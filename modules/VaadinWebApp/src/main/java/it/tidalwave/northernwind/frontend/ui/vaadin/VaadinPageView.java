@@ -22,9 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import it.tidalwave.northernwind.frontend.ui.PageView;
-import it.tidalwave.northernwind.frontend.model.StructureLink;
-import it.tidalwave.northernwind.frontend.ui.PageViewController;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.AbstractLayout;
 import javax.annotation.Nonnull;
@@ -33,7 +32,6 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -63,20 +61,22 @@ public class VaadinPageView extends Window implements PageView
       {
         removeAllComponents();
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
+        
+        final WebSiteModel w = controller.getWebSiteModel();
         menuView.setLinks(Arrays.asList
           (
-            new StructureLink("Home", "/"),
-            new StructureLink("Features", "/Features"),
-            new StructureLink("Download", "/Download"),
-            new StructureLink("Screenshots", "/Screenshots"),
-            new StructureLink("Getting started", "/Getting started"),
-            new StructureLink("Blog & News", "/Blog & News (new)"),
-            new StructureLink("Contacts", "/Contact"),
-            new StructureLink("License", "/License"),
-            new StructureLink("Developers", "/Developers")
+            w.getStructure("/"),
+            w.getStructure("/Features"),
+            w.getStructure("/Download"),
+            w.getStructure("/Screenshots"),
+            w.getStructure("/Getting started"),
+            w.getStructure("/Blog & News (new)"),
+            w.getStructure("/Contact"),
+            w.getStructure("/License"),
+            w.getStructure("/Developers")
           ));
         
-        final Media media = controller.getWebSiteModel().getMedia("/content/media/blueBill_Mobile-Banner.png");
+        final Media media = w.getMedia("/content/media/blueBill_Mobile-Banner.png");
         addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));
         addComponent(menuView);
         addComponent((Component)content);

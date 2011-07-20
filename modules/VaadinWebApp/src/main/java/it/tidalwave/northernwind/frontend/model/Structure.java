@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 import lombok.Delegate;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,11 +46,15 @@ public class Structure
     
     @Nonnull
     private final WebSiteModel webSiteModel;
+    
+    @Nonnull @Getter
+    private final String uri;
 
-    public Structure (final @Nonnull WebSiteModel webSiteModel, final @Nonnull File file)
+    public Structure (final @Nonnull WebSiteModel webSiteModel, final @Nonnull File file, final @Nonnull String uri)
       {
         resource = new Resource(file);  
         this.webSiteModel = webSiteModel;
+        this.uri = uri;
       }
 
     @Nonnull

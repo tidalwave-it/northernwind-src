@@ -55,12 +55,19 @@ public class Resource
             f = new File(file, "OverrideResource_en.properties");
           }
         
-        log.info(">>>> reading properties from {}...", f.getAbsolutePath());
-        @Cleanup final Reader r = new FileReader(f);
-        properties.load(r);
-        r.close();        
-        
-        log.info(">>>> properties: {}", properties);
+        if (!f.exists())
+          {
+            log.warn("No properties for {}", file);
+          }
+        else
+          {
+            log.info(">>>> reading properties from {}...", f.getAbsolutePath());
+            @Cleanup final Reader r = new FileReader(f);
+            properties.load(r);
+            r.close();        
+
+            log.info(">>>> properties: {}", properties);
+          }
         
         return properties;
       }

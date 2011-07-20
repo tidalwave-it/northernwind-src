@@ -22,7 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
-import it.tidalwave.northernwind.frontend.model.StructureLink;
+import it.tidalwave.northernwind.frontend.model.Structure;
+import java.io.IOException;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -34,5 +35,6 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface MenuView 
   {
-    public void setLinks (@Nonnull List<StructureLink> links);
+    public void setLinks (@Nonnull List<Structure> links)
+      throws IOException;
   }
