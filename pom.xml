@@ -14,12 +14,12 @@
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (master)</name>
-    <description>NorthernWind (master)</description>
+    <description>NorthernWind - lightweight CMS</description>
 
     <properties>
         <scm.repo.url>ssh://hg.java.net/northernwind~src</scm.repo.url>
-        <scm.repo.readonly.url>http://java.net/hg/it-tidalwave-northernwind~src</scm.repo.readonly.url>
-        <scm.repo.browse.url>http://java.net/projects/it-tidalwave-northernwind/sources/src/show</scm.repo.browse.url>
+        <scm.repo.readonly.url>http://java.net/hg/northernwind~src</scm.repo.readonly.url>
+        <scm.repo.browse.url>http://java.net/projects/northernwind/sources/src/show</scm.repo.browse.url>
 
         <vaadin.version>6.6.1</vaadin.version>
         <javax.servlet-api.version>2.5</javax.servlet-api.version>
