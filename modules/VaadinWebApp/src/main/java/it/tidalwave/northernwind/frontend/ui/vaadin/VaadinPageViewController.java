@@ -80,12 +80,9 @@ public class VaadinPageViewController implements PageViewController
             final Properties properties = structure.getProperties();
             log.info(">>>> properties: {}", properties);
             final String title = properties.getProperty("Title");
-            final String contentUri = properties.getProperty("main.content");
             
             pageView.setCaption(title);
-            final VaadinArticleView articleView = new VaadinArticleView("main");
-            new DefaultArticleViewController(webSiteModel, articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
-            pageView.setContents(articleView);
+            pageView.setContents(structure.createContents());
           }
         catch (Exception e)
           {

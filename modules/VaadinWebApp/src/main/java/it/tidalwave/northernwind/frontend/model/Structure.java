@@ -22,7 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
+import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
+import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
 import java.io.File;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +42,22 @@ public class Structure
   {
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
+    
+    @Nonnull
+    private final WebSiteModel webSiteModel;
 
-    public Structure (final @Nonnull File file)
+    public Structure (final @Nonnull WebSiteModel webSiteModel, final @Nonnull File file)
       {
         resource = new Resource(file);  
+        this.webSiteModel = webSiteModel;
+      }
+
+    @Nonnull
+    public Object createContents()
+      throws IOException 
+      {
+        final String contentUri = resource.getProperties().getProperty("main.content");
+        final VaadinArticleView articleView = new VaadinArticleView("main");
+        return new DefaultArticleViewController(webSiteModel, articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
       }
   }
