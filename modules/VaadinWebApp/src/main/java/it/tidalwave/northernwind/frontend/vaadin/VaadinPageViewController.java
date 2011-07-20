@@ -22,11 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import it.tidalwave.northernwind.frontend.Content;
+import it.tidalwave.northernwind.frontend.PageView;
+import it.tidalwave.northernwind.frontend.PageViewController;
 import it.tidalwave.northernwind.frontend.WebSiteModel;
-import java.io.File;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.URIHandler;
+import it.tidalwave.northernwind.frontend.component.article.DefaultArticleViewController;
+import it.tidalwave.northernwind.frontend.component.article.vaadin.VaadinArticleView;
+import java.net.URL;
 import javax.annotation.Nonnull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -35,15 +39,40 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
-public class DefaultWebSiteModel implements WebSiteModel 
+@Slf4j
+public class VaadinPageViewController implements PageViewController 
   {
-    private final File root = new File("/workarea/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export");
-    
-    @Override @Nonnull
-    public Content getContent (final @Nonnull String uri) 
+    private final URIHandler uriHandler = new URIHandler()
       {
-        log.info("getContent({})", uri);
-        return new Content(new File(root, "content/document/" + uri));
+        @Override
+        public DownloadStream handleURI (final @Nonnull URL context,
+                                         final @Nonnull String relativeUri) 
+          {
+            log.info("uri: {}", relativeUri);
+            setUri(relativeUri);
+            return null; 
+          }
+      };
+    
+    @Nonnull
+    private final PageView pageView;
+    
+    private final WebSiteModel webSiteModel = new DefaultWebSiteModel();
+
+    public VaadinPageViewController (final @Nonnull VaadinPageView pageView) 
+      {
+        log.info("DefaultPageViewController()");
+        this.pageView = pageView;
+        pageView.addURIHandler(uriHandler);
+        log.info(">>>> registered URI handler");
       }
+    
+    private void setUri (final @Nonnull String uri) 
+      {
+        log.info("setUri({})", uri);
+        pageView.setCaption(uri);
+        final VaadinArticleView vaadinArticleView = new VaadinArticleView();
+        new DefaultArticleViewController(webSiteModel, vaadinArticleView, uri);
+        pageView.setContent(vaadinArticleView);
+      } 
   }

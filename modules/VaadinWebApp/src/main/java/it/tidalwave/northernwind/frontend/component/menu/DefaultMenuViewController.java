@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin.component.view;
+package it.tidalwave.northernwind.frontend.component.menu;
 
 /***********************************************************************************************************************
  *
@@ -28,7 +28,7 @@ package it.tidalwave.northernwind.frontend.vaadin.component.view;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuViewController
+public class DefaultMenuViewController implements MenuViewController
   {
     
-  } 
+  }

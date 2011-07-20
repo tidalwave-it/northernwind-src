@@ -20,9 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
-
-import javax.annotation.Nonnull;
+package it.tidalwave.northernwind.frontend.component.article;
 
 /***********************************************************************************************************************
  *
@@ -30,8 +28,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteModel 
+public interface ArticleViewController 
   {
-    @Nonnull
-    public Content getContent (@Nonnull String relativeUri);    
+    
   }

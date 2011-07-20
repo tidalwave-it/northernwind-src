@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend;
 
 import javax.annotation.Nonnull;
 
@@ -30,9 +30,6 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface PageView 
+public interface PageViewController 
   {
-    public void setCaption (@Nonnull String caption);
-
-    public void setContent (@Nonnull Object content);
   }

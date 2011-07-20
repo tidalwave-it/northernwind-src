@@ -20,7 +20,9 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin.component.article;
+package it.tidalwave.northernwind.frontend.component.article;
+
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -28,7 +30,7 @@ package it.tidalwave.northernwind.frontend.vaadin.component.article;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ArticleViewController 
+public interface ArticleView 
   {
-    
+    public void setText (@Nonnull String string);
   }

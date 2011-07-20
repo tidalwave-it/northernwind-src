@@ -20,11 +20,11 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.component.menu;
 
+import it.tidalwave.northernwind.frontend.StructureLink;
+import java.util.List;
 import javax.annotation.Nonnull;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -32,12 +32,7 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Getter
-public class StructureLink
+public interface MenuView 
   {
-    @Nonnull
-    private final String text;
-    
-    @Nonnull
-    private final String uri;
+    public void setLinks (@Nonnull List<StructureLink> links);
   }

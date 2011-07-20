@@ -20,11 +20,11 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin.component.view;
+package it.tidalwave.northernwind.frontend.component.article.vaadin;
 
-import it.tidalwave.northernwind.frontend.vaadin.StructureLink;
-import java.util.List;
+import it.tidalwave.northernwind.frontend.component.article.ArticleView;
 import javax.annotation.Nonnull;
+import com.vaadin.ui.Label;
 
 /***********************************************************************************************************************
  *
@@ -32,7 +32,12 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuView 
+public class VaadinArticleView extends Label implements ArticleView
   {
-    public void setLinks (@Nonnull List<StructureLink> links);
+    @Override
+    public void setText (final @Nonnull String string)
+      {
+        setContentMode(Label.CONTENT_XHTML);
+        setValue(string);
+      }
   }

@@ -20,13 +20,11 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin.component.view;
+package it.tidalwave.northernwind.frontend.component.article;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Link;
-import it.tidalwave.northernwind.frontend.vaadin.StructureLink;
-import java.util.List;
+import it.tidalwave.northernwind.frontend.Content;
+import it.tidalwave.northernwind.frontend.WebSiteModel;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
@@ -35,14 +33,20 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
+public class DefaultArticleViewController implements ArticleViewController
   {
-    @Override
-    public void setLinks (final @Nonnull List<StructureLink> links) 
+    public DefaultArticleViewController (final @Nonnull WebSiteModel webSiteModel,
+                                         final @Nonnull ArticleView articleView, 
+                                         final @Nonnull String uri) 
       {
-        for (final StructureLink link : links)
-          {  
-            addComponent(new Link(link.getText(), new ExternalResource("/nw" + link.getUri())));                
+        try
+          {
+            final Content content = webSiteModel.getContent(uri);
+            articleView.setText(content.get("FullText_en.html", String.class));
+          }
+        catch (IOException e)
+          {
+            articleView.setText(e.toString());
           }
       }
   }

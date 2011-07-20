@@ -20,16 +20,15 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.component.menu.vaadin;
 
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.URIHandler;
-import it.tidalwave.northernwind.frontend.vaadin.component.article.DefaultArticleViewController;
-import it.tidalwave.northernwind.frontend.vaadin.component.article.VaadinArticleView;
-import java.net.URL;
+import it.tidalwave.northernwind.frontend.component.menu.MenuView;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Link;
+import it.tidalwave.northernwind.frontend.StructureLink;
+import java.util.List;
 import javax.annotation.Nonnull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -37,40 +36,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class DefaultPageViewController implements PageViewController 
+public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
-    private final URIHandler uriHandler = new URIHandler()
+    @Override
+    public void setLinks (final @Nonnull List<StructureLink> links) 
       {
-        @Override
-        public DownloadStream handleURI (final @Nonnull URL context,
-                                         final @Nonnull String relativeUri) 
-          {
-            log.info("uri: {}", relativeUri);
-            setUri(relativeUri);
-            return null; 
+        for (final StructureLink link : links)
+          {  
+            addComponent(new Link(link.getText(), new ExternalResource("/nw" + link.getUri())));                
           }
-      };
-    
-    @Nonnull
-    private final PageView pageView;
-    
-    private final WebSiteModel webSiteModel = new DefaultWebSiteModel();
-
-    public DefaultPageViewController (final @Nonnull VaadinPageView pageView) 
-      {
-        log.info("DefaultPageViewController()");
-        this.pageView = pageView;
-        pageView.addURIHandler(uriHandler);
-        log.info(">>>> registered URI handler");
       }
-    
-    private void setUri (final @Nonnull String uri) 
-      {
-        log.info("setUri({})", uri);
-        pageView.setCaption(uri);
-        final VaadinArticleView vaadinArticleView = new VaadinArticleView();
-        new DefaultArticleViewController(webSiteModel, vaadinArticleView, uri);
-        pageView.setContent(vaadinArticleView);
-      } 
   }

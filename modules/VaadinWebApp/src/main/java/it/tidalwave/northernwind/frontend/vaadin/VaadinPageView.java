@@ -22,12 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
+import it.tidalwave.northernwind.frontend.PageView;
+import it.tidalwave.northernwind.frontend.StructureLink;
+import it.tidalwave.northernwind.frontend.PageViewController;
 import com.vaadin.terminal.FileResource;
 import javax.annotation.Nonnull;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
-import it.tidalwave.northernwind.frontend.vaadin.component.view.VaadinHorizontalMenuView;
+import it.tidalwave.northernwind.frontend.component.menu.vaadin.VaadinHorizontalMenuView;
 import java.io.File;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +49,7 @@ public class VaadinPageView extends Window implements PageView
     public VaadinPageView() 
       {
         log.info("VaadinPageView()");
-        controller = new DefaultPageViewController(this); 
+        controller = new VaadinPageViewController(this); 
         log.info("Stoca");
       }
 
