@@ -33,12 +33,19 @@ import lombok.extern.slf4j.Slf4j;
  **********************************************************************************************************************/
 @Slf4j
 public class VaadinFrontEndApplication extends Application
-  {
+  {          
     @Override
     public void init() 
       {
-        log.info("Restarting...");    
-        setMainWindow(new VaadinPageView());
-        setTheme("bluebill");
+        try
+          {  
+            log.info("Restarting...");    
+            setMainWindow(new VaadinPageView());
+            setTheme("bluebill");
+          }
+        catch (Throwable e)
+          {
+            log.error("", e);  
+          }
       }
   }

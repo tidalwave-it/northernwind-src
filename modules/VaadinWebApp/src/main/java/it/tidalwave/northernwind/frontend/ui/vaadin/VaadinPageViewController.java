@@ -28,10 +28,7 @@ import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
 import it.tidalwave.northernwind.frontend.model.Structure;
-import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
-import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
 import java.net.URL;
-import java.util.Properties;
 import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -76,12 +73,8 @@ public class VaadinPageViewController implements PageViewController
         try
           {
             log.info("setUri({})", uri);
-            final Structure structure = webSiteModel.getStructure(uri);
-            final Properties properties = structure.getProperties();
-            log.info(">>>> properties: {}", properties);
-            final String title = properties.getProperty("Title");
-            
-            pageView.setCaption(title);
+            final Structure structure = webSiteModel.getStructure(uri);            
+//            pageView.setCaption(structure.getProperties().getProperty("Title"));
             pageView.setContents(structure.createContents());
           }
         catch (Exception e)

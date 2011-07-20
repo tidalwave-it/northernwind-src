@@ -43,10 +43,4 @@ public class Media
       {
         resource = new Resource(file);  
       }
-    
-    @Nonnull
-    public File getFile()
-      {
-        return resource.getFile();  
-      }
   }

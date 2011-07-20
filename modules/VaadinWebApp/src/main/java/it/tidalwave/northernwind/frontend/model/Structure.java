@@ -58,6 +58,7 @@ public class Structure
       {
         final String contentUri = resource.getProperties().getProperty("main.content");
         final VaadinArticleView articleView = new VaadinArticleView("main");
-        return new DefaultArticleViewController(webSiteModel, articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+        new DefaultArticleViewController(webSiteModel, articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+        return articleView;
       }
   }

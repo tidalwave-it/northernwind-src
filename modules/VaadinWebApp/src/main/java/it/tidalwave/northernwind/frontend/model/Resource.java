@@ -46,18 +46,21 @@ public class Resource
     public Properties getProperties()
       throws IOException
       {
+        log.info("getProperties()");
         final Properties properties = new Properties();
         File f = new File(file, "Resource_en.properties");
         
         if (!f.exists())
           {
-            f = new File(f, "OverrideResource_en.properties");
+            f = new File(file, "OverrideResource_en.properties");
           }
         
         log.info(">>>> reading properties from {}...", f.getAbsolutePath());
         @Cleanup final Reader r = new FileReader(f);
         properties.load(r);
         r.close();        
+        
+        log.info(">>>> properties: {}", properties);
         
         return properties;
       }
