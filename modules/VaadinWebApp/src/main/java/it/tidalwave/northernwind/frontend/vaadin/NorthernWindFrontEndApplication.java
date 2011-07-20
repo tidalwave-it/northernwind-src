@@ -23,6 +23,9 @@
 package it.tidalwave.northernwind.frontend.vaadin;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.URIHandler;
+import java.net.URL;
 
 /***********************************************************************************************************************
  *
@@ -32,7 +35,6 @@ import com.vaadin.Application;
  **********************************************************************************************************************/
 public class NorthernWindFrontEndApplication extends Application
   {
-
     @Override
     public void init() 
       {
