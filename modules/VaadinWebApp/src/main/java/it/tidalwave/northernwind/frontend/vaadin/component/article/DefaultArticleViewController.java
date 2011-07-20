@@ -20,12 +20,14 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.vaadin.component.article;
 
+import it.tidalwave.northernwind.frontend.vaadin.Resource;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.annotation.Nonnull;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Window;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Cleanup;
 
 /***********************************************************************************************************************
  *
@@ -33,20 +35,26 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class NorthernWindMainWindow extends Window implements PageView
+public class DefaultArticleViewController implements ArticleViewController
   {
-    private final PageViewController controller;
+    private final Resource resource;
     
-    public NorthernWindMainWindow() 
+    public DefaultArticleViewController (final @Nonnull ArticleView articleView, final @Nonnull Resource resource) 
       {
-        controller = new DefaultPageViewController(this);
-      }
-
-    @Override
-    public void setContent (final @Nonnull Object content) 
-      {
-        removeAllComponents();
-        addComponent((Component)content);
+        this.resource = resource;
+        final File file = new File(resource.getPath(), "FullText_en.html");
+        
+        try
+          {
+            @Cleanup final FileReader fr = new FileReader(file);
+            final StringBuilder builder = new StringBuilder();
+            final char[] chars = new char[(int)file.length()];
+            fr.read(chars);
+            articleView.setText(new String(chars));
+          }
+        catch (IOException e)
+          {
+            articleView.setText(e.toString());
+          }
       }
   }

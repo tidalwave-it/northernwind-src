@@ -20,12 +20,10 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.vaadin.component.article;
 
 import javax.annotation.Nonnull;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Window;
-import lombok.extern.slf4j.Slf4j;
+import com.vaadin.ui.Label;
 
 /***********************************************************************************************************************
  *
@@ -33,20 +31,12 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class NorthernWindMainWindow extends Window implements PageView
+public class VaadinArticleView extends Label implements ArticleView
   {
-    private final PageViewController controller;
-    
-    public NorthernWindMainWindow() 
-      {
-        controller = new DefaultPageViewController(this);
-      }
-
     @Override
-    public void setContent (final @Nonnull Object content) 
+    public void setText (final @Nonnull String string)
       {
-        removeAllComponents();
-        addComponent((Component)content);
+        setContentMode(Label.CONTENT_XHTML);
+        setValue(string);
       }
   }

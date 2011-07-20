@@ -32,5 +32,7 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface PageView 
   {
-    public void setCaption (@Nonnull String caption); 
+    public void setCaption (@Nonnull String caption);
+
+    public void setContent (@Nonnull Object content);
   }
