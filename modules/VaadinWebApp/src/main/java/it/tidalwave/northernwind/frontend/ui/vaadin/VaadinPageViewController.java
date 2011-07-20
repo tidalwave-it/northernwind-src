@@ -20,15 +20,15 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import it.tidalwave.northernwind.frontend.PageView;
-import it.tidalwave.northernwind.frontend.PageViewController;
-import it.tidalwave.northernwind.frontend.WebSiteModel;
+import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.ui.PageViewController;
+import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
-import it.tidalwave.northernwind.frontend.component.article.DefaultArticleViewController;
-import it.tidalwave.northernwind.frontend.component.article.vaadin.VaadinArticleView;
+import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
+import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
 import java.net.URL;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;

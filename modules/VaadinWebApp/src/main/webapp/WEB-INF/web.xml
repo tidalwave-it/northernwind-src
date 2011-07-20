@@ -55,7 +55,7 @@
         <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>it.tidalwave.northernwind.frontend.vaadin.NorthernWindFrontEndApplication</param-value>
+            <param-value>it.tidalwave.northernwind.frontend.ui.vaadin.VaadinFrontEndApplication</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
         <!--        <init-param>

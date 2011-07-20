@@ -20,12 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.component.article;
-
-import it.tidalwave.northernwind.frontend.Content;
-import it.tidalwave.northernwind.frontend.WebSiteModel;
-import java.io.IOException;
-import javax.annotation.Nonnull;
+package it.tidalwave.northernwind.frontend.ui.component.article;
 
 /***********************************************************************************************************************
  *
@@ -33,20 +28,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultArticleViewController implements ArticleViewController
+public interface ArticleViewController 
   {
-    public DefaultArticleViewController (final @Nonnull WebSiteModel webSiteModel,
-                                         final @Nonnull ArticleView articleView, 
-                                         final @Nonnull String uri) 
-      {
-        try
-          {
-            final Content content = webSiteModel.getContent(uri);
-            articleView.setText(content.get("FullText_en.html", String.class));
-          }
-        catch (IOException e)
-          {
-            articleView.setText(e.toString());
-          }
-      }
+    
   }

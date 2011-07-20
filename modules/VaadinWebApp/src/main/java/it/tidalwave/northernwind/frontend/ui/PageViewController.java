@@ -20,7 +20,9 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.component.menu;
+package it.tidalwave.northernwind.frontend.ui;
+
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -28,7 +30,6 @@ package it.tidalwave.northernwind.frontend.component.menu;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuViewController
+public interface PageViewController 
   {
-    
-  } 
+  }

@@ -20,9 +20,13 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.component.menu;
+package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
-import it.tidalwave.northernwind.frontend.StructureLink;
+import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Link;
+import it.tidalwave.northernwind.frontend.model.StructureLink;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -32,7 +36,20 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuView 
+public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
-    public void setLinks (@Nonnull List<StructureLink> links);
+    public VaadinHorizontalMenuView (final @Nonnull String name) 
+      {
+        setMargin(false);
+        setStyleName("component-" + name);
+      }
+    
+    @Override
+    public void setLinks (final @Nonnull List<StructureLink> links) 
+      {
+        for (final StructureLink link : links)
+          {  
+            addComponent(new Link(link.getText(), new ExternalResource("/nw" + link.getUri())));                
+          }
+      }
   }

@@ -20,11 +20,9 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend;
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -32,12 +30,8 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Getter
-public class StructureLink
+public interface WebSiteModel 
   {
     @Nonnull
-    private final String text;
-    
-    @Nonnull
-    private final String uri;
+    public Content getContent (@Nonnull String relativeUri);    
   }

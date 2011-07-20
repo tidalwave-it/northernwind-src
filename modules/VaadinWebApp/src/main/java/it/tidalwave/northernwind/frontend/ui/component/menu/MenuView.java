@@ -20,8 +20,10 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.component.article;
+package it.tidalwave.northernwind.frontend.ui.component.menu;
 
+import it.tidalwave.northernwind.frontend.model.StructureLink;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
@@ -30,7 +32,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ArticleView 
+public interface MenuView 
   {
-    public void setText (@Nonnull String string);
+    public void setLinks (@Nonnull List<StructureLink> links);
   }

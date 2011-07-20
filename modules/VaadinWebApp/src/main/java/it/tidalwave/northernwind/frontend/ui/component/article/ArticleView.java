@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend;
+package it.tidalwave.northernwind.frontend.ui.component.article;
 
 import javax.annotation.Nonnull;
 
@@ -30,8 +30,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteModel 
+public interface ArticleView 
   {
-    @Nonnull
-    public Content getContent (@Nonnull String relativeUri);    
+    public void setText (@Nonnull String string);
   }

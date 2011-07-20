@@ -20,7 +20,10 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.component.article;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
+
+import com.vaadin.Application;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -28,7 +31,14 @@ package it.tidalwave.northernwind.frontend.component.article;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ArticleViewController 
+@Slf4j
+public class VaadinFrontEndApplication extends Application
   {
-    
+    @Override
+    public void init() 
+      {
+        log.info("Restarting...");    
+        setMainWindow(new VaadinPageView());
+        setTheme("bluebill");
+      }
   }

@@ -20,11 +20,14 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.component.article.vaadin;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import it.tidalwave.northernwind.frontend.component.article.ArticleView;
+import it.tidalwave.northernwind.frontend.model.Content;
+import it.tidalwave.northernwind.frontend.model.WebSiteModel;
+import java.io.File;
 import javax.annotation.Nonnull;
-import com.vaadin.ui.Label;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -32,17 +35,15 @@ import com.vaadin.ui.Label;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class VaadinArticleView extends Label implements ArticleView
+@RequiredArgsConstructor @Slf4j
+public class DefaultWebSiteModel implements WebSiteModel 
   {
-    public VaadinArticleView (final @Nonnull String name) 
-      {
-        setStyleName("component-" + name);
-      }
+    private final File root = new File("/workarea/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export");
     
-    @Override
-    public void setText (final @Nonnull String string)
+    @Override @Nonnull
+    public Content getContent (final @Nonnull String uri) 
       {
-        setContentMode(Label.CONTENT_XHTML);
-        setValue(string);
+        log.info("getContent({})", uri);
+        return new Content(new File(root, "content/document/" + uri));
       }
   }

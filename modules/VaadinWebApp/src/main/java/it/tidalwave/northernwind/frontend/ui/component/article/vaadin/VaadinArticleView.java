@@ -20,9 +20,11 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend;
+package it.tidalwave.northernwind.frontend.ui.component.article.vaadin;
 
+import it.tidalwave.northernwind.frontend.ui.component.article.ArticleView;
 import javax.annotation.Nonnull;
+import com.vaadin.ui.Label;
 
 /***********************************************************************************************************************
  *
@@ -30,6 +32,17 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface PageViewController 
+public class VaadinArticleView extends Label implements ArticleView
   {
+    public VaadinArticleView (final @Nonnull String name) 
+      {
+        setStyleName("component-" + name);
+      }
+    
+    @Override
+    public void setText (final @Nonnull String string)
+      {
+        setContentMode(Label.CONTENT_XHTML);
+        setValue(string);
+      }
   }

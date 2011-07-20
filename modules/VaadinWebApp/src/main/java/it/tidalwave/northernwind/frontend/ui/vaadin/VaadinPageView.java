@@ -20,18 +20,18 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import it.tidalwave.northernwind.frontend.PageView;
-import it.tidalwave.northernwind.frontend.StructureLink;
-import it.tidalwave.northernwind.frontend.PageViewController;
+import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.model.StructureLink;
+import it.tidalwave.northernwind.frontend.ui.PageViewController;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.AbstractLayout;
 import javax.annotation.Nonnull;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
-import it.tidalwave.northernwind.frontend.component.menu.vaadin.VaadinHorizontalMenuView;
+import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import java.io.File;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;

@@ -20,12 +20,13 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.model;
 
-import it.tidalwave.northernwind.frontend.Content;
-import it.tidalwave.northernwind.frontend.WebSiteModel;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.annotation.Nonnull;
+import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,14 +37,23 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultWebSiteModel implements WebSiteModel 
+public class Content 
   {
-    private final File root = new File("/workarea/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export");
+    @Nonnull
+    private final File path;    
     
-    @Override @Nonnull
-    public Content getContent (final @Nonnull String uri) 
+    @Nonnull
+    public <Type> Type get (final @Nonnull String attribute, final @Nonnull Class<Type> type)
+      throws IOException
       {
-        log.info("getContent({})", uri);
-        return new Content(new File(root, "content/document/" + uri));
+        log.info("get({}, {})", attribute, type);
+        final File file = new File(path, attribute);
+        log.info(">>>> reading from {}", file.getAbsolutePath());
+        @Cleanup final FileReader fr = new FileReader(file);
+        final char[] chars = new char[(int)file.length()];
+        fr.read(chars);
+        fr.close();
+        
+        return (Type)new String(chars);
       }
   }

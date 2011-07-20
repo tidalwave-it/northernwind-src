@@ -20,10 +20,9 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.ui;
 
-import com.vaadin.Application;
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -31,14 +30,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class NorthernWindFrontEndApplication extends Application
+public interface PageView 
   {
-    @Override
-    public void init() 
-      {
-        log.info("Restarting...");    
-        setMainWindow(new VaadinPageView());
-        setTheme("bluebill");
-      }
+    public void setCaption (@Nonnull String caption);
+
+    public void setContents (@Nonnull Object content);
   }
