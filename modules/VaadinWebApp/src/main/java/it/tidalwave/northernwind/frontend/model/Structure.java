@@ -22,8 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import java.io.IOException;
+import java.io.File;
 import javax.annotation.Nonnull;
+import lombok.Delegate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -31,13 +34,14 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteModel 
+@RequiredArgsConstructor @Slf4j
+public class Structure 
   {
-    @Nonnull
-    public Content getContent (@Nonnull String uri)
-      throws IOException;    
-    
-    @Nonnull
-    public Structure getStructure (@Nonnull String uri) 
-      throws IOException;    
+    @Nonnull @Delegate(types=Resource.class)
+    private final Resource resource;
+
+    public Structure (final @Nonnull File file)
+      {
+        resource = new Resource(file);  
+      }
   }

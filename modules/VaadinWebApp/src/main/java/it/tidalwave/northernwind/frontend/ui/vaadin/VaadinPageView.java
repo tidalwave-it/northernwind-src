@@ -66,8 +66,8 @@ public class VaadinPageView extends Window implements PageView
             new StructureLink("Features", "/Features"),
             new StructureLink("Download", "/Download"),
             new StructureLink("Screenshots", "/Screenshots"),
-            new StructureLink("Getting started", "/Getting+started"),
-            new StructureLink("Blog & News", "/Blog"),
+            new StructureLink("Getting started", "/Getting started"),
+            new StructureLink("Blog & News", "/Blog & News (new)"),
             new StructureLink("Contacts", "/Contact"),
             new StructureLink("License", "/License"),
             new StructureLink("Developers", "/Developers")

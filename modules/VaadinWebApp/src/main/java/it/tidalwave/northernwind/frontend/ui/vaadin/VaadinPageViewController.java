@@ -27,9 +27,11 @@ import it.tidalwave.northernwind.frontend.ui.PageViewController;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
+import it.tidalwave.northernwind.frontend.model.Structure;
 import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
 import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
 import java.net.URL;
+import java.util.Properties;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,10 +71,23 @@ public class VaadinPageViewController implements PageViewController
     
     private void setUri (final @Nonnull String uri) 
       {
-        log.info("setUri({})", uri);
-        pageView.setCaption(uri);
-        final VaadinArticleView articleView = new VaadinArticleView("main");
-        new DefaultArticleViewController(webSiteModel, articleView, uri);
-        pageView.setContents(articleView);
+        try
+          {
+            log.info("setUri({})", uri);
+            final Structure structure = webSiteModel.getStructure(uri);
+            final Properties properties = structure.getProperties();
+            log.info(">>>> properties: {}", properties);
+            final String title = properties.getProperty("Title");
+            final String contentUri = properties.getProperty("main.content");
+            
+            pageView.setCaption(title);
+            final VaadinArticleView articleView = new VaadinArticleView("main");
+            new DefaultArticleViewController(webSiteModel, articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+            pageView.setContents(articleView);
+          }
+        catch (Exception e)
+          {
+            log.error("", e);  
+          }
       } 
   }

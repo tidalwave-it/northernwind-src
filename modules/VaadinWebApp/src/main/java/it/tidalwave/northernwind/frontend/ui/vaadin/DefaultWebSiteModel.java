@@ -23,8 +23,11 @@
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import it.tidalwave.northernwind.frontend.model.Content;
+import it.tidalwave.northernwind.frontend.model.Structure;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +45,31 @@ public class DefaultWebSiteModel implements WebSiteModel
     
     @Override @Nonnull
     public Content getContent (final @Nonnull String uri) 
+      throws UnsupportedEncodingException 
       {
         log.info("getContent({})", uri);
-        return new Content(new File(root, "content/document/" + uri));
+        return new Content(new File(root, "content/document/" + encode(uri)));
+      }
+    
+    @Override @Nonnull
+    public Structure getStructure (final @Nonnull String uri) 
+      throws UnsupportedEncodingException 
+      {
+        log.info("getStructure({})", uri);
+        return new Structure(new File(root, "structure/" + encode(uri)));
+      }
+    
+    @Nonnull
+    private String encode (final @Nonnull String uri)
+      throws UnsupportedEncodingException
+      {
+        final StringBuilder builder = new StringBuilder();
+        
+        for (final String part : uri.split("/"))
+          {
+            builder.append("/").append(URLEncoder.encode(part, "UTF-8"));
+          }
+        
+        return builder.toString();
       }
   }
