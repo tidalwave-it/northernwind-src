@@ -22,10 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import javax.annotation.Nonnull;
-import java.net.URL;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.URIHandler;
 import com.vaadin.ui.Window;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,23 +32,12 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class NorthernWindMainWindow extends Window
+public class NorthernWindMainWindow extends Window implements PageView
   {
-    private final URIHandler uriHandler = new URIHandler()
-      {
-        @Override
-        public DownloadStream handleURI (final @Nonnull URL context,
-                                         final @Nonnull String relativeUri) 
-          {
-            log.info("uri: {}", relativeUri);
-            setCaption(relativeUri);               
-            return null; 
-          }
-      };
+    private final PageViewController controller;
     
     public NorthernWindMainWindow() 
       {
-        super("NorthernWind");
-        addURIHandler(uriHandler);
+        controller = new DefaultPageViewController(this);
       }     
   }

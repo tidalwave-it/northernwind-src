@@ -22,19 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import com.vaadin.Application;
-
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NorthernWindFrontEndApplication extends Application
+public interface WebSiteModel 
   {
-    @Override
-    public void init() 
-      {
-        setMainWindow(new NorthernWindMainWindow());
-      }
+    
   }

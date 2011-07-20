@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import com.vaadin.Application;
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -30,11 +30,6 @@ import com.vaadin.Application;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NorthernWindFrontEndApplication extends Application
+public interface PageViewController 
   {
-    @Override
-    public void init() 
-      {
-        setMainWindow(new NorthernWindMainWindow());
-      }
   }

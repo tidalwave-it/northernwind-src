@@ -22,7 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import com.vaadin.Application;
+import javax.annotation.Nonnull;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -30,11 +31,9 @@ import com.vaadin.Application;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NorthernWindFrontEndApplication extends Application
+@RequiredArgsConstructor
+public class DefaultWebSiteModel implements WebSiteModel 
   {
-    @Override
-    public void init() 
-      {
-        setMainWindow(new NorthernWindMainWindow());
-      }
+    @Nonnull
+    private final String relativeUri;
   }
