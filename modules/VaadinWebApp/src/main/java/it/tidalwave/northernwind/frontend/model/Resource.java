@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.util.Properties;
 import javax.annotation.Nonnull;
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,18 +24,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public class Resource 
   {
-    @Nonnull
-    private final File path;    
-    
+    @Nonnull @Getter
+    private final File file;    
+        
     @Nonnull
     public <Type> Type get (final @Nonnull String attribute, final @Nonnull Class<Type> type)
       throws IOException
       {
         log.info("get({}, {})", attribute, type);
-        final File file = new File(path, attribute);
-        log.info(">>>> reading from {}", file.getAbsolutePath());
-        @Cleanup final FileReader fr = new FileReader(file);
-        final char[] chars = new char[(int)file.length()];
+        final File f = new File(file, attribute);
+        log.info(">>>> reading from {}", f.getAbsolutePath());
+        @Cleanup final FileReader fr = new FileReader(f);
+        final char[] chars = new char[(int)f.length()];
         fr.read(chars);
         fr.close();
         
@@ -46,15 +47,15 @@ public class Resource
       throws IOException
       {
         final Properties properties = new Properties();
-        File file = new File(path, "Resource_en.properties");
+        File f = new File(file, "Resource_en.properties");
         
-        if (!file.exists())
+        if (!f.exists())
           {
-            file = new File(path, "OverrideResource_en.properties");
+            f = new File(f, "OverrideResource_en.properties");
           }
         
-        log.info(">>>> reading properties from {}...", file.getAbsolutePath());
-        @Cleanup final Reader r = new FileReader(file);
+        log.info(">>>> reading properties from {}...", f.getAbsolutePath());
+        @Cleanup final Reader r = new FileReader(f);
         properties.load(r);
         r.close();        
         

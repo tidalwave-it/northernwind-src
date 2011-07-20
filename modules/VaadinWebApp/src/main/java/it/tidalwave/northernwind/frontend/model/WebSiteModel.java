@@ -38,6 +38,10 @@ public interface WebSiteModel
       throws IOException;    
     
     @Nonnull
+    public Media getMedia (@Nonnull String uri)
+      throws IOException;    
+    
+    @Nonnull
     public Structure getStructure (@Nonnull String uri) 
       throws IOException;    
   }

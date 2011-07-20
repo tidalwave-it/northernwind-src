@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import it.tidalwave.northernwind.frontend.model.Content;
+import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Structure;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import java.io.File;
@@ -49,6 +50,14 @@ public class DefaultWebSiteModel implements WebSiteModel
       {
         log.info("getContent({})", uri);
         return new Content(new File(root, "content/document/" + encode(uri)));
+      }
+    
+    @Override @Nonnull
+    public Media getMedia (final @Nonnull String uri) 
+      throws UnsupportedEncodingException 
+      {
+        log.info("getMedia({})", uri);
+        return new Media(new File(root, "content/media/" + encode(uri)));
       }
     
     @Override @Nonnull

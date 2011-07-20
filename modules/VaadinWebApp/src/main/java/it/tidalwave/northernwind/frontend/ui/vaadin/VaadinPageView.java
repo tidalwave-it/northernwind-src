@@ -31,8 +31,10 @@ import javax.annotation.Nonnull;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
+import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class VaadinPageView extends Window implements PageView
   {
-    private final PageViewController controller;
+    private final VaadinPageViewController controller;
     
     public VaadinPageView() 
       {
@@ -57,6 +59,7 @@ public class VaadinPageView extends Window implements PageView
 
     @Override
     public void setContents (final @Nonnull Object content) 
+      throws IOException
       {
         removeAllComponents();
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
@@ -73,8 +76,8 @@ public class VaadinPageView extends Window implements PageView
             new StructureLink("Developers", "/Developers")
           ));
         
-        final String h = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export";
-        addComponent(new Embedded("", new FileResource(new File(h + "/content/media/blueBill_Mobile-Banner.png"), getApplication())));
+        final Media media = controller.getWebSiteModel().getMedia("/content/media/blueBill_Mobile-Banner.png");
+        addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));
         addComponent(menuView);
         addComponent((Component)content);
       }

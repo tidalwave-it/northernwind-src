@@ -33,6 +33,7 @@ import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArti
 import java.net.URL;
 import java.util.Properties;
 import javax.annotation.Nonnull;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -59,6 +60,7 @@ public class VaadinPageViewController implements PageViewController
     @Nonnull
     private final PageView pageView;
     
+    @Getter
     private final WebSiteModel webSiteModel = new DefaultWebSiteModel();
 
     public VaadinPageViewController (final @Nonnull VaadinPageView pageView) 

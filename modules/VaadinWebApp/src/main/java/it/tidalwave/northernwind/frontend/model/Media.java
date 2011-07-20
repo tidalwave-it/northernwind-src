@@ -20,10 +20,12 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui;
+package it.tidalwave.northernwind.frontend.model;
 
-import java.io.IOException;
+import java.io.File;
 import javax.annotation.Nonnull;
+import lombok.Delegate;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -31,10 +33,20 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface PageView 
+@Slf4j
+public class Media 
   {
-    public void setCaption (@Nonnull String caption);
+    @Nonnull @Delegate(types=Resource.class)
+    private final Resource resource;
 
-    public void setContents (@Nonnull Object content)
-      throws IOException;
+    public Media (final @Nonnull File file)
+      {
+        resource = new Resource(file);  
+      }
+    
+    @Nonnull
+    public File getFile()
+      {
+        return resource.getFile();  
+      }
   }
