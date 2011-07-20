@@ -38,6 +38,12 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
+    public VaadinHorizontalMenuView (final @Nonnull String name) 
+      {
+        setMargin(false);
+        setStyleName("component-" + name);
+      }
+    
     @Override
     public void setLinks (final @Nonnull List<StructureLink> links) 
       {

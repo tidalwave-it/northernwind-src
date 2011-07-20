@@ -34,5 +34,5 @@ public interface PageView
   {
     public void setCaption (@Nonnull String caption);
 
-    public void setContent (@Nonnull Object content);
+    public void setContents (@Nonnull Object content);
   }

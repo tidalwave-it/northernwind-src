@@ -39,5 +39,6 @@ public class NorthernWindFrontEndApplication extends Application
       {
         log.info("Restarting...");    
         setMainWindow(new VaadinPageView());
+        setTheme("bluebill");
       }
   }

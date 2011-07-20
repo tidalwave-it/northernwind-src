@@ -34,6 +34,11 @@ import com.vaadin.ui.Label;
  **********************************************************************************************************************/
 public class VaadinArticleView extends Label implements ArticleView
   {
+    public VaadinArticleView (final @Nonnull String name) 
+      {
+        setStyleName("component-" + name);
+      }
+    
     @Override
     public void setText (final @Nonnull String string)
       {

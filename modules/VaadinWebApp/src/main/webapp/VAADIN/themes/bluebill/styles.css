@@ -22,12 +22,79 @@
  **********************************************************************************************************************/
 @import "../runo/styles.css";
 
+.small 
+  {
+    font-size: 80%;
+  }
+  
 .v-app 
   {
     background-color:   #f0f0f0;
     background-image:   none;
+    
+    font-family:        Verdana,Geneva,Arial,Helvetica,sans-serif;
+    font-size:          76%;
+    line-height:        1em;
+    text-align:         left;
+    margin:             0;
+    padding:            0;    
   }
   
+.component-page
+  {  
+    width:              1000px;    
+    margin:             0 auto 20px;
+    position:           relative;
+  }
+      
+.component-nav a, .component-nav a:link, .component-nav a:active, .component-nav a:visited 
+  {
+    font-weight:        bold;
+    color:              #35569D;
+    text-align:         left;
+    padding:            5px 10px;
+    margin:             0;
+    display:            block;
+    text-decoration:    none;
+  }
+
+.component-main
+  {
+    background-color:   white;
+    font-size:          1em;
+    line-height:        1.4em;
+    margin:             0 0 1.5em;
+    padding:            0;
+    border-color:       #EEEEEE #D5D5D5 #BDBDBD;
+    border-style:       solid;
+    border-width:       1px;
+    margin-top:         20px;
+  }
+  
+.component-main a, .component-main a:link, .component-main a:visited 
+  {
+    color:              #35569D;
+    font-weight:        bold;
+    text-decoration:    none;
+  }
+
+.component-main h3
+  {
+    font-size:          1.4em;
+    font-weight:        normal;
+    margin-bottom:      15px;      
+    color:              black;
+    line-height:        1.3em;
+    margin:             0 0 0.5em;
+    padding:            0;
+  }
+  
+.component-main td
+  {
+    padding-left:       10px;
+    padding-right:      10px;    
+  }
+
 .v-label-copyright
   {
     font-family:        Verdana, Geneva, Arial, Helvetica, sans-serif;

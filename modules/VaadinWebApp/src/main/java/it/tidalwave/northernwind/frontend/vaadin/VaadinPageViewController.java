@@ -71,8 +71,8 @@ public class VaadinPageViewController implements PageViewController
       {
         log.info("setUri({})", uri);
         pageView.setCaption(uri);
-        final VaadinArticleView vaadinArticleView = new VaadinArticleView();
-        new DefaultArticleViewController(webSiteModel, vaadinArticleView, uri);
-        pageView.setContent(vaadinArticleView);
+        final VaadinArticleView articleView = new VaadinArticleView("main");
+        new DefaultArticleViewController(webSiteModel, articleView, uri);
+        pageView.setContents(articleView);
       } 
   }

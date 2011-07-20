@@ -26,6 +26,7 @@ import it.tidalwave.northernwind.frontend.PageView;
 import it.tidalwave.northernwind.frontend.StructureLink;
 import it.tidalwave.northernwind.frontend.PageViewController;
 import com.vaadin.terminal.FileResource;
+import com.vaadin.ui.AbstractLayout;
 import javax.annotation.Nonnull;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
@@ -50,15 +51,15 @@ public class VaadinPageView extends Window implements PageView
       {
         log.info("VaadinPageView()");
         controller = new VaadinPageViewController(this); 
-        log.info("Stoca");
+        setStyleName("component-" + "page");
+        ((AbstractLayout)getContent()).setMargin(false);
       }
 
     @Override
-    public void setContent (final @Nonnull Object content) 
+    public void setContents (final @Nonnull Object content) 
       {
         removeAllComponents();
-        setBorder(0);
-        final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView();
+        final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
         menuView.setLinks(Arrays.asList
           (
             new StructureLink("Home", "/"),
