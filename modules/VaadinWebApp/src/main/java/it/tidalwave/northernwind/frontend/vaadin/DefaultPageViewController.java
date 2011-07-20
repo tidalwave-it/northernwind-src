@@ -26,9 +26,7 @@ import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
 import it.tidalwave.northernwind.frontend.vaadin.component.article.DefaultArticleViewController;
 import it.tidalwave.northernwind.frontend.vaadin.component.article.VaadinArticleView;
-import java.io.File;
 import java.net.URL;
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +37,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@Slf4j
 public class DefaultPageViewController implements PageViewController 
   {
-    private final File root = new File("/workarea/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export");
-
     private final URIHandler uriHandler = new URIHandler()
       {
         @Override
@@ -51,30 +47,30 @@ public class DefaultPageViewController implements PageViewController
                                          final @Nonnull String relativeUri) 
           {
             log.info("uri: {}", relativeUri);
-            setRelativeUri(relativeUri);
+            setUri(relativeUri);
             return null; 
           }
       };
     
     @Nonnull
-    private final PageView view;
+    private final PageView pageView;
     
-    @CheckForNull
-    private WebSiteModel pageModel;
+    private final WebSiteModel webSiteModel = new DefaultWebSiteModel();
 
-    public DefaultPageViewController (final @Nonnull VaadinPageView view) 
+    public DefaultPageViewController (final @Nonnull VaadinPageView pageView) 
       {
-        this.view = view;
-        view.addURIHandler(uriHandler);
+        log.info("DefaultPageViewController()");
+        this.pageView = pageView;
+        pageView.addURIHandler(uriHandler);
+        log.info(">>>> registered URI handler");
       }
     
-    private void setRelativeUri (final @Nonnull String relativeUri) 
+    private void setUri (final @Nonnull String uri) 
       {
-        pageModel = new DefaultWebSiteModel(relativeUri);
-        view.setCaption(relativeUri);
+        log.info("setUri({})", uri);
+        pageView.setCaption(uri);
         final VaadinArticleView vaadinArticleView = new VaadinArticleView();
-        final Content resource = new Content(new File(root, "content/document/" + relativeUri));
-        new DefaultArticleViewController(vaadinArticleView, resource);
-        view.setContent(vaadinArticleView);
+        new DefaultArticleViewController(webSiteModel, vaadinArticleView, uri);
+        pageView.setContent(vaadinArticleView);
       } 
   }

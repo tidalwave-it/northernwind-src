@@ -23,9 +23,13 @@
 package it.tidalwave.northernwind.frontend.vaadin;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.annotation.Nonnull;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -33,9 +37,24 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class Content 
   {
-    @Nonnull @Getter
+    @Nonnull
     private final File path;    
+    
+    @Nonnull
+    public <Type> Type get (final @Nonnull String attribute, final @Nonnull Class<Type> type)
+      throws IOException
+      {
+        log.info("get({}, {})", attribute, type);
+        final File file = new File(path, attribute);
+        log.info(">>>> reading from {}", file.getAbsolutePath());
+        @Cleanup final FileReader fr = new FileReader(file);
+        final char[] chars = new char[(int)file.length()];
+        fr.read(chars);
+        fr.close();
+        
+        return (Type)new String(chars);
+      }
   }

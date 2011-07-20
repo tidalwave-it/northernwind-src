@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.vaadin;
 
 import com.vaadin.Application;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -30,11 +31,13 @@ import com.vaadin.Application;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class NorthernWindFrontEndApplication extends Application
   {
     @Override
     public void init() 
       {
+        log.info("Restarting...");    
         setMainWindow(new VaadinPageView());
       }
   }

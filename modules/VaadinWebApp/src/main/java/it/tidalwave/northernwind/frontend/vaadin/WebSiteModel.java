@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
+import javax.annotation.Nonnull;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,5 +32,6 @@ package it.tidalwave.northernwind.frontend.vaadin;
  **********************************************************************************************************************/
 public interface WebSiteModel 
   {
-    
+    @Nonnull
+    public Content getContent (@Nonnull String relativeUri);    
   }

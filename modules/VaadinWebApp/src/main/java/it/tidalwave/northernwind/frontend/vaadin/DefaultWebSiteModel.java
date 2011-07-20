@@ -22,8 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
+import java.io.File;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -31,9 +33,15 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class DefaultWebSiteModel implements WebSiteModel 
   {
-    @Nonnull
-    private final String relativeUri;
+    private final File root = new File("/workarea/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export");
+    
+    @Override @Nonnull
+    public Content getContent (final @Nonnull String uri) 
+      {
+        log.info("getContent({})", uri);
+        return new Content(new File(root, "content/document/" + uri));
+      }
   }

@@ -45,7 +45,9 @@ public class VaadinPageView extends Window implements PageView
     
     public VaadinPageView() 
       {
-        controller = new DefaultPageViewController(this);
+        log.info("VaadinPageView()");
+        controller = new DefaultPageViewController(this); 
+        log.info("Stoca");
       }
 
     @Override

@@ -23,11 +23,9 @@
 package it.tidalwave.northernwind.frontend.vaadin.component.article;
 
 import it.tidalwave.northernwind.frontend.vaadin.Content;
-import java.io.File;
-import java.io.FileReader;
+import it.tidalwave.northernwind.frontend.vaadin.WebSiteModel;
 import java.io.IOException;
 import javax.annotation.Nonnull;
-import lombok.Cleanup;
 
 /***********************************************************************************************************************
  *
@@ -37,20 +35,14 @@ import lombok.Cleanup;
  **********************************************************************************************************************/
 public class DefaultArticleViewController implements ArticleViewController
   {
-    private final Content resource;
-    
-    public DefaultArticleViewController (final @Nonnull ArticleView articleView, final @Nonnull Content resource) 
+    public DefaultArticleViewController (final @Nonnull WebSiteModel webSiteModel,
+                                         final @Nonnull ArticleView articleView, 
+                                         final @Nonnull String uri) 
       {
-        this.resource = resource;
-        final File file = new File(resource.getPath(), "FullText_en.html");
-        
         try
           {
-            @Cleanup final FileReader fr = new FileReader(file);
-            final StringBuilder builder = new StringBuilder();
-            final char[] chars = new char[(int)file.length()];
-            fr.read(chars);
-            articleView.setText(new String(chars));
+            final Content content = webSiteModel.getContent(uri);
+            articleView.setText(content.get("FullText_en.html", String.class));
           }
         catch (IOException e)
           {
