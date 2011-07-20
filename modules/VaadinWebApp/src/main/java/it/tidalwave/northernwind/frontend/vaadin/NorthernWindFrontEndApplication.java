@@ -1,6 +1,6 @@
 /***********************************************************************************************************************
  *
- * blueBill Stats
+ * NorthernWind - lightweight CMS
  * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
  *
  ***********************************************************************************************************************
@@ -16,8 +16,8 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://bluebill.tidalwave.it/mobile/
- * SCM: http://java.net/hg/bluebill-server~stats-src
+ * WWW: http://northernwind.java.net
+ * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
