@@ -62,7 +62,7 @@ public class DefaultPageViewController implements PageViewController
     @CheckForNull
     private WebSiteModel pageModel;
 
-    public DefaultPageViewController (final @Nonnull NorthernWindMainWindow view) 
+    public DefaultPageViewController (final @Nonnull VaadinPageView view) 
       {
         this.view = view;
         view.addURIHandler(uriHandler);

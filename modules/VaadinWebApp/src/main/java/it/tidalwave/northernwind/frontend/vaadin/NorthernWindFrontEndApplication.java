@@ -35,6 +35,6 @@ public class NorthernWindFrontEndApplication extends Application
     @Override
     public void init() 
       {
-        setMainWindow(new NorthernWindMainWindow());
+        setMainWindow(new VaadinPageView());
       }
   }

@@ -39,11 +39,11 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class NorthernWindMainWindow extends Window implements PageView
+public class VaadinPageView extends Window implements PageView
   {
     private final PageViewController controller;
     
-    public NorthernWindMainWindow() 
+    public VaadinPageView() 
       {
         controller = new DefaultPageViewController(this);
       }
