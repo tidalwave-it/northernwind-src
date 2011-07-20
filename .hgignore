@@ -1,0 +1,12 @@
+target
+\.repository
+\.revision
+\.classpath
+\.project
+\.settings
+release.properties
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$

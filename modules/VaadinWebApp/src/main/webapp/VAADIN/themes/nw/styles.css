@@ -1,0 +1,18 @@
+@import "../runo/styles.css";
+
+.v-app 
+  {
+    background-color:   #f0f0f0;
+    background-image:   none;
+  }
+  
+.v-label-copyright
+  {
+    font-family:        Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size:          10px;
+    color:              black;
+    font-style:         italic;
+    text-align:         left;
+    margin-top:         10px;
+  }
+
