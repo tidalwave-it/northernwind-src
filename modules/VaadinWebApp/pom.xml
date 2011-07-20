@@ -16,5 +16,17 @@
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <name>NorthernWind - Vaadin Webapp</name>
     <description>NorthernWind - Vaadin Webapp</description>
+    
+    <properties>
+        <tft.webapp.contextPath>${main.webapp.contextPath}</tft.webapp.contextPath>
+        <changeSet>null</changeSet>
+        <netbeans.hint.deploy.server>Tomcat70</netbeans.hint.deploy.server>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin</artifactId>
+        </dependency>
+    </dependencies>
 </project>

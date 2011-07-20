@@ -42,7 +42,6 @@
 
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
-        <legacy.webapp.contextPath>/mobilestatslegacy</legacy.webapp.contextPath>
         <tft.webapp.deployServerId>tidalwave.it</tft.webapp.deployServerId>
         <tft.webapp.deployServerUrl>http://www.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
 

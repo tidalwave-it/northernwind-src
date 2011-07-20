@@ -35,7 +35,7 @@
     </context-param>
     
     <!-- Jersey (REST) configuration -->
-    <servlet>
+<!--    <servlet>
         <servlet-name>JerseyServlet</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
         <init-param>
@@ -47,7 +47,7 @@
     <servlet-mapping>
         <servlet-name>JerseyServlet</servlet-name>
         <url-pattern>/api/*</url-pattern>    
-    </servlet-mapping>
+    </servlet-mapping>-->
 
     <!-- Vaadin configuration -->
     <servlet>
@@ -55,7 +55,7 @@
         <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>it.tidalwave.bluebill.stats.webapp.StatsApplication</param-value>
+            <param-value>it.tidalwave.northernwind.frontend.vaadin.NorthernWindFrontEndApplication</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
         <!--        <init-param>
