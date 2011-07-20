@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.frontend.vaadin.component.view;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
-import it.tidalwave.northernwind.frontend.vaadin.ResourceLink;
+import it.tidalwave.northernwind.frontend.vaadin.StructureLink;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -38,9 +38,9 @@ import javax.annotation.Nonnull;
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
     @Override
-    public void setLinks (final @Nonnull List<ResourceLink> links) 
+    public void setLinks (final @Nonnull List<StructureLink> links) 
       {
-        for (final ResourceLink link : links)
+        for (final StructureLink link : links)
           {  
             addComponent(new Link(link.getText(), new ExternalResource("/nw" + link.getUri())));                
           }

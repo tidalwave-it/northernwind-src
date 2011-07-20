@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import java.io.File;
 import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +32,12 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
-public class Resource 
+@RequiredArgsConstructor @Getter
+public class StructureLink
   {
-    @Nonnull @Getter
-    private final File path;    
+    @Nonnull
+    private final String text;
+    
+    @Nonnull
+    private final String uri;
   }

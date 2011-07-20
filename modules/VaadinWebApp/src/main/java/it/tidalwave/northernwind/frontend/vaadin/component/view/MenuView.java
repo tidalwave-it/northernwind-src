@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin.component.view;
 
-import it.tidalwave.northernwind.frontend.vaadin.ResourceLink;
+import it.tidalwave.northernwind.frontend.vaadin.StructureLink;
 import java.util.List;
 import javax.annotation.Nonnull;
 
@@ -34,5 +34,5 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface MenuView 
   {
-    public void setLinks (@Nonnull List<ResourceLink> links);
+    public void setLinks (@Nonnull List<StructureLink> links);
   }

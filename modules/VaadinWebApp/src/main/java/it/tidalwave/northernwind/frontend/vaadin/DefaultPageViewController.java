@@ -73,7 +73,7 @@ public class DefaultPageViewController implements PageViewController
         pageModel = new DefaultWebSiteModel(relativeUri);
         view.setCaption(relativeUri);
         final VaadinArticleView vaadinArticleView = new VaadinArticleView();
-        final Resource resource = new Resource(new File(root, "content/document/" + relativeUri));
+        final Content resource = new Content(new File(root, "content/document/" + relativeUri));
         new DefaultArticleViewController(vaadinArticleView, resource);
         view.setContent(vaadinArticleView);
       } 
