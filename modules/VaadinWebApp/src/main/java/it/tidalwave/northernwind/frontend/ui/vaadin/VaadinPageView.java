@@ -33,6 +33,7 @@ import com.vaadin.ui.Window;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -67,18 +68,22 @@ public class VaadinPageView extends Window implements PageView
         removeAllComponents();
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
         
+        try {
         menuView.setLinks(Arrays.asList
           (
-            webSiteModel.getNode("/"),
-            webSiteModel.getNode("/Features"),
-            webSiteModel.getNode("/Download"),
-            webSiteModel.getNode("/Screenshots"),
-            webSiteModel.getNode("/Getting started"),
-            webSiteModel.getNode("/Blog & News (new)"),
-            webSiteModel.getNode("/Contact"),
-            webSiteModel.getNode("/License"),
-            webSiteModel.getNode("/Developers")
-          ));
+            "/",
+            "/Features",
+            "/Download",
+            "/Screenshots",
+            "/Getting started",
+            "/Blog & News (new)",
+            "/Contact",
+            "/License",
+            "/Developers"
+          )); }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         
         final Media media = webSiteModel.getMedia("/content/media/blueBill_Mobile-Banner.png");
         addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));

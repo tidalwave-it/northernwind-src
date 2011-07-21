@@ -23,15 +23,16 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
+import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import java.util.List;
-
 import javax.annotation.Nonnull;
-
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
 import it.tidalwave.northernwind.frontend.model.Node;
 import java.io.IOException;
+import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -39,8 +40,12 @@ import java.io.IOException;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable(preConstruction=true) 
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
+    @Nonnull @Inject
+    private WebSiteModel webSiteModel;
+    
     public VaadinHorizontalMenuView (final @Nonnull String name) 
       {
         setMargin(false);
@@ -48,14 +53,14 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
       }
     
     @Override
-    public void setLinks (final @Nonnull List<Node> nodes) 
+    public void setLinks (final @Nonnull List<String> relativeUris) 
       throws IOException
       {
-        for (final Node node : nodes)
+        for (final String relativeUri : relativeUris)
           {  
-            final String uri = node.getUri();
+            final Node node = webSiteModel.getNode(relativeUri);
             final String navigationTitle = node.getProperties().getProperty("NavigationTitle");
-            addComponent(new Link(navigationTitle, new ExternalResource("/nw" + uri)));                
+            addComponent(new Link(navigationTitle, new ExternalResource("/nw" + relativeUri)));                
           }
       }
   }
