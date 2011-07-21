@@ -27,10 +27,12 @@ import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArti
 import java.io.File;
 import java.io.IOException;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -38,22 +40,21 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j
 public class Node 
   {
+    @Nonnull @Inject
+    private WebSiteModel webSiteModel;
+    
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
-    
-    @Nonnull
-    private final WebSiteModel webSiteModel;
     
     @Nonnull @Getter
     private final String uri;
 
-    public Node (final @Nonnull WebSiteModel webSiteModel, final @Nonnull File file, final @Nonnull String uri)
+    public Node (final @Nonnull File file, final @Nonnull String uri)
       {
         resource = new Resource(file);  
-        this.webSiteModel = webSiteModel;
         this.uri = uri;
       }
 
@@ -63,7 +64,7 @@ public class Node
       {
         final String contentUri = resource.getProperties().getProperty("main.content");
         final VaadinArticleView articleView = new VaadinArticleView("main");
-        new DefaultArticleViewController(webSiteModel, articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+        new DefaultArticleViewController(articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
         return articleView;
       }
   }

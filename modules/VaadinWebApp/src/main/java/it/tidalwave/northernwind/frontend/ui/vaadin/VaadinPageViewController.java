@@ -30,8 +30,9 @@ import com.vaadin.terminal.URIHandler;
 import it.tidalwave.northernwind.frontend.model.Node;
 import java.net.URL;
 import javax.annotation.Nonnull;
-import lombok.Getter;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -39,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Configurable(preConstruction=true) @Slf4j
 public class VaadinPageViewController implements PageViewController 
   {
     private final URIHandler uriHandler = new URIHandler()
@@ -56,9 +57,9 @@ public class VaadinPageViewController implements PageViewController
     
     @Nonnull
     private final PageView pageView;
-    
-    @Getter
-    private final WebSiteModel webSiteModel = new DefaultWebSiteModel();
+
+    @Nonnull @Inject
+    private WebSiteModel webSiteModel;
 
     public VaadinPageViewController (final @Nonnull VaadinPageView pageView) 
       {

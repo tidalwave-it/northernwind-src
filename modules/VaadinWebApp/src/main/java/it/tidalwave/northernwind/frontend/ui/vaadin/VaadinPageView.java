@@ -34,7 +34,9 @@ import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import java.io.IOException;
 import java.util.Arrays;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -42,9 +44,12 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Configurable(preConstruction=true) @Slf4j
 public class VaadinPageView extends Window implements PageView
   {
+    @Nonnull @Inject
+    private WebSiteModel webSiteModel;
+    
     private final VaadinPageViewController controller;
     
     public VaadinPageView() 
@@ -62,21 +67,20 @@ public class VaadinPageView extends Window implements PageView
         removeAllComponents();
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
         
-        final WebSiteModel w = controller.getWebSiteModel();
         menuView.setLinks(Arrays.asList
           (
-            w.getNode("/"),
-            w.getNode("/Features"),
-            w.getNode("/Download"),
-            w.getNode("/Screenshots"),
-            w.getNode("/Getting started"),
-            w.getNode("/Blog & News (new)"),
-            w.getNode("/Contact"),
-            w.getNode("/License"),
-            w.getNode("/Developers")
+            webSiteModel.getNode("/"),
+            webSiteModel.getNode("/Features"),
+            webSiteModel.getNode("/Download"),
+            webSiteModel.getNode("/Screenshots"),
+            webSiteModel.getNode("/Getting started"),
+            webSiteModel.getNode("/Blog & News (new)"),
+            webSiteModel.getNode("/Contact"),
+            webSiteModel.getNode("/License"),
+            webSiteModel.getNode("/Developers")
           ));
         
-        final Media media = w.getMedia("/content/media/blueBill_Mobile-Banner.png");
+        final Media media = webSiteModel.getMedia("/content/media/blueBill_Mobile-Banner.png");
         addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));
         addComponent(menuView);
         addComponent((Component)content);

@@ -42,4 +42,12 @@
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
 
+    <!-- Turns on @Autowired, @PostConstruct, etc. -->
+    <context:annotation-config />
+   
+    <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
+    <context:spring-configured />
+
+    <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSiteModel" />
+       
 </beans>

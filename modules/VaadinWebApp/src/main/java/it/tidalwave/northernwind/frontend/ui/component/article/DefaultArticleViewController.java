@@ -26,6 +26,8 @@ import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import java.io.IOException;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -33,11 +35,13 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable(preConstruction=true)
 public class DefaultArticleViewController implements ArticleViewController
   {
-    public DefaultArticleViewController (final @Nonnull WebSiteModel webSiteModel,
-                                         final @Nonnull ArticleView articleView, 
-                                         final @Nonnull String uri) 
+    @Nonnull @Inject
+    private WebSiteModel webSiteModel;
+    
+    public DefaultArticleViewController (final @Nonnull ArticleView articleView, final @Nonnull String uri) 
       {
         try
           {

@@ -65,7 +65,7 @@ public class DefaultWebSiteModel implements WebSiteModel
       throws UnsupportedEncodingException 
       {
         log.info("getNode({})", uri);
-        return new Node(this, new File(root, "structure/" + encode(uri)), uri);
+        return new Node(new File(root, "structure/" + encode(uri)), uri);
       }
     
     @Nonnull
