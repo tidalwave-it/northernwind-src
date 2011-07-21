@@ -85,7 +85,7 @@ public class VaadinPageView extends Window implements PageView
             throw new RuntimeException(e);
         }
         
-        final Media media = webSiteModel.getMedia("/content/media/blueBill_Mobile-Banner.png");
+        final Media media = webSiteModel.getMedia("blueBill_Mobile-Banner.png");
         addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));
         addComponent(menuView);
         addComponent((Component)content);
