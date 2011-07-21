@@ -28,8 +28,8 @@ import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.WebSite;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
+import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleView.*;
 
 /***********************************************************************************************************************
