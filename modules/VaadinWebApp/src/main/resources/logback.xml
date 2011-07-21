@@ -24,8 +24,7 @@
 <configuration debug="true"> 
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>/tmp/nw.log</file>
-        <!-- file>${log.file}</file -->
+        <file>${log.file}</file>
         <append>true</append>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%-20.20(%thread)] %-5level %-50logger{50} - %msg%n</pattern>

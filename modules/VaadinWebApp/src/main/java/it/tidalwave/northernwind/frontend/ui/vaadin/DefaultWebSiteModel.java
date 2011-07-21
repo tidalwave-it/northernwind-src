@@ -71,10 +71,10 @@ public class DefaultWebSiteModel implements WebSiteModel
         documentFolder = new File(rootFile, documentPath);
         mediaFolder = new File(rootFile, mediaPath);
         nodeFolder = new File(rootFile, nodePath);
-        log.info(">>>> rootPath: {}", rootFile.getAbsolutePath());
+        log.info(">>>> rootPath:     {}", rootFile.getAbsolutePath());
         log.info(">>>> documentPath: {}", documentFolder.getAbsolutePath());
-        log.info(">>>> mediaPath: {}", mediaFolder.getAbsolutePath());
-        log.info(">>>> nodePath: {}", nodeFolder.getAbsolutePath());
+        log.info(">>>> mediaPath:    {}", mediaFolder.getAbsolutePath());
+        log.info(">>>> nodePath:     {}", nodeFolder.getAbsolutePath());
       }
     
     @Override @Nonnull

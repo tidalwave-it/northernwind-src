@@ -42,6 +42,17 @@
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
 
+<!--    <context:property-placeholder  location="classpath:datasource.properties"/>-->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:configuration.properties</value>
+                <value>file:${configuration.parentFolderPath}/${configuration.folderName}/configuration.properties</value>
+            </list>
+        </property>
+    </bean>
+    
     <!-- Turns on @Autowired, @PostConstruct, etc. -->
     <context:annotation-config />
    
@@ -49,10 +60,10 @@
     <context:spring-configured />
 
     <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSiteModel">
-        <property name="rootPath" value="/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export" />
-        <property name="documentPath" value="content/document" />
-        <property name="mediaPath" value="content/media" />
-        <property name="nodePath" value="structure" />
+        <property name="rootPath" value="${nw.rootPath}" />
+        <property name="documentPath" value="${nw.documentPath}" />
+        <property name="mediaPath" value="${nw.mediaPath}" />
+        <property name="nodePath" value="${nw.nodePath}" />
     </bean>
        
 </beans>
