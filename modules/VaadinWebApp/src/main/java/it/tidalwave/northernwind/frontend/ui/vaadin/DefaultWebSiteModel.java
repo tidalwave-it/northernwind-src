@@ -30,8 +30,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import lombok.Getter;
@@ -92,11 +92,11 @@ public class DefaultWebSiteModel implements WebSiteModel
     
     private File nodeFolder; 
     
-    private final Map<String, Content> documentMapByRelativeUri = new HashMap<String, Content>();
+    private final Map<String, Content> documentMapByRelativeUri = new TreeMap<String, Content>();
     
-    private final Map<String, Media> mediaMapByRelativeUri = new HashMap<String, Media>();
+    private final Map<String, Media> mediaMapByRelativeUri = new TreeMap<String, Media>();
     
-    private final Map<String, Node> nodeMapByRelativeUri = new HashMap<String, Node>();
+    private final Map<String, Node> nodeMapByRelativeUri = new TreeMap<String, Node>();
         
     @PostConstruct
     public void initialize()
@@ -198,4 +198,10 @@ public class DefaultWebSiteModel implements WebSiteModel
               } 
           }
       }  
+    
+    @Nonnull
+    private static String r (final @Nonnull String s)
+      {
+        return "".equals(s) ? "/" : s;  
+      }
   }

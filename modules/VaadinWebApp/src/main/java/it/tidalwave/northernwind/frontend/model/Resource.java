@@ -34,10 +34,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -46,11 +48,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor @Slf4j // @ToString
 public class Resource 
   {
     @Nonnull @Getter
     private final File file;    
+    
+    @CheckForNull
+    private transient TypeSafeMap properties; 
         
     /*******************************************************************************************************************
      *
@@ -118,39 +123,44 @@ public class Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    private TypeSafeMap getProperties()
+    private synchronized  TypeSafeMap getProperties()
       throws IOException
       {
-        log.info("getProperties()");
-        final Properties properties = new Properties();
-        File f = new File(file, "Resource_en.properties");
-        
-        if (!f.exists())
+        if (properties == null)
           {
-            f = new File(file, "OverrideResource_en.properties");
-          }
-        
-        if (!f.exists())
-          {
-            log.warn("No properties for {}", file);
-          }
-        else
-          {
-            log.info(">>>> reading properties from {}...", f.getAbsolutePath());
-            @Cleanup final Reader r = new FileReader(f);
-            properties.load(r);
-            r.close();        
+            log.info("getProperties()");
+            final Properties tempProperties = new Properties();
+            File f = new File(file, "Resource_en.properties");
 
-            log.info(">>>> properties: {}", properties);
+            if (!f.exists())
+              {
+                f = new File(file, "OverrideResource_en.properties");
+              }
+
+            if (!f.exists())
+              {
+                log.warn("No properties for {}", file);
+              }
+            else
+              {
+                log.info(">>>> reading properties from {}...", f.getAbsolutePath());
+                @Cleanup final Reader r = new FileReader(f);
+                tempProperties.load(r);
+                r.close();        
+
+                log.info(">>>> properties: {}", tempProperties);
+              }
+
+            final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
+
+            for (final Entry<Object, Object> entry : tempProperties.entrySet())
+              {
+                map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
+              }
+
+            properties = new TypeSafeHashMap(map);
           }
-        
-        final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
-        
-        for (final Entry<Object, Object> entry : properties.entrySet())
-          {
-            map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
-          }
-        
-        return new TypeSafeHashMap(map);
+
+        return properties;
       }
   }

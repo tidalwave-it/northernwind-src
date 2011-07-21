@@ -71,8 +71,7 @@ public class VaadinPageView extends Window implements PageView
         try {
         menuView.setLinks(Arrays.asList
           (
-//            "/",
-            "",
+            "/",
             "/Features",
             "/Download",
             "/Screenshots",

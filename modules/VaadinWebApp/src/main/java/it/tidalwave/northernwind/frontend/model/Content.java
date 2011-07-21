@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.model;
 import java.io.File;
 import javax.annotation.Nonnull;
 import lombok.Delegate;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -33,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j @ToString
 public class Content 
   {
     @Nonnull @Delegate(types=Resource.class)

@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -42,7 +43,7 @@ import org.springframework.beans.factory.annotation.Configurable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @To String
 public class Node 
   {
     public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
