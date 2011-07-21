@@ -69,7 +69,7 @@ public class DefaultWebSiteModel implements WebSiteModel
           }
       };
     
-    static interface FolderVisitor // FIXME: rename to FileVisitor
+    static interface FileVisitor 
       {
         public void visit (@Nonnull File file, @Nonnull String relativeUri);   
       }
@@ -120,7 +120,7 @@ public class DefaultWebSiteModel implements WebSiteModel
         log.info(">>>> mediaPath:    {}", mediaFolder.getAbsolutePath());
         log.info(">>>> nodePath:     {}", nodeFolder.getAbsolutePath());
         
-        accept(documentFolder, DIRECTORY_FILTER, new FolderVisitor() 
+        accept(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
             public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
@@ -129,7 +129,7 @@ public class DefaultWebSiteModel implements WebSiteModel
               }
           });
         
-        accept(mediaFolder, FILE_FILTER, new FolderVisitor() 
+        accept(mediaFolder, FILE_FILTER, new FileVisitor() 
           {
             @Override
             public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
@@ -138,7 +138,7 @@ public class DefaultWebSiteModel implements WebSiteModel
               }
           });
         
-        accept(nodeFolder, DIRECTORY_FILTER, new FolderVisitor() 
+        accept(nodeFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
             public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
@@ -158,11 +158,11 @@ public class DefaultWebSiteModel implements WebSiteModel
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content findContentByUri (final @Nonnull String uri) 
+    public Content findContentByUri (final @Nonnull String relativeUri) 
       throws NotFoundException 
       {
-        log.info("findContentByUri({})", uri);
-        return NotFoundException.throwWhenNull(documentMapByRelativeUri.get(uri), uri + ": " + documentMapByRelativeUri.keySet());
+        log.info("findContentByUri({})", relativeUri);
+        return safeGet(documentMapByRelativeUri, relativeUri);
       }
     
     /*******************************************************************************************************************
@@ -171,11 +171,11 @@ public class DefaultWebSiteModel implements WebSiteModel
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media findMediaByUri (final @Nonnull String uri) 
+    public Media findMediaByUri (final @Nonnull String relativeUri) 
       throws NotFoundException 
       {
-        log.info("findMediaByUri({})", uri);
-        return NotFoundException.throwWhenNull(mediaMapByRelativeUri.get(uri), uri + ": " + mediaMapByRelativeUri.keySet());
+        log.info("findMediaByUri({})", relativeUri);
+        return safeGet(mediaMapByRelativeUri, relativeUri);
       }
     
     /*******************************************************************************************************************
@@ -184,45 +184,23 @@ public class DefaultWebSiteModel implements WebSiteModel
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Node findNodeByUri (final @Nonnull String uri) 
+    public Node findNodeByUri (final @Nonnull String relativeUri) 
       throws NotFoundException 
       {
-        log.info("findNodeByUri({})", uri);
-        return NotFoundException.throwWhenNull(nodeMapByRelativeUri.get(uri), uri + ": " + nodeMapByRelativeUri.keySet());
+        log.info("findNodeByUri({})", relativeUri);
+        return safeGet(nodeMapByRelativeUri, relativeUri);
       }
     
     /*******************************************************************************************************************
      *
-     * Decodes an URL-encoded URI
-     * 
-     * @param   uri   the URL-encoded URI
-     * @return        the plain text URI
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String decode (final @Nonnull String uri)
-      throws UnsupportedEncodingException
-      {
-        final StringBuilder builder = new StringBuilder();
-        
-        for (final String part : uri.split("/"))
-          {
-            builder.append("/").append(URLDecoder.decode(part, "UTF-8"));
-          }
-        
-        return builder.toString();
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * Accepts a {@link FolderVisitor} to visit a file or folder.
+     * Accepts a {@link FileVisitor} to visit a file or folder.
      * 
      * @param  file        the file to visit
      * @param  fileFilter  the filter for directory contents
      * @param  visitor     the visitor
      *
      ******************************************************************************************************************/
-    private void accept (final @Nonnull File file, final @Nonnull FileFilter fileFilter,  final @Nonnull FolderVisitor visitor)
+    private void accept (final @Nonnull File file, final @Nonnull FileFilter fileFilter, final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
         log.info("accept({}}", file, fileFilter);
@@ -238,6 +216,38 @@ public class DefaultWebSiteModel implements WebSiteModel
               } 
           }
       }  
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private static <T> T safeGet (final @Nonnull Map<String, T> map, final @Nonnull String relativeUri) 
+      throws NotFoundException
+      {
+        return NotFoundException.throwWhenNull(map.get(relativeUri), relativeUri + ": " + map.keySet());        
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Decodes an URL-encoded URI
+     * 
+     * @param   uri   the URL-encoded URI
+     * @return        the plain text URI
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String decode (final @Nonnull String uri)
+      throws UnsupportedEncodingException
+      {
+        final StringBuilder builder = new StringBuilder();
+        
+        for (final String part : uri.split("/"))
+          {
+            builder.append("/").append(URLDecoder.decode(part, "UTF-8"));
+          }
+        
+        return builder.toString();
+      }
     
     /*******************************************************************************************************************
      *
