@@ -59,7 +59,7 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
         for (final String relativeUri : relativeUris)
           {  
             final Node node = webSiteModel.getNode(relativeUri);
-            final String navigationTitle = node.getProperties().get(Node.PROP_NAVIGATION_TITLE, "no nav. title");
+            final String navigationTitle = node.getProperty(Node.PROP_NAVIGATION_TITLE, "no nav. title");
             addComponent(new Link(navigationTitle, new ExternalResource("/nw" + relativeUri)));                
           }
       }

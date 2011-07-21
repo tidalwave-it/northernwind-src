@@ -67,7 +67,7 @@ public class Node
       throws IOException, NotFoundException
       {
         final Key<String> K = new Key<String>("main.content");
-        final String contentUri = resource.getProperties().get(K);
+        final String contentUri = resource.getProperty(K);
         final VaadinArticleView articleView = new VaadinArticleView("main");
         new DefaultArticleViewController(articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
         return articleView;

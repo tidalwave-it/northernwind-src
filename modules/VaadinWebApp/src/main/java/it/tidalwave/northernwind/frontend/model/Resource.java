@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -49,6 +50,10 @@ public class Resource
     @Nonnull @Getter
     private final File file;    
         
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public <Type> Type get (final @Nonnull String attribute, final @Nonnull Class<Type> type)
       throws IOException
@@ -64,6 +69,32 @@ public class Resource
         return (Type)new String(chars);
       }  
     
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public <T> T getProperty (@Nonnull Key<T> key)
+      throws NotFoundException, IOException
+      {
+        return getProperties().get(key);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public <T> T getProperty (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
+      throws IOException
+      {
+        return getProperties().get(key, defaultValue);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getProperties()
       throws IOException
