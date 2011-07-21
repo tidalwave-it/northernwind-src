@@ -32,5 +32,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util</artifactId>
+            <version>1.12.5</version>
+            <type>nbm</type>
+        </dependency>
     </dependencies>
 </project>

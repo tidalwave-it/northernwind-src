@@ -28,6 +28,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Configurable;
+import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleView.*;
 
 /***********************************************************************************************************************
  *
@@ -46,7 +47,7 @@ public class DefaultArticleViewController implements ArticleViewController
         try
           {
             final Content content = webSiteModel.getContent(uri);
-            articleView.setText(content.get("FullText_en.html", String.class));
+            articleView.setText(content.get(ATTR_FULL_TEXT, String.class));
           }
         catch (IOException e)
           {

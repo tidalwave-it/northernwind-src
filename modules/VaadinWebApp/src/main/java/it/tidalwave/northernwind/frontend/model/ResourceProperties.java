@@ -20,19 +20,15 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
+package it.tidalwave.northernwind.frontend.model;
 
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
-import java.util.List;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.TypeSafeHashMap;
+import it.tidalwave.util.TypeSafeMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Link;
-import it.tidalwave.northernwind.frontend.model.Node;
-import java.io.IOException;
-import javax.inject.Inject;
-import org.springframework.beans.factory.annotation.Configurable;
+import lombok.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -40,27 +36,26 @@ import org.springframework.beans.factory.annotation.Configurable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) 
-public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
+public class ResourceProperties
   {
-    @Nonnull @Inject
-    private WebSiteModel webSiteModel;
+    @Delegate(types=TypeSafeMap.class)
+    private final TypeSafeMap propertyMap;
     
-    public VaadinHorizontalMenuView (final @Nonnull String name) 
+    protected ResourceProperties (final Map<Key<?>, Object> propertyMap)
       {
-        setMargin(false);
-        setStyleName("component-" + name);
+        this.propertyMap = new TypeSafeHashMap(propertyMap);
       }
     
-    @Override
-    public void setLinks (final @Nonnull List<String> relativeUris) 
-      throws IOException
+    @Nonnull
+    public <T> T get (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
       {
-        for (final String relativeUri : relativeUris)
-          {  
-            final Node node = webSiteModel.getNode(relativeUri);
-            final String navigationTitle = node.getProperties().get(Node.PROP_NAVIGATION_TITLE, "no nav. title");
-            addComponent(new Link(navigationTitle, new ExternalResource("/nw" + relativeUri)));                
+        try
+          {
+            return get(key);
+          }
+        catch (NotFoundException e)
+          {
+            return defaultValue;  
           }
       }
   }

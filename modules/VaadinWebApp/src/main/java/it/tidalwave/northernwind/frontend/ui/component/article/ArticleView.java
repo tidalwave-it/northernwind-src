@@ -32,5 +32,7 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface ArticleView 
   {
+    public static final String ATTR_FULL_TEXT = "FullText_en.html";
+    
     public void setText (@Nonnull String string);
   }

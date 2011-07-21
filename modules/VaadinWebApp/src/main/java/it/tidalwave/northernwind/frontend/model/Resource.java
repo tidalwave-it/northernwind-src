@@ -4,10 +4,14 @@
  */
 package it.tidalwave.northernwind.frontend.model;
 
+import it.tidalwave.util.Key;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import javax.annotation.Nonnull;
 import lombok.Cleanup;
@@ -43,7 +47,7 @@ public class Resource
       }  
     
     @Nonnull
-    public Properties getProperties()
+    public ResourceProperties getProperties()
       throws IOException
       {
         log.info("getProperties()");
@@ -69,6 +73,13 @@ public class Resource
             log.info(">>>> properties: {}", properties);
           }
         
-        return properties;
+        final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
+        
+        for (final Entry<Object, Object> entry : properties.entrySet())
+          {
+            map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
+          }
+        
+        return new ResourceProperties(map);
       }
   }

@@ -24,6 +24,8 @@ package it.tidalwave.northernwind.frontend.model;
 
 import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
 import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 import java.io.File;
 import java.io.IOException;
 import javax.annotation.Nonnull;
@@ -43,6 +45,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j
 public class Node 
   {
+    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
+    
     @Nonnull @Inject
     private WebSiteModel webSiteModel;
     
@@ -60,9 +64,10 @@ public class Node
 
     @Nonnull
     public Object createContents()
-      throws IOException 
+      throws IOException, NotFoundException
       {
-        final String contentUri = resource.getProperties().getProperty("main.content");
+        final Key<String> K = new Key<String>("main.content");
+        final String contentUri = resource.getProperties().get(K);
         final VaadinArticleView articleView = new VaadinArticleView("main");
         new DefaultArticleViewController(articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
         return articleView;
