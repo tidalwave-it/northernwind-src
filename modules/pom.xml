@@ -310,6 +310,7 @@
 
 
     <modules>
+        <module>Core</module>
         <module>VaadinWebApp</module>
     </modules>
 
