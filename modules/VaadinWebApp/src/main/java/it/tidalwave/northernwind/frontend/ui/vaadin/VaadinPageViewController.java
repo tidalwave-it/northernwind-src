@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.net.URL;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.model.Node;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.ui.PageView;
 import it.tidalwave.northernwind.frontend.ui.PageViewController;
 import com.vaadin.terminal.DownloadStream;
@@ -66,7 +66,7 @@ public class VaadinPageViewController implements PageViewController
     private final PageView pageView;
 
     @Nonnull @Inject
-    private WebSiteModel webSiteModel;
+    private WebSite webSite;
 
     /*******************************************************************************************************************
      *
@@ -77,7 +77,6 @@ public class VaadinPageViewController implements PageViewController
      ******************************************************************************************************************/
     public VaadinPageViewController (final @Nonnull VaadinPageView pageView) 
       {
-        log.info("DefaultPageViewController()");
         this.pageView = pageView;
         pageView.addURIHandler(uriHandler);
         log.info(">>>> registered URI handler");
@@ -95,9 +94,9 @@ public class VaadinPageViewController implements PageViewController
         try
           {
             log.info("setUri({})", relativeUri);
-            final Node structure = webSiteModel.findNodeByUri(relativeUri);            
+            final WebSiteNode node = webSite.findNodeByUri(relativeUri);            
 //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-            pageView.setContents(structure.createContents());
+            pageView.setContents(node.createContents());
           }
         catch (Exception e)
           {

@@ -29,7 +29,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
+import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.ui.PageView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import com.vaadin.ui.AbstractLayout;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VaadinPageView extends Window implements PageView
   {
     @Nonnull @Inject
-    private WebSiteModel webSiteModel;
+    private WebSite webSite;
     
     private final VaadinPageViewController controller;
     
@@ -100,7 +100,7 @@ public class VaadinPageView extends Window implements PageView
         
         try // FIXME
           {
-            final Media media = webSiteModel.findMediaByUri("/blueBill_Mobile-Banner.png");
+            final Media media = webSite.findMediaByUri("/blueBill_Mobile-Banner.png");
             addComponent(new Embedded("", new FileResource(media.getFile(), getApplication()))); 
           }
         catch (NotFoundException e) 

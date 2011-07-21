@@ -30,11 +30,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.Node;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
-import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultWebSiteModel implements WebSiteModel 
+public class DefaultWebSite implements WebSite
   {
     private static final FileFilter DIRECTORY_FILTER = new FileFilter()
       {
@@ -99,7 +99,7 @@ public class DefaultWebSiteModel implements WebSiteModel
     
     private final Map<String, Media> mediaMapByRelativeUri = new TreeMap<String, Media>();
     
-    private final Map<String, Node> nodeMapByRelativeUri = new TreeMap<String, Node>();
+    private final Map<String, WebSiteNode> nodeMapByRelativeUri = new TreeMap<String, WebSiteNode>();
         
     /*******************************************************************************************************************
      *
@@ -143,7 +143,7 @@ public class DefaultWebSiteModel implements WebSiteModel
             @Override
             public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
               {
-                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 2)), new Node(folder, relativeUri));
+                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 2)), new WebSiteNode(folder, relativeUri));
               }
           });
         
@@ -184,7 +184,7 @@ public class DefaultWebSiteModel implements WebSiteModel
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Node findNodeByUri (final @Nonnull String relativeUri) 
+    public WebSiteNode findNodeByUri (final @Nonnull String relativeUri) 
       throws NotFoundException 
       {
         log.info("findNodeByUri({})", relativeUri);

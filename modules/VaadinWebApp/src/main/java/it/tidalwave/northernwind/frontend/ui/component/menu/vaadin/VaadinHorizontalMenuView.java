@@ -29,8 +29,8 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
-import it.tidalwave.northernwind.frontend.model.Node;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
     @Nonnull @Inject
-    private WebSiteModel webSiteModel;
+    private WebSite webSite;
     
     /*******************************************************************************************************************
      *
@@ -75,9 +75,9 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
           {  
             try
               {
-                final Node node = webSiteModel.findNodeByUri(relativeUri);
-                final String navigationTitle = node.getProperty(Node.PROP_NAVIGATION_TITLE, "no nav. title");
-                addComponent(new Link(navigationTitle, new ExternalResource(webSiteModel.getContextPath() + relativeUri)));                
+                final WebSiteNode node = webSite.findNodeByUri(relativeUri);
+                final String navigationTitle = node.getProperty(WebSiteNode.PROP_NAVIGATION_TITLE, "no nav. title");
+                addComponent(new Link(navigationTitle, new ExternalResource(webSite.getContextPath() + relativeUri)));                
               }
             catch (IOException e)
               {

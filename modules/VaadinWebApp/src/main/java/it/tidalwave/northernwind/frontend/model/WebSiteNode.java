@@ -23,61 +23,82 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
+import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
+import lombok.Delegate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
- * The model for the whole website, it contains a collection of {@link Content}s, {@link Media} items and 
- * {@link Node}s.
+ * A node of the website, mapped to a given URL.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteModel 
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
+public class WebSiteNode
   {
-    /*******************************************************************************************************************
-     *
-     * Returns the context path for this web site.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getContextPath();
+    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
     
-    /*******************************************************************************************************************
-     *
-     * Finds the {@link Content} bound to the given URI.
-     * 
-     * @param   relativeUri        the URI
-     * @throws  NotFoundException  if the URI is not bound to any content
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Content findContentByUri (@Nonnull String relativeUri)
-      throws NotFoundException, IOException;    
+    @Nonnull @Inject
+    private WebSite webSite;
     
-    /*******************************************************************************************************************
-     *
-     * Finds the {@link Media} item bound to the given URI.
-     * 
-     * @param   relativeUri        the URI
-     * @throws  NotFoundException  if the URI is not bound to any media item
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Media findMediaByUri (@Nonnull String relativeUri)
-      throws NotFoundException, IOException;    
+    @Nonnull @Delegate(types=Resource.class)
+    private final Resource resource;
     
+    @Nonnull @Getter
+    private final String relativeUri;
+
     /*******************************************************************************************************************
      *
-     * Finds the {@link Node} bound to the given URI.
+     * Creates a new instance with the given configuration file and mapped to the given URI.
      * 
-     * @param   relativeUri        the URI
-     * @throws  NotFoundException  if the URI is not bound to any node
+     * @param  file          the file with the configuration
+     * @param  relativeUri   the bound URI
+     *
+     ******************************************************************************************************************/
+    public WebSiteNode (final @Nonnull File file, final @Nonnull String relativeUri)
+      {
+        resource = new Resource(file);  
+        this.relativeUri = relativeUri;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates the UI contents for this {@code WebSiteNode}.
+     * 
+     * @return   the contents
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Node findNodeByUri (@Nonnull String relativeUri) 
-      throws NotFoundException, IOException;    
+    public Object createContents()
+      throws IOException, NotFoundException
+      {
+        // FIXME: this is temporary
+        final Key<String> K = new Key<String>("main.content");
+        final String contentUri = resource.getProperty(K);
+        final VaadinArticleView articleView = new VaadinArticleView("main");
+        new DefaultArticleViewController(articleView, r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", "")));
+        return articleView;
+      }
+        
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String r (final @Nonnull String s)
+      {
+        return "".equals(s) ? "/" : s;  
+      }
   }

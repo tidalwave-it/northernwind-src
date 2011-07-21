@@ -23,82 +23,61 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
-import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
-import lombok.Delegate;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
- * A node of the website, mapped to a given URL.
+ * The model for the whole website, it contains a collection of {@link Content}s, {@link Media} items and 
+ * {@link SiteNode}s.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
-public class Node // TODO: rename to SiteNode
+public interface WebSite
   {
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
-    
-    @Nonnull @Inject
-    private WebSiteModel webSiteModel;
-    
-    @Nonnull @Delegate(types=Resource.class)
-    private final Resource resource;
-    
-    @Nonnull @Getter
-    private final String relativeUri;
-
     /*******************************************************************************************************************
      *
-     * Creates a new instance with the given configuration file and mapped to the given URI.
-     * 
-     * @param  file          the file with the configuration
-     * @param  relativeUri   the bound URI
-     *
-     ******************************************************************************************************************/
-    public Node (final @Nonnull File file, final @Nonnull String relativeUri)
-      {
-        resource = new Resource(file);  
-        this.relativeUri = relativeUri;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Creates the UI contents for this {@code Node}.
-     * 
-     * @return   the contents
+     * Returns the context path for this web site.
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createContents()
-      throws IOException, NotFoundException
-      {
-        // FIXME: this is temporary
-        final Key<String> K = new Key<String>("main.content");
-        final String contentUri = resource.getProperty(K);
-        final VaadinArticleView articleView = new VaadinArticleView("main");
-        new DefaultArticleViewController(articleView, r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", "")));
-        return articleView;
-      }
-        
+    public String getContextPath();
+    
     /*******************************************************************************************************************
      *
+     * Finds the {@link Content} bound to the given URI.
+     * 
+     * @param   relativeUri        the URI
+     * @throws  NotFoundException  if the URI is not bound to any content
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String r (final @Nonnull String s)
-      {
-        return "".equals(s) ? "/" : s;  
-      }
+    public Content findContentByUri (@Nonnull String relativeUri)
+      throws NotFoundException, IOException;    
+    
+    /*******************************************************************************************************************
+     *
+     * Finds the {@link Media} item bound to the given URI.
+     * 
+     * @param   relativeUri        the URI
+     * @throws  NotFoundException  if the URI is not bound to any media item
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Media findMediaByUri (@Nonnull String relativeUri)
+      throws NotFoundException, IOException;    
+    
+    /*******************************************************************************************************************
+     *
+     * Finds the {@link SiteNode} bound to the given URI.
+     * 
+     * @param   relativeUri        the URI
+     * @throws  NotFoundException  if the URI is not bound to any node
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public WebSiteNode findNodeByUri (@Nonnull String relativeUri) 
+      throws NotFoundException, IOException;    
   }

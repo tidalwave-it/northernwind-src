@@ -22,12 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.article;
 
-import it.tidalwave.northernwind.frontend.model.Content;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Content;
+import it.tidalwave.northernwind.frontend.model.WebSite;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleView.*;
@@ -44,7 +44,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleVie
 public class DefaultArticleViewController implements ArticleViewController
   {
     @Nonnull @Inject
-    private WebSiteModel webSiteModel;
+    private WebSite webSite;
     
     /*******************************************************************************************************************
      *
@@ -58,7 +58,7 @@ public class DefaultArticleViewController implements ArticleViewController
       {
         try
           {
-            final Content content = webSiteModel.findContentByUri(relativeUri);
+            final Content content = webSite.findContentByUri(relativeUri);
             articleView.setText(content.getProperty(PROP_FULL_TEXT));
           }
         catch (NotFoundException e)
