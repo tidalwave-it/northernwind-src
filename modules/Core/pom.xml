@@ -12,8 +12,8 @@
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core</artifactId>
-    <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>NorthernWind - Core</name>
     <description>NorthernWind - Core</description>
     
