@@ -147,7 +147,7 @@ public class DefaultWebSiteModel implements WebSiteModel
       }
     
     @Override @Nonnull
-    public Content getContent (final @Nonnull String uri) 
+    public Content findContentByUri (final @Nonnull String uri) 
       throws NotFoundException 
       {
         log.info("getContent({})", uri);
@@ -155,7 +155,7 @@ public class DefaultWebSiteModel implements WebSiteModel
       }
     
     @Override @Nonnull
-    public Media getMedia (final @Nonnull String uri) 
+    public Media findMediaByUri (final @Nonnull String uri) 
       throws NotFoundException 
       {
         log.info("getMedia({})", uri);
@@ -163,7 +163,7 @@ public class DefaultWebSiteModel implements WebSiteModel
       }
     
     @Override @Nonnull
-    public Node getNode (final @Nonnull String uri) 
+    public Node findNodeByUri (final @Nonnull String uri) 
       throws NotFoundException 
       {
         log.info("getNode({})", uri);

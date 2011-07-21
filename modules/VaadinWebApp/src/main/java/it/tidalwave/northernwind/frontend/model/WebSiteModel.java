@@ -38,14 +38,14 @@ public interface WebSiteModel
     public String getContextPath();
     
     @Nonnull
-    public Content getContent (@Nonnull String uri)
+    public Content findContentByUri (@Nonnull String uri)
       throws NotFoundException, IOException;    
     
     @Nonnull
-    public Media getMedia (@Nonnull String uri)
+    public Media findMediaByUri (@Nonnull String uri)
       throws NotFoundException, IOException;    
     
     @Nonnull
-    public Node getNode (@Nonnull String uri) 
+    public Node findNodeByUri (@Nonnull String uri) 
       throws NotFoundException, IOException;    
   }

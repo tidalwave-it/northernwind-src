@@ -48,7 +48,7 @@ public class DefaultArticleViewController implements ArticleViewController
       {
         try
           {
-            final Content content = webSiteModel.getContent(uri);
+            final Content content = webSiteModel.findContentByUri(uri);
             articleView.setText(content.getProperty(PROP_FULL_TEXT));
           }
         catch (NotFoundException e)

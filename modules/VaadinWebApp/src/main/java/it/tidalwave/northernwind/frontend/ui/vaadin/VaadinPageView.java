@@ -88,7 +88,7 @@ public class VaadinPageView extends Window implements PageView
         
         try 
           {
-            final Media media = webSiteModel.getMedia("/blueBill_Mobile-Banner.png");
+            final Media media = webSiteModel.findMediaByUri("/blueBill_Mobile-Banner.png");
             addComponent(new Embedded("", new FileResource(media.getFile(), getApplication()))); 
           }
         catch (NotFoundException e) 
