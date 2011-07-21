@@ -50,7 +50,7 @@ public class VaadinPageViewController implements PageViewController
                                          final @Nonnull String relativeUri) 
           {
             log.info("uri: {}", relativeUri);
-            setUri(relativeUri);    
+            setUri("/" + relativeUri);    
             return null; 
           }
       };
@@ -69,12 +69,12 @@ public class VaadinPageViewController implements PageViewController
         log.info(">>>> registered URI handler");
       }
     
-    private void setUri (final @Nonnull String uri) 
+    private void setUri (final @Nonnull String relativeUri) 
       {
         try
           {
-            log.info("setUri({})", uri);
-            final Node structure = webSiteModel.getNode(uri);            
+            log.info("setUri({})", relativeUri);
+            final Node structure = webSiteModel.getNode(relativeUri);            
 //            pageView.setCaption(structure.getProperties().getProperty("Title"));
             pageView.setContents(structure.createContents());
           }

@@ -27,8 +27,11 @@ import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Node;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import lombok.Getter;
@@ -45,6 +48,29 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public class DefaultWebSiteModel implements WebSiteModel 
   {
+    private static final FileFilter DIRECTORY_FILTER = new FileFilter()
+      {
+        @Override
+        public boolean accept (final @Nonnull File file) 
+          {
+            return file.isDirectory();
+          }
+      };
+    
+    private static final FileFilter FILE_FILTER = new FileFilter()
+      {
+        @Override
+        public boolean accept (final @Nonnull File file) 
+          {
+            return file.isFile();
+          }
+      };
+    
+    static interface FolderVisitor
+      {
+        public void visit (@Nonnull File folder, @Nonnull String relativeUri);   
+      }
+    
     @Getter @Setter @Nonnull
     private String contextPath = "";
     
@@ -65,9 +91,16 @@ public class DefaultWebSiteModel implements WebSiteModel
     private File mediaFolder;
     
     private File nodeFolder; 
+    
+    private final Map<String, Content> documentMapByRelativeUri = new HashMap<String, Content>();
+    
+    private final Map<String, Media> mediaMapByRelativeUri = new HashMap<String, Media>();
+    
+    private final Map<String, Node> nodeMapByRelativeUri = new HashMap<String, Node>();
         
     @PostConstruct
     public void initialize()
+      throws UnsupportedEncodingException
       {
         log.info("initialize()");
         final File rootFile = new File(rootPath);
@@ -79,6 +112,37 @@ public class DefaultWebSiteModel implements WebSiteModel
         log.info(">>>> documentPath: {}", documentFolder.getAbsolutePath());
         log.info(">>>> mediaPath:    {}", mediaFolder.getAbsolutePath());
         log.info(">>>> nodePath:     {}", nodeFolder.getAbsolutePath());
+        
+        accept(documentFolder, DIRECTORY_FILTER, new FolderVisitor() 
+          {
+            @Override
+            public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
+              {
+                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 2)), new Content(folder));
+              }
+          });
+        
+        accept(mediaFolder, FILE_FILTER, new FolderVisitor() 
+          {
+            @Override
+            public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
+              {
+                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 2)), new Media(folder));
+              }
+          });
+        
+        accept(nodeFolder, DIRECTORY_FILTER, new FolderVisitor() 
+          {
+            @Override
+            public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
+              {
+                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 2)), new Node(folder, relativeUri));
+              }
+          });
+        
+        log.info(">>>> documents: {}", documentMapByRelativeUri);
+        log.info(">>>> media:     {}", mediaMapByRelativeUri);
+        log.info(">>>> nodes:     {}", nodeMapByRelativeUri);
       }
     
     @Override @Nonnull
@@ -86,15 +150,14 @@ public class DefaultWebSiteModel implements WebSiteModel
       throws UnsupportedEncodingException 
       {
         log.info("getContent({})", uri);
-        return new Content(new File(documentFolder, encode(uri)));
+        return documentMapByRelativeUri.get(uri);
       }
     
     @Override @Nonnull
     public Media getMedia (final @Nonnull String uri) 
-      throws UnsupportedEncodingException 
       {
         log.info("getMedia({})", uri);
-        return new Media(new File(mediaFolder, encode(uri)));
+        return mediaMapByRelativeUri.get(uri);
       }
     
     @Override @Nonnull
@@ -102,20 +165,37 @@ public class DefaultWebSiteModel implements WebSiteModel
       throws UnsupportedEncodingException 
       {
         log.info("getNode({})", uri);
-        return new Node(new File(nodeFolder, encode(uri)), uri);
+        return nodeMapByRelativeUri.get(uri);
       }
     
     @Nonnull
-    private String encode (final @Nonnull String uri)
+    private String decode (final @Nonnull String uri)
       throws UnsupportedEncodingException
       {
         final StringBuilder builder = new StringBuilder();
         
         for (final String part : uri.split("/"))
           {
-            builder.append("/").append(URLEncoder.encode(part, "UTF-8"));
+            builder.append("/").append(URLDecoder.decode(part, "UTF-8"));
           }
         
         return builder.toString();
       }
+    
+    private void accept (final @Nonnull File folder, final @Nonnull FileFilter fileFilter,  final @Nonnull FolderVisitor visitor)
+      throws UnsupportedEncodingException
+      {
+        log.info("accept({}}", folder, fileFilter);
+        final String relativeUri = decode(folder.getAbsolutePath().substring(rootPath.length()));
+        visitor.visit(folder, relativeUri);
+        final File[] subFolders = folder.listFiles(fileFilter);
+        
+        if (subFolders != null)
+          {
+            for (final File subFolder : subFolders)
+              {
+                accept(subFolder, fileFilter, visitor);                    
+              } 
+          }
+      }  
   }

@@ -71,13 +71,14 @@ public class VaadinPageView extends Window implements PageView
         try {
         menuView.setLinks(Arrays.asList
           (
-            "/",
+//            "/",
+            "",
             "/Features",
             "/Download",
             "/Screenshots",
             "/Getting started",
             "/Blog & News (new)",
-            "/Contact",
+//            "/Contact",
             "/License",
             "/Developers"
           )); }
@@ -85,7 +86,7 @@ public class VaadinPageView extends Window implements PageView
             throw new RuntimeException(e);
         }
         
-        final Media media = webSiteModel.getMedia("blueBill_Mobile-Banner.png");
+        final Media media = webSiteModel.getMedia("/blueBill_Mobile-Banner.png");
         addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));
         addComponent(menuView);
         addComponent((Component)content);
