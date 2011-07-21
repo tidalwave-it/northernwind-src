@@ -65,15 +65,15 @@ public class VaadinPageView extends Window implements PageView
         final WebSiteModel w = controller.getWebSiteModel();
         menuView.setLinks(Arrays.asList
           (
-            w.getStructure("/"),
-            w.getStructure("/Features"),
-            w.getStructure("/Download"),
-            w.getStructure("/Screenshots"),
-            w.getStructure("/Getting started"),
-            w.getStructure("/Blog & News (new)"),
-            w.getStructure("/Contact"),
-            w.getStructure("/License"),
-            w.getStructure("/Developers")
+            w.getNode("/"),
+            w.getNode("/Features"),
+            w.getNode("/Download"),
+            w.getNode("/Screenshots"),
+            w.getNode("/Getting started"),
+            w.getNode("/Blog & News (new)"),
+            w.getNode("/Contact"),
+            w.getNode("/License"),
+            w.getNode("/Developers")
           ));
         
         final Media media = w.getMedia("/content/media/blueBill_Mobile-Banner.png");

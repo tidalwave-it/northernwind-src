@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
-import it.tidalwave.northernwind.frontend.model.Structure;
+import it.tidalwave.northernwind.frontend.model.Node;
 import java.io.IOException;
 
 /***********************************************************************************************************************
@@ -48,13 +48,13 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
       }
     
     @Override
-    public void setLinks (final @Nonnull List<Structure> links) 
+    public void setLinks (final @Nonnull List<Node> nodes) 
       throws IOException
       {
-        for (final Structure link : links)
+        for (final Node node : nodes)
           {  
-            final String uri = link.getUri();
-            final String navigationTitle = link.getProperties().getProperty("NavigationTitle");
+            final String uri = node.getUri();
+            final String navigationTitle = node.getProperties().getProperty("NavigationTitle");
             addComponent(new Link(navigationTitle, new ExternalResource("/nw" + uri)));                
           }
       }

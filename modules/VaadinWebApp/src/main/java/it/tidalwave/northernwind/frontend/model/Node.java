@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class Structure 
+public class Node 
   {
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
@@ -50,7 +50,7 @@ public class Structure
     @Nonnull @Getter
     private final String uri;
 
-    public Structure (final @Nonnull WebSiteModel webSiteModel, final @Nonnull File file, final @Nonnull String uri)
+    public Node (final @Nonnull WebSiteModel webSiteModel, final @Nonnull File file, final @Nonnull String uri)
       {
         resource = new Resource(file);  
         this.webSiteModel = webSiteModel;

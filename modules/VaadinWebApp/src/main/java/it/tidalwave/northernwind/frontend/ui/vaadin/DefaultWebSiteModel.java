@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.Structure;
+import it.tidalwave.northernwind.frontend.model.Node;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -61,11 +61,11 @@ public class DefaultWebSiteModel implements WebSiteModel
       }
     
     @Override @Nonnull
-    public Structure getStructure (final @Nonnull String uri) 
+    public Node getNode (final @Nonnull String uri) 
       throws UnsupportedEncodingException 
       {
-        log.info("getStructure({})", uri);
-        return new Structure(this, new File(root, "structure/" + encode(uri)), uri);
+        log.info("getNode({})", uri);
+        return new Node(this, new File(root, "structure/" + encode(uri)), uri);
       }
     
     @Nonnull

@@ -42,6 +42,6 @@ public interface WebSiteModel
       throws IOException;    
     
     @Nonnull
-    public Structure getStructure (@Nonnull String uri) 
+    public Node getNode (@Nonnull String uri) 
       throws IOException;    
   }
