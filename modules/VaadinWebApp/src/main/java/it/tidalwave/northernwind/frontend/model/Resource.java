@@ -36,11 +36,12 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -48,15 +49,15 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j // @ToString
+@Configurable @RequiredArgsConstructor @Slf4j // @ToString
 public class Resource 
   {
     @Nonnull @Getter
     private final File file;    
     
     @CheckForNull
-    private transient TypeSafeMap properties; 
-        
+    private transient TypeSafeMap properties;
+
     /*******************************************************************************************************************
      *
      *
@@ -92,7 +93,7 @@ public class Resource
       {
         try
           { 
-            return getProperties().get(key);
+            return properties.get(key);
           }
         catch (NotFoundException e)
           {
@@ -122,45 +123,40 @@ public class Resource
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
-    private synchronized  TypeSafeMap getProperties()
+    @PostConstruct
+    private void loadProperties()
       throws IOException
       {
-        if (properties == null)
+        log.info("loadProperties()");
+        final Properties tempProperties = new Properties();
+        File f = new File(file, "Resource_en.properties");
+
+        if (!f.exists())
           {
-            log.info("getProperties()");
-            final Properties tempProperties = new Properties();
-            File f = new File(file, "Resource_en.properties");
-
-            if (!f.exists())
-              {
-                f = new File(file, "OverrideResource_en.properties");
-              }
-
-            if (!f.exists())
-              {
-                log.warn("No properties for {}", file);
-              }
-            else
-              {
-                log.info(">>>> reading properties from {}...", f.getAbsolutePath());
-                @Cleanup final Reader r = new FileReader(f);
-                tempProperties.load(r);
-                r.close();        
-
-                log.info(">>>> properties: {}", tempProperties);
-              }
-
-            final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
-
-            for (final Entry<Object, Object> entry : tempProperties.entrySet())
-              {
-                map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
-              }
-
-            properties = new TypeSafeHashMap(map);
+            f = new File(file, "OverrideResource_en.properties");
           }
 
-        return properties;
+        if (!f.exists())
+          {
+            log.warn("No properties for {}", file);
+          }
+        else
+          {
+            log.info(">>>> reading properties from {}...", f.getAbsolutePath());
+            @Cleanup final Reader r = new FileReader(f);
+            tempProperties.load(r);
+            r.close();        
+
+            log.info(">>>> properties: {}", tempProperties);
+          }
+
+        final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
+
+        for (final Entry<Object, Object> entry : tempProperties.entrySet())
+          {
+            map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
+          }
+
+        properties = new TypeSafeHashMap(map);
       }
   }
