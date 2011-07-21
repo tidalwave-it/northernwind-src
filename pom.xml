@@ -57,7 +57,7 @@
                 <configuration.folderName>.nwpre</configuration.folderName>
                 <main.webapp.contextPath>/mobile2</main.webapp.contextPath>
                 <main.webapp.url>http://bluebill.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
-                <log.file>/home/fgiudici/Redirector/log/nw-pre.log</log.file>
+                <log.file>/home/fgiudici/.nwpre/bluebill/log/nwpre.log</log.file>
             </properties>
         </profile>
 <!--        <profile>
