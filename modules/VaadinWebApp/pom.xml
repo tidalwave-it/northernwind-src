@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it.tidalwave.northernwind.module1</artifactId>
+    <artifactId>it-tidalwave-northernwind-webapp-vaadin</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <version>1.0-ALPHA-1-SNAPSHOT</version>
     <name>NorthernWind - Vaadin Webapp</name>
     <description>NorthernWind - Vaadin Webapp</description>
     
