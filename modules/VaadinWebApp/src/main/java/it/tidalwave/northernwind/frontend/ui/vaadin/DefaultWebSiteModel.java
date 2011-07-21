@@ -30,7 +30,10 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -42,14 +45,44 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public class DefaultWebSiteModel implements WebSiteModel 
   {
-    private final File root = new File("/workarea/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export");
+    @Getter @Setter @Nonnull
+    private String rootPath = "";
+    
+    @Getter @Setter @Nonnull
+    private String documentPath = "content/document";
+
+    @Getter @Setter @Nonnull
+    private String mediaPath = "content/media";
+
+    @Getter @Setter @Nonnull
+    private String nodePath = "structure";
+    
+    private File documentFolder;
+    
+    private File mediaFolder;
+    
+    private File nodeFolder; 
+        
+    @PostConstruct
+    public void initialize()
+      {
+        log.info("initialize()");
+        final File rootFile = new File(rootPath);
+        documentFolder = new File(rootFile, documentPath);
+        mediaFolder = new File(rootFile, mediaPath);
+        nodeFolder = new File(rootFile, nodePath);
+        log.info(">>>> rootPath: {}", rootFile.getAbsolutePath());
+        log.info(">>>> documentPath: {}", documentFolder.getAbsolutePath());
+        log.info(">>>> mediaPath: {}", mediaFolder.getAbsolutePath());
+        log.info(">>>> nodePath: {}", nodeFolder.getAbsolutePath());
+      }
     
     @Override @Nonnull
     public Content getContent (final @Nonnull String uri) 
       throws UnsupportedEncodingException 
       {
         log.info("getContent({})", uri);
-        return new Content(new File(root, "content/document/" + encode(uri)));
+        return new Content(new File(documentFolder, encode(uri)));
       }
     
     @Override @Nonnull
@@ -57,7 +90,7 @@ public class DefaultWebSiteModel implements WebSiteModel
       throws UnsupportedEncodingException 
       {
         log.info("getMedia({})", uri);
-        return new Media(new File(root, "content/media/" + encode(uri)));
+        return new Media(new File(mediaFolder, encode(uri)));
       }
     
     @Override @Nonnull
@@ -65,7 +98,7 @@ public class DefaultWebSiteModel implements WebSiteModel
       throws UnsupportedEncodingException 
       {
         log.info("getNode({})", uri);
-        return new Node(new File(root, "structure/" + encode(uri)), uri);
+        return new Node(new File(nodeFolder, encode(uri)), uri);
       }
     
     @Nonnull

@@ -48,6 +48,11 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
-    <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSiteModel" />
+    <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSiteModel">
+        <property name="rootPath" value="/home/fritz/Business/Tidalwave/Projects/WorkAreas/Tidalwave/tidalwave~other/InfoglueExporter/target/export" />
+        <property name="documentPath" value="content/document" />
+        <property name="mediaPath" value="content/media" />
+        <property name="nodePath" value="structure" />
+    </bean>
        
 </beans>
