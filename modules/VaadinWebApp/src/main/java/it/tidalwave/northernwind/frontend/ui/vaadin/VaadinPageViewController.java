@@ -93,7 +93,7 @@ public class VaadinPageViewController implements PageViewController
       {
         try
           {
-            log.info("setUri({})", relativeUri);
+            log.info("setContentsByUri({})", relativeUri);
             final WebSiteNode node = webSite.findNodeByUri(relativeUri);            
 //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
             pageView.setContents(node.createContents());
