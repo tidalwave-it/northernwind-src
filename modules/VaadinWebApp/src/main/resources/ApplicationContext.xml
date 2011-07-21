@@ -63,7 +63,7 @@
         <property name="rootPath" value="${nw.rootPath}" />
     </bean>
     
-    <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSite">
+    <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite">
         <property name="contextPath" value="${nw.contextPath}" />
         <property name="fileSystemProvider" ref="fileSystemProvider" />
         <property name="documentPath" value="${nw.documentPath}" />

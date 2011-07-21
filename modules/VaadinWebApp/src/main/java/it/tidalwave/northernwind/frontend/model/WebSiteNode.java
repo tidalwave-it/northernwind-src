@@ -27,8 +27,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
-import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import lombok.Delegate;
@@ -87,9 +85,35 @@ public class WebSiteNode
         // FIXME: this is temporary
         final Key<String> K = new Key<String>("main.content");
         final String contentUri = resource.getProperty(K);
-        final VaadinArticleView articleView = new VaadinArticleView("main");
-        new DefaultArticleViewController(articleView, r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", "")));
-        return articleView;
+        final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+
+        // FIXME: load from the config of this node
+        return createContent("it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView", 
+                             "it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController", 
+                             fixedContentUri);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Object createContent (final @Nonnull String viewClassName,
+                                  final @Nonnull String viewControllerClassName,
+                                  final @Nonnull String contentUri)
+      {
+        try
+          { 
+            final @Nonnull Class<?> viewClass = Class.forName(viewClassName);
+            final @Nonnull Class<?> viewControllerClass = Class.forName(viewControllerClassName);
+            final Object view = viewClass.getConstructor(String.class).newInstance("main");
+            viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class).newInstance(view, contentUri);  
+            return view;
+          }
+        catch (Exception e)
+          {
+            throw new RuntimeException(e);
+          }
       }
         
     /*******************************************************************************************************************
