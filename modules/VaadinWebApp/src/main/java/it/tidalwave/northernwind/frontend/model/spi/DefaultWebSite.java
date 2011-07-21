@@ -214,7 +214,7 @@ public class DefaultWebSite implements WebSite
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.info("accept({}}", file);
+        log.info("traverse({}}", file);
         final String relativeUri = decode(file.getPath());
         visitor.visit(file, relativeUri);
 
