@@ -27,8 +27,6 @@ import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
 import java.util.Map;
 import java.util.TreeMap;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -37,12 +35,13 @@ import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.LocalFileSystem;
+import org.openide.filesystems.FileSystem;
 
 /***********************************************************************************************************************
  *
@@ -52,7 +51,7 @@ import org.openide.filesystems.LocalFileSystem;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@Slf4j
 public class DefaultWebSite implements WebSite
   {
     static interface FileVisitor 
@@ -87,7 +86,7 @@ public class DefaultWebSite implements WebSite
     private String contextPath = "";
     
     @Getter @Setter @Nonnull
-    private String rootPath = "";
+    private FileSystemProvider fileSystemProvider;
     
     @Getter @Setter @Nonnull
     private String documentPath = "content/document";
@@ -119,21 +118,14 @@ public class DefaultWebSite implements WebSite
       throws IOException, PropertyVetoException
       {
         log.info("initialize()");
-        LocalFileSystem fileSystem = new LocalFileSystem();
-        fileSystem.setRootDirectory(new File(rootPath));
         
-        final FileObject rootFolder = fileSystem.getRoot();
-        
-        if (rootFolder == null)
-          {
-            throw new FileNotFoundException(rootPath);  
-          } 
-        
+        final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = fileSystem.findResource(documentPath);
         mediaFolder = fileSystem.findResource(mediaPath);
         nodeFolder = fileSystem.findResource(nodePath);
+        
         log.info(">>>> contextPath:  {}", contextPath);
-        log.info(">>>> rootPath:     {}", rootFolder.getPath());
+        log.info(">>>> fileSystem:   {}", fileSystem);
         log.info(">>>> documentPath: {}", documentFolder.getPath());
         log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
         log.info(">>>> nodePath:     {}", nodeFolder.getPath());

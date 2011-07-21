@@ -59,9 +59,13 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.LocalFileSystemProvider">
+        <property name="rootPath" value="${nw.rootPath}" />
+    </bean>
+    
     <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSite">
         <property name="contextPath" value="${nw.contextPath}" />
-        <property name="rootPath" value="${nw.rootPath}" />
+        <property name="fileSystemProvider" ref="fileSystemProvider" />
         <property name="documentPath" value="${nw.documentPath}" />
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
