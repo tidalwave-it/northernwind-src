@@ -311,6 +311,8 @@
 
     <modules>
         <module>Core</module>
+        <module>Components</module>
+        <module>VaadinComponents</module>
         <module>VaadinWebApp</module>
     </modules>
 
