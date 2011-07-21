@@ -312,6 +312,7 @@
     <modules>
         <module>Core</module>
         <module>Components</module>
+        <module>InfoglueExporter</module>
         <module>VaadinComponents</module>
         <module>VaadinWebApp</module>
     </modules>
