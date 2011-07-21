@@ -24,6 +24,8 @@ package it.tidalwave.northernwind.frontend.model;
 
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.TypeSafeHashMap;
+import it.tidalwave.util.TypeSafeMap;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -55,18 +57,24 @@ public class Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <Type> Type get (final @Nonnull String attribute, final @Nonnull Class<Type> type)
-      throws IOException
+    private String get (final @Nonnull String attribute)
+      throws NotFoundException, IOException
       {
-        log.info("get({}, {})", attribute, type);
+        log.info("get({})", attribute);
         final File f = new File(file, attribute);
+        
+        if (!f.exists())
+          {
+            throw new NotFoundException(file.getAbsolutePath());  
+          }
+        
         log.info(">>>> reading from {}", f.getAbsolutePath());
         @Cleanup final FileReader fr = new FileReader(f);
         final char[] chars = new char[(int)f.length()];
         fr.read(chars);
         fr.close();
         
-        return (Type)new String(chars);
+        return new String(chars);
       }  
     
     /*******************************************************************************************************************
@@ -74,10 +82,17 @@ public class Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <T> T getProperty (@Nonnull Key<T> key)
+    public <Type> Type getProperty (@Nonnull Key<Type> key)
       throws NotFoundException, IOException
       {
-        return getProperties().get(key);
+        try
+          { 
+            return getProperties().get(key);
+          }
+        catch (NotFoundException e)
+          {
+            return (Type)get(key.stringValue());
+          }
       }
 
     /*******************************************************************************************************************
@@ -85,10 +100,17 @@ public class Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <T> T getProperty (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
+    public <Type> Type getProperty (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
       throws IOException
       {
-        return getProperties().get(key, defaultValue);
+        try
+          { 
+            return getProperty(key);
+          }
+        catch (NotFoundException e)
+          {
+            return defaultValue;
+          }
       }
     
     /*******************************************************************************************************************
@@ -96,7 +118,7 @@ public class Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties getProperties()
+    private TypeSafeMap getProperties()
       throws IOException
       {
         log.info("getProperties()");
@@ -129,6 +151,6 @@ public class Resource
             map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
           }
         
-        return new ResourceProperties(map);
+        return new TypeSafeHashMap(map);
       }
   }

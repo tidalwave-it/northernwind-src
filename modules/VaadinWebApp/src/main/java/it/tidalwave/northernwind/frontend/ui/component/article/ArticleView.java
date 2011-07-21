@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.article;
 
+import it.tidalwave.util.Key;
 import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface ArticleView 
   {
-    public static final String ATTR_FULL_TEXT = "FullText_en.html";
+    public static final Key<String> PROP_FULL_TEXT = new Key<String>("FullText_en.html");
     
     public void setText (@Nonnull String string);
   }

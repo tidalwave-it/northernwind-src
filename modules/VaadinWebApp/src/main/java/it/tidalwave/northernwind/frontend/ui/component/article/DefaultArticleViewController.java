@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.article;
 
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
+import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -47,7 +48,11 @@ public class DefaultArticleViewController implements ArticleViewController
         try
           {
             final Content content = webSiteModel.getContent(uri);
-            articleView.setText(content.get(ATTR_FULL_TEXT, String.class));
+            articleView.setText(content.getProperty(PROP_FULL_TEXT));
+          }
+        catch (NotFoundException e)
+          {
+            articleView.setText(e.toString());
           }
         catch (IOException e)
           {
