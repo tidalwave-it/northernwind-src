@@ -60,6 +60,7 @@
     <context:spring-configured />
 
     <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.ui.vaadin.DefaultWebSiteModel">
+        <property name="contextPath" value="${nw.contextPath}" />
         <property name="rootPath" value="${nw.rootPath}" />
         <property name="documentPath" value="${nw.documentPath}" />
         <property name="mediaPath" value="${nw.mediaPath}" />

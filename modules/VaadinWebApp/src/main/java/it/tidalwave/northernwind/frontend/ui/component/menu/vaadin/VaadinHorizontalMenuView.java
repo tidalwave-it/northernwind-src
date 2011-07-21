@@ -32,6 +32,7 @@ import com.vaadin.ui.Link;
 import it.tidalwave.northernwind.frontend.model.Node;
 import java.io.IOException;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
@@ -40,7 +41,7 @@ import org.springframework.beans.factory.annotation.Configurable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) 
+@Configurable(preConstruction=true) @Slf4j
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
     @Nonnull @Inject
@@ -60,7 +61,7 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
           {  
             final Node node = webSiteModel.getNode(relativeUri);
             final String navigationTitle = node.getProperty(Node.PROP_NAVIGATION_TITLE, "no nav. title");
-            addComponent(new Link(navigationTitle, new ExternalResource("/nw" + relativeUri)));                
+            addComponent(new Link(navigationTitle, new ExternalResource(webSiteModel.getContextPath() + relativeUri)));                
           }
       }
   }

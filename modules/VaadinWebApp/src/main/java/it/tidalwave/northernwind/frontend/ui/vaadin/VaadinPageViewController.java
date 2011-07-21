@@ -50,7 +50,7 @@ public class VaadinPageViewController implements PageViewController
                                          final @Nonnull String relativeUri) 
           {
             log.info("uri: {}", relativeUri);
-            setUri(relativeUri);
+            setUri(relativeUri);    
             return null; 
           }
       };

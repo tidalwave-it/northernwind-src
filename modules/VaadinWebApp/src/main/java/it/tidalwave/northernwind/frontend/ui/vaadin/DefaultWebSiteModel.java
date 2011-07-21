@@ -46,6 +46,9 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultWebSiteModel implements WebSiteModel 
   {
     @Getter @Setter @Nonnull
+    private String contextPath = "";
+    
+    @Getter @Setter @Nonnull
     private String rootPath = "";
     
     @Getter @Setter @Nonnull
@@ -71,6 +74,7 @@ public class DefaultWebSiteModel implements WebSiteModel
         documentFolder = new File(rootFile, documentPath);
         mediaFolder = new File(rootFile, mediaPath);
         nodeFolder = new File(rootFile, nodePath);
+        log.info(">>>> contextPath:  {}", contextPath);
         log.info(">>>> rootPath:     {}", rootFile.getAbsolutePath());
         log.info(">>>> documentPath: {}", documentFolder.getAbsolutePath());
         log.info(">>>> mediaPath:    {}", mediaFolder.getAbsolutePath());

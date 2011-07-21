@@ -34,6 +34,9 @@ import javax.annotation.Nonnull;
 public interface WebSiteModel 
   {
     @Nonnull
+    public String getContextPath();
+    
+    @Nonnull
     public Content getContent (@Nonnull String uri)
       throws IOException;    
     
