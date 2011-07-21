@@ -24,10 +24,12 @@ package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import java.beans.PropertyVetoException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.io.File;
-import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import it.tidalwave.util.NotFoundException;
@@ -39,6 +41,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.LocalFileSystem;
 
 /***********************************************************************************************************************
  *
@@ -51,28 +55,33 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public class DefaultWebSite implements WebSite
   {
+    static interface FileVisitor 
+      {
+        public void visit (@Nonnull FileObject file, @Nonnull String relativeUri);   
+      }
+    
+    static interface FileFilter
+      {
+        public boolean accept (@Nonnull FileObject file);  
+      }
+    
     private static final FileFilter DIRECTORY_FILTER = new FileFilter()
       {
         @Override
-        public boolean accept (final @Nonnull File file) 
+        public boolean accept (final @Nonnull FileObject file) 
           {
-            return file.isDirectory();
+            return file.isFolder();
           }
       };
     
     private static final FileFilter FILE_FILTER = new FileFilter()
       {
         @Override
-        public boolean accept (final @Nonnull File file) 
+        public boolean accept (final @Nonnull FileObject file) 
           {
-            return file.isFile();
+            return file.isData();
           }
       };
-    
-    static interface FileVisitor 
-      {
-        public void visit (@Nonnull File file, @Nonnull String relativeUri);   
-      }
     
     @Getter @Setter @Nonnull
     private String contextPath = "";
@@ -89,11 +98,11 @@ public class DefaultWebSite implements WebSite
     @Getter @Setter @Nonnull
     private String nodePath = "structure";
     
-    private File documentFolder;
+    private FileObject documentFolder;
     
-    private File mediaFolder;
+    private FileObject mediaFolder;
     
-    private File nodeFolder; 
+    private FileObject nodeFolder; 
     
     private final Map<String, Content> documentMapByRelativeUri = new TreeMap<String, Content>();
     
@@ -107,43 +116,52 @@ public class DefaultWebSite implements WebSite
      ******************************************************************************************************************/
     @PostConstruct
     public void initialize()
-      throws UnsupportedEncodingException
+      throws IOException, PropertyVetoException
       {
         log.info("initialize()");
-        final File rootFile = new File(rootPath);
-        documentFolder = new File(rootFile, documentPath);
-        mediaFolder = new File(rootFile, mediaPath);
-        nodeFolder = new File(rootFile, nodePath);
+        LocalFileSystem fileSystem = new LocalFileSystem();
+        fileSystem.setRootDirectory(new File(rootPath));
+        
+        final FileObject rootFolder = fileSystem.getRoot();
+        
+        if (rootFolder == null)
+          {
+            throw new FileNotFoundException(rootPath);  
+          } 
+        
+        documentFolder = fileSystem.findResource(documentPath);
+        mediaFolder = fileSystem.findResource(mediaPath);
+        nodeFolder = fileSystem.findResource(nodePath);
         log.info(">>>> contextPath:  {}", contextPath);
-        log.info(">>>> rootPath:     {}", rootFile.getAbsolutePath());
-        log.info(">>>> documentPath: {}", documentFolder.getAbsolutePath());
-        log.info(">>>> mediaPath:    {}", mediaFolder.getAbsolutePath());
-        log.info(">>>> nodePath:     {}", nodeFolder.getAbsolutePath());
+        log.info(">>>> rootPath:     {}", rootFolder.getPath());
+        log.info(">>>> documentPath: {}", documentFolder.getPath());
+        log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
+        log.info(">>>> nodePath:     {}", nodeFolder.getPath());
         
-        accept(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
+        traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
+            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 2)), new Content(folder));
+                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 1)), new Content(folder));
               }
           });
         
-        accept(mediaFolder, FILE_FILTER, new FileVisitor() 
+        traverse(mediaFolder, FILE_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
+            public void visit (final @Nonnull FileObject file, final @Nonnull String relativeUri) 
               {
-                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 2)), new Media(folder));
+                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 1)), new Media(file));
               }
           });
         
-        accept(nodeFolder, DIRECTORY_FILTER, new FileVisitor() 
+        traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull File folder, final @Nonnull String relativeUri) 
+            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 2)), new WebSiteNode(folder, relativeUri));
+                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new WebSiteNode(folder, relativeUri));
               }
           });
         
@@ -200,21 +218,22 @@ public class DefaultWebSite implements WebSite
      * @param  visitor     the visitor
      *
      ******************************************************************************************************************/
-    private void accept (final @Nonnull File file, final @Nonnull FileFilter fileFilter, final @Nonnull FileVisitor visitor)
+    private void traverse (final @Nonnull FileObject file, 
+                           final @Nonnull FileFilter fileFilter, 
+                           final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.info("accept({}}", file, fileFilter);
-        final String relativeUri = decode(file.getAbsolutePath().substring(rootPath.length()));
+        log.info("accept({}}", file);
+        final String relativeUri = decode(file.getPath());
         visitor.visit(file, relativeUri);
-        final File[] subFolders = file.listFiles(fileFilter);
-        
-        if (subFolders != null)
+
+        for (final FileObject child : file.getChildren())
           {
-            for (final File subFolder : subFolders)
+            if (fileFilter.accept(child))
               {
-                accept(subFolder, fileFilter, visitor);                    
-              } 
-          }
+                traverse(child, fileFilter, visitor);                    
+              }
+          } 
       }  
     
     /*******************************************************************************************************************

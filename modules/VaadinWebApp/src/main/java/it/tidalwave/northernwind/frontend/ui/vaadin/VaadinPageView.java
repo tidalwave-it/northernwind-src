@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.WebSite;
@@ -101,7 +102,7 @@ public class VaadinPageView extends Window implements PageView
         try // FIXME
           {
             final Media media = webSite.findMediaByUri("/blueBill_Mobile-Banner.png");
-            addComponent(new Embedded("", new FileResource(media.getFile(), getApplication()))); 
+            addComponent(new Embedded("", new FileResource(FileUtil.toFile(media.getFile()), getApplication()))); 
           }
         catch (NotFoundException e) 
           {

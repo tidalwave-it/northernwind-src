@@ -23,7 +23,7 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import java.io.File;
+import org.openide.filesystems.FileObject;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class Content
      * @param   file   the configuration file
      *
      ******************************************************************************************************************/
-    public Content (final @Nonnull File file)
+    public Content (final @Nonnull FileObject file)
       {
         resource = new Resource(file);  
       }

@@ -24,18 +24,18 @@ package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
 import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
+import org.openide.filesystems.FileObject;
+import org.springframework.beans.factory.annotation.Configurable;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -67,7 +67,7 @@ public class WebSiteNode
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public WebSiteNode (final @Nonnull File file, final @Nonnull String relativeUri)
+    public WebSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
       {
         resource = new Resource(file);  
         this.relativeUri = relativeUri;

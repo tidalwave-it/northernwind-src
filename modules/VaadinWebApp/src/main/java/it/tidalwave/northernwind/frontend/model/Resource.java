@@ -29,14 +29,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.util.TypeSafeMap;
+import java.io.InputStreamReader;
+import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Resource 
   {
     @Nonnull @Getter
-    private final File file;    
+    private final FileObject file;    
     
     @CheckForNull
     private transient TypeSafeMap properties;
@@ -113,20 +113,15 @@ public class Resource
       throws NotFoundException, IOException
       {
         log.info("getFileBasedProperty({})", attribute);
-        final File f = new File(file, attribute);
+        final FileObject attributeFile = file.getFileObject(attribute);
         
-        if (!f.exists())
+        if (attributeFile == null)
           {
-            throw new NotFoundException(file.getAbsolutePath());  
+            throw new NotFoundException(file.getPath());  
           }
         
-        log.info(">>>> reading from {}", f.getAbsolutePath());
-        @Cleanup final FileReader fr = new FileReader(f);
-        final char[] chars = new char[(int)f.length()];
-        fr.read(chars);
-        fr.close();
-        
-        return new String(chars);
+        log.info(">>>> reading from {}", attributeFile.getPath());
+        return attributeFile.asText();
       }  
     
     /*******************************************************************************************************************
@@ -139,21 +134,21 @@ public class Resource
       {
         log.info("loadProperties()");
         final Properties tempProperties = new Properties();
-        File f = new File(file, "Resource_en.properties");
+        FileObject propertyFile = file.getFileObject("Resource_en.properties");
 
-        if (!f.exists())
+        if (propertyFile == null)
           {
-            f = new File(file, "OverrideResource_en.properties");
+            propertyFile = file.getFileObject("OverrideResource_en.properties");
           }
 
-        if (!f.exists())
+        if (propertyFile == null)
           {
             log.warn("No properties for {}", file);
           }
         else
           {
-            log.info(">>>> reading properties from {}...", f.getAbsolutePath());
-            @Cleanup final Reader r = new FileReader(f);
+            log.info(">>>> reading properties from {}...", propertyFile.getPath());
+            @Cleanup final Reader r = new InputStreamReader(propertyFile.getInputStream());
             tempProperties.load(r);
             r.close();        
             log.info(">>>> properties: {}", tempProperties);
