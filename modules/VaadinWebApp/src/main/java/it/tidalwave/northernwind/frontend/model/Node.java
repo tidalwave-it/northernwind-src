@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Configurable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @To String
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
 public class Node 
   {
     public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
@@ -70,7 +70,13 @@ public class Node
         final Key<String> K = new Key<String>("main.content");
         final String contentUri = resource.getProperty(K);
         final VaadinArticleView articleView = new VaadinArticleView("main");
-        new DefaultArticleViewController(articleView, contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+        new DefaultArticleViewController(articleView, r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", "")));
         return articleView;
+      }
+        
+    @Nonnull
+    private static String r (final @Nonnull String s)
+      {
+        return "".equals(s) ? "/" : s;  
       }
   }

@@ -32,6 +32,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
+import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
@@ -85,8 +86,16 @@ public class VaadinPageView extends Window implements PageView
             throw new RuntimeException(e);
         }
         
-        final Media media = webSiteModel.getMedia("/blueBill_Mobile-Banner.png");
-        addComponent(new Embedded("", new FileResource(media.getFile(), getApplication())));
+        try 
+          {
+            final Media media = webSiteModel.getMedia("/blueBill_Mobile-Banner.png");
+            addComponent(new Embedded("", new FileResource(media.getFile(), getApplication()))); 
+          }
+        catch (NotFoundException e) 
+          {
+            log.error("", e);
+          }
+        
         addComponent(menuView);
         addComponent((Component)content);
       }

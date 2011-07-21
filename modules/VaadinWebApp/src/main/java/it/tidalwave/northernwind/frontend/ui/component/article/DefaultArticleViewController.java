@@ -28,6 +28,7 @@ import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleView.*;
 
@@ -37,7 +38,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleVie
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true)
+@Configurable(preConstruction=true) @Slf4j
 public class DefaultArticleViewController implements ArticleViewController
   {
     @Nonnull @Inject
@@ -53,10 +54,12 @@ public class DefaultArticleViewController implements ArticleViewController
         catch (NotFoundException e)
           {
             articleView.setText(e.toString());
+            log.error("", e);
           }
         catch (IOException e)
           {
             articleView.setText(e.toString());
+            log.error("", e);
           }
       }
   }

@@ -30,6 +30,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
 import it.tidalwave.northernwind.frontend.model.Node;
+import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -55,13 +56,23 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
     
     @Override
     public void setLinks (final @Nonnull List<String> relativeUris) 
-      throws IOException
       {
         for (final String relativeUri : relativeUris)
           {  
-            final Node node = webSiteModel.getNode(relativeUri);
-            final String navigationTitle = node.getProperty(Node.PROP_NAVIGATION_TITLE, "no nav. title");
-            addComponent(new Link(navigationTitle, new ExternalResource(webSiteModel.getContextPath() + relativeUri)));                
+            try
+              {
+                final Node node = webSiteModel.getNode(relativeUri);
+                final String navigationTitle = node.getProperty(Node.PROP_NAVIGATION_TITLE, "no nav. title");
+                addComponent(new Link(navigationTitle, new ExternalResource(webSiteModel.getContextPath() + relativeUri)));                
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+            catch (NotFoundException e)
+              {
+                log.warn("", e);
+              }
           }
       }
   }

@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
+import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import javax.annotation.Nonnull;
 
@@ -38,13 +39,13 @@ public interface WebSiteModel
     
     @Nonnull
     public Content getContent (@Nonnull String uri)
-      throws IOException;    
+      throws NotFoundException, IOException;    
     
     @Nonnull
     public Media getMedia (@Nonnull String uri)
-      throws IOException;    
+      throws NotFoundException, IOException;    
     
     @Nonnull
     public Node getNode (@Nonnull String uri) 
-      throws IOException;    
+      throws NotFoundException, IOException;    
   }

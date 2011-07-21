@@ -26,6 +26,7 @@ import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Node;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
+import it.tidalwave.util.NotFoundException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.UnsupportedEncodingException;
@@ -147,25 +148,26 @@ public class DefaultWebSiteModel implements WebSiteModel
     
     @Override @Nonnull
     public Content getContent (final @Nonnull String uri) 
-      throws UnsupportedEncodingException 
+      throws NotFoundException 
       {
         log.info("getContent({})", uri);
-        return documentMapByRelativeUri.get(uri);
+        return NotFoundException.throwWhenNull(documentMapByRelativeUri.get(uri), uri + ": " + documentMapByRelativeUri.keySet());
       }
     
     @Override @Nonnull
     public Media getMedia (final @Nonnull String uri) 
+      throws NotFoundException 
       {
         log.info("getMedia({})", uri);
-        return mediaMapByRelativeUri.get(uri);
+        return NotFoundException.throwWhenNull(mediaMapByRelativeUri.get(uri), uri + ": " + mediaMapByRelativeUri.keySet());
       }
     
     @Override @Nonnull
     public Node getNode (final @Nonnull String uri) 
-      throws UnsupportedEncodingException 
+      throws NotFoundException 
       {
         log.info("getNode({})", uri);
-        return nodeMapByRelativeUri.get(uri);
+        return NotFoundException.throwWhenNull(nodeMapByRelativeUri.get(uri), uri + ": " + nodeMapByRelativeUri.keySet());
       }
     
     @Nonnull
