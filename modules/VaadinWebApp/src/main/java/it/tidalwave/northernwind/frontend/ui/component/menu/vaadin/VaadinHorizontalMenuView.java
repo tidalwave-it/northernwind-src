@@ -22,22 +22,24 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.List;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
-import java.util.List;
-import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.frontend.model.Node;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
-import it.tidalwave.northernwind.frontend.model.Node;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
-import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
+ * A Vaadin implementation of {@link MenuView}, using an horizontal layout.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -48,12 +50,24 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
     @Nonnull @Inject
     private WebSiteModel webSiteModel;
     
+    /*******************************************************************************************************************
+     *
+     * Creates an instance with the given name.
+     * 
+     * @param  name  the component name
+     *
+     ******************************************************************************************************************/
     public VaadinHorizontalMenuView (final @Nonnull String name) 
       {
         setMargin(false);
         setStyleName("component-" + name);
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void setLinks (final @Nonnull List<String> relativeUris) 
       {

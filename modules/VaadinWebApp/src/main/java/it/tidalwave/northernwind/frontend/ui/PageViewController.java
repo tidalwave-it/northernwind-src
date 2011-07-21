@@ -22,10 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui;
 
-import javax.annotation.Nonnull;
-
 /***********************************************************************************************************************
  *
+ * The controller of {@link PageView}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *

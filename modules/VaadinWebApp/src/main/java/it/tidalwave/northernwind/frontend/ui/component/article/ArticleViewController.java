@@ -24,11 +24,12 @@ package it.tidalwave.northernwind.frontend.ui.component.article;
 
 /***********************************************************************************************************************
  *
+ * The controller of {@link ArticleView}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface ArticleViewController 
-  {
-    
+  {    
   }

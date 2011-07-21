@@ -34,6 +34,8 @@ import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleVie
 
 /***********************************************************************************************************************
  *
+ * A default implementation of {@link ArticleViewController}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -44,11 +46,19 @@ public class DefaultArticleViewController implements ArticleViewController
     @Nonnull @Inject
     private WebSiteModel webSiteModel;
     
-    public DefaultArticleViewController (final @Nonnull ArticleView articleView, final @Nonnull String uri) 
+    /*******************************************************************************************************************
+     *
+     * Creates an instance for populating the given {@link ArticleView} with the given URI.
+     * 
+     * @param  articleView  the view to populate
+     * @param  relativeUri  the content URI
+     *
+     ******************************************************************************************************************/
+    public DefaultArticleViewController (final @Nonnull ArticleView articleView, final @Nonnull String relativeUri) 
       {
         try
           {
-            final Content content = webSiteModel.findContentByUri(uri);
+            final Content content = webSiteModel.findContentByUri(relativeUri);
             articleView.setText(content.getProperty(PROP_FULL_TEXT));
           }
         catch (NotFoundException e)

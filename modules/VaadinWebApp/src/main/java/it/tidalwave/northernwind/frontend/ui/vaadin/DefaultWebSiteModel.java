@@ -22,26 +22,28 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import java.util.Map;
+import java.util.TreeMap;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Node;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import it.tidalwave.util.NotFoundException;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Map;
-import java.util.TreeMap;
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * The default implementation of {@link WebSiteModel}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -67,9 +69,9 @@ public class DefaultWebSiteModel implements WebSiteModel
           }
       };
     
-    static interface FolderVisitor
+    static interface FolderVisitor // FIXME: rename to FileVisitor
       {
-        public void visit (@Nonnull File folder, @Nonnull String relativeUri);   
+        public void visit (@Nonnull File file, @Nonnull String relativeUri);   
       }
     
     @Getter @Setter @Nonnull
@@ -99,6 +101,10 @@ public class DefaultWebSiteModel implements WebSiteModel
     
     private final Map<String, Node> nodeMapByRelativeUri = new TreeMap<String, Node>();
         
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @PostConstruct
     public void initialize()
       throws UnsupportedEncodingException
@@ -146,30 +152,53 @@ public class DefaultWebSiteModel implements WebSiteModel
         log.info(">>>> nodes:     {}", nodeMapByRelativeUri);
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Content findContentByUri (final @Nonnull String uri) 
       throws NotFoundException 
       {
-        log.info("getContent({})", uri);
+        log.info("findContentByUri({})", uri);
         return NotFoundException.throwWhenNull(documentMapByRelativeUri.get(uri), uri + ": " + documentMapByRelativeUri.keySet());
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Media findMediaByUri (final @Nonnull String uri) 
       throws NotFoundException 
       {
-        log.info("getMedia({})", uri);
+        log.info("findMediaByUri({})", uri);
         return NotFoundException.throwWhenNull(mediaMapByRelativeUri.get(uri), uri + ": " + mediaMapByRelativeUri.keySet());
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Node findNodeByUri (final @Nonnull String uri) 
       throws NotFoundException 
       {
-        log.info("getNode({})", uri);
+        log.info("findNodeByUri({})", uri);
         return NotFoundException.throwWhenNull(nodeMapByRelativeUri.get(uri), uri + ": " + nodeMapByRelativeUri.keySet());
       }
     
+    /*******************************************************************************************************************
+     *
+     * Decodes an URL-encoded URI
+     * 
+     * @param   uri   the URL-encoded URI
+     * @return        the plain text URI
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private String decode (final @Nonnull String uri)
       throws UnsupportedEncodingException
@@ -184,13 +213,22 @@ public class DefaultWebSiteModel implements WebSiteModel
         return builder.toString();
       }
     
-    private void accept (final @Nonnull File folder, final @Nonnull FileFilter fileFilter,  final @Nonnull FolderVisitor visitor)
+    /*******************************************************************************************************************
+     *
+     * Accepts a {@link FolderVisitor} to visit a file or folder.
+     * 
+     * @param  file        the file to visit
+     * @param  fileFilter  the filter for directory contents
+     * @param  visitor     the visitor
+     *
+     ******************************************************************************************************************/
+    private void accept (final @Nonnull File file, final @Nonnull FileFilter fileFilter,  final @Nonnull FolderVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.info("accept({}}", folder, fileFilter);
-        final String relativeUri = decode(folder.getAbsolutePath().substring(rootPath.length()));
-        visitor.visit(folder, relativeUri);
-        final File[] subFolders = folder.listFiles(fileFilter);
+        log.info("accept({}}", file, fileFilter);
+        final String relativeUri = decode(file.getAbsolutePath().substring(rootPath.length()));
+        visitor.visit(file, relativeUri);
+        final File[] subFolders = file.listFiles(fileFilter);
         
         if (subFolders != null)
           {
@@ -201,6 +239,10 @@ public class DefaultWebSiteModel implements WebSiteModel
           }
       }  
     
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private static String r (final @Nonnull String s)
       {

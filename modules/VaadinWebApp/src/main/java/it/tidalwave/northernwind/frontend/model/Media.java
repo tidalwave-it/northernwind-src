@@ -22,14 +22,16 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import java.io.File;
 import javax.annotation.Nonnull;
+import java.io.File;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * A {@code Media} item is a document that is served as-is, without any processing. It's typically an image or such.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -40,6 +42,10 @@ public class Media
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     public Media (final @Nonnull File file)
       {
         resource = new Resource(file);  

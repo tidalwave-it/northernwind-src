@@ -22,26 +22,27 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.WebSiteModel;
 import it.tidalwave.northernwind.frontend.ui.PageView;
-import com.vaadin.terminal.FileResource;
+import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import com.vaadin.ui.AbstractLayout;
-import javax.annotation.Nonnull;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
-import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-import javax.inject.Inject;
+import com.vaadin.terminal.FileResource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
+ * The Vaadin implementation of {@link PageView}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -54,6 +55,10 @@ public class VaadinPageView extends Window implements PageView
     
     private final VaadinPageViewController controller;
     
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     public VaadinPageView() 
       {
         log.info("VaadinPageView()");
@@ -62,6 +67,13 @@ public class VaadinPageView extends Window implements PageView
         ((AbstractLayout)getContent()).setMargin(false);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Set the contents.
+     * 
+     * @param  content  the new contents (must be a Vaadin {@link Component})
+     *
+     ******************************************************************************************************************/
     @Override
     public void setContents (final @Nonnull Object content) 
       throws IOException
@@ -69,7 +81,7 @@ public class VaadinPageView extends Window implements PageView
         removeAllComponents();
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
         
-        try {
+        try { // FIXME
         menuView.setLinks(Arrays.asList
           (
             "/",
@@ -86,7 +98,7 @@ public class VaadinPageView extends Window implements PageView
             throw new RuntimeException(e);
         }
         
-        try 
+        try // FIXME
           {
             final Media media = webSiteModel.findMediaByUri("/blueBill_Mobile-Banner.png");
             addComponent(new Embedded("", new FileResource(media.getFile(), getApplication()))); 

@@ -24,11 +24,12 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 /***********************************************************************************************************************
  *
+ * The controller of {@link MenuView}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface MenuViewController
   {
-    
   } 

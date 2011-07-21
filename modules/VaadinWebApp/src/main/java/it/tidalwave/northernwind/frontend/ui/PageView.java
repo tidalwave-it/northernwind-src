@@ -22,19 +22,36 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui;
 
-import java.io.IOException;
 import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /***********************************************************************************************************************
  *
+ * This class models a page of the website. It is repopulated every time in function of the user navigation.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface PageView 
   {
+    /*******************************************************************************************************************
+     *
+     * Sets the caption.
+     * 
+     * @param  caption   the caption
+     *
+     ******************************************************************************************************************/
     public void setCaption (@Nonnull String caption);
 
+    /*******************************************************************************************************************
+     *
+     * Sets the contents.
+     * 
+     * @param  content  the content
+     * 
+     *
+     ******************************************************************************************************************/
     public void setContents (@Nonnull Object content)
       throws IOException;
   }

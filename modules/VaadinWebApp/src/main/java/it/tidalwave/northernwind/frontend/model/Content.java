@@ -22,14 +22,16 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import java.io.File;
 import javax.annotation.Nonnull;
+import java.io.File;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * A piece of content to be composed into a page.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -40,6 +42,13 @@ public class Content
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
 
+    /*******************************************************************************************************************
+     *
+     * Cretes a new {@code Content} with the given configuration file.
+     * 
+     * @param   file   the configuration file
+     *
+     ******************************************************************************************************************/
     public Content (final @Nonnull File file)
       {
         resource = new Resource(file);  

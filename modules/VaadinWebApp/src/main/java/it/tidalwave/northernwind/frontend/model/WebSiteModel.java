@@ -22,30 +22,62 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
+ * The model for the whole website, it contains a collection of {@link Content}s, {@link Media} items and 
+ * {@link Node}s.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface WebSiteModel 
   {
+    /*******************************************************************************************************************
+     *
+     * Returns the context path for this web site.
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getContextPath();
     
+    /*******************************************************************************************************************
+     *
+     * Finds the {@link Content} bound to the given URI.
+     * 
+     * @param   relativeUri        the URI
+     * @throws  NotFoundException  if the URI is not bound to any content
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public Content findContentByUri (@Nonnull String uri)
+    public Content findContentByUri (@Nonnull String relativeUri)
       throws NotFoundException, IOException;    
     
+    /*******************************************************************************************************************
+     *
+     * Finds the {@link Media} item bound to the given URI.
+     * 
+     * @param   relativeUri        the URI
+     * @throws  NotFoundException  if the URI is not bound to any media item
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public Media findMediaByUri (@Nonnull String uri)
+    public Media findMediaByUri (@Nonnull String relativeUri)
       throws NotFoundException, IOException;    
     
+    /*******************************************************************************************************************
+     *
+     * Finds the {@link Node} bound to the given URI.
+     * 
+     * @param   relativeUri        the URI
+     * @throws  NotFoundException  if the URI is not bound to any node
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public Node findNodeByUri (@Nonnull String uri) 
+    public Node findNodeByUri (@Nonnull String relativeUri) 
       throws NotFoundException, IOException;    
   }

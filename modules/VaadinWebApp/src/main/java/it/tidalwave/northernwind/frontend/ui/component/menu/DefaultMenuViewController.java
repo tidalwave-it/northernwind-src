@@ -24,11 +24,12 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 /***********************************************************************************************************************
  *
+ * The default implementation of {@link MenuViewController}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public class DefaultMenuViewController implements MenuViewController
-  {
-    
+  {    
   }

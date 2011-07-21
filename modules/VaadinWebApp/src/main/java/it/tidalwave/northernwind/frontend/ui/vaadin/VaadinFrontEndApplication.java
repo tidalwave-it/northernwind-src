@@ -27,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * 
+ * The Vaadin application for the NorthernWind front end.
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -34,6 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class VaadinFrontEndApplication extends Application
   {          
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void init() 
       {

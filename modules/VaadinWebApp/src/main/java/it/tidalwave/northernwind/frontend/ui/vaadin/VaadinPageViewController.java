@@ -22,20 +22,22 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import it.tidalwave.northernwind.frontend.ui.PageView;
-import it.tidalwave.northernwind.frontend.ui.PageViewController;
-import it.tidalwave.northernwind.frontend.model.WebSiteModel;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.URIHandler;
-import it.tidalwave.northernwind.frontend.model.Node;
-import java.net.URL;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
+import java.net.URL;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.frontend.model.Node;
+import it.tidalwave.northernwind.frontend.model.WebSiteModel;
+import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.ui.PageViewController;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.URIHandler;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * The Vaadin specialization of {@link PageViewController}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -43,6 +45,11 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable(preConstruction=true) @Slf4j
 public class VaadinPageViewController implements PageViewController 
   {
+    /*******************************************************************************************************************
+     *
+     * Tracks the incoming URI.
+     *
+     ******************************************************************************************************************/
     private final URIHandler uriHandler = new URIHandler()
       {
         @Override
@@ -50,7 +57,7 @@ public class VaadinPageViewController implements PageViewController
                                          final @Nonnull String relativeUri) 
           {
             log.info("uri: {}", relativeUri);
-            setUri("/" + relativeUri);    
+            setContentsByUri("/" + relativeUri);    
             return null; 
           }
       };
@@ -61,6 +68,13 @@ public class VaadinPageViewController implements PageViewController
     @Nonnull @Inject
     private WebSiteModel webSiteModel;
 
+    /*******************************************************************************************************************
+     *
+     * Creates a new instance bound to the given view.
+     * 
+     * @param  pageView   the view
+     *
+     ******************************************************************************************************************/
     public VaadinPageViewController (final @Nonnull VaadinPageView pageView) 
       {
         log.info("DefaultPageViewController()");
@@ -69,13 +83,20 @@ public class VaadinPageViewController implements PageViewController
         log.info(">>>> registered URI handler");
       }
     
-    private void setUri (final @Nonnull String relativeUri) 
+    /*******************************************************************************************************************
+     *
+     * Changes the contents in function of the given uri.
+     * 
+     * @param  relativeUri   the uri
+     *
+     ******************************************************************************************************************/
+    private void setContentsByUri (final @Nonnull String relativeUri) 
       {
         try
           {
             log.info("setUri({})", relativeUri);
             final Node structure = webSiteModel.findNodeByUri(relativeUri);            
-//            pageView.setCaption(structure.getProperties().getProperty("Title"));
+//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
             pageView.setContents(structure.createContents());
           }
         catch (Exception e)

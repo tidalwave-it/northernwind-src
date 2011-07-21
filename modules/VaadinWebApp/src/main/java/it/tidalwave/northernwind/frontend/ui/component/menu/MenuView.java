@@ -28,12 +28,21 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
+ * A menu component with clickable links.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface MenuView 
   {
+    /*******************************************************************************************************************
+     *
+     * Sets the navigation links.
+     * 
+     * @param  relativeUris   the relative URIs of the targets
+     *
+     ******************************************************************************************************************/
     public void setLinks (@Nonnull List<String> relativeUris)
       throws IOException;
   }

@@ -22,11 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.article;
 
-import it.tidalwave.util.Key;
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
+ * An {@code ArticleView} is a simple text with an optional title.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -35,5 +37,12 @@ public interface ArticleView
   {
     public static final Key<String> PROP_FULL_TEXT = new Key<String>("FullText_en.html");
     
+    /*******************************************************************************************************************
+     *
+     * Sets the text content.
+     * 
+     * @param  text  the text
+     *
+     ******************************************************************************************************************/
     public void setText (@Nonnull String string);
   }

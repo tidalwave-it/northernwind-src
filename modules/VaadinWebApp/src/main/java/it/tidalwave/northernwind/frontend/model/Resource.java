@@ -22,26 +22,26 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.TypeSafeHashMap;
-import it.tidalwave.util.TypeSafeMap;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.TypeSafeHashMap;
+import it.tidalwave.util.TypeSafeMap;
+import org.springframework.beans.factory.annotation.Configurable;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -60,31 +60,11 @@ public class Resource
 
     /*******************************************************************************************************************
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String get (final @Nonnull String attribute)
-      throws NotFoundException, IOException
-      {
-        log.info("get({})", attribute);
-        final File f = new File(file, attribute);
-        
-        if (!f.exists())
-          {
-            throw new NotFoundException(file.getAbsolutePath());  
-          }
-        
-        log.info(">>>> reading from {}", f.getAbsolutePath());
-        @Cleanup final FileReader fr = new FileReader(f);
-        final char[] chars = new char[(int)f.length()];
-        fr.read(chars);
-        fr.close();
-        
-        return new String(chars);
-      }  
-    
-    /*******************************************************************************************************************
-     *
+     * Retrieves a property.
+     * 
+     * @param   key                 the property key
+     * @return                      the property value
+     * @throws  NotFoundException   if the property doesn't exist
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -97,12 +77,17 @@ public class Resource
           }
         catch (NotFoundException e)
           {
-            return (Type)get(key.stringValue());
+            return (Type)getFileBasedProperty(key.stringValue());
           }
       }
 
     /*******************************************************************************************************************
      *
+     * Retrieves a property, eventualyl returning a default value.
+     * 
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -118,6 +103,31 @@ public class Resource
             return defaultValue;
           }
       }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String getFileBasedProperty (final @Nonnull String attribute)
+      throws NotFoundException, IOException
+      {
+        log.info("getFileBasedProperty({})", attribute);
+        final File f = new File(file, attribute);
+        
+        if (!f.exists())
+          {
+            throw new NotFoundException(file.getAbsolutePath());  
+          }
+        
+        log.info(">>>> reading from {}", f.getAbsolutePath());
+        @Cleanup final FileReader fr = new FileReader(f);
+        final char[] chars = new char[(int)f.length()];
+        fr.read(chars);
+        fr.close();
+        
+        return new String(chars);
+      }  
     
     /*******************************************************************************************************************
      *
@@ -146,7 +156,6 @@ public class Resource
             @Cleanup final Reader r = new FileReader(f);
             tempProperties.load(r);
             r.close();        
-
             log.info(">>>> properties: {}", tempProperties);
           }
 

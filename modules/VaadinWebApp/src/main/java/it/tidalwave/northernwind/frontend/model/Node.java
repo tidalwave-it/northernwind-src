@@ -22,14 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
-import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import java.io.File;
-import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
+import it.tidalwave.northernwind.frontend.ui.component.article.vaadin.VaadinArticleView;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,12 +39,14 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
+ * A node of the website, mapped to a given URL.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
-public class Node 
+public class Node // TODO: rename to SiteNode
   {
     public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
     
@@ -55,18 +57,34 @@ public class Node
     private final Resource resource;
     
     @Nonnull @Getter
-    private final String uri;
+    private final String relativeUri;
 
-    public Node (final @Nonnull File file, final @Nonnull String uri)
+    /*******************************************************************************************************************
+     *
+     * Creates a new instance with the given configuration file and mapped to the given URI.
+     * 
+     * @param  file          the file with the configuration
+     * @param  relativeUri   the bound URI
+     *
+     ******************************************************************************************************************/
+    public Node (final @Nonnull File file, final @Nonnull String relativeUri)
       {
         resource = new Resource(file);  
-        this.uri = uri;
+        this.relativeUri = relativeUri;
       }
 
+    /*******************************************************************************************************************
+     *
+     * Creates the UI contents for this {@code Node}.
+     * 
+     * @return   the contents
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public Object createContents()
       throws IOException, NotFoundException
       {
+        // FIXME: this is temporary
         final Key<String> K = new Key<String>("main.content");
         final String contentUri = resource.getProperty(K);
         final VaadinArticleView articleView = new VaadinArticleView("main");
@@ -74,6 +92,10 @@ public class Node
         return articleView;
       }
         
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private static String r (final @Nonnull String s)
       {
