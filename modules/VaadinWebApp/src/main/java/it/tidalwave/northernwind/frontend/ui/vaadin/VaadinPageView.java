@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import com.vaadin.terminal.FileResource;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.io.IOException;
@@ -30,8 +31,14 @@ import it.tidalwave.northernwind.frontend.ui.PageView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
+import it.tidalwave.northernwind.frontend.model.Media;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.util.NotFoundException;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.filesystems.FileUtil;
 
 /***********************************************************************************************************************
  *
@@ -41,9 +48,12 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable @Slf4j
 public class VaadinPageView extends Window implements PageView
   {
+    @Inject @Nonnull
+    private WebSite webSite;
+            
     /*******************************************************************************************************************
      *
      *
@@ -87,16 +97,16 @@ public class VaadinPageView extends Window implements PageView
             throw new RuntimeException(e);
         }
         
-//        try // FIXME to be moved to CSS
-//          {
-//            final Media media = webSite.findMediaByUri("/blueBill_Mobile-Banner.png");
-//            addComponent(new Embedded("", new FileResource(FileUtil.toFile(media.getResource().getFile()), getApplication()))); 
-//          }
-//        catch (NotFoundException e) 
-//          {
-//            log.error("", e);
-//          }
-        
+        try // FIXME to be moved to CSS
+          {
+            final Media media = webSite.findMediaByUri("/blueBill_Mobile-Banner.png");
+            addComponent(new Embedded("", new FileResource(FileUtil.toFile(media.getResource().getFile()), getApplication()))); 
+          }
+        catch (NotFoundException e) 
+          {
+            log.error("", e);
+          }
+       
         addComponent(menuView);
         addComponent((Component)content);
       }
