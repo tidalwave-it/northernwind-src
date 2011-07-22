@@ -41,6 +41,7 @@ import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -49,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j // @ToString
+@Configurable @Slf4j @ToString(exclude="webSite")
 public class Resource 
   {
     @Inject @Nonnull
