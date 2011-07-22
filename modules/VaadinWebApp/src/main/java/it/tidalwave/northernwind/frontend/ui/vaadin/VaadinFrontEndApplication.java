@@ -23,7 +23,12 @@
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import com.vaadin.Application;
+import com.vaadin.ui.Window;
+import it.tidalwave.northernwind.frontend.ui.PageView;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -33,9 +38,12 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Configurable @Slf4j
 public class VaadinFrontEndApplication extends Application
   {          
+    @Inject @Nonnull
+    private PageView pageView;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -47,7 +55,7 @@ public class VaadinFrontEndApplication extends Application
         try
           {  
             log.info("Restarting...");    
-            setMainWindow(new VaadinPageView());
+            setMainWindow((Window)pageView);
             setTheme("bluebill");
           }
         catch (Throwable e)
