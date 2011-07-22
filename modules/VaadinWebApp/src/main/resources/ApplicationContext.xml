@@ -74,7 +74,7 @@
             <list>
                 <!-- FIXME: pass thru JavaScript calls -->            
                 <bean id="mediaUriHandler" class="it.tidalwave.northernwind.frontend.model.vaadin.urihandler.VaadinMediaUriHandler"/>
-                <bean id="contentUriHandler" class="it.tidalwave.northernwind.frontend.model.urihandler.ContentUriHandler"/>
+                <bean id="contentUriHandler" class="it.tidalwave.northernwind.frontend.model.spi.ContentUriHandler"/>
             </list>
         </property>
     </bean>
