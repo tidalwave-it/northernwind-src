@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URLEncoder;
 import java.util.Stack;
+import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -136,7 +137,7 @@ public class Main
                       if (fixedPath.startsWith("Mobile"))
                         {
                           fixedPath = fixedPath.replaceAll("^Mobile/", "content/document/");
-                          final String xml = builder.toString().replace("cdataEnd", "]]>");
+                          final String xml = replaceMacros(builder.toString().replace("cdataEnd", "]]>"));
                           new ContentParser(xml, dateTime, fixedPath, languageCode).process();
                         }
                       
@@ -170,4 +171,12 @@ public class Main
               }
           }
       }    
+    
+    @Nonnull
+    public static String replaceMacros (@Nonnull String xml)
+      {
+        xml = xml.replaceAll("\\$templateLogic\\.getPageUrl\\(([0-9]*), \\$templateLogic\\.languageId,-1\\)", "\\$link($1)");
+        xml = xml.replaceAll("\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*), \"([^\"]*)\"\\)", "\\$media($1, $2)");
+        return xml;
+      }
   }
