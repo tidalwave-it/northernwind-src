@@ -79,7 +79,7 @@ public class VaadinPageViewController extends DefaultPageViewController
      *
      ******************************************************************************************************************/
     @PostConstruct
-    private void initialize()
+    private void registerUriHandler()
       {
         pageView.addURIHandler(uriHandler);
         // FIXME: seems to be registered twice? See logs
