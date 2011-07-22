@@ -65,9 +65,10 @@ public class VaadinMediaUriHandler implements UriHandler
             final Resource resource = webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource();     
             final FileObject file = resource.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());
-            downloadStreamHolder.set(new DownloadStream(file.getInputStream(), null, null));
-//                return new DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType());
-                // TODO: I suppose DownloadStream closes the stream
+            downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), null));
+            // FIXE: mimeType triggers a NB Platform exception
+//            downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()));
+            // TODO: I suppose DownloadStream closes the stream
             return true;
           }
         
