@@ -61,6 +61,8 @@ public class VaadinPageViewController implements PageViewController
           {
             log.info("uri: {}", relativeUri);
             
+            // FIXME: pass thru JavaScript calls
+            
             // FIXME: move to a filter
             if (relativeUri.startsWith("media"))
               {
