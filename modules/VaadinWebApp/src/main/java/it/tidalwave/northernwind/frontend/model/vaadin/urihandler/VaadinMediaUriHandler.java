@@ -20,69 +20,52 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.vaadin;
+package it.tidalwave.northernwind.frontend.model.vaadin.urihandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
+import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.ui.PageViewController;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultPageViewController;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Resource;
+import it.tidalwave.northernwind.frontend.model.UriHandler;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal;
 import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.URIHandler;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The Vaadin specialization of {@link PageViewController}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class VaadinPageViewController extends DefaultPageViewController
+public class VaadinMediaUriHandler implements UriHandler
   {
-    @Nonnull @Inject
-    private VaadinPageView pageView;
+    @Inject @Nonnull
+    private WebSite webSite;
     
     @Nonnull @Inject
     private DownloadStreamThreadLocal downloadStreamHolder;
 
-    /*******************************************************************************************************************
-     *
-     * Tracks the incoming URI.
-     *
-     ******************************************************************************************************************/
-    private final URIHandler uriHandler = new URIHandler()
+    @Override
+    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+      throws NotFoundException, IOException
       {
-        @Override
-        public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
+        if (relativeUri.startsWith("media"))
           {
-            try
-              {
-                downloadStreamHolder.set(null);
-                handleUri(context, relativeUri);
-                return downloadStreamHolder.get();
-              }
-            finally
-              {
-                downloadStreamHolder.set(null);
-              }
+            final Resource resource = webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource();     
+            final FileObject file = resource.getFile();
+            log.info(">>>> serving contents of {} ...", file.getPath());
+            downloadStreamHolder.set(new DownloadStream(file.getInputStream(), null, null));
+//                return new DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType());
+                // TODO: I suppose DownloadStream closes the stream
+            return true;
           }
-      };
-    
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @PostConstruct
-    private void initialize()
-      {
-        pageView.addURIHandler(uriHandler);
-        // FIXME: seems to be registered twice? See logs
-        log.info(">>>> registered URI handler: {}", uriHandler);
+        
+        return false;
       }
   }

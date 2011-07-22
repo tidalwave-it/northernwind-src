@@ -23,16 +23,17 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Resource;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
-import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.ui.PageViewController;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -46,11 +47,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultPageViewController implements PageViewController
   {
-    @Inject @Nonnull
-    private WebSite webSite;
-    
-    @Inject @Nonnull
-    private PageView pageView;
+    @Getter @Setter @Nonnull
+    private List<UriHandler> uriHandlers;
     
     /*******************************************************************************************************************
      *
@@ -63,40 +61,36 @@ public class DefaultPageViewController implements PageViewController
         try
           {
             log.info("handleUri({}, {})", context, relativeUri);
-
-            // FIXME: pass thru JavaScript calls
-
-            // FIXME: move to a filter
-            if (relativeUri.startsWith("media"))
+            
+            for (final UriHandler uriHandler : uriHandlers)
               {
-                serveResource(webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource());     
-                return;
+                log.info(">>>> trying {} ...", uriHandler);
+                
+                if (uriHandler.handleUri(context, relativeUri))
+                  {
+                    break;  
+                  }
               }
-
-            // FIXME: move this to a filter too
-            final WebSiteNode node = webSite.findNodeByUri("/" + relativeUri);            
-    //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-            pageView.setContents(node.createContents());
           }
         catch (NotFoundException e) 
           {
-            log.error("", e);
+            log.error("", e); 
+            // TODO
           }
         catch (IOException e) 
           {
             log.error("", e);
+            // TODO
           }
       }
     
     /*******************************************************************************************************************
      *
      *
-     *
      ******************************************************************************************************************/
-    protected void serveResource (final @Nonnull Resource resource)
-      throws IOException
+    @PostConstruct
+    public void logConfiguration()
       {
-        log.info("serveResource({})", resource);
-        log.warn(">>>> doing nothing, need to be overridden");
+        log.info(">>>> uriHandlers: {}", uriHandlers);  
       }
   } 

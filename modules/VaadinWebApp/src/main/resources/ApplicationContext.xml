@@ -63,11 +63,21 @@
         <property name="rootPath" value="${nw.rootPath}" />
     </bean>
     
+    <bean id="downloadStreamThreadLocal" class="it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal" />
+    
     <!-- FIXME: session bound -->
     <bean id="pageView" class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageView"/>
     
     <!-- FIXME: session bound -->
-    <bean id="pageViewController" class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageViewController"/>
+    <bean id="pageViewController" class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageViewController" autowire="no">
+        <property name="uriHandlers">
+            <list>
+                <!-- FIXME: pass thru JavaScript calls -->            
+                <bean id="mediaUriHandler" class="it.tidalwave.northernwind.frontend.model.vaadin.urihandler.VaadinMediaUriHandler"/>
+                <bean id="contentUriHandler" class="it.tidalwave.northernwind.frontend.model.urihandler.ContentUriHandler"/>
+            </list>
+        </property>
+    </bean>
     
     <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite">
         <property name="contextPath" value="${nw.contextPath}" />

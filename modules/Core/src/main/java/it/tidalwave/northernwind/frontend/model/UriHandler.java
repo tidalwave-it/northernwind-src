@@ -20,69 +20,25 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.vaadin;
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URL;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.ui.PageViewController;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultPageViewController;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.URIHandler;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
- * The Vaadin specialization of {@link PageViewController}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
-public class VaadinPageViewController extends DefaultPageViewController
+public interface UriHandler
   {
-    @Nonnull @Inject
-    private VaadinPageView pageView;
-    
-    @Nonnull @Inject
-    private DownloadStreamThreadLocal downloadStreamHolder;
-
-    /*******************************************************************************************************************
-     *
-     * Tracks the incoming URI.
-     *
-     ******************************************************************************************************************/
-    private final URIHandler uriHandler = new URIHandler()
-      {
-        @Override
-        public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
-          {
-            try
-              {
-                downloadStreamHolder.set(null);
-                handleUri(context, relativeUri);
-                return downloadStreamHolder.get();
-              }
-            finally
-              {
-                downloadStreamHolder.set(null);
-              }
-          }
-      };
-    
     /*******************************************************************************************************************
      *
      *
-     *
      ******************************************************************************************************************/
-    @PostConstruct
-    private void initialize()
-      {
-        pageView.addURIHandler(uriHandler);
-        // FIXME: seems to be registered twice? See logs
-        log.info(">>>> registered URI handler: {}", uriHandler);
-      }
+    public boolean handleUri (@Nonnull URL context, @Nonnull String relativeUri)
+      throws NotFoundException, IOException;
   }
