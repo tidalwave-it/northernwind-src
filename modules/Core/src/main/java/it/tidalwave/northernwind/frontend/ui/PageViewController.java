@@ -23,10 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.net.URL;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Resource;
 
 /***********************************************************************************************************************
  *
@@ -47,6 +44,5 @@ public interface PageViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Resource handleUri (@Nonnull URL context, @Nonnull String relativeUri) 
-      throws NotFoundException, IOException, DoNothingException;
+    public void handleUri (@Nonnull URL context, @Nonnull String relativeUri);
   }

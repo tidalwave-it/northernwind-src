@@ -57,25 +57,46 @@ public class DefaultPageViewController implements PageViewController
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public Resource handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws NotFoundException, IOException, DoNothingException
+    @Override
+    public void handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
       {
-        log.info("handleUri({}. {})", context, relativeUri);
-
-        // FIXME: pass thru JavaScript calls
-
-        // FIXME: move to a filter
-        if (relativeUri.startsWith("media"))
+        try
           {
-            return webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource();      
-          }
+            log.info("handleUri({}, {})", context, relativeUri);
 
-        // FIXME: move this to a filter too
-        final WebSiteNode node = webSite.findNodeByUri("/" + relativeUri);            
-//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        pageView.setContents(node.createContents());
-        
-        throw new DoNothingException(); 
+            // FIXME: pass thru JavaScript calls
+
+            // FIXME: move to a filter
+            if (relativeUri.startsWith("media"))
+              {
+                serveResource(webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource());     
+                return;
+              }
+
+            // FIXME: move this to a filter too
+            final WebSiteNode node = webSite.findNodeByUri("/" + relativeUri);            
+    //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
+            pageView.setContents(node.createContents());
+          }
+        catch (NotFoundException e) 
+          {
+            log.error("", e);
+          }
+        catch (IOException e) 
+          {
+            log.error("", e);
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    protected void serveResource (final @Nonnull Resource resource)
+      throws IOException
+      {
+        log.info("serveResource({})", resource);
+        log.warn(">>>> doing nothing, need to be overridden");
       }
   } 
