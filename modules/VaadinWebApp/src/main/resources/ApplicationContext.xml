@@ -69,8 +69,6 @@
     <!-- FIXME: session bound -->
     <bean id="pageViewController" class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageViewController"/>
     
-    <bean id="uriHandler" class="it.tidalwave.northernwind.frontend.model.UriHandler"/>
-    
     <bean id="webSiteModel" class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite">
         <property name="contextPath" value="${nw.contextPath}" />
         <property name="fileSystemProvider" ref="fileSystemProvider" />

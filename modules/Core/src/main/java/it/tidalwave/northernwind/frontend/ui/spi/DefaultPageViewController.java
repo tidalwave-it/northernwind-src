@@ -20,33 +20,62 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui;
+package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Resource;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.ui.PageViewController;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link PageView}.
+ * The default implementation of {@link PageViewController}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface PageViewController 
+@Configurable @Slf4j
+public class DefaultPageViewController implements PageViewController
   {
-    public static class DoNothingException extends Exception
-      {
-      }
-                
+    @Inject @Nonnull
+    private WebSite webSite;
+    
+    @Inject @Nonnull
+    private PageView pageView;
+    
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public Resource handleUri (@Nonnull URL context, @Nonnull String relativeUri) 
-      throws NotFoundException, IOException, DoNothingException;
-  }
+    @Override @Nonnull
+    public Resource handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+      throws NotFoundException, IOException, DoNothingException
+      {
+        log.info("handleUri({}. {})", context, relativeUri);
+
+        // FIXME: pass thru JavaScript calls
+
+        // FIXME: move to a filter
+        if (relativeUri.startsWith("media"))
+          {
+            return webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource();      
+          }
+
+        // FIXME: move this to a filter too
+        final WebSiteNode node = webSite.findNodeByUri("/" + relativeUri);            
+//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
+        pageView.setContents(node.createContents());
+        
+        throw new DoNothingException(); 
+      }
+  } 
