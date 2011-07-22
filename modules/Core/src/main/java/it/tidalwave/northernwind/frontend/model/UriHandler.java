@@ -4,6 +4,7 @@
  */
 package it.tidalwave.northernwind.frontend.model;
 
+import it.tidalwave.northernwind.frontend.ui.PageView;
 import it.tidalwave.northernwind.frontend.ui.PageViewController;
 import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
@@ -30,6 +31,9 @@ public class UriHandler
     @Inject @Nonnull
     private PageViewController pageViewController;
     
+    @Inject @Nonnull
+    private PageView pageView;
+    
     @Nonnull
     public Resource handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException, DoNothingException
@@ -45,7 +49,11 @@ public class UriHandler
           }
 
         // FIXME: move this to a filter too
-        pageViewController.setContentsByUri("/" + relativeUri);   
+//        pageViewController.setContentsByUri("/" + relativeUri);   
+//            log.info("setContentsByUri({})", relativeUri);
+            final WebSiteNode node = webSite.findNodeByUri("/" + relativeUri);            
+//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
+            pageView.setContents(node.createContents());
         
         throw new DoNothingException(); 
       }

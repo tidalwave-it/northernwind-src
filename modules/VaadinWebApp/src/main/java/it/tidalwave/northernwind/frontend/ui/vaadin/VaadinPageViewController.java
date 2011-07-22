@@ -56,16 +56,5 @@ public class VaadinPageViewController implements PageViewController
     @Override
     public void setContentsByUri (final @Nonnull String relativeUri) // TODO: could probably pushed up into a support superclass
       {
-        try
-          {
-            log.info("setContentsByUri({})", relativeUri);
-            final WebSiteNode node = webSite.findNodeByUri(relativeUri);            
-//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-            pageView.setContents(node.createContents());
-          }
-        catch (Exception e)
-          {
-            log.error("", e);  
-          }
       } 
   }
