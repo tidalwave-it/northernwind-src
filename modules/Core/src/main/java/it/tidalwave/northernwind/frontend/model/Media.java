@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import javax.annotation.Nonnull;
 import org.openide.filesystems.FileObject;
 import lombok.Delegate;
@@ -49,5 +51,12 @@ public class Media
     public Media (final @Nonnull FileObject file)
       {
         resource = new Resource(file);  
+      }
+    
+    @Nonnull
+    public InputStream getInputStream() // FIXME: refactor as getProperty("something", InputStream.class);
+      throws FileNotFoundException
+      {
+        return resource.getFile().getInputStream();  
       }
   }

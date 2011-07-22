@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URLEncoder;
 import java.util.Stack;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLInputFactory;
@@ -175,8 +176,34 @@ public class Main
     @Nonnull
     public static String replaceMacros (@Nonnull String xml)
       {
-        xml = xml.replaceAll("\\$templateLogic\\.getPageUrl\\(([0-9]*), \\$templateLogic\\.languageId,-1\\)", "\\$link($1)");
-        xml = xml.replaceAll("\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*), \"([^\"]*)\"\\)", "\\$media($1, $2)");
-        return xml;
+        final String r1 = "\\$templateLogic\\.getPageUrl\\(([0-9]*), \\$templateLogic\\.languageId,-1\\)";
+        final String r2 = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*), \"([^\"]*)\"\\)";
+        final Pattern p1 = Pattern.compile(r1);
+        final Pattern p2 = Pattern.compile(r2);
+        final Matcher m1 = p1.matcher(xml);
+        
+        StringBuffer buffer = new StringBuffer();
+
+        while (m1.find())
+          {
+            final String r = m1.group(1);
+            m1.appendReplacement(buffer, "\\$nodelink(" + r + ")");
+          }
+        
+        m1.appendTail(buffer);
+
+        final Matcher m2 = p2.matcher(buffer.toString());
+        buffer = new StringBuffer();
+        
+        while (m2.find())
+          {
+            final String r = m2.group(2);
+            m2.appendReplacement(buffer, "\\$media(" + r + ".png)");
+          }
+        
+        m2.appendTail(buffer);
+        
+//          System.err.println("ORIGINAL " + xml + "\nREPLACED " + buffer);
+        return buffer.toString();
       }
   }

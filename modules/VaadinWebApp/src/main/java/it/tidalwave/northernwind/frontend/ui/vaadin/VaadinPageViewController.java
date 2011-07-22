@@ -22,6 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import it.tidalwave.northernwind.frontend.model.Media;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.net.URL;
@@ -57,6 +60,28 @@ public class VaadinPageViewController implements PageViewController
                                          final @Nonnull String relativeUri) 
           {
             log.info("uri: {}", relativeUri);
+            
+            // FIXME: move to a filter
+            if (relativeUri.startsWith("media"))
+              {
+                try 
+                  {
+                    final Media media = webSite.findMediaByUri(relativeUri.replaceAll("^media", ""));                    
+                    return new DownloadStream(media.getInputStream(), null, null); // TODO: I suppose DownloadStream closes the stream
+                  }
+                catch (NotFoundException e) 
+                  {
+                    log.error("", e);
+                  }
+                catch (IOException e) 
+                  {
+                    log.error("", e);
+                  }
+                
+                return null;
+              }
+            
+            // FIXME: move this to a filter too
             setContentsByUri("/" + relativeUri);    
             return null; 
           }

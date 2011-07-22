@@ -36,6 +36,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.util.TypeSafeMap;
 import java.io.InputStreamReader;
+import javax.inject.Inject;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import lombok.Cleanup;
@@ -49,15 +50,23 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor @Slf4j // @ToString
+@Configurable @Slf4j // @ToString
 public class Resource 
   {
+    @Inject @Nonnull
+    private WebSite webSite;
+    
     @Nonnull @Getter
     private final FileObject file;    
     
     @CheckForNull
     private transient TypeSafeMap properties;
 
+    public Resource (final @Nonnull FileObject file) 
+      {
+        this.file = file;
+      }
+    
     /*******************************************************************************************************************
      *
      * Retrieves a property.
@@ -121,7 +130,12 @@ public class Resource
           }
         
         log.info(">>>> reading from {}", attributeFile.getPath());
-        return attributeFile.asText();
+        String text = attributeFile.asText();
+
+        // FIXME: this should be done in a specific postprocessor registered only for Content   
+        text = text.replaceAll("\\$media\\(([^\\)]*)\\)", webSite.getContextPath() + "/media/$1");
+        
+        return text;
       }  
     
     /*******************************************************************************************************************
