@@ -48,9 +48,14 @@ public class VaadinMediaUriHandler implements UriHandler
     @Inject @Nonnull
     private WebSite webSite;
     
-    @Nonnull @Inject
+    @Inject @Nonnull
     private DownloadStreamThreadLocal downloadStreamHolder;
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException
