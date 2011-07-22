@@ -31,6 +31,8 @@ import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.ui.PageView;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
  *
@@ -38,6 +40,7 @@ import it.tidalwave.northernwind.frontend.ui.PageView;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable @Scope(value="session") 
 public class ContentUriHandler implements UriHandler
   {
     @Inject @Nonnull

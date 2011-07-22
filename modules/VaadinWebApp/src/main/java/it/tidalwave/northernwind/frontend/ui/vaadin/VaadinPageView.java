@@ -39,6 +39,7 @@ import it.tidalwave.util.NotFoundException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.filesystems.FileUtil;
+import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
  *
@@ -48,7 +49,7 @@ import org.openide.filesystems.FileUtil;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @Scope(value="session") @Slf4j
 public class VaadinPageView extends Window implements PageView
   {
     @Inject @Nonnull

@@ -32,6 +32,7 @@ import it.tidalwave.northernwind.frontend.ui.spi.DefaultPageViewController;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
  *
@@ -41,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @Scope(value="session") @Slf4j
 public class VaadinPageViewController extends DefaultPageViewController
   {
     @Nonnull @Inject

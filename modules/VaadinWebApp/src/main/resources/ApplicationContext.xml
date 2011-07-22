@@ -60,20 +60,16 @@
     <context:spring-configured />
 
     <bean id="fileSystemProvider" 
-          class="it.tidalwave.northernwind.frontend.filesystem.LocalFileSystemProvider"
-          scope="singleton">
+          class="it.tidalwave.northernwind.frontend.filesystem.LocalFileSystemProvider" >
         <property name="rootPath" value="${nw.rootPath}" />
     </bean>
     
     <bean id="downloadStreamThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal" 
-          scope="singleton" />
+          class="it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal" />
     
-    <!-- FIXME: session bound -->
     <bean id="pageView" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageView" />
     
-    <!-- FIXME: session bound -->
     <bean id="pageViewController" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageViewController"
           autowire="no">
@@ -89,8 +85,7 @@
     </bean>
     
     <bean id="webSiteModel" 
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite"
-          scope="singleton">
+          class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite" >
         <property name="contextPath" value="${nw.contextPath}" />
         <property name="fileSystemProvider" ref="fileSystemProvider" />
         <property name="documentPath" value="${nw.documentPath}" />
@@ -98,4 +93,7 @@
         <property name="nodePath" value="${nw.nodePath}" />
     </bean>
        
+    <bean id="frontEndWebApp"
+          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinFrontEndApplication" />
+          
 </beans>

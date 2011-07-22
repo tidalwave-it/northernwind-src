@@ -35,6 +35,7 @@ import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal;
 import com.vaadin.terminal.DownloadStream;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
  *
@@ -42,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @Scope(value="session") @Slf4j
 public class VaadinMediaUriHandler implements UriHandler
   {
     @Inject @Nonnull

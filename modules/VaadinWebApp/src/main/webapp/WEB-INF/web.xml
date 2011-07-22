@@ -34,6 +34,11 @@
         <param-value>classpath:/ApplicationContext.xml</param-value>
     </context-param>
     
+    <!-- Spring configuration for session-scoped beans -->
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+    
     <!-- Jersey (REST) configuration -->
 <!--    <servlet>
         <servlet-name>JerseyServlet</servlet-name>
@@ -52,10 +57,10 @@
     <!-- Vaadin configuration -->
     <servlet>
         <servlet-name>Vaadin Application Servlet</servlet-name>
-        <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+        <servlet-class>it.tidalwave.northernwind.frontend.ui.vaadin.SpringApplicationServlet</servlet-class>
         <init-param>
-            <param-name>application</param-name>
-            <param-value>it.tidalwave.northernwind.frontend.ui.vaadin.VaadinFrontEndApplication</param-value>
+            <param-name>applicationBean</param-name>
+            <param-value>frontEndWebApp</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
         <!--        <init-param>
