@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
+import it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewControllerSupport;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Link;
@@ -37,7 +37,7 @@ import com.vaadin.ui.Link;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class VaadinMenuViewController extends DefaultMenuViewController
+public class VaadinMenuViewController extends MenuViewControllerSupport
   {
     @Nonnull @Inject
     private WebSite webSite;
@@ -53,6 +53,7 @@ public class VaadinMenuViewController extends DefaultMenuViewController
         
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override

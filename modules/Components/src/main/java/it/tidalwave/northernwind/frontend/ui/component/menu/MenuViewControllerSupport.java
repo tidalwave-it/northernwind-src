@@ -43,7 +43,7 @@ import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
  *
  **********************************************************************************************************************/
 @Configurable @Scope("session") @Slf4j
-public abstract class DefaultMenuViewController implements MenuViewController
+public abstract class MenuViewControllerSupport implements MenuViewController
   {    
     @Nonnull @Inject
     private WebSite webSite;
@@ -55,7 +55,7 @@ public abstract class DefaultMenuViewController implements MenuViewController
      *
      *
      ******************************************************************************************************************/
-    public DefaultMenuViewController (final @Nonnull MenuView view) 
+    public MenuViewControllerSupport (final @Nonnull MenuView view) 
       {
         this.view = view;
       }
@@ -93,4 +93,3 @@ public abstract class DefaultMenuViewController implements MenuViewController
      *
      ******************************************************************************************************************/
     protected abstract void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
-  }
