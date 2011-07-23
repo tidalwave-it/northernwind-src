@@ -39,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class Content 
   {
+    public static final Class<Content> Content = Content.class;
+    
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
 

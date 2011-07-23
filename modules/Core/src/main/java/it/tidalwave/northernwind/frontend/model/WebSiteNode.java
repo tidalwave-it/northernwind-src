@@ -46,6 +46,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
 public class WebSiteNode
   {
+    public static final Class<WebSiteNode> WebSiteNode = WebSiteNode.class;
+    
     public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
     
     @Nonnull @Inject

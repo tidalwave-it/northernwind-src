@@ -33,6 +33,7 @@ import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.ui.PageView;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
+import static it.tidalwave.northernwind.frontend.model.WebSiteNode.WebSiteNode;
 
 /***********************************************************************************************************************
  *
@@ -58,7 +59,7 @@ public class ContentUriHandler implements UriHandler
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
       throws NotFoundException, IOException 
       {
-        final WebSiteNode node = webSite.findNode().withRelativeUri("/" + relativeUri).result();            
+        final WebSiteNode node = webSite.find(WebSiteNode).withRelativeUri("/" + relativeUri).result();            
 //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
         pageView.setContents(node.createContents());
         

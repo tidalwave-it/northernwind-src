@@ -53,6 +53,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j @ToString(exclude="webSite")
 public class Resource 
   {
+    public static final Class<Resource> Resource = Resource.class;
+    
     @Inject @Nonnull
     private WebSite webSite;
     

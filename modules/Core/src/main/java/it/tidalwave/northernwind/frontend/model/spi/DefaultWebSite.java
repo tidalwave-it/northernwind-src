@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.model.WebSiteFinder;
+import java.util.HashMap;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +109,8 @@ public class DefaultWebSite implements WebSite
     private final Map<String, Media> mediaMapByRelativeUri = new TreeMap<String, Media>();
     
     private final Map<String, WebSiteNode> nodeMapByRelativeUri = new TreeMap<String, WebSiteNode>();
+    
+    private final Map<Class<?>, Map<String, ?>> mapsByType = new HashMap<Class<?>, Map<String, ?>>(); 
         
     /*******************************************************************************************************************
      *
@@ -118,6 +121,10 @@ public class DefaultWebSite implements WebSite
       throws IOException, PropertyVetoException
       {
         log.info("initialize()");
+        
+        mapsByType.put(Content.class, documentMapByRelativeUri);
+        mapsByType.put(Media.class, mediaMapByRelativeUri);
+        mapsByType.put(WebSiteNode.class, nodeMapByRelativeUri);
         
         final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = fileSystem.findResource(documentPath);
@@ -168,31 +175,16 @@ public class DefaultWebSite implements WebSite
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public WebSiteFinder<Content> findContent()
+    public <Type> WebSiteFinder<Type> find (final @Nonnull Class<Type> type)
       {
-        return new DefaultWebSiteFinder<Content>("Content", documentMapByRelativeUri);
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public WebSiteFinder<Media> findMedia() 
-      {
-        return new DefaultWebSiteFinder<Media>("Media", mediaMapByRelativeUri);
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public WebSiteFinder<WebSiteNode> findNode() 
-      {
-        return new DefaultWebSiteFinder<WebSiteNode>("WebSiteNode", nodeMapByRelativeUri);
+        final Map<String, Type> map = (Map<String, Type>)mapsByType.get(type);
+        
+        if (map == null)
+          {
+            throw new IllegalArgumentException("Illegal type: " + type + "; can be: " + mapsByType.keySet());  
+          }
+        
+        return new DefaultWebSiteFinder<Type>(type.getSimpleName(), map);
       }
     
     /*******************************************************************************************************************

@@ -37,6 +37,7 @@ import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
 import com.vaadin.terminal.DownloadStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
+import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -64,7 +65,7 @@ public class VaadinMediaUriHandler implements UriHandler
       {
         if (relativeUri.startsWith("media"))
           {
-            final Media media = webSite.findMedia().withRelativeUri(relativeUri.replaceAll("^media", "")).result();
+            final Media media = webSite.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
             final Resource resource = media.getResource();     
             final FileObject file = resource.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());

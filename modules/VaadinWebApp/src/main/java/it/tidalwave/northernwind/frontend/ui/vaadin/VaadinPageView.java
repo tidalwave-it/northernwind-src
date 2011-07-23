@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.PageView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
@@ -43,6 +42,7 @@ import it.tidalwave.util.NotFoundException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
+import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -103,7 +103,7 @@ public class VaadinPageView extends Window implements PageView
         
         try // FIXME to be moved to CSS
           {
-            final Media media = webSite.findMedia().withRelativeUri("/blueBill_Mobile-Banner.png").result();
+            final Media media = webSite.find(Media).withRelativeUri("/blueBill_Mobile-Banner.png").result();
             final FileObject file = media.getResource().getFile();
             final InputStream is = file.getInputStream();
             addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 

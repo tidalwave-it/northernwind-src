@@ -40,6 +40,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class Media 
   {
+    public static final Class<Media> Media = Media.class;
+    
     @Nonnull @Getter @Delegate(types=Resource.class)
     private final Resource resource;
 
