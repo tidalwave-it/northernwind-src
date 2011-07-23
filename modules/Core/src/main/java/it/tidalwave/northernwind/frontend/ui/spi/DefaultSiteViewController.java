@@ -64,7 +64,7 @@ public class DefaultSiteViewController implements SiteViewController
             
             for (final UriHandler uriHandler : uriHandlers)
               {
-                log.info(">>>> trying {} ...", uriHandler);
+                log.debug(">>>> trying {} ...", uriHandler);
                 
                 if (uriHandler.handleUri(context, relativeUri))
                   {

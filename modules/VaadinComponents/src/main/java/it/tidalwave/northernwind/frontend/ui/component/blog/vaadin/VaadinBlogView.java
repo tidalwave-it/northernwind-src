@@ -62,7 +62,6 @@ public class VaadinBlogView extends VerticalLayout implements BlogView
         builder.append("<h3>").append(blogPost.getTitle()).append("</h3>");
         builder.append(blogPost.getFullText());
         label.setValue(builder.toString());
-        log.info("SET TEXT " + builder);
         addComponent(label);
       }
   }

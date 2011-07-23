@@ -91,7 +91,7 @@ public class DefaultMenuViewController implements MenuViewController
      ******************************************************************************************************************/
     private void setLinks (final @Nonnull List<String> relativeUris) 
       {
-        log.info("setLinks({})", relativeUris);
+        log.debug("setLinks({})", relativeUris);
         
         for (final String relativeUri : relativeUris)
           {  

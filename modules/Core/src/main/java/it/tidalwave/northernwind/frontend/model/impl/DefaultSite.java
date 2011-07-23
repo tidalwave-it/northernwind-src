@@ -120,7 +120,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     public void initialize()
       throws IOException, PropertyVetoException
       {
-        log.info("initialize()");
+        log.debug("initialize()");
         
         mapsByType.put(Content.class, documentMapByRelativeUri);
         mapsByType.put(Media.class, mediaMapByRelativeUri);
@@ -201,7 +201,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.info("traverse({}}", file);
+        log.trace("traverse({}}", file);
         final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 

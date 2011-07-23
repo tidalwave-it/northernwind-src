@@ -104,13 +104,13 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     private void copyFolder (final @Nonnull FileObject sourceFolder, final @Nonnull FileObject targetFolder)
       throws IOException
       {
-        log.info("copyFolder({}, {}", sourceFolder, targetFolder);
+        log.debug("copyFolder({}, {}", sourceFolder, targetFolder);
         
         for (final FileObject sourceChild : sourceFolder.getChildren())
           {
             if (!sourceChild.isFolder())
               { 
-                log.info(">>>> copying {} into {} ...", sourceChild, targetFolder);
+                log.trace(">>>> copying {} into {} ...", sourceChild, targetFolder);
                 FileUtil.copyFile(sourceChild, targetFolder, sourceChild.getName());
               }
           }

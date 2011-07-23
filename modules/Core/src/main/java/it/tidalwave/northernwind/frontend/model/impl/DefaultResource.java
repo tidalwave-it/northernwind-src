@@ -118,7 +118,7 @@ import lombok.extern.slf4j.Slf4j;
     private String getFileBasedProperty (final @Nonnull String attribute)
       throws NotFoundException, IOException
       {
-        log.info("getFileBasedProperty({})", attribute);
+        log.trace("getFileBasedProperty({})", attribute);
         final FileObject attributeFile = file.getFileObject(attribute);
         
         if (attributeFile == null)
@@ -126,7 +126,7 @@ import lombok.extern.slf4j.Slf4j;
             throw new NotFoundException(file.getPath() + "/" + attribute);  
           }
         
-        log.info(">>>> reading from {}", attributeFile.getPath());
+        log.trace(">>>> reading from {}", attributeFile.getPath());
         String text = attributeFile.asText();
 
         // FIXME: this should be done in a specific postprocessor registered only for Content   
@@ -143,17 +143,17 @@ import lombok.extern.slf4j.Slf4j;
     private void loadProperties()
       throws IOException
       {
-        log.info("loadProperties() for {}", file.getPath());
+        log.trace("loadProperties() for {}", file.getPath());
                 
         final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
 
         for (final FileObject propertyFile : getPropertyFiles())
           {
-            log.info(">>>> reading properties from {}...", propertyFile.getPath());
+            log.trace(">>>> reading properties from {}...", propertyFile.getPath());
             @Cleanup final Reader r = new InputStreamReader(propertyFile.getInputStream());
             final Properties tempProperties = new Properties();
             tempProperties.load(r);
-            log.info(">>>> local properties: {}", tempProperties);
+            log.trace(">>>> local properties: {}", tempProperties);
             r.close();        
             
             for (final Entry<Object, Object> entry : tempProperties.entrySet())

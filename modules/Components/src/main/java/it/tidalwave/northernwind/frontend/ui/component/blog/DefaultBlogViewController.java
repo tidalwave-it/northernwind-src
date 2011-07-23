@@ -73,7 +73,7 @@ public class DefaultBlogViewController implements BlogViewController
     
     private void setPosts (final @Nonnull List<String> relativeUris) 
       {
-        log.info("setPosts({})", relativeUris);
+        log.debug("setPosts({})", relativeUris);
         
         for (final String relativeUri : relativeUris)
           {  
