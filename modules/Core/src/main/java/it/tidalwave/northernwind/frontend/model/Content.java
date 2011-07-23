@@ -46,7 +46,7 @@ public class Content
 
     /*******************************************************************************************************************
      *
-     * Cretes a new {@code Content} with the given configuration file.
+     * Creates a new {@code Content} with the given configuration file.
      * 
      * @param   file   the configuration file
      *
