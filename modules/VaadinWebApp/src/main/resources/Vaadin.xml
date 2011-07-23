@@ -43,7 +43,7 @@
        default-autowire="byType">
            
     <bean id="downloadStreamThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal" />
+          class="it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal" />
     
     <bean id="pageView" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageView" />
@@ -63,6 +63,6 @@
     </bean>
     
     <bean id="frontEndWebApp"
-          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinFrontEndApplication" />
+          class="it.tidalwave.northernwind.frontend.vaadin.VaadinFrontEndApplication" />
           
 </beans>

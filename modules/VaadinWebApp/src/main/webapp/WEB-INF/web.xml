@@ -57,7 +57,7 @@
     <!-- Vaadin configuration -->
     <servlet>
         <servlet-name>Vaadin Application Servlet</servlet-name>
-        <servlet-class>it.tidalwave.northernwind.frontend.ui.vaadin.SpringApplicationServlet</servlet-class>
+        <servlet-class>it.tidalwave.northernwind.frontend.vaadin.SpringApplicationServlet</servlet-class>
         <init-param>
             <param-name>applicationBean</param-name>
             <param-value>frontEndWebApp</param-value>

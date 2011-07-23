@@ -20,48 +20,59 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.vaadin;
+package it.tidalwave.northernwind.frontend.vaadin;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.vaadin.Application;
-import com.vaadin.ui.Window;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope; // FIXME: can we use javax.inject.Scope?
-import it.tidalwave.northernwind.frontend.ui.PageView;
-import lombok.extern.slf4j.Slf4j;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /***********************************************************************************************************************
  *
- * The Vaadin application for the NorthernWind front end.
+ * See http://vaadin.com/wiki/-/wiki/Main/Creating%20JEE6%20Vaadin%20Applications (option #3)
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
-public class VaadinFrontEndApplication extends Application
-  {          
-    @Inject @Nonnull
-    private PageView pageView;
+public class SpringApplicationServlet extends AbstractApplicationServlet 
+  {
+    private WebApplicationContext applicationContext;
     
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+    private Class<? extends Application> applicationClass;
+    
+    private String applicationBean;
+
     @Override
-    public void init() 
+    public void init (final @Nonnull ServletConfig servletConfig)
+      throws ServletException
       {
-        try
-          {  
-            log.info("Restarting...");    
-            setMainWindow((Window)pageView);
-            setTheme("bluebill");
-          }
-        catch (Throwable e)
+        super.init(servletConfig);
+        applicationBean = servletConfig.getInitParameter("applicationBean");
+      
+        if (applicationBean == null) 
           {
-            log.error("", e);  
+            throw new ServletException("ApplicationBean not specified in servlet parameters");
           }
+      
+        applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletConfig.getServletContext());
+        applicationClass = (Class<? extends Application>) applicationContext.getType(applicationBean);
       }
-  }
+
+    @Override @Nonnull
+    protected Class<? extends Application> getApplicationClass()
+      throws ClassNotFoundException 
+      {
+        return applicationClass;
+      }
+
+    @Override @Nonnull
+    protected Application getNewApplication (final @Nonnull HttpServletRequest request)
+      {
+        return (Application)applicationContext.getBean(applicationBean);
+      }
+  } 

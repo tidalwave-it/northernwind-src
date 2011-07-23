@@ -20,16 +20,48 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.vaadin;
+package it.tidalwave.northernwind.frontend.vaadin;
 
-import com.vaadin.terminal.DownloadStream;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import com.vaadin.Application;
+import com.vaadin.ui.Window;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope; // FIXME: can we use javax.inject.Scope?
+import it.tidalwave.northernwind.frontend.ui.PageView;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * The Vaadin application for the NorthernWind front end.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DownloadStreamThreadLocal extends ThreadLocal<DownloadStream>
-  {
+@Configurable @Scope(value="session") @Slf4j
+public class VaadinFrontEndApplication extends Application
+  {          
+    @Inject @Nonnull
+    private PageView pageView;
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void init() 
+      {
+        try
+          {  
+            log.info("Restarting...");    
+            setMainWindow((Window)pageView);
+            setTheme("bluebill");
+          }
+        catch (Throwable e)
+          {
+            log.error("", e);  
+          }
+      }
   }
