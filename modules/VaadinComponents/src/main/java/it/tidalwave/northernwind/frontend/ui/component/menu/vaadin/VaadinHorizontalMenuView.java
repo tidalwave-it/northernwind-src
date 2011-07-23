@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -34,6 +35,8 @@ import com.vaadin.ui.HorizontalLayout;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@ViewMetadata(name="http://northernwind.tidalwave.it/component/HorizontalMenu", 
+              controlledBy=VaadinMenuViewController.class)
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
     /*******************************************************************************************************************

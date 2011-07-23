@@ -20,35 +20,60 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
+package it.tidalwave.northernwind.frontend.impl.util;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import com.vaadin.ui.VerticalLayout;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.TypeFilter;
+import org.springframework.util.ClassUtils;
 
 /***********************************************************************************************************************
  *
- * A Vaadin implementation of {@link MenuView}, using an horizontal layout.
+ * A utility for scanning classes in the classpath with some criteria.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/VerticalMenu", 
-              controlledBy=VaadinMenuViewController.class)
-public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
+public class ClassScanner 
   {
+    private final String basePackage = "it"; // FIME
+    
+    private final ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Scans for classes and returns them.
      * 
-     * @param  name  the component name
+     * @return  the collection of scanned classes
      *
      ******************************************************************************************************************/
-    public VaadinVerticalMenuView (final @Nonnull String name) 
+    @Nonnull
+    public final Collection<Class<?>> findClasses() 
       {
-        setMargin(false);
-        setStyleName("component-" + name);
+        final List<Class<?>> classes = new ArrayList<Class<?>>();
+      
+        for (final BeanDefinition candidate : scanner.findCandidateComponents(basePackage)) 
+          {
+            classes.add(ClassUtils.resolveClassName(candidate.getBeanClassName(), ClassUtils.getDefaultClassLoader()));
+          }
+        
+        return classes;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Adds an "include" filter.
+     * 
+     * @param  filter  the filter
+     *
+     ******************************************************************************************************************/
+    public void addIncludeFilter (final @Nonnull TypeFilter filter)
+      {
+        scanner.addIncludeFilter(filter);
       }
   }

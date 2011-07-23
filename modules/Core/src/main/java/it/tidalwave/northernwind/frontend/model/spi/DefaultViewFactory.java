@@ -20,86 +20,85 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
+import java.util.Map;
+import java.util.TreeMap;
 import java.io.IOException;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
-import lombok.Delegate;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
+import it.tidalwave.northernwind.frontend.model.ViewFactory;
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A node of the website, mapped to a given URL.
+ * The default implementation of {@link ViewFactory}.
+ * 
+ * @stereotype  Factory
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
-public class WebSiteNode
+@Configurable @Slf4j @ToString
+public class DefaultViewFactory implements ViewFactory
   {
-    public static final Class<WebSiteNode> WebSiteNode = WebSiteNode.class;
+    private final Map<String, ViewBuilder> viewBuilderMapByName = new TreeMap<String, ViewBuilder>();
     
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
-    
-    @Nonnull @Inject
-    private ViewFactory viewFactory;
-    
-    @Nonnull @Delegate(types=Resource.class)
-    private final Resource resource;
-    
-    @Nonnull @Getter
-    private final String relativeUri;
-
     /*******************************************************************************************************************
      *
-     * Creates a new instance with the given configuration file and mapped to the given URI.
-     * 
-     * @param  file          the file with the configuration
-     * @param  relativeUri   the bound URI
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public WebSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
-      {
-        resource = new Resource(file);  
-        this.relativeUri = relativeUri;
+    @Override @Nonnull
+    public Object createView (final @Nonnull String viewName, 
+                              final @Nonnull String instanceName, 
+                              final @Nonnull String contentRelativeUri)
+      throws NotFoundException
+      {        
+        final ViewBuilder viewBuilder = NotFoundException.throwWhenNull(viewBuilderMapByName.get(viewName),
+                                                                        "Cannot find " + viewName + ": available: " + viewBuilderMapByName.keySet());
+        return viewBuilder.createView(instanceName, contentRelativeUri);
       }
-
+     
     /*******************************************************************************************************************
      *
-     * Creates the UI contents for this {@code WebSiteNode}.
-     * 
-     * @return   the contents
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public Object createContents() // FIXME: rename to createView
-      throws IOException, NotFoundException
+    @PostConstruct 
+    private void initialize() // FIXME: gets called twice
+      throws IOException
       {
-        // FIXME: this is temporary
-        final Key<String> K = new Key<String>("main.content"); // FIXME: have a subproperty "main"
-        final String contentUri = resource.getProperty(K);
-        final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
-
-        return viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", fixedContentUri); // FIXME: pass this instead of the uri
-        // END FIXME
+        final ClassScanner classScanner = new ClassScanner();
+        classScanner.addIncludeFilter(new AnnotationTypeFilter(ViewMetadata.class));
+        
+        for (final Class<?> viewClass : classScanner.findClasses())
+          {
+            final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
+            final String name = viewMetadata.name();
+            viewBuilderMapByName.put(name, new ViewBuilder(name, viewClass, viewMetadata.controlledBy()));
+          }
+        
+        logViewDefinitions();
       }
     
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
-    private static String r (final @Nonnull String s)
+    private void logViewDefinitions()
       {
-        return "".equals(s) ? "/" : s;  
+        log.info("View definitions:");
+        
+        for (final ViewBuilder viewDefinition : viewBuilderMapByName.values())
+          {
+            log.info(">>>> {}", viewDefinition);
+          }
       }
   }

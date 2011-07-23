@@ -20,35 +20,62 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import com.vaadin.ui.VerticalLayout;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A Vaadin implementation of {@link MenuView}, using an horizontal layout.
+ * A builder which creates a View - ViewController pair.
+ * 
+ * @stereotype  Factory
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/VerticalMenu", 
-              controlledBy=VaadinMenuViewController.class)
-public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
+@RequiredArgsConstructor @Slf4j @ToString
+/* package */ class ViewBuilder
   {
+    @Nonnull
+    private final String name;  
+
+    @Nonnull
+    private final Class<?> viewClass;  
+
+    @Nonnull
+    private final Class<?> viewControllerClass;  
+    
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
-     * 
-     * @param  name  the component name
+     * Creates a new View - ViewController pair.
+     *
+     * @param   instanceName        the instance name
+     * @param   contentRelativeUri 
+     * @return  
      *
      ******************************************************************************************************************/
-    public VaadinVerticalMenuView (final @Nonnull String name) 
+    @Nonnull
+    public Object createView (final @Nonnull String instanceName, final @Nonnull String contentRelativeUri)
       {
-        setMargin(false);
-        setStyleName("component-" + name);
+        log.debug("createView({}, {})", instanceName, contentRelativeUri);
+        
+        try
+          { 
+            final Object view = viewClass.getConstructor(String.class).newInstance(instanceName);
+            // FIXME: the viewController is not assigned, will be GCed!
+            // FIXME: Attach to the view, even though it doesn't need it? Or use a WeakIdentityMap indexed by the View?
+            final Object viewController = viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class)
+                                                             .newInstance(view, contentRelativeUri);  
+            return view;
+          }
+        catch (Exception e)
+          {
+            throw new RuntimeException(e);
+          }
       }
   }
+

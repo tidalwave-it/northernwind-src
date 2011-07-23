@@ -20,35 +20,39 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
+package it.tidalwave.northernwind.frontend.ui.annotation;
 
-import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import com.vaadin.ui.VerticalLayout;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import it.tidalwave.northernwind.frontend.model.ViewFactory;
 
 /***********************************************************************************************************************
  *
- * A Vaadin implementation of {@link MenuView}, using an horizontal layout.
+ * An annotation to declare implementations of Views.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/VerticalMenu", 
-              controlledBy=VaadinMenuViewController.class)
-public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface ViewMetadata 
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
-     * 
-     * @param  name  the component name
+     * The name of the component, that will be registered into the {@link ViewFactory}.
      *
      ******************************************************************************************************************/
-    public VaadinVerticalMenuView (final @Nonnull String name) 
-      {
-        setMargin(false);
-        setStyleName("component-" + name);
-      }
+    public String name();
+    
+    /*******************************************************************************************************************
+     *
+     * The class of the Controller for the view.
+     *
+     ******************************************************************************************************************/
+    public Class<?> controlledBy();
   }

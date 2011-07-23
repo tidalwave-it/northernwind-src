@@ -23,7 +23,9 @@
 package it.tidalwave.northernwind.frontend.ui.component.article.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.article.ArticleView;
+import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
 import com.vaadin.ui.Label;
 
 /***********************************************************************************************************************
@@ -34,6 +36,8 @@ import com.vaadin.ui.Label;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@ViewMetadata(name="http://northernwind.tidalwave.it/component/Article", 
+              controlledBy=DefaultArticleViewController.class)
 public class VaadinArticleView extends Label implements ArticleView
   {
     /*******************************************************************************************************************

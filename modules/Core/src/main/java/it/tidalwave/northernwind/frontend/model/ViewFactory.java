@@ -20,35 +20,37 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import com.vaadin.ui.VerticalLayout;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
- * A Vaadin implementation of {@link MenuView}, using an horizontal layout.
+ * A factory for Views.
+ * 
+ * @stereotype  Factory
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/VerticalMenu", 
-              controlledBy=VaadinMenuViewController.class)
-public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
+public interface ViewFactory 
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
-     * 
-     * @param  name  the component name
+     * Creates a new instance of a View.
      *
+     * @param   viewName            the component view name
+     * @param   instanceName        the instance name
+     * @param   contentRelativeUri 
+     * @return  
+     * @throws  NotFoundException   if no view component is found
+     * 
      ******************************************************************************************************************/
-    public VaadinVerticalMenuView (final @Nonnull String name) 
-      {
-        setMargin(false);
-        setStyleName("component-" + name);
-      }
+    @Nonnull
+    public Object createView (@Nonnull String viewName, 
+                              @Nonnull String instanceName, 
+                              @Nonnull String contentRelativeUri) 
+      throws NotFoundException;
   }
