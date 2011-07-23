@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem;
 
+import java.io.File;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -74,11 +75,26 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     private void initialize()
       throws IOException
       {
+        new File(rootPath).mkdirs(); // TODO: use FileSystem API
         targetProvider.setRootPath(rootPath);
         final FileObject targetRoot = targetProvider.getFileSystem().getRoot();
-        log.info(">>>> deleting {}", targetRoot);
-        targetRoot.delete();
+        emptyFolder(targetRoot);
         copyFolder(sourceProvider.getFileSystem().getRoot(), targetRoot);           
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void emptyFolder (final @Nonnull FileObject folder) 
+      throws IOException
+      {
+        log.info("emptyFolder({}, {}", folder);
+        
+        for (final FileObject child : folder.getChildren())
+          {
+            child.delete();
+          }
       }
     
     /*******************************************************************************************************************
@@ -103,7 +119,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
           {
             if (sourceChild.isFolder())
               { 
-                copyFolder(sourceFolder, targetFolder.createFolder(sourceFolder.getNameExt()));
+                copyFolder(sourceChild, targetFolder.createFolder(sourceChild.getNameExt()));
               }
           }
       }
