@@ -307,7 +307,15 @@
             </dependencies>
         </profile>    
     </profiles>
-
+    
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 
     <modules>
         <module>Core</module>
