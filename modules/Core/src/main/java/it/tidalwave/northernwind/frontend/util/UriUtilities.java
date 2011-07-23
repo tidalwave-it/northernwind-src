@@ -31,8 +31,6 @@ import static lombok.AccessLevel.*;
 
 /***********************************************************************************************************************
  *
- * The default implementation of {@link Site}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
