@@ -26,8 +26,8 @@ import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import static lombok.AccessLevel.*;
 
 /***********************************************************************************************************************
  *
@@ -37,7 +37,7 @@ import lombok.NoArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NoArgsConstructor(access=AccessLevel.PRIVATE)
+@NoArgsConstructor(access=PRIVATE)
 public final class UriUtilities   
   {
     /*******************************************************************************************************************
