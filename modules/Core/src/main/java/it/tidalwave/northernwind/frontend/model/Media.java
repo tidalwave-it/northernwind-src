@@ -22,13 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import javax.annotation.Nonnull;
-import org.openide.filesystems.FileObject;
-import lombok.Delegate;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-
 /***********************************************************************************************************************
  *
  * A {@code Media} item is a document that is served as-is, without any processing. It's typically an image or such.
@@ -37,20 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString
-public class Media 
+public interface Media extends Resource
   {
     public static final Class<Media> Media = Media.class;
-    
-    @Nonnull @Getter @Delegate(types=Resource.class)
-    private final Resource resource;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public Media (final @Nonnull FileObject file)
-      {
-        resource = new Resource(file);  
-      }
   }

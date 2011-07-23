@@ -20,35 +20,37 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
+import org.openide.filesystems.FileObject;
+import it.tidalwave.northernwind.frontend.model.Media;
+import it.tidalwave.northernwind.frontend.model.Resource;
+import lombok.Delegate;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A node of the website, mapped to a given URL.
+ * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or such.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteNode extends Resource
+@Slf4j @ToString
+/* package */ class DefaultMedia implements Media
   {
-    public static final Class<WebSiteNode> WebSiteNode = WebSiteNode.class;
-    
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
-    
+    @Nonnull @Getter @Delegate(types=Resource.class)
+    private final Resource resource;
+
     /*******************************************************************************************************************
      *
-     * Creates the view for this {@code WebSiteNode}.
-     * 
-     * @return   the view
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public Object createView() 
-      throws IOException, NotFoundException;
+    public DefaultMedia (final @Nonnull FileObject file)
+      {
+        resource = new DefaultResource(file);  
+      }
   }

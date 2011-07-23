@@ -22,12 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import javax.annotation.Nonnull;
-import org.openide.filesystems.FileObject;
-import lombok.Delegate;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-
 /***********************************************************************************************************************
  *
  * A piece of content to be composed into a page.
@@ -36,23 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString
-public class Content 
+public interface Content extends Resource
   {
     public static final Class<Content> Content = Content.class;
-    
-    @Nonnull @Delegate(types=Resource.class)
-    private final Resource resource;
-
-    /*******************************************************************************************************************
-     *
-     * Creates a new {@code Content} with the given configuration file.
-     * 
-     * @param   file   the configuration file
-     *
-     ******************************************************************************************************************/
-    public Content (final @Nonnull FileObject file)
-      {
-        resource = new Resource(file);  
-      }
   }

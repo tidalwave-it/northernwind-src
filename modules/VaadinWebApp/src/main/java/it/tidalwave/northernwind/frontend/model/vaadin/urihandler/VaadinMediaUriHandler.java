@@ -30,7 +30,6 @@ import java.net.URL;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
@@ -66,8 +65,7 @@ public class VaadinMediaUriHandler implements UriHandler
         if (relativeUri.startsWith("media"))
           {
             final Media media = webSite.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
-            final Resource resource = media.getResource();     
-            final FileObject file = resource.getFile();
+            final FileObject file = media.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());
             downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), null));
             // FIXE: mimeType triggers a NB Platform exception

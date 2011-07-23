@@ -32,7 +32,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.WebSite;
@@ -142,7 +141,7 @@ public class DefaultWebSite implements WebSite
             @Override
             public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 1)), new Content(folder));
+                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 1)), new DefaultContent(folder));
               }
           });
         
@@ -151,7 +150,7 @@ public class DefaultWebSite implements WebSite
             @Override
             public void visit (final @Nonnull FileObject file, final @Nonnull String relativeUri) 
               {
-                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 1)), new Media(file));
+                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 1)), new DefaultMedia(file));
               }
           });
         
@@ -160,7 +159,7 @@ public class DefaultWebSite implements WebSite
             @Override
             public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new WebSiteNode(folder, relativeUri));
+                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultWebSiteNode(folder, relativeUri));
               }
           });
         

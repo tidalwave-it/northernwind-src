@@ -20,12 +20,22 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
-import it.tidalwave.util.Key;
+import org.openide.filesystems.FileObject;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Resource;
+import it.tidalwave.northernwind.frontend.model.ViewFactory;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import lombok.Delegate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -35,20 +45,43 @@ import it.tidalwave.util.NotFoundException;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteNode extends Resource
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
+/* package */ class DefaultWebSiteNode implements WebSiteNode
   {
-    public static final Class<WebSiteNode> WebSiteNode = WebSiteNode.class;
+    @Nonnull @Inject
+    private ViewFactory viewFactory;
     
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
+    @Nonnull @Delegate(types=Resource.class)
+    private final Resource resource;
     
+    @Nonnull @Getter
+    private final String relativeUri;
+
     /*******************************************************************************************************************
      *
-     * Creates the view for this {@code WebSiteNode}.
+     * Creates a new instance with the given configuration file and mapped to the given URI.
      * 
-     * @return   the view
+     * @param  file          the file with the configuration
+     * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    @Nonnull
+    public DefaultWebSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
+      {
+        resource = new DefaultResource(file);  
+        this.relativeUri = relativeUri;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoe}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
     public Object createView() 
-      throws IOException, NotFoundException;
+      throws IOException, NotFoundException
+      {
+        // FIXME: this is temporary
+        return viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this); 
+        // END FIXME
+      }
   }
