@@ -41,32 +41,6 @@
                            http://www.springframework.org/schema/util 
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
-
-<!--    <context:property-placeholder  location="classpath:datasource.properties"/>-->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="locations">
-            <list>
-                <value>classpath:configuration.properties</value>
-                <value>file:${configuration.parentFolderPath}/${configuration.folderName}/configuration.properties</value>
-            </list>
-        </property>
-    </bean>
-    
-    <!-- Turns on @Autowired, @PostConstruct, etc. -->
-    <context:annotation-config />
-   
-    <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
-    <context:spring-configured />
-
-    <bean id="webSiteModel" 
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite" >
-        <property name="contextPath" value="${nw.contextPath}" />
-        <property name="fileSystemProvider" ref="fileSystemProvider" />
-        <property name="documentPath" value="${nw.documentPath}" />
-        <property name="mediaPath" value="${nw.mediaPath}" />
-        <property name="nodePath" value="${nw.nodePath}" />
-    </bean>
            
     <bean id="downloadStreamThreadLocal" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal" />

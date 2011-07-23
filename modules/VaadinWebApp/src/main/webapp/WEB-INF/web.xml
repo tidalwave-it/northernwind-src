@@ -31,7 +31,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <!-- ApplicationContext is in src/main/resources so it can be preprocessed by the maven-resource-plugin -->
-        <param-value>classpath:/ApplicationContext.xml,classpath:/LocalZipFileExpanded.xml</param-value>
+        <param-value>classpath:/Core.xml,classpath:/LocalZipFileExpanded.xml,classpath:/Vaadin.xml</param-value>
     </context-param>
     
     <!-- Spring configuration for session-scoped beans -->
