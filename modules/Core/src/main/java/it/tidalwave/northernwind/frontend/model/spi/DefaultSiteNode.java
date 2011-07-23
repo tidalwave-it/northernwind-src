@@ -90,7 +90,16 @@ import lombok.extern.slf4j.Slf4j;
           
         final SiteNodeView pageContent = viewFactory.createSiteNodeView();
         pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this));
+        
+        if (relativeUri.contains("Blog"))
+          {
+            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Blog", "main", this));
+          }        
+        else
+          {
+            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this));
+          }
+        
         pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "footer", this));
         return pageContent;
         // END FIXME
