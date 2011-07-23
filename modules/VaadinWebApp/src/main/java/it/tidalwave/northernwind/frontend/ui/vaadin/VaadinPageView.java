@@ -38,6 +38,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinMenuViewController;
 import it.tidalwave.util.NotFoundException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -83,9 +84,10 @@ public class VaadinPageView extends Window implements PageView
         removeAllComponents();
         // FIXME: this must be built from the configuration
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
+        final VaadinMenuViewController menuController = new VaadinMenuViewController(menuView);
         
         try { // FIXME
-        menuView.setLinks(Arrays.asList
+        menuController.setLinks(Arrays.asList
           (
             "/",
             "/Features",

@@ -23,19 +23,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.util.List;
-import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Link;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
 
 /***********************************************************************************************************************
  *
@@ -45,12 +34,8 @@ import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
-    @Nonnull @Inject
-    private WebSite webSite;
-    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given name.
@@ -62,32 +47,5 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
       {
         setMargin(false);
         setStyleName("component-" + name);
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void setLinks (final @Nonnull List<String> relativeUris) 
-      {
-        for (final String relativeUri : relativeUris)
-          {  
-            try
-              {
-                final WebSiteNode node = webSite.find(WebSiteNode).withRelativeUri(relativeUri).result();
-                final String navigationTitle = node.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
-                addComponent(new Link(navigationTitle, new ExternalResource(webSite.getContextPath() + relativeUri)));                
-              }
-            catch (IOException e)
-              {
-                log.warn("", e);
-              }
-            catch (NotFoundException e)
-              {
-                log.warn("", e);
-              }
-          }
       }
   }

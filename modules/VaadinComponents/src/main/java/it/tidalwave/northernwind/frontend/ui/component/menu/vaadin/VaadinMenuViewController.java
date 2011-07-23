@@ -20,29 +20,44 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu;
+package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.io.IOException;
+import javax.inject.Inject;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
+import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Link;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link MenuView}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuViewController
+public class VaadinMenuViewController extends DefaultMenuViewController
   {
+    @Nonnull @Inject
+    private WebSite webSite;
+    
     /*******************************************************************************************************************
      *
-     * Sets the navigation links.
-     * 
-     * @param  relativeUris   the relative URIs of the targets
      *
      ******************************************************************************************************************/
-    public void setLinks (@Nonnull List<String> relativeUris)
-      throws IOException;
-  } 
+    public VaadinMenuViewController (final @Nonnull MenuView view) 
+      {
+        super(view);
+      }
+        
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
+      {
+        ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(webSite.getContextPath() + relativeUri)));                        
+      }
+  }

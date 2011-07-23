@@ -22,10 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
-import java.io.IOException;
-import java.util.List;
-import javax.annotation.Nonnull;
-
 /***********************************************************************************************************************
  *
  * A menu component with clickable links.
@@ -36,13 +32,4 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface MenuView 
   {
-    /*******************************************************************************************************************
-     *
-     * Sets the navigation links.
-     * 
-     * @param  relativeUris   the relative URIs of the targets
-     *
-     ******************************************************************************************************************/
-    public void setLinks (@Nonnull List<String> relativeUris)
-      throws IOException;
   }

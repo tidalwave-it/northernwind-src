@@ -22,6 +22,20 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.List;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
+import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
+
 /***********************************************************************************************************************
  *
  * The default implementation of {@link MenuViewController}.
@@ -30,6 +44,55 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultMenuViewController implements MenuViewController
+@Configurable @Scope("session") @Slf4j
+public abstract class DefaultMenuViewController implements MenuViewController
   {    
+    @Nonnull @Inject
+    private WebSite webSite;
+    
+    @Nonnull
+    protected final MenuView view;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public DefaultMenuViewController (final @Nonnull MenuView view) 
+      {
+        this.view = view;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setLinks (final @Nonnull List<String> relativeUris) 
+      {
+        for (final String relativeUri : relativeUris)
+          {  
+            try
+              {
+                final WebSiteNode node = webSite.find(WebSiteNode).withRelativeUri(relativeUri).result();
+                final String navigationTitle = node.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
+                addLink(navigationTitle, relativeUri);                
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+            catch (NotFoundException e)
+              {
+                log.warn("", e);
+              }
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    protected abstract void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
   }
