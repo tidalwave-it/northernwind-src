@@ -93,6 +93,7 @@ import lombok.extern.slf4j.Slf4j;
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override @Nonnull
     public <Type> Type getProperty (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
       throws IOException
       {
