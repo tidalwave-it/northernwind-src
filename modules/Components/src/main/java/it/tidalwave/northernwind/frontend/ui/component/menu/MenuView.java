@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
+import javax.annotation.Nonnull;
+
 /***********************************************************************************************************************
  *
  * A menu component with clickable links.
@@ -32,4 +34,5 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
  **********************************************************************************************************************/
 public interface MenuView 
   {
+    public void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
   }

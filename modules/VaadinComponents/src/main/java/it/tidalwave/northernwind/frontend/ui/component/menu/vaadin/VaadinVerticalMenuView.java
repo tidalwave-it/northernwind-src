@@ -25,7 +25,9 @@ package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
+import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
 import com.vaadin.ui.VerticalLayout;
+import lombok.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -36,9 +38,12 @@ import com.vaadin.ui.VerticalLayout;
  *
  **********************************************************************************************************************/
 @ViewMetadata(name="http://northernwind.tidalwave.it/component/VerticalMenu", 
-              controlledBy=VaadinMenuViewController.class)
+              controlledBy=DefaultMenuViewController.class)
 public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
   {
+    @Delegate
+    private final VaadinMenuViewHelper helper = new VaadinMenuViewHelper(this);
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given name.

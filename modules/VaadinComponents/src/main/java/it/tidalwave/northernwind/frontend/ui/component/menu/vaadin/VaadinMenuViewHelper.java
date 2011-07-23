@@ -24,10 +24,9 @@ package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewControllerSupport;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Link;
@@ -38,32 +37,21 @@ import com.vaadin.ui.Link;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class VaadinMenuViewController extends MenuViewControllerSupport
+@Configurable
+ /* package */ class VaadinMenuViewHelper 
   {
+    @Nonnull
+    private final MenuView view;
+    
     @Nonnull @Inject
     private Site site;
     
-    /*******************************************************************************************************************
-     *
-     * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public VaadinMenuViewController (final @Nonnull MenuView view, 
-                                     final @Nonnull String viewInstanceName,
-                                     final @Nonnull SiteNode siteNode) 
-    {
-        super(view, viewInstanceName, siteNode);
+    public VaadinMenuViewHelper (final @Nonnull MenuView view)
+      {
+        this.view = view;
       }
         
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    protected void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
+    public void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
       {
         ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(site.getContextPath() + relativeUri)));                        
       }

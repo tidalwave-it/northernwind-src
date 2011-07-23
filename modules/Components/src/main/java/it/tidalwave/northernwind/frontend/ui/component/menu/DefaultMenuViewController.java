@@ -45,7 +45,7 @@ import static it.tidalwave.northernwind.frontend.model.SiteNode.*;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @Scope("session") @Slf4j
-public abstract class MenuViewControllerSupport implements MenuViewController
+public class DefaultMenuViewController implements MenuViewController
   {    
     @Nonnull @Inject
     private Site site;
@@ -60,7 +60,7 @@ public abstract class MenuViewControllerSupport implements MenuViewController
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public MenuViewControllerSupport (final @Nonnull MenuView view, 
+    public DefaultMenuViewController (final @Nonnull MenuView view, 
                                       final @Nonnull String viewInstanceName, 
                                       final @Nonnull SiteNode siteNode) 
     {
@@ -101,7 +101,7 @@ public abstract class MenuViewControllerSupport implements MenuViewController
                 final String fixedUri = "/" + relativeUri.trim().replaceAll("/content/document/Mobile", "").replaceAll("/content/document/", "");
                 final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(fixedUri).result();
                 final String navigationTitle = targetSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
-                addLink(navigationTitle, fixedUri);                
+                view.addLink(navigationTitle, fixedUri);                
               }
             catch (IOException e)
               {
@@ -113,11 +113,4 @@ public abstract class MenuViewControllerSupport implements MenuViewController
               }
           }
       }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    protected abstract void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
   }
