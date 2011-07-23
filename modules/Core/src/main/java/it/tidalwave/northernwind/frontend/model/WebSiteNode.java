@@ -75,13 +75,13 @@ public class WebSiteNode
 
     /*******************************************************************************************************************
      *
-     * Creates the UI contents for this {@code WebSiteNode}.
+     * Creates the view for this {@code WebSiteNode}.
      * 
-     * @return   the contents
+     * @return   the view
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createContents() // FIXME: rename to createView
+    public Object createView() 
       throws IOException, NotFoundException
       {
         // FIXME: this is temporary

@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import com.vaadin.terminal.StreamResource;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -71,16 +70,16 @@ public class VaadinPageView extends Window implements PageView
 
     /*******************************************************************************************************************
      *
-     * Set the contents.
+     * {@inheritDoc}
      * 
-     * @param  content  the new contents (must be a Vaadin {@link Component})
+     * @param  view   must be a Vaadin component
      *
      ******************************************************************************************************************/
     @Override
-    public void setContents (final @Nonnull Object content) 
+    public void setContentView (final @Nonnull Object view) 
       throws IOException
       {
-        log.info("setContents({} - {})", content.getClass(), content);
+        log.info("setContents({} - {})", view.getClass(), view);
         removeAllComponents();
         // FIXME: this must be built from the configuration
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
@@ -123,6 +122,6 @@ public class VaadinPageView extends Window implements PageView
           }
        
         addComponent(menuView);
-        addComponent((Component)content);
+        addComponent((Component)view);
       }
   }

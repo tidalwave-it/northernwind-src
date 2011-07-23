@@ -46,12 +46,11 @@ public interface PageView
 
     /*******************************************************************************************************************
      *
-     * Sets the contents.
+     * Sets the contained view.
      * 
-     * @param  content  the content
-     * 
+     * @param  view  the view
      *
      ******************************************************************************************************************/
-    public void setContents (@Nonnull Object content)
+    public void setContentView (@Nonnull Object view)
       throws IOException;
   }

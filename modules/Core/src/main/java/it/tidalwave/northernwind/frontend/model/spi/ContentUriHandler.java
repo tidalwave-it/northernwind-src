@@ -59,9 +59,9 @@ public class ContentUriHandler implements UriHandler
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
       throws NotFoundException, IOException 
       {
-        final WebSiteNode node = webSite.find(WebSiteNode).withRelativeUri("/" + relativeUri).result();            
+        final WebSiteNode webSiteNode = webSite.find(WebSiteNode).withRelativeUri("/" + relativeUri).result();            
 //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        pageView.setContents(node.createContents());
+        pageView.setContentView(webSiteNode.createView());
         
         return true;
       }
