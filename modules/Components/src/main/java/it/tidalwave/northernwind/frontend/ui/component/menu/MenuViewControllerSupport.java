@@ -53,9 +53,14 @@ public abstract class MenuViewControllerSupport implements MenuViewController
 
     /*******************************************************************************************************************
      *
+     * @param  view              the related view
+     * @param  viewInstanceName  the name of the view instance
+     * @param  webSiteNode       the related {@link WebSiteNode}
      *
      ******************************************************************************************************************/
-    public MenuViewControllerSupport (final @Nonnull MenuView view) 
+    public MenuViewControllerSupport (final @Nonnull MenuView view, 
+                                      final @Nonnull String viewInstanceName, 
+                                      final @Nonnull WebSiteNode webSiteNode) 
       {
         this.view = view;
       }
@@ -72,8 +77,8 @@ public abstract class MenuViewControllerSupport implements MenuViewController
           {  
             try
               {
-                final WebSiteNode node = webSite.find(WebSiteNode).withRelativeUri(relativeUri).result();
-                final String navigationTitle = node.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
+                final WebSiteNode targetWebSiteNode = webSite.find(WebSiteNode).withRelativeUri(relativeUri).result();
+                final String navigationTitle = targetWebSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
                 addLink(navigationTitle, relativeUri);                
               }
             catch (IOException e)

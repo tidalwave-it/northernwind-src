@@ -25,10 +25,10 @@ package it.tidalwave.northernwind.frontend.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -85,21 +85,7 @@ public class WebSiteNode
       throws IOException, NotFoundException
       {
         // FIXME: this is temporary
-        final Key<String> K = new Key<String>("main.content"); // FIXME: have a subproperty "main"
-        final String contentUri = resource.getProperty(K);
-        final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
-
-        return viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", fixedContentUri); // FIXME: pass this instead of the uri
+        return viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this); 
         // END FIXME
-      }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String r (final @Nonnull String s)
-      {
-        return "".equals(s) ? "/" : s;  
       }
   }

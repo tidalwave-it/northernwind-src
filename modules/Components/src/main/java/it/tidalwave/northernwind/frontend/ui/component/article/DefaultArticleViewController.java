@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.article;
 
+import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -51,26 +53,45 @@ public class DefaultArticleViewController implements ArticleViewController
      *
      * Creates an instance for populating the given {@link ArticleView} with the given URI.
      * 
-     * @param  articleView  the view to populate
-     * @param  relativeUri  the content URI
+     * @param  view              the related view
+     * @param  viewInstanceName  the name of the view instance
+     * @param  webSiteNode       the related {@link WebSiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultArticleViewController (final @Nonnull ArticleView articleView, final @Nonnull String relativeUri) 
+    public DefaultArticleViewController (final @Nonnull ArticleView view, 
+                                         final @Nonnull String viewInstanceName,
+                                         final @Nonnull WebSiteNode webSiteNode) 
       {
         try
           {
-            final Content content = webSite.find(Content).withRelativeUri(relativeUri).result();
-            articleView.setText(content.getProperty(PROP_FULL_TEXT));
+            final Key<String> K = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
+            final String contentUri = webSiteNode.getProperty(K);
+            
+            // FIXME: should be fixed in the Infoglue importer
+            final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+            
+            final Content content = webSite.find(Content).withRelativeUri(fixedContentUri).result();
+            view.setText(content.getProperty(PROP_FULL_TEXT));
           }
         catch (NotFoundException e)
           {
-            articleView.setText(e.toString());
+            view.setText(e.toString());
             log.error("", e);
           }
         catch (IOException e)
           {
-            articleView.setText(e.toString());
+            view.setText(e.toString());
             log.error("", e);
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String r (final @Nonnull String s)
+      {
+        return "".equals(s) ? "/" : s;  
       }
   }

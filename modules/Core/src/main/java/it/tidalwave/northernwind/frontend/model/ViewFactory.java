@@ -43,7 +43,7 @@ public interface ViewFactory
      *
      * @param   viewName            the component view name
      * @param   instanceName        the instance name
-     * @param   contentRelativeUri 
+     * @param   webSiteNode         the node this view is created for 
      * @return  
      * @throws  NotFoundException   if no view component is found
      * 
@@ -51,6 +51,6 @@ public interface ViewFactory
     @Nonnull
     public Object createView (@Nonnull String viewName, 
                               @Nonnull String instanceName, 
-                              @Nonnull String contentRelativeUri) 
+                              @Nonnull WebSiteNode webSiteNode) 
       throws NotFoundException;
   }

@@ -32,6 +32,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
 import it.tidalwave.northernwind.frontend.model.ViewFactory;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -59,12 +60,12 @@ public class DefaultViewFactory implements ViewFactory
     @Override @Nonnull
     public Object createView (final @Nonnull String viewName, 
                               final @Nonnull String instanceName, 
-                              final @Nonnull String contentRelativeUri)
+                              final @Nonnull WebSiteNode webSiteNode)
       throws NotFoundException
       {        
         final ViewBuilder viewBuilder = NotFoundException.throwWhenNull(viewBuilderMapByName.get(viewName),
                                                                         "Cannot find " + viewName + ": available: " + viewBuilderMapByName.keySet());
-        return viewBuilder.createView(instanceName, contentRelativeUri);
+        return viewBuilder.createView(instanceName, webSiteNode);
       }
      
     /*******************************************************************************************************************
@@ -73,7 +74,7 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @PostConstruct 
     private void initialize() // FIXME: gets called twice
-      throws IOException
+      throws IOException, NoSuchMethodException
       {
         final ClassScanner classScanner = new ClassScanner();
         classScanner.addIncludeFilter(new AnnotationTypeFilter(ViewMetadata.class));
@@ -82,7 +83,9 @@ public class DefaultViewFactory implements ViewFactory
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
             final String name = viewMetadata.name();
-            viewBuilderMapByName.put(name, new ViewBuilder(name, viewClass, viewMetadata.controlledBy()));
+            final ViewBuilder viewBuilder = new ViewBuilder(name, viewClass, viewMetadata.controlledBy());
+            viewBuilder.validate();
+            viewBuilderMapByName.put(name, viewBuilder);
           }
         
         logViewDefinitions();

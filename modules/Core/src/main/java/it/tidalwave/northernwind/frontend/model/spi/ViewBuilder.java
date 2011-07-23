@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -51,25 +53,37 @@ import lombok.extern.slf4j.Slf4j;
     
     /*******************************************************************************************************************
      *
+     * Validates the configured classes.
+     * 
+     * @throws  Exception   if the view and/or controller classes are not valid
+     *
+     ******************************************************************************************************************/
+    public void validate() 
+      throws NoSuchMethodException
+      {
+        getConstructor();
+      }
+    
+    /*******************************************************************************************************************
+     *
      * Creates a new View - ViewController pair.
      *
      * @param   instanceName        the instance name
      * @param   contentRelativeUri 
-     * @return  
+     * @return                      the created view
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (final @Nonnull String instanceName, final @Nonnull String contentRelativeUri)
+    public Object createView (final @Nonnull String instanceName, final @Nonnull WebSiteNode webSiteNode)
       {
-        log.debug("createView({}, {})", instanceName, contentRelativeUri);
+        log.debug("createView({}, {})", instanceName, webSiteNode);
         
         try
           { 
             final Object view = viewClass.getConstructor(String.class).newInstance(instanceName);
             // FIXME: the viewController is not assigned, will be GCed!
             // FIXME: Attach to the view, even though it doesn't need it? Or use a WeakIdentityMap indexed by the View?
-            final Object viewController = viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class)
-                                                             .newInstance(view, contentRelativeUri);  
+            final Object viewController = getConstructor().newInstance(view, instanceName, webSiteNode);  
             return view;
           }
         catch (Exception e)
@@ -77,5 +91,15 @@ import lombok.extern.slf4j.Slf4j;
             throw new RuntimeException(e);
           }
       }
-  }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Constructor<?> getConstructor() 
+      throws NoSuchMethodException, SecurityException 
+      {
+        return viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class, WebSiteNode.class);
+      }
+  }

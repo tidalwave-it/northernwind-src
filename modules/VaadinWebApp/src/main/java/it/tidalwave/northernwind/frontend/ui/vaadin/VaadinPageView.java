@@ -84,7 +84,7 @@ public class VaadinPageView extends Window implements PageView
         removeAllComponents();
         // FIXME: this must be built from the configuration
         final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
-        final VaadinMenuViewController menuController = new VaadinMenuViewController(menuView);
+        final VaadinMenuViewController menuController = new VaadinMenuViewController(menuView, "nav", null);
         
         try { // FIXME
         menuController.setLinks(Arrays.asList

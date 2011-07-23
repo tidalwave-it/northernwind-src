@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewControllerSupport;
 import com.vaadin.terminal.ExternalResource;
@@ -44,11 +45,16 @@ public class VaadinMenuViewController extends MenuViewControllerSupport
     
     /*******************************************************************************************************************
      *
+     * @param  view              the related view
+     * @param  viewInstanceName  the name of the view instance
+     * @param  webSiteNode       the related {@link WebSiteNode}
      *
      ******************************************************************************************************************/
-    public VaadinMenuViewController (final @Nonnull MenuView view) 
+    public VaadinMenuViewController (final @Nonnull MenuView view, 
+                                     final @Nonnull String viewInstanceName,
+                                     final @Nonnull WebSiteNode webSiteNode) 
       {
-        super(view);
+        super(view, viewInstanceName, webSiteNode);
       }
         
     /*******************************************************************************************************************
