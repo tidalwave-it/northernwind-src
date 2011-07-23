@@ -22,10 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import com.vaadin.terminal.FileResource;
+import com.vaadin.terminal.StreamResource;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.io.IOException;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.PageView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
@@ -38,7 +42,6 @@ import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.util.NotFoundException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import org.openide.filesystems.FileUtil;
 import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
@@ -101,7 +104,16 @@ public class VaadinPageView extends Window implements PageView
         try // FIXME to be moved to CSS
           {
             final Media media = webSite.findMediaByUri("/blueBill_Mobile-Banner.png");
-            addComponent(new Embedded("", new FileResource(FileUtil.toFile(media.getResource().getFile()), getApplication()))); 
+            final FileObject file = media.getResource().getFile();
+            final InputStream is = file.getInputStream();
+            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
+              {
+                @Override @Nonnull
+                public InputStream getStream() 
+                  {
+                    return is;
+                  }
+              }, file.getNameExt(), getApplication())));
           }
         catch (NotFoundException e) 
           {
