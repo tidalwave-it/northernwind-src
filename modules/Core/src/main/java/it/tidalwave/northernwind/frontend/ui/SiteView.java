@@ -20,71 +20,38 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.vaadin;
+package it.tidalwave.northernwind.frontend.ui;
 
-import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.net.URL;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.ui.PageViewController;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultPageViewController;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.URIHandler;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
+import java.io.IOException;
 
 /***********************************************************************************************************************
  *
- * The Vaadin specialization of {@link PageViewController}.
+ * This class models a site of the site. It is repopulated or reloaded (in function of the technology) every time in 
+ * function of the user navigation.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
-public class VaadinPageViewController extends DefaultPageViewController
+public interface SiteView 
   {
-    @Nonnull @Inject
-    private VaadinPageView pageView;
-    
-    @Nonnull @Inject
-    private DownloadStreamThreadLocal downloadStreamHolder;
+    /*******************************************************************************************************************
+     *
+     * Sets the caption.
+     * 
+     * @param  caption   the caption
+     *
+     ******************************************************************************************************************/
+    public void setCaption (@Nonnull String caption);
 
     /*******************************************************************************************************************
      *
-     * Tracks the incoming URI.
+     * Sets the contained view.
+     * 
+     * @param  view  the view
      *
      ******************************************************************************************************************/
-    private final URIHandler uriHandler = new URIHandler()
-      {
-        @Override
-        public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
-          {
-            try
-              {
-                downloadStreamHolder.set(null);
-                handleUri(context, relativeUri);
-                return downloadStreamHolder.get();
-              }
-            finally
-              {
-                downloadStreamHolder.set(null);
-              }
-          }
-      };
-    
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @PostConstruct
-    private void registerUriHandler()
-      {
-        pageView.addURIHandler(uriHandler);
-        // FIXME: seems to be registered twice? See logs
-        log.info(">>>> registered URI handler: {}", uriHandler);
-      }
+    public void setSiteNodeView (@Nonnull SiteNodeView view)
+      throws IOException;
   }

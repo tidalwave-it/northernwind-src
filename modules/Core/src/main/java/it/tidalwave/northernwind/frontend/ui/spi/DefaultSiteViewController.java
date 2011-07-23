@@ -20,37 +20,77 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui;
+package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
 import java.io.IOException;
+import java.net.URL;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.UriHandler;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * This class models a page of the site. It is repopulated every time in function of the user navigation.
+ * The default implementation of {@link SiteViewController}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface PageView 
+@Configurable @Slf4j
+public class DefaultSiteViewController implements SiteViewController
   {
+    @Getter @Setter @Nonnull
+    private List<UriHandler> uriHandlers;
+    
     /*******************************************************************************************************************
      *
-     * Sets the caption.
-     * 
-     * @param  caption   the caption
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void setCaption (@Nonnull String caption);
-
+    @Override
+    public void handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+      {
+        try
+          {
+            log.info("handleUri({}, {})", context, relativeUri);
+            
+            for (final UriHandler uriHandler : uriHandlers)
+              {
+                log.info(">>>> trying {} ...", uriHandler);
+                
+                if (uriHandler.handleUri(context, relativeUri))
+                  {
+                    break;  
+                  }
+              }
+          }
+        catch (NotFoundException e) 
+          {
+            log.error("", e); 
+            // TODO
+          }
+        catch (IOException e) 
+          {
+            log.error("", e);
+            // TODO
+          }
+      }
+    
     /*******************************************************************************************************************
      *
-     * Sets the contained view.
-     * 
-     * @param  view  the view
      *
      ******************************************************************************************************************/
-    public void setSiteNodeView (@Nonnull SiteNodeView view)
-      throws IOException;
-  }
+    @PostConstruct
+    public void logConfiguration()
+      {
+        log.info(">>>> uriHandlers: {}", uriHandlers);  
+      }
+  } 

@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.ui.SiteView;
 import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Site;
@@ -44,14 +44,14 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
- * The Vaadin implementation of {@link PageView}.
+ * The Vaadin implementation of {@link SiteView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") @Slf4j
-public class VaadinPageView extends Window implements PageView
+public class VaadinSiteView extends Window implements SiteView
   {
     @Inject @Nonnull
     private Site site;
@@ -60,7 +60,7 @@ public class VaadinPageView extends Window implements PageView
      *
      *
      ******************************************************************************************************************/
-    public VaadinPageView() 
+    public VaadinSiteView() 
       {
         setStyleName("component-" + "page");
         ((AbstractLayout)getContent()).setMargin(false);

@@ -27,13 +27,13 @@ import java.net.URL;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link PageView}.
+ * The controller of {@link SiteView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface PageViewController 
+public interface SiteViewController 
   {
     public static class DoNothingException extends Exception
       {

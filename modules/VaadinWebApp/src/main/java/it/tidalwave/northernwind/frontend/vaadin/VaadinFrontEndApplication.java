@@ -28,7 +28,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope; // FIXME: can we use javax.inject.Scope?
-import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.ui.SiteView;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VaadinFrontEndApplication extends Application
   {          
     @Inject @Nonnull
-    private PageView pageView;
+    private SiteView siteView;
     
     /*******************************************************************************************************************
      *
@@ -56,7 +56,7 @@ public class VaadinFrontEndApplication extends Application
         try
           {  
             log.info("Restarting...");    
-            setMainWindow((Window)pageView);
+            setMainWindow((Window)siteView);
             setTheme("bluebill");
           }
         catch (Throwable e)

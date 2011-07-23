@@ -30,7 +30,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.PageView;
+import it.tidalwave.northernwind.frontend.ui.SiteView;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
@@ -48,7 +48,7 @@ public class ContentUriHandler implements UriHandler
     private Site site;
     
     @Inject @Nonnull
-    private PageView pageView;
+    private SiteView siteView;
         
     /*******************************************************************************************************************
      *
@@ -60,8 +60,8 @@ public class ContentUriHandler implements UriHandler
       throws NotFoundException, IOException 
       {
         final SiteNode siteNode = site.find(SiteNode).withRelativeUri("/" + relativeUri).result();            
-//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        pageView.setSiteNodeView(siteNode.createView());
+//            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
+        siteView.setSiteNodeView(siteNode.createView());
         
         return true;
       }

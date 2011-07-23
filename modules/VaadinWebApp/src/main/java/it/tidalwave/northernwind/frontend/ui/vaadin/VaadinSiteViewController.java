@@ -20,77 +20,71 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.spi;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.List;
-import java.io.IOException;
 import java.net.URL;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import it.tidalwave.northernwind.frontend.ui.PageViewController;
-import lombok.Getter;
-import lombok.Setter;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController;
+import com.vaadin.terminal.DownloadStream;
+import com.vaadin.terminal.URIHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
  *
- * The default implementation of {@link PageViewController}.
+ * The Vaadin specialization of {@link SiteViewController}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
-public class DefaultPageViewController implements PageViewController
+@Configurable @Scope(value="session") @Slf4j
+public class VaadinSiteViewController extends DefaultSiteViewController
   {
-    @Getter @Setter @Nonnull
-    private List<UriHandler> uriHandlers;
+    @Nonnull @Inject
+    private VaadinSiteView siteView;
     
+    @Nonnull @Inject
+    private DownloadStreamThreadLocal downloadStreamHolder;
+
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Tracks the incoming URI.
      *
      ******************************************************************************************************************/
-    @Override
-    public void handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    private final URIHandler uriHandler = new URIHandler()
       {
-        try
+        @Override
+        public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
           {
-            log.info("handleUri({}, {})", context, relativeUri);
-            
-            for (final UriHandler uriHandler : uriHandlers)
+            try
               {
-                log.info(">>>> trying {} ...", uriHandler);
-                
-                if (uriHandler.handleUri(context, relativeUri))
-                  {
-                    break;  
-                  }
+                downloadStreamHolder.set(null);
+                handleUri(context, relativeUri);
+                return downloadStreamHolder.get();
+              }
+            finally
+              {
+                downloadStreamHolder.set(null);
               }
           }
-        catch (NotFoundException e) 
-          {
-            log.error("", e); 
-            // TODO
-          }
-        catch (IOException e) 
-          {
-            log.error("", e);
-            // TODO
-          }
-      }
+      };
     
     /*******************************************************************************************************************
+     *
      *
      *
      ******************************************************************************************************************/
     @PostConstruct
-    public void logConfiguration()
+    private void registerUriHandler()
       {
-        log.info(">>>> uriHandlers: {}", uriHandlers);  
+        siteView.addURIHandler(uriHandler);
+        // FIXME: seems to be registered twice? See logs
+        log.info(">>>> registered URI handler: {}", uriHandler);
       }
-  } 
+  }

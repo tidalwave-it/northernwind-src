@@ -45,11 +45,11 @@
     <bean id="downloadStreamThreadLocal" 
           class="it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal" />
     
-    <bean id="pageView" 
-          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageView" />
+    <bean id="siteView" 
+          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinSiteView" />
     
-    <bean id="pageViewController" 
-          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinPageViewController"
+    <bean id="siteViewController" 
+          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinSiteViewController"
           autowire="no">
         <property name="uriHandlers">
             <list>
