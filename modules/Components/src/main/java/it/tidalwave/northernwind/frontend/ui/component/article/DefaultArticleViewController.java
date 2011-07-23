@@ -22,15 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.article;
 
-import it.tidalwave.util.Key;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.WebSite;
-import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleView.*;
