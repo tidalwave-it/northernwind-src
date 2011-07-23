@@ -64,8 +64,8 @@ public class DefaultArticleViewController implements ArticleViewController
       {
         try
           {
-            final Key<String> K = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
-            final String contentUri = webSiteNode.getProperty(K);
+            final Key<String> PROP_CONTENT = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
+            final String contentUri = webSiteNode.getProperty(PROP_CONTENT);
             
             // FIXME: should be fixed in the Infoglue importer
             final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
