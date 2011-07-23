@@ -26,7 +26,10 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -140,35 +143,66 @@ import lombok.extern.slf4j.Slf4j;
     private void loadProperties()
       throws IOException
       {
-        log.info("loadProperties()");
-        final Properties tempProperties = new Properties();
-        FileObject propertyFile = file.getFileObject("Resource_en.properties");
+        log.info("loadProperties() for {}", file.getPath());
+                
+        final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
 
-        if (propertyFile == null)
-          {
-            propertyFile = file.getFileObject("OverrideResource_en.properties");
-          }
-
-        if (propertyFile == null)
-          {
-            log.warn("No properties for {}", file);
-          }
-        else
+        for (final FileObject propertyFile : getPropertyFiles())
           {
             log.info(">>>> reading properties from {}...", propertyFile.getPath());
             @Cleanup final Reader r = new InputStreamReader(propertyFile.getInputStream());
+            final Properties tempProperties = new Properties();
             tempProperties.load(r);
+            log.info(">>>> local properties: {}", tempProperties);
             r.close();        
-            log.info(">>>> properties: {}", tempProperties);
-          }
-
-        final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
-
-        for (final Entry<Object, Object> entry : tempProperties.entrySet())
-          {
-            map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
+            
+            for (final Entry<Object, Object> entry : tempProperties.entrySet())
+              {
+                map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
+              }
           }
 
         properties = new TypeSafeHashMap(map);
+        log.info(">>>> properties: {}", properties);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Computes a list of property files to implement inheritance. Property files are enumerated starting from the root
+     * up to the current folder, plus an eventual local override.
+     * 
+     * @return  a list of property files
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<FileObject> getPropertyFiles()
+      {
+        log.trace("getPropertyFiles() for {}", file.getPath());
+        
+        final List<FileObject> files = new ArrayList<FileObject>();
+        
+        for (FileObject folder = this.file; folder.getParent() != null; folder = folder.getParent())
+          {            
+            log.trace(">>>> probing {} ...", folder);
+            final FileObject propertyFile = folder.getFileObject("Resource_en.properties");
+            
+            if (propertyFile != null)
+              {  
+                files.add(propertyFile);                    
+              }
+          }
+        
+        Collections.reverse(files);
+
+        final FileObject propertyFile = file.getFileObject("OverrideResource_en.properties");
+
+        if (propertyFile != null)
+          {  
+            files.add(propertyFile);                    
+          }
+        
+        log.trace(">>>> property file candidates: {}", files);
+        
+        return files;
       }
   }
