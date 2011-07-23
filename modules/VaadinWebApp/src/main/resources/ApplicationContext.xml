@@ -82,14 +82,14 @@
     </bean>
 -->
 
-    <bean id="fileSystemProvider1" 
+    <bean id="delegateFileSystemProvider" 
           class="it.tidalwave.northernwind.frontend.filesystem.ZipFileSystemProvider" >
-        <property name="zipFilePath" value="${nw.rootPath}" />
+        <property name="zipFilePath" value="${nw.zipFile}" />
     </bean>
     
     <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.LocalCopyFileSystemProvider">
-        <property name="sourceProvider" ref="fileSystemProvider1" />
-        <property name="rootPath" value="/tmp/foobar" />
+        <property name="sourceProvider" ref="delegateFileSystemProvider" />
+        <property name="rootPath" value="${nw.rootPath}" />
     </bean>
     
     <bean id="downloadStreamThreadLocal" 

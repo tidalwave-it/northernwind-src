@@ -27,7 +27,7 @@ import sun.misc.BASE64Decoder;
  */
 public class Main 
   {
-    public static final File hgFolder = new File("/home/fritz/.nw/test/root");      
+    public static final File hgFolder = new File("target/root");      
     
     private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendYear(4, 4)
                                                                                      .appendLiteral("-")
