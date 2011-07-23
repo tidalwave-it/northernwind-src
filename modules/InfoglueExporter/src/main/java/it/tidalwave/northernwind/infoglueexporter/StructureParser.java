@@ -6,6 +6,7 @@ package it.tidalwave.northernwind.infoglueexporter;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import javax.annotation.Nonnull;
 import org.joda.time.DateTime;
 
@@ -32,14 +33,14 @@ public class StructureParser extends Parser
           {
             try
               {
-                new ComponentParser(builder.toString(), dateTime, path + "beans_" + language + ".xml", properties).process();
+                new ComponentParser(builder.toString(), dateTime, path + "Layout_" + language + ".xml", properties).process();
               }
             catch (Exception e)
               {
                   System.err.println("ERROR: " + e + " ON " + builder);                        
               }
           }
-        else if (!"attributes".equals(name))
+        else if (!Arrays.asList("attributes", "article").contains(name) &!builder.toString().equals("_Standard Pages"))
           {
             properties.put(name, builder.toString()); 
           }

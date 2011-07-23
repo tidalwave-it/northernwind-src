@@ -5,6 +5,8 @@
 package it.tidalwave.northernwind.infoglueexporter;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
@@ -16,9 +18,32 @@ import org.joda.time.DateTime;
  */
 public class ComponentParser extends Parser
   {
+    private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
+      {{
+        put(  "7", "http://northernwind.tidalwave.it/component/BasePage");
+        put( "67", "http://northernwind.tidalwave.it/component/Sidebar");
+        put("104", "http://northernwind.tidalwave.it/component/NewsIterator");
+        put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu");
+        put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment");
+        put( "44", "http://northernwind.tidalwave.it/component/Document");
+        put("853", "http://northernwind.tidalwave.it/component/StatCounter");
+        put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking");
+        put("873", "http://northernwind.tidalwave.it/component/AddThis");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+//        put("", "");
+      }};
+            
     private final StringBuilder builder = new StringBuilder();
     private final SortedMap<String, String> properties;
-    private String beanName = "";
+    private String componentName = "";
 
     public ComponentParser (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
@@ -35,99 +60,98 @@ public class ComponentParser extends Parser
       {
         if ("components".equals(name) && (indent == 0))
           {
-            builder.append("<beans>");
+            builder.append("<components>");
           }
         else if ("components".equals(name) && (indent > 0))
           {
-            builder.append("<property name='subcomponents'><list>");
+//            builder.append("<component>");
           }
         else if ("component".equals(name))
           {
-            builder.append("<bean ");
+            builder.append("<component ");
+            String attrNameValue = "";
+            String attrIdValue = "";
+            String attrTypeValue = "";
 
             for (int i = 0; i < reader.getAttributeCount(); i++)
               {
                 final String attrName = reader.getAttributeName(i).getLocalPart();
-                    final String attrValue = reader.getAttributeValue(i);
-                    
-                    if ("id".equals(attrName))
-                      {
-                        builder.append(String.format("id='%s' ", attrValue));
-                      }
-                    else if ("contentId".equals(attrName))
-                      {
-                        builder.append(String.format("class='%s' ", attrValue));
-                      }
-                  }
-                
-                builder.append(" >");
-                
-                for (int i = 0; i < reader.getAttributeCount(); i++)
+                final String attrValue = reader.getAttributeValue(i);
+
+                if ("name".equals(attrName))
                   {
-                    final String attrName = reader.getAttributeName(i).getLocalPart();
-                    final String attrValue = reader.getAttributeValue(i);
-                    
-                    if ("name".equals(attrName))
-                      {
-                        beanName = attrValue;
-                      }
-                    
-                    if (!Arrays.asList("id", "contentId").contains(attrName))
-                      {
-                        builder.append(String.format("<property name='%s' value='%s'/>", attrName, attrValue));
-                      }
+                    attrNameValue = attrValue;
+                  }
+                else if ("id".equals(attrName))
+                  {
+                    attrIdValue = attrValue;
+                  }
+                else if ("contentId".equals(attrName))
+                  {
+                    attrTypeValue = TYPE_MAP.get(attrValue);
                   }
               }
-            else if ("property".equals(name))
+            
+            componentName = attrNameValue + attrIdValue;
+            builder.append(String.format("name='%s' ", componentName));
+            builder.append(String.format("type='%s' ", attrTypeValue));
+//            builder.append(String.format("name='%s' ", attrValue));
+            builder.append(" >");
+
+          }
+        else if ("property".equals(name))
+          {
+            for (int i = 0; i < reader.getAttributeCount(); i++)
               {
-                for (int i = 0; i < reader.getAttributeCount(); i++)
+                final String attrName = reader.getAttributeName(i).getLocalPart();
+                final String attrValue = reader.getAttributeValue(i);
+
+                if ("path".equals(attrName))
                   {
-                    final String attrName = reader.getAttributeName(i).getLocalPart();
-                    final String attrValue = reader.getAttributeValue(i);
-                    
-                    if ("path".equals(attrName))
-                      {
-                        builder.append(String.format("<property name='content' value='${%s}'/>", beanName + ".content"));
-                        properties.put(beanName + ".content", "/content/document/" + attrValue);
-                      }
+//                    builder.append(String.format("<property name='content' value='${%s}'/>", beanName + ".content"));
+                    properties.put(componentName + ".content", attrValue);
                   }
               }
           }
-                
-        @Override
-        protected void processAttribute (final @Nonnull String name,  final @Nonnull XMLStreamReader reader)
-          throws Exception
+      }
+
+    @Override
+    protected void processAttribute (final @Nonnull String name,  final @Nonnull XMLStreamReader reader)
+      throws Exception
+      {
+        if (!Arrays.asList("article").contains(name))
           {
             builder.append(String.format("<property name='%s' value='%s'/>", name, "bwlin"));
           }
-        
-        @Override
-        protected void processEndElement (final @Nonnull String name)
-          throws Exception
+      }
+
+    @Override
+    protected void processEndElement (final @Nonnull String name)
+      throws Exception
+      {
+        if ("components".equals(name) && (indent == 0))
           {
-            if ("components".equals(name) && (indent == 0))
-              {
-                builder.append("</beans>");
-              }
-            else if ("components".equals(name) && (indent > 0))
-              {
-                builder.append("</list></property>");
-              }
-            else if ("component".equals(name))
-              {
-                builder.append("</bean>");
-              }
-            else 
-              {
-//                builder.append("</").append(name).append(">");                   
-              }
+            builder.append("</components>");
           }
-        
-        @Override
-        protected void finish() 
-          throws Exception
+        else if ("components".equals(name) && (indent > 0))
           {
-            ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(builder.toString())));
+//            builder.append("</list></property>");
+          }
+        else if ("component".equals(name))
+          {
+            builder.append("</component>");
+          }
+        else 
+          {
+//                builder.append("</").append(name).append(">");                   
           }
       }
-    
+
+    @Override
+    protected void finish() 
+      throws Exception
+      {
+        ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(builder.toString())));
+      }
+  }
+

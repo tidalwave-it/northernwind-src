@@ -137,17 +137,17 @@ public class Main
                       
                       if (fixedPath.startsWith("Mobile"))
                         {
-                          fixedPath = fixedPath.replaceAll("^Mobile/", "content/document/");
+                          fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
                           final String xml = replaceMacros(builder.toString().replace("cdataEnd", "]]>"));
                           new ContentParser(xml, dateTime, fixedPath, languageCode).process();
                         }
                       
                       else if (fixedPath.startsWith("Meta+info+folder/blueBill/Mobile"))
                         {
-                          fixedPath = fixedPath.replaceAll("^Meta\\+info\\+folder/blueBill/Mobile/", "structure/")
+                          fixedPath = fixedPath.replaceAll("^Meta\\+info\\+folder/blueBill/Mobile", "structure")
                                                .replaceAll("_Standard\\+Pages/", "/")
                                                .replaceAll("\\+Metainfo/", "/");
-                          fixedPath = fixedPath.replaceAll("_Standard\\+Pages/$", "layout");
+                          fixedPath = fixedPath.replaceAll("_Standard\\+Pages/$", "Override");
                           fixedPath = fixedPath.replaceAll("Meta\\+info\\+folder/blueBill/Mobile/", "structure/Override");
 //                          fixedPath = fixedPath.replaceAll("(^.*/)$", "$1layout_");
                           final String xml = builder.toString().replace("cdataEnd", "]]>");
