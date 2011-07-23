@@ -67,31 +67,7 @@
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
     </bean>
-       
-<!-- Example 1: Simple local file system.
-    <bean id="fileSystemProvider" 
-          class="it.tidalwave.northernwind.frontend.filesystem.LocalFileSystemProvider" >
-        <property name="rootPath" value="${nw.rootPath}" />
-    </bean>
--->
-    
-<!-- Example 2: Simple local zip file.
-    <bean id="fileSystemProvider" 
-          class="it.tidalwave.northernwind.frontend.filesystem.ZipFileSystemProvider" >
-        <property name="zipFilePath" value="${nw.rootPath}" />
-    </bean>
--->
-
-    <bean id="delegateFileSystemProvider" 
-          class="it.tidalwave.northernwind.frontend.filesystem.ZipFileSystemProvider" >
-        <property name="zipFilePath" value="${nw.zipFile}" />
-    </bean>
-    
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.LocalCopyFileSystemProvider">
-        <property name="sourceProvider" ref="delegateFileSystemProvider" />
-        <property name="rootPath" value="${nw.rootPath}" />
-    </bean>
-    
+           
     <bean id="downloadStreamThreadLocal" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.DownloadStreamThreadLocal" />
     
