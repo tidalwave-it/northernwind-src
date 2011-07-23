@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.impl;
 
+import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
@@ -163,9 +164,9 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
               }
           });
         
-        log.info(">>>> documents: {}", documentMapByRelativeUri);
-        log.info(">>>> media:     {}", mediaMapByRelativeUri);
-        log.info(">>>> nodes:     {}", nodeMapByRelativeUri);
+        logConfiguration("Documents:", documentMapByRelativeUri);
+        logConfiguration("Media:", mediaMapByRelativeUri);
+        logConfiguration("Nodes:", nodeMapByRelativeUri);
       }
     
     /*******************************************************************************************************************
@@ -212,6 +213,21 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
               }
           } 
       }  
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    private static void logConfiguration (final @Nonnull String name, Map<String, ?> map)
+      {
+        log.info(name);
+        
+        for (final Entry<String, ?> entry : map.entrySet())
+          {
+            log.info(">>>> {}: {}", entry.getKey(), entry.getValue());  
+          }
+      }
     
     /*******************************************************************************************************************
      *
