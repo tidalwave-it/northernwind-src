@@ -33,7 +33,7 @@ import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.article.ArticleView.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -71,7 +71,7 @@ public class DefaultArticleViewController implements ArticleViewController
             final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
             
             final Content content = site.find(Content).withRelativeUri(fixedContentUri).result();
-            view.setText(content.getProperty(PROP_FULL_TEXT));
+            view.setText(content.getProperty(PROPERTY_FULL_TEXT));
           }
         catch (NotFoundException e)
           {

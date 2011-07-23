@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.article;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
@@ -35,8 +34,6 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface ArticleView // FIXME: rename to CaptionedText?
   {
-    public static final Key<String> PROP_FULL_TEXT = new Key<String>("FullText_en.html");
-    
     /*******************************************************************************************************************
      *
      * Sets the text content.
