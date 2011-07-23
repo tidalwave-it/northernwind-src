@@ -119,7 +119,7 @@ import lombok.extern.slf4j.Slf4j;
         
         if (attributeFile == null)
           {
-            throw new NotFoundException(attributeFile.getPath());  
+            throw new NotFoundException(file.getPath() + "/" + attribute);  
           }
         
         log.info(">>>> reading from {}", attributeFile.getPath());

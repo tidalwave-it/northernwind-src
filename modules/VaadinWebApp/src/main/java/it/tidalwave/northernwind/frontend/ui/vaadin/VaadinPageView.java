@@ -22,26 +22,24 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import com.vaadin.terminal.StreamResource;
-import java.io.InputStream;
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import javax.inject.Inject;
+import java.io.InputStream;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.PageView;
-import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinHorizontalMenuView;
+import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
+import it.tidalwave.northernwind.frontend.model.Media;
+import it.tidalwave.northernwind.frontend.model.WebSite;
+import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
-import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.ui.component.menu.vaadin.VaadinMenuViewController;
-import it.tidalwave.util.NotFoundException;
-import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
@@ -72,35 +70,15 @@ public class VaadinPageView extends Window implements PageView
      *
      * {@inheritDoc}
      * 
-     * @param  view   must be a Vaadin component
+     * @param  webSiteNodeView   must be a Vaadin component
      *
      ******************************************************************************************************************/
     @Override
-    public void setContentView (final @Nonnull Object view) 
+    public void setWebSiteNodeView (final @Nonnull WebSiteNodeView webSiteNodeView) 
       throws IOException
       {
-        log.info("setContents({} - {})", view.getClass(), view);
+        log.info("setWebSiteNodeView({} - {})", webSiteNodeView.getClass(), webSiteNodeView);
         removeAllComponents();
-        // FIXME: this must be built from the configuration
-        final VaadinHorizontalMenuView menuView = new VaadinHorizontalMenuView("nav");
-        final VaadinMenuViewController menuController = new VaadinMenuViewController(menuView, "nav", null);
-        
-        try { // FIXME
-        menuController.setLinks(Arrays.asList
-          (
-            "/",
-            "/Features",
-            "/Download",
-            "/Screenshots",
-            "/Getting started",
-            "/Blog & News (new)",
-//            "/Contact",
-            "/License",
-            "/Developers"
-          )); }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         
         try // FIXME to be moved to CSS
           {
@@ -121,7 +99,6 @@ public class VaadinPageView extends Window implements PageView
             log.error("", e);
           }
        
-        addComponent(menuView);
-        addComponent((Component)view);
+        addComponent((Component)webSiteNodeView);
       }
   }

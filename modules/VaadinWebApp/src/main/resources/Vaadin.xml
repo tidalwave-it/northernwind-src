@@ -64,5 +64,9 @@
     
     <bean id="frontEndWebApp"
           class="it.tidalwave.northernwind.frontend.vaadin.VaadinFrontEndApplication" />
-          
+              
+    <bean id="viewFactory"
+          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinViewFactory">
+    </bean>
+
 </beans>

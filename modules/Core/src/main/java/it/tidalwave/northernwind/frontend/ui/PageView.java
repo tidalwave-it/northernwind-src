@@ -51,6 +51,6 @@ public interface PageView
      * @param  view  the view
      *
      ******************************************************************************************************************/
-    public void setContentView (@Nonnull Object view)
+    public void setWebSiteNodeView (@Nonnull WebSiteNodeView view)
       throws IOException;
   }

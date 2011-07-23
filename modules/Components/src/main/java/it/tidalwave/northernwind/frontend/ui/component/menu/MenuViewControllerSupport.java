@@ -24,14 +24,16 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
+import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
 
 /***********************************************************************************************************************
@@ -42,7 +44,7 @@ import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope("session") @Slf4j
+@Configurable(preConstruction=true) @Scope("session") @Slf4j
 public abstract class MenuViewControllerSupport implements MenuViewController
   {    
     @Nonnull @Inject
@@ -63,23 +65,43 @@ public abstract class MenuViewControllerSupport implements MenuViewController
                                       final @Nonnull WebSiteNode webSiteNode) 
       {
         this.view = view;
+        
+        try 
+          {
+            final Key<String> PROP_CONTENT = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
+            final String uris = webSiteNode.getProperty(PROP_CONTENT);
+            setLinks(Arrays.asList(uris.split(",")));
+          }
+        catch (NotFoundException e)
+          {
+            log.error("", e);
+          }
+        catch (IOException e) 
+          {
+            log.error("", e);
+          }
       }
     
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Sets the navigation links.
+     * 
+     * @param  relativeUris   the relative URIs of the targets
      *
      ******************************************************************************************************************/
-    @Override
-    public void setLinks (final @Nonnull List<String> relativeUris) 
+    private void setLinks (final @Nonnull List<String> relativeUris) 
       {
+        log.info("setLinks({})", relativeUris);
+        
         for (final String relativeUri : relativeUris)
           {  
             try
               {
-                final WebSiteNode targetWebSiteNode = webSite.find(WebSiteNode).withRelativeUri(relativeUri).result();
+                // FIXME: should be fixed in the Infoglue importer
+                final String fixedUri = "/" + relativeUri.trim().replaceAll("/content/document/Mobile", "").replaceAll("/content/document/", "");
+                final WebSiteNode targetWebSiteNode = webSite.find(WebSiteNode).withRelativeUri(fixedUri).result();
                 final String navigationTitle = targetWebSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
-                addLink(navigationTitle, relativeUri);                
+                addLink(navigationTitle, fixedUri);                
               }
             catch (IOException e)
               {

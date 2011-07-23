@@ -20,16 +20,30 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
+
+import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.frontend.model.spi.ViewFactorySupport;
+import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link MenuView}.
+ * The Vaadin implementation of {@link ViewFactory}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuViewController
+public class VaadinViewFactory extends ViewFactorySupport
   {
-  } 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public WebSiteNodeView createWebSiteNodeView()
+      {
+        return new VaadinWebSiteNodeView();
+      }    
+  }

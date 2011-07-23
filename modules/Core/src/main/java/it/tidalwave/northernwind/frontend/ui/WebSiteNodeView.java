@@ -20,16 +20,26 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu;
+package it.tidalwave.northernwind.frontend.ui;
+
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link MenuView}.
+ * The view for a {@link WebSiteNode}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuViewController
+public interface WebSiteNodeView 
   {
-  } 
+    /*******************************************************************************************************************
+     *
+     * Adds another content to this object.
+     * 
+     * @oaram  content  the content to add
+     * 
+     ******************************************************************************************************************/
+    public void add (@Nonnull Object content);
+  }

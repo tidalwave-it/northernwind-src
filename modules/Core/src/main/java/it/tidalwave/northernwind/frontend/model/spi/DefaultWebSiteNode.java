@@ -31,6 +31,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.ViewFactory;
 import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString(exclude="viewFactory")
 /* package */ class DefaultWebSiteNode implements WebSiteNode
   {
     @Nonnull @Inject
@@ -77,11 +78,21 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Object createView() 
+    public WebSiteNodeView createView() 
       throws IOException, NotFoundException
       {
         // FIXME: this is temporary
-        return viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this); 
+//base.content = /content/document/Google Analytics
+//content3.content = /content/document/News
+//footer.content = /content/document/Copyright
+//main.content = /content/document/Mobile
+//nav.content = /content/document/Mobile, Features, Download, Screenshots, Getting started, Blog & News, Contacts, License, Developers          
+          
+        final WebSiteNodeView pageContent = viewFactory.createWebSiteNodeView();
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "footer", this));
+        return pageContent;
         // END FIXME
       }
   }

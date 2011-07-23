@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
+import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.NotFoundException;
 
@@ -37,6 +38,9 @@ import it.tidalwave.util.NotFoundException;
  **********************************************************************************************************************/
 public interface ViewFactory 
   {
+    @Nonnull
+    public WebSiteNodeView createWebSiteNodeView();
+    
     /*******************************************************************************************************************
      *
      * Creates a new instance of a View.

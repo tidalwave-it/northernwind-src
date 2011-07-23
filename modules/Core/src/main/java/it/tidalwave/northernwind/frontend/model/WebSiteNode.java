@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
 
 /***********************************************************************************************************************
  *
@@ -49,6 +50,6 @@ public interface WebSiteNode extends Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView() 
+    public WebSiteNodeView createView() 
       throws IOException, NotFoundException;
   }

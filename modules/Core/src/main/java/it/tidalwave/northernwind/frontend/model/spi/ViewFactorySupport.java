@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString
-public class DefaultViewFactory implements ViewFactory
+public abstract class ViewFactorySupport implements ViewFactory
   {
     private final Map<String, ViewBuilder> viewBuilderMapByName = new TreeMap<String, ViewBuilder>();
     

@@ -67,9 +67,5 @@
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
     </bean>
-    
-    <bean id="viewFactory"
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultViewFactory">
-    </bean>
               
 </beans>
