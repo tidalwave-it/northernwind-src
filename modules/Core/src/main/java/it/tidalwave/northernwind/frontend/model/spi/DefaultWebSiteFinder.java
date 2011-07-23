@@ -101,7 +101,12 @@ import lombok.ToString;
 
         if (relativeUri != null)
           {
-            results.add(mapByRelativeUri.get(relativeUri));  
+            final Type result = mapByRelativeUri.get(relativeUri);
+            
+            if (result != null)
+              {
+                results.add(result);  
+              }
           }
         else
           {
