@@ -23,8 +23,9 @@
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.model.spi.ViewFactorySupport;
 import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory;
+import it.tidalwave.northernwind.frontend.ui.spi.ViewFactorySupport;
 
 /***********************************************************************************************************************
  *

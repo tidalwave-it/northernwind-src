@@ -27,7 +27,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import it.tidalwave.northernwind.frontend.model.ViewFactory;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 
 /***********************************************************************************************************************
  *

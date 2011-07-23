@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi;
+package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -30,10 +30,10 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
-import it.tidalwave.northernwind.frontend.model.ViewFactory;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
+import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 

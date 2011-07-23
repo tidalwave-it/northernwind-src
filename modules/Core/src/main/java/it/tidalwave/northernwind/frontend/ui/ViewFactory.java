@@ -20,11 +20,11 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.northernwind.frontend.ui;
 
-import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 
 /***********************************************************************************************************************
  *
