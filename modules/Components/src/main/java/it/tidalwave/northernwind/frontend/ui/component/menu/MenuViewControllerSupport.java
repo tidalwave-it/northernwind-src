@@ -93,3 +93,4 @@ public abstract class MenuViewControllerSupport implements MenuViewController
      *
      ******************************************************************************************************************/
     protected abstract void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
+  }
