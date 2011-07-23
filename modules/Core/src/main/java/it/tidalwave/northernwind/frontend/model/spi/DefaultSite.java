@@ -25,23 +25,23 @@ package it.tidalwave.northernwind.frontend.model.spi;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteFinder;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
-import it.tidalwave.northernwind.frontend.model.SiteFinder;
-import java.util.HashMap;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
@@ -201,7 +201,7 @@ public class DefaultSite implements Site
       throws UnsupportedEncodingException
       {
         log.info("traverse({}}", file);
-        final String relativeUri = decode(file.getPath());
+        final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 
         for (final FileObject child : file.getChildren())
@@ -212,28 +212,6 @@ public class DefaultSite implements Site
               }
           } 
       }  
-    
-    /*******************************************************************************************************************
-     *
-     * Decodes an URL-encoded URI
-     * 
-     * @param   uri   the URL-encoded URI
-     * @return        the plain text URI
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String decode (final @Nonnull String uri)
-      throws UnsupportedEncodingException
-      {
-        final StringBuilder builder = new StringBuilder();
-        
-        for (final String part : uri.split("/"))
-          {
-            builder.append("/").append(URLDecoder.decode(part, "UTF-8"));
-          }
-        
-        return builder.toString();
-      }
     
     /*******************************************************************************************************************
      *
