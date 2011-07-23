@@ -126,7 +126,7 @@ public class Resource
         
         if (attributeFile == null)
           {
-            throw new NotFoundException(file.getPath());  
+            throw new NotFoundException(attributeFile.getPath());  
           }
         
         log.info(">>>> reading from {}", attributeFile.getPath());
