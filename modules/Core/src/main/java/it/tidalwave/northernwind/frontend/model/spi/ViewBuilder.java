@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -74,16 +74,16 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (final @Nonnull String instanceName, final @Nonnull WebSiteNode webSiteNode)
+    public Object createView (final @Nonnull String instanceName, final @Nonnull SiteNode siteNode)
       {
-        log.debug("createView({}, {})", instanceName, webSiteNode);
+        log.debug("createView({}, {})", instanceName, siteNode);
         
         try
           { 
             final Object view = viewClass.getConstructor(String.class).newInstance(instanceName);
             // FIXME: the viewController is not assigned, will be GCed!
             // FIXME: Attach to the view, even though it doesn't need it? Or use a WeakIdentityMap indexed by the View?
-            final Object viewController = getConstructor().newInstance(view, instanceName, webSiteNode);  
+            final Object viewController = getConstructor().newInstance(view, instanceName, siteNode);  
             return view;
           }
         catch (Exception e)
@@ -100,6 +100,6 @@ import lombok.extern.slf4j.Slf4j;
     private Constructor<?> getConstructor() 
       throws NoSuchMethodException, SecurityException 
       {
-        return viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class, WebSiteNode.class);
+        return viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class, SiteNode.class);
       }
   }

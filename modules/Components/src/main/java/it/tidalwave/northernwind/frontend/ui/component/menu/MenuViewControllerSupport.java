@@ -31,10 +31,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
+import static it.tidalwave.northernwind.frontend.model.SiteNode.*;
 
 /***********************************************************************************************************************
  *
@@ -48,7 +48,7 @@ import static it.tidalwave.northernwind.frontend.model.WebSiteNode.*;
 public abstract class MenuViewControllerSupport implements MenuViewController
   {    
     @Nonnull @Inject
-    private WebSite webSite;
+    private Site site;
     
     @Nonnull
     protected final MenuView view;
@@ -57,19 +57,19 @@ public abstract class MenuViewControllerSupport implements MenuViewController
      *
      * @param  view              the related view
      * @param  viewInstanceName  the name of the view instance
-     * @param  webSiteNode       the related {@link WebSiteNode}
+     * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public MenuViewControllerSupport (final @Nonnull MenuView view, 
                                       final @Nonnull String viewInstanceName, 
-                                      final @Nonnull WebSiteNode webSiteNode) 
-      {
+                                      final @Nonnull SiteNode siteNode) 
+    {
         this.view = view;
         
         try 
           {
             final Key<String> PROP_CONTENT = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
-            final String uris = webSiteNode.getProperty(PROP_CONTENT);
+            final String uris = siteNode.getProperty(PROP_CONTENT);
             setLinks(Arrays.asList(uris.split(",")));
           }
         catch (NotFoundException e)
@@ -99,8 +99,8 @@ public abstract class MenuViewControllerSupport implements MenuViewController
               {
                 // FIXME: should be fixed in the Infoglue importer
                 final String fixedUri = "/" + relativeUri.trim().replaceAll("/content/document/Mobile", "").replaceAll("/content/document/", "");
-                final WebSiteNode targetWebSiteNode = webSite.find(WebSiteNode).withRelativeUri(fixedUri).result();
-                final String navigationTitle = targetWebSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
+                final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(fixedUri).result();
+                final String navigationTitle = targetSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
                 addLink(navigationTitle, fixedUri);                
               }
             catch (IOException e)

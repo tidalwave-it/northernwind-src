@@ -24,8 +24,8 @@ package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewControllerSupport;
 import com.vaadin.terminal.ExternalResource;
@@ -41,20 +41,20 @@ import com.vaadin.ui.Link;
 public class VaadinMenuViewController extends MenuViewControllerSupport
   {
     @Nonnull @Inject
-    private WebSite webSite;
+    private Site site;
     
     /*******************************************************************************************************************
      *
      * @param  view              the related view
      * @param  viewInstanceName  the name of the view instance
-     * @param  webSiteNode       the related {@link WebSiteNode}
+     * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public VaadinMenuViewController (final @Nonnull MenuView view, 
                                      final @Nonnull String viewInstanceName,
-                                     final @Nonnull WebSiteNode webSiteNode) 
-      {
-        super(view, viewInstanceName, webSiteNode);
+                                     final @Nonnull SiteNode siteNode) 
+    {
+        super(view, viewInstanceName, siteNode);
       }
         
     /*******************************************************************************************************************
@@ -65,6 +65,6 @@ public class VaadinMenuViewController extends MenuViewControllerSupport
     @Override
     protected void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
       {
-        ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(webSite.getContextPath() + relativeUri)));                        
+        ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(site.getContextPath() + relativeUri)));                        
       }
   }

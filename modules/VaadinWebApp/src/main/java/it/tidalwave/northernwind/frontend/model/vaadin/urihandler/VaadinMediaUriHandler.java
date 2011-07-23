@@ -31,7 +31,7 @@ import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
-import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
 import com.vaadin.terminal.DownloadStream;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
 public class VaadinMediaUriHandler implements UriHandler
   {
     @Inject @Nonnull
-    private WebSite webSite;
+    private Site site;
     
     @Inject @Nonnull
     private DownloadStreamThreadLocal downloadStreamHolder;
@@ -64,7 +64,7 @@ public class VaadinMediaUriHandler implements UriHandler
       {
         if (relativeUri.startsWith("media"))
           {
-            final Media media = webSite.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
+            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
             final FileObject file = media.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());
             downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), null));

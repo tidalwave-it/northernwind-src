@@ -31,9 +31,9 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.PageView;
-import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
+import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.Site;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
@@ -54,7 +54,7 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
 public class VaadinPageView extends Window implements PageView
   {
     @Inject @Nonnull
-    private WebSite webSite;
+    private Site site;
             
     /*******************************************************************************************************************
      *
@@ -70,19 +70,19 @@ public class VaadinPageView extends Window implements PageView
      *
      * {@inheritDoc}
      * 
-     * @param  webSiteNodeView   must be a Vaadin component
+     * @param  siteNodeView   must be a Vaadin component
      *
      ******************************************************************************************************************/
     @Override
-    public void setWebSiteNodeView (final @Nonnull WebSiteNodeView webSiteNodeView) 
+    public void setSiteNodeView (final @Nonnull SiteNodeView siteNodeView) 
       throws IOException
       {
-        log.info("setWebSiteNodeView({} - {})", webSiteNodeView.getClass(), webSiteNodeView);
+        log.info("setSiteNodeView({} - {})", siteNodeView.getClass(), siteNodeView);
         removeAllComponents();
         
         try // FIXME to be moved to CSS
           {
-            final Media media = webSite.find(Media).withRelativeUri("/blueBill_Mobile-Banner.png").result();
+            final Media media = site.find(Media).withRelativeUri("/blueBill_Mobile-Banner.png").result();
             final FileObject file = media.getFile();
             final InputStream is = file.getInputStream();
             addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
@@ -99,6 +99,6 @@ public class VaadinPageView extends Window implements PageView
             log.error("", e);
           }
        
-        addComponent((Component)webSiteNodeView);
+        addComponent((Component)siteNodeView);
       }
   }

@@ -30,8 +30,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.ViewFactory;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
-import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +40,14 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A node of the website, mapped to a given URL.
+ * A node of the site, mapped to a given URL.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString(exclude="viewFactory")
-/* package */ class DefaultWebSiteNode implements WebSiteNode
+/* package */ class DefaultSiteNode implements SiteNode
   {
     @Nonnull @Inject
     private ViewFactory viewFactory;
@@ -66,7 +66,7 @@ import lombok.extern.slf4j.Slf4j;
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultWebSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
+    public DefaultSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
       {
         resource = new DefaultResource(file);  
         this.relativeUri = relativeUri;
@@ -78,7 +78,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public WebSiteNodeView createView() 
+    public SiteNodeView createView() 
       throws IOException, NotFoundException
       {
         // FIXME: this is temporary
@@ -88,7 +88,7 @@ import lombok.extern.slf4j.Slf4j;
 //main.content = /content/document/Mobile
 //nav.content = /content/document/Mobile, Features, Download, Screenshots, Getting started, Blog & News, Contacts, License, Developers          
           
-        final WebSiteNodeView pageContent = viewFactory.createWebSiteNodeView();
+        final SiteNodeView pageContent = viewFactory.createSiteNodeView();
         pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav", this));
         pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this));
         pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "footer", this));

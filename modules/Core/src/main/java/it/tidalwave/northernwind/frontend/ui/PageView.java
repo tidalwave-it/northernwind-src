@@ -27,7 +27,7 @@ import java.io.IOException;
 
 /***********************************************************************************************************************
  *
- * This class models a page of the website. It is repopulated every time in function of the user navigation.
+ * This class models a page of the site. It is repopulated every time in function of the user navigation.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -51,6 +51,6 @@ public interface PageView
      * @param  view  the view
      *
      ******************************************************************************************************************/
-    public void setWebSiteNodeView (@Nonnull WebSiteNodeView view)
+    public void setSiteNodeView (@Nonnull SiteNodeView view)
       throws IOException;
   }

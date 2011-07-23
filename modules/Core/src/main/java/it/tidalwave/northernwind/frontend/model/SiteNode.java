@@ -20,39 +20,36 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.vaadin;
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.VerticalLayout;
+import java.io.IOException;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 
 /***********************************************************************************************************************
  *
- * The Vaadin implementation of {@link WebSiteNodeView}.
+ * A node of the site, mapped to a given URL.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class VaadinWebSiteNodeView extends VerticalLayout implements WebSiteNodeView
+public interface SiteNode extends Resource
   {
+    public static final Class<SiteNode> SiteNode = SiteNode.class;
+    
+    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
+    
     /*******************************************************************************************************************
      *
-     ******************************************************************************************************************/
-    public VaadinWebSiteNodeView()
-      {
-        setMargin(false);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
+     * Creates the view for this {@code SiteNode}.
+     * 
+     * @return   the view
      *
      ******************************************************************************************************************/
-    @Override
-    public void add (final @Nonnull Object subContent) 
-      {
-        addComponent((Component)subContent);
-      }
+    @Nonnull
+    public SiteNodeView createView() 
+      throws IOException, NotFoundException;
   }

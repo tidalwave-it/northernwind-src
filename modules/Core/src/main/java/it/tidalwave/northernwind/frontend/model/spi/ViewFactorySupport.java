@@ -32,7 +32,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
 import it.tidalwave.northernwind.frontend.model.ViewFactory;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -60,12 +60,12 @@ public abstract class ViewFactorySupport implements ViewFactory
     @Override @Nonnull
     public Object createView (final @Nonnull String viewName, 
                               final @Nonnull String instanceName, 
-                              final @Nonnull WebSiteNode webSiteNode)
+                              final @Nonnull SiteNode siteNode)
       throws NotFoundException
       {        
         final ViewBuilder viewBuilder = NotFoundException.throwWhenNull(viewBuilderMapByName.get(viewName),
                                                                         "Cannot find " + viewName + ": available: " + viewBuilderMapByName.keySet());
-        return viewBuilder.createView(instanceName, webSiteNode);
+        return viewBuilder.createView(instanceName, siteNode);
       }
      
     /*******************************************************************************************************************

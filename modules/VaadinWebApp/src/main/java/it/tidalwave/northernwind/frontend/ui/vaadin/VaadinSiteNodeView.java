@@ -20,34 +20,39 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.VerticalLayout;
 
 /***********************************************************************************************************************
  *
- * The model for the whole website, it contains a collection of {@link Content}s, {@link Media} items and 
- * {@link SiteNode}s.
+ * The Vaadin implementation of {@link SiteNodeView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSite
+public class VaadinSiteNodeView extends VerticalLayout implements SiteNodeView
   {
     /*******************************************************************************************************************
      *
-     * Returns the context path for this web site.
-     *
      ******************************************************************************************************************/
-    @Nonnull
-    public String getContextPath();
-    
+    public VaadinSiteNodeView()
+      {
+        setMargin(false);
+      }
+
     /*******************************************************************************************************************
      *
-     * Finds something.
-     * 
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
-    @Nonnull
-    public <Type> WebSiteFinder<Type> find (@Nonnull Class<Type> type);
+    @Override
+    public void add (final @Nonnull Object subContent) 
+      {
+        addComponent((Component)subContent);
+      }
   }

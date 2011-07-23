@@ -40,7 +40,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.util.TypeSafeMap;
 import it.tidalwave.northernwind.frontend.model.Resource;
-import it.tidalwave.northernwind.frontend.model.WebSite;
+import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
@@ -52,11 +52,11 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude="webSite")
+@Configurable @Slf4j @ToString(exclude="site")
 /* package */ class DefaultResource implements Resource
   {
     @Inject @Nonnull
-    private WebSite webSite;
+    private Site site;
     
     @Nonnull @Getter
     private final FileObject file;    
@@ -126,7 +126,7 @@ import lombok.extern.slf4j.Slf4j;
         String text = attributeFile.asText();
 
         // FIXME: this should be done in a specific postprocessor registered only for Content   
-        text = text.replaceAll("\\$media\\(([^\\)]*)\\)", webSite.getContextPath() + "/media/$1");
+        text = text.replaceAll("\\$media\\(([^\\)]*)\\)", site.getContextPath() + "/media/$1");
         
         return text;
       }  

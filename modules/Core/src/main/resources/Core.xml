@@ -59,8 +59,8 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
-    <bean id="webSiteModel" 
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultWebSite" >
+    <bean id="site" 
+          class="it.tidalwave.northernwind.frontend.model.spi.DefaultSite" >
         <property name="contextPath" value="${nw.contextPath}" />
         <property name="fileSystemProvider" ref="fileSystemProvider" />
         <property name="documentPath" value="${nw.documentPath}" />

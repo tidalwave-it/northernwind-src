@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
-import it.tidalwave.northernwind.frontend.model.WebSiteFinder;
+import it.tidalwave.northernwind.frontend.model.SiteFinder;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -39,7 +39,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString(callSuper=true, exclude="mapByRelativeUri")
-/* package */ class DefaultWebSiteFinder<Type> extends FinderSupport<Type, DefaultWebSiteFinder<Type>> implements WebSiteFinder<Type>    
+/* package */ class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
   {
     @Nonnull
     private final Map<String, Type> mapByRelativeUri;
@@ -51,7 +51,7 @@ import lombok.ToString;
      *
      *
      ******************************************************************************************************************/
-    public DefaultWebSiteFinder (final @Nonnull String name, final @Nonnull Map<String, Type> mapByRelativeUri) 
+    public DefaultSiteFinder (final @Nonnull String name, final @Nonnull Map<String, Type> mapByRelativeUri) 
       {
         super(name);
         this.mapByRelativeUri = mapByRelativeUri;
@@ -63,9 +63,9 @@ import lombok.ToString;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public WebSiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri) 
+    public SiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri) 
       {
-        final DefaultWebSiteFinder<Type> clone = (DefaultWebSiteFinder<Type>)clone();
+        final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
         clone.relativeUri = relativeUri;
         return clone;
       }

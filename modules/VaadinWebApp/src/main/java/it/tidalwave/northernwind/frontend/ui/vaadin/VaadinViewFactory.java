@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.frontend.model.spi.ViewFactorySupport;
-import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
+import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 
 /***********************************************************************************************************************
  *
@@ -42,8 +42,8 @@ public class VaadinViewFactory extends ViewFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public WebSiteNodeView createWebSiteNodeView()
+    public SiteNodeView createSiteNodeView()
       {
-        return new VaadinWebSiteNodeView();
+        return new VaadinSiteNodeView();
       }    
   }

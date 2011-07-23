@@ -28,12 +28,12 @@ import java.io.IOException;
 import java.net.URL;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.PageView;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
-import static it.tidalwave.northernwind.frontend.model.WebSiteNode.WebSiteNode;
+import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -45,7 +45,7 @@ import static it.tidalwave.northernwind.frontend.model.WebSiteNode.WebSiteNode;
 public class ContentUriHandler implements UriHandler
   {
     @Inject @Nonnull
-    private WebSite webSite;
+    private Site site;
     
     @Inject @Nonnull
     private PageView pageView;
@@ -59,9 +59,9 @@ public class ContentUriHandler implements UriHandler
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
       throws NotFoundException, IOException 
       {
-        final WebSiteNode webSiteNode = webSite.find(WebSiteNode).withRelativeUri("/" + relativeUri).result();            
+        final SiteNode siteNode = site.find(SiteNode).withRelativeUri("/" + relativeUri).result();            
 //            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        pageView.setWebSiteNodeView(webSiteNode.createView());
+        pageView.setSiteNodeView(siteNode.createView());
         
         return true;
       }

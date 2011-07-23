@@ -34,10 +34,10 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
+import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
-import it.tidalwave.northernwind.frontend.model.WebSiteFinder;
+import it.tidalwave.northernwind.frontend.model.SiteFinder;
 import java.util.HashMap;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,14 +45,14 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The default implementation of {@link WebSiteModel}.
+ * The default implementation of {@link Site}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultWebSite implements WebSite
+public class DefaultSite implements Site
   {
     static interface FileVisitor 
       {
@@ -107,7 +107,7 @@ public class DefaultWebSite implements WebSite
     
     private final Map<String, Media> mediaMapByRelativeUri = new TreeMap<String, Media>();
     
-    private final Map<String, WebSiteNode> nodeMapByRelativeUri = new TreeMap<String, WebSiteNode>();
+    private final Map<String, SiteNode> nodeMapByRelativeUri = new TreeMap<String, SiteNode>();
     
     private final Map<Class<?>, Map<String, ?>> mapsByType = new HashMap<Class<?>, Map<String, ?>>(); 
         
@@ -123,7 +123,7 @@ public class DefaultWebSite implements WebSite
         
         mapsByType.put(Content.class, documentMapByRelativeUri);
         mapsByType.put(Media.class, mediaMapByRelativeUri);
-        mapsByType.put(WebSiteNode.class, nodeMapByRelativeUri);
+        mapsByType.put(SiteNode.class, nodeMapByRelativeUri);
         
         final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = fileSystem.findResource(documentPath);
@@ -159,7 +159,7 @@ public class DefaultWebSite implements WebSite
             @Override
             public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultWebSiteNode(folder, relativeUri));
+                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultSiteNode(folder, relativeUri));
               }
           });
         
@@ -174,7 +174,7 @@ public class DefaultWebSite implements WebSite
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <Type> WebSiteFinder<Type> find (final @Nonnull Class<Type> type)
+    public <Type> SiteFinder<Type> find (final @Nonnull Class<Type> type)
       {
         final Map<String, Type> map = (Map<String, Type>)mapsByType.get(type);
         
@@ -183,7 +183,7 @@ public class DefaultWebSite implements WebSite
             throw new IllegalArgumentException("Illegal type: " + type + "; can be: " + mapsByType.keySet());  
           }
         
-        return new DefaultWebSiteFinder<Type>(type.getSimpleName(), map);
+        return new DefaultSiteFinder<Type>(type.getSimpleName(), map);
       }
     
     /*******************************************************************************************************************

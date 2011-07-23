@@ -20,26 +20,19 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui;
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.spi.ExtendedFinderSupport;
 
 /***********************************************************************************************************************
  *
- * The view for a {@link WebSiteNode}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteNodeView 
+public interface SiteFinder<Type> extends ExtendedFinderSupport<Type, SiteFinder<Type>>
   {
-    /*******************************************************************************************************************
-     *
-     * Adds another content to this object.
-     * 
-     * @oaram  content  the content to add
-     * 
-     ******************************************************************************************************************/
-    public void add (@Nonnull Object content);
+    @Nonnull
+    public SiteFinder<Type> withRelativeUri (@Nonnull String relativeUri);
   }

@@ -23,33 +23,31 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
 
 /***********************************************************************************************************************
  *
- * A node of the website, mapped to a given URL.
+ * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and 
+ * {@link SiteNode}s.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSiteNode extends Resource
+public interface Site
   {
-    public static final Class<WebSiteNode> WebSiteNode = WebSiteNode.class;
-    
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
-    
     /*******************************************************************************************************************
      *
-     * Creates the view for this {@code WebSiteNode}.
-     * 
-     * @return   the view
+     * Returns the context path for this web site.
      *
      ******************************************************************************************************************/
     @Nonnull
-    public WebSiteNodeView createView() 
-      throws IOException, NotFoundException;
+    public String getContextPath();
+    
+    /*******************************************************************************************************************
+     *
+     * Finds something.
+     * 
+     ******************************************************************************************************************/
+    @Nonnull
+    public <Type> SiteFinder<Type> find (@Nonnull Class<Type> type);
   }

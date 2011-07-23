@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
-import it.tidalwave.northernwind.frontend.ui.WebSiteNodeView;
+import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.NotFoundException;
 
@@ -39,7 +39,7 @@ import it.tidalwave.util.NotFoundException;
 public interface ViewFactory 
   {
     @Nonnull
-    public WebSiteNodeView createWebSiteNodeView();
+    public SiteNodeView createSiteNodeView();
     
     /*******************************************************************************************************************
      *
@@ -47,7 +47,7 @@ public interface ViewFactory
      *
      * @param   viewName            the component view name
      * @param   instanceName        the instance name
-     * @param   webSiteNode         the node this view is created for 
+     * @param   siteNode            the node this view is created for 
      * @return  
      * @throws  NotFoundException   if no view component is found
      * 
@@ -55,6 +55,6 @@ public interface ViewFactory
     @Nonnull
     public Object createView (@Nonnull String viewName, 
                               @Nonnull String instanceName, 
-                              @Nonnull WebSiteNode webSiteNode) 
+                              @Nonnull SiteNode siteNode) 
       throws NotFoundException;
   }
