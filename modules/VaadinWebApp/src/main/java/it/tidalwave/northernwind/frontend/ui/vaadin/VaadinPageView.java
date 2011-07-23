@@ -103,7 +103,7 @@ public class VaadinPageView extends Window implements PageView
         
         try // FIXME to be moved to CSS
           {
-            final Media media = webSite.findMediaByUri("/blueBill_Mobile-Banner.png");
+            final Media media = webSite.findMedia().withRelativeUri("/blueBill_Mobile-Banner.png").result();
             final FileObject file = media.getResource().getFile();
             final InputStream is = file.getInputStream();
             addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 

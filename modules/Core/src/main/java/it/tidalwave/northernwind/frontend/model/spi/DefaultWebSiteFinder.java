@@ -20,52 +20,95 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.northernwind.frontend.model.spi;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.northernwind.frontend.model.WebSiteFinder;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
- * The model for the whole website, it contains a collection of {@link Content}s, {@link Media} items and 
- * {@link SiteNode}s.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface WebSite
+@ToString(callSuper=true, exclude="mapByRelativeUri")
+/* package */ class DefaultWebSiteFinder<Type> extends FinderSupport<Type, DefaultWebSiteFinder<Type>> implements WebSiteFinder<Type>    
   {
+    @Nonnull
+    private final Map<String, Type> mapByRelativeUri;
+    
+    @CheckForNull
+    private String relativeUri;
+
     /*******************************************************************************************************************
      *
-     * Returns the context path for this web site.
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public String getContextPath();
+    public DefaultWebSiteFinder (final @Nonnull String name, final @Nonnull Map<String, Type> mapByRelativeUri) 
+      {
+        super(name);
+        this.mapByRelativeUri = mapByRelativeUri;
+      }    
     
     /*******************************************************************************************************************
      *
-     * Finds {@link Content}s.
-     * 
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
-    @Nonnull
-    public WebSiteFinder<Content> findContent();
+    @Override @Nonnull
+    public WebSiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri) 
+      {
+        final DefaultWebSiteFinder<Type> clone = (DefaultWebSiteFinder<Type>)clone();
+        clone.relativeUri = relativeUri;
+        return clone;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Type result() 
+      throws NotFoundException 
+      {
+        try
+          {
+            return super.result();
+          }
+        catch (NotFoundException e)
+          {
+            throw new NotFoundException(relativeUri + ": " + mapByRelativeUri.keySet());
+          }
+      }
     
     /*******************************************************************************************************************
      *
-     * Finds {@link Media} items.
-     * 
-     ******************************************************************************************************************/
-    @Nonnull
-    public WebSiteFinder<Media> findMedia();
-    
-    /*******************************************************************************************************************
+     * {@inheritDoc}
      *
-     * Finds {@link WebSiteNode}s.
-     * 
      ******************************************************************************************************************/
-    @Nonnull
-    public WebSiteFinder<WebSiteNode> findNode();
+    @Override @Nonnull
+    protected List<? extends Type> computeResults()
+      {
+        final List<Type> results = new ArrayList<Type>();
+
+        if (relativeUri != null)
+          {
+            results.add(mapByRelativeUri.get(relativeUri));  
+          }
+        else
+          {
+            results.addAll(mapByRelativeUri.values());  
+          }
+        
+        return results;
+      }
   }

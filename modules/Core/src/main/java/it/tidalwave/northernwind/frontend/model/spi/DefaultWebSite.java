@@ -38,6 +38,7 @@ import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.WebSite;
 import it.tidalwave.northernwind.frontend.model.WebSiteNode;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.frontend.model.WebSiteFinder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -167,11 +168,9 @@ public class DefaultWebSite implements WebSite
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content findContentByUri (final @Nonnull String relativeUri) 
-      throws NotFoundException 
+    public WebSiteFinder<Content> findContent()
       {
-        log.info("findContentByUri({})", relativeUri);
-        return safeGet(documentMapByRelativeUri, relativeUri);
+        return new DefaultWebSiteFinder<Content>("Content", documentMapByRelativeUri);
       }
     
     /*******************************************************************************************************************
@@ -180,11 +179,9 @@ public class DefaultWebSite implements WebSite
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media findMediaByUri (final @Nonnull String relativeUri) 
-      throws NotFoundException 
+    public WebSiteFinder<Media> findMedia() 
       {
-        log.info("findMediaByUri({})", relativeUri);
-        return safeGet(mediaMapByRelativeUri, relativeUri);
+        return new DefaultWebSiteFinder<Media>("Media", mediaMapByRelativeUri);
       }
     
     /*******************************************************************************************************************
@@ -193,11 +190,9 @@ public class DefaultWebSite implements WebSite
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public WebSiteNode findNodeByUri (final @Nonnull String relativeUri) 
-      throws NotFoundException 
+    public WebSiteFinder<WebSiteNode> findNode() 
       {
-        log.info("findNodeByUri({})", relativeUri);
-        return safeGet(nodeMapByRelativeUri, relativeUri);
+        return new DefaultWebSiteFinder<WebSiteNode>("WebSiteNode", nodeMapByRelativeUri);
       }
     
     /*******************************************************************************************************************
@@ -226,16 +221,6 @@ public class DefaultWebSite implements WebSite
               }
           } 
       }  
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    private static <T> T safeGet (final @Nonnull Map<String, T> map, final @Nonnull String relativeUri) 
-      throws NotFoundException
-      {
-        return NotFoundException.throwWhenNull(map.get(relativeUri), relativeUri + ": " + map.keySet());        
-      }
     
     /*******************************************************************************************************************
      *

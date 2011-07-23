@@ -20,19 +20,10 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi; 
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
-import java.net.URL;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import it.tidalwave.northernwind.frontend.model.WebSite;
-import it.tidalwave.northernwind.frontend.model.WebSiteNode;
-import it.tidalwave.northernwind.frontend.ui.PageView;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
+import it.tidalwave.util.spi.ExtendedFinderSupport;
 
 /***********************************************************************************************************************
  *
@@ -40,28 +31,8 @@ import org.springframework.context.annotation.Scope;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
-public class ContentUriHandler implements UriHandler
+public interface WebSiteFinder<Type> extends ExtendedFinderSupport<Type, WebSiteFinder<Type>>
   {
-    @Inject @Nonnull
-    private WebSite webSite;
-    
-    @Inject @Nonnull
-    private PageView pageView;
-        
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
-      throws NotFoundException, IOException 
-      {
-        final WebSiteNode node = webSite.findNode().withRelativeUri("/" + relativeUri).result();            
-//            pageView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        pageView.setContents(node.createContents());
-        
-        return true;
-      }
+    @Nonnull
+    public WebSiteFinder<Type> withRelativeUri (@Nonnull String relativeUri);
   }

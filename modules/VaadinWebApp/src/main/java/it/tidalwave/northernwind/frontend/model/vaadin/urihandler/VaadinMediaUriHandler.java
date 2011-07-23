@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.vaadin.urihandler;
 
+import it.tidalwave.northernwind.frontend.model.Media;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -63,7 +64,8 @@ public class VaadinMediaUriHandler implements UriHandler
       {
         if (relativeUri.startsWith("media"))
           {
-            final Resource resource = webSite.findMediaByUri(relativeUri.replaceAll("^media", "")).getResource();     
+            final Media media = webSite.findMedia().withRelativeUri(relativeUri.replaceAll("^media", "")).result();
+            final Resource resource = media.getResource();     
             final FileObject file = resource.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());
             downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), null));
