@@ -23,8 +23,6 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
