@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.util.UriUtilities.*;
+import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *

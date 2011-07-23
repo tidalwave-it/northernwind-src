@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.util;
+package it.tidalwave.northernwind.frontend.impl.util;
 
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;

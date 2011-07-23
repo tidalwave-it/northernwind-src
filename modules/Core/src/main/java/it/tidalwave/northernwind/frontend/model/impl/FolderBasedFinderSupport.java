@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.util.UriUtilities.*;
+import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
