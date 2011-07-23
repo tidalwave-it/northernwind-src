@@ -111,7 +111,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
             if (!sourceChild.isFolder())
               { 
                 log.info(">>>> copying {} into {} ...", sourceChild, targetFolder);
-                FileUtil.copyFile(sourceChild, targetFolder, sourceChild.getNameExt());
+                FileUtil.copyFile(sourceChild, targetFolder, sourceChild.getName());
               }
           }
         
