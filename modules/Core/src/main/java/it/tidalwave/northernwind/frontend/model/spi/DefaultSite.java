@@ -52,7 +52,7 @@ import static it.tidalwave.northernwind.frontend.util.UriUtilities.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultSite implements Site
+/* package */ class DefaultSite implements Site
   {
     static interface FileVisitor 
       {
