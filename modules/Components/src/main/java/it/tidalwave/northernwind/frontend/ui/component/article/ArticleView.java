@@ -33,7 +33,7 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ArticleView 
+public interface ArticleView // FIXME: rename to CaptionedText?
   {
     public static final Key<String> PROP_FULL_TEXT = new Key<String>("FullText_en.html");
     
