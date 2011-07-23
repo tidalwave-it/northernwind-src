@@ -20,20 +20,23 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi;
+package it.tidalwave.northernwind.frontend.model.impl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.io.UnsupportedEncodingException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Finder;
-import it.tidalwave.northernwind.frontend.model.Content;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.impl.FolderBasedFinderSupport;
-import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
@@ -43,36 +46,61 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString
-/* package */ class DefaultContent implements Content
+@Configurable @Slf4j @ToString
+public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
   {
+    @Nonnull
+    private final Class<Type> typeClass;
+    
+    @Nonnull
+    private final FileObject file;
+    
     @Inject @Nonnull
     private Site site;
     
-    @Nonnull @Delegate(types=Resource.class)
-    private final Resource resource;
-
+    private final String uriPrefix;
+    
     /*******************************************************************************************************************
      *
-     * Creates a new {@code DefaultContent} with the given configuration file.
-     * 
-     * @param   file   the configuration file
      *
      ******************************************************************************************************************/
-    public DefaultContent (final @Nonnull FileObject file)
+    public FolderBasedFinderSupport (final @Nonnull Type owner) 
       {
-        resource = new DefaultResource(file);  
+        this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME
+        this.file = owner.getFile();
+        this.uriPrefix = "/content/document"; // FIXME: site.getRelativeUriPrefix(typeClass);
       }
-
+        
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder<Content> findChildren() 
+    protected List<? extends Type> computeResults() 
       {
-        return new FolderBasedFinderSupport(this);
+        final List<Type> result = new ArrayList<Type>();
+
+        for (final FileObject childFile : Collections.list(file.getChildren(true)))
+          {
+            if (childFile.isFolder())
+              {
+                try 
+                  {
+                    final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
+                    result.add(site.find(typeClass).withRelativeUri(relativeUri).result());
+                  }
+                catch (UnsupportedEncodingException e) 
+                  {
+                    log.error("", e);
+                  }
+                catch (NotFoundException e) 
+                  {
+                    log.error("", e);
+                  }
+              }
+          }
+
+        return result;
       }
   }
-    

@@ -22,6 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
+import it.tidalwave.util.Finder;
+import it.tidalwave.role.Composite;
+
 /***********************************************************************************************************************
  *
  * A piece of content to be composed into a page.
@@ -30,7 +33,7 @@ package it.tidalwave.northernwind.frontend.model;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Content extends Resource
+public interface Content extends Resource, Composite<Content, Finder<Content>> 
   {
     public static final Class<Content> Content = Content.class;
   }
