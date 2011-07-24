@@ -19,7 +19,7 @@ import lombok.ToString;
  * @author fritz
  */
 @RequiredArgsConstructor @Getter @ToString
-public class Component 
+public class Layout 
   {
     @Nonnull
     private final String name;
@@ -27,20 +27,20 @@ public class Component
     @Nonnull
     private final String type;
     
-    private final List<Component> subComponents = new ArrayList<Component>();
+    private final List<Layout> children = new ArrayList<Layout>();
     
-    private final Map<String, Component> subComponentMapByName = new HashMap<String, Component>();
+    private final Map<String, Layout> childrenMapByName = new HashMap<String, Layout>();
     
-    public void add (final @Nonnull Component component)
+    public void add (final @Nonnull Layout layout)
       {
-        subComponents.add(component);
-        subComponentMapByName.put(component.getName(), component);
+        children.add(layout);
+        childrenMapByName.put(layout.getName(), layout);
       }
     
     @Nonnull
-    public Component findSubComponentByName (final @Nonnull String name)
+    public Layout findSubComponentByName (final @Nonnull String name)
       throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(subComponentMapByName.get(name), "Can't find " + name);
+        return NotFoundException.throwWhenNull(childrenMapByName.get(name), "Can't find " + name);
       }            
   }

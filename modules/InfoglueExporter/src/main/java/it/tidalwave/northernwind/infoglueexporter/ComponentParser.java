@@ -36,8 +36,8 @@ public class ComponentParser extends Parser
             
     private final SortedMap<String, String> properties;
     private String componentName = "";
-    private Component rootComponent;
-    private Stack<Component> componentStack = new Stack<Component>();
+    private Layout rootComponent;
+    private Stack<Layout> componentStack = new Stack<Layout>();
 
     public ComponentParser (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
@@ -78,7 +78,7 @@ public class ComponentParser extends Parser
               }
             
             componentName = attrNameValue + attrIdValue;
-            final Component newComponent = new Component(componentName, attrTypeValue);
+            final Layout newComponent = new Layout(componentName, attrTypeValue);
             
             if (componentStack.isEmpty())
               {
@@ -120,7 +120,7 @@ public class ComponentParser extends Parser
     protected void finish() 
       throws Exception
       {
-        final ComponentXmlMarshaller marshaller = new ComponentXmlMarshaller(rootComponent);
+        final LayoutXmlMarshaller marshaller = new LayoutXmlMarshaller(rootComponent);
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw);
         marshaller.marshall(pw);
