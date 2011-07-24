@@ -88,12 +88,12 @@ import lombok.extern.slf4j.Slf4j;
           {
             log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
             final DefaultLayout localLayout = new DefaultLayoutXmlUnmarshaller(layoutFile).unmarshal();
-            localLayout.accept(new LayoutLoggerVisitor());           
+            localLayout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.DEBUG));           
             tempLayout = (tempLayout == null) ? localLayout : (DefaultLayout)tempLayout.withOverride(localLayout);
           }
           
         this.layout = tempLayout;
         log.info(">>>> layout for /{}:", resource.getFile().getPath());
-        layout.accept(new LayoutLoggerVisitor());
+        layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
       }
   }
