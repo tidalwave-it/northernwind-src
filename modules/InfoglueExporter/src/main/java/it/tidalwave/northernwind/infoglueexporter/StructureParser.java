@@ -33,7 +33,7 @@ public class StructureParser extends Parser
           {
             try
               {
-                new ComponentParser(builder.toString(), dateTime, path + "Layout_" + language + ".xml", properties).process();
+                new LayoutConverter(builder.toString(), dateTime, path + "Layout_" + language + ".xml", properties).process();
               }
             catch (Exception e)
               {

@@ -18,7 +18,7 @@ import org.joda.time.DateTime;
  *
  * @author fritz
  */
-public class ComponentParser extends Parser
+public class LayoutConverter extends Parser
   {
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
@@ -40,7 +40,7 @@ public class ComponentParser extends Parser
     private final Stack<Layout> componentStack = new Stack<Layout>();
     private final Map<String, Layout> wrapperLayouts = new HashMap<String, Layout>();
 
-    public ComponentParser (final @Nonnull String xml, 
+    public LayoutConverter (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
                             final @Nonnull String path,
                             final @Nonnull SortedMap<String, String> properties) 
