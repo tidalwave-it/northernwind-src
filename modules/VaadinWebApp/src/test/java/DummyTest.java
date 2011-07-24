@@ -20,6 +20,13 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
+
+import org.testng.annotations.Test;
+
 public class DummyTest
   {
+    @Test
+    public void dummy()
+      {
+      }
   }
