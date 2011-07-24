@@ -6,7 +6,6 @@ package it.tidalwave.northernwind.infoglueexporter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -35,7 +34,6 @@ public class ComponentParser extends Parser
 //        put("", "");
       }};
             
-    private final StringBuilder builder = new StringBuilder();
     private final SortedMap<String, String> properties;
     private String componentName = "";
     private Component rootComponent;
@@ -54,17 +52,8 @@ public class ComponentParser extends Parser
     protected void processStartElement (final @Nonnull String name,  final @Nonnull XMLStreamReader reader)
       throws Exception
       {
-        if ("components".equals(name) && (indent == 0))
+        if ("component".equals(name))
           {
-            builder.append("<components>");
-          }
-        else if ("components".equals(name) && (indent > 0))
-          {
-//            builder.append("<component>");
-          }
-        else if ("component".equals(name))
-          {
-            builder.append("<component ");
             String attrNameValue = "";
             String attrIdValue = "";
             String attrTypeValue = "";
@@ -89,10 +78,6 @@ public class ComponentParser extends Parser
               }
             
             componentName = attrNameValue + attrIdValue;
-            builder.append(String.format("name='%s' ", componentName));
-            builder.append(String.format("type='%s' ", attrTypeValue));
-//            builder.append(String.format("name='%s' ", attrValue));
-            builder.append(" >");
             final Component newComponent = new Component(componentName, attrTypeValue);
             
             if (componentStack.isEmpty())
@@ -115,7 +100,6 @@ public class ComponentParser extends Parser
 
                 if ("path".equals(attrName))
                   {
-//                    builder.append(String.format("<property name='content' value='${%s}'/>", beanName + ".content"));
                     properties.put(componentName + ".content", attrValue);
                   }
               }
@@ -123,35 +107,12 @@ public class ComponentParser extends Parser
       }
 
     @Override
-    protected void processAttribute (final @Nonnull String name,  final @Nonnull XMLStreamReader reader)
-      throws Exception
-      {
-        if (!Arrays.asList("article").contains(name))
-          {
-            builder.append(String.format("<property name='%s' value='%s'/>", name, "bwlin"));
-          }
-      }
-
-    @Override
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
-        if ("components".equals(name) && (indent == 0))
+        if ("component".equals(name))
           {
-            builder.append("</components>");
-          }
-        else if ("components".equals(name) && (indent > 0))
-          {
-//            builder.append("</list></property>");
-          }
-        else if ("component".equals(name))
-          {
-            builder.append("</component>");
             componentStack.pop();
-          }
-        else 
-          {
-//                builder.append("</").append(name).append(">");                   
           }
       }
 
@@ -164,8 +125,7 @@ public class ComponentParser extends Parser
         final PrintWriter pw = new PrintWriter(sw);
         marshaller.marshall(pw);
         pw.close();
-        ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(builder.toString())));
-        ResourceManager.addResource(new Resource(dateTime, path + "BIS", Utilities.dumpXml(sw.getBuffer().toString())));
+        ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(sw.getBuffer().toString())));
       }
   }
 
