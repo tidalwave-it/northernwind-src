@@ -42,4 +42,7 @@ public interface Layout
     @Nonnull // TODO: refactor with Composite
     public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor) 
       throws NotFoundException;
+    
+    @Nonnull
+    public Layout withOverride (@Nonnull Layout override);
   }

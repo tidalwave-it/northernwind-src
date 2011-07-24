@@ -23,16 +23,17 @@
 package it.tidalwave.northernwind.frontend.impl.model;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayoutXmlUnmarshaller;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
-import javax.inject.Inject;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -53,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
     private final Resource resource;
     
     @Nonnull @Getter
-    private DefaultLayout layout;
+    private final Layout layout;
     
     @Inject @Nonnull
     private DefaultSite site;
@@ -70,7 +71,13 @@ import lombok.extern.slf4j.Slf4j;
       throws IOException, NotFoundException
       {
         resource = new DefaultResource(file);  
-        loadLayout();
+        layout = loadLayout();
+        
+        if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
+          {
+            log.info(">>>> layout for /{}:", resource.getFile().getPath());
+            layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
+          }
       }
 
     /*******************************************************************************************************************
@@ -78,29 +85,24 @@ import lombok.extern.slf4j.Slf4j;
      * {@inheritDoe}
      *
      ******************************************************************************************************************/
-    private void loadLayout() 
+    @Nonnull
+    private Layout loadLayout() 
       throws IOException, NotFoundException
       {
-        DefaultLayout tempLayout = null;
+        Layout layout = null;
         
         for (final FileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Layout_en.xml"))
           {
             log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
-            final DefaultLayout localLayout = new DefaultLayoutXmlUnmarshaller(layoutFile).unmarshal();
-            tempLayout = (tempLayout == null) ? localLayout : (DefaultLayout)tempLayout.withOverride(localLayout);
+            final DefaultLayout overridingLayout = new DefaultLayoutXmlUnmarshaller(layoutFile).unmarshal();
+            layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
             
             if (log.isDebugEnabled())
               { 
-                localLayout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.DEBUG));           
+                overridingLayout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.DEBUG));           
               }
           }
-          
-        this.layout = tempLayout;
         
-        if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
-          {
-            log.info(">>>> layout for /{}:", resource.getFile().getPath());
-            layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
-          }
+        return layout;
       }
   }

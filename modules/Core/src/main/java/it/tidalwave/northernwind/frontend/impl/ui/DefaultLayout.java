@@ -120,7 +120,7 @@ public class DefaultLayout implements Layout
           }
       }  
     
-    @Nonnull
+    @Override @Nonnull
     public Layout withOverride (final @Nonnull Layout override)
       { 
         final DefaultLayout result = clone();
