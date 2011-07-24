@@ -30,6 +30,7 @@ import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Panel;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -53,7 +54,7 @@ public class VaadinNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<
     protected Component createPlaceHolderComponent (final @Nonnull Layout layout)
       {
         final Panel panel = new Panel(); // TODO: id?
-        panel.setCaption("Missing component: ");
+        panel.setCaption("Missing component: " + ((DefaultLayout)layout).getTypeUri()); // FIXME
         return panel;
       }
 
