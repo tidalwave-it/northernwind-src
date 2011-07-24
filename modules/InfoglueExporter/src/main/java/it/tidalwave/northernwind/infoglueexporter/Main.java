@@ -3,6 +3,8 @@ package it.tidalwave.northernwind.infoglueexporter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +31,8 @@ public class Main
   {
     public static final File hgFolder = new File("target/root");      
     
+    private static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
+    
     private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendYear(4, 4)
                                                                                      .appendLiteral("-")
                                                                                      .appendMonthOfYear(2)
@@ -51,7 +55,7 @@ public class Main
     public static void main (String[] args)
       throws Exception
       {
-        process("/home/fritz/Downloads/Export__blueBill_2011-07-17_1747.xml");
+        process(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml");
         ResourceManager.addAndCommitResources();
       }
     
@@ -72,6 +76,7 @@ public class Main
         final String spaces = "                                                                ";
         String languageCode = "";
         String assetFileName = "";
+        String assetKey = "";
         DateTime dateTime = null;
         
         hgFolder.mkdirs();
@@ -110,26 +115,32 @@ public class Main
                       System.err.printf("%spath: %s\n", spaces.substring(0, indent * 2), path);
                     }
                   
-                  if ("languageCode".equals(name))
+                  else if ("languageCode".equals(name))
                     {
                       languageCode = builder.toString();  
                     }
                   
-                  if ("modifiedDateTime".equals(name))
+                  else if ("modifiedDateTime".equals(name))
                     {
                       dateTime = FORMATTER.parseDateTime(builder.toString());  
                         System.err.println("date " + builder + " parsed as " + dateTime);
                     }
                   
-                  if ("assetFileName".equals(name))
+                  else if ("assetFileName".equals(name))
                     {
                       assetFileName = builder.toString();  
+                    }
+                  
+                  else if ("assetKey".equals(name))
+                    {
+                      assetKey = builder.toString();  
+                      assetFileNameMapByKey.put(assetKey, assetFileName);
                     }
                   
                   // TODO: we're not tracking document deletion
                   // TODO: when a document was added, it wasn't necessarily immediately published - put those documents in branches, merged when they are published
                   
-                  if ("escapedVersionValue".equals(name))
+                  else if ("escapedVersionValue".equals(name))
                     {
                       String fixedPath = path.replaceAll("/$", "") + "/";
                       System.err.println("Processing " + fixedPath);
@@ -155,7 +166,7 @@ public class Main
                         }
                     }
                   
-                  if ("assetBytes".equals(name))
+                  else if ("assetBytes".equals(name))
                     {
                       String fixedPath = "content/media/" + assetFileName;
                       System.err.println("Processing " + fixedPath);
@@ -197,8 +208,8 @@ public class Main
         
         while (m2.find())
           {
-            final String r = m2.group(2);
-            m2.appendReplacement(buffer, "\\$media(" + r + ".png)");
+            final String r = assetFileNameMapByKey.get(m2.group(2));
+            m2.appendReplacement(buffer, "\\$media(" + r + ")"); // FIXME: use StringTemplate syntax
           }
         
         m2.appendTail(buffer);
