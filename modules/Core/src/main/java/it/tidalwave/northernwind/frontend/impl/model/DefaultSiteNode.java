@@ -31,6 +31,7 @@ import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayoutXmlUnmarshaller;
+import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -81,14 +82,18 @@ import lombok.extern.slf4j.Slf4j;
     private void loadLayout() 
       throws IOException, NotFoundException
       {
-        final FileObject layoutFile = resource.getFile().getFileObject("Layout_en.xml");
-
-        // TODO: implement layout inheritance
+        DefaultLayout tempLayout = null;
         
-        if (layoutFile != null)
-          { 
-            layout = new DefaultLayoutXmlUnmarshaller(layoutFile).unmarshal();
-            log.debug(">>>> layout for /{}: {}", resource.getFile().getPath(), layout);
+        for (final FileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Layout_en.xml"))
+          {
+            log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
+            final DefaultLayout localLayout = new DefaultLayoutXmlUnmarshaller(layoutFile).unmarshal();
+            localLayout.accept(new LayoutLoggerVisitor());           
+            tempLayout = (tempLayout == null) ? localLayout : (DefaultLayout)tempLayout.withOverride(localLayout);
           }
+          
+        this.layout = tempLayout;
+        log.info(">>>> layout for /{}:", resource.getFile().getPath());
+        layout.accept(new LayoutLoggerVisitor());
       }
   }

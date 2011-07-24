@@ -34,6 +34,7 @@ import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
+import java.util.Stack;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -43,18 +44,59 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Getter @ToString(exclude="childrenMapById")
+@Configurable @Getter
 public class DefaultLayout implements Layout
   {
     @Nonnull
     private final String id;
     
     @Nonnull
-    private final String typeUri;
+    private /* final FIXME */ String typeUri;
     
     private final List<DefaultLayout> children = new ArrayList<DefaultLayout>();
     
     private final Map<String, DefaultLayout> childrenMapById = new HashMap<String, DefaultLayout>();
+    
+    static class CloneVisitor implements Visitor<Layout, DefaultLayout>
+      {
+        private DefaultLayout rootLayout;
+        
+        private Stack<DefaultLayout> layouts = new Stack<DefaultLayout>();
+
+        @Override
+        public void preVisit (final @Nonnull Layout layout) 
+          {
+            final DefaultLayout newLayout = new DefaultLayout(((DefaultLayout)layout).id, ((DefaultLayout)layout).typeUri);
+
+            if (rootLayout == null)
+              {
+                rootLayout = newLayout;  
+              }
+            else
+              {
+                layouts.peek().add(newLayout);
+              }
+
+            layouts.push(newLayout);
+          }
+
+        @Override
+        public void visit (final @Nonnull Layout layout) 
+          {
+          }
+
+        @Override
+        public void postVisit (final @Nonnull Layout layout) 
+          {
+            layouts.pop();
+          }
+
+        @Override @Nonnull
+        public DefaultLayout getValue() 
+          {
+            return rootLayout;
+          }    
+      };
     
     @Inject @Nonnull
     private ViewFactory viewFactory;
@@ -63,6 +105,46 @@ public class DefaultLayout implements Layout
       {
         this.id = id;
         this.typeUri = typeUri;
+      }
+    
+    @Override @Nonnull
+    public DefaultLayout clone()
+      {
+        try 
+          {
+            return accept(new CloneVisitor());
+          }
+        catch (NotFoundException e) 
+          {
+            throw new RuntimeException(e);
+          }
+      }  
+    
+    @Nonnull
+    public Layout withOverride (final @Nonnull Layout override)
+      { 
+        final DefaultLayout result = clone();
+        result.applyOverride(((DefaultLayout)override).clone());
+        return result;
+      }
+    
+    private void applyOverride (final @Nonnull DefaultLayout override)
+      {
+        this.typeUri = override.typeUri; // FIXME: don't like this approach, as it requires typeUri non final
+        
+        for (final DefaultLayout overridingChild : override.getChildren())
+          {
+            final DefaultLayout overriddenChild = childrenMapById.get(overridingChild.id);
+            
+            if (overriddenChild == null)
+              {
+                add(overridingChild);  
+              }
+            else
+              {
+                overriddenChild.applyOverride(overridingChild);                    
+              }
+          }
       }
       
     public void add (final @Nonnull DefaultLayout layout)
@@ -100,5 +182,11 @@ public class DefaultLayout implements Layout
         visitor.postVisit(this);
         
         return visitor.getValue();
+      }
+    
+    @Override @Nonnull
+    public String toString()
+      {
+        return String.format("DefaultLayout(id=%s, typeUri=%s, children=%d)", id, typeUri, children.size());  
       }
   }
