@@ -144,13 +144,13 @@ import lombok.extern.slf4j.Slf4j;
     private void loadProperties()
       throws IOException
       {
-        log.trace("loadProperties() for {}", file.getPath());
+        log.trace("loadProperties() for /{}", file.getPath());
                 
         final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
 
         for (final FileObject propertyFile : getPropertyFiles())
           {
-            log.trace(">>>> reading properties from {}...", propertyFile.getPath());
+            log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
             @Cleanup final Reader r = new InputStreamReader(propertyFile.getInputStream());
             final Properties tempProperties = new Properties();
             tempProperties.load(r);
@@ -164,7 +164,7 @@ import lombok.extern.slf4j.Slf4j;
           }
 
         properties = new TypeSafeHashMap(map);
-        log.info(">>>> properties: {}", properties);
+        log.debug(">>>> properties for /{}: {}", file.getPath(), properties);
       }
     
     /*******************************************************************************************************************

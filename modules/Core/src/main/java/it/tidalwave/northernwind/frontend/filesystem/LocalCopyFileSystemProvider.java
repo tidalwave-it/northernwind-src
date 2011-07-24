@@ -78,7 +78,10 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
         new File(rootPath).mkdirs(); // TODO: use FileSystem API
         targetProvider.setRootPath(rootPath);
         final FileObject targetRoot = targetProvider.getFileSystem().getRoot();
+        final String path = FileUtil.toFile(targetRoot).getAbsolutePath();
+        log.info("Scratching {} ...", path);
         emptyFolder(targetRoot);
+        log.info("Copying files to {} ...", path);
         copyFolder(sourceProvider.getFileSystem().getRoot(), targetRoot);           
       }
     
@@ -89,7 +92,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     private void emptyFolder (final @Nonnull FileObject folder) 
       throws IOException
       {
-        log.info("emptyFolder({}, {}", folder);
+        log.trace("emptyFolder({}, {}", folder);
         
         for (final FileObject child : folder.getChildren())
           {
@@ -104,7 +107,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     private void copyFolder (final @Nonnull FileObject sourceFolder, final @Nonnull FileObject targetFolder)
       throws IOException
       {
-        log.debug("copyFolder({}, {}", sourceFolder, targetFolder);
+        log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
         
         for (final FileObject sourceChild : sourceFolder.getChildren())
           {
