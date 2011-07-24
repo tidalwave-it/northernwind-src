@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.List;
 import java.io.IOException;
 import java.net.URL;
