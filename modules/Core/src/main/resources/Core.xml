@@ -60,7 +60,7 @@
     <context:spring-configured />
 
     <bean id="site" 
-          class="it.tidalwave.northernwind.frontend.model.impl.DefaultSite" >
+          class="it.tidalwave.northernwind.frontend.impl.model.DefaultSite" >
         <property name="contextPath" value="${nw.contextPath}" />
         <property name="fileSystemProvider" ref="fileSystemProvider" />
         <property name="documentPath" value="${nw.documentPath}" />

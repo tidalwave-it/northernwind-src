@@ -20,87 +20,99 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.impl;
+package it.tidalwave.northernwind.frontend.impl.model;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
-import org.openide.filesystems.FileObject;
-import org.springframework.beans.factory.annotation.Configurable;
+import java.util.Map;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.SimpleFinderSupport;
-import it.tidalwave.northernwind.frontend.model.Resource;
-import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.northernwind.frontend.model.SiteFinder;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
- * A piece of content to be composed into a page.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString
-public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
+@ToString(callSuper=true, exclude="mapByRelativeUri")
+/* package */ class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
   {
     @Nonnull
-    private final Class<Type> typeClass;
+    private final Map<String, Type> mapByRelativeUri;
     
-    @Nonnull
-    private final FileObject file;
-    
-    @Inject @Nonnull
-    private Site site;
-    
-    private final String uriPrefix;
-    
+    @CheckForNull
+    private String relativeUri;
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public FolderBasedFinderSupport (final @Nonnull Type owner) 
+    public DefaultSiteFinder (final @Nonnull String name, final @Nonnull Map<String, Type> mapByRelativeUri) 
       {
-        this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME
-        this.file = owner.getFile();
-        this.uriPrefix = "/content/document"; // FIXME: site.getRelativeUriPrefix(typeClass);
-      }
-        
+        super(name);
+        this.mapByRelativeUri = mapByRelativeUri;
+      }    
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected List<? extends Type> computeResults() 
+    public SiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri) 
       {
-        final List<Type> result = new ArrayList<Type>();
+        final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
+        clone.relativeUri = relativeUri;
+        return clone;
+      }
 
-        for (final FileObject childFile : Collections.list(file.getChildren(true)))
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Type result() 
+      throws NotFoundException 
+      {
+        try
           {
-            if (childFile.isFolder())
+            return super.result();
+          }
+        catch (NotFoundException e)
+          {
+            throw new NotFoundException(relativeUri + ": " + mapByRelativeUri.keySet());
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    protected List<? extends Type> computeResults()
+      {
+        final List<Type> results = new ArrayList<Type>();
+
+        if (relativeUri != null)
+          {
+            final Type result = mapByRelativeUri.get(relativeUri);
+            
+            if (result != null)
               {
-                try 
-                  {
-                    final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
-                    result.add(site.find(typeClass).withRelativeUri(relativeUri).result());
-                  }
-                catch (UnsupportedEncodingException e) 
-                  {
-                    log.error("", e);
-                  }
-                catch (NotFoundException e) 
-                  {
-                    log.error("", e);
-                  }
+                results.add(result);  
               }
           }
-
-        return result;
+        else
+          {
+            results.addAll(mapByRelativeUri.values());  
+          }
+        
+        return results;
       }
   }

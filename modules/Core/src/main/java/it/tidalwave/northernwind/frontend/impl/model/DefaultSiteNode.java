@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.impl;
+package it.tidalwave.northernwind.frontend.impl.model;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
