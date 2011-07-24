@@ -43,7 +43,7 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Getter @ToString
+@Configurable @Getter @ToString(exclude="childrenMapByName")
 public class DefaultLayout implements Layout
   {
     @Nonnull
