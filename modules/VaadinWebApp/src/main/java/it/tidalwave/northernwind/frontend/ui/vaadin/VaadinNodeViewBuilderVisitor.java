@@ -22,17 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Stack;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite.Visitor;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Panel;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -43,62 +40,26 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NotThreadSafe @RequiredArgsConstructor @Slf4j
-public class VaadinNodeViewBuilderVisitor implements Visitor<Layout, Component>
+@NotThreadSafe @Slf4j
+public class VaadinNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<Component, ComponentContainer> 
   {
-    @Nonnull
-    private final SiteNode siteNode;
-    
-    private Component rootComponent;
-    
-    private Stack<Component> components = new Stack<Component>();
-
-    @Override
-    public void preVisit (final @Nonnull Layout layout) 
+    public VaadinNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
       {
-        final Component component = createComponent(layout);
-
-        if (rootComponent == null)
-          {
-            rootComponent = component;  
-          }
-        else
-          {
-            ((ComponentContainer)components.peek()).addComponent(component);  
-          }
-
-        components.push(component);
+        super(siteNode);
       }
     
-    @Override
-    public void visit (final @Nonnull Layout layout) 
-      {
-      }
-
-    @Override
-    public void postVisit (final @Nonnull Layout layout) 
-      {
-        components.pop();
-      }
-
+    // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
-    public Component getValue() 
+    protected Component createPlaceHolderComponent (final @Nonnull Layout layout)
       {
-        return rootComponent;
+        final Panel panel = new Panel(); // TODO: id?
+        panel.setCaption("Missing component: ");
+        return panel;
       }
-    
-    @Nonnull
-    protected Component createComponent (final @Nonnull Layout layout)
+
+    @Override
+    protected void attach (final @Nonnull ComponentContainer parent, final @Nonnull Component child)
       {
-        try
-          {
-            return (Component)layout.createView(siteNode); 
-          }
-        catch (NotFoundException e) // FIXME; somewhere there's a Visitor whose methods can throw checked exceptions
-          {
-            final Panel panel = new Panel(); // TODO: id?
-            panel.setCaption("Missing component: ");
-            return panel;
-          }
+        parent.addComponent(child);
       }
   }
