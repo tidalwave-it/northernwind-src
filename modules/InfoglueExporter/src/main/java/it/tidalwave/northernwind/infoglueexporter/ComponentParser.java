@@ -102,6 +102,10 @@ public class ComponentParser extends Parser
                   {
                     properties.put(componentName + ".content", attrValue);
                   }
+//                else FIXME: there are missing properties (e.g. set Blog max posts, etc...)
+//                  {
+//                    properties.put(componentName + "." + attrName, attrValue);
+//                  }
               }
           }
       }
