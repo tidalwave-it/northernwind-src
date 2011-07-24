@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.vaadin;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.frontend.ui.component.StaticHtmlFragmentView;
 import com.vaadin.ui.Label;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -43,7 +44,7 @@ public class VaadinStaticHtmlFragmentView extends Label implements StaticHtmlFra
      ******************************************************************************************************************/
     public VaadinStaticHtmlFragmentView (final @Nonnull String name) 
       {
-        setStyleName("component-" + name);
+        setStyleName(NW + name);
         setContentMode(Label.CONTENT_RAW);
       }
     

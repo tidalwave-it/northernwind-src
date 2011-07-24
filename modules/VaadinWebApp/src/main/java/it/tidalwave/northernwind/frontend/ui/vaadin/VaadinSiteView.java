@@ -64,7 +64,7 @@ public class VaadinSiteView extends Window implements SiteView
      ******************************************************************************************************************/
     public VaadinSiteView() 
       {
-        setStyleName("component-" + "page");
+        setStyleName(NW + "page");
         ((AbstractLayout)getContent()).setMargin(false);
       }
 

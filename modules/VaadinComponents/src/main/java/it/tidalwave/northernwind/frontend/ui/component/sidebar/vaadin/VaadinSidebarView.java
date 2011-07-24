@@ -27,6 +27,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.sidebar.DefaultSidebarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.sidebar.SidebarView;
 import com.vaadin.ui.VerticalLayout;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -48,6 +49,6 @@ public class VaadinSidebarView extends VerticalLayout implements SidebarView
     public VaadinSidebarView (final @Nonnull String id) 
       {
         setMargin(false);
-        setStyleName("component-" + id);
+        setStyleName(NW + id);
       }
   }  

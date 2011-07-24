@@ -27,6 +27,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 import com.vaadin.ui.VerticalLayout;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -48,7 +49,7 @@ public class VaadinContainerView extends VerticalLayout implements NodeContainer
     public VaadinContainerView (final @Nonnull String id) 
       {
         setMargin(false);
-        setStyleName("component-" + id);
+        setStyleName(NW + id);
 //        setCaption(typeUri); TODO:for debugging purposes, add everything into a captioned Panel
       }
   }  

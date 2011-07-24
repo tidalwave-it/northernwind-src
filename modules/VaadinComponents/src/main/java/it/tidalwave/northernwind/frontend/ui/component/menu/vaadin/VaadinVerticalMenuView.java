@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
 import com.vaadin.ui.VerticalLayout;
 import lombok.Delegate;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -54,6 +55,6 @@ public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
     public VaadinVerticalMenuView (final @Nonnull String id) 
       {
         setMargin(false);
-        setStyleName("component-" + id);
+        setStyleName(NW + id);
       }
   }

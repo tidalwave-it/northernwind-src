@@ -27,6 +27,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.HtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.DefaultHtmlFragmentViewController;
 import com.vaadin.ui.Label;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -49,7 +50,7 @@ public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
      ******************************************************************************************************************/
     public VaadinHtmlFragmentView (final @Nonnull String id) 
       {
-        setStyleName("component-" + id);
+        setStyleName(NW + id);
         setContentMode(Label.CONTENT_XHTML);
       }
     

@@ -29,6 +29,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewContr
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -50,7 +51,7 @@ public class VaadinBlogView extends VerticalLayout implements BlogView
      ******************************************************************************************************************/
     public VaadinBlogView (final @Nonnull String id) 
       {
-        setStyleName("component-" + id);
+        setStyleName(NW + id);
       }
 
     @Override
