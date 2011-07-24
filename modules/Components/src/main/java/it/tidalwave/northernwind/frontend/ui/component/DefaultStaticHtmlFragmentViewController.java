@@ -23,10 +23,12 @@
 package it.tidalwave.northernwind.frontend.ui.component;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
+import org.antlr.stringtemplate.StringTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
@@ -59,7 +61,7 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
         this.view = view; 
       }
     
-    protected void populate (final @Nonnull String htmlResourceName) 
+    protected void populate (final @Nonnull String htmlResourceName, final @Nonnull Map<String, String> attributes) 
       throws IOException
       {
         final Resource htmlResource = new ClassPathResource(htmlResourceName, getClass());  
@@ -68,6 +70,9 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
         final int length = r.read(charBuffer);
         r.close();
         final String html = new String(charBuffer.array(), 0, length);
-        view.setHtmlFragment(html);
+        
+        final StringTemplate template = new StringTemplate(html);
+        template.setAttributes(attributes);
+        view.setHtmlFragment(template.toString());
       } 
   }

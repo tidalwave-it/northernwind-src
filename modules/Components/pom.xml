@@ -34,5 +34,9 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>stringtemplate</artifactId>
+        </dependency>
     </dependencies>
 </project>

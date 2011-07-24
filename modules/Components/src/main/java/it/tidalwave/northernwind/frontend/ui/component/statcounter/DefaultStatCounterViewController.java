@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.statcounter;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
@@ -50,6 +52,9 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
       throws IOException 
       {
         super(view, viewInstanceName, siteNode);
-        populate("StatCounterHtmlFragment.html"); // FIXME: interpolate with properties
+        final Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("project", "5834368"); // FIXME: get from siteNode properties
+        attributes.put("security", "91675212"); // FIXME: get from siteNode properties
+        populate("StatCounterHtmlFragment.html", attributes);
       }
   }

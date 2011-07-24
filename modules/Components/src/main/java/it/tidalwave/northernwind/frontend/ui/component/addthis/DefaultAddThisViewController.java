@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.addthis;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
@@ -50,6 +52,9 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
       throws IOException 
       {
         super(view, viewInstanceName, siteNode);
-        populate("AddThisHtmlFragment.html"); // FIXME: interpolate with properties
+        final Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("username", "fabriziogiudici"); // FIXME: get from siteNode properties
+        attributes.put("url", "http://bluebill.tidalwave.it/mobile/"); // FIXME: get from site
+        populate("AddThisHtmlFragment.html", attributes); 
       }
   }
