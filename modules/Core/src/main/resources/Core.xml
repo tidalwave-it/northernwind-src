@@ -66,9 +66,13 @@
         <property name="documentPath" value="${nw.documentPath}" />
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
+        <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
     </bean>
                             
     <bean id="viewFactory"
-          class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" />
+          class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
+        <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
+    </bean>
+              
 
 </beans>

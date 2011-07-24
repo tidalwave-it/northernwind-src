@@ -34,6 +34,8 @@ import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,6 +53,9 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultViewFactory implements ViewFactory
   {
     private final Map<String, ViewBuilder> viewBuilderMapByName = new TreeMap<String, ViewBuilder>();
+    
+    @Getter @Setter
+    private boolean logConfigurationEnabled = false;
     
     /*******************************************************************************************************************
      *
@@ -88,14 +93,17 @@ public class DefaultViewFactory implements ViewFactory
             viewBuilderMapByName.put(name, viewBuilder);
           }
         
-        logViewDefinitions();
+        if (logConfigurationEnabled)
+          {
+            logConfiguration();
+          }
       }
     
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    private void logViewDefinitions()
+    private void logConfiguration()
       {
         log.info("View definitions:");
         

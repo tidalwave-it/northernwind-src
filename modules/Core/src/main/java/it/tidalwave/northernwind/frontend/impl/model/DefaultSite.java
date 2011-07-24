@@ -99,6 +99,9 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     @Getter @Setter @Nonnull
     private String nodePath = "structure";
     
+    @Getter @Setter
+    private boolean logConfigurationEnabled = false;
+    
     private FileObject documentFolder;
     
     private FileObject mediaFolder;
@@ -176,9 +179,12 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
               }
           });
         
-        logConfiguration("Documents:", documentMapByRelativeUri);
-        logConfiguration("Media:", mediaMapByRelativeUri);
-        logConfiguration("Nodes:", nodeMapByRelativeUri);
+        if (logConfigurationEnabled)
+          {
+            logConfiguration("Documents:", documentMapByRelativeUri);
+            logConfiguration("Media:", mediaMapByRelativeUri);
+            logConfiguration("Nodes:", nodeMapByRelativeUri);
+          }
       }
     
     /*******************************************************************************************************************

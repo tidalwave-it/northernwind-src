@@ -146,11 +146,6 @@ import lombok.extern.slf4j.Slf4j;
         
         breadcrumb.add(breadcrumb_1);
         
-//        final SiteNodeView pageContent = viewFactory.createSiteNodeView();
-//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/Sidebar", "local-1", this));
-//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav-1", this));
-//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HtmlFragment", "main-1", this));
-//        
 //        if (relativeUri.contains("Blog"))
 //          {
 //            pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/Blog", "main-1", this));
@@ -159,11 +154,6 @@ import lombok.extern.slf4j.Slf4j;
 //          {
 //            pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HtmlTextWithTitle", "main-2", this));
 //          }
-//        
-//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HtmlFragment", "footer-1", this));
-//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/StatCounter", "footer-2", this));
-//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/AddThis", "breadcrumb-1", this));
-//        return pageContent;
 //        // END FIXME
       }
   }
