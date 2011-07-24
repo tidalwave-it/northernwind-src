@@ -89,7 +89,9 @@ import lombok.extern.slf4j.Slf4j;
 //nav.content = /content/document/Mobile, Features, Download, Screenshots, Getting started, Blog & News, Contacts, License, Developers          
           
         final SiteNodeView pageContent = viewFactory.createSiteNodeView();
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Sidebar", "local2", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav4", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "main5", this));
         
         if (relativeUri.contains("Blog"))
           {
@@ -97,10 +99,12 @@ import lombok.extern.slf4j.Slf4j;
           }        
         else
           {
-            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main", this));
+            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main1", this));
           }
         
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "footer", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "footer6", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/StatCounter", "footer7", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/AddThis", "breadcrumb10", this));
         return pageContent;
         // END FIXME
       }
