@@ -98,7 +98,7 @@ public class DefaultMenuViewController implements MenuViewController
             try
               {
                 // FIXME: should be fixed in the Infoglue importer
-                final String fixedUri = "/" + relativeUri.trim().replaceAll("/content/document/Mobile", "").replaceAll("/content/document/", "");
+                final String fixedUri = "/" + relativeUri.trim().replaceAll("Mobile", "");
                 final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(fixedUri).result();
                 final String navigationTitle = targetSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
                 view.addLink(navigationTitle, fixedUri);                
