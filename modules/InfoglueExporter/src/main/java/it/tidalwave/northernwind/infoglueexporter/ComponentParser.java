@@ -25,7 +25,7 @@ public class ComponentParser extends Parser
         put("104", "http://northernwind.tidalwave.it/component/NewsIterator");
         put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu");
         put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment");
-        put( "44", "http://northernwind.tidalwave.it/component/Document");
+        put( "44", "http://northernwind.tidalwave.it/component/Article");
         put("853", "http://northernwind.tidalwave.it/component/StatCounter");
         put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking");
         put("873", "http://northernwind.tidalwave.it/component/AddThis");
