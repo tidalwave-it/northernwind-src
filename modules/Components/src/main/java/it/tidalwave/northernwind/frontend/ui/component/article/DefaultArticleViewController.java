@@ -68,7 +68,7 @@ public class DefaultArticleViewController implements ArticleViewController
             final String contentUri = siteNode.getProperty(PROP_CONTENT);
             
             // FIXME: should be fixed in the Infoglue importer
-            final String fixedContentUri = r(contentUri.replaceAll("/content/document/Mobile", "").replaceAll("/content/document", ""));
+            final String fixedContentUri = r("/" + contentUri.replaceAll("Mobile", ""));
             
             final Content content = site.find(Content).withRelativeUri(fixedContentUri).result();
             view.setText(content.getProperty(PROPERTY_FULL_TEXT));
