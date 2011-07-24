@@ -56,6 +56,7 @@ public class DefaultSiteViewController implements SiteViewController
      ******************************************************************************************************************/
     @Override
     public void handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+      throws HttpErrorException
       {
         try
           {
@@ -73,13 +74,11 @@ public class DefaultSiteViewController implements SiteViewController
           }
         catch (NotFoundException e) 
           {
-            log.error("", e); 
-            // TODO
+            throw new HttpErrorException(404, e); 
           }
         catch (IOException e) 
           {
-            log.error("", e);
-            // TODO
+            throw new HttpErrorException(500, e); 
           }
       }
     

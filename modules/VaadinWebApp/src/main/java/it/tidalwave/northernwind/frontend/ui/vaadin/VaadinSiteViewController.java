@@ -68,6 +68,13 @@ public class VaadinSiteViewController extends DefaultSiteViewController
                 handleUri(context, relativeUri);
                 return downloadStreamHolder.get();
               }
+            catch (HttpErrorException e)
+              {
+                log.error("", e);
+//                e.getStatusCode();
+                // TODO: send status code
+                return null;
+              }
             finally
               {
                 downloadStreamHolder.set(null);

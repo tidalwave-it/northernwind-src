@@ -24,6 +24,8 @@ package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
+import lombok.Getter;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -35,8 +37,23 @@ import java.net.URL;
  **********************************************************************************************************************/
 public interface SiteViewController 
   {
-    public static class DoNothingException extends Exception
+    @ToString 
+    public static class HttpErrorException extends Exception
       {
+        @Getter
+        private final int statusCode;
+
+        public HttpErrorException (final int statusCode) 
+          {
+            super("HTTP error: " + statusCode);
+            this.statusCode = statusCode;
+          }
+
+        public HttpErrorException (final int statusCode, final @Nonnull Throwable cause) 
+          {
+            super("HTTP error: " + statusCode, cause);
+            this.statusCode = statusCode;
+          }
       }
                 
     /*******************************************************************************************************************
@@ -44,5 +61,6 @@ public interface SiteViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    public void handleUri (@Nonnull URL context, @Nonnull String relativeUri);
+    public void handleUri (@Nonnull URL context, @Nonnull String relativeUri)
+      throws HttpErrorException;
   }
