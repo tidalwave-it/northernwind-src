@@ -33,15 +33,6 @@ public class ComponentParser extends Parser
         put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking");
         put("873", "http://northernwind.tidalwave.it/component/AddThis");
 //        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
-//        put("", "");
       }};
             
     private final StringBuilder builder = new StringBuilder();
