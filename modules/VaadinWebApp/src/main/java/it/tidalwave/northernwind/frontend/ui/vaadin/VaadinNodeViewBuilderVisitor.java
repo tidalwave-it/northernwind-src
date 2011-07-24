@@ -22,15 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import it.tidalwave.northernwind.frontend.model.SiteNode;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Panel;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import com.vaadin.ui.Label;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -53,8 +53,8 @@ public class VaadinNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<
     @Override @Nonnull
     protected Component createPlaceHolderComponent (final @Nonnull Layout layout)
       {
-        final Panel panel = new Panel(); // TODO: id?
-        panel.setCaption("Missing component: " + ((DefaultLayout)layout).getTypeUri()); // FIXME
+        final Label panel = new Label(); // TODO: id?
+        panel.setValue("Missing component: " + ((DefaultLayout)layout).getTypeUri()); // FIXME
         return panel;
       }
 
