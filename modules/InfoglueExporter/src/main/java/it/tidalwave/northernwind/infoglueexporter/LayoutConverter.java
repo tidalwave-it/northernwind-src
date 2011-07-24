@@ -60,7 +60,7 @@ public class LayoutConverter extends Parser
             String attrIdValue = "";
             String attrTypeValue = "";
 
-            for (int i = 0; i < reader.getAttributeCount(); i++)
+            for (int i = 0; i < reader.getAttributeCount(); i++) // FIXME: use reader.getAttributeValue(String, String)
               {
                 final String attrName = reader.getAttributeName(i).getLocalPart();
                 final String attrValue = reader.getAttributeValue(i);
