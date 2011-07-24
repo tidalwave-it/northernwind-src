@@ -20,47 +20,16 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.article.vaadin;
-
-import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.article.ArticleView;
-import it.tidalwave.northernwind.frontend.ui.component.article.DefaultArticleViewController;
-import com.vaadin.ui.Label;
+package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 /***********************************************************************************************************************
  *
- * The Vaadin implementation of {@link ArticleView}.
+ * The controller of {@link ArticleView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/Article", 
-              controlledBy=DefaultArticleViewController.class)
-public class VaadinArticleView extends Label implements ArticleView
-  {
-    /*******************************************************************************************************************
-     *
-     * Creates an instance with the given name.
-     * 
-     * @param  name  the component name
-     *
-     ******************************************************************************************************************/
-    public VaadinArticleView (final @Nonnull String name) 
-      {
-        setStyleName("component-" + name);
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void setText (final @Nonnull String text)
-      {
-        setContentMode(Label.CONTENT_XHTML);
-        setValue(text);
-      }
+public interface HtmlTextWithTitleViewController 
+  {    
   }

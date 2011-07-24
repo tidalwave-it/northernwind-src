@@ -20,16 +20,26 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.article;
+package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
+
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link ArticleView}.
+ * An {@code HtmlTextWithTitleView} is a simple text with an optional title.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ArticleViewController 
-  {    
+public interface HtmlTextWithTitleView
+  {
+    /*******************************************************************************************************************
+     *
+     * Sets the text content.
+     * 
+     * @param  text  the text
+     *
+     ******************************************************************************************************************/
+    public void setText (@Nonnull String string);
   }

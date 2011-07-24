@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.article;
+package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,28 +37,28 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
- * A default implementation of {@link ArticleViewController}.
+ * A default implementation of {@link HtmlTextWithTitleViewController}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @Slf4j
-public class DefaultArticleViewController implements ArticleViewController
+public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitleViewController
   {
     @Nonnull @Inject
     private Site site;
     
     /*******************************************************************************************************************
      *
-     * Creates an instance for populating the given {@link ArticleView} with the given URI.
+     * Creates an instance for populating the given {@link HtmlTextWithTitleView} with the given URI.
      * 
      * @param  view              the related view
      * @param  viewInstanceName  the name of the view instance
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultArticleViewController (final @Nonnull ArticleView view, 
+    public DefaultHtmlTextWithTitleViewController (final @Nonnull HtmlTextWithTitleView view, 
                                          final @Nonnull String viewInstanceName,
                                          final @Nonnull SiteNode siteNode) 
     {

@@ -20,26 +20,47 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.article;
+package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
+import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
+import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController;
+import com.vaadin.ui.Label;
 
 /***********************************************************************************************************************
  *
- * An {@code ArticleView} is a simple text with an optional title.
+ * The Vaadin implementation of {@link HtmlTextWithTitleView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ArticleView // FIXME: rename to CaptionedText?
+@ViewMetadata(name="http://northernwind.tidalwave.it/component/HtmlTextWithTitle", 
+              controlledBy=DefaultHtmlTextWithTitleViewController.class)
+public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTitleView
   {
     /*******************************************************************************************************************
      *
-     * Sets the text content.
+     * Creates an instance with the given name.
      * 
-     * @param  text  the text
+     * @param  name  the component name
      *
      ******************************************************************************************************************/
-    public void setText (@Nonnull String string);
+    public VaadinHtmlTextWithTitleView (final @Nonnull String name) 
+      {
+        setStyleName("component-" + name);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setText (final @Nonnull String text)
+      {
+        setContentMode(Label.CONTENT_XHTML);
+        setValue(text);
+      }
   }
