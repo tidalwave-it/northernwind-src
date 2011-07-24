@@ -23,15 +23,13 @@
 package it.tidalwave.northernwind.frontend.model.impl;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.ViewFactory;
-import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,17 +44,17 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString(exclude="viewFactory")
+@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString(exclude={"viewFactory", "layout"})
 /* package */ class DefaultSiteNode implements SiteNode
   {
-    @Nonnull @Inject
-    private ViewFactory viewFactory;
-    
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
     
     @Nonnull @Getter
     private final String relativeUri;
+    
+    @Nonnull @Getter
+    private DefaultLayout layout;
 
     /*******************************************************************************************************************
      *
@@ -67,9 +65,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     public DefaultSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
+      throws IOException, NotFoundException
       {
         resource = new DefaultResource(file);  
         this.relativeUri = relativeUri;
+        createLayout();
       }
 
     /*******************************************************************************************************************
@@ -77,35 +77,93 @@ import lombok.extern.slf4j.Slf4j;
      * {@inheritDoe}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public SiteNodeView createView() 
+    private void createLayout() 
       throws IOException, NotFoundException
       {
         // FIXME: this is temporary
-//base.content = /content/document/Google Analytics
-//content3.content = /content/document/News
-//footer.content = /content/document/Copyright
-//main.content = /content/document/Mobile
-//nav.content = /content/document/Mobile, Features, Download, Screenshots, Getting started, Blog & News, Contacts, License, Developers          
-          
-        final SiteNodeView pageContent = viewFactory.createSiteNodeView();
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Sidebar", "local-1", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav-1", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "main-1", this));
+//<layout>
+//    <component id="base" type="http://northernwind.tidalwave.it/component/NodeContainer">
+//        <component id="local" type="http://northernwind.tidalwave.it/component/Container">
+//            <component id="local-1" type="http://northernwind.tidalwave.it/component/Sidebar">
+//                <component id="content3" type="http://northernwind.tidalwave.it/component/Container">
+//                    <component id="content3-1" type="http://northernwind.tidalwave.it/component/NewsIterator"/>
+//                </component>
+//            </component>
+//        </component>
+//        <component id="nav" type="http://northernwind.tidalwave.it/component/Container">
+//            <component id="nav-1" type="http://northernwind.tidalwave.it/component/HorizontalMenu"/>
+//        </component>
+//        <component id="main" type="http://northernwind.tidalwave.it/component/Container">
+//            <component id="main-1" type="http://northernwind.tidalwave.it/component/HtmlFragment"/>
+//            <component id="main-2" type="http://northernwind.tidalwave.it/component/HtmlTextWithTitle"/>
+//            <component id="main-3" type="http://northernwind.tidalwave.it/component/Top1000Ranking"/>
+//        </component>
+//        <component id="footer" type="http://northernwind.tidalwave.it/component/Container">
+//            <component id="footer-1" type="http://northernwind.tidalwave.it/component/HtmlFragment"/>
+//            <component id="footer-2" type="http://northernwind.tidalwave.it/component/StatCounter"/>
+//        </component>
+//        <component id="breadcrumb" type="http://northernwind.tidalwave.it/component/Container">
+//            <component id="breadcrumb-1" type="http://northernwind.tidalwave.it/component/AddThis"/>
+//        </component>
+//    </component>
+//</layout>
         
-        if (relativeUri.contains("Blog"))
-          {
-            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Blog", "main-1", this));
-          }        
-        else
-          {
-            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlTextWithTitle", "main-2", this));
-          }
+        layout = new DefaultLayout("base", "http://northernwind.tidalwave.it/component/NodeContainer");
+        final DefaultLayout local = new DefaultLayout("local", "http://northernwind.tidalwave.it/component/Container");
+        final DefaultLayout local_1 = new DefaultLayout("local-1", "http://northernwind.tidalwave.it/component/Sidebar");
+        final DefaultLayout content3 = new DefaultLayout("content3", "http://northernwind.tidalwave.it/component/Container");
+//        final DefaultLayout content3_1 = new DefaultLayout("content3-1", "http://northernwind.tidalwave.it/component/NewsIterator");
+        final DefaultLayout nav = new DefaultLayout("nav", "http://northernwind.tidalwave.it/component/Container");
+        final DefaultLayout nav_1 = new DefaultLayout("nav-1", "http://northernwind.tidalwave.it/component/HorizontalMenu");
+        final DefaultLayout main = new DefaultLayout("main", "http://northernwind.tidalwave.it/component/Container");
+        final DefaultLayout main_1 = new DefaultLayout("main-1", "http://northernwind.tidalwave.it/component/HtmlFragment");
+        final DefaultLayout main_2 = new DefaultLayout("main-2", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle");
+//        final DefaultLayout main_3 = new DefaultLayout("main-3", "http://northernwind.tidalwave.it/component/Top1000Ranking");
+        final DefaultLayout footer = new DefaultLayout("footer", "http://northernwind.tidalwave.it/component/Container");
+        final DefaultLayout footer_1 = new DefaultLayout("footer-1", "http://northernwind.tidalwave.it/component/HtmlFragment");
+        final DefaultLayout footer_2 = new DefaultLayout("footer-2", "http://northernwind.tidalwave.it/component/StatCounter");
+        final DefaultLayout breadcrumb = new DefaultLayout("breadcrumb", "http://northernwind.tidalwave.it/component/Container");
+        final DefaultLayout breadcrumb_1 = new DefaultLayout("breadcrumb-1", "http://northernwind.tidalwave.it/component/AddThis");
         
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "footer-1", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/StatCounter", "footer-2", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/AddThis", "breadcrumb-1", this));
-        return pageContent;
-        // END FIXME
+        layout.add(local);
+        layout.add(nav);
+        layout.add(main);
+        layout.add(footer);
+        layout.add(breadcrumb);
+        
+        local.add(local_1);
+        local_1.add(content3);
+//        content3.add(content3_1);
+        
+        nav.add(nav_1);
+        
+        main.add(main_1);
+        main.add(main_2);
+//        main.add(main_3);
+
+        footer.add(footer_1);
+        footer.add(footer_2);
+        
+        breadcrumb.add(breadcrumb_1);
+        
+//        final SiteNodeView pageContent = viewFactory.createSiteNodeView();
+//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/Sidebar", "local-1", this));
+//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav-1", this));
+//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HtmlFragment", "main-1", this));
+//        
+//        if (relativeUri.contains("Blog"))
+//          {
+//            pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/Blog", "main-1", this));
+//          }        
+//        else
+//          {
+//            pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HtmlTextWithTitle", "main-2", this));
+//          }
+//        
+//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/HtmlFragment", "footer-1", this));
+//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/StatCounter", "footer-2", this));
+//        pageContent.add(viewFactory.getLayout("http://northernwind.tidalwave.it/component/AddThis", "breadcrumb-1", this));
+//        return pageContent;
+//        // END FIXME
       }
   }

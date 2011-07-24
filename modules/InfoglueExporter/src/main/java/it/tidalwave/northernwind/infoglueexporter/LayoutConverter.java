@@ -4,6 +4,7 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -36,9 +37,9 @@ public class LayoutConverter extends Parser
             
     private final SortedMap<String, String> properties;
     private String componentName = "";
-    private Layout rootComponent;
-    private final Stack<Layout> componentStack = new Stack<Layout>();
-    private final Map<String, Layout> wrapperLayouts = new HashMap<String, Layout>();
+    private DefaultLayout rootComponent;
+    private final Stack<DefaultLayout> componentStack = new Stack<DefaultLayout>();
+    private final Map<String, DefaultLayout> wrapperLayouts = new HashMap<String, DefaultLayout>();
 
     public LayoutConverter (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
@@ -81,23 +82,23 @@ public class LayoutConverter extends Parser
             if (componentStack.isEmpty())
               {
                 componentName = attrNameValue;
-                final Layout newComponent = new Layout(componentName, attrTypeValue);
+                final DefaultLayout newComponent = new DefaultLayout(componentName, attrTypeValue);
                 componentStack.push(newComponent);
                 rootComponent = newComponent;  
               }
             else
               {
-                Layout parentLayout = wrapperLayouts.get(attrNameValue);
+                DefaultLayout parentLayout = wrapperLayouts.get(attrNameValue);
                 
                 if (parentLayout == null)
                   {
-                    parentLayout = new Layout(attrNameValue, "http://northernwind.tidalwave.it/component/Container"); 
+                    parentLayout = new DefaultLayout(attrNameValue, "http://northernwind.tidalwave.it/component/Container"); 
                     wrapperLayouts.put(attrNameValue, parentLayout);
                     componentStack.peek().add(parentLayout);
                   }
                 
                 componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
-                final Layout newComponent = new Layout(componentName, attrTypeValue);
+                final DefaultLayout newComponent = new DefaultLayout(componentName, attrTypeValue);
                 parentLayout.add(newComponent);
                 componentStack.push(newComponent);
               }
@@ -139,9 +140,9 @@ public class LayoutConverter extends Parser
           // TODO: Infoglue generates a sub-layout even when just properties are changed. We put properties in a
           // separate file, so some of those sub-layouts have to be dropped.
           // Do this:
-          //   Layout parentLayout = ...
-          //   Layout thisLayout = ...
-          //   Layout subLayout = parentLayout.withOverride(thisLayout);
+          //   DefaultLayout parentLayout = ...
+          //   DefaultLayout thisLayout = ...
+          //   DefaultLayout subLayout = parentLayout.withOverride(thisLayout);
           //   if (parentLayout.equals(subLayout)) then do not produce subLayout
         final LayoutXmlMarshaller marshaller = new LayoutXmlMarshaller(rootComponent);
         final StringWriter sw = new StringWriter();

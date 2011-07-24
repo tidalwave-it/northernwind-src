@@ -41,6 +41,10 @@
             <version>1.12.5</version>
             <type>nbm</type>
         </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

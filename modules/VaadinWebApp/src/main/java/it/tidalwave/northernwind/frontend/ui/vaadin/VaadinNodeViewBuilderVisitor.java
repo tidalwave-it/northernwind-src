@@ -23,36 +23,73 @@
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.Stack;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.ComponentContainer;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The Vaadin implementation of {@link SiteNodeView}.
+ * A visitor for {@link Layout} that builds a Vaadin view.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class VaadinSiteNodeView extends VerticalLayout implements SiteNodeView
+@NotThreadSafe @RequiredArgsConstructor @Slf4j
+public class VaadinNodeViewBuilderVisitor implements Visitor<Layout, Component>
   {
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    public VaadinSiteNodeView()
+    @Nonnull
+    private final SiteNode siteNode;
+    
+    private Component rootComponent;
+    
+    private Stack<Component> components = new Stack<Component>();
+
+    @Override
+    public void preVisit (final @Nonnull Layout layout) 
       {
-        setMargin(false);
+        try
+          {
+            final Component component = (Component)layout.createView(siteNode);
+
+            if (rootComponent == null)
+              {
+                rootComponent = component;  
+              }
+            else
+              {
+                ((ComponentContainer)components.peek()).addComponent(component);  
+              }
+
+            components.push(component);
+          }
+        catch (NotFoundException e) // FIXME; somewhere there's a Visitor whose methods can throw checked exceptions
+          {
+            throw new RuntimeException(e);  
+          }
+      }
+    
+    @Override
+    public void visit (final @Nonnull Layout layout) 
+      {
       }
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     @Override
-    public void add (final @Nonnull Object subContent) 
+    public void postVisit (final @Nonnull Layout layout) 
       {
-        addComponent((Component)subContent);
+        components.pop();
+      }
+
+    @Override @Nonnull
+    public Component getValue() 
+      {
+        return rootComponent;
       }
   }

@@ -61,7 +61,7 @@ public class ContentUriHandler implements UriHandler
       {
         final SiteNode siteNode = site.find(SiteNode).withRelativeUri("/" + relativeUri).result();            
 //            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        siteView.setSiteNodeView(siteNode.createView());
+        siteView.renderSiteNode(siteNode);
         
         return true;
       }

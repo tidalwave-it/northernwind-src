@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.impl;
 
+import it.tidalwave.util.NotFoundException;
 import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -43,6 +44,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
+import org.openide.util.Exceptions;
 
 /***********************************************************************************************************************
  *
@@ -160,7 +162,18 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
             @Override
             public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultSiteNode(folder, relativeUri));
+                try 
+                  {
+                    nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultSiteNode(folder, relativeUri));
+                  }
+                catch (IOException e) 
+                  {
+                    throw new RuntimeException(e);
+                  } 
+                catch (NotFoundException e) 
+                  {
+                    throw new RuntimeException(e);
+                  }
               }
           });
         

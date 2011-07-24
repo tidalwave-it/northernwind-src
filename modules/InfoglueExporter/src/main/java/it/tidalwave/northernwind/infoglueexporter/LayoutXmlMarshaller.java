@@ -4,6 +4,7 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class LayoutXmlMarshaller
   {
     @Nonnull
-    private final Layout layout;
+    private final DefaultLayout layout;
     
     public void marshall (final @Nonnull PrintWriter pw)
       throws IOException
@@ -27,12 +28,12 @@ public class LayoutXmlMarshaller
         pw.println("</layout>");
       } 
     
-    private void marshall (final @Nonnull PrintWriter pw, final @Nonnull Layout layout, final @Nonnull String leading)
+    private void marshall (final @Nonnull PrintWriter pw, final @Nonnull DefaultLayout layout, final @Nonnull String leading)
       throws IOException
       {
         pw.printf("%s<component id='%s' type='%s'>\n", leading, layout.getName(), layout.getType());
         
-        for (final Layout child : layout.getChildren())
+        for (final DefaultLayout child : layout.getChildren())
           {
             marshall(pw, child, leading + "  ");                
           }

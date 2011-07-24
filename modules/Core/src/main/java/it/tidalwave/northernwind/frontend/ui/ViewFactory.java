@@ -38,9 +38,6 @@ import it.tidalwave.northernwind.frontend.model.SiteNode;
  **********************************************************************************************************************/
 public interface ViewFactory 
   {
-    @Nonnull
-    public SiteNodeView createSiteNodeView();
-    
     /*******************************************************************************************************************
      *
      * Creates a new instance of a View.

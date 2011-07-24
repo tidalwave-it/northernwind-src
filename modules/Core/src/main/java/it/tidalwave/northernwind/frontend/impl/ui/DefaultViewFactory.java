@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.spi;
+package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString
-public abstract class ViewFactorySupport implements ViewFactory
+public class DefaultViewFactory implements ViewFactory
   {
     private final Map<String, ViewBuilder> viewBuilderMapByName = new TreeMap<String, ViewBuilder>();
     

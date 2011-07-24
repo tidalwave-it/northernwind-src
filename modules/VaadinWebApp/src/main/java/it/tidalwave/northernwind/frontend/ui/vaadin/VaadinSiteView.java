@@ -30,10 +30,12 @@ import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.ui.SiteView;
-import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
+import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.ui.SiteView;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
@@ -70,14 +72,15 @@ public class VaadinSiteView extends Window implements SiteView
      *
      * {@inheritDoc}
      * 
-     * @param  siteNodeView   must be a Vaadin component
+     * @param  layout   must be a Vaadin component
      *
      ******************************************************************************************************************/
     @Override
-    public void setSiteNodeView (final @Nonnull SiteNodeView siteNodeView) 
+    public void renderSiteNode (final @Nonnull SiteNode siteNode) 
       throws IOException
       {
-        log.info("setSiteNodeView({} - {})", siteNodeView.getClass(), siteNodeView);
+        log.info("renderSiteNode({})", siteNode);
+        
         removeAllComponents();
         
         try // FIXME to be moved to CSS
@@ -93,12 +96,13 @@ public class VaadinSiteView extends Window implements SiteView
                     return is;
                   }
               }, file.getNameExt(), getApplication())));
+            
+            final Visitor<Layout, Component> nodeViewBuilderVisitor = new VaadinNodeViewBuilderVisitor(siteNode);
+            addComponent(siteNode.getLayout().accept(nodeViewBuilderVisitor));        
           }
         catch (NotFoundException e) 
           {
             log.error("", e);
           }
-       
-        addComponent((Component)siteNodeView);
       }
   }

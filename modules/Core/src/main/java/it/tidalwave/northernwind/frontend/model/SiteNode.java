@@ -23,10 +23,8 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.ui.SiteNodeView;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
  *
@@ -44,12 +42,11 @@ public interface SiteNode extends Resource
     
     /*******************************************************************************************************************
      *
-     * Creates the view for this {@code SiteNode}.
+     * Returns the {@link Layout} of this {@code SiteNode}.
      * 
-     * @return   the view
+     * @return   the {@code Layout}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public SiteNodeView createView() 
-      throws IOException, NotFoundException;
+    public Layout getLayout();
   }

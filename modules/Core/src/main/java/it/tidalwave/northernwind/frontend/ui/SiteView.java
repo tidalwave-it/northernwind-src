@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui;
 
+import it.tidalwave.northernwind.frontend.model.SiteNode;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
@@ -47,11 +48,11 @@ public interface SiteView
 
     /*******************************************************************************************************************
      *
-     * Sets the contained view.
+     * Sets the layout.
      * 
-     * @param  view  the view
+     * @param  layout  the layout
      *
      ******************************************************************************************************************/
-    public void setSiteNodeView (@Nonnull SiteNodeView view)
+    public void renderSiteNode (@Nonnull SiteNode siteNode)
       throws IOException;
   }
