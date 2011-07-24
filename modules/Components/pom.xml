@@ -35,7 +35,7 @@
             <artifactId>spring-beans</artifactId>
         </dependency>
         <dependency>
-            <groupId>antlr</groupId>
+            <groupId>org.antlr</groupId>
             <artifactId>stringtemplate</artifactId>
         </dependency>
     </dependencies>

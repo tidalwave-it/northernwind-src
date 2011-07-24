@@ -22,17 +22,18 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component;
 
+import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
-import org.antlr.stringtemplate.StringTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import lombok.Cleanup;
+import org.stringtemplate.v4.ST;
 
 /***********************************************************************************************************************
  *
@@ -71,8 +72,13 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
         r.close();
         final String html = new String(charBuffer.array(), 0, length);
         
-        final StringTemplate template = new StringTemplate(html);
-        template.setAttributes(attributes);
-        view.setHtmlFragment(template.toString());
+        ST template = new ST(html, '$', '$');
+        
+        for (final Entry<String, String> entry : attributes.entrySet())
+          {
+            template = template.add(entry.getKey(), entry.getValue());  
+          }
+        
+        view.setHtmlFragment(template.render());
       } 
   }
