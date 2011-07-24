@@ -25,7 +25,7 @@ public class LayoutConverter extends Parser
       {{
         put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer");
         put( "67", "http://northernwind.tidalwave.it/component/Sidebar");
-        put("104", "http://northernwind.tidalwave.it/component/NewsIterator");
+        put("104", "http://northernwind.tidalwave.it/component/Blog");
         put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu");
         put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment");
         put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle");
@@ -97,9 +97,15 @@ public class LayoutConverter extends Parser
                     componentStack.peek().add(parentLayout);
                   }
                 
-                componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
+                // We can't rearrange ids, as subfolders might override this stuff with non-rearranged ids
+//                componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
+                componentName = attrNameValue + "-" + attrIdValue;
                 final DefaultLayout newComponent = new DefaultLayout(componentName, attrTypeValue);
-                parentLayout.add(newComponent);
+                
+                if (!"content3-3".equals(componentName)) // FIXME: temp patch until we recover all the properties so this is a blog navigator...
+                  {
+                    parentLayout.add(newComponent);
+                  }
                 componentStack.push(newComponent);
               }
 
