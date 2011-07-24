@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
-import it.tidalwave.util.NotFoundException;
 import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -34,6 +33,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Site;
@@ -44,7 +44,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
-import org.openide.util.Exceptions;
 
 /***********************************************************************************************************************
  *
