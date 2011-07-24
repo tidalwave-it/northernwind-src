@@ -40,6 +40,7 @@ import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Media.Media;
@@ -71,8 +72,6 @@ public class VaadinSiteView extends Window implements SiteView
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
-     * 
-     * @param  layout   must be a Vaadin component
      *
      ******************************************************************************************************************/
     @Override
@@ -85,18 +84,23 @@ public class VaadinSiteView extends Window implements SiteView
         
         try // FIXME to be moved to CSS
           {
-            final Media media = site.find(Media).withRelativeUri("/blueBill_Mobile-Banner.png").result();
-            final FileObject file = media.getFile();
-            final InputStream is = file.getInputStream();
-            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
-              {
-                @Override @Nonnull
-                public InputStream getStream() 
-                  {
-                    return is;
-                  }
-              }, file.getNameExt(), getApplication())));
-            
+//            final Media media = site.find(Media).withRelativeUri("/blueBill_Mobile-Banner.png").result();
+//            final FileObject file = media.getFile();
+//            final InputStream is = file.getInputStream();
+//            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
+//              {
+//                @Override @Nonnull
+//                public InputStream getStream() 
+//                  {
+//                    return is;
+//                  }
+//              }, file.getNameExt(), getApplication())));
+           
+            final String uri = site.getContextPath() + "/media/blueBill_Mobile-Banner.png";
+            final Label label = new Label();
+            label.setContentMode(Label.CONTENT_RAW);
+            label.setValue("<img src='" + uri + "'/>");
+            addComponent(label);
             final Visitor<Layout, Component> nodeViewBuilderVisitor = new VaadinNodeViewBuilderVisitor(siteNode);
             addComponent(siteNode.getLayout().accept(nodeViewBuilderVisitor));        
           }
