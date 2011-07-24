@@ -31,6 +31,7 @@ import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Panel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,25 +56,18 @@ public class VaadinNodeViewBuilderVisitor implements Visitor<Layout, Component>
     @Override
     public void preVisit (final @Nonnull Layout layout) 
       {
-        try
-          {
-            final Component component = (Component)layout.createView(siteNode);
+        final Component component = createComponent(layout);
 
-            if (rootComponent == null)
-              {
-                rootComponent = component;  
-              }
-            else
-              {
-                ((ComponentContainer)components.peek()).addComponent(component);  
-              }
-
-            components.push(component);
-          }
-        catch (NotFoundException e) // FIXME; somewhere there's a Visitor whose methods can throw checked exceptions
+        if (rootComponent == null)
           {
-            throw new RuntimeException(e);  
+            rootComponent = component;  
           }
+        else
+          {
+            ((ComponentContainer)components.peek()).addComponent(component);  
+          }
+
+        components.push(component);
       }
     
     @Override
@@ -91,5 +85,20 @@ public class VaadinNodeViewBuilderVisitor implements Visitor<Layout, Component>
     public Component getValue() 
       {
         return rootComponent;
+      }
+    
+    @Nonnull
+    protected Component createComponent (final @Nonnull Layout layout)
+      {
+        try
+          {
+            return (Component)layout.createView(siteNode); 
+          }
+        catch (NotFoundException e) // FIXME; somewhere there's a Visitor whose methods can throw checked exceptions
+          {
+            final Panel panel = new Panel(); // TODO: id?
+            panel.setCaption("Missing component: ");
+            return panel;
+          }
       }
   }
