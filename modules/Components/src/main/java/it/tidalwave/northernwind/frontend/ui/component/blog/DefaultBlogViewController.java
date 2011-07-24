@@ -56,17 +56,17 @@ public class DefaultBlogViewController implements BlogViewController
     /*******************************************************************************************************************
      *
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultBlogViewController (final @Nonnull BlogView view, 
-                                      final @Nonnull String viewInstanceName, 
+                                      final @Nonnull String viewId, 
                                       final @Nonnull SiteNode siteNode) 
     {
         this.view = view;
         
-        final Key<String> PROP_CONTENT = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
+        final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
         final String uris = "/content/document/Blog"; // siteNode.getProperty(PROP_CONTENT);
         setPosts(Arrays.asList(uris.split(",")));
       }

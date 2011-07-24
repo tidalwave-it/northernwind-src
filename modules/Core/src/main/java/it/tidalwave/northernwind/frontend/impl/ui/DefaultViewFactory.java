@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j @ToString
 public class DefaultViewFactory implements ViewFactory
   {
-    private final Map<String, ViewBuilder> viewBuilderMapByName = new TreeMap<String, ViewBuilder>();
+    private final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<String, ViewBuilder>();
     
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
@@ -63,14 +63,14 @@ public class DefaultViewFactory implements ViewFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Object createView (final @Nonnull String viewName, 
-                              final @Nonnull String instanceName, 
+    public Object createView (final @Nonnull String typeUri, 
+                              final @Nonnull String id, 
                               final @Nonnull SiteNode siteNode)
       throws NotFoundException
       {        
-        final ViewBuilder viewBuilder = NotFoundException.throwWhenNull(viewBuilderMapByName.get(viewName),
-                                                                        "Cannot find " + viewName + ": available: " + viewBuilderMapByName.keySet());
-        return viewBuilder.createView(instanceName, siteNode);
+        final ViewBuilder viewBuilder = NotFoundException.throwWhenNull(viewBuilderMapByTypeUri.get(typeUri),
+                                                                        "Cannot find " + typeUri + ": available: " + viewBuilderMapByTypeUri.keySet());
+        return viewBuilder.createView(id, siteNode);
       }
      
     /*******************************************************************************************************************
@@ -87,10 +87,10 @@ public class DefaultViewFactory implements ViewFactory
         for (final Class<?> viewClass : classScanner.findClasses())
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
-            final String name = viewMetadata.name();
-            final ViewBuilder viewBuilder = new ViewBuilder(name, viewClass, viewMetadata.controlledBy());
+            final String typeUri = viewMetadata.typeUri();
+            final ViewBuilder viewBuilder = new ViewBuilder(typeUri, viewClass, viewMetadata.controlledBy());
             viewBuilder.validate();
-            viewBuilderMapByName.put(name, viewBuilder);
+            viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
         
         if (logConfigurationEnabled)
@@ -107,7 +107,7 @@ public class DefaultViewFactory implements ViewFactory
       {
         log.info("View definitions:");
         
-        for (final ViewBuilder viewDefinition : viewBuilderMapByName.values())
+        for (final ViewBuilder viewDefinition : viewBuilderMapByTypeUri.values())
           {
             log.info(">>>> {}", viewDefinition);
           }

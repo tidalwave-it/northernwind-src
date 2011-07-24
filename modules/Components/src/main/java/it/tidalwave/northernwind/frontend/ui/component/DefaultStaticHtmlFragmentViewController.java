@@ -51,12 +51,12 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
      * Creates an instance for populating the given {@link StaticHtmlFragmentView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultStaticHtmlFragmentViewController (final @Nonnull StaticHtmlFragmentView view, 
-                                                    final @Nonnull String viewInstanceName,
+                                                    final @Nonnull String viewId,
                                                     final @Nonnull SiteNode siteNode) 
       {
         this.view = view; 

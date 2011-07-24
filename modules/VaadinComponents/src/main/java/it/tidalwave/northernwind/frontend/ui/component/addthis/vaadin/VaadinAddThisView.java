@@ -34,19 +34,19 @@ import it.tidalwave.northernwind.frontend.ui.component.vaadin.VaadinStaticHtmlFr
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/AddThis", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/AddThis", 
               controlledBy=DefaultAddThisViewController.class)
 public class VaadinAddThisView extends VaadinStaticHtmlFragmentView implements AddThisView
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the view id
      *
      ******************************************************************************************************************/
-    public VaadinAddThisView (final @Nonnull String name) 
+    public VaadinAddThisView (final @Nonnull String id) 
       {
-        super(name);
+        super(id);
       }
   }

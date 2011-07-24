@@ -34,20 +34,20 @@ import com.vaadin.ui.VerticalLayout;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/NodeContainer", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer", 
               controlledBy=DefaultNodeContainerViewController.class)
 public class VaadinNodeContainerView extends VerticalLayout implements NodeContainerView // FIXME: probably it should be a Window
   {// TODO: not VerticalLayout, but something without Layout
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinNodeContainerView (final @Nonnull String name) 
+    public VaadinNodeContainerView (final @Nonnull String id) 
       {
         setMargin(false);
-        setStyleName("component-" + name);
+        setStyleName("component-" + id);
       }
   }  

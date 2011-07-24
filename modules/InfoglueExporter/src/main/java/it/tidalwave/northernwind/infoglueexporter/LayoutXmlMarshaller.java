@@ -31,7 +31,7 @@ public class LayoutXmlMarshaller
     private void marshall (final @Nonnull PrintWriter pw, final @Nonnull DefaultLayout layout, final @Nonnull String leading)
       throws IOException
       {
-        pw.printf("%s<component id='%s' type='%s'>\n", leading, layout.getName(), layout.getType());
+        pw.printf("%s<component id='%s' type='%s'>\n", leading, layout.getId(), layout.getTypeUri());
         
         for (final DefaultLayout child : layout.getChildren())
           {

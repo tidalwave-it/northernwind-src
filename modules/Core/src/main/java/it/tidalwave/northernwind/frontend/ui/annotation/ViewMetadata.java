@@ -44,10 +44,10 @@ public @interface ViewMetadata
   {
     /*******************************************************************************************************************
      *
-     * The name of the component, that will be registered into the {@link ViewFactory}.
+     * The type of the component, that will be registered into the {@link ViewFactory}.
      *
      ******************************************************************************************************************/
-    public String name();
+    public String typeUri();
     
     /*******************************************************************************************************************
      *

@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 /* package */ class ViewBuilder
   {
     @Nonnull
-    private final String name;  
+    private final String typeUri;  
 
     @Nonnull
     private final Class<?> viewClass;  
@@ -68,22 +68,22 @@ import lombok.extern.slf4j.Slf4j;
      *
      * Creates a new View - ViewController pair.
      *
-     * @param   instanceName        the instance name
-     * @param   contentRelativeUri 
-     * @return                      the created view
+     * @param   id        the instance id
+     * @param   siteNode  the {@link SiteNode} the view will be built for
+     * @return            the created view
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (final @Nonnull String instanceName, final @Nonnull SiteNode siteNode)
+    public Object createView (final @Nonnull String id, final @Nonnull SiteNode siteNode)
       {
-        log.debug("createView({}, {})", instanceName, siteNode);
+        log.debug("createView({}, {})", id, siteNode);
         
         try
           { 
-            final Object view = viewClass.getConstructor(String.class).newInstance(instanceName);
+            final Object view = viewClass.getConstructor(String.class).newInstance(id);
             // FIXME: the viewController is not assigned, will be GCed!
             // FIXME: Attach to the view, even though it doesn't need it? Or use a WeakIdentityMap indexed by the View?
-            final Object viewController = getConstructor().newInstance(view, instanceName, siteNode);  
+            final Object viewController = getConstructor().newInstance(view, id, siteNode);  
             return view;
           }
         catch (Exception e)

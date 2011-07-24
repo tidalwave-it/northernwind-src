@@ -36,20 +36,20 @@ import com.vaadin.ui.Label;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/HtmlTextWithTitle", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlTextWithTitle", 
               controlledBy=DefaultHtmlTextWithTitleViewController.class)
 public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTitleView
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinHtmlTextWithTitleView (final @Nonnull String name) 
+    public VaadinHtmlTextWithTitleView (final @Nonnull String id) 
       {
-        setStyleName("component-" + name);
+        setStyleName("component-" + id);
       }
     
     /*******************************************************************************************************************

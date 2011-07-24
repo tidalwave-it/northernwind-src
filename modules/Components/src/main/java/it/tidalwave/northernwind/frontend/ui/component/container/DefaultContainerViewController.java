@@ -38,12 +38,12 @@ public class DefaultContainerViewController implements ContainerViewController
      * Creates an instance for populating the given {@link ContainerView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultContainerViewController (final @Nonnull ContainerView view, 
-                                           final @Nonnull String viewInstanceName,
+                                           final @Nonnull String viewId,
                                            final @Nonnull SiteNode siteNode) 
       {     
       }

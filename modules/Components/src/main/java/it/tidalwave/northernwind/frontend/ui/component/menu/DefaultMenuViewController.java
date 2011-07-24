@@ -56,19 +56,19 @@ public class DefaultMenuViewController implements MenuViewController
     /*******************************************************************************************************************
      *
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultMenuViewController (final @Nonnull MenuView view, 
-                                      final @Nonnull String viewInstanceName, 
+                                      final @Nonnull String viewId, 
                                       final @Nonnull SiteNode siteNode) 
     {
         this.view = view;
         
         try 
           {
-            final Key<String> PROP_CONTENT = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
+            final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
             final String uris = siteNode.getProperty(PROP_CONTENT);
             setLinks(Arrays.asList(uris.split(",")));
           }

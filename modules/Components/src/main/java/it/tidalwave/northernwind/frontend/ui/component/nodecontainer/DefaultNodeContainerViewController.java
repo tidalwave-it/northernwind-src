@@ -38,12 +38,12 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      * Creates an instance for populating the given {@link NodeContainerView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, 
-                                               final @Nonnull String viewInstanceName,
+                                               final @Nonnull String viewId,
                                                final @Nonnull SiteNode siteNode) 
       {     
       }

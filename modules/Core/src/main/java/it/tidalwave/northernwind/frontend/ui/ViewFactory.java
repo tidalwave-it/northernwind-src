@@ -42,16 +42,16 @@ public interface ViewFactory
      *
      * Creates a new instance of a View.
      *
-     * @param   viewName            the component view name
-     * @param   instanceName        the instance name
+     * @param   typeUri             the view type URI
+     * @param   id                  the view id
      * @param   siteNode            the node this view is created for 
      * @return  
      * @throws  NotFoundException   if no view component is found
      * 
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (@Nonnull String viewName, 
-                              @Nonnull String instanceName, 
+    public Object createView (@Nonnull String typeUri, 
+                              @Nonnull String id, 
                               @Nonnull SiteNode siteNode) 
       throws NotFoundException;
   }

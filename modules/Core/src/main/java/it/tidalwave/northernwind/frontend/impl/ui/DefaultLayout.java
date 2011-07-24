@@ -43,49 +43,49 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Getter @ToString(exclude="childrenMapByName")
+@Configurable @Getter @ToString(exclude="childrenMapById")
 public class DefaultLayout implements Layout
   {
     @Nonnull
-    private final String name;
+    private final String id;
     
     @Nonnull
-    private final String type;
+    private final String typeUri;
     
     private final List<DefaultLayout> children = new ArrayList<DefaultLayout>();
     
-    private final Map<String, DefaultLayout> childrenMapByName = new HashMap<String, DefaultLayout>();
+    private final Map<String, DefaultLayout> childrenMapById = new HashMap<String, DefaultLayout>();
     
     @Inject @Nonnull
     private ViewFactory viewFactory;
 
-    public DefaultLayout (final @Nonnull String name, final @Nonnull String type)
+    public DefaultLayout (final @Nonnull String id, final @Nonnull String typeUri)
       {
-        this.name = name;
-        this.type = type;
+        this.id = id;
+        this.typeUri = typeUri;
       }
       
     public void add (final @Nonnull DefaultLayout layout)
       {
         children.add(layout);
-        childrenMapByName.put(layout.getName(), layout);
+        childrenMapById.put(layout.id, layout);
       }
     
     @Nonnull
-    public DefaultLayout findSubComponentByName (final @Nonnull String name)
+    public DefaultLayout findSubComponentById (final @Nonnull String id)
       throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(childrenMapByName.get(name), "Can't find " + name);
+        return NotFoundException.throwWhenNull(childrenMapById.get(id), "Can't find " + id);
       }
 
     @Override @Nonnull
     public Object createView (final @Nonnull SiteNode siteNode) 
       throws NotFoundException
       {
-        return viewFactory.createView(type, name, siteNode);
+        return viewFactory.createView(typeUri, id, siteNode);
       }
     
-    @Nonnull // TODO: refactor with Composite
+    @Override @Nonnull // TODO: refactor with Composite
     public <Type> Type accept (final @Nonnull Visitor<Layout, Type> visitor) 
       throws NotFoundException
       {

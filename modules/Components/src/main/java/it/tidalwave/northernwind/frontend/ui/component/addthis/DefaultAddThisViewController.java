@@ -42,16 +42,16 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
      * Creates an instance for populating the given {@link AddThisView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultAddThisViewController (final @Nonnull AddThisView view, 
-                                         final @Nonnull String viewInstanceName,
+                                         final @Nonnull String viewId,
                                          final @Nonnull SiteNode siteNode) 
       throws IOException 
       {
-        super(view, viewInstanceName, siteNode);
+        super(view, viewId, siteNode);
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("username", "fabriziogiudici"); // FIXME: get from siteNode properties
         attributes.put("url", "http://bluebill.tidalwave.it/mobile/"); // FIXME: get from site

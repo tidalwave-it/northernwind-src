@@ -37,7 +37,7 @@ import lombok.Delegate;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/HorizontalMenu", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HorizontalMenu", 
               controlledBy=DefaultMenuViewController.class)
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {
@@ -46,14 +46,14 @@ public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuVi
     
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinHorizontalMenuView (final @Nonnull String name) 
+    public VaadinHorizontalMenuView (final @Nonnull String id) 
       {
         setMargin(false);
-        setStyleName("component-" + name);
+        setStyleName("component-" + id);
       }
   }

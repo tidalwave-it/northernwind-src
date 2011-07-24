@@ -34,19 +34,19 @@ import it.tidalwave.northernwind.frontend.ui.component.vaadin.VaadinStaticHtmlFr
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/StatCounter", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/StatCounter", 
               controlledBy=DefaultStatCounterViewController.class)
 public class VaadinStatCounterView extends VaadinStaticHtmlFragmentView implements StatCounterView
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinStatCounterView (final @Nonnull String name) 
+    public VaadinStatCounterView (final @Nonnull String id) 
       {
-        super(name);
+        super(id);
       }
   }

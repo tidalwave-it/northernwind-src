@@ -36,20 +36,20 @@ import com.vaadin.ui.Label;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/HtmlFragment", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlFragment", 
               controlledBy=DefaultHtmlFragmentViewController.class)
 public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinHtmlFragmentView (final @Nonnull String name) 
+    public VaadinHtmlFragmentView (final @Nonnull String id) 
       {
-        setStyleName("component-" + name);
+        setStyleName("component-" + id);
         setContentMode(Label.CONTENT_XHTML);
       }
     

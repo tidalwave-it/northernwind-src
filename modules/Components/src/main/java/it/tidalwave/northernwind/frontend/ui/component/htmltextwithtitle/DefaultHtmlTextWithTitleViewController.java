@@ -54,17 +54,17 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      * Creates an instance for populating the given {@link HtmlTextWithTitleView} with the given URI.
      * 
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultHtmlTextWithTitleViewController (final @Nonnull HtmlTextWithTitleView view, 
-                                         final @Nonnull String viewInstanceName,
-                                         final @Nonnull SiteNode siteNode) 
-    {
+                                                   final @Nonnull String viewId,
+                                                   final @Nonnull SiteNode siteNode) 
+      {
         try
           {
-            final Key<String> PROP_CONTENT = new Key<String>(viewInstanceName + ".content"); // FIXME: have a subproperty group with the name
+            final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
             final String contentUri = siteNode.getProperty(PROP_CONTENT);
             
             // FIXME: should be fixed in the Infoglue importer

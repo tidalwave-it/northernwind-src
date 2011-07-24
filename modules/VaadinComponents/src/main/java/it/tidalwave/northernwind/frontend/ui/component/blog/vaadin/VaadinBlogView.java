@@ -36,21 +36,21 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/Blog", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Blog", 
               controlledBy=DefaultBlogViewController.class)
 @Slf4j
 public class VaadinBlogView extends VerticalLayout implements BlogView
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinBlogView (final @Nonnull String name) 
+    public VaadinBlogView (final @Nonnull String id) 
       {
-        setStyleName("component-" + name);
+        setStyleName("component-" + id);
       }
 
     @Override

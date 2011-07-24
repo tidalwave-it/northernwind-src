@@ -34,20 +34,20 @@ import com.vaadin.ui.VerticalLayout;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(name="http://northernwind.tidalwave.it/component/Sidebar", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Sidebar", 
               controlledBy=DefaultSidebarViewController.class)
 public class VaadinSidebarView extends VerticalLayout implements SidebarView
   {
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given name.
+     * Creates an instance with the given id.
      * 
-     * @param  name  the component name
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinSidebarView (final @Nonnull String name) 
+    public VaadinSidebarView (final @Nonnull String id) 
       {
         setMargin(false);
-        setStyleName("component-" + name);
+        setStyleName("component-" + id);
       }
   }  

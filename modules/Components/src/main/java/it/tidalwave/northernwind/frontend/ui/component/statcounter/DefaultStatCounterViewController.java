@@ -42,16 +42,16 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
      * Creates an instance for populating the given {@link StatCounterView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewInstanceName  the name of the view instance
+     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultStatCounterViewController (final @Nonnull StatCounterView view, 
-                                             final @Nonnull String viewInstanceName,
+                                             final @Nonnull String viewId,
                                              final @Nonnull SiteNode siteNode) 
       throws IOException 
       {
-        super(view, viewInstanceName, siteNode);
+        super(view, viewId, siteNode);
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("project", "5834368"); // FIXME: get from siteNode properties
         attributes.put("security", "91675212"); // FIXME: get from siteNode properties
