@@ -22,7 +22,7 @@ public class LayoutConverter extends Parser
   {
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
-        put(  "7", "http://northernwind.tidalwave.it/component/BasePage");
+        put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer");
         put( "67", "http://northernwind.tidalwave.it/component/Sidebar");
         put("104", "http://northernwind.tidalwave.it/component/NewsIterator");
         put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu");
@@ -91,7 +91,7 @@ public class LayoutConverter extends Parser
                 
                 if (parentLayout == null)
                   {
-                    parentLayout = new Layout(attrNameValue, "http://northernwind.tidalwave.it/component/Panel"); 
+                    parentLayout = new Layout(attrNameValue, "http://northernwind.tidalwave.it/component/Container"); 
                     wrapperLayouts.put(attrNameValue, parentLayout);
                     componentStack.peek().add(parentLayout);
                   }
@@ -136,6 +136,13 @@ public class LayoutConverter extends Parser
     protected void finish() 
       throws Exception
       {
+          // TODO: Infoglue generates a sub-layout even when just properties are changed. We put properties in a
+          // separate file, so some of those sub-layouts have to be dropped.
+          // Do this:
+          //   Layout parentLayout = ...
+          //   Layout thisLayout = ...
+          //   Layout subLayout = parentLayout.withOverride(thisLayout);
+          //   if (parentLayout.equals(subLayout)) then do not produce subLayout
         final LayoutXmlMarshaller marshaller = new LayoutXmlMarshaller(rootComponent);
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw);
