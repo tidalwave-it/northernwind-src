@@ -130,6 +130,7 @@ import lombok.extern.slf4j.Slf4j;
         String text = attributeFile.asText();
 
         // FIXME: this should be done in a specific postprocessor registered only for Content   
+        // FIXME: and do this with StringTemplate - remember to escape $'s in the source
         text = text.replaceAll("\\$media\\(([^\\)]*)\\)", site.getContextPath() + "/media/$1");
         
         return text;
