@@ -131,18 +131,33 @@ public class DefaultLayout implements Layout
     private void applyOverride (final @Nonnull DefaultLayout override)
       {
         this.typeUri = override.typeUri; // FIXME: don't like this approach, as it requires typeUri non final
-        
-        for (final DefaultLayout overridingChild : override.getChildren())
+
+        // Complex rule, but it's Infoglue. 
+        // FIXME: translate the mapping during the conversion and use a simpler rule here
+        if ("base".equals(id))
           {
-            final DefaultLayout overriddenChild = childrenMapById.get(overridingChild.id);
-            
-            if (overriddenChild == null)
+            for (final DefaultLayout overridingChild : override.getChildren())
+              {
+                final DefaultLayout overriddenChild = childrenMapById.get(overridingChild.id);
+
+                if (overriddenChild == null)
+                  {
+                    add(overridingChild);  
+                  }
+                else
+                  {
+                    overriddenChild.applyOverride(overridingChild);                    
+                  }
+              }
+          }
+        else
+          {
+            this.children.clear();
+            this.childrenMapById.clear();
+
+            for (final DefaultLayout overridingChild : override.getChildren())
               {
                 add(overridingChild);  
-              }
-            else
-              {
-                overriddenChild.applyOverride(overridingChild);                    
               }
           }
       }
