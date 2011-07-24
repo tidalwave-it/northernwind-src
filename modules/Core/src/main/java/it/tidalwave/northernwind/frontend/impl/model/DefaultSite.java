@@ -166,7 +166,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
               {
                 try 
                   {
-                    nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultSiteNode(folder, relativeUri));
+                    nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultSiteNode(folder));
                   }
                 catch (IOException e) 
                   {

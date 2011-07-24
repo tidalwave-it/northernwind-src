@@ -34,7 +34,6 @@ import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayoutXmlUnmarshaller;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Delegate;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,14 +45,11 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @RequiredArgsConstructor @Slf4j @ToString(exclude={"layout"})
+@Configurable(preConstruction=true) @Slf4j @ToString(exclude={"layout"})
 /* package */ class DefaultSiteNode implements SiteNode
   {
     @Nonnull @Delegate(types=Resource.class)
     private final Resource resource;
-    
-    @Nonnull @Getter
-    private final String relativeUri; // TODO: is this needed?
     
     @Nonnull @Getter
     private DefaultLayout layout;
@@ -66,11 +62,10 @@ import lombok.extern.slf4j.Slf4j;
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultSiteNode (final @Nonnull FileObject file, final @Nonnull String relativeUri)
+    public DefaultSiteNode (final @Nonnull FileObject file)
       throws IOException, NotFoundException
       {
         resource = new DefaultResource(file);  
-        this.relativeUri = relativeUri;
         loadLayout();
       }
 
