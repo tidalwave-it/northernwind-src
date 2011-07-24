@@ -37,7 +37,8 @@ public class ComponentParser extends Parser
     private final SortedMap<String, String> properties;
     private String componentName = "";
     private Layout rootComponent;
-    private Stack<Layout> componentStack = new Stack<Layout>();
+    private final Stack<Layout> componentStack = new Stack<Layout>();
+    private final Map<String, Layout> wrapperLayouts = new HashMap<String, Layout>();
 
     public ComponentParser (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
@@ -77,16 +78,27 @@ public class ComponentParser extends Parser
                   }
               }
             
-            componentName = attrNameValue + attrIdValue;
-            final Layout newComponent = new Layout(componentName, attrTypeValue);
-            
             if (componentStack.isEmpty())
               {
-                componentStack.push(rootComponent = newComponent);  
+                componentName = attrNameValue;
+                final Layout newComponent = new Layout(componentName, attrTypeValue);
+                componentStack.push(newComponent);
+                rootComponent = newComponent;  
               }
             else
               {
-                componentStack.peek().add(newComponent);
+                Layout parentLayout = wrapperLayouts.get(attrNameValue);
+                
+                if (parentLayout == null)
+                  {
+                    parentLayout = new Layout(attrNameValue, "http://northernwind.tidalwave.it/component/Panel"); 
+                    wrapperLayouts.put(attrNameValue, parentLayout);
+                    componentStack.peek().add(parentLayout);
+                  }
+                
+                componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
+                final Layout newComponent = new Layout(componentName, attrTypeValue);
+                parentLayout.add(newComponent);
                 componentStack.push(newComponent);
               }
 
