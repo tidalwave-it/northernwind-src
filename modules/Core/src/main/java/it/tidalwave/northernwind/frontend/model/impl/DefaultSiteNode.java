@@ -89,22 +89,22 @@ import lombok.extern.slf4j.Slf4j;
 //nav.content = /content/document/Mobile, Features, Download, Screenshots, Getting started, Blog & News, Contacts, License, Developers          
           
         final SiteNodeView pageContent = viewFactory.createSiteNodeView();
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Sidebar", "local2", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav4", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "main5", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Sidebar", "local-1", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HorizontalMenu", "nav-1", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "main-1", this));
         
         if (relativeUri.contains("Blog"))
           {
-            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Blog", "main", this));
+            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Blog", "main-1", this));
           }        
         else
           {
-            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/Article", "main1", this));
+            pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlTextWithTitle", "main-2", this));
           }
         
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "footer6", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/StatCounter", "footer7", this));
-        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/AddThis", "breadcrumb10", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/HtmlFragment", "footer-1", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/StatCounter", "footer-2", this));
+        pageContent.add(viewFactory.createView("http://northernwind.tidalwave.it/component/AddThis", "breadcrumb-1", this));
         return pageContent;
         // END FIXME
       }

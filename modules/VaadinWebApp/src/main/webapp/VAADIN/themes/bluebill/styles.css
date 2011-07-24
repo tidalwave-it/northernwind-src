@@ -47,7 +47,7 @@
     position:           relative;
   }
       
-.component-nav a, .component-nav a:link, .component-nav a:active, .component-nav a:visited 
+.component-nav-1 a, .component-nav-1 a:link, .component-nav-1 a:active, .component-nav-1 a:visited 
   {
     font-weight:        bold;
     color:              #35569D;
@@ -58,7 +58,7 @@
     text-decoration:    none;
   }
 
-.component-main
+.component-main-2
   {
     background-color:   white;
     font-size:          1em;
@@ -75,14 +75,14 @@
     margin-top:         20px;
   }
   
-.component-main a, .component-main a:link, .component-main a:visited 
+.component-main-2 a, .component-main-2 a:link, .component-main-2 a:visited 
   {
     color:              #35569D;
     font-weight:        bold;
     text-decoration:    none;
   }
 
-.component-main h3
+.component-main-2 h3
   {
     font-size:          1.4em;
     font-weight:        normal;
@@ -93,7 +93,7 @@
     padding:            0;
   }
   
-.component-main td
+.component-main-2 td
   {
     padding-left:       10px;
     padding-right:      10px;    
