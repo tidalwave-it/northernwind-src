@@ -47,14 +47,20 @@
     position:           relative;
   }
       
-.nw-nav a, .nw-nav a:link, .nw-nav a:active, .nw-nav a:visited 
+.nw-nav a, .nw-nav a:link, .nw-nav a:active, .nw-nav a:visited
   {
     font-weight:        bold;
+    font-size:          1.2em;
     color:              #35569D;
     text-align:         left;
     padding:            5px 10px;
     margin:             0;
     display:            block;
+    text-decoration:    none;
+  }
+  
+.v-link span
+  {
     text-decoration:    none;
   }
 
@@ -108,3 +114,11 @@
     font-size:          0.8em;
   }
 
+  /*
+div#addThis 
+  {
+    position:           absolute;
+    right:              0px;
+    top:                -100px;
+  }
+  */
