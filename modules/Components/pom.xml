@@ -11,16 +11,16 @@
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it-tidalwave-northernwind-components</artifactId>
+    <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Components</name>
-    <description>NorthernWind - Components</description>
+    <name>NorthernWind - Frontend Components</name>
+    <description>NorthernWind - Frontend Components</description>
     
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-core</artifactId>
+            <artifactId>it-tidalwave-northernwind-frontend-core</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
