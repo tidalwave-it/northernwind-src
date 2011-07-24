@@ -58,7 +58,7 @@
     text-decoration:    none;
   }
 
-.nw-main
+.nw-main-1
   {
     background-color:   white;
     font-size:          1em;
@@ -75,14 +75,14 @@
     margin-top:         20px;
   }
   
-.nw-main a, .nw-main a:link, .nw-main a:visited 
+.nw-main-1 a, .nw-main-1 a:link, .nw-main-1 a:visited 
   {
     color:              #35569D;
     font-weight:        bold;
     text-decoration:    none;
   }
 
-.nw-main h3
+.nw-main-1 h3
   {
     font-size:          1.4em;
     font-weight:        normal;
@@ -93,19 +93,18 @@
     padding:            0;
   }
   
-.nw-main td
+.nw-main-1 td
   {
     padding-left:       10px;
     padding-right:      10px;    
   }
 
-.v-label-copyright
+.nw-footer p
   {
-    font-family:        Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size:          10px;
-    color:              black;
     font-style:         italic;
     text-align:         left;
-    margin-top:         10px;
+    margin:             0;
+    padding:            20px;
+    font-size:          0.8em;
   }
 
