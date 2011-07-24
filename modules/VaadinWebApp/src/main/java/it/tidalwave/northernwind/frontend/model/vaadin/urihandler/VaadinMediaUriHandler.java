@@ -22,20 +22,20 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.vaadin.urihandler;
 
-import it.tidalwave.northernwind.frontend.model.Media;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
 import com.vaadin.terminal.DownloadStream;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
