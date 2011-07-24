@@ -4,10 +4,13 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.Stack;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
 import org.joda.time.DateTime;
@@ -25,7 +28,7 @@ public class ComponentParser extends Parser
         put("104", "http://northernwind.tidalwave.it/component/NewsIterator");
         put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu");
         put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment");
-        put( "44", "http://northernwind.tidalwave.it/component/Article");
+        put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle");
         put("853", "http://northernwind.tidalwave.it/component/StatCounter");
         put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking");
         put("873", "http://northernwind.tidalwave.it/component/AddThis");
@@ -44,6 +47,8 @@ public class ComponentParser extends Parser
     private final StringBuilder builder = new StringBuilder();
     private final SortedMap<String, String> properties;
     private String componentName = "";
+    private Component rootComponent;
+    private Stack<Component> componentStack = new Stack<Component>();
 
     public ComponentParser (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
@@ -97,6 +102,17 @@ public class ComponentParser extends Parser
             builder.append(String.format("type='%s' ", attrTypeValue));
 //            builder.append(String.format("name='%s' ", attrValue));
             builder.append(" >");
+            final Component newComponent = new Component(componentName, attrTypeValue);
+            
+            if (componentStack.isEmpty())
+              {
+                componentStack.push(rootComponent = newComponent);  
+              }
+            else
+              {
+                componentStack.peek().add(newComponent);
+                componentStack.push(newComponent);
+              }
 
           }
         else if ("property".equals(name))
@@ -140,6 +156,7 @@ public class ComponentParser extends Parser
         else if ("component".equals(name))
           {
             builder.append("</component>");
+            componentStack.pop();
           }
         else 
           {
@@ -151,7 +168,13 @@ public class ComponentParser extends Parser
     protected void finish() 
       throws Exception
       {
+        final ComponentXmlMarshaller marshaller = new ComponentXmlMarshaller(rootComponent);
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
+        marshaller.marshall(pw);
+        pw.close();
         ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(builder.toString())));
+        ResourceManager.addResource(new Resource(dateTime, path + "BIS", Utilities.dumpXml(sw.getBuffer().toString())));
       }
   }
 
