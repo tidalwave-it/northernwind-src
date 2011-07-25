@@ -11,7 +11,7 @@
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind</artifactId>
-    <version>1.0-ALPHA-1</version>
+    <version>1.0-ALPHA-2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (master)</name>
     <description>NorthernWind - lightweight CMS</description>
@@ -124,32 +124,32 @@
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-core</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-vaadin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-vaadin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-htmltemplate</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
