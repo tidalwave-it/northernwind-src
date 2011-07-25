@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
@@ -51,7 +52,7 @@ public class HtmlTemplateHorizontalMenuView extends HtmlHolder implements MenuVi
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateHorizontalMenuView (final @Nonnull String id) 
+    public HtmlTemplateHorizontalMenuView (final @Nonnull Id id) 
       {
         super(id);
       }

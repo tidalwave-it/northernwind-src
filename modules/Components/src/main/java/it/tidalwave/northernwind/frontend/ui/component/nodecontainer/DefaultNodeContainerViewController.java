@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -43,7 +44,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, 
-                                               final @Nonnull String viewId,
+                                               final @Nonnull Id viewId,
                                                final @Nonnull SiteNode siteNode) 
       {     
       }

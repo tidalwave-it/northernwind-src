@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController;
@@ -47,7 +48,7 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateHtmlTextWithTitleView (final @Nonnull String id) 
+    public HtmlTemplateHtmlTextWithTitleView (final @Nonnull Id id) 
       {
         super(id);
       }

@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.addthis.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.addthis.AddThisView;
 import it.tidalwave.northernwind.frontend.ui.component.addthis.DefaultAddThisViewController;
@@ -45,7 +46,7 @@ public class HtmlTemplateAddThisView extends HtmlHolder implements AddThisView
      * @param  id  the view id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateAddThisView (final @Nonnull String id) 
+    public HtmlTemplateAddThisView (final @Nonnull Id id) 
       {
         super(id);
       }

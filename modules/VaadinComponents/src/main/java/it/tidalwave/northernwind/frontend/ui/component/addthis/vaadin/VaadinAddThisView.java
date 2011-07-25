@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.addthis.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.addthis.AddThisView;
 import it.tidalwave.northernwind.frontend.ui.component.addthis.DefaultAddThisViewController;
@@ -45,7 +46,7 @@ public class VaadinAddThisView extends VaadinStaticHtmlFragmentView implements A
      * @param  id  the view id
      *
      ******************************************************************************************************************/
-    public VaadinAddThisView (final @Nonnull String id) 
+    public VaadinAddThisView (final @Nonnull Id id) 
       {
         super(id);
       }

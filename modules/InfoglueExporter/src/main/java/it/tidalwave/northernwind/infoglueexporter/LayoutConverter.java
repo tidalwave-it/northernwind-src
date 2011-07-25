@@ -5,6 +5,7 @@
 package it.tidalwave.northernwind.infoglueexporter;
 
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import it.tidalwave.util.Id;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class LayoutConverter extends Parser
       }};
             
     private final SortedMap<String, String> properties;
-    private String componentName = "";
+    private Id componentId;
     private DefaultLayout rootComponent;
     private final Stack<DefaultLayout> componentStack = new Stack<DefaultLayout>();
     private final Map<String, DefaultLayout> wrapperLayouts = new HashMap<String, DefaultLayout>();
@@ -81,8 +82,8 @@ public class LayoutConverter extends Parser
             
             if (componentStack.isEmpty())
               {
-                componentName = attrNameValue;
-                final DefaultLayout newComponent = new DefaultLayout(componentName, attrTypeValue);
+                componentId = new Id(attrNameValue);
+                final DefaultLayout newComponent = new DefaultLayout(componentId, attrTypeValue);
                 componentStack.push(newComponent);
                 rootComponent = newComponent;  
               }
@@ -92,17 +93,17 @@ public class LayoutConverter extends Parser
                 
                 if (parentLayout == null)
                   {
-                    parentLayout = new DefaultLayout(attrNameValue, "http://northernwind.tidalwave.it/component/Container"); 
+                    parentLayout = new DefaultLayout(new Id(attrNameValue), "http://northernwind.tidalwave.it/component/Container"); 
                     wrapperLayouts.put(attrNameValue, parentLayout);
                     componentStack.peek().add(parentLayout);
                   }
                 
                 // We can't rearrange ids, as subfolders might override this stuff with non-rearranged ids
 //                componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
-                componentName = attrNameValue + "-" + attrIdValue;
-                final DefaultLayout newComponent = new DefaultLayout(componentName, attrTypeValue);
+                componentId = new Id(attrNameValue + "-" + attrIdValue);
+                final DefaultLayout newComponent = new DefaultLayout(componentId, attrTypeValue);
                 
-                if (!"content3-3".equals(componentName)) // FIXME: temp patch until we recover all the properties so this is a blog navigator...
+                if (!"content3-3".equals(componentId)) // FIXME: temp patch until we recover all the properties so this is a blog navigator...
                   {
                     parentLayout.add(newComponent);
                   }
@@ -119,7 +120,7 @@ public class LayoutConverter extends Parser
 
                 if ("path".equals(attrName))
                   {
-                    properties.put(componentName + ".content", attrValue);
+                    properties.put(componentId + ".content", attrValue);
                   }
 //                else FIXME: there are missing properties (e.g. set Blog max posts, etc...)
 //                  {

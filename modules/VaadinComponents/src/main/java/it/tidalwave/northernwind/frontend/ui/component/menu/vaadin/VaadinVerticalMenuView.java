@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
@@ -52,9 +53,9 @@ public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinVerticalMenuView (final @Nonnull String id) 
+    public VaadinVerticalMenuView (final @Nonnull Id id) 
       {
         setMargin(false);
-        setStyleName(NW + id);
+        setStyleName(NW + id.stringValue());
       }
   }

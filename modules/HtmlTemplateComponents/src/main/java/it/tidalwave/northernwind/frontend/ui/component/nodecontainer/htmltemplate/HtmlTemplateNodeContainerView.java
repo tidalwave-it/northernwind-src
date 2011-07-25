@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
@@ -45,7 +46,7 @@ public class HtmlTemplateNodeContainerView extends HtmlHolder implements NodeCon
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateNodeContainerView (final @Nonnull String id) 
+    public HtmlTemplateNodeContainerView (final @Nonnull Id id) 
       {
         super(id);
       }

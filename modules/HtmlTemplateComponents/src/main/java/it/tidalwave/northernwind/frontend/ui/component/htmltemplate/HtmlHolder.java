@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.stringtemplate.v4.ST;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
@@ -70,9 +71,9 @@ public class HtmlHolder
      * @param  name  the component name
      *
      ******************************************************************************************************************/
-    public HtmlHolder (final @Nonnull String id) 
+    public HtmlHolder (final @Nonnull Id id) 
       {
-        attributeMap.put("style", NW + id);
+        attributeMap.put("style", NW + id.stringValue());
         attributeMap.put("content", "");
         
         try

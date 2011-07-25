@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
@@ -48,7 +49,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogView (final @Nonnull String id) 
+    public HtmlTemplateBlogView (final @Nonnull Id id) 
       {
         super(id);
       }

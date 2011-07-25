@@ -29,6 +29,7 @@ import java.util.TreeMap;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
@@ -64,7 +65,7 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @Override @Nonnull
     public Object createView (final @Nonnull String typeUri, 
-                              final @Nonnull String id, 
+                              final @Nonnull Id id, 
                               final @Nonnull SiteNode siteNode)
       throws NotFoundException
       {        

@@ -36,6 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import it.tidalwave.util.Id;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -97,10 +98,10 @@ public class DefaultLayoutXmlUnmarshaller
     @Nonnull
     private DefaultLayout parseComponent (final @Nonnull Node componentNode)
       {
-        final String name = componentNode.getAttributes().getNamedItem("id").getNodeValue();
+        final Id id = new Id(componentNode.getAttributes().getNamedItem("id").getNodeValue());
         final String type = componentNode.getAttributes().getNamedItem("type").getNodeValue();
         
-        final DefaultLayout layout = new DefaultLayout(name, type);
+        final DefaultLayout layout = new DefaultLayout(id, type);
         
         for (final Node node : getChildComponentNodes(componentNode))
           {
