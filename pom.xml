@@ -59,7 +59,7 @@
                 <configuration.folderName>.nwpre</configuration.folderName>
                 <main.webapp.contextPath>/mobile2</main.webapp.contextPath>
                 <main.webapp.url>http://bluebill.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
-                <log.file>/home/fgiudici/.nwpre/bluebill/log/nwpre.log</log.file>
+                <log.file>/home/fgiudici/.nwpre/blueBill/log/nwpre.log</log.file>
             </properties>
         </profile>
 <!--        <profile>
@@ -133,12 +133,22 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
+                <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-vaadin</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-vaadin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.northernwind</groupId>
+                <artifactId>it-tidalwave-northernwind-frontend-webapp-htmltemplate</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
