@@ -60,7 +60,7 @@ public class RestResource
       {
         responseHolder.set(null);
         final String relativeUri = "";
-        log.info("GET {}", relativeUri);
+        log.info("GET /{}", relativeUri);
         siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
         return responseHolder.get();
       }
@@ -71,7 +71,7 @@ public class RestResource
       {
         responseHolder.set(null);
         final String relativeUri = uriInfo.getPath(true);
-        log.info("GET {}", relativeUri);
+        log.info("GET /{}", relativeUri);
         siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
         return responseHolder.get();
       }
