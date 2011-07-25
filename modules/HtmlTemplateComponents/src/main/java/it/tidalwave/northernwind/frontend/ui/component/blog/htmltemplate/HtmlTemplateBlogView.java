@@ -28,8 +28,8 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
  *
@@ -57,12 +57,9 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
     @Override
     public void addPost (final @Nonnull BlogPost blogPost) 
       {
-//        final Label label = new Label();
-//        label.setContentMode(Label.CONTENT_XHTML);
-//        final StringBuilder builder = new StringBuilder();
-//        builder.append("<h3>").append(blogPost.getTitle()).append("</h3>");
-//        builder.append(blogPost.getFullText());
-//        label.setValue(builder.toString());
-//        addComponent(label);
+        final StringBuilder builder = new StringBuilder();
+        builder.append("<h3>").append(blogPost.getTitle()).append("</h3>\n");
+        builder.append(blogPost.getFullText()).append("\n");
+        addComponent(new HtmlHolder("", builder.toString()));
       }
   }
