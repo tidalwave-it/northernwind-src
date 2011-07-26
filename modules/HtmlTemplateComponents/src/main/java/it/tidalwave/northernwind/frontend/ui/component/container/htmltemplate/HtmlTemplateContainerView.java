@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.container.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
@@ -45,7 +46,7 @@ public class HtmlTemplateContainerView extends HtmlTemplateHtmlFragmentView impl
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateContainerView (final @Nonnull String id) 
+    public HtmlTemplateContainerView (final @Nonnull Id id) 
       {
         super(id);
 //        setCaption(typeUri); TODO:for debugging purposes, add everything into a captioned Panel

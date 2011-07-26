@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
@@ -49,9 +50,9 @@ public class VaadinBlogView extends VerticalLayout implements BlogView
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinBlogView (final @Nonnull String id) 
+    public VaadinBlogView (final @Nonnull Id id) 
       {
-        setStyleName(NW + id);
+        setStyleName(NW + id.stringValue());
       }
 
     @Override

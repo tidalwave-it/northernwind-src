@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
@@ -36,7 +37,6 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import java.util.Stack;
 import lombok.Getter;
-import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -48,14 +48,14 @@ import lombok.ToString;
 public class DefaultLayout implements Layout
   {
     @Nonnull
-    private final String id;
+    private final Id id;
     
     @Nonnull
     private /* final FIXME */ String typeUri;
     
     private final List<DefaultLayout> children = new ArrayList<DefaultLayout>();
     
-    private final Map<String, DefaultLayout> childrenMapById = new HashMap<String, DefaultLayout>();
+    private final Map<Id, DefaultLayout> childrenMapById = new HashMap<Id, DefaultLayout>();
     
     static class CloneVisitor implements Visitor<Layout, DefaultLayout>
       {
@@ -101,7 +101,7 @@ public class DefaultLayout implements Layout
     @Inject @Nonnull
     private ViewFactory viewFactory;
 
-    public DefaultLayout (final @Nonnull String id, final @Nonnull String typeUri)
+    public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
         this.id = id;
         this.typeUri = typeUri;
@@ -134,7 +134,7 @@ public class DefaultLayout implements Layout
 
         // Complex rule, but it's Infoglue. 
         // FIXME: translate the mapping during the conversion and use a simpler rule here
-        if ("base".equals(id))
+        if ("base".equals(id.stringValue()))
           {
             for (final DefaultLayout overridingChild : override.getChildren())
               {
@@ -169,7 +169,7 @@ public class DefaultLayout implements Layout
       }
     
     @Nonnull
-    public DefaultLayout findSubComponentById (final @Nonnull String id)
+    public DefaultLayout findSubComponentById (final @Nonnull Id id)
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(childrenMapById.get(id), "Can't find " + id);

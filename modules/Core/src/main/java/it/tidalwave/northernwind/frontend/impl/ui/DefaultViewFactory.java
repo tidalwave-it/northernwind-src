@@ -24,11 +24,13 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
@@ -64,7 +66,7 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @Override @Nonnull
     public Object createView (final @Nonnull String typeUri, 
-                              final @Nonnull String id, 
+                              final @Nonnull Id id, 
                               final @Nonnull SiteNode siteNode)
       throws NotFoundException
       {        
@@ -79,7 +81,9 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @PostConstruct 
     private void initialize() // FIXME: gets called twice
-      throws IOException, NoSuchMethodException
+      throws IOException, 
+             NoSuchMethodException, InvocationTargetException, InstantiationException, 
+             IllegalArgumentException, IllegalAccessException, SecurityException 
       {
         final ClassScanner classScanner = new ClassScanner();
         classScanner.addIncludeFilter(new AnnotationTypeFilter(ViewMetadata.class));
@@ -88,8 +92,7 @@ public class DefaultViewFactory implements ViewFactory
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
             final String typeUri = viewMetadata.typeUri();
-            final ViewBuilder viewBuilder = new ViewBuilder(typeUri, viewClass, viewMetadata.controlledBy());
-            viewBuilder.validate();
+            final ViewBuilder viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
             viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
         

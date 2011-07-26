@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 
@@ -51,7 +52,7 @@ public interface ViewFactory
      ******************************************************************************************************************/
     @Nonnull
     public Object createView (@Nonnull String typeUri, 
-                              @Nonnull String id, 
+                              @Nonnull Id id, 
                               @Nonnull SiteNode siteNode) 
       throws NotFoundException;
   }

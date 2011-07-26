@@ -51,7 +51,7 @@ import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
         
     public void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
       {
-        ((HtmlHolder)view).addComponent(new HtmlHolder("",
+        ((HtmlHolder)view).addComponent(new HtmlHolder(
                 String.format("<li><a href='%s'>%s</a></li>", site.getContextPath() + relativeUri, navigationTitle)));                        
       }
   }

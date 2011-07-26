@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
@@ -59,7 +60,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     public DefaultHtmlTextWithTitleViewController (final @Nonnull HtmlTextWithTitleView view, 
-                                                   final @Nonnull String viewId,
+                                                   final @Nonnull Id viewId,
                                                    final @Nonnull SiteNode siteNode) 
       {
         try

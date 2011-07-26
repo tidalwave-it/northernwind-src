@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.statcounter.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.statcounter.DefaultStatCounterViewController;
 import it.tidalwave.northernwind.frontend.ui.component.statcounter.StatCounterView;
@@ -45,7 +46,7 @@ public class VaadinStatCounterView extends VaadinStaticHtmlFragmentView implemen
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinStatCounterView (final @Nonnull String id) 
+    public VaadinStatCounterView (final @Nonnull Id id) 
       {
         super(id);
       }

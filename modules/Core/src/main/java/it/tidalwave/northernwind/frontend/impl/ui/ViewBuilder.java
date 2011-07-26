@@ -22,10 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,67 +40,53 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j @ToString
+@Slf4j @ToString
 /* package */ class ViewBuilder
   {
     @Nonnull
-    private final String typeUri;  
-
-    @Nonnull
-    private final Class<?> viewClass;  
-
-    @Nonnull
-    private final Class<?> viewControllerClass;  
+    private final Constructor<?> viewConstructor;
     
+    @Nonnull
+    private final Constructor<?> viewControllerConstructor;
+
     /*******************************************************************************************************************
      *
-     * Validates the configured classes.
-     * 
-     * @throws  Exception   if the view and/or controller classes are not valid
      *
      ******************************************************************************************************************/
-    public void validate() 
-      throws NoSuchMethodException
+    public ViewBuilder (final @Nonnull Class<?> viewClass, final @Nonnull Class<?> viewControllerClass)
+      throws NoSuchMethodException, InvocationTargetException, InstantiationException, 
+             IllegalArgumentException, IllegalAccessException, SecurityException 
       {
-        getConstructor();
+        viewConstructor = viewClass.getConstructor(Id.class);
+        viewControllerConstructor = viewControllerClass.getConstructor(viewClass.getInterfaces()[0], Id.class, SiteNode.class);
       }
     
     /*******************************************************************************************************************
      *
      * Creates a new View - ViewController pair.
      *
-     * @param   id        the instance id
+     * @param   id        the view id
      * @param   siteNode  the {@link SiteNode} the view will be built for
      * @return            the created view
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (final @Nonnull String id, final @Nonnull SiteNode siteNode)
+    public Object createView (final @Nonnull Id id, final @Nonnull SiteNode siteNode)
       {
         log.debug("createView({}, {})", id, siteNode);
         
         try
           { 
-            final Object view = viewClass.getConstructor(String.class).newInstance(id);
-            // FIXME: the viewController is not assigned, will be GCed!
-            // FIXME: Attach to the view, even though it doesn't need it? Or use a WeakIdentityMap indexed by the View?
-            final Object viewController = getConstructor().newInstance(view, id, siteNode);  
+            // Note that the viewController is not assigned to any object. Indeed, it might be GCed sooner or later.
+            // But it's not a problem: if it's not referenced, it will no more useful (in contrast, e.g. a view
+            // would bind itself to a controller listener or action in cases when the controller plays a later role). 
+            final Object view = viewConstructor.newInstance(id);
+            viewControllerConstructor.newInstance(view, id, siteNode);  
             return view;
           }
         catch (Exception e)
           {
             throw new RuntimeException(e);
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private Constructor<?> getConstructor() 
-      throws NoSuchMethodException, SecurityException 
-      {
-        return viewControllerClass.getConstructor(viewClass.getInterfaces()[0], String.class, SiteNode.class);
       }
   }

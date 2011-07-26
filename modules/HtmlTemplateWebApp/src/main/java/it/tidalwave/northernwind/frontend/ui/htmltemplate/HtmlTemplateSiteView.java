@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
-import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
@@ -51,20 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 public class HtmlTemplateSiteView implements SiteView
   {
     @Inject @Nonnull
-    private Site site;
-    
-    @Inject @Nonnull
     private ResponseThreadLocal responseHolder;
-
-//    private HtmlHolder htmlHolder;
-            
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public HtmlTemplateSiteView() 
-      {
-      }
 
     /*******************************************************************************************************************
      *
@@ -77,37 +63,17 @@ public class HtmlTemplateSiteView implements SiteView
       {
         log.info("renderSiteNode({})", siteNode);
         
-//        htmlHolder = new HtmlHolder("");
-        
-        Response response = null;
-        
-        try // FIXME to be moved to CSS
+        try
           {
-//            final Media media = site.find(Media).withRelativeUri("/blueBill_Mobile-Banner.png").result();
-//            final FileObject file = media.getFile();
-//            final InputStream is = file.getInputStream();
-//            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
-//              {
-//                @Override @Nonnull
-//                public InputStream getStream() 
-//                  {
-//                    return is;
-//                  }
-//              }, file.getNameExt(), getApplication())));
-           
-//            final String uri = site.getContextPath() + "/media/blueBill_Mobile-Banner.png";
-//            htmlHolder.addComponent(new HtmlHolder("", "<img src='" + uri + "'/>"));
             final Visitor<Layout, HtmlHolder> nodeViewBuilderVisitor = new HtmlTemplateNodeViewBuilderVisitor(siteNode);
             final HtmlHolder htmlHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);        
-            response = Response.ok().entity(htmlHolder.asString()).type("text/html").build();
+            responseHolder.set(Response.ok().entity(htmlHolder.asString()).type("text/html").build());
           }
         catch (NotFoundException e) 
           {
             log.error("", e);
-            response = Response.status(Status.NOT_FOUND).entity(e.toString()).build();
+            responseHolder.set(Response.status(Status.NOT_FOUND).entity(e.toString()).build());
           }
-        
-        responseHolder.set(response);
       }
 
     @Override

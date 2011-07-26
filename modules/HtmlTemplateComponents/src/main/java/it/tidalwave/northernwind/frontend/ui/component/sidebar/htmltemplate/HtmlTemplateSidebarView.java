@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.sidebar.htmltemplate;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.sidebar.DefaultSidebarViewController;
@@ -45,7 +46,7 @@ public class HtmlTemplateSidebarView extends HtmlHolder implements SidebarView
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateSidebarView (final @Nonnull String id) 
+    public HtmlTemplateSidebarView (final @Nonnull Id id) 
       {
         super(id);
       }

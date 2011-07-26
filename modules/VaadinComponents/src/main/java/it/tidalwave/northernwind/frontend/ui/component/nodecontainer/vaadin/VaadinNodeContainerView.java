@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
@@ -46,9 +47,9 @@ public class VaadinNodeContainerView extends VerticalLayout implements NodeConta
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinNodeContainerView (final @Nonnull String id) 
+    public VaadinNodeContainerView (final @Nonnull Id id) 
       {
         setMargin(false);
-        setStyleName(NW + id);
+        setStyleName(NW + id.stringValue());
       }
   }  

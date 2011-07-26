@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
 
@@ -47,7 +48,7 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
      *
      ******************************************************************************************************************/
     public DefaultAddThisViewController (final @Nonnull AddThisView view, 
-                                         final @Nonnull String viewId,
+                                         final @Nonnull Id viewId,
                                          final @Nonnull SiteNode siteNode) 
       throws IOException 
       {

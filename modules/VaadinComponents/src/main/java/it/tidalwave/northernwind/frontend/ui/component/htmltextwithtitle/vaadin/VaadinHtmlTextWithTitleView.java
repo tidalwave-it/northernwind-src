@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.vaadin;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController;
@@ -48,9 +49,9 @@ public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTi
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinHtmlTextWithTitleView (final @Nonnull String id) 
+    public VaadinHtmlTextWithTitleView (final @Nonnull Id id) 
       {
-        setStyleName(NW + id);
+        setStyleName(NW + id.stringValue());
       }
     
     /*******************************************************************************************************************

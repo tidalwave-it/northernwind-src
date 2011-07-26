@@ -29,6 +29,7 @@ import java.util.List;
 import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Site;
@@ -61,7 +62,7 @@ public class DefaultMenuViewController implements MenuViewController
      *
      ******************************************************************************************************************/
     public DefaultMenuViewController (final @Nonnull MenuView view, 
-                                      final @Nonnull String viewId, 
+                                      final @Nonnull Id viewId, 
                                       final @Nonnull SiteNode siteNode) 
     {
         this.view = view;
