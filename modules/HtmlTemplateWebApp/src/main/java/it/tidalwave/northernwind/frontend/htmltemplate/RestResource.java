@@ -55,22 +55,24 @@ public class RestResource
     private UriInfo uriInfo;
     
     @GET
-    public Response serveRoot()
+    public Response getRoot()
       throws HttpErrorException, MalformedURLException
       {
-        responseHolder.set(null);
-        final String relativeUri = "";
-        log.info("GET /{}", relativeUri);
-        siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
-        return responseHolder.get();
+        return get("");
       }
     
-    @GET @Path("{operation: .*}") 
-    public Response serve()
+    @GET @Path("{path: .*}") 
+    public Response get()
+      throws HttpErrorException, MalformedURLException
+      {
+        return get(uriInfo.getPath(true));
+      }
+
+    @Nonnull
+    private Response get (final @Nonnull String relativeUri)
       throws HttpErrorException, MalformedURLException
       {
         responseHolder.set(null);
-        final String relativeUri = uriInfo.getPath(true);
         log.info("GET /{}", relativeUri);
         siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
         return responseHolder.get();
