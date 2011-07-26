@@ -23,20 +23,13 @@
 package it.tidalwave.northernwind.frontend.model.vaadin.urihandler;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
-import java.net.URL;
+import java.io.FileNotFoundException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.Media;
+import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
 import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamThreadLocal;
 import com.vaadin.terminal.DownloadStream;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -44,36 +37,13 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
-public class VaadinMediaUriHandler implements UriHandler
+@Configurable @Scope(value="session") 
+public class VaadinMediaUriHandler extends MediaUriHandlerSupport<DownloadStream, DownloadStreamThreadLocal>
   {
-    @Inject @Nonnull
-    private Site site;
-    
-    @Inject @Nonnull
-    private DownloadStreamThreadLocal downloadStreamHolder;
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws NotFoundException, IOException
+    @Override @Nonnull
+    protected DownloadStream createResponse (final @Nonnull FileObject file) 
+      throws FileNotFoundException
       {
-        if (relativeUri.startsWith("media"))
-          {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
-            final FileObject file = media.getFile();
-            log.info(">>>> serving contents of {} ...", file.getPath());
-            downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), null));
-            // FIXE: mimeType triggers a NB Platform exception
-//            downloadStreamHolder.set(new DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()));
-            // TODO: I suppose DownloadStream closes the stream
-            return true;
-          }
-        
-        return false;
+        return new DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType());
       }
   }
