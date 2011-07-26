@@ -45,6 +45,9 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupString;
 
 /***********************************************************************************************************************
  *
@@ -126,9 +129,14 @@ import lombok.extern.slf4j.Slf4j;
         log.trace(">>>> reading from {}", attributeFile.getPath());
         String text = attributeFile.asText();
 
-        // FIXME: this should be done in a specific postprocessor registered only for Content   
-        // FIXME: and do this with StringTemplate - remember to escape $'s in the source
-        text = text.replaceAll("\\$media\\(([^\\)]*)\\)", site.getContextPath() + "/media/$1");
+//        // FIXME: this should be done in a specific postprocessor registered only for Content   
+//        // FIXME: and do this with StringTemplate - remember to escape $'s in the source
+//        final String c = site.getContextPath();
+//        final STGroup g = new STGroupString("",
+//                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
+//                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
+        text = text.replaceAll("\\$mediaLink\\(relativeUri=([^)]*)\\)\\$", site.getContextPath() + "/media/$1");
+        text = text.replaceAll("\\$nodeLink\\(relativeUri=([^)]*)\\)\\$", site.getContextPath() + "/$1");
         
         return text;
       }  

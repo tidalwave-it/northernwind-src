@@ -29,6 +29,11 @@ import sun.misc.BASE64Decoder;
  */
 public class Main 
   {
+    private static final String REGEXP_getPageUrl = "\\$templateLogic\\.getPageUrl\\(([0-9]*)\\s*,\\s*\\$templateLogic\\.languageId\\s*,\\s*-1\\)";
+    private static final String REGEXP_getInlineAssetUrl = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*)\\s*,\\s*\"([^\"]*)\"\\)";
+    private static final Pattern PATTERN_getPageUrl = Pattern.compile(REGEXP_getPageUrl);
+    private static final Pattern PATTERN_getInlineAssetUrl = Pattern.compile(REGEXP_getInlineAssetUrl);
+        
     public static final File hgFolder = new File("target/root");      
     
     private static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
@@ -185,36 +190,31 @@ public class Main
       }    
     
     @Nonnull
-    public static String replaceMacros (@Nonnull String xml)
+    public static String replaceMacros (final @Nonnull String xml)
       {
-        final String r1 = "\\$templateLogic\\.getPageUrl\\(([0-9]*), \\$templateLogic\\.languageId,-1\\)";
-        final String r2 = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*), \"([^\"]*)\"\\)";
-        final Pattern p1 = Pattern.compile(r1);
-        final Pattern p2 = Pattern.compile(r2);
-        final Matcher m1 = p1.matcher(xml);
+        final Matcher matcherGetPageUrl = PATTERN_getPageUrl.matcher(xml);
         
         StringBuffer buffer = new StringBuffer();
 
-        while (m1.find())
+        while (matcherGetPageUrl.find())
           {
-            final String r = m1.group(1);
-            m1.appendReplacement(buffer, "\\$nodelink(" + r + ")");
+            final String r = matcherGetPageUrl.group(1);
+            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativeUri=" + r + ")\\$");
           }
         
-        m1.appendTail(buffer);
+        matcherGetPageUrl.appendTail(buffer);
 
-        final Matcher m2 = p2.matcher(buffer.toString());
+        final Matcher matcherGetInlineAssetUrl = PATTERN_getInlineAssetUrl.matcher(buffer.toString());
         buffer = new StringBuffer();
         
-        while (m2.find())
+        while (matcherGetInlineAssetUrl.find())
           {
-            final String r = assetFileNameMapByKey.get(m2.group(2));
-            m2.appendReplacement(buffer, "\\$media(" + r + ")"); // FIXME: use StringTemplate syntax
+            final String r = assetFileNameMapByKey.get(matcherGetInlineAssetUrl.group(2));
+            matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativeUri=" + r + ")\\$");
           }
         
-        m2.appendTail(buffer);
+        matcherGetInlineAssetUrl.appendTail(buffer);
         
-//          System.err.println("ORIGINAL " + xml + "\nREPLACED " + buffer);
         return buffer.toString();
       }
   }
