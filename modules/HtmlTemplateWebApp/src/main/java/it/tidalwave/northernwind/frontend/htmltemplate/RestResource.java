@@ -74,7 +74,15 @@ public class RestResource
       {
         responseHolder.set(null);
         log.info("GET /{}", relativeUri);
-        siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
-        return responseHolder.get();
+        
+        try
+          { 
+            siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
+            return responseHolder.get();
+          }
+        catch (HttpErrorException e)
+          {
+            return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+          }
       }
   }
