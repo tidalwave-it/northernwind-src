@@ -27,8 +27,8 @@ import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -60,6 +60,6 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
         final StringBuilder builder = new StringBuilder();
         builder.append("<h3>").append(blogPost.getTitle()).append("</h3>\n");
         builder.append(blogPost.getFullText()).append("\n");
-        addComponent(new HtmlHolder("", builder.toString()));
+        addComponent(new HtmlHolder(builder.toString()));
       }
   }

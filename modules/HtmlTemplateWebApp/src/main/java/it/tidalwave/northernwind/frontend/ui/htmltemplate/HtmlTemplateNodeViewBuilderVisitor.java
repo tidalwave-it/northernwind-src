@@ -51,7 +51,7 @@ public class HtmlTemplateNodeViewBuilderVisitor extends NodeViewBuilderVisitorSu
     @Override @Nonnull
     protected HtmlHolder createPlaceHolderComponent (final @Nonnull Layout layout)
       {
-        return new HtmlHolder("", "<div>Missing component: " + ((DefaultLayout)layout).getTypeUri() + "</div>"); // FIXME
+        return new HtmlHolder("<div>Missing component: " + ((DefaultLayout)layout).getTypeUri() + "</div>"); // FIXME
       }
 
     @Override

@@ -86,7 +86,7 @@ public class HtmlHolder
           }
       }
     
-    public HtmlHolder (final @Nonnull String dummy, final @Nonnull String html) 
+    public HtmlHolder (final @Nonnull String html) 
       {
         attributeMap.put("content", html);
         template = "$content$";
@@ -141,7 +141,6 @@ public class HtmlHolder
             final int length = r.read(charBuffer);
             r.close();
             template = new String(charBuffer.array(), 0, length);
-            log.info("Read template: {}", template);
           }
         catch (FileNotFoundException e) // no specific template, fallback
           {
