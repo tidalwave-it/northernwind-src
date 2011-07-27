@@ -22,17 +22,20 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
-import java.util.Map.Entry;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
+import org.springframework.web.context.WebApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
@@ -50,7 +53,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
  * The default implementation of {@link Site}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: DefaultSite.java,v 1c2a8af3450a 2011/07/24 19:44:35 fabrizio $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -84,10 +87,10 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
           }
       };
     
-    @Getter @Setter @Nonnull
-    private String contextPath = "";
+    @Inject
+    private WebApplicationContext webApplicationContext;
     
-    @Getter @Setter @Nonnull
+    @Inject @Named("fileSystemProvider")
     private FileSystemProvider fileSystemProvider;
     
     @Getter @Setter @Nonnull
@@ -101,6 +104,9 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
+    
+    @Getter @Nonnull
+    private String contextPath = "NOT SET YET";
     
     private FileObject documentFolder;
     
@@ -129,6 +135,8 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
         mapsByType.put(Content.class, documentMapByRelativeUri);
         mapsByType.put(Media.class, mediaMapByRelativeUri);
         mapsByType.put(SiteNode.class, nodeMapByRelativeUri);
+        
+        contextPath = webApplicationContext.getServletContext().getContextPath();
         
         final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = fileSystem.findResource(documentPath);
