@@ -26,7 +26,7 @@
 
     <!-- Spring configuration for webapps -->
     <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        <listener-class>it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator</listener-class>
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -76,5 +76,15 @@
         <param-name>productionMode</param-name>
         <param-value>false</param-value>
     </context-param>
+    
+    <!-- Initialization DiagnosticsFilter -->
+    <filter>
+        <filter-name>InitializationDiagnosticsFilter</filter-name>
+        <filter-class>it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>InitializationDiagnosticsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
        
 </web-app>
