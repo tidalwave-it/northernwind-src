@@ -44,10 +44,10 @@ import lombok.extern.slf4j.Slf4j;
  * A node of the site, mapped to a given URL.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: DefaultSiteNode.java,v eebd4fb32aa4 2011/07/24 19:59:10 fabrizio $
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString(exclude={"layout"})
+@Configurable(preConstruction=true) @Slf4j @ToString(exclude={"layout", "site"})
 /* package */ class DefaultSiteNode implements SiteNode
   {
     @Nonnull @Delegate(types=Resource.class)
@@ -72,7 +72,7 @@ import lombok.extern.slf4j.Slf4j;
       {
         resource = new DefaultResource(file);  
         layout = loadLayout();
-        
+
         if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
           {
             log.info(">>>> layout for /{}:", resource.getFile().getPath());
