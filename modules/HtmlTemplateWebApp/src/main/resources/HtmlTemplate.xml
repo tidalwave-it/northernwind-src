@@ -63,7 +63,4 @@
         </property>
     </bean>
     
-<!--    <bean id="frontEndWebApp"
-          class="it.tidalwave.northernwind.frontend.vaadin.VaadinFrontEndApplication" />-->
-
 </beans>
