@@ -25,6 +25,9 @@
     <display-name>blueBill Stats</display-name>
 
     <listener>
+        <listener-class>it.tidalwave.northernwind.frontend.util.SystemPropertyLoggerServletContextListener</listener-class>
+    </listener>
+    <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.Slf4JJulBrigdeInstallerServletContextListener</listener-class>
     </listener>
     
