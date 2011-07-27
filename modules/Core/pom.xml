@@ -17,10 +17,6 @@
     <name>NorthernWind - Frontend Core</name>
     <description>NorthernWind - Frontend Core</description>
    
-    <properties>
-        <tft.clirr.skip>true</tft.clirr.skip> <!-- Clirr make the build fail -->
-    </properties>
- 
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
