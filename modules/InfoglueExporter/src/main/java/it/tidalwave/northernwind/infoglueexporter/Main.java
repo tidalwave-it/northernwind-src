@@ -62,6 +62,7 @@ public class Main
       {
         process(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml");
         ResourceManager.addAndCommitResources();
+        Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
       }
     
     /*******************************************************************************************************************
