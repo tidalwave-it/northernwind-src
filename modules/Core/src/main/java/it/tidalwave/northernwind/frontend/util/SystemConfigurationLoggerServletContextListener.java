@@ -22,9 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import java.util.Collections;
 import javax.annotation.Nonnull;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import javax.naming.Binding;
+import javax.naming.InitialContext;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class SystemPropertyLoggerServletContextListener implements ServletContextListener
+public class SystemConfigurationLoggerServletContextListener implements ServletContextListener
   {
     /*******************************************************************************************************************
      *
@@ -53,6 +58,28 @@ public class SystemPropertyLoggerServletContextListener implements ServletContex
         for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(System.getProperties()).entrySet())
           {
             log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
+          }
+
+        try
+          {
+            final InitialContext context = new InitialContext();
+            log.info("JNDI Environment:");
+
+            for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(context.getEnvironment()).entrySet())
+              {
+                log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
+              }
+            
+            log.info("JNDI Bindings:");
+            
+            for (final Binding binding : Collections.list(context.listBindings("")))
+              {
+                log.info(">>>> {} = {}", binding.getNameInNamespace(), binding.getObject());
+              }
+          }
+        catch (NamingException e)
+          { 
+            log.warn("", e);               
           }
       }
 

@@ -34,7 +34,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.Cleanup;
-import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -44,7 +43,6 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id: Slf4JJulBrigdeInstallerServletContextListener.java,v 64e867bc71e7 2011/07/27 13:49:56 fabrizio $
  *
  **********************************************************************************************************************/
-@Slf4j
 public class PerformanceHostingConfigurationServletContextListener implements ServletContextListener
   {
     /*******************************************************************************************************************
@@ -69,13 +67,18 @@ public class PerformanceHostingConfigurationServletContextListener implements Se
             final String home = "/" + x2[1] + "/" + x2[2];
             final String domain = x2[6] + "." + x2[4];
             final String configurationFile = home + "/.nw/" + domain + contextPath + "/configuration.properties";
+            final String logBackConfigurationFile = home + "/.nw/" + domain + contextPath + "/logback.xml";
+           
+            // FIXME: this will collide with other webapps in the same Tomcat - try to set it into JNDI and then use
+            // file inclusion from the embedded logback.xml
+            System.setProperty("logback.configurationFile", logBackConfigurationFile);
             
             log(">>>> home:   " + home);
             log(">>>> domain: " + domain);
             
             try
               {                
-                log.info("Properties from " + configurationFile);
+                log("Properties from " + configurationFile);
                 final Properties properties = new Properties();
                 final @Cleanup InputStream is = new FileInputStream(configurationFile);
                 properties.load(is);
@@ -108,7 +111,8 @@ public class PerformanceHostingConfigurationServletContextListener implements Se
     
     /*******************************************************************************************************************
      *
-     * We can't log to the real thing, since we first need to compute the path of the logging file.
+     * We can't log to the real thing, since we first need to compute the path of the logging file. Logging to the real
+     * thing would instantiate the logging facility before we have a chance to configure it.
      *
      ******************************************************************************************************************/
     protected static void log (final @Nonnull String string)

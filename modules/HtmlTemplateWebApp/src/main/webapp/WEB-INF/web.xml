@@ -25,10 +25,10 @@
     <display-name>blueBill Stats</display-name>
 
     <listener>
-        <listener-class>it.tidalwave.northernwind.frontend.util.SystemPropertyLoggerServletContextListener</listener-class>
+        <listener-class>it.tidalwave.northernwind.frontend.util.PerformanceHostingConfigurationServletContextListener</listener-class>
     </listener>
     <listener>
-        <listener-class>it.tidalwave.northernwind.frontend.util.PerformanceHostingConfigurationServletContextListener</listener-class>
+        <listener-class>it.tidalwave.northernwind.frontend.util.SystemConfigurationLoggerServletContextListener</listener-class>
     </listener>
     <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.Slf4JJulBrigdeInstallerServletContextListener</listener-class>
@@ -59,6 +59,15 @@
     <servlet-mapping>
         <servlet-name>JerseyServlet</servlet-name>
         <url-pattern>/*</url-pattern>    
+    </servlet-mapping>
+    <!-- LogBack status viewer -->
+    <servlet>
+        <servlet-name>LogBackViewStatusMessages</servlet-name>
+        <servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogBackViewStatusMessages</servlet-name>
+        <url-pattern>/admin/logback</url-pattern>
     </servlet-mapping>
     <!-- Initialization DiagnosticsFilter -->
     <filter>
