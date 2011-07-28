@@ -44,34 +44,23 @@
         <tft.UmlGraphDoc.version>5.4</tft.UmlGraphDoc.version>
         <tft.UmlGraphDoc.additionalParam>-views -attributes -operations -types -postfixpackage -nodefontpackagesize 6 -nodefontclasssize 8 -nodefontsize 7 -edgefontsize 7 -nodesep 0.05 -ranksep 0.1 -visibility -inferdep -inferrel -inferdepinpackage -hide java.*|javax.*|android.*</tft.UmlGraphDoc.additionalParam>
 
-        <configuration.parentFolderPath>${user.home}</configuration.parentFolderPath>
-        <configuration.folderName>.nw</configuration.folderName>
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
-        <tft.webapp.deployServerId>bluebill.tidalwave.it</tft.webapp.deployServerId>
-        <tft.webapp.deployServerUrl>http://bluebill.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
         <log.file>target/nw.log</log.file>
     </properties>
 
     <profiles>
         <profile>
-            <id>preproduction</id>
+            <id>bluebill-mobile</id>
             <properties>
-                <configuration.parentFolderPath>/home/fgiudici</configuration.parentFolderPath>
-                <configuration.folderName>.nwpre</configuration.folderName>
+                <tft.webapp.deployServerId>bluebill.tidalwave.it</tft.webapp.deployServerId>
+                <tft.webapp.deployServerUrl>http://bluebill.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
+                <nw.extraConfigurationPath>/home/fgiudici/.nw/bluebill.tidalwave.it/mobile/configuration.properties</nw.extraConfigurationPath>
                 <main.webapp.contextPath>/mobile2</main.webapp.contextPath>
                 <main.webapp.url>http://bluebill.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
                 <log.file>/home/fgiudici/.nwpre/blueBill/log/nwpre.log</log.file>
             </properties>
         </profile>
-<!--        <profile>
-            <id>production</id>
-            <properties>
-                <main.webapp.url>http://bluebill.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
-                <log.file>/home/fgiudici/Redirector/log/nw.log</log.file>
-                <configuration.path>/home/fgiudici/.nw/configuration.properties</configuration.path>
-            </properties>
-        </profile>-->
     </profiles>
 
     <url>http://northernwind.java.net</url>
