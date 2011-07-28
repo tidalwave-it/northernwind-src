@@ -87,6 +87,16 @@
         <param-value>false</param-value>
     </context-param>
     
+    <!-- LogBack status viewer -->
+    <servlet>
+        <servlet-name>LogBackViewStatusMessages</servlet-name>
+        <servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogBackViewStatusMessages</servlet-name>
+        <url-pattern>/admin/logback</url-pattern>
+    </servlet-mapping>
+    
     <!-- Initialization DiagnosticsFilter -->
     <filter>
         <filter-name>InitializationDiagnosticsFilter</filter-name>
