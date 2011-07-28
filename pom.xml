@@ -55,10 +55,17 @@
             <properties>
                 <tft.webapp.deployServerId>bluebill.tidalwave.it</tft.webapp.deployServerId>
                 <tft.webapp.deployServerUrl>http://bluebill.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
-                <nw.extraConfigurationPath>/home/fgiudici/.nw/bluebill.tidalwave.it/mobile/configuration.properties</nw.extraConfigurationPath>
                 <main.webapp.contextPath>/mobile2</main.webapp.contextPath>
                 <main.webapp.url>http://bluebill.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
-                <log.file>/home/fgiudici/.nwpre/blueBill/log/nwpre.log</log.file>
+            </properties>
+        </profile>
+        <profile>
+            <id>northernwind</id>
+            <properties>
+                <tft.webapp.deployServerId>northernwind.tidalwave.it</tft.webapp.deployServerId>
+                <tft.webapp.deployServerUrl>http://northernwind.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
+                <main.webapp.contextPath>/</main.webapp.contextPath>
+                <main.webapp.url>http://northernwind.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
             </properties>
         </profile>
     </profiles>
