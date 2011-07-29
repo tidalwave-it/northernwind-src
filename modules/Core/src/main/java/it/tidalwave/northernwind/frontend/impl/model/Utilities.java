@@ -40,7 +40,6 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access=PRIVATE) @Slf4j
 public final class Utilities 
   {
-   
     /*******************************************************************************************************************
      *
      * Computes a list of property files to implement inheritance. Property files are enumerated starting from the root
@@ -58,7 +57,7 @@ public final class Utilities
         
         for (FileObject parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
           {            
-            log.trace(">>>> probing {} ...", parent);
+            log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
             final FileObject propertyFile = parent.getFileObject(propertyFileName);
             
             if (propertyFile != null)
