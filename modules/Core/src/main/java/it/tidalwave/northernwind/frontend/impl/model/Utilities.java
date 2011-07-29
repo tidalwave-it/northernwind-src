@@ -34,7 +34,7 @@ import static lombok.AccessLevel.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: Utilities.java,v 8f0c28673558 2011/07/24 19:32:18 fabrizio $
  *
  **********************************************************************************************************************/
 @NoArgsConstructor(access=PRIVATE) @Slf4j
@@ -52,7 +52,7 @@ public final class Utilities
     @Nonnull
     public static List<FileObject> getInheritedPropertyFiles (final @Nonnull FileObject folder, final @Nonnull String propertyFileName)
       {
-        log.trace("getInheritedPropertyFiles() for {}", folder.getPath());
+        log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
         
         final List<FileObject> files = new ArrayList<FileObject>();
         
