@@ -67,6 +67,8 @@ public class ZipFileSystemProvider implements FileSystemProvider
     
     private final Timer timer = new Timer("ZipFileSystemProvider.modificationTracker"); 
             
+    private boolean changeWasDetected = false;
+    
     /*******************************************************************************************************************
      *
      *
@@ -80,11 +82,29 @@ public class ZipFileSystemProvider implements FileSystemProvider
             final DateTime timestamp = new DateTime(zipFile.lastModified());
 //            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
             
-            if (timestamp.isAfter(latestModified))
+            if (!changeWasDetected)
               {
-                latestModified = timestamp;  
-                log.info("Detected change of {}: last modified time: {}", zipFile, latestModified);
-                eventBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+                if (timestamp.isAfter(latestModified))
+                  {
+                    latestModified = timestamp;  
+                    changeWasDetected = true;
+                    log.info("Detected change of {}: last modified time: {} - waiting for it to become stable", zipFile, latestModified);
+                  }
+              }
+            else
+              {
+                if (timestamp.isAfter(latestModified))
+                  {
+                    latestModified = timestamp;  
+                    log.info("Detected unstable change of {}: last modified time: {} - waiting for it to become stable", zipFile, latestModified);
+                  }
+                else
+                  {
+                    latestModified = timestamp;  
+                    changeWasDetected = true;
+                    log.info("Detected stable change of {}: last modified time: {}", zipFile, latestModified);
+                    eventBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+                  }
               }
           }
       };
