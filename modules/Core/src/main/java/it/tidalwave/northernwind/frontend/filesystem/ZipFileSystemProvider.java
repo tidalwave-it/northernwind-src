@@ -101,7 +101,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
                 else
                   {
                     latestModified = timestamp;  
-                    changeWasDetected = true;
+                    changeWasDetected = false;
                     log.info("Detected stable change of {}: last modified time: {}", zipFile, latestModified);
                     eventBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
                   }
