@@ -28,7 +28,6 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import javax.naming.Binding;
 import javax.naming.InitialContext;
-import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
