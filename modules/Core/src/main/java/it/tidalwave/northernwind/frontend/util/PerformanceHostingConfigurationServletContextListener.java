@@ -22,28 +22,20 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.TreeMap;
 import javax.annotation.Nonnull;
+import java.io.File;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import lombok.Cleanup;
 
 /***********************************************************************************************************************
  *
- * A file for integrating with Tomcat hosting at PerformanceHosting.net
+ * A {@link ServletContextListener} for integrating with Tomcat hosting at PerformanceHosting.net
  * 
  * @author  Fabrizio Giudici
  * @version $Id: Slf4JJulBrigdeInstallerServletContextListener.java,v 64e867bc71e7 2011/07/27 13:49:56 fabrizio $
  *
  **********************************************************************************************************************/
-public class PerformanceHostingConfigurationServletContextListener implements ServletContextListener
+public class PerformanceHostingConfigurationServletContextListener extends ExternalConfigurationServletContextListener
   {
     /*******************************************************************************************************************
      *
@@ -76,47 +68,8 @@ public class PerformanceHostingConfigurationServletContextListener implements Se
             log(">>>> home:   " + home);
             log(">>>> domain: " + domain);
             
-            try
-              {                
-                log("Properties from " + configurationFile);
-                final Properties properties = new Properties();
-                final @Cleanup InputStream is = new FileInputStream(configurationFile);
-                properties.load(is);
-                is.close();
-                
-                for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(properties).entrySet())
-                  {
-                    log(">>>> " + entry.getKey() + " = " + entry.getValue());
-                    servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());                       
-                  }
-              }
-            catch (IOException e)
-              {
-                e.printStackTrace(); // FIXME  
-              }
-            
+            loadProperties(servletContext, configurationFile);
             // TODO: use the configuration file for Spring
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event) 
-      {
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * We can't log to the real thing, since we first need to compute the path of the logging file. Logging to the real
-     * thing would instantiate the logging facility before we have a chance to configure it.
-     *
-     ******************************************************************************************************************/
-    protected static void log (final @Nonnull String string)
-      {
-        System.err.println(string);
       }
   }

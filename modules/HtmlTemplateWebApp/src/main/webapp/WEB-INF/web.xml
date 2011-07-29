@@ -25,6 +25,9 @@
     <display-name>NorthernWind</display-name>
 
     <listener>
+        <listener-class>it.tidalwave.northernwind.frontend.util.ExternalConfigurationServletContextListener</listener-class>
+    </listener>
+    <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.PerformanceHostingConfigurationServletContextListener</listener-class>
     </listener>
     <listener>
@@ -37,11 +40,6 @@
     <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator</listener-class>
     </listener>
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <!-- ApplicationContext is in src/main/resources so it can be preprocessed by the maven-resource-plugin -->
-        <param-value>classpath:/Core.xml,classpath:/LocalZipFileExpanded.xml,classpath:/HtmlTemplate.xml</param-value>
-    </context-param>
     <!-- Spring configuration for session-scoped beans -->
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>

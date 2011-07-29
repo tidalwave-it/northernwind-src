@@ -49,7 +49,7 @@
         <property name="searchContextAttributes" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath:configuration.properties</value>
+                <value>classpath:META-INF/configuration.properties</value>
                 <value>file:${user.home}/.nw/configuration.properties</value>
             </list>
         </property>

@@ -34,7 +34,7 @@ import org.springframework.web.context.ContextLoaderListener;
  * it available to the {@link InitializationDiagnosticsFilter}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: InitializationDiagnosticsServletContextListenerDecorator.java,v c34136ca5c55 2011/07/27 07:47:54 fabrizio $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -42,7 +42,7 @@ public class InitializationDiagnosticsServletContextListenerDecorator implements
   {
     public static final String ATTRIBUTE_BOOT_THROWABLE = "it.tidalwave.northernwind.bootThrowable";
     
-    private final ContextLoaderListener delegate = new ContextLoaderListener();
+    private final ContextLoaderListener delegate = new ContextAttributeContextLoaderListener();
 
     /*******************************************************************************************************************
      *
