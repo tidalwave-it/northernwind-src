@@ -20,55 +20,28 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.eventbus;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
 
 /***********************************************************************************************************************
  *
- * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and 
- * {@link SiteNode}s.
+ * A listener to receive notifications from an {@link EventBus}.
+ * 
+ * @stereotype  Listener
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Site
+public interface EventBusListener<Topic>
   {
     /*******************************************************************************************************************
      *
-     * Returns the context path for this web site.
+     * Notifies the reception of the given event.
+     * 
+     * @param  event  the event
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public String getContextPath();
-    
-    /*******************************************************************************************************************
-     *
-     * Reloads the whole configuration, e.g. to get and update.
-     * 
-     ******************************************************************************************************************/
-    public void reset()
-      throws IOException, NotFoundException;
-    
-    /*******************************************************************************************************************
-     *
-     * Finds something.
-     * 
-     ******************************************************************************************************************/
-    @Nonnull
-    public <Type> SiteFinder<Type> find (@Nonnull Class<Type> type);
-    
-    /*******************************************************************************************************************
-     *
-     * Returns the {@link FileSystemProvider} used by this {@code Site}.
-     * 
-     * @return  the {@code FileSystemProvider}
-     * 
-     ******************************************************************************************************************/
-    @Nonnull
-    public FileSystemProvider getFileSystemProvider();
+    public void notify (@Nonnull Topic event);  
   }

@@ -46,6 +46,7 @@ import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.filesystems.FileUtil;
 import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
@@ -90,7 +91,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     @Inject
     private WebApplicationContext webApplicationContext;
     
-    @Inject @Named("fileSystemProvider")
+    @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private FileSystemProvider fileSystemProvider;
     
     @Getter @Setter @Nonnull
@@ -120,34 +121,22 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     
     private final Map<String, SiteNode> nodeMapByRelativeUri = new TreeMap<String, SiteNode>();
     
-    private final Map<Class<?>, Map<String, ?>> mapsByType = new HashMap<Class<?>, Map<String, ?>>(); 
-        
+    private final Map<Class<?>, Map<String, ?>> mapsByType = new HashMap<Class<?>, Map<String, ?>>();
+
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    public void initialize()
-      throws IOException, PropertyVetoException
+    @Override
+    public void reset()
+      throws IOException, NotFoundException
       {
-        log.debug("initialize()");
+        log.info("reset()");
         
-        mapsByType.put(Content.class, documentMapByRelativeUri);
-        mapsByType.put(Media.class, mediaMapByRelativeUri);
-        mapsByType.put(SiteNode.class, nodeMapByRelativeUri);
-        
-        contextPath = webApplicationContext.getServletContext().getContextPath();
-        
-        final FileSystem fileSystem = fileSystemProvider.getFileSystem();
-        documentFolder = fileSystem.findResource(documentPath);
-        mediaFolder = fileSystem.findResource(mediaPath);
-        nodeFolder = fileSystem.findResource(nodePath);
-        
-        log.info(">>>> contextPath:  {}", contextPath);
-        log.info(">>>> fileSystem:   {}", fileSystem);
-        log.info(">>>> documentPath: {}", documentFolder.getPath());
-        log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
-        log.info(">>>> nodePath:     {}", nodeFolder.getPath());
+        documentMapByRelativeUri.clear();
+        mediaMapByRelativeUri.clear();
+        nodeMapByRelativeUri.clear();
         
         traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
@@ -215,6 +204,36 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     
     /*******************************************************************************************************************
      *
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    private void initialize()
+      throws IOException, NotFoundException, PropertyVetoException
+      {
+        log.info("initialize()");
+        
+        mapsByType.put(Content.class, documentMapByRelativeUri);
+        mapsByType.put(Media.class, mediaMapByRelativeUri);
+        mapsByType.put(SiteNode.class, nodeMapByRelativeUri);
+        
+        contextPath = webApplicationContext.getServletContext().getContextPath();
+        
+        final FileSystem fileSystem = fileSystemProvider.getFileSystem();
+        documentFolder = findMandatoryFolder(fileSystem, documentPath);
+        mediaFolder = findMandatoryFolder(fileSystem, mediaPath);
+        nodeFolder = findMandatoryFolder(fileSystem, nodePath);
+        
+        log.info(">>>> contextPath:  {}", contextPath);
+        log.info(">>>> fileSystem:   {}", fileSystem);
+        log.info(">>>> documentPath: {}", documentFolder.getPath());
+        log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
+        log.info(">>>> nodePath:     {}", nodeFolder.getPath());
+        
+        reset();
+      }
+    
+    /*******************************************************************************************************************
+     *
      * Accepts a {@link FileVisitor} to visit a file or folder.
      * 
      * @param  file        the file to visit
@@ -253,6 +272,18 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
           {
             log.info(">>>> {}: {}", entry.getKey(), entry.getValue());  
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static FileObject findMandatoryFolder (final @Nonnull FileSystem fileSystem, final @Nonnull String path) 
+      throws NotFoundException
+      {
+        return NotFoundException.throwWhenNull(fileSystem.findResource(path), "Cannot find folder: " + 
+                            FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/" + path);  
       }
     
     /*******************************************************************************************************************

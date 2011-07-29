@@ -41,7 +41,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * A default implementation of {@link HtmlTextWithTitleViewController}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: DefaultHtmlTextWithTitleViewController.java,v 2b1a28213ed2 2011/07/25 23:34:35 fabrizio $
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @Slf4j

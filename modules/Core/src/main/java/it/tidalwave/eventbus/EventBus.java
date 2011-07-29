@@ -20,55 +20,47 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model;
+package it.tidalwave.eventbus;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
 
 /***********************************************************************************************************************
  *
- * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and 
- * {@link SiteNode}s.
+ * A simple event bus for a local publish/subscribe facility.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Site
+public interface EventBus
   {
     /*******************************************************************************************************************
      *
-     * Returns the context path for this web site.
+     * Publishes the given event. The topic is the class of the event.
+     * 
+     * @param  event  the event
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public String getContextPath();
+    public <Topic> void publish (@Nonnull Topic event);
     
     /*******************************************************************************************************************
      *
-     * Reloads the whole configuration, e.g. to get and update.
+     * Publishes the given event and topic. Passing an explicit topic can be useful when dealing with a hierarchy of
+     * events (so, perhaps a subclass is passed but the topic is the root of the hierarchy).
      * 
+     * @param  topic  the topic
+     * @param  event  the event
+     *
      ******************************************************************************************************************/
-    public void reset()
-      throws IOException, NotFoundException;
+    public <Topic> void publish (@Nonnull Class<Topic> topic, @Nonnull Topic event);
     
     /*******************************************************************************************************************
      *
-     * Finds something.
+     * Subscribes an {@link EventBusListener} to a topic.
      * 
-     ******************************************************************************************************************/
-    @Nonnull
-    public <Type> SiteFinder<Type> find (@Nonnull Class<Type> type);
-    
-    /*******************************************************************************************************************
+     * @param  topic     the topic
+     * @param  listener  the listener
      *
-     * Returns the {@link FileSystemProvider} used by this {@code Site}.
-     * 
-     * @return  the {@code FileSystemProvider}
-     * 
      ******************************************************************************************************************/
-    @Nonnull
-    public FileSystemProvider getFileSystemProvider();
+    public <Topic> void subscribe (@Nonnull Class<Topic> topic, @Nonnull EventBusListener<Topic> listener);
   }

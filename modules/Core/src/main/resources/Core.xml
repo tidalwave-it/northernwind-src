@@ -60,7 +60,35 @@
    
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
+    
+    <!-- Bus Event stuff -->
+    <bean id="applicationEventBusTaskExecutor" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          autowire-candidate="false">
+        <property name="corePoolSize" value="1" />
+        <property name="maxPoolSize" value="5" />
+        <property name="queueCapacity" value="25" />
+    </bean>
 
+    <bean id="sessionEventBusTaskExecutor" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          autowire-candidate="false">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="10" />
+        <property name="queueCapacity" value="25" />
+    </bean>
+
+    <bean id="applicationEventBus" 
+          class="it.tidalwave.eventbus.impl.DefaultEventBus" >
+        <property name="taskExecutor" ref="applicationEventBusTaskExecutor"/>
+    </bean>
+
+    <bean id="sessionEventBus" 
+          class="it.tidalwave.eventbus.impl.DefaultEventBus" > <!-- FIXME: declare scope -->
+        <property name="taskExecutor" ref="sessionEventBusTaskExecutor"/>
+    </bean>
+    
+    <!-- Core objects -->
     <bean id="site" 
           class="it.tidalwave.northernwind.frontend.impl.model.DefaultSite" >
         <property name="documentPath" value="${nw.documentPath}" />
@@ -73,6 +101,7 @@
           class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
     </bean>
+    
+    <bean id="siteResetterOnFileSystemChange" class="it.tidalwave.northernwind.frontend.model.spi.SiteResetterOnFileSystemChange"/>
               
-
 </beans>

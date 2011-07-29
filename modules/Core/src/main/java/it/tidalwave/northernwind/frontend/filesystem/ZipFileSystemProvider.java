@@ -24,31 +24,71 @@ package it.tidalwave.northernwind.frontend.filesystem;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import lombok.Getter;
-import lombok.Setter;
+import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.JarFileSystem;
+import it.tidalwave.eventbus.EventBus;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
  * A provider for a local {@link FileSystem}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: ZipFileSystemProvider.java,v d2a3b8c30109 2011/07/23 06:54:32 fabrizio $
  *
  **********************************************************************************************************************/
+@Slf4j
 public class ZipFileSystemProvider implements FileSystemProvider
   {
     @Getter @Setter @Nonnull
     private String zipFilePath = "";
     
+    @Getter @Setter
+    private long modificationCheckInterval = 5000;
+    
     @CheckForNull
     private JarFileSystem fileSystem;
-
+    
+    private DateTime latestModified;
+    
+    @Inject @Named("applicationEventBus")
+    private EventBus eventBus;
+    
+    private final Timer timer = new Timer("ZipFileSystemProvider.modificationTracker"); 
+            
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private final TimerTask zipFileModificationTracker = new TimerTask() 
+      {
+        @Override
+        public void run() 
+          {
+            final File zipFile = fileSystem.getJarFile();
+            final DateTime timestamp = new DateTime(zipFile.lastModified());
+//            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
+            
+            if (timestamp.isAfter(latestModified))
+              {
+                latestModified = timestamp;  
+                log.info("Detected change of {}: last modified time: {}", zipFile, latestModified);
+                eventBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+              }
+          }
+      };
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -60,14 +100,18 @@ public class ZipFileSystemProvider implements FileSystemProvider
       {
         if (fileSystem == null)
           {
-            fileSystem = new JarFileSystem(new File(zipFilePath));
-
+            final File zipFile = new File(zipFilePath);
+            fileSystem = new JarFileSystem(zipFile);
             final FileObject rootFolder = fileSystem.getRoot();
 
             if (rootFolder == null)
               {
                 throw new FileNotFoundException(zipFilePath);  
               } 
+
+            log.info(">>>> fileSystem: {}", fileSystem);
+            latestModified = new DateTime(zipFile.lastModified());
+            timer.scheduleAtFixedRate(zipFileModificationTracker, modificationCheckInterval, modificationCheckInterval);
           }
               
         return fileSystem;  

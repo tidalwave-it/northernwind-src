@@ -22,13 +22,18 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem;
 
-import java.io.File;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
+import java.io.File;
+import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
+import it.tidalwave.eventbus.EventBus;
+import it.tidalwave.eventbus.EventBusListener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * FIXME: doesn't work, triggering a strange exception
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: LocalCopyFileSystemProvider.java,v 7928a7746811 2011/07/24 14:29:53 fabrizio $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -54,6 +59,34 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     private String rootPath = "";
     
     private LocalFileSystemProvider targetProvider = new LocalFileSystemProvider();
+    
+    @Inject @Named("applicationEventBus") @Nonnull
+    private EventBus eventBus;
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private final EventBusListener<FileSystemChangedEvent> sourceProviderChangeListener = new EventBusListener<FileSystemChangedEvent>() 
+      {
+        @Override
+        public void notify (final @Nonnull FileSystemChangedEvent event) 
+          {
+            if (event.getFileSystemProvider() == sourceProvider)
+              {
+                try 
+                  {
+                    log.info("Detected file change, regenerating local file system...");
+                    generateLocalFileSystem();
+                    eventBus.publish(new FileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
+                  }
+                catch (IOException e) 
+                  {
+                    log.error("While resetting site: ", e);
+                  }
+              }
+          }
+      };
     
     /*******************************************************************************************************************
      *
@@ -75,14 +108,30 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     private void initialize()
       throws IOException
       {
+        log.info("initialize()");
+        generateLocalFileSystem();
+        eventBus.subscribe(FileSystemChangedEvent.class, sourceProviderChangeListener);            
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void generateLocalFileSystem()
+      throws IOException
+      {
+        log.info("generateLocalFileSystem()");
         new File(rootPath).mkdirs(); // TODO: use FileSystem API
+        // FIXME: shouldn't be needed, but otherwise after a second call to this method won't find files
+        targetProvider = new LocalFileSystemProvider(); 
         targetProvider.setRootPath(rootPath);
         final FileObject targetRoot = targetProvider.getFileSystem().getRoot();
         final String path = FileUtil.toFile(targetRoot).getAbsolutePath();
-        log.info("Scratching {} ...", path);
+        log.info(">>>> scratching {} ...", path);
         emptyFolder(targetRoot);
-        log.info("Copying files to {} ...", path);
+        log.info(">>>> copying files to {} ...", path);
         copyFolder(sourceProvider.getFileSystem().getRoot(), targetRoot);           
+//                    targetProvider.getFileSystem().refresh(true);
       }
     
     /*******************************************************************************************************************
