@@ -28,6 +28,7 @@
 
     <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.ZipFileSystemProvider" >
         <property name="zipFilePath" value="${nw.rootPath}" />
+        <property name="modificationCheckInterval" value="${nw.zip.modificationCheckInterval}" />
     </bean>
 
 </beans>
