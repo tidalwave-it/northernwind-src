@@ -20,16 +20,10 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.jersey.urihandler;
+package it.tidalwave.northernwind.frontend.jersey;
 
-import javax.annotation.Nonnull;
 import javax.ws.rs.core.Response;
-import java.io.FileNotFoundException;
-import org.openide.filesystems.FileObject;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
-import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
-import it.tidalwave.northernwind.frontend.jersey.RestResponseHolder;
+import it.tidalwave.northernwind.frontend.util.ResponseHolder;
 
 /***********************************************************************************************************************
  *
@@ -37,13 +31,6 @@ import it.tidalwave.northernwind.frontend.jersey.RestResponseHolder;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
-public class JerseyMediaUriHandler extends MediaUriHandlerSupport<Response, RestResponseHolder>
+public class RestResponseHolder extends ResponseHolder<Response>
   {
-    @Override @Nonnull
-    protected Response createResponse (final @Nonnull FileObject file) 
-      throws FileNotFoundException
-      {
-        return Response.ok(file.getInputStream(), file.getMIMEType()).build();
-      }
   }

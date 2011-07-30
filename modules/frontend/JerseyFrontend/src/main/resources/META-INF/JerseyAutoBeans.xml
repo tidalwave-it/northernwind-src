@@ -43,7 +43,7 @@
        default-autowire="byType">
            
     <bean id="responseThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal" />    
+          class="it.tidalwave.northernwind.frontend.jersey.RestResponseHolder" />    
     
     <bean id="siteView" 
           class="it.tidalwave.northernwind.frontend.ui.jersey.JerseySiteView" />

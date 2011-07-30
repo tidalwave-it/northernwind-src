@@ -35,7 +35,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal;
+import it.tidalwave.northernwind.frontend.jersey.RestResponseHolder;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JerseyCssUriHandler implements UriHandler
   {
     @Inject @Nonnull
-    private ResponseThreadLocal responseHolder;
+    private RestResponseHolder responseHolder;
 
     /*******************************************************************************************************************
      *

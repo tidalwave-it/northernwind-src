@@ -28,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import it.tidalwave.northernwind.frontend.util.ResponseHolder;
 
 /***********************************************************************************************************************
  *
@@ -35,7 +36,7 @@ import org.springframework.http.ResponseEntity;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseEntityThreadLocal extends ThreadLocal<ResponseEntity<?>> 
+public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>> 
   {
     @NotThreadSafe
     public class ResponseBuilder

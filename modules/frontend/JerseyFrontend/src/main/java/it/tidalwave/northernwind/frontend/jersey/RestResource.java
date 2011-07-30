@@ -49,7 +49,7 @@ public class RestResource
     private SiteViewController siteViewController;
     
     @Inject @Nonnull
-    private ResponseThreadLocal responseHolder;
+    private RestResponseHolder responseHolder;
     
     @Context
     private UriInfo uriInfo;

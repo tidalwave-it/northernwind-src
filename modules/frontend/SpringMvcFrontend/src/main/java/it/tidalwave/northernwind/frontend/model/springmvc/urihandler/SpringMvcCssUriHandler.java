@@ -34,7 +34,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityThreadLocal;
+import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringMvcCssUriHandler implements UriHandler
   {
     @Inject @Nonnull
-    private ResponseEntityThreadLocal responseHolder;
+    private ResponseEntityHolder responseHolder;
 
     /*******************************************************************************************************************
      *

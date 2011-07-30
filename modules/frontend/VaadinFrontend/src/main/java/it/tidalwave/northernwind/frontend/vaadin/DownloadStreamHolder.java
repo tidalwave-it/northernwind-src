@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
+import it.tidalwave.northernwind.frontend.util.ResponseHolder;
 import com.vaadin.terminal.DownloadStream;
 
 /***********************************************************************************************************************
@@ -30,6 +31,6 @@ import com.vaadin.terminal.DownloadStream;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DownloadStreamThreadLocal extends ThreadLocal<DownloadStream>
+public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
   {
   }

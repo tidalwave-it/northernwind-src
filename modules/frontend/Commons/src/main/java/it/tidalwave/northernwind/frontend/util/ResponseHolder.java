@@ -20,9 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.jersey;
-
-import javax.ws.rs.core.Response;
+package it.tidalwave.northernwind.frontend.util;
 
 /***********************************************************************************************************************
  *
@@ -30,6 +28,6 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseThreadLocal extends ThreadLocal<Response>
-  {
+public class ResponseHolder<ResponseType> extends ThreadLocal<ResponseType>
+  { 
   }
