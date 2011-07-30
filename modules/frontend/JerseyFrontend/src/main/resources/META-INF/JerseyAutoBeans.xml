@@ -54,9 +54,9 @@
         <property name="uriHandlers">
             <list>
                 <bean id="mediaUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.jersey.urihandler.JerseyMediaUriHandler" />
+                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultMediaUriHandler" />
                 <bean id="cssUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.jersey.urihandler.JerseyCssUriHandler" />
+                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultCssUriHandler" />
                 <bean id="contentUriHandler" 
                       class="it.tidalwave.northernwind.frontend.model.spi.ContentUriHandler" />
             </list>

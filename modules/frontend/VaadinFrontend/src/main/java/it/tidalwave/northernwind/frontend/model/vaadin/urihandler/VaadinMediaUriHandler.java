@@ -27,7 +27,7 @@ import java.io.FileNotFoundException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
-import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
+import it.tidalwave.northernwind.frontend.model.spi.DefaultMediaUriHandler;
 import com.vaadin.terminal.DownloadStream;
 
 /***********************************************************************************************************************
@@ -37,13 +37,13 @@ import com.vaadin.terminal.DownloadStream;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") 
-public class VaadinMediaUriHandler extends MediaUriHandlerSupport<DownloadStream>
+public class VaadinMediaUriHandler extends DefaultMediaUriHandler<DownloadStream>
   {
     @Override @Nonnull
     protected void createResponse (final @Nonnull FileObject file) 
       throws FileNotFoundException
       {
         //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
-        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMIMEType()).build();
+        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMIMEType()).put();
       }
   }

@@ -20,24 +20,19 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.jersey.urihandler;
+package it.tidalwave.northernwind.frontend.model.spi; 
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.CharBuffer;
 import java.net.URL;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
+import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.jersey.RestResponseHolder;
+import it.tidalwave.northernwind.frontend.model.Media;
+import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
-import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -45,11 +40,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
-public class JerseyCssUriHandler implements UriHandler
+@Slf4j
+public class DefaultMediaUriHandler<ResponseType> implements UriHandler
   {
     @Inject @Nonnull
-    private RestResponseHolder responseHolder;
+    private Site site;
+    
+    @Inject @Nonnull
+    protected ResponseHolder<ResponseType> responseHolder;
 
     /*******************************************************************************************************************
      *
@@ -60,28 +58,29 @@ public class JerseyCssUriHandler implements UriHandler
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException
       {
-        if (relativeUri.startsWith("css"))
+        if (relativeUri.startsWith("media"))
           {
-            final String path = relativeUri.replaceAll("^css", "");
-            log.info(">>>> serving contents of {} ...", path);      
-            responseHolder.response().withBody(loadCss(path))
-                                     .withContentType("text/css")
-                                     .put();
+            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
+            final FileObject file = media.getFile();
+            log.info(">>>> serving contents of {} ...", file.getPath());
+            createResponse(file);
             return true;
           }
         
         return false;
       }
     
-    @Nonnull
-    private String loadCss (final @Nonnull String path)
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    protected void createResponse (final @Nonnull FileObject file)
       throws IOException
       {
-        final Resource htmlResource = new ClassPathResource("/css" + path, getClass());  
-        final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
-        final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
-        final int length = r.read(charBuffer);
-        r.close();
-        return new String(charBuffer.array(), 0, length);
-      }  
+        final byte[] bytes = file.asBytes();
+        responseHolder.response().withContentType(file.getMIMEType())
+                                 .withContentLenght(bytes.length)
+                                 .withBody(bytes)
+                                 .put();
+      }
   }
