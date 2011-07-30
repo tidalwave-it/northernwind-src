@@ -43,8 +43,6 @@ import lombok.extern.slf4j.Slf4j;
  * A provider for the {@link FileSystem} that clones a source provider into a local FileSystem for performance 
  * purposes...
  * 
- * FIXME: doesn't work, triggering a strange exception
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
