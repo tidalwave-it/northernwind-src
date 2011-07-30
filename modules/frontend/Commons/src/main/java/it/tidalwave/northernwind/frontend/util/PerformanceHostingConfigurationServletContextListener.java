@@ -24,8 +24,11 @@ package it.tidalwave.northernwind.frontend.util;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /***********************************************************************************************************************
  *
@@ -45,16 +48,16 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
     @Override
     public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
-        final ServletContext servletContext = event.getServletContext();
-        final String contextPath = servletContext.getContextPath();
-        final String realPath = servletContext.getRealPath("");
-        log(">>>> contextPath: " + contextPath);
-        log(">>>> realPath:    " + realPath);
-        
-        final String x = realPath.replace(File.pathSeparator + "webapps" + contextPath + File.pathSeparator, "");
-        
-        if (x.startsWith("/home/fgiudici")) // FIXME: check instead the hostname, put all this method within the if
+        if ("neo.performancehosting.net".equals(getLocalHostName()))
           {
+            final ServletContext servletContext = event.getServletContext();
+            final String contextPath = servletContext.getContextPath();
+            final String realPath = servletContext.getRealPath("");
+            log(">>>> contextPath: " + contextPath);
+            log(">>>> realPath:    " + realPath);
+
+            final String x = realPath.replace(File.pathSeparator + "webapps" + contextPath + File.pathSeparator, "");
+
             final String[] x2 = x.split("/");
             final String home = "/" + x2[1] + "/" + x2[2];
             final String domain = x2[6] + "." + x2[4];
@@ -70,6 +73,23 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
             
             loadProperties(servletContext, configurationFile);
             // TODO: use the configuration file for Spring
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String getLocalHostName()
+      {
+        try 
+          {
+            return InetAddress.getLocalHost().getCanonicalHostName();
+          }
+        catch (UnknownHostException e) 
+          {
+            return "?";
           }
       }
   }
