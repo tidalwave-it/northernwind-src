@@ -20,20 +20,17 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi; 
+package it.tidalwave.northernwind.frontend.model.springmvc.urihandler;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.URL;
 import org.openide.filesystems.FileObject;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import java.io.FileNotFoundException;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.Media.Media;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
+import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
+import it.tidalwave.northernwind.frontend.springmvc.ResponseThreadLocal;
 
 /***********************************************************************************************************************
  *
@@ -41,38 +38,20 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public abstract class MediaUriHandlerSupport<ResponseType, ResponseHolder extends ThreadLocal<ResponseType>> implements UriHandler
+@Configurable @Scope(value="session") 
+public class SpringMvcMediaUriHandler extends MediaUriHandlerSupport<ResponseEntity<?>, ResponseThreadLocal>
   {
     @Inject @Nonnull
-    private Site site;
-    
-    @Inject @Nonnull
-    private ResponseHolder responseHolder;
+    private ResponseThreadLocal responseHolder;
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws NotFoundException, IOException
+    @Override @Nonnull
+    protected ResponseEntity<?> createResponse (final @Nonnull FileObject file) 
+      throws IOException
       {
-        if (relativeUri.startsWith("media"))
-          {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
-            final FileObject file = media.getFile();
-            log.info(">>>> serving contents of {} ...", file.getPath());
-            responseHolder.set(createResponse(file));
-            // TODO: I suppose Jersey closes the stream
-            return true;
-          }
-        
-        return false;
+        final byte[] bytes = file.asBytes();
+        return responseHolder.response().withContentType(file.getMIMEType())
+                                        .withContentLenght(bytes.length)
+                                        .withBody(bytes)
+                                        .build();
       }
-    
-    @Nonnull
-    protected abstract ResponseType createResponse (final @Nonnull FileObject file)
-      throws IOException;
   }

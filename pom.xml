@@ -149,6 +149,11 @@
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-htmltemplate</artifactId>
                 <version>1.0.1-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>it.tidalwave.northernwind</groupId>
+                <artifactId>it-tidalwave-northernwind-frontend-webapp-springmvc</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

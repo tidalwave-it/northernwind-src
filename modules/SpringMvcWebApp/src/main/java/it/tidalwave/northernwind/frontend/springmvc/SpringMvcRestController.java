@@ -20,20 +20,23 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi; 
+package it.tidalwave.northernwind.frontend.springmvc;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import org.openide.filesystems.FileObject;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import java.io.FileNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -41,38 +44,34 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public abstract class MediaUriHandlerSupport<ResponseType, ResponseHolder extends ThreadLocal<ResponseType>> implements UriHandler
+@Configurable @Controller @Slf4j
+public class SpringMvcRestController 
   {
     @Inject @Nonnull
-    private Site site;
+    private SiteViewController siteViewController;
     
     @Inject @Nonnull
-    private ResponseHolder responseHolder;
+    private ResponseThreadLocal responseHolder;
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws NotFoundException, IOException
+    @RequestMapping(value="/**", method=RequestMethod.GET) @Nonnull
+    public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
+      throws HttpErrorException, MalformedURLException, IOException
       {
-        if (relativeUri.startsWith("media"))
-          {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
-            final FileObject file = media.getFile();
-            log.info(">>>> serving contents of {} ...", file.getPath());
-            responseHolder.set(createResponse(file));
-            // TODO: I suppose Jersey closes the stream
-            return true;
-          }
+        responseHolder.set(null);
+        final String relativeUri = request.getRequestURI().substring(request.getContextPath().length() + 1);
+        log.info("GET /{}", relativeUri);
         
-        return false;
+        try
+          { 
+            siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
+            return responseHolder.get();
+          }
+        catch (HttpErrorException e)
+          {
+            return responseHolder.response().withContentType("text/plain")
+                                            .withBody(e.getMessage())
+                                            .withStatus(HttpStatus.valueOf(e.getStatusCode()))
+                                            .build();
+          }
       }
-    
-    @Nonnull
-    protected abstract ResponseType createResponse (final @Nonnull FileObject file)
-      throws IOException;
   }

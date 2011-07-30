@@ -1,0 +1,108 @@
+/* 
+A CSS Framework by Mike Stenhouse of Content with Style 
+-------------------------------------------------------
+
+Copyright (c) 2005, Mike Stenhouse of Content with Style
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* Neither the name of CSS Framework nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/* $Id$ */
+
+/* NAV */
+.nw-nav {
+    font-size: 0.8em;
+}
+* html .nw-nav {
+    /* hide ie/mac \*/
+    height: 1%;
+    /* end hide */
+}
+.nw-nav div.wrapper {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+.nw-nav ul {
+    width: 100%;
+    
+    margin: 0;
+    padding: 0;
+    
+    line-height: 1em;
+    list-style: none;
+}
+.nw-nav li {
+    float: left;
+    display: inline;
+    
+    margin: 0;
+    padding: 0;
+    
+    list-style: none;
+    
+    line-height: 1em;
+    border-right: 1px solid #aaa;
+}
+.nw-nav li.last {
+    border-right: none;
+}
+.nw-nav a,
+.nw-nav a:link,
+.nw-nav a:active,
+.nw-nav a:visited {
+    display: inline-block;
+    /* hide from ie/mac \*/
+    display: block;
+    /* end hide */
+    
+    margin: 0;
+    padding: 5px 38px 5px 38px;
+    
+    font-weight: bold;
+    text-decoration: none;
+    
+    color: black;
+    background: #ddd;
+}
+.nw-nav a:hover {
+    text-decoration: underline;
+}
+.nw-nav strong {
+    display: inline-block;
+    /* hide from ie/mac \*/
+    display: block;
+    /* end hide */
+    
+    color: white;
+    background: black;
+}
+.nw-nav strong a,
+.nw-nav strong a:link,
+.nw-nav strong a:active,
+.nw-nav strong a:visited,
+.nw-nav strong a:hover {
+    color: white;
+    background-color: black;
+}
+/* END NAV */
+
