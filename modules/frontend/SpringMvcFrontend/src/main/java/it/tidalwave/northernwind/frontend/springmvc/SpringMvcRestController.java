@@ -29,7 +29,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,8 +57,8 @@ public class SpringMvcRestController
       throws HttpErrorException, MalformedURLException, IOException
       {
         responseHolder.clear();
-        final String relativeUri = request.getRequestURI().substring(request.getContextPath().length() + 1);
-        log.info("GET /{}", relativeUri);
+        final String relativeUri = "/" + request.getRequestURI().substring(request.getContextPath().length() + 1);
+        log.info("GET {}", relativeUri);
         
         try
           { 

@@ -58,14 +58,14 @@ public class RestResource
     public Response getRoot()
       throws HttpErrorException, MalformedURLException
       {
-        return get("");
+        return get("/");
       }
     
     @GET @Path("{path: .*}") 
     public Response get()
       throws HttpErrorException, MalformedURLException
       {
-        return get(uriInfo.getPath(true));
+        return get("/" + uriInfo.getPath(true));
       }
 
     @Nonnull
@@ -73,7 +73,7 @@ public class RestResource
       throws HttpErrorException, MalformedURLException
       {
         responseHolder.clear();
-        log.info("GET /{}", relativeUri);
+        log.info("GET {}", relativeUri);
         
         try
           { 

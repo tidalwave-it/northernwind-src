@@ -58,9 +58,9 @@ public class DefaultMediaUriHandler<ResponseType> implements UriHandler
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException
       {
-        if (relativeUri.startsWith("media"))
+        if (relativeUri.startsWith("/media"))
           {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
+            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "/")).result();
             final FileObject file = media.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());
             createResponse(file);

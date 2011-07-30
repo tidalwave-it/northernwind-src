@@ -59,7 +59,7 @@ public class ContentUriHandler implements UriHandler // FIXME: rename to Default
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
       throws NotFoundException, IOException 
       {
-        final SiteNode siteNode = site.find(SiteNode).withRelativeUri("/" + relativeUri).result();            
+        final SiteNode siteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();            
 //            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
         siteView.renderSiteNode(siteNode);
         

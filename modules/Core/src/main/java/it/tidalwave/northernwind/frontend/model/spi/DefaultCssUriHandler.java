@@ -61,7 +61,7 @@ public class DefaultCssUriHandler implements UriHandler
       {
         if (relativeUri.startsWith("css"))
           {
-            final String path = relativeUri.replaceAll("^css", "");
+            final String path = relativeUri.replaceAll("^/css", "/");
             log.info(">>>> serving contents of {} ...", path);            
             responseHolder.response().withContentType("text/css").withBody(loadCss(path)).put();  
             return true;
