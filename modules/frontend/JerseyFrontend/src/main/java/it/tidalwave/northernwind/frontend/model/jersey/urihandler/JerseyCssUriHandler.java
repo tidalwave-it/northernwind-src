@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
-import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,9 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value="session") @Slf4j
 public class JerseyCssUriHandler implements UriHandler
   {
-    @Inject @Nonnull
-    private Site site;
-    
     @Inject @Nonnull
     private ResponseThreadLocal responseHolder;
 

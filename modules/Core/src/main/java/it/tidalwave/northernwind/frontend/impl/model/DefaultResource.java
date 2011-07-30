@@ -45,9 +45,6 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupString;
 
 /***********************************************************************************************************************
  *
@@ -146,7 +143,7 @@ import org.stringtemplate.v4.STGroupString;
      *
      ******************************************************************************************************************/
     @PostConstruct
-    private void loadProperties()
+    /* package */ void loadProperties()
       throws IOException
       {
         log.trace("loadProperties() for /{}", file.getPath());

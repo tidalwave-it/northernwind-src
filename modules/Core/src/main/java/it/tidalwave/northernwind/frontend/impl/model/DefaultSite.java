@@ -207,7 +207,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @PostConstruct
-    private void initialize()
+    /* package */ void initialize()
       throws IOException, NotFoundException, PropertyVetoException
       {
         log.info("initialize()");

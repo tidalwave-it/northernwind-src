@@ -105,7 +105,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @PostConstruct
-    private void initialize()
+    /* package */ void initialize()
       throws IOException
       {
         log.info("initialize()");

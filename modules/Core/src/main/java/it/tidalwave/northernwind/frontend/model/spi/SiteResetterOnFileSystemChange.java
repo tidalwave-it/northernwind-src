@@ -76,7 +76,7 @@ public class SiteResetterOnFileSystemChange
       };
     
     @PostConstruct
-    private void initialize()
+    /* package */ void initialize()
       {
         log.info("SiteResetterOnFileSystemChange installed");
         eventBus.subscribe(FileSystemChangedEvent.class, listener);            

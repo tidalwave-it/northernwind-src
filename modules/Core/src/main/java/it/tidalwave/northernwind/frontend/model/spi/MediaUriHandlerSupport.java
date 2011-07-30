@@ -31,7 +31,6 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
-import java.io.FileNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Media.Media;
 

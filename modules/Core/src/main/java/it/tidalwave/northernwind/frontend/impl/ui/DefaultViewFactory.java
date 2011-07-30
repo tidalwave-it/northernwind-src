@@ -80,7 +80,7 @@ public class DefaultViewFactory implements ViewFactory
      *
      ******************************************************************************************************************/
     @PostConstruct 
-    private void initialize() // FIXME: gets called twice
+    /* package */ void initialize() // FIXME: gets called twice
       throws IOException, 
              NoSuchMethodException, InvocationTargetException, InstantiationException, 
              IllegalArgumentException, IllegalAccessException, SecurityException 

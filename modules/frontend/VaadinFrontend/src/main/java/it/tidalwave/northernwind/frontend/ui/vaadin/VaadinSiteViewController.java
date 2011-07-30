@@ -88,7 +88,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
      *
      ******************************************************************************************************************/
     @PostConstruct
-    private void registerUriHandler()
+    /* package */ void registerUriHandler()
       {
         siteView.addURIHandler(uriHandler);
         // FIXME: seems to be registered twice? See logs
