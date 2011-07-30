@@ -47,11 +47,11 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
       {
         final ServletContext servletContext = event.getServletContext();
         final String contextPath = servletContext.getContextPath();
-        final String realPath = servletContext.getRealPath(".probe");
+        final String realPath = servletContext.getRealPath("");
         log(">>>> contextPath: " + contextPath);
         log(">>>> realPath:    " + realPath);
         
-        final String x = realPath.replace(File.pathSeparator + "webapps" + contextPath + File.pathSeparator + ".probe", "");
+        final String x = realPath.replace(File.pathSeparator + "webapps" + contextPath + File.pathSeparator, "");
         
         if (x.startsWith("/home/fgiudici")) // FIXME: check instead the hostname, put all this method within the if
           {
