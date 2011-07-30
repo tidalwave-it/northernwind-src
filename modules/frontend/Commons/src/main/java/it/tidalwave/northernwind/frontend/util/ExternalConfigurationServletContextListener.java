@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.servlet.ServletContext;
@@ -77,33 +78,9 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           {
             try
               {                
-                log(">>>> reading properties from " + configurationFile);
-                final Properties properties = new Properties();
-                final @Cleanup InputStream is = new FileInputStream(configurationFile);
-                properties.load(is);
-                is.close();
-
-                for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(properties).entrySet())
-                  {
-                    log(">>>> " + entry.getKey() + " = " + entry.getValue());
-                    servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());                       
-                  }
-                
-                final StringBuilder builder = new StringBuilder();
-                String separator = "";
-                
-                for (final String nwBeans : properties.getProperty("nw.beans", "").split(","))
-                  {
-                    if (!nwBeans.trim().equals(""))
-                      {
-                        builder.append(separator).append(String.format("classpath:/META-INF/%s.xml", nwBeans.trim()));
-                        separator = ",";
-                      }
-                  }
-                
-                final String contextConfigLocation = builder.toString();
-                servletContext.setAttribute("nwcontextConfigLocation", contextConfigLocation);
-                log(">>>> contextConfigLocation: " + contextConfigLocation);
+                final Properties properties = loadProperties(configurationFile);
+                copyPropertiesToServletContextAttributes(properties, servletContext);                
+                servletContext.setAttribute("nwcontextConfigLocation", computeConfigLocation(properties));
               }
             catch (IOException e)
               {
@@ -111,6 +88,46 @@ public class ExternalConfigurationServletContextListener implements ServletConte
                 e.printStackTrace(); // FIXME  
               }
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Properties loadProperties(final String configurationFile) throws FileNotFoundException, IOException 
+      {
+        log(">>>> reading properties from " + configurationFile);
+        final Properties properties = new Properties();
+        final @Cleanup InputStream is = new FileInputStream(configurationFile);
+        properties.load(is);
+        is.close();
+        return properties;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeConfigLocation (final Properties properties) 
+      {
+        final StringBuilder builder = new StringBuilder();
+        String separator = "";
+      
+        for (final String nwBeans : properties.getProperty("nw.beans", "").split(","))
+          {
+            if (!nwBeans.trim().equals(""))
+              {
+                builder.append(separator).append(String.format("classpath:/META-INF/%sBeans.xml", nwBeans.trim()));
+                separator = ",";
+              }
+          }
+        
+        final String contextConfigLocation = "classpath*:/META-INF/*AutoBeans.xml," + builder.toString();
+        log(">>>> contextConfigLocation: " + contextConfigLocation);
+        
+        return contextConfigLocation;
       }
     
     /*******************************************************************************************************************
@@ -122,5 +139,19 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     protected static void log (final @Nonnull String string)
       {
         System.err.println(string);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void copyPropertiesToServletContextAttributes (final @Nonnull Properties properties,
+                                                           final @Nonnull ServletContext servletContext)
+      {
+        for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(properties).entrySet())
+          {
+            log(">>>> " + entry.getKey() + " = " + entry.getValue());
+            servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());                       
+          }
       }
   }
