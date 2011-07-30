@@ -352,7 +352,7 @@
         <module>HtmlTemplateComponents</module>
 
         <module>JerseyFrontend</module>
-        <module>HtmlTemplateWebApp</module>
+        <module>JerseyWebApp</module>
 
         <module>SpringMvcFrontend</module>
         <module>SpringMvcWebApp</module>
