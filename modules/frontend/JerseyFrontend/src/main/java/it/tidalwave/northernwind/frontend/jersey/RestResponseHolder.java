@@ -59,7 +59,10 @@ public class RestResponseHolder extends ResponseHolder<Response>
  
             for (final Entry<String, List<String>> entry : headers.entrySet())
               {
-                builder = builder.header(entry.getKey(), entry.getValue());  
+                for (final String value : entry.getValue())
+                  {
+                    builder = builder.header(entry.getKey(), value);  
+                  }
               }
 
             return builder.build();  
