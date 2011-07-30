@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  * A provider for a local {@link FileSystem}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: ZipFileSystemProvider.java,v d2a3b8c30109 2011/07/23 06:54:32 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

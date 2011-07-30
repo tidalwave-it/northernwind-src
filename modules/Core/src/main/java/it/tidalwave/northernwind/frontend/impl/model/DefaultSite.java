@@ -54,7 +54,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
  * The default implementation of {@link Site}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: DefaultSite.java,v 1c2a8af3450a 2011/07/24 19:44:35 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

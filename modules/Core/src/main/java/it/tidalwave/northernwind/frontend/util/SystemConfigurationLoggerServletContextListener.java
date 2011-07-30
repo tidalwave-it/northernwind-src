@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * Dumps system properties at startup.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: Slf4JJulBrigdeInstallerServletContextListener.java,v 64e867bc71e7 2011/07/27 13:49:56 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

@@ -34,7 +34,7 @@ import org.springframework.web.context.ContextLoaderListener;
  * it available to the {@link InitializationDiagnosticsFilter}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: InitializationDiagnosticsServletContextListenerDecorator.java,v c34136ca5c55 2011/07/27 07:47:54 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

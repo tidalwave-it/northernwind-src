@@ -37,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
  * init parameters.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: InitializationDiagnosticsServletContextListenerDecorator.java,v c34136ca5c55 2011/07/27 07:47:54 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class ContextAttributeContextLoaderListener extends ContextLoaderListener

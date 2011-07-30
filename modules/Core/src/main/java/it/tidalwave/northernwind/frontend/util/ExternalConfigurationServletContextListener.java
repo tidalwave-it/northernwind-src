@@ -40,7 +40,7 @@ import lombok.Cleanup;
  * A {@link ServletContextListener} that reads a configuration from $HOME/.nw/configuration.properties
  * 
  * @author  Fabrizio Giudici
- * @version $Id: Slf4JJulBrigdeInstallerServletContextListener.java,v 64e867bc71e7 2011/07/27 13:49:56 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class ExternalConfigurationServletContextListener implements ServletContextListener

@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  * A node of the site, mapped to a given URL.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: DefaultSiteNode.java,v eebd4fb32aa4 2011/07/24 19:59:10 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @Slf4j @ToString(exclude={"layout", "site"})

@@ -32,7 +32,7 @@ import javax.servlet.ServletContextEvent;
  * A {@link ServletContextListener} for integrating with Tomcat hosting at PerformanceHosting.net
  * 
  * @author  Fabrizio Giudici
- * @version $Id: Slf4JJulBrigdeInstallerServletContextListener.java,v 64e867bc71e7 2011/07/27 13:49:56 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class PerformanceHostingConfigurationServletContextListener extends ExternalConfigurationServletContextListener

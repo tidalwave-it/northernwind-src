@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * FIXME: doesn't work, triggering a strange exception
  * 
  * @author  Fabrizio Giudici
- * @version $Id: LocalCopyFileSystemProvider.java,v 7928a7746811 2011/07/24 14:29:53 fabrizio $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j
