@@ -51,7 +51,7 @@ public class SpringMvcRestController
     private SiteViewController siteViewController;
     
     @Inject @Nonnull
-    private ResponseThreadLocal responseHolder;
+    private ResponseEntityThreadLocal responseHolder;
 
     @RequestMapping(value="/**", method=RequestMethod.GET) @Nonnull
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)

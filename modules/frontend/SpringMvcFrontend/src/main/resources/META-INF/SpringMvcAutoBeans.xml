@@ -43,7 +43,7 @@
        default-autowire="byType">
            
     <bean id="responseThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.springmvc.ResponseThreadLocal" />    
+          class="it.tidalwave.northernwind.frontend.springmvc.ResponseEntityThreadLocal" />    
     
     <bean id="siteView" 
           class="it.tidalwave.northernwind.frontend.ui.springmvc.SpringMvcSiteView" />

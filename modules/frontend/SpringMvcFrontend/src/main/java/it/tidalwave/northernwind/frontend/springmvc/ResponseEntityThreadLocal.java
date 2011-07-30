@@ -35,7 +35,7 @@ import org.springframework.http.ResponseEntity;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseThreadLocal extends ThreadLocal<ResponseEntity<?>> // FIXME: change nome to ResponseEntityThreadLocal
+public class ResponseEntityThreadLocal extends ThreadLocal<ResponseEntity<?>> 
   {
     @NotThreadSafe
     public class ResponseBuilder

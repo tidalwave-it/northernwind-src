@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
-import it.tidalwave.northernwind.frontend.springmvc.ResponseThreadLocal;
+import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityThreadLocal;
 
 /***********************************************************************************************************************
  *
@@ -39,10 +39,10 @@ import it.tidalwave.northernwind.frontend.springmvc.ResponseThreadLocal;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") 
-public class SpringMvcMediaUriHandler extends MediaUriHandlerSupport<ResponseEntity<?>, ResponseThreadLocal>
+public class SpringMvcMediaUriHandler extends MediaUriHandlerSupport<ResponseEntity<?>, ResponseEntityThreadLocal>
   {
     @Inject @Nonnull
-    private ResponseThreadLocal responseHolder;
+    private ResponseEntityThreadLocal responseHolder;
 
     @Override @Nonnull
     protected ResponseEntity<?> createResponse (final @Nonnull FileObject file) 
