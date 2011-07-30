@@ -141,7 +141,7 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-webapp-vaadin</artifactId>
+                <artifactId>it-tidalwave-northernwind-frontend-vaadin-webapp</artifactId>
                 <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
