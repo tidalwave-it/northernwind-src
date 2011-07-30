@@ -28,6 +28,7 @@ import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
@@ -43,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @Scope(value="session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
     @Getter @Setter @Nonnull

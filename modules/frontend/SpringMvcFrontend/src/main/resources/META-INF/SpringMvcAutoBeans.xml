@@ -49,7 +49,7 @@
           class="it.tidalwave.northernwind.frontend.ui.springmvc.SpringMvcSiteView" />
     
     <bean id="siteViewController" 
-          class="it.tidalwave.northernwind.frontend.ui.springmvc.SpringMvcSiteViewController"
+          class="it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController"
           autowire="no">
         <property name="uriHandlers">
             <list>
