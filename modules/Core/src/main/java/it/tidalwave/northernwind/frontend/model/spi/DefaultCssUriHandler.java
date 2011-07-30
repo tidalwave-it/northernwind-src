@@ -59,7 +59,7 @@ public class DefaultCssUriHandler implements UriHandler
     public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException
       {
-        if (relativeUri.startsWith("css"))
+        if (relativeUri.startsWith("/css"))
           {
             final String path = relativeUri.replaceAll("^/css", "/");
             log.info(">>>> serving contents of {} ...", path);            
