@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.frontend.ui.jersey;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
@@ -66,13 +65,18 @@ public class JerseySiteView implements SiteView
         try
           {
             final Visitor<Layout, HtmlHolder> nodeViewBuilderVisitor = new JerseyNodeViewBuilderVisitor(siteNode);
-            final HtmlHolder htmlHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);        
-            responseHolder.set(Response.ok().entity(htmlHolder.asString()).type("text/html").build());
+            final HtmlHolder htmlHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);    
+            responseHolder.response().withBody(htmlHolder.asString())
+                                     .withContentType("text/html")
+                                     .put();
           }
         catch (NotFoundException e) 
           {
             log.error("", e);
-            responseHolder.set(Response.status(Status.NOT_FOUND).entity(e.toString()).build());
+            responseHolder.response().withStatus(Status.NOT_FOUND.getStatusCode()) 
+                                     .withBody(e.toString())
+                                     .withContentType("text/html")
+                                     .put();
           }
       }
 

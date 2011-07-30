@@ -22,7 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import it.tidalwave.northernwind.frontend.util.ResponseHolder;
+import java.io.InputStream;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
+import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
 import com.vaadin.terminal.DownloadStream;
 
 /***********************************************************************************************************************
@@ -33,4 +39,28 @@ import com.vaadin.terminal.DownloadStream;
  **********************************************************************************************************************/
 public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
   {
+    @NotThreadSafe
+    public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream> 
+      {
+        private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        
+        @Override @Nonnull
+        public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
+          {
+            headers.add(header, value);        
+            return this;
+          }
+        
+        @Override @Nonnull
+        public DownloadStream build()
+          {
+            return new DownloadStream((InputStream)body, null, headers.get("Content-Type").get(0)); // FIXME: set name?
+          }
+      }
+    
+    @Override @Nonnull
+    public ResponseBuilder response()
+      {
+        return new ResponseBuilder();  
+      }
   }

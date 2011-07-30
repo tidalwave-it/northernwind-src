@@ -20,16 +20,10 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.springmvc;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
 
 /***********************************************************************************************************************
  *
@@ -37,44 +31,68 @@ import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuild
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>> 
-  {
+public abstract class ResponseHolder<ResponseType>
+  { 
+    private final ThreadLocal<Object> threadLocal = new ThreadLocal<Object>();
+//    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
+    
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>> 
+    public abstract class ResponseBuilderSupport<ResponseType>
       {
-        private final HttpHeaders headers = new HttpHeaders();
+        protected Object body = "";
         
-        @Override @Nonnull
-        public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
+        protected int httpStatus = 200;
+        
+        @Nonnull
+        public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
           {
-            headers.add(header, value);        
+            return withHeader("Content-Type", contentType);
+          }
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withContentLenght (final @Nonnull long contentLenght)
+          {
+            return withHeader("Content-Length", "" + contentLenght);
+          }
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
+          {
+            this.body = body;
             return this;
           }
         
-        @Override @Nonnull
-        public ResponseBuilder withContentType (final @Nonnull String contentType)
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withStatus (final @Nonnull int httpStatus)
           {
-            headers.setContentType(MediaType.parseMediaType(contentType));
+            this.httpStatus = httpStatus;
             return this;
           }
         
-        @Override @Nonnull
-        public ResponseBuilder withContentLenght (final @Nonnull long contentLenght)
-          {
-            headers.setContentLength(contentLenght);
-            return this;
-          }
+        @Nonnull
+        public abstract ResponseType build();
         
-        @Override @Nonnull
-        public ResponseEntity<?> build()
+        public void put()
           {
-            return new ResponseEntity<Object>(body, headers, HttpStatus.valueOf(httpStatus));
+            threadLocal.set(build()); // FIXME
+//            threadLocal.set(build());
           }
       }
     
-    @Override @Nonnull
-    public ResponseBuilder response()
+    @Nonnull
+    public abstract ResponseBuilderSupport<ResponseType> response();
+    
+    @Nonnull
+    public ResponseType get()
+      {  
+        return (ResponseType)threadLocal.get();   
+      }
+    
+    public void clear()
       {
-        return new ResponseBuilder();  
+        threadLocal.set(null);  
       }
   }

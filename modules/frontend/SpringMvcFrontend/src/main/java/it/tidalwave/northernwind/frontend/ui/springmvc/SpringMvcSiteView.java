@@ -28,9 +28,6 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
@@ -69,18 +66,17 @@ public class SpringMvcSiteView implements SiteView
           {
             final Visitor<Layout, HtmlHolder> nodeViewBuilderVisitor = new SpringMvcNodeViewBuilderVisitor(siteNode);
             final HtmlHolder htmlHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);    
-            final String asString = htmlHolder.asString();
-            final MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-            headers.add("Content-Type", "text/html");
-//            headers.add("Content-Lenght", "" + bytes.length);
-            responseHolder.set(new ResponseEntity<String>(asString, headers, HttpStatus.OK));
+            responseHolder.response().withBody(htmlHolder.asString())
+                                     .withContentType("text/html")
+                                     .put();
           }
         catch (NotFoundException e) 
           {
             log.error("", e);
-            final MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-            headers.add("Content-Type", "text/html");
-            responseHolder.set(new ResponseEntity<String>("Not found", headers, HttpStatus.NOT_FOUND));
+            responseHolder.response().withStatus(HttpStatus.NOT_FOUND.value()) 
+                                     .withBody(e.toString())
+                                     .withContentType("text/html")
+                                     .put();
           }
       }
 

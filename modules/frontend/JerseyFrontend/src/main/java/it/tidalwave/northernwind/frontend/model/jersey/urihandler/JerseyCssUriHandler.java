@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.CharBuffer;
 import java.net.URL;
-import javax.ws.rs.core.Response;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -64,9 +63,10 @@ public class JerseyCssUriHandler implements UriHandler
         if (relativeUri.startsWith("css"))
           {
             final String path = relativeUri.replaceAll("^css", "");
-            log.info(">>>> serving contents of {} ...", path);            
-            responseHolder.set(Response.ok(loadCss(path), "text/css").build());
-            // TODO: I suppose Jersey closes the stream
+            log.info(">>>> serving contents of {} ...", path);      
+            responseHolder.response().withBody(loadCss(path))
+                                     .withContentType("text/css")
+                                     .put();
             return true;
           }
         

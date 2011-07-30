@@ -72,7 +72,7 @@ public class RestResource
     private Response get (final @Nonnull String relativeUri)
       throws HttpErrorException, MalformedURLException
       {
-        responseHolder.set(null);
+        responseHolder.clear();
         log.info("GET /{}", relativeUri);
         
         try
@@ -83,6 +83,10 @@ public class RestResource
         catch (HttpErrorException e)
           {
             return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+          }
+        finally
+          {
+            responseHolder.clear();
           }
       }
   }

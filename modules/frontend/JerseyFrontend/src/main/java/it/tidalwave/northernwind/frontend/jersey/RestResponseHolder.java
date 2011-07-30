@@ -22,8 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.jersey;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
+import java.util.Map.Entry;
 import javax.ws.rs.core.Response;
-import it.tidalwave.northernwind.frontend.util.ResponseHolder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
+import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
 
 /***********************************************************************************************************************
  *
@@ -33,4 +40,35 @@ import it.tidalwave.northernwind.frontend.util.ResponseHolder;
  **********************************************************************************************************************/
 public class RestResponseHolder extends ResponseHolder<Response>
   {
+    @NotThreadSafe
+    public class ResponseBuilder extends ResponseBuilderSupport<Response> 
+      {
+        private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        
+        @Override @Nonnull
+        public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
+          {
+            headers.add(header, value);        
+            return this;
+          }
+        
+        @Override @Nonnull
+        public Response build()
+          {
+            Response.ResponseBuilder builder = Response.status(httpStatus).entity(body);
+ 
+            for (final Entry<String, List<String>> entry : headers.entrySet())
+              {
+                builder = builder.header(entry.getKey(), entry.getValue());  
+              }
+
+            return builder.build();  
+          }
+      }
+    
+    @Override @Nonnull
+    public ResponseBuilder response()
+      {
+        return new ResponseBuilder();  
+      }
   }

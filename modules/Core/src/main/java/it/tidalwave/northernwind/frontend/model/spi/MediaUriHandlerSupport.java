@@ -41,13 +41,13 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
  *
  **********************************************************************************************************************/
 @Slf4j
-public abstract class MediaUriHandlerSupport<ResponseType, ResponseHolder extends ThreadLocal<ResponseType>> implements UriHandler
+public abstract class MediaUriHandlerSupport<ResponseType> implements UriHandler
   {
     @Inject @Nonnull
     private Site site;
     
     @Inject @Nonnull
-    private ResponseHolder responseHolder;
+    protected ResponseHolder<ResponseType> responseHolder;
 
     /*******************************************************************************************************************
      *
@@ -63,8 +63,7 @@ public abstract class MediaUriHandlerSupport<ResponseType, ResponseHolder extend
             final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^media", "")).result();
             final FileObject file = media.getFile();
             log.info(">>>> serving contents of {} ...", file.getPath());
-            responseHolder.set(createResponse(file));
-            // TODO: I suppose Jersey closes the stream
+            createResponse(file);
             return true;
           }
         
@@ -72,6 +71,6 @@ public abstract class MediaUriHandlerSupport<ResponseType, ResponseHolder extend
       }
     
     @Nonnull
-    protected abstract ResponseType createResponse (final @Nonnull FileObject file)
+    protected abstract void createResponse (final @Nonnull FileObject file)
       throws IOException;
   }

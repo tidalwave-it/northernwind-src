@@ -23,14 +23,12 @@
 package it.tidalwave.northernwind.frontend.model.springmvc.urihandler;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
-import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder;
 
 /***********************************************************************************************************************
  *
@@ -39,19 +37,16 @@ import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") 
-public class SpringMvcMediaUriHandler extends MediaUriHandlerSupport<ResponseEntity<?>, ResponseEntityHolder>
+public class SpringMvcMediaUriHandler extends MediaUriHandlerSupport<ResponseEntity<?>>
   {
-    @Inject @Nonnull
-    private ResponseEntityHolder responseHolder;
-
-    @Override @Nonnull
-    protected ResponseEntity<?> createResponse (final @Nonnull FileObject file) 
+    @Override
+    protected void createResponse (final @Nonnull FileObject file) 
       throws IOException
       {
         final byte[] bytes = file.asBytes();
-        return responseHolder.response().withContentType(file.getMIMEType())
-                                        .withContentLenght(bytes.length)
-                                        .withBody(bytes)
-                                        .build();
+        responseHolder.response().withContentType(file.getMIMEType())
+                                 .withContentLenght(bytes.length)
+                                 .withBody(bytes)
+                                 .put();
       }
   }

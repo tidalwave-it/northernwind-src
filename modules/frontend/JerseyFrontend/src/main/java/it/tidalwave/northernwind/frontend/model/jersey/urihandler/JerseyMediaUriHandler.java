@@ -24,12 +24,11 @@ package it.tidalwave.northernwind.frontend.model.jersey.urihandler;
 
 import javax.annotation.Nonnull;
 import javax.ws.rs.core.Response;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
-import it.tidalwave.northernwind.frontend.jersey.RestResponseHolder;
 
 /***********************************************************************************************************************
  *
@@ -38,12 +37,12 @@ import it.tidalwave.northernwind.frontend.jersey.RestResponseHolder;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") 
-public class JerseyMediaUriHandler extends MediaUriHandlerSupport<Response, RestResponseHolder>
+public class JerseyMediaUriHandler extends MediaUriHandlerSupport<Response>
   {
     @Override @Nonnull
-    protected Response createResponse (final @Nonnull FileObject file) 
-      throws FileNotFoundException
+    protected void createResponse (final @Nonnull FileObject file) 
+      throws IOException
       {
-        return Response.ok(file.getInputStream(), file.getMIMEType()).build();
+        responseHolder.response().withBody(file.asBytes()).withContentType(file.getMIMEType()).put();  
       }
   }

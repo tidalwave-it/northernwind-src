@@ -28,7 +28,6 @@ import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
-import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamHolder;
 import com.vaadin.terminal.DownloadStream;
 
 /***********************************************************************************************************************
@@ -38,12 +37,13 @@ import com.vaadin.terminal.DownloadStream;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") 
-public class VaadinMediaUriHandler extends MediaUriHandlerSupport<DownloadStream, DownloadStreamHolder>
+public class VaadinMediaUriHandler extends MediaUriHandlerSupport<DownloadStream>
   {
     @Override @Nonnull
-    protected DownloadStream createResponse (final @Nonnull FileObject file) 
+    protected void createResponse (final @Nonnull FileObject file) 
       throws FileNotFoundException
       {
-        return new DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType());
+        //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
+        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMIMEType()).build();
       }
   }

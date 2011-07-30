@@ -57,7 +57,7 @@ public class SpringMvcRestController
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
       throws HttpErrorException, MalformedURLException, IOException
       {
-        responseHolder.set(null);
+        responseHolder.clear();
         final String relativeUri = request.getRequestURI().substring(request.getContextPath().length() + 1);
         log.info("GET /{}", relativeUri);
         
@@ -70,8 +70,12 @@ public class SpringMvcRestController
           {
             return responseHolder.response().withContentType("text/plain")
                                             .withBody(e.getMessage())
-                                            .withStatus(HttpStatus.valueOf(e.getStatusCode()))
+                                            .withStatus(e.getStatusCode())
                                             .build();
+          }
+        finally
+          {
+            responseHolder.clear();
           }
       }
   }

@@ -64,7 +64,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
           {
             try
               {
-                downloadStreamHolder.set(null);
+                downloadStreamHolder.clear();
                 handleUri(context, relativeUri);
                 return downloadStreamHolder.get();
               }
@@ -77,7 +77,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
               }
             finally
               {
-                downloadStreamHolder.set(null);
+                downloadStreamHolder.clear();
               }
           }
       };
