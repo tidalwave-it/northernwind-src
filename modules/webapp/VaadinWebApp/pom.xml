@@ -5,9 +5,9 @@
 
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
-        <artifactId>it-tidalwave-northernwind-modules</artifactId>
+        <artifactId>it-tidalwave-northernwind-webapp</artifactId>
         <version>1.0-ALPHA-2-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>..</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>

@@ -351,15 +351,8 @@
 
         <module>HtmlTemplateComponents</module>
 
-        <module>JerseyFrontend</module>
-        <module>JerseyWebApp</module>
-
-        <module>SpringMvcFrontend</module>
-        <module>SpringMvcWebApp</module>
-
-        <module>VaadinComponents</module>
-        <module>VaadinFrontend</module>
-        <module>VaadinWebApp</module>
+        <module>frontend</module>
+        <module>webapp</module>
     </modules>
 
 </project>

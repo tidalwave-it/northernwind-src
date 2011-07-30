@@ -5,17 +5,17 @@
 
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
-        <artifactId>it-tidalwave-northernwind-modules</artifactId>
+        <artifactId>it-tidalwave-northernwind-frontend</artifactId>
         <version>1.0-ALPHA-2-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>..</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Frontend (Jersey)</name>
-    <description>NorthernWind - Frontend (Jersey)</description>
+    <name>NorthernWind - Frontend (Spring MVC)</name>
+    <description>NorthernWind - Frontend Spring MVC)</description>
     
     <dependencies>
         <dependency>
@@ -30,13 +30,10 @@
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-server</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
 
         <dependency>
@@ -44,6 +41,10 @@
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>        
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
@@ -66,10 +67,10 @@
         </dependency>
         
         <!-- Redirect JUL and JCL to SFL4J -->
-        <dependency>
+        <dependency> <!-- FIXME: should be only runtime, but we have sources in this module. Move sources into a separate module. -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -90,6 +91,6 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>    
+        </dependency>
     </dependencies>
 </project>

@@ -5,17 +5,17 @@
 
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
-        <artifactId>it-tidalwave-northernwind-modules</artifactId>
+        <artifactId>it-tidalwave-northernwind-webapp</artifactId>
         <version>1.0-ALPHA-2-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>..</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it-tidalwave-northernwind-frontend-springmvc-webapp</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>NorthernWind - Frontend Webapp (Spring MVC)</name>
-    <description>NorthernWind - Frontend Webapp Spring MVC)</description>
+    <name>NorthernWind - Frontend Webapp (Jersey)</name>
+    <description>NorthernWind - Frontend Webapp (Jersey)</description>
     
     <properties>
         <tft.webapp.contextPath>${main.webapp.contextPath}</tft.webapp.contextPath>
@@ -26,7 +26,13 @@
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
+            <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
