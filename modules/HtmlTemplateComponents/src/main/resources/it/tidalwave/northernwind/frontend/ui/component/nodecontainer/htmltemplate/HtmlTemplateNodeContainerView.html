@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$titlePrefix$$title$</title>
+        <meta name="description" content="$description$" />
+        
+        <style type="text/css" media="screen">
+                @import url("$contextPath$/css/layout.css");
+                @import url("$contextPath$/css/typography.css");
+                @import url("$contextPath$/css/forms.css");
+                @import url("$contextPath$/css/tools.css");
+                @import url("$contextPath$/css/horizontal-navigation.css");
+                @import url("$contextPath$/css/layout-navtop-nonav.css");
+                @import url("$contextPath$/css/tidalwave-default.css");
+                @import url("$contextPath$/css/blueBill-mobile.css");
+                @import url("$contextPath$/css/blueBill-mobile-main.css");
+            
+        </style>        
+
+<!--
+        <style type="text/css" media="screen">
+            @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shCore.css");
+            @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shThemeDefault.css");
+            @import url("http://services.tidalwave.it/LightBox/css/lightbox.css");
+            <c:forEach items="{styleSheets}" var="styleSheet" >
+                @import url("{styleSheet.url}");
+            </c:forEach>
+        </style>
+        <style type="text/css" media="print">
+div#header { display: none }
+div#sub { display: none }
+div#nav { display: none }
+div#local { display: none }
+div#breadcrumb { display: none }
+        </style>
+
+        <c:forEach items="{scripts}" var="script" >
+            <script type="text/javascript" src="{script.url}"></script>
+        </c:forEach>
+
+        <c:forEach items="{rssFeeds}" var="rssFeed" >
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="{rssFeed.url}" />
+        </c:forEach>
+
+    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shCore.js"></script>
+    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushGroovy.js"></script>
+    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushBash.js"></script>
+    <script type="text/javascript">
+            SyntaxHighlighter.config.clipboardSwf = 'http://services.tidalwave.it/SyntaxHighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.all();
+    </script>
+
+    <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/prototype.js"></script>
+    <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/scriptaculous.js?load=effects,builder"></script>
+    <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/lightbox.js"></script>
+
+        <c:forEach items="{inlinedScripts}" var="inlinedScript">
+            <c:set var="inlinedScriptId" value="{inlinedScript.id}"/>
+            <% Integer contentId = (Integer)pageContext.findAttribute("inlinedScriptId"); %>
+            <%= ((BasicTemplateController)request.getAttribute("templateLogic")).getParsedContentAttribute(contentId, "Template") %>
+
+        </c:forEach>
+-->
+    </head>
+
+    <body id="page-home">
+        <div class="nw-page">
+            
+            <div class="nw-header"></div> <!-- FIXME: move header in layout; 
+                                                     FIXME: components don't have clearfix -->
+                
+            <div class="nw-content">
+                $content$
+            </div>
+        </div>
+    </body>
+</html>
