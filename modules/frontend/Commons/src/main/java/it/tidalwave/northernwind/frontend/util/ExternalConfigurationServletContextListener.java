@@ -77,7 +77,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           {
             try
               {                
-                log("Properties from " + configurationFile);
+                log(">>>> reading properties from " + configurationFile);
                 final Properties properties = new Properties();
                 final @Cleanup InputStream is = new FileInputStream(configurationFile);
                 properties.load(is);
