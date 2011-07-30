@@ -42,7 +42,7 @@ import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") 
-public class ContentUriHandler implements UriHandler
+public class ContentUriHandler implements UriHandler // FIXME: rename to DefaultContentUriHandler
   {
     @Inject @Nonnull
     private Site site;
