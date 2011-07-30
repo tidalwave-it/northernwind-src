@@ -60,9 +60,8 @@ public class DefaultMediaUriHandler<ResponseType> implements UriHandler
       {
         if (relativeUri.startsWith("/media"))
           {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "/")).result();
+            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "")).result();
             final FileObject file = media.getFile();
-            log.info(">>>> serving contents of {} ...", file.getPath());
             createResponse(file);
             return true;
           }
@@ -77,6 +76,7 @@ public class DefaultMediaUriHandler<ResponseType> implements UriHandler
     protected void createResponse (final @Nonnull FileObject file)
       throws IOException
       {
+        log.info(">>>> serving contents of /{} ...", file.getPath());
         final byte[] bytes = file.asBytes();
         responseHolder.response().withContentType(file.getMIMEType())
                                  .withContentLenght(bytes.length)

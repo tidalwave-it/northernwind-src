@@ -61,8 +61,7 @@ public class DefaultCssUriHandler implements UriHandler
       {
         if (relativeUri.startsWith("/css"))
           {
-            final String path = relativeUri.replaceAll("^/css", "/");
-            log.info(">>>> serving contents of {} ...", path);            
+            final String path = relativeUri.replaceAll("^/css", "");
             responseHolder.response().withContentType("text/css").withBody(loadCss(path)).put();  
             return true;
           }
@@ -78,7 +77,9 @@ public class DefaultCssUriHandler implements UriHandler
     private String loadCss (final @Nonnull String path)
       throws IOException
       {
-        final Resource htmlResource = new ClassPathResource("/css" + path, getClass());  
+        final String resourcePath = "/css" + path;
+        log.info(">>>> serving contents of {} ...", resourcePath);            
+        final Resource htmlResource = new ClassPathResource(resourcePath, getClass());  
         final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
         final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
         final int length = r.read(charBuffer);
