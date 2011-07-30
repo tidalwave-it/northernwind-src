@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -35,6 +36,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.Cleanup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /***********************************************************************************************************************
  *
@@ -46,6 +49,9 @@ import lombok.Cleanup;
  **********************************************************************************************************************/
 public class ExternalConfigurationServletContextListener implements ServletContextListener
   {
+//    @CheckForNull
+//    private static Logger log;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -74,7 +80,13 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      ******************************************************************************************************************/
     protected void loadProperties (final @Nonnull ServletContext servletContext, final @Nonnull String configurationFile)
       {  
-        if (new File(configurationFile).exists())
+        final File file = new File(configurationFile);
+        
+        if (!file.exists())
+          {
+            log(file.getAbsolutePath() + " does not exist");
+          }
+        else
           {
             try
               {                
@@ -88,6 +100,16 @@ public class ExternalConfigurationServletContextListener implements ServletConte
                 e.printStackTrace(); // FIXME  
               }
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    protected static void enableLogging()
+      {
+        // Logging should have been configured at this point
+//        log = LoggerFactory.getLogger(ExternalConfigurationServletContextListener.class);
       }
 
     /*******************************************************************************************************************
@@ -138,7 +160,14 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      ******************************************************************************************************************/
     protected static void log (final @Nonnull String string)
       {
-        System.err.println(string);
+    //        if (log != null)
+    //          {
+    //            log.info(string);  
+    //          }
+    //        else
+          {
+            System.err.println(string);
+          } 
       }
 
     /*******************************************************************************************************************
