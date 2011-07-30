@@ -80,7 +80,7 @@ public class ContextAttributeContextLoaderListener extends ContextLoaderListener
 
     wac.setParent(parent);
     wac.setServletContext(sc);
-    wac.setConfigLocation(sc.getAttribute("nwcontextConfigLocation").toString());
+    wac.setConfigLocation((String)sc.getAttribute("nwcontextConfigLocation"));
 //		wac.setConfigLocation(sc.getInitParameter(CONFIG_LOCATION_PARAM));
     customizeContext(sc, wac);
     wac.refresh();
