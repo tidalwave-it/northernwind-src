@@ -20,43 +20,30 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.htmltemplate;
+package it.tidalwave.northernwind.frontend.model.jersey.urihandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
-import lombok.extern.slf4j.Slf4j;
+import javax.ws.rs.core.Response;
+import java.io.FileNotFoundException;
+import org.openide.filesystems.FileObject;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
+import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
+import it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal;
 
 /***********************************************************************************************************************
  *
- * A visitor for {@link Layout} that builds a Vaadin view.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NotThreadSafe @Slf4j
-public class HtmlTemplateNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<HtmlHolder, HtmlHolder> 
+@Configurable @Scope(value="session") 
+public class JerseyMediaUriHandler extends MediaUriHandlerSupport<Response, ResponseThreadLocal>
   {
-    public HtmlTemplateNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
-      {
-        super(siteNode);
-      }
-    
-    // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
-    protected HtmlHolder createPlaceHolderComponent (final @Nonnull Layout layout)
+    protected Response createResponse (final @Nonnull FileObject file) 
+      throws FileNotFoundException
       {
-        return new HtmlHolder("<div>Missing component: " + ((DefaultLayout)layout).getTypeUri() + "</div>"); // FIXME
-      }
-
-    @Override
-    protected void attach (final @Nonnull HtmlHolder parent, final @Nonnull HtmlHolder child)
-      {
-        parent.addComponent(child);
+        return Response.ok(file.getInputStream(), file.getMIMEType()).build();
       }
   }

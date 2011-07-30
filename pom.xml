@@ -146,7 +146,7 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-webapp-htmltemplate</artifactId>
+                <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
                 <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

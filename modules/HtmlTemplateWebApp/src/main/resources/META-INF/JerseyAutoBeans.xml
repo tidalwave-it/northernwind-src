@@ -43,20 +43,20 @@
        default-autowire="byType">
            
     <bean id="responseThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.htmltemplate.ResponseThreadLocal" />    
+          class="it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal" />    
     
     <bean id="siteView" 
-          class="it.tidalwave.northernwind.frontend.ui.htmltemplate.HtmlTemplateSiteView" />
+          class="it.tidalwave.northernwind.frontend.ui.jersey.JerseySiteView" />
     
     <bean id="siteViewController" 
-          class="it.tidalwave.northernwind.frontend.ui.htmltemplate.HtmlTemplateSiteViewController"
+          class="it.tidalwave.northernwind.frontend.ui.jersey.JerseySiteViewController"
           autowire="no">
         <property name="uriHandlers">
             <list>
                 <bean id="mediaUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.htmltemplate.urihandler.HtmlTemplateMediaUriHandler" />
+                      class="it.tidalwave.northernwind.frontend.model.jersey.urihandler.JerseyMediaUriHandler" />
                 <bean id="cssUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.htmltemplate.urihandler.HtmlTemplateCssUriHandler" />
+                      class="it.tidalwave.northernwind.frontend.model.jersey.urihandler.JerseyCssUriHandler" />
                 <bean id="contentUriHandler" 
                       class="it.tidalwave.northernwind.frontend.model.spi.ContentUriHandler" />
             </list>

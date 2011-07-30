@@ -11,11 +11,11 @@
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it-tidalwave-northernwind-frontend-webapp-htmltemplate</artifactId>
+    <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>NorthernWind - Frontend Webapp (HTML Template)</name>
-    <description>NorthernWind - Frontend Webapp (HTML Template)</description>
+    <name>NorthernWind - Frontend Webapp (Jersey)</name>
+    <description>NorthernWind - Frontend Webapp (Jersey)</description>
     
     <properties>
         <tft.webapp.contextPath>${main.webapp.contextPath}</tft.webapp.contextPath>

@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.htmltemplate.urihandler;
+package it.tidalwave.northernwind.frontend.model.jersey.urihandler;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.htmltemplate.ResponseThreadLocal;
+import it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal;
 import it.tidalwave.northernwind.frontend.model.UriHandler;
 import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.Cleanup;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") @Slf4j
-public class HtmlTemplateCssUriHandler implements UriHandler
+public class JerseyCssUriHandler implements UriHandler
   {
     @Inject @Nonnull
     private Site site;

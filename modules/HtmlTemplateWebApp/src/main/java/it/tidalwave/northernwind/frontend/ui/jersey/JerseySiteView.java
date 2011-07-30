@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.htmltemplate;
+package it.tidalwave.northernwind.frontend.ui.jersey;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,19 +35,19 @@ import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.htmltemplate.ResponseThreadLocal;
+import it.tidalwave.northernwind.frontend.jersey.ResponseThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The Vaadin implementation of {@link SiteView}.
+ * The Jersey implementation of {@link SiteView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") @Slf4j
-public class HtmlTemplateSiteView implements SiteView
+public class JerseySiteView implements SiteView
   {
     @Inject @Nonnull
     private ResponseThreadLocal responseHolder;
@@ -65,7 +65,7 @@ public class HtmlTemplateSiteView implements SiteView
         
         try
           {
-            final Visitor<Layout, HtmlHolder> nodeViewBuilderVisitor = new HtmlTemplateNodeViewBuilderVisitor(siteNode);
+            final Visitor<Layout, HtmlHolder> nodeViewBuilderVisitor = new JerseyNodeViewBuilderVisitor(siteNode);
             final HtmlHolder htmlHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);        
             responseHolder.set(Response.ok().entity(htmlHolder.asString()).type("text/html").build());
           }

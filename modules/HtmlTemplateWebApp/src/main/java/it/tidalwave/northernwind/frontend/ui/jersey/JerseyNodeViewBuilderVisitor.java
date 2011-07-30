@@ -20,69 +20,43 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.htmltemplate;
+package it.tidalwave.northernwind.frontend.ui.jersey;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.net.MalformedURLException;
-import java.net.URL;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
+import javax.annotation.concurrent.NotThreadSafe;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * A visitor for {@link Layout} that builds a Jersey view.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Path("/") @Slf4j
-public class RestResource 
+@NotThreadSafe @Slf4j
+public class JerseyNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<HtmlHolder, HtmlHolder> 
   {
-    @Inject @Nonnull
-    private SiteViewController siteViewController;
-    
-    @Inject @Nonnull
-    private ResponseThreadLocal responseHolder;
-    
-    @Context
-    private UriInfo uriInfo;
-    
-    @GET
-    public Response getRoot()
-      throws HttpErrorException, MalformedURLException
+    public JerseyNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
       {
-        return get("");
+        super(siteNode);
       }
     
-    @GET @Path("{path: .*}") 
-    public Response get()
-      throws HttpErrorException, MalformedURLException
+    // TODO: this could be done in a ViewFactory subclass? Or an aspect?
+    @Override @Nonnull
+    protected HtmlHolder createPlaceHolderComponent (final @Nonnull Layout layout)
       {
-        return get(uriInfo.getPath(true));
+        return new HtmlHolder("<div>Missing component: " + ((DefaultLayout)layout).getTypeUri() + "</div>"); // FIXME
       }
 
-    @Nonnull
-    private Response get (final @Nonnull String relativeUri)
-      throws HttpErrorException, MalformedURLException
+    @Override
+    protected void attach (final @Nonnull HtmlHolder parent, final @Nonnull HtmlHolder child)
       {
-        responseHolder.set(null);
-        log.info("GET /{}", relativeUri);
-        
-        try
-          { 
-            siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
-            return responseHolder.get();
-          }
-        catch (HttpErrorException e)
-          {
-            return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-          }
+        parent.addComponent(child);
       }
   }

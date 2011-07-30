@@ -20,16 +20,23 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.htmltemplate;
+package it.tidalwave.northernwind.frontend.ui.jersey;
 
-import javax.ws.rs.core.Response;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * The Jersey specialization of {@link SiteViewController}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseThreadLocal extends ThreadLocal<Response>
+@Configurable @Scope(value="session") @Slf4j
+public class JerseySiteViewController extends DefaultSiteViewController // FIXME: drop this, use Default...
   {
   }

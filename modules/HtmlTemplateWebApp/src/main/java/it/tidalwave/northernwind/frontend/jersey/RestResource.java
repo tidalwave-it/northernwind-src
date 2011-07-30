@@ -20,16 +20,21 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.htmltemplate.urihandler;
+package it.tidalwave.northernwind.frontend.jersey;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.io.FileNotFoundException;
-import org.openide.filesystems.FileObject;
+import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
-import it.tidalwave.northernwind.frontend.model.spi.MediaUriHandlerSupport;
-import it.tidalwave.northernwind.frontend.htmltemplate.ResponseThreadLocal;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController;
+import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -37,13 +42,47 @@ import it.tidalwave.northernwind.frontend.htmltemplate.ResponseThreadLocal;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
-public class HtmlTemplateMediaUriHandler extends MediaUriHandlerSupport<Response, ResponseThreadLocal>
+@Configurable @Path("/") @Slf4j
+public class RestResource 
   {
-    @Override @Nonnull
-    protected Response createResponse (final @Nonnull FileObject file) 
-      throws FileNotFoundException
+    @Inject @Nonnull
+    private SiteViewController siteViewController;
+    
+    @Inject @Nonnull
+    private ResponseThreadLocal responseHolder;
+    
+    @Context
+    private UriInfo uriInfo;
+    
+    @GET
+    public Response getRoot()
+      throws HttpErrorException, MalformedURLException
       {
-        return Response.ok(file.getInputStream(), file.getMIMEType()).build();
+        return get("");
+      }
+    
+    @GET @Path("{path: .*}") 
+    public Response get()
+      throws HttpErrorException, MalformedURLException
+      {
+        return get(uriInfo.getPath(true));
+      }
+
+    @Nonnull
+    private Response get (final @Nonnull String relativeUri)
+      throws HttpErrorException, MalformedURLException
+      {
+        responseHolder.set(null);
+        log.info("GET /{}", relativeUri);
+        
+        try
+          { 
+            siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
+            return responseHolder.get();
+          }
+        catch (HttpErrorException e)
+          {
+            return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
+          }
       }
   }
