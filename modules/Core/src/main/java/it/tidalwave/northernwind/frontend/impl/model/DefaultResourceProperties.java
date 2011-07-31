@@ -116,6 +116,11 @@ public class DefaultResourceProperties implements ResourceProperties
           }
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public ResourceProperties getGroup (final @Nonnull Id id)
       throws NotFoundException
