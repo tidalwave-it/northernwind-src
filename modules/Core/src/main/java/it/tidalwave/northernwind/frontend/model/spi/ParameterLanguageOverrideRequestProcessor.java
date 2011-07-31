@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import java.util.Locale;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
