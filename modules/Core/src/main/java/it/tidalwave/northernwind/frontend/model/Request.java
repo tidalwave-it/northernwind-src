@@ -24,7 +24,13 @@ package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
+import it.tidalwave.util.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -42,6 +48,8 @@ public class Request
     @Nonnull
     private final String relativeUri;
     
+    private final Map<String, List<String>> parametersMap = new HashMap<String, List<String>>();
+    
     @Nonnull
     public static Request request()
       {
@@ -52,12 +60,39 @@ public class Request
     public static Request requestFrom (final @Nonnull HttpServletRequest httpServletRequest)
       {
         final String relativeUri = "/" + httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length() + 1);
-        return request().withRelativeUri(relativeUri); 
+        return request().withRelativeUri(relativeUri)
+                        .withParameterMap(httpServletRequest.getParameterMap()); 
+      }
+    
+    @Nonnull
+    public String getParameter (final @Nonnull String parameterName)
+      throws NotFoundException
+      {
+        return getMultiValuedParameter(parameterName).get(0);
+      }
+    
+    @Nonnull
+    public List<String> getMultiValuedParameter (final @Nonnull String parameterName)
+      throws NotFoundException
+      {
+        return NotFoundException.throwWhenNull(parametersMap.get(parameterName), parameterName);
       }
     
     @Nonnull
     public Request withRelativeUri (final @Nonnull String relativeUri)
       {
         return new Request(relativeUri);     
+      }
+    
+    private Request withParameterMap (final @Nonnull Map<String, String[]> parameterMap)
+      {
+        final Request request = new Request(relativeUri);
+        
+        for (final Entry<String, String[]> entry : parameterMap.entrySet())
+          {
+            request.parametersMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
+          }
+        
+        return request;
       }
   }
