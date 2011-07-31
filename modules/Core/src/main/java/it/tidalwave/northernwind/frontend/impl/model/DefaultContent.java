@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A piece of content to be composed into a page.
+ * A piece of content to be composed into a {@code Node}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
