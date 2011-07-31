@@ -56,18 +56,18 @@ public class DefaultSiteViewController implements SiteViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    public void processRequest (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws HttpErrorException
       {
         try
           {
-            log.info("handleUri({}, {})", context, relativeUri);
+            log.info("processRequest({}, {})", context, relativeUri);
             
             for (final RequestProcessor requestProcessor : requestProcessors)
               {
                 log.debug(">>>> trying {} ...", requestProcessor);
                 
-                if (requestProcessor.handleUri(context, relativeUri))
+                if (requestProcessor.process(context, relativeUri))
                   {
                     break;  
                   }

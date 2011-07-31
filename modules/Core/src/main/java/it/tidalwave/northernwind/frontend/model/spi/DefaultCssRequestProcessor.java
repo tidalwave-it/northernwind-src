@@ -56,7 +56,7 @@ public class DefaultCssRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    public boolean process (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException
       {
         if (relativeUri.startsWith("/css"))

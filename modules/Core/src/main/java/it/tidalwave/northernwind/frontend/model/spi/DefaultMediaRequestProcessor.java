@@ -55,7 +55,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
      *
      ******************************************************************************************************************/
     @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    public boolean process (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws NotFoundException, IOException
       {
         if (relativeUri.startsWith("/media"))

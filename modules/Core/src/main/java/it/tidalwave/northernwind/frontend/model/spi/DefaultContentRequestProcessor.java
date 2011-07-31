@@ -56,7 +56,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
+    public boolean process (final @Nonnull URL context, final @Nonnull String relativeUri)
       throws NotFoundException, IOException 
       {
         final SiteNode siteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();            

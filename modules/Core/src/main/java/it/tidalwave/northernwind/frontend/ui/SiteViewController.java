@@ -61,6 +61,6 @@ public interface SiteViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    public void handleUri (@Nonnull URL context, @Nonnull String relativeUri)
+    public void processRequest (@Nonnull URL context, @Nonnull String relativeUri)
       throws HttpErrorException;
   }

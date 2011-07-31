@@ -39,6 +39,6 @@ public interface RequestProcessor
      *
      *
      ******************************************************************************************************************/
-    public boolean handleUri (@Nonnull URL context, @Nonnull String relativeUri)
+    public boolean process (@Nonnull URL context, @Nonnull String relativeUri)
       throws NotFoundException, IOException;
   }

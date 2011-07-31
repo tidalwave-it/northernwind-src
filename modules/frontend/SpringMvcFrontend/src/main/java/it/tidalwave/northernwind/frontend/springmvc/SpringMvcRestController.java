@@ -62,7 +62,7 @@ public class SpringMvcRestController
         
         try
           { 
-            siteViewController.handleUri(new URL("http://localhost:8080/"), relativeUri); // FIXME
+            siteViewController.processRequest(new URL("http://localhost:8080/"), relativeUri); // FIXME
             return responseHolder.get();
           }
         catch (HttpErrorException e)
