@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -36,8 +35,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.Cleanup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /***********************************************************************************************************************
  *
