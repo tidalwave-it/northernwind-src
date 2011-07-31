@@ -33,6 +33,7 @@ import it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.Request.*;
 
 /***********************************************************************************************************************
  *
@@ -60,7 +61,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
           {
             try
               {
-                return processRequest(context, "/" + relativeUri);
+                return processRequest(request().withRelativeUri("/" + relativeUri));
               }
             catch (HttpErrorException e)
               {

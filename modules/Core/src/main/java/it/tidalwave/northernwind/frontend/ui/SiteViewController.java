@@ -23,9 +23,9 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import java.net.URL;
 import lombok.Getter;
 import lombok.ToString;
+import it.tidalwave.northernwind.frontend.model.Request;
 
 /***********************************************************************************************************************
  *
@@ -58,15 +58,16 @@ public interface SiteViewController
                 
     /*******************************************************************************************************************
      *
-     * Processes a request and updates the view of the site. This can happen by producing a response that must be 
-     * returned to the HTTP response (typical for HTML-based technologies or for straightly exposing resources such as
-     * media or RSS feeds) or by side effect (typical for JavaScript-based technologies); in the latter case, the
+     * Processes a {@link Request} and updates the view of the site. This can happen by producing a response that must
+     * be returned to the HTTP response (typical for HTML-based technologies or for straightly exposing resources such 
+     * as media or RSS feeds) or by side effect (typical for JavaScript-based technologies); in the latter case, the
      * returned value is meaningless.
      * 
-     * @return  the response
+     * @param   request   the {@code Request}
+     * @return            the response
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <ResponseType> ResponseType processRequest (@Nonnull URL context, @Nonnull String relativeUri)
+    public <ResponseType> ResponseType processRequest (@Nonnull Request request)
       throws HttpErrorException;
   }

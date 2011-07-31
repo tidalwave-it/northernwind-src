@@ -28,12 +28,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.CharBuffer;
-import java.net.URL;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
@@ -56,9 +56,11 @@ public class DefaultCssRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override
-    public boolean process (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    public boolean process (final @Nonnull Request request) 
       throws NotFoundException, IOException
       {
+        final String relativeUri = request.getRelativeUri();
+        
         if (relativeUri.startsWith("/css"))
           {
             final String path = relativeUri.replaceAll("^/css", "");

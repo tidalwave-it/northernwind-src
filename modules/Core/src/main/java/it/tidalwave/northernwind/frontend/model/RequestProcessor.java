@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.URL;
 import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
@@ -39,6 +38,6 @@ public interface RequestProcessor
      *
      *
      ******************************************************************************************************************/
-    public boolean process (@Nonnull URL context, @Nonnull String relativeUri)
+    public boolean process (@Nonnull Request request)
       throws NotFoundException, IOException;
   }

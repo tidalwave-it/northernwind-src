@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.frontend.jersey;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.net.MalformedURLException;
-import java.net.URL;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -35,6 +34,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.Request.*;
 
 /***********************************************************************************************************************
  *
@@ -76,7 +76,7 @@ public class RestResource
         
         try
           { 
-            return siteViewController.processRequest(new URL("http://localhost:8080/"), relativeUri); // FIXME
+            return siteViewController.processRequest(request().withRelativeUri(relativeUri));
           }
         catch (HttpErrorException e)
           {

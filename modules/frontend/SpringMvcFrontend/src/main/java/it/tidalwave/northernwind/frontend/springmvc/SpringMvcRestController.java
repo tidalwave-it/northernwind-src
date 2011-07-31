@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.Request.*;
 
 /***********************************************************************************************************************
  *
@@ -56,12 +56,9 @@ public class SpringMvcRestController
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
       throws HttpErrorException, MalformedURLException, IOException
       {
-        final String relativeUri = "/" + request.getRequestURI().substring(request.getContextPath().length() + 1);
-        log.info("GET {}", relativeUri);
-        
         try
           { 
-            return siteViewController.processRequest(new URL("http://localhost:8080/"), relativeUri); // FIXME
+            return siteViewController.processRequest(requestFrom(request));
           }
         catch (HttpErrorException e)
           {

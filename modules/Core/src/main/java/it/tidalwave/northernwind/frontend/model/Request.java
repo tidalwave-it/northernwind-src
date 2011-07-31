@@ -20,20 +20,15 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi; 
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Request;
-import it.tidalwave.northernwind.frontend.model.RequestProcessor;
-import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.SiteView;
-import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
+import javax.annotation.concurrent.Immutable;
+import javax.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
@@ -41,28 +36,28 @@ import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
-public class DefaultContentRequestProcessor implements RequestProcessor 
+@Immutable @AllArgsConstructor(access=PRIVATE) @Getter @ToString
+public class Request 
   {
-    @Inject @Nonnull
-    private Site site;
+    @Nonnull
+    private final String relativeUri;
     
-    @Inject @Nonnull
-    private SiteView siteView;
-        
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean process (final @Nonnull Request request)
-      throws NotFoundException, IOException 
+    @Nonnull
+    public static Request request()
       {
-        final SiteNode siteNode = site.find(SiteNode).withRelativeUri(request.getRelativeUri()).result();            
-//            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        siteView.renderSiteNode(siteNode);
-        
-        return true;
+        return new Request("");  
+      }
+    
+    @Nonnull
+    public static Request requestFrom (final @Nonnull HttpServletRequest httpServletRequest)
+      {
+        final String relativeUri = "/" + httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length() + 1);
+        return request().withRelativeUri(relativeUri); 
+      }
+    
+    @Nonnull
+    public Request withRelativeUri (final @Nonnull String relativeUri)
+      {
+        return new Request(relativeUri);     
       }
   }

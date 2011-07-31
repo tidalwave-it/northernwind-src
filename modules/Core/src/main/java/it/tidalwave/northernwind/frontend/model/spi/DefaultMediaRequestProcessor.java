@@ -25,12 +25,12 @@ package it.tidalwave.northernwind.frontend.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.URL;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
+import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
@@ -55,9 +55,11 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
      *
      ******************************************************************************************************************/
     @Override
-    public boolean process (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    public boolean process (final @Nonnull Request request) 
       throws NotFoundException, IOException
       {
+        final String relativeUri = request.getRelativeUri();
+        
         if (relativeUri.startsWith("/media"))
           {
             final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "")).result();

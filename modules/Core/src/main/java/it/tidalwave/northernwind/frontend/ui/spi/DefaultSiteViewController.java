@@ -27,10 +27,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.List;
 import java.io.IOException;
-import java.net.URL;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import it.tidalwave.northernwind.frontend.model.spi.RequestResettable;
 import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
@@ -65,19 +65,19 @@ public class DefaultSiteViewController implements SiteViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <ResponseType> ResponseType processRequest (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    public <ResponseType> ResponseType processRequest (final @Nonnull Request request) 
       throws HttpErrorException
       {
         try
           {
-            log.info("processRequest({}, {})", context, relativeUri);
+            log.info("processRequest({})", request);
             resetRequestResettables();
             
             for (final RequestProcessor requestProcessor : requestProcessors)
               {
                 log.debug(">>>> trying {} ...", requestProcessor);
                 
-                if (requestProcessor.process(context, relativeUri))
+                if (requestProcessor.process(request))
                   {
                     break;  
                   }
