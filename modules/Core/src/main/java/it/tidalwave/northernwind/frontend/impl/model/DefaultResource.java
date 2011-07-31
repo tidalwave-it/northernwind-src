@@ -112,15 +112,15 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getFileBasedProperty (final @Nonnull String attribute)
+    private String getFileBasedProperty (final @Nonnull String propertyName)
       throws NotFoundException, IOException
       {
-        log.trace("getFileBasedProperty({})", attribute);
-        final FileObject attributeFile = file.getFileObject(attribute);
+        log.trace("getFileBasedProperty({})", propertyName);
+        final FileObject attributeFile = file.getFileObject(propertyName);
         
         if (attributeFile == null)
           {
-            throw new NotFoundException(file.getPath() + "/" + attribute);  
+            throw new NotFoundException(file.getPath() + "/" + propertyName);  
           }
         
         log.trace(">>>> reading from {}", attributeFile.getPath());
