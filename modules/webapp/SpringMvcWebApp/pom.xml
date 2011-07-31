@@ -17,12 +17,6 @@
     <name>NorthernWind - Frontend Webapp (Spring MVC)</name>
     <description>NorthernWind - Frontend Webapp Spring MVC)</description>
     
-    <properties>
-        <tft.webapp.contextPath>${main.webapp.contextPath}</tft.webapp.contextPath>
-        <changeSet>null</changeSet>
-        <netbeans.hint.deploy.server>Tomcat70</netbeans.hint.deploy.server>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
