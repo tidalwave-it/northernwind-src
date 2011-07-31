@@ -24,11 +24,11 @@ package it.tidalwave.northernwind.frontend.jersey;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import static it.tidalwave.northernwind.frontend.model.Request.*;
@@ -46,17 +46,17 @@ public class RestResource
     private SiteViewController siteViewController;
     
     @Context
-    private UriInfo uriInfo;
+    private HttpServletRequest httpServletRequest;
     
     @GET
     public Response getRoot()
       {
-        return siteViewController.processRequest(request().withRelativeUri("/"));
+        return siteViewController.processRequest(requestFrom(httpServletRequest));
       }
     
     @GET @Path("{path: .*}") 
     public Response get()
       {
-        return siteViewController.processRequest(request().withRelativeUri("/" + uriInfo.getPath(true)));
+        return siteViewController.processRequest(requestFrom(httpServletRequest));
       }
   }
