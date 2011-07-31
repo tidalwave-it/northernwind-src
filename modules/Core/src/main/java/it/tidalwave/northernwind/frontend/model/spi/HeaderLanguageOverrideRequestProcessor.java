@@ -27,12 +27,10 @@ import javax.inject.Inject;
 import java.util.Locale;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
+import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.impl.model.DefaultRequestLocaleManager;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -41,14 +39,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Order(2000) @Slf4j // order must come after HeaderLanguageOverrideRequestProcessor
-public class ParameterLanguageOverrideRequestProcessor implements RequestProcessor
+@Configurable @Order(1000) @Slf4j
+public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
   {
-    @Getter @Setter @Nonnull
-    private String parameterName = "l";
-            
     @Inject @Nonnull
     private DefaultRequestLocaleManager requestLocaleManager;
+
+    @Inject @Nonnull
+    private Site site;
 
     /*******************************************************************************************************************
      *
@@ -58,13 +56,13 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
     @Override
     public boolean process (final @Nonnull Request request) 
       {
-        try
+        for (final Locale locale : request.getPreferredLocales())
           {
-            requestLocaleManager.setRequestLocale(new Locale(request.getParameter(parameterName)));
-          }
-        catch (NotFoundException ex) 
-          {
-            // ok, no override
+            if (site.getConfiguredLocales().contains(locale))
+              {
+                requestLocaleManager.setRequestLocale(locale);
+                break;
+              }
           }
 
         return false;

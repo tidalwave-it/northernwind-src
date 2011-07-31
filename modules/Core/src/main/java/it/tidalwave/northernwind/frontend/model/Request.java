@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model;
 
+import java.util.ArrayList;
+import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import it.tidalwave.util.NotFoundException;
+import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -48,12 +51,16 @@ public class Request
     @Nonnull
     private final String relativeUri;
     
-    private final Map<String, List<String>> parametersMap = new HashMap<String, List<String>>();
+    @Nonnull
+    private final Map<String, List<String>> parametersMap;
+        
+    @Nonnull
+    private final List<Locale> preferredLocales;
     
     @Nonnull
     public static Request request()
       {
-        return new Request("");  
+        return new Request("", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
       }
     
     @Nonnull
@@ -61,7 +68,8 @@ public class Request
       {
         final String relativeUri = "/" + httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length() + 1);
         return request().withRelativeUri(relativeUri)
-                        .withParameterMap(httpServletRequest.getParameterMap()); 
+                        .withParameterMap(httpServletRequest.getParameterMap())
+                        .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 
       }
     
     @Nonnull
@@ -81,18 +89,25 @@ public class Request
     @Nonnull
     public Request withRelativeUri (final @Nonnull String relativeUri)
       {
-        return new Request(relativeUri);     
+        return new Request(relativeUri, parametersMap, preferredLocales);     
       }
     
-    private Request withParameterMap (final @Nonnull Map<String, String[]> parameterMap)
+    @Nonnull
+    private Request withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
       {
-        final Request request = new Request(relativeUri);
+        final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
         
-        for (final Entry<String, String[]> entry : parameterMap.entrySet())
+        for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
           {
-            request.parametersMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
+            parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
           }
         
-        return request;
+        return new Request(relativeUri, parameterMap, preferredLocales);
+      }
+    
+    @Nonnull
+    private Request withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
+      {
+        return new Request(relativeUri, parametersMap, preferredLocales);  
       }
   }
