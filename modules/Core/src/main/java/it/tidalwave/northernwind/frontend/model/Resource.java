@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
 import org.openide.filesystems.FileObject;
 
 /***********************************************************************************************************************
@@ -47,4 +49,8 @@ public interface Resource
     
     @Nonnull
     public ResourceProperties getProperties();
+    
+    @Nonnull
+    public ResourceProperties getProperties (@Nonnull Id id)
+      throws NotFoundException;
   }

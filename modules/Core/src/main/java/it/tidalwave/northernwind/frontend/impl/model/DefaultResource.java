@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -39,8 +38,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.TypeSafeHashMap;
-import it.tidalwave.util.TypeSafeMap;
 import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
@@ -68,7 +65,7 @@ import lombok.extern.slf4j.Slf4j;
     @Nonnull @Getter
     private final FileObject file;    
     
-    @Nonnull @Getter
+    @Nonnull
     private ResourceProperties properties;
     
     private DefaultResourceProperties.PropertyResolver propertyResolver = new DefaultResourceProperties.PropertyResolver()
@@ -88,6 +85,27 @@ import lombok.extern.slf4j.Slf4j;
     public DefaultResource (final @Nonnull FileObject file) 
       {
         this.file = file;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public ResourceProperties getProperties()
+      {
+        return properties;   
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public ResourceProperties getProperties (final @Nonnull Id id)
+      throws NotFoundException
+      {
+        return properties.getGroup(id);   
       }
     
     /*******************************************************************************************************************
