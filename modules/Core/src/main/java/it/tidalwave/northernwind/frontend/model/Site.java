@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Locale;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
@@ -71,4 +73,14 @@ public interface Site
      ******************************************************************************************************************/
     @Nonnull
     public FileSystemProvider getFileSystemProvider();
+    
+    /*******************************************************************************************************************
+     *
+     * Returns the {@link Locale}s configured for this site.
+     * 
+     * @return   the {@code Locale}s.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<Locale> getConfiguredLocales();
   }

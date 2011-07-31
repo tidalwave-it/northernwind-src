@@ -27,6 +27,9 @@ import javax.inject.Named;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -200,6 +203,17 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
           }
         
         return new DefaultSiteFinder<Type>(type.getSimpleName(), map);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public List<Locale> getConfiguredLocales()
+      {
+        return Arrays.asList(Locale.ITALIAN, Locale.ENGLISH); // FIXME:
       }
     
     /*******************************************************************************************************************

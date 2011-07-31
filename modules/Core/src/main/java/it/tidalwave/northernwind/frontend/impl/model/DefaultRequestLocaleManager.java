@@ -27,6 +27,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
+import it.tidalwave.northernwind.frontend.model.Site;
+import java.util.ArrayList;
+import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -36,8 +41,14 @@ import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable @Slf4j
 public class DefaultRequestLocaleManager implements RequestLocaleManager
   {
+    @Inject @Nonnull
+    private Site site;
+    
+    private final ThreadLocal<Locale> localeHolder = new ThreadLocal<Locale>();
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -46,6 +57,37 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager
     @Override @Nonnull
     public List<Locale> getLocales() 
       {
-        return Arrays.asList(Locale.ITALIAN, Locale.ENGLISH);
+        final Locale requestLocale = localeHolder.get();
+        final List<Locale> locales = new ArrayList<Locale>(site.getConfiguredLocales());
+        
+        
+        if (requestLocale != null)
+          {
+            locales.remove(requestLocale);
+            locales.add(0, requestLocale);
+          }
+
+        log.debug(">>>> locales: {}", locales);
+        
+        return locales;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public void setRequestLocale (final @Nonnull Locale locale)
+      {
+        log.debug("setRequestLocale({})", locale);
+        localeHolder.set(locale);            
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public void reset()
+      {
+        localeHolder.remove();  
       }
   }
