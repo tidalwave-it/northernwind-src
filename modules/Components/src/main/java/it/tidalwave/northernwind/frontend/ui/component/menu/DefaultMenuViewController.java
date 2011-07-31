@@ -70,7 +70,7 @@ public class DefaultMenuViewController implements MenuViewController
         try 
           {
             final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
-            final String uris = siteNode.getProperty(PROP_CONTENT);
+            final String uris = siteNode.getProperties().getProperty(PROP_CONTENT);
             setLinks(Arrays.asList(uris.split(",")));
           }
         catch (NotFoundException e)
@@ -101,7 +101,7 @@ public class DefaultMenuViewController implements MenuViewController
                 // FIXME: should be fixed in the Infoglue importer
                 final String fixedUri = "/" + relativeUri.trim().replaceAll("Mobile", "");
                 final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(fixedUri).result();
-                final String navigationTitle = targetSiteNode.getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
+                final String navigationTitle = targetSiteNode.getProperties().getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
                 view.addLink(navigationTitle, fixedUri);                
               }
             catch (IOException e)

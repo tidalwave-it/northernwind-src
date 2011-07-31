@@ -28,7 +28,6 @@ import javax.inject.Named;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.beans.PropertyVetoException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;

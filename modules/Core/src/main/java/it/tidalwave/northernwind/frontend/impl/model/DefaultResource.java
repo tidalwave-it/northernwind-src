@@ -36,12 +36,14 @@ import java.io.IOException;
 import java.io.Reader;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.util.TypeSafeMap;
 import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
 import it.tidalwave.northernwind.frontend.model.Resource;
+import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -54,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude={"site", "localeRequestManager"})
+@Configurable @Slf4j @ToString(exclude={"site", "localeRequestManager", "properties", "propertyResolver"})
 /* package */ class DefaultResource implements Resource
   {
     @Inject @Nonnull
@@ -66,50 +68,26 @@ import lombok.extern.slf4j.Slf4j;
     @Nonnull @Getter
     private final FileObject file;    
     
-    @CheckForNull
-    private transient TypeSafeMap properties;
-
-    public DefaultResource (final @Nonnull FileObject file) 
+    @Nonnull @Getter
+    private ResourceProperties properties;
+    
+    private DefaultResourceProperties.PropertyResolver propertyResolver = new DefaultResourceProperties.PropertyResolver()
       {
-        this.file = file;
-      }
+        @Override
+        public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key) 
+          throws NotFoundException, IOException
+          {
+            return (Type)getFileBasedProperty(key.stringValue()); // FIXME: use also Id
+          }
+      };
     
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public <Type> Type getProperty (@Nonnull Key<Type> key)
-      throws NotFoundException, IOException
+    public DefaultResource (final @Nonnull FileObject file) 
       {
-        try
-          { 
-            return properties.get(key);
-          }
-        catch (NotFoundException e)
-          {
-            return (Type)getFileBasedProperty(key.stringValue());
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public <Type> Type getProperty (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
-      throws IOException
-      {
-        try
-          { 
-            return getProperty(key);
-          }
-        catch (NotFoundException e)
-          {
-            return defaultValue;
-          }
+        this.file = file;
       }
     
     /*******************************************************************************************************************
@@ -165,7 +143,7 @@ import lombok.extern.slf4j.Slf4j;
               }
           }
 
-        properties = new TypeSafeHashMap(map);
+        properties = new DefaultResourceProperties(new Id(""), map, propertyResolver);
         log.debug(">>>> properties for /{}: {}", file.getPath(), properties);
       }
     

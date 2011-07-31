@@ -88,8 +88,8 @@ public class DefaultBlogViewController implements BlogViewController
                   {
                     try
                       {
-                        view.addPost(new BlogPost(post.getProperty(PROPERTY_TITLE),     
-                                                  post.getProperty(PROPERTY_FULL_TEXT)));                
+                        view.addPost(new BlogPost(post.getProperties().getProperty(PROPERTY_TITLE),     
+                                                  post.getProperties().getProperty(PROPERTY_FULL_TEXT)));                
                       }
                     catch (NotFoundException e)
                       {

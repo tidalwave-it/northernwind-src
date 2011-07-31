@@ -23,28 +23,56 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import org.openide.filesystems.FileObject;
+import java.io.IOException;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
- *
+ * 
+ * A bag of properties for a {@link Resources}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Resource 
+public interface ResourceProperties 
   {
-    public static final Class<Resource> Resource = Resource.class;
-    
     /*******************************************************************************************************************
      *
-     * Returns the file backing this resource.
+     * Retrieves a property.
      * 
-     * @return  the file
+     * @param   key                 the property key
+     * @return                      the property value
+     * @throws  NotFoundException   if the property doesn't exist
      *
      ******************************************************************************************************************/
     @Nonnull
-    public FileObject getFile();
-    
+    public <Type> Type getProperty (@Nonnull Key<Type> key)
+      throws NotFoundException, IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property, eventually returning a default value.
+     * 
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties getProperties();
+    public <Type> Type getProperty (@Nonnull Key<Type> key, @Nonnull Type defaultValue)
+      throws IOException;
+    
+    /*******************************************************************************************************************
+     *
+     * Retrieves a subgroup of properties.
+     * 
+     * @param   id                  the id
+     * @return                      the property group
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties getGroup (@Nonnull Id id)
+      throws NotFoundException;
   }
