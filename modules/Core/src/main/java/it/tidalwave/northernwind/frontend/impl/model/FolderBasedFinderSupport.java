@@ -66,7 +66,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
      ******************************************************************************************************************/
     public FolderBasedFinderSupport (final @Nonnull Type owner) 
       {
-        this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME
+        this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME assumes the interesting interface is [0]
         this.file = owner.getFile();
         this.uriPrefix = "/content/document"; // FIXME: site.getRelativeUriPrefix(typeClass);
       }
