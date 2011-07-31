@@ -38,6 +38,6 @@ public interface RequestProcessor
      *
      *
      ******************************************************************************************************************/
-    public boolean process (@Nonnull Request request)
+    public boolean process (@Nonnull Request request) // FIXME: use enum in place of boolean
       throws NotFoundException, IOException;
   }
