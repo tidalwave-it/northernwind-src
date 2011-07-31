@@ -59,17 +59,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
         @Override
         public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
           {
-            try
-              {
-                return processRequest(request().withRelativeUri("/" + relativeUri));
-              }
-            catch (HttpErrorException e)
-              {
-                log.error("", e);
-//                e.getStatusCode();
-                // TODO: send status code
-                return null;
-              }
+            return processRequest(request().withRelativeUri("/" + relativeUri));
           }
       };
     

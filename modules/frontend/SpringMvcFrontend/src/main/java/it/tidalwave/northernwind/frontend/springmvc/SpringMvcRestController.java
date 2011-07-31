@@ -24,17 +24,13 @@ package it.tidalwave.northernwind.frontend.springmvc;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static it.tidalwave.northernwind.frontend.model.Request.*;
 
 /***********************************************************************************************************************
@@ -43,29 +39,15 @@ import static it.tidalwave.northernwind.frontend.model.Request.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Controller @Slf4j
+@Configurable @Controller
 public class SpringMvcRestController 
   {
     @Inject @Nonnull
     private SiteViewController siteViewController;
     
-    @Inject @Nonnull
-    private ResponseEntityHolder responseHolder;
-
-    @RequestMapping(value="/**", method=RequestMethod.GET) @Nonnull
+    @RequestMapping(value="/**", method=GET) @Nonnull
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
-      throws HttpErrorException, MalformedURLException, IOException
       {
-        try
-          { 
-            return siteViewController.processRequest(requestFrom(request));
-          }
-        catch (HttpErrorException e)
-          {
-            return responseHolder.response().withContentType("text/plain")
-                                            .withBody(e.getMessage())
-                                            .withStatus(e.getStatusCode())
-                                            .build();
-          }
+        return siteViewController.processRequest(requestFrom(request));
       }
   }

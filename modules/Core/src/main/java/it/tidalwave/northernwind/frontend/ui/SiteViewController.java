@@ -23,8 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import lombok.Getter;
-import lombok.ToString;
 import it.tidalwave.northernwind.frontend.model.Request;
 
 /***********************************************************************************************************************
@@ -37,25 +35,6 @@ import it.tidalwave.northernwind.frontend.model.Request;
  **********************************************************************************************************************/
 public interface SiteViewController 
   {
-    @ToString 
-    public static class HttpErrorException extends Exception
-      {
-        @Getter
-        private final int statusCode;
-
-        public HttpErrorException (final int statusCode) 
-          {
-            super("HTTP error: " + statusCode);
-            this.statusCode = statusCode;
-          }
-
-        public HttpErrorException (final int statusCode, final @Nonnull Throwable cause) 
-          {
-            super("HTTP error: " + statusCode, cause);
-            this.statusCode = statusCode;
-          }
-      }
-                
     /*******************************************************************************************************************
      *
      * Processes a {@link Request} and updates the view of the site. This can happen by producing a response that must
@@ -68,6 +47,5 @@ public interface SiteViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <ResponseType> ResponseType processRequest (@Nonnull Request request)
-      throws HttpErrorException;
+    public <ResponseType> ResponseType processRequest (@Nonnull Request request);
   }

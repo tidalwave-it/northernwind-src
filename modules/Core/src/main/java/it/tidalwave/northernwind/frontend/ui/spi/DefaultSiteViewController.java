@@ -66,7 +66,6 @@ public class DefaultSiteViewController implements SiteViewController
      ******************************************************************************************************************/
     @Override @Nonnull
     public <ResponseType> ResponseType processRequest (final @Nonnull Request request) 
-      throws HttpErrorException
       {
         try
           {
@@ -87,11 +86,13 @@ public class DefaultSiteViewController implements SiteViewController
           }
         catch (NotFoundException e) 
           {
-            throw new HttpErrorException(404, e); 
+            log.warn("processing: {} - {}", request, e.toString());
+            return (ResponseType)responseHolder.response().forException(e).build();
           }
         catch (IOException e) 
           {
-            throw new HttpErrorException(500, e); 
+            log.warn("processing: " + request, e);
+            return (ResponseType)responseHolder.response().forException(e).build();
           }
         finally
           {

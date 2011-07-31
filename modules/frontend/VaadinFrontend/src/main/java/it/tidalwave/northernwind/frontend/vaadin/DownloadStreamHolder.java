@@ -22,11 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.vaadin;
 
-import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.io.IOException;
+import java.io.InputStream;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
 import com.vaadin.terminal.DownloadStream;
@@ -49,6 +51,22 @@ public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
           {
             headers.add(header, value);        
             return this;
+          }
+        
+        @Override @Nonnull
+        public ResponseBuilder forException (final @Nonnull NotFoundException e) 
+          {
+            return (ResponseBuilder)withContentType("text/plain")
+                  .withBody(e.getMessage())
+                  .withStatus(404);
+          }
+
+        @Override @Nonnull
+        public ResponseBuilder forException (final @Nonnull IOException e) 
+          {
+            return (ResponseBuilder)withContentType("text/plain")
+                  .withBody(e.getMessage())
+                  .withStatus(500);
           }
         
         @Override @Nonnull

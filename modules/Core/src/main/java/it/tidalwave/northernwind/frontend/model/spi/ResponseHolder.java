@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.spi;
 
+import it.tidalwave.util.NotFoundException;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
@@ -92,6 +93,22 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           {
             this.httpStatus = httpStatus;
             return this;
+          }
+
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e) 
+          {
+            return withContentType("text/plain")
+                  .withBody(e.getMessage())
+                  .withStatus(404);
+          }
+
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e) 
+          {
+            return withContentType("text/plain")
+                  .withBody(e.getMessage())
+                  .withStatus(500);
           }
         
         @Nonnull

@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.jersey;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.net.MalformedURLException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -32,8 +31,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import it.tidalwave.northernwind.frontend.ui.SiteViewController.HttpErrorException;
-import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Request.*;
 
 /***********************************************************************************************************************
@@ -42,45 +39,24 @@ import static it.tidalwave.northernwind.frontend.model.Request.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Path("/") @Slf4j
+@Configurable @Path("/")
 public class RestResource 
   {
     @Inject @Nonnull
     private SiteViewController siteViewController;
-    
-    @Inject @Nonnull
-    private RestResponseHolder responseHolder;
     
     @Context
     private UriInfo uriInfo;
     
     @GET
     public Response getRoot()
-      throws HttpErrorException, MalformedURLException
       {
-        return get("/");
+        return siteViewController.processRequest(request().withRelativeUri("/"));
       }
     
     @GET @Path("{path: .*}") 
     public Response get()
-      throws HttpErrorException, MalformedURLException
       {
-        return get("/" + uriInfo.getPath(true));
-      }
-
-    @Nonnull
-    private Response get (final @Nonnull String relativeUri)
-      throws HttpErrorException, MalformedURLException
-      {
-        log.info("GET {}", relativeUri);
-        
-        try
-          { 
-            return siteViewController.processRequest(request().withRelativeUri(relativeUri));
-          }
-        catch (HttpErrorException e)
-          {
-            return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-          }
+        return siteViewController.processRequest(request().withRelativeUri("/" + uriInfo.getPath(true)));
       }
   }
