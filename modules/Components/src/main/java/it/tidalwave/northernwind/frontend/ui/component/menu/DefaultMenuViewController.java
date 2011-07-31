@@ -30,7 +30,6 @@ import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
@@ -69,8 +68,7 @@ public class DefaultMenuViewController implements MenuViewController
         
         try 
           {
-            final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
-            final String uris = siteNode.getProperties().getProperty(PROP_CONTENT);
+            final String uris = siteNode.getProperties(viewId).getProperty(PROP_CONTENT);
             setLinks(Arrays.asList(uris.split(",")));
           }
         catch (NotFoundException e)

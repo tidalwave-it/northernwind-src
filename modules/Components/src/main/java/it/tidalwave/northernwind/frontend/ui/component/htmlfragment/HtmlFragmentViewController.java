@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * The controller of {@link ArticleView}.
@@ -32,4 +34,5 @@ package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
  **********************************************************************************************************************/
 public interface HtmlFragmentViewController 
   {    
+    public static final Key<String> PROP_CONTENT = new Key<String>("content"); 
   }

@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,4 +32,5 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
  **********************************************************************************************************************/
 public interface BlogViewController 
   {    
+    public static final Key<String> PROP_CONTENT = new Key<String>("content"); 
   }

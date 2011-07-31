@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * The controller of {@link ArticleView}.
@@ -32,4 +34,5 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
  **********************************************************************************************************************/
 public interface HtmlTextWithTitleViewController 
   {    
+    public static final Key<String> PROP_CONTENT = new Key<String>("content");
   }

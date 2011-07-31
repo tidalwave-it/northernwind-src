@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Site;
@@ -65,8 +64,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     {
         try
           {
-            final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
-            final String contentUri = siteNode.getProperties().getProperty(PROP_CONTENT);
+            final String contentUri = siteNode.getProperties(viewId).getProperty(PROP_CONTENT);
             
             // FIXME: should be fixed in the Infoglue importer
             final String fixedContentUri = r("/" + contentUri.replaceAll("Mobile", ""));

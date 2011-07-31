@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * The controller of {@link MenuView}.
@@ -32,4 +34,5 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
  **********************************************************************************************************************/
 public interface MenuViewController
   {
+    public static final Key<String> PROP_CONTENT = new Key<String>("content"); 
   } 

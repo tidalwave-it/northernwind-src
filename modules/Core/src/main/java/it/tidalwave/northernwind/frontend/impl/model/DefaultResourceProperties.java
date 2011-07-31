@@ -26,6 +26,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -74,7 +75,43 @@ public class DefaultResourceProperties implements ResourceProperties
                                       final @Nonnull PropertyResolver propertyResolver) 
       {
         this.id = id;
-        properties = new TypeSafeHashMap(map);
+        
+        final Map<Key<?>, Object> rootMap = new HashMap<Key<?>, Object>();
+        final Map<Id, Map<Key<?>, Object>> othersMap = new HashMap<Id, Map<Key<?>, Object>>();
+        
+        for (final Entry<Key<?>, Object> entry : map.entrySet())
+          {
+            final String s = entry.getKey().stringValue();
+            final Object value = entry.getValue();
+            
+            if (!s.contains("."))
+              {
+                rootMap.put(new Key<Object>(s), value);  
+              }
+            else
+              {
+                final String[] x = s.split("\\.");
+                final Id groupId = new Id(x[0]);
+                
+                Map<Key<?>, Object> otherMap = othersMap.get(groupId);
+                
+                if (otherMap == null)
+                  {
+                    otherMap = new HashMap<Key<?>, Object>();
+                    othersMap.put(groupId, otherMap);  
+                  }
+                
+                otherMap.put(new Key<Object>(x[1]), value);
+              }
+          }
+        
+        properties = new TypeSafeHashMap(rootMap);
+        
+        for (final Entry<Id, Map<Key<?>, Object>> entry : othersMap.entrySet())
+          {
+            groups.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
+          }
+        
         this.propertyResolver = propertyResolver;
       }
     

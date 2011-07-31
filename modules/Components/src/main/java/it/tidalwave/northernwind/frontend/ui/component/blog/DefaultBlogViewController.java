@@ -32,6 +32,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
+import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView.BlogPost;
@@ -66,13 +67,11 @@ public class DefaultBlogViewController implements BlogViewController
                                       final @Nonnull SiteNode siteNode) 
     {
         this.view = view;
-        
-        final Key<String> PROP_CONTENT = new Key<String>(viewId + ".content"); // FIXME: have a subproperty group with the name
-        final String uris = "/content/document/Blog"; // siteNode.getProperty(PROP_CONTENT);
-        setPosts(Arrays.asList(uris.split(",")));
+        final String uris = "/content/document/Blog"; // FIXME siteNode.getProperty(PROP_CONTENT);
+        setPosts(Arrays.asList(uris.split(",")), viewId);
       }
     
-    private void setPosts (final @Nonnull List<String> relativeUris) 
+    private void setPosts (final @Nonnull List<String> relativeUris, final @Nonnull Id viewId) 
       {
         log.debug("setPosts({})", relativeUris);
         
@@ -88,8 +87,9 @@ public class DefaultBlogViewController implements BlogViewController
                   {
                     try
                       {
-                        view.addPost(new BlogPost(post.getProperties().getProperty(PROPERTY_TITLE),     
-                                                  post.getProperties().getProperty(PROPERTY_FULL_TEXT)));                
+                        final ResourceProperties properties = post.getProperties(viewId);
+                        view.addPost(new BlogPost(properties.getProperty(PROPERTY_TITLE),     
+                                                  properties.getProperty(PROPERTY_FULL_TEXT)));                
                       }
                     catch (NotFoundException e)
                       {
