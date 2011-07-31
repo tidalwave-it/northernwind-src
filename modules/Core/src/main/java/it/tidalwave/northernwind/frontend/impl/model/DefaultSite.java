@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
+import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.annotation.Nonnull;
@@ -46,6 +47,7 @@ import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteFinder;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -112,6 +114,9 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     @Getter @Nonnull
     private String contextPath = "NOT SET YET";
     
+    @Getter @Setter @Nonnull
+    private String localesAsString;
+            
     private FileObject documentFolder;
     
     private FileObject mediaFolder;
@@ -125,6 +130,8 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     private final Map<String, SiteNode> nodeMapByRelativeUri = new TreeMap<String, SiteNode>();
     
     private final Map<Class<?>, Map<String, ?>> mapsByType = new HashMap<Class<?>, Map<String, ?>>();
+    
+    private final List<Locale> configuredLocales = new ArrayList<Locale>();
 
     /*******************************************************************************************************************
      *
@@ -213,7 +220,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
     @Override @Nonnull
     public List<Locale> getConfiguredLocales()
       {
-        return Arrays.asList(Locale.ITALIAN, Locale.ENGLISH); // FIXME:
+        return new CopyOnWriteArrayList<Locale>(configuredLocales);
       }
     
     /*******************************************************************************************************************
@@ -237,11 +244,17 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
         mediaFolder = findMandatoryFolder(fileSystem, mediaPath);
         nodeFolder = findMandatoryFolder(fileSystem, nodePath);
         
+        for (final String localeAsString : localesAsString.split(","))
+          {
+            configuredLocales.add(new Locale(localeAsString.trim()));  
+          }
+        
         log.info(">>>> contextPath:  {}", contextPath);
         log.info(">>>> fileSystem:   {}", fileSystem);
         log.info(">>>> documentPath: {}", documentFolder.getPath());
         log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
         log.info(">>>> nodePath:     {}", nodeFolder.getPath());
+        log.info(">>>> locales:      {}", configuredLocales);
         
         reset();
       }

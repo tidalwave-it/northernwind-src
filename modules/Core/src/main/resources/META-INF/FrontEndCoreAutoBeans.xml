@@ -95,6 +95,7 @@
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
+        <property name="localesAsString" value="${nw.site.locales}" />
     </bean>
                             
     <bean id="requestLocaleManager"
