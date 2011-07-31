@@ -88,20 +88,25 @@ public class HtmlHolder
     
     public HtmlHolder (final @Nonnull String html) 
       {
-        attributeMap.put("content", html);
+        addAttribute("content", html);
         template = "$content$";
       }
     
 //    @Override
     public void setHtmlFragment (final @Nonnull String html) 
       {
-        attributeMap.put("content", html);
+        addAttribute("content", html);
 //        setValue(html);
       }    
     
     public void addComponent (final @Nonnull HtmlHolder child) 
       {
         contents.add(child);
+      }
+    
+    public void addAttribute (final @Nonnull String name, final @Nonnull String value)
+      {
+        attributeMap.put(name, value);  
       }
     
     @Nonnull
