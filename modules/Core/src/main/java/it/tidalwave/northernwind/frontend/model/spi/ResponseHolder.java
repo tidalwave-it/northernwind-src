@@ -22,8 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.spi;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import org.openide.filesystems.FileObject;
 
 /***********************************************************************************************************************
  *
@@ -33,6 +36,12 @@ import javax.annotation.concurrent.NotThreadSafe;
  **********************************************************************************************************************/
 public abstract class ResponseHolder<ResponseType>
   { 
+    protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
+    protected static final String HEADER_ETAG = "ETag";
+    protected static final String HEADER_CONTENT_TYPE = "Content-Type";
+    protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
+    protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
+
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<Object>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
     
@@ -49,13 +58,13 @@ public abstract class ResponseHolder<ResponseType>
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
           {
-            return withHeader("Content-Type", contentType);
+            return withHeader(HEADER_CONTENT_TYPE, contentType);
           }
         
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentLenght (final @Nonnull long contentLenght)
+        public ResponseBuilderSupport<ResponseType> withContentLength (final @Nonnull long contentLength)
           {
-            return withHeader("Content-Length", "" + contentLenght);
+            return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
           }
         
         @Nonnull
@@ -63,6 +72,19 @@ public abstract class ResponseHolder<ResponseType>
           {
             this.body = body;
             return this;
+          }
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull FileObject file)
+          throws IOException
+          {
+            final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
+
+            return withContentType(file.getMIMEType())
+                  .withContentLength(bytes.length)
+                  .withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(file.lastModified()))
+                  .withHeader(HEADER_ETAG, String.format("\"%d\"", file.lastModified().getTime()))
+                  .withBody(bytes);
           }
         
         @Nonnull
@@ -77,8 +99,7 @@ public abstract class ResponseHolder<ResponseType>
         
         public void put()
           {
-            threadLocal.set(build()); // FIXME
-//            threadLocal.set(build());
+            threadLocal.set(build()); 
           }
       }
     

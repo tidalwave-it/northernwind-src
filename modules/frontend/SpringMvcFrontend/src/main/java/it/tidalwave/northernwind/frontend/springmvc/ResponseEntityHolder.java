@@ -59,7 +59,7 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
           }
         
         @Override @Nonnull
-        public ResponseBuilder withContentLenght (final @Nonnull long contentLenght)
+        public ResponseBuilder withContentLength (final @Nonnull long contentLenght)
           {
             headers.setContentLength(contentLenght);
             return this;

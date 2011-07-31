@@ -77,10 +77,6 @@ public class DefaultMediaUriHandler<ResponseType> implements UriHandler
       throws IOException
       {
         log.info(">>>> serving contents of /{} ...", file.getPath());
-        final byte[] bytes = file.asBytes();
-        responseHolder.response().withContentType(file.getMIMEType())
-                                 .withContentLenght(bytes.length)
-                                 .withBody(bytes)
-                                 .put();
+        responseHolder.response().fromFile(file).put();
       }
   }
