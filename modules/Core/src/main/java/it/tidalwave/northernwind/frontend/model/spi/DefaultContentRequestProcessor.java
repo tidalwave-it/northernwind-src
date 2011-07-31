@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
@@ -34,6 +35,7 @@ import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
+import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************
  *
@@ -41,7 +43,7 @@ import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
+@Configurable @Scope(value="session") @Order(LOWEST_PRECEDENCE)
 public class DefaultContentRequestProcessor implements RequestProcessor 
   {
     @Inject @Nonnull

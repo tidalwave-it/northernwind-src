@@ -23,12 +23,14 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
@@ -117,9 +119,17 @@ public class DefaultSiteViewController implements SiteViewController
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    public void logConfiguration()
+//    @PostConstruct // TODO: doesn't work, so we work around overriding the setter
+//    /* package */ void initialize()
+    public void setRequestProcessors (final @Nonnull List<RequestProcessor> requestProcessors)
       {
-        log.info(">>>> uriHandlers: {}", requestProcessors);  
+        this.requestProcessors = new ArrayList<RequestProcessor>(requestProcessors);
+        Collections.sort(requestProcessors, new AnnotationAwareOrderComparator());
+        log.info(">>>> requestProcessors:");
+        
+        for (final RequestProcessor requestProcessor : requestProcessors)
+          {
+            log.info(">>>>>>>> {}", requestProcessor);
+          }
       }
   } 

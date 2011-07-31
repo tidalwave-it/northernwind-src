@@ -30,6 +30,7 @@ import java.io.Reader;
 import java.nio.CharBuffer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
@@ -37,6 +38,7 @@ import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************
  *
@@ -44,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
+@Configurable @Scope(value="session") @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class DefaultCssRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull

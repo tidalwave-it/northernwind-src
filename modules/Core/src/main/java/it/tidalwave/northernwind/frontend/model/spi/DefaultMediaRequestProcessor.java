@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
+import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Request;
@@ -33,6 +34,7 @@ import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.model.Media.Media;
+import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************
  *
@@ -40,7 +42,7 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j @Order(HIGHEST_PRECEDENCE)
 public class DefaultMediaRequestProcessor<ResponseType> implements RequestProcessor
   {
     @Inject @Nonnull

@@ -26,9 +26,11 @@ import javax.annotation.Nonnull;
 import java.io.FileNotFoundException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.annotation.Order;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.northernwind.frontend.model.spi.DefaultMediaRequestProcessor;
 import com.vaadin.terminal.DownloadStream;
+import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************
  *
@@ -36,7 +38,7 @@ import com.vaadin.terminal.DownloadStream;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
+@Configurable @Scope(value="session") @Order(HIGHEST_PRECEDENCE)
 public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<DownloadStream>
   {
     @Override @Nonnull
