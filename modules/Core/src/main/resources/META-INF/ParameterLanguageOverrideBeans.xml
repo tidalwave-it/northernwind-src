@@ -42,7 +42,8 @@
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
 
-    <bean id="parameterLanguageOverrideRequestProcessor" class="it.tidalwave.northernwind.frontend.model.spi.ParameterLanguageOverrideRequestProcessor">
+    <bean id="parameterLanguageOverrideRequestProcessor" 
+          class="it.tidalwave.northernwind.frontend.model.spi.ParameterLanguageOverrideRequestProcessor">
         <property name="parameterName" value="${nb.languageOverride.parameterName}"/>
     </bean>
     
