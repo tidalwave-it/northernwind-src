@@ -60,22 +60,22 @@
    
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
-    
-    <!-- Bus Event stuff -->
+
+    <!-- EventBus stuff -->
     <bean id="applicationEventBusTaskExecutor" 
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
           autowire-candidate="false">
-        <property name="corePoolSize" value="1" />
-        <property name="maxPoolSize" value="5" />
-        <property name="queueCapacity" value="25" />
+        <property name="corePoolSize" value="${nw.eventBus.context.corePoolSize}" />
+        <property name="maxPoolSize" value="${nw.eventBus.context.maxPoolSize}" />
+        <property name="queueCapacity" value="${nw.eventBus.context.queueCapacity}" />
     </bean>
 
     <bean id="sessionEventBusTaskExecutor" 
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
           autowire-candidate="false">
-        <property name="corePoolSize" value="5" />
-        <property name="maxPoolSize" value="10" />
-        <property name="queueCapacity" value="25" />
+        <property name="corePoolSize" value="${nw.eventBus.session.corePoolSize}" />
+        <property name="maxPoolSize" value="${nw.eventBus.session.maxPoolSize}" />
+        <property name="queueCapacity" value="${nw.eventBus.session.queueCapacity}" />
     </bean>
 
     <bean id="applicationEventBus" 
