@@ -23,8 +23,8 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
@@ -37,8 +37,6 @@ import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import it.tidalwave.northernwind.frontend.model.spi.RequestResettable;
 import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -55,7 +53,7 @@ public class DefaultSiteViewController implements SiteViewController
     @Inject @Nonnull
     private List<RequestResettable> requestResettables;
     
-    @Getter @Setter @Nonnull
+    @Inject @Nonnull
     private List<RequestProcessor> requestProcessors;
     
     @Inject @Nonnull
@@ -119,11 +117,9 @@ public class DefaultSiteViewController implements SiteViewController
      *
      *
      ******************************************************************************************************************/
-//    @PostConstruct // TODO: doesn't work, so we work around overriding the setter
-//    /* package */ void initialize()
-    public void setRequestProcessors (final @Nonnull List<RequestProcessor> requestProcessors)
+    @PostConstruct
+    /* package */ void initialize()
       {
-        this.requestProcessors = new ArrayList<RequestProcessor>(requestProcessors);
         Collections.sort(requestProcessors, new AnnotationAwareOrderComparator());
         log.info(">>>> requestProcessors:");
         

@@ -45,22 +45,20 @@
     <bean id="downloadStreamThreadLocal" 
           class="it.tidalwave.northernwind.frontend.vaadin.DownloadStreamHolder" />
     
-    <bean id="siteView" 
-          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinSiteView" />
-    
+    <bean id="mediaRequestProcessor" 
+          class="it.tidalwave.northernwind.frontend.model.vaadin.RequestProcessor.VaadinMediaRequestProcessor" />
+
+    <bean id="contentRequestProcessor" 
+          class="it.tidalwave.northernwind.frontend.model.spi.ContentRequestProcessor" />
+                      
+    <!-- FIXME: pass thru JavaScript calls -->            
     <bean id="siteViewController" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinSiteViewController"
           autowire="no">
-        <property name="requestProcessors">
-            <list>
-                <!-- FIXME: pass thru JavaScript calls -->            
-                <bean id="mediaRequestProcessor" 
-                      class="it.tidalwave.northernwind.frontend.model.vaadin.RequestProcessor.VaadinMediaRequestProcessor" />
-                <bean id="contentRequestProcessor" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.ContentRequestProcessor" />
-            </list>
-        </property>
     </bean>
+    
+    <bean id="siteView" 
+          class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinSiteView" />
     
     <bean id="frontEndWebApp"
           class="it.tidalwave.northernwind.frontend.vaadin.VaadinFrontEndApplication" />

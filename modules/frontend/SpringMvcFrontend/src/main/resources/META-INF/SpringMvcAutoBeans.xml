@@ -45,22 +45,20 @@
     <bean id="responseThreadLocal" 
           class="it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder" />    
     
-    <bean id="siteView" 
-          class="it.tidalwave.northernwind.frontend.ui.springmvc.SpringMvcSiteView" />
-    
+    <bean id="mediaRequestProcessor" 
+          class="it.tidalwave.northernwind.frontend.model.spi.DefaultMediaRequestProcessor" />
+
+    <bean id="cssRequestProcessor" 
+          class="it.tidalwave.northernwind.frontend.model.spi.DefaultCssRequestProcessor" />
+
+    <bean id="contentRequestProcessor" 
+          class="it.tidalwave.northernwind.frontend.model.spi.DefaultContentRequestProcessor" />
+
     <bean id="siteViewController" 
           class="it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController"
           autowire="no">
-        <property name="requestProcessors">
-            <list>
-                <bean id="mediaRequestProcessor" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultMediaRequestProcessor" />
-                <bean id="cssRequestProcessor" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultCssRequestProcessor" />
-                <bean id="contentRequestProcessor" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultContentRequestProcessor" />
-            </list>
-        </property>
     </bean>
     
+    <bean id="siteView" 
+          class="it.tidalwave.northernwind.frontend.ui.springmvc.SpringMvcSiteView" />
 </beans>
