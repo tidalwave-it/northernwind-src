@@ -41,6 +41,8 @@ import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.util.TypeSafeMap;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.Site;
+import java.util.Arrays;
+import java.util.Locale;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
@@ -116,15 +118,10 @@ import lombok.extern.slf4j.Slf4j;
       throws NotFoundException, IOException
       {
         log.trace("getFileBasedProperty({})", propertyName);
-        final FileObject attributeFile = file.getFileObject(propertyName);
         
-        if (attributeFile == null)
-          {
-            throw new NotFoundException(file.getPath() + "/" + propertyName);  
-          }
-        
-        log.trace(">>>> reading from {}", attributeFile.getPath());
-        String text = attributeFile.asText();
+        final FileObject propertyFile = findLocalizedFile(propertyName);
+        log.trace(">>>> reading from {}", propertyFile.getPath());
+        String text = propertyFile.asText();
 
 //        // FIXME: this should be done in a specific postprocessor registered only for Content   
 //        // FIXME: and do this with StringTemplate - remember to escape $'s in the source
@@ -167,5 +164,35 @@ import lombok.extern.slf4j.Slf4j;
 
         properties = new TypeSafeHashMap(map);
         log.debug(">>>> properties for /{}: {}", file.getPath(), properties);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private FileObject findLocalizedFile (final @Nonnull String fileName)
+      throws NotFoundException
+      {
+        FileObject localizedFile = null;
+        final StringBuilder fileNamesNotFound = new StringBuilder();
+        String separator = "";
+        
+        for (final Locale locale : Arrays.asList(Locale.ITALIAN, Locale.ENGLISH))
+          {
+            final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
+            localizedFile = file.getFileObject(localizedFileName);
+            
+            if (localizedFile != null)
+              {
+                break;  
+              }
+            
+            fileNamesNotFound.append(separator);
+            fileNamesNotFound.append(localizedFileName);
+            separator = ",";
+          }
+
+        return NotFoundException.throwWhenNull(localizedFile, String.format("%s/{%s}", file.getPath(), fileNamesNotFound));  
       }
   }

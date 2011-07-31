@@ -37,5 +37,5 @@ public final class Properties
   {
     public static final Key<String> PROPERTY_TITLE = new Key<String>("Title");
     
-    public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("FullText_en.html");    
+    public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("FullText.html");    
   }
