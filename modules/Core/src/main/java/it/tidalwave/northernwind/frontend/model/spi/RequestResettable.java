@@ -20,53 +20,23 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui;
-
-import javax.annotation.Nonnull;
-import java.net.URL;
-import lombok.Getter;
-import lombok.ToString;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link SiteView}.
+ * The behaviour of an object that is bound to the request life-cycle and that must be reset at the beginning and at
+ * the end.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteViewController 
+public interface RequestResettable 
   {
-    @ToString 
-    public static class HttpErrorException extends Exception
-      {
-        @Getter
-        private final int statusCode;
-
-        public HttpErrorException (final int statusCode) 
-          {
-            super("HTTP error: " + statusCode);
-            this.statusCode = statusCode;
-          }
-
-        public HttpErrorException (final int statusCode, final @Nonnull Throwable cause) 
-          {
-            super("HTTP error: " + statusCode, cause);
-            this.statusCode = statusCode;
-          }
-      }
-                
     /*******************************************************************************************************************
      *
-     * Processes a request and updates the view of the site. This can happen by producing a response that must be 
-     * returned to the HTTP response (typical for HTML-based technologies or for straightly exposing resources such as
-     * media or RSS feeds) or by side effect (typical for JavaScript-based technologies); in the latter case, the
-     * returned value is meaningless.
-     * 
-     * @return  the response
+     * Resets this object.
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public <ResponseType> ResponseType processRequest (@Nonnull URL context, @Nonnull String relativeUri)
-      throws HttpErrorException;
+    public void requestReset();  
   }

@@ -72,21 +72,15 @@ public class RestResource
     private Response get (final @Nonnull String relativeUri)
       throws HttpErrorException, MalformedURLException
       {
-        responseHolder.clear();
         log.info("GET {}", relativeUri);
         
         try
           { 
-            siteViewController.processRequest(new URL("http://localhost:8080/"), relativeUri); // FIXME
-            return responseHolder.get();
+            return siteViewController.processRequest(new URL("http://localhost:8080/"), relativeUri); // FIXME
           }
         catch (HttpErrorException e)
           {
             return Response.status(e.getStatusCode()).entity(e.getMessage()).build();
-          }
-        finally
-          {
-            responseHolder.clear();
           }
       }
   }

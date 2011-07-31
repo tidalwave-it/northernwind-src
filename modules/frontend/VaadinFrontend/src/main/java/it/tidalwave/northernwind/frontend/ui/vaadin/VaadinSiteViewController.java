@@ -22,18 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.vaadin;
 
-import it.tidalwave.northernwind.frontend.vaadin.DownloadStreamHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.net.URL;
+import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 
 /***********************************************************************************************************************
  *
@@ -49,9 +48,6 @@ public class VaadinSiteViewController extends DefaultSiteViewController
     @Nonnull @Inject
     private VaadinSiteView siteView;
     
-    @Nonnull @Inject
-    private DownloadStreamHolder downloadStreamHolder;
-
     /*******************************************************************************************************************
      *
      * Tracks the incoming URI.
@@ -64,9 +60,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
           {
             try
               {
-                downloadStreamHolder.clear();
-                processRequest(context, "/" + relativeUri);
-                return downloadStreamHolder.get();
+                return processRequest(context, "/" + relativeUri);
               }
             catch (HttpErrorException e)
               {
@@ -74,10 +68,6 @@ public class VaadinSiteViewController extends DefaultSiteViewController
 //                e.getStatusCode();
                 // TODO: send status code
                 return null;
-              }
-            finally
-              {
-                downloadStreamHolder.clear();
               }
           }
       };

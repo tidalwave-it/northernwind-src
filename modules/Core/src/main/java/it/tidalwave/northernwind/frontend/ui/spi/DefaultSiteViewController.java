@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.util.List;
 import java.io.IOException;
 import java.net.URL;
@@ -31,6 +32,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
+import it.tidalwave.northernwind.frontend.model.spi.RequestResettable;
+import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,21 +50,28 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value="session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
+    @Inject @Nonnull
+    private List<RequestResettable> requestResettables;
+    
     @Getter @Setter @Nonnull
     private List<RequestProcessor> requestProcessors;
     
+    @Inject @Nonnull
+    private ResponseHolder<?> responseHolder;
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public void processRequest (final @Nonnull URL context, final @Nonnull String relativeUri) 
+    @Override @Nonnull
+    public <ResponseType> ResponseType processRequest (final @Nonnull URL context, final @Nonnull String relativeUri) 
       throws HttpErrorException
       {
         try
           {
             log.info("processRequest({}, {})", context, relativeUri);
+            resetRequestResettables();
             
             for (final RequestProcessor requestProcessor : requestProcessors)
               {
@@ -72,6 +82,8 @@ public class DefaultSiteViewController implements SiteViewController
                     break;  
                   }
               }
+            
+            return (ResponseType)responseHolder.get();
           }
         catch (NotFoundException e) 
           {
@@ -80,6 +92,23 @@ public class DefaultSiteViewController implements SiteViewController
         catch (IOException e) 
           {
             throw new HttpErrorException(500, e); 
+          }
+        finally
+          {
+            resetRequestResettables();
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void resetRequestResettables()
+      {
+        for (final RequestResettable requestResettable : requestResettables)
+          {
+            log.debug(">>>> resetting {} ...", requestResettable);
+            requestResettable.requestReset();  
           }
       }
     

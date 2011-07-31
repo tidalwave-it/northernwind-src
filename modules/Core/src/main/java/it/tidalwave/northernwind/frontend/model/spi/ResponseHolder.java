@@ -22,10 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.model.spi;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import org.openide.filesystems.FileObject;
 
 /***********************************************************************************************************************
@@ -34,7 +34,7 @@ import org.openide.filesystems.FileObject;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public abstract class ResponseHolder<ResponseType>
+public abstract class ResponseHolder<ResponseType> implements RequestResettable
   { 
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
     protected static final String HEADER_ETAG = "ETag";
@@ -112,8 +112,14 @@ public abstract class ResponseHolder<ResponseType>
         return (ResponseType)threadLocal.get();   
       }
     
-    public void clear()
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void requestReset()
       {
-        threadLocal.set(null);  
+        threadLocal.remove(); 
       }
   }

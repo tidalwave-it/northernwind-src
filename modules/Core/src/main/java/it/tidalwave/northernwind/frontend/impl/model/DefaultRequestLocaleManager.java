@@ -23,13 +23,13 @@
 package it.tidalwave.northernwind.frontend.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
 import it.tidalwave.northernwind.frontend.model.Site;
-import java.util.ArrayList;
-import javax.inject.Inject;
+import it.tidalwave.northernwind.frontend.model.spi.RequestResettable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Configurable;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class DefaultRequestLocaleManager implements RequestLocaleManager
+public class DefaultRequestLocaleManager implements RequestLocaleManager, RequestResettable
   {
     @Inject @Nonnull
     private Site site;
@@ -84,9 +84,11 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager
     
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void reset()
+    @Override
+    public void requestReset()
       {
         localeHolder.remove();  
       }
