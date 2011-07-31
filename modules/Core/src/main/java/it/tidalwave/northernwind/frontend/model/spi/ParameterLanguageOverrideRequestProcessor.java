@@ -34,6 +34,7 @@ import it.tidalwave.northernwind.frontend.impl.model.DefaultRequestLocaleManager
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
@@ -55,8 +56,8 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean process (final @Nonnull Request request) 
+    @Override @Nonnull
+    public Status process (final @Nonnull Request request) 
       {
         try
           {
@@ -67,6 +68,6 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
             // ok, no override
           }
 
-        return false;
+        return CONTINUE;
       }
   }

@@ -38,6 +38,7 @@ import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
+import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
@@ -56,8 +57,8 @@ public class DefaultCssRequestProcessor implements RequestProcessor
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean process (final @Nonnull Request request) 
+    @Override @Nonnull
+    public Status process (final @Nonnull Request request) 
       throws NotFoundException, IOException
       {
         final String relativeUri = request.getRelativeUri();
@@ -66,10 +67,10 @@ public class DefaultCssRequestProcessor implements RequestProcessor
           {
             final String path = relativeUri.replaceAll("^/css", "");
             responseHolder.response().withContentType("text/css").withBody(loadCss(path)).put();  
-            return true;
+            return BREAK;
           }
         
-        return false;
+        return CONTINUE;
       }
     
     /*******************************************************************************************************************

@@ -38,6 +38,7 @@ import it.tidalwave.northernwind.frontend.model.spi.RequestResettable;
 import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
@@ -76,7 +77,7 @@ public class DefaultSiteViewController implements SiteViewController
               {
                 log.debug(">>>> trying {} ...", requestProcessor);
                 
-                if (requestProcessor.process(request))
+                if (requestProcessor.process(request) == BREAK)
                   {
                     break;  
                   }

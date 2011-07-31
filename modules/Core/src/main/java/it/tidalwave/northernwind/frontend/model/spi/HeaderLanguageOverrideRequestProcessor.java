@@ -32,6 +32,7 @@ import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.impl.model.DefaultRequestLocaleManager;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
@@ -53,8 +54,8 @@ public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean process (final @Nonnull Request request) 
+    @Override @Nonnull
+    public Status process (final @Nonnull Request request) 
       {
         for (final Locale locale : request.getPreferredLocales())
           {
@@ -65,6 +66,6 @@ public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
               }
           }
 
-        return false;
+        return CONTINUE;
       }
   }

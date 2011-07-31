@@ -33,8 +33,9 @@ import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import it.tidalwave.northernwind.frontend.model.Site;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.Media.Media;
 import static org.springframework.core.Ordered.*;
+import static it.tidalwave.northernwind.frontend.model.Media.Media;
+import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
@@ -56,8 +57,8 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean process (final @Nonnull Request request) 
+    @Override @Nonnull
+    public Status process (final @Nonnull Request request) 
       throws NotFoundException, IOException
       {
         final String relativeUri = request.getRelativeUri();
@@ -67,10 +68,10 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "")).result();
             final FileObject file = media.getFile();
             createResponse(file);
-            return true;
+            return BREAK;
           }
         
-        return false;
+        return CONTINUE;
       }
     
     /*******************************************************************************************************************

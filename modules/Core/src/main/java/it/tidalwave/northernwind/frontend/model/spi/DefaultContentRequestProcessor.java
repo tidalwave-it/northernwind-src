@@ -34,8 +34,9 @@ import it.tidalwave.northernwind.frontend.model.RequestProcessor;
 import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
-import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
 import static org.springframework.core.Ordered.*;
+import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
@@ -57,14 +58,14 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean process (final @Nonnull Request request)
+    @Override @Nonnull
+    public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException 
       {
         final SiteNode siteNode = site.find(SiteNode).withRelativeUri(request.getRelativeUri()).result();            
 //            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
         siteView.renderSiteNode(siteNode);
         
-        return true;
+        return BREAK;
       }
   }

@@ -34,10 +34,16 @@ import it.tidalwave.util.NotFoundException;
  **********************************************************************************************************************/
 public interface RequestProcessor
   {
+    public enum Status
+      {
+        CONTINUE, BREAK
+      }
+    
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public boolean process (@Nonnull Request request) // FIXME: use enum in place of boolean
+    @Nonnull
+    public Status process (@Nonnull Request request)
       throws NotFoundException, IOException;
   }
