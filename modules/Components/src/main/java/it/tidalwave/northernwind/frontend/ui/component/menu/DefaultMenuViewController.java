@@ -110,7 +110,7 @@ public class DefaultMenuViewController implements MenuViewController
               }
             catch (NotFoundException e)
               {
-                log.warn("", e);
+                log.warn("Ignoring link '{}' because of {}", relativeUri, e.toString());
               }
           }
       }
