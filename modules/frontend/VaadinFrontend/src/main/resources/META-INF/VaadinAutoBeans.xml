@@ -51,13 +51,13 @@
     <bean id="siteViewController" 
           class="it.tidalwave.northernwind.frontend.ui.vaadin.VaadinSiteViewController"
           autowire="no">
-        <property name="uriHandlers">
+        <property name="requestProcessors">
             <list>
                 <!-- FIXME: pass thru JavaScript calls -->            
-                <bean id="mediaUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.vaadin.urihandler.VaadinMediaUriHandler" />
-                <bean id="contentUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.ContentUriHandler" />
+                <bean id="mediaRequestProcessor" 
+                      class="it.tidalwave.northernwind.frontend.model.vaadin.RequestProcessor.VaadinMediaRequestProcessor" />
+                <bean id="contentRequestProcessor" 
+                      class="it.tidalwave.northernwind.frontend.model.spi.ContentRequestProcessor" />
             </list>
         </property>
     </bean>

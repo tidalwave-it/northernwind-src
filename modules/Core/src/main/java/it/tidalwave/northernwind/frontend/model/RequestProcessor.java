@@ -20,19 +20,12 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi; 
+package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
-import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Media;
-import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -40,43 +33,12 @@ import static it.tidalwave.northernwind.frontend.model.Media.Media;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class DefaultMediaUriHandler<ResponseType> implements UriHandler
+public interface RequestProcessor
   {
-    @Inject @Nonnull
-    private Site site;
-    
-    @Inject @Nonnull
-    protected ResponseHolder<ResponseType> responseHolder;
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws NotFoundException, IOException
-      {
-        if (relativeUri.startsWith("/media"))
-          {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "")).result();
-            final FileObject file = media.getFile();
-            createResponse(file);
-            return true;
-          }
-        
-        return false;
-      }
-    
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected void createResponse (final @Nonnull FileObject file)
-      throws IOException
-      {
-        log.info(">>>> serving contents of /{} ...", file.getPath());
-        responseHolder.response().fromFile(file).put();
-      }
+    public boolean handleUri (@Nonnull URL context, @Nonnull String relativeUri)
+      throws NotFoundException, IOException;
   }

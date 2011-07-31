@@ -26,14 +26,13 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
+import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
+import it.tidalwave.northernwind.frontend.model.Media;
 import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.SiteView;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
-import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
+import it.tidalwave.northernwind.frontend.model.RequestProcessor;
+import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -41,28 +40,43 @@ import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") 
-public class ContentUriHandler implements UriHandler // FIXME: rename to DefaultContentUriHandler
+@Slf4j
+public class DefaultMediaRequestProcessor<ResponseType> implements RequestProcessor
   {
     @Inject @Nonnull
     private Site site;
     
     @Inject @Nonnull
-    private SiteView siteView;
-        
+    protected ResponseHolder<ResponseType> responseHolder;
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
-      throws NotFoundException, IOException 
+    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+      throws NotFoundException, IOException
       {
-        final SiteNode siteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();            
-//            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        siteView.renderSiteNode(siteNode);
+        if (relativeUri.startsWith("/media"))
+          {
+            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "")).result();
+            final FileObject file = media.getFile();
+            createResponse(file);
+            return true;
+          }
         
-        return true;
+        return false;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    protected void createResponse (final @Nonnull FileObject file)
+      throws IOException
+      {
+        log.info(">>>> serving contents of /{} ...", file.getPath());
+        responseHolder.response().fromFile(file).put();
       }
   }

@@ -20,76 +20,70 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.spi;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import java.util.List;
+import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.CharBuffer;
 import java.net.URL;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
-import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The default implementation of {@link SiteViewController}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Scope(value="session") @Slf4j
-public class DefaultSiteViewController implements SiteViewController
+public class DefaultCssRequestProcessor implements RequestProcessor
   {
-    @Getter @Setter @Nonnull
-    private List<RequestProcessor> requestProcessors;
-    
+    @Inject @Nonnull
+    private ResponseHolder<?> responseHolder;
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws HttpErrorException
+    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
+      throws NotFoundException, IOException
       {
-        try
+        if (relativeUri.startsWith("/css"))
           {
-            log.info("handleUri({}, {})", context, relativeUri);
-            
-            for (final RequestProcessor requestProcessor : requestProcessors)
-              {
-                log.debug(">>>> trying {} ...", requestProcessor);
-                
-                if (requestProcessor.handleUri(context, relativeUri))
-                  {
-                    break;  
-                  }
-              }
+            final String path = relativeUri.replaceAll("^/css", "");
+            responseHolder.response().withContentType("text/css").withBody(loadCss(path)).put();  
+            return true;
           }
-        catch (NotFoundException e) 
-          {
-            throw new HttpErrorException(404, e); 
-          }
-        catch (IOException e) 
-          {
-            throw new HttpErrorException(500, e); 
-          }
+        
+        return false;
       }
     
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    public void logConfiguration()
+    @Nonnull
+    private String loadCss (final @Nonnull String path)
+      throws IOException
       {
-        log.info(">>>> uriHandlers: {}", requestProcessors);  
-      }
-  } 
+        final String resourcePath = "/css" + path;
+        log.info(">>>> serving contents of {} ...", resourcePath);            
+        final Resource htmlResource = new ClassPathResource(resourcePath, getClass());  
+        final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
+        final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
+        final int length = r.read(charBuffer);
+        r.close();
+        return new String(charBuffer.array(), 0, length);
+      }  
+  }

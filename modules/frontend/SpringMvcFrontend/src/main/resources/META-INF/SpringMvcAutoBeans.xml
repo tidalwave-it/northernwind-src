@@ -51,14 +51,14 @@
     <bean id="siteViewController" 
           class="it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController"
           autowire="no">
-        <property name="uriHandlers">
+        <property name="requestProcessors">
             <list>
-                <bean id="mediaUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultMediaUriHandler" />
-                <bean id="cssUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultCssUriHandler" />
-                <bean id="contentUriHandler" 
-                      class="it.tidalwave.northernwind.frontend.model.spi.ContentUriHandler" />
+                <bean id="mediaRequestProcessor" 
+                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultMediaRequestProcessor" />
+                <bean id="cssRequestProcessor" 
+                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultCssRequestProcessor" />
+                <bean id="contentRequestProcessor" 
+                      class="it.tidalwave.northernwind.frontend.model.spi.DefaultContentRequestProcessor" />
             </list>
         </property>
     </bean>

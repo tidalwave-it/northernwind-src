@@ -20,23 +20,20 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi;
+package it.tidalwave.northernwind.frontend.model.spi; 
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.CharBuffer;
 import java.net.URL;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.RequestProcessor;
+import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.SiteView;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.UriHandler;
-import lombok.Cleanup;
-import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.SiteNode.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -44,46 +41,28 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
-public class DefaultCssUriHandler implements UriHandler
+@Configurable @Scope(value="session") 
+public class DefaultContentRequestProcessor implements RequestProcessor 
   {
     @Inject @Nonnull
-    private ResponseHolder<?> responseHolder;
-
+    private Site site;
+    
+    @Inject @Nonnull
+    private SiteView siteView;
+        
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri) 
-      throws NotFoundException, IOException
+    public boolean handleUri (final @Nonnull URL context, final @Nonnull String relativeUri)
+      throws NotFoundException, IOException 
       {
-        if (relativeUri.startsWith("/css"))
-          {
-            final String path = relativeUri.replaceAll("^/css", "");
-            responseHolder.response().withContentType("text/css").withBody(loadCss(path)).put();  
-            return true;
-          }
+        final SiteNode siteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();            
+//            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
+        siteView.renderSiteNode(siteNode);
         
-        return false;
+        return true;
       }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String loadCss (final @Nonnull String path)
-      throws IOException
-      {
-        final String resourcePath = "/css" + path;
-        log.info(">>>> serving contents of {} ...", resourcePath);            
-        final Resource htmlResource = new ClassPathResource(resourcePath, getClass());  
-        final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
-        final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
-        final int length = r.read(charBuffer);
-        r.close();
-        return new String(charBuffer.array(), 0, length);
-      }  
   }
