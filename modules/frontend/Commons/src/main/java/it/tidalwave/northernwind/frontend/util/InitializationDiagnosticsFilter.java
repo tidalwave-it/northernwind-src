@@ -123,7 +123,7 @@ public class InitializationDiagnosticsFilter implements Filter
       {
         response.setContentType("text/html");
         final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream()));                
-        pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n"); //NOI18N
+        pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n"); 
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");                
         pw.print(t.getMessage());                
         pw.print("</pre></body>\n</html>");
