@@ -5,33 +5,21 @@
         <meta name="description" content="$description$" />
         
         <style type="text/css" media="screen">
-                @import url("$contextPath$/css/layout.css");
-                @import url("$contextPath$/css/typography.css");
-                @import url("$contextPath$/css/forms.css");
-                @import url("$contextPath$/css/tools.css");
-                @import url("$contextPath$/css/horizontal-navigation.css");
-                @import url("$contextPath$/css/layout-navtop-nonav.css");
-                @import url("$contextPath$/css/tidalwave-default.css");
-                @import url("$contextPath$/css/blueBill-mobile.css");
-                @import url("$contextPath$/css/blueBill-mobile-main.css");
-            
+            $screenCssSection$
         </style>        
+        <style type="text/css" media="print">
+            div#header { display: none }
+            div#sub { display: none }
+            div#nav { display: none }
+            div#local { display: none }
+            div#breadcrumb { display: none }
+        </style>
 
 <!--
         <style type="text/css" media="screen">
             @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shCore.css");
             @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shThemeDefault.css");
             @import url("http://services.tidalwave.it/LightBox/css/lightbox.css");
-            <c:forEach items="{styleSheets}" var="styleSheet" >
-                @import url("{styleSheet.url}");
-            </c:forEach>
-        </style>
-        <style type="text/css" media="print">
-div#header { display: none }
-div#sub { display: none }
-div#nav { display: none }
-div#local { display: none }
-div#breadcrumb { display: none }
         </style>
 
         <c:forEach items="{scripts}" var="script" >

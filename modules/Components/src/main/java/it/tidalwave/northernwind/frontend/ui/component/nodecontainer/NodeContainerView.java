@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
+import javax.annotation.Nonnull;
+
 /***********************************************************************************************************************
  *
  * The container of a "screen" of the application, mapped to a SiteNode. This, for instance, is a page with a
@@ -33,4 +35,5 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
  **********************************************************************************************************************/
 public interface NodeContainerView 
   {
+    public void setScreenCssSection (@Nonnull String screenCssSection);
   }

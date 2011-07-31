@@ -50,4 +50,15 @@ public class HtmlTemplateNodeContainerView extends HtmlHolder implements NodeCon
       {
         super(id);
       }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setScreenCssSection (final @Nonnull String screenCssSection) 
+      {
+        addAttribute("screenCssSection", screenCssSection);
+      }
   }  

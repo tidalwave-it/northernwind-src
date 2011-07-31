@@ -23,8 +23,17 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -32,8 +41,12 @@ import it.tidalwave.northernwind.frontend.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable(preConstruction=true) @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
+    @Inject @Nonnull
+    private Site site;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance for populating the given {@link NodeContainerView} with the given {@link SiteNode}.
@@ -47,5 +60,37 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                                                final @Nonnull Id viewId,
                                                final @Nonnull SiteNode siteNode) 
       {     
+        
+        final StringBuilder builder = new StringBuilder();
+        
+        try
+          {
+            // FIXME: remove workarounds
+            final String x = siteNode.getProperties(viewId).getProperty(new Key<String>("content")); // FIXME: property SCREEN_CSS
+            final List<String> css = new ArrayList<String>();
+            
+            for (final String xx : x.replace("Top, No Local", "Top@ No Local").split(","))
+              {
+                css.add(xx.replace("@", ",").trim().replace(" ", "-").replace("blueBill-Mobile-CSS", "blueBill-Mobile.css"));  
+              }
+            
+            final String contextPath = site.getContextPath();
+
+            for (final String c : css)
+              {
+                builder.append("@import url(\"").append(contextPath).append("/css/").append(c).append("\");\n");  
+              }
+
+            view.setScreenCssSection(builder.toString());
+          }
+        catch (IOException e)
+          {
+            log.warn("", e);
+            // ok, no css  
+          }        
+        catch (NotFoundException e)
+          {
+            // ok, no css  
+          }        
       }
   }
