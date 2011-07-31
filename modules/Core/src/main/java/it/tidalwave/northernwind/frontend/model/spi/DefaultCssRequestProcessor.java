@@ -32,7 +32,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Request;
 import it.tidalwave.northernwind.frontend.model.RequestProcessor;
@@ -46,7 +45,7 @@ import static org.springframework.core.Ordered.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Order(HIGHEST_PRECEDENCE) @Slf4j
+@Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class DefaultCssRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
