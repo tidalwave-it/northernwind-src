@@ -99,7 +99,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e) 
           {
             return withContentType("text/plain")
-                  .withBody(e.getMessage())
+                  .withBody("Not found\n" + e.getMessage()) // FIXME: use StringTemplate
                   .withStatus(404);
           }
 
@@ -107,7 +107,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e) 
           {
             return withContentType("text/plain")
-                  .withBody(e.getMessage())
+                  .withBody("Internal error\n" + e.getMessage()) // FIXME: use StringTemplate
                   .withStatus(500);
           }
         
