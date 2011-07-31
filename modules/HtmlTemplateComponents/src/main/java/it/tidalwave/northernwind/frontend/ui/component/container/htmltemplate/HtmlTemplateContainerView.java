@@ -25,9 +25,9 @@ package it.tidalwave.northernwind.frontend.ui.component.container.htmltemplate;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
+import it.tidalwave.northernwind.frontend.ui.component.container.ContainerView;
+import it.tidalwave.northernwind.frontend.ui.component.container.DefaultContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
-import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
-import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 
 /***********************************************************************************************************************
  *
@@ -36,8 +36,8 @@ import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContain
  *
  **********************************************************************************************************************/
 @ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Container", 
-              controlledBy=DefaultNodeContainerViewController.class)
-public class HtmlTemplateContainerView extends HtmlTemplateHtmlFragmentView implements NodeContainerView
+              controlledBy=DefaultContainerViewController.class)
+public class HtmlTemplateContainerView extends HtmlTemplateHtmlFragmentView implements ContainerView
   {
     /*******************************************************************************************************************
      *
