@@ -48,7 +48,7 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
     @Override
     public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
-//        if ("neo.performancehosting.net".equals(getLocalHostName())) FIXME: doesn't work
+        if (getLocalHostName().endsWith(".performancehosting.net"))
           {
             final ServletContext servletContext = event.getServletContext();
             final String contextPath = servletContext.getContextPath();
@@ -56,30 +56,23 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
             log(">>>> contextPath: " + contextPath);
             log(">>>> realPath:    " + realPath);
             
-            servletContext.setAttribute("nw.hostName", getLocalHostName());
-
             final String x = realPath.replace(File.pathSeparator + "webapps" + contextPath + File.pathSeparator, "");
-            
-            if (x.startsWith("/home/fgiudici"))
-              {
-                final String[] x2 = x.split("/");
-                final String home = "/" + x2[1] + "/" + x2[2];
-                final String domain = x2[6] + "." + x2[4];
-                final String configurationFile = home + "/.nw/" + domain + contextPath + "/configuration.properties";
-                final String logBackConfigurationFile = home + "/.nw/" + domain + contextPath + "/logback.xml";
 
-                // FIXME: this will collide with other webapps in the same Tomcat - try to set it into JNDI and then use
-                // file inclusion from the embedded logback.xml
-                System.setProperty("logback.configurationFile", logBackConfigurationFile);
+            final String[] x2 = x.split("/");
+            final String home = "/" + x2[1] + "/" + x2[2];
+            final String domain = x2[6] + "." + x2[4];
+            final String configurationFile = home + "/.nw/" + domain + contextPath + "/configuration.properties";
+            final String logBackConfigurationFile = home + "/.nw/" + domain + contextPath + "/logback.xml";
+
+            // FIXME: this will collide with other webapps in the same Tomcat - try to set it into JNDI and then use
+            // file inclusion from the embedded logback.xml
+            System.setProperty("logback.configurationFile", logBackConfigurationFile);
 //                enableLogging();
 
-                log(">>>> home:   " + home);
-                log(">>>> domain: " + domain);
+            log(">>>> home:   " + home);
+            log(">>>> domain: " + domain);
 
-                loadProperties(servletContext, configurationFile);
-              }
-
-//            getLocalHostName();
+            loadProperties(servletContext, configurationFile);
           }
       }
     
@@ -92,7 +85,7 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
       {
         try 
           {
-            final String hostName = InetAddress.getLocalHost().getCanonicalHostName() + "/" + InetAddress.getLocalHost().getHostAddress();
+            final String hostName = InetAddress.getLocalHost().getCanonicalHostName();
             log(">>>> host name: " + hostName);
             return hostName;
           }
