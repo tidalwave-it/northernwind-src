@@ -97,6 +97,10 @@
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
     </bean>
                             
+    <bean id="requestLocaleManager"
+          class="it.tidalwave.northernwind.frontend.impl.model.DefaultRequestLocaleManager" >
+    </bean>
+                            
     <bean id="viewFactory"
           class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />

@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -39,10 +40,9 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.util.TypeSafeMap;
+import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.Site;
-import java.util.Arrays;
-import java.util.Locale;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
@@ -54,11 +54,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude="site")
+@Configurable @Slf4j @ToString(exclude={"site", "localeRequestManager"})
 /* package */ class DefaultResource implements Resource
   {
     @Inject @Nonnull
     private Site site;
+    
+    @Inject @Nonnull
+    private RequestLocaleManager localeRequestManager;
     
     @Nonnull @Getter
     private final FileObject file;    
@@ -178,7 +181,7 @@ import lombok.extern.slf4j.Slf4j;
         final StringBuilder fileNamesNotFound = new StringBuilder();
         String separator = "";
         
-        for (final Locale locale : Arrays.asList(Locale.ITALIAN, Locale.ENGLISH))
+        for (final Locale locale : localeRequestManager.getLocales())
           {
             final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
             localizedFile = file.getFileObject(localizedFileName);
