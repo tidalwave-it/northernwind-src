@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -65,9 +66,15 @@ public class DefaultCssRequestProcessor implements RequestProcessor
         
         if (relativeUri.startsWith("/css"))
           {
-            final String path = relativeUri.replaceAll("^/css", "");
-            responseHolder.response().withContentType("text/css").withBody(loadCss(path)).put();  
-            return BREAK;
+            try
+              {
+                responseHolder.response().withContentType("text/css").withBody(loadCss(relativeUri)).put();  
+                return BREAK;
+              }
+            catch (FileNotFoundException e)
+              {
+                log.info("Cannot find {}, continuing...", relativeUri);  
+              }
           }
         
         return CONTINUE;
@@ -81,10 +88,9 @@ public class DefaultCssRequestProcessor implements RequestProcessor
     private String loadCss (final @Nonnull String path)
       throws IOException
       {
-        final String resourcePath = "/css" + path;
-        log.info(">>>> serving contents of {} ...", resourcePath);            
-        final Resource htmlResource = new ClassPathResource(resourcePath, getClass());  
+        final Resource htmlResource = new ClassPathResource(path, getClass());  
         final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
+        log.info(">>>> serving contents of {} ...", path);            
         final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
         final int length = r.read(charBuffer);
         r.close();
