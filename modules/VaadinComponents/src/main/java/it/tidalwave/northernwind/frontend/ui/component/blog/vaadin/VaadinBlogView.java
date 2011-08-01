@@ -38,7 +38,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Blog", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Blog/#v1.0", 
               controlledBy=DefaultBlogViewController.class)
 @Slf4j
 public class VaadinBlogView extends VerticalLayout implements BlogView

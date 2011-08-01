@@ -37,7 +37,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlTextWithTitle", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0", 
               controlledBy=DefaultHtmlTextWithTitleViewController.class)
 public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements HtmlTextWithTitleView
   {

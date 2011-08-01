@@ -36,7 +36,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer/#v1.0", 
               controlledBy=DefaultNodeContainerViewController.class)
 public class VaadinNodeContainerView extends VerticalLayout implements NodeContainerView // FIXME: probably it should be a Window
   {// TODO: not VerticalLayout, but something without Layout

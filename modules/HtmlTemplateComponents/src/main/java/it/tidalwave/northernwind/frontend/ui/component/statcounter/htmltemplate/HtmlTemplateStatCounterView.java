@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/StatCounter", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/StatCounter/#v1.0", 
               controlledBy=DefaultStatCounterViewController.class)
 public class HtmlTemplateStatCounterView extends HtmlHolder implements StatCounterView
   {

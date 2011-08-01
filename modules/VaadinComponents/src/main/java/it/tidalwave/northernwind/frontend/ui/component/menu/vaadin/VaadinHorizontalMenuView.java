@@ -39,7 +39,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HorizontalMenu", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HorizontalMenu/#v1.0", 
               controlledBy=DefaultMenuViewController.class)
 public class VaadinHorizontalMenuView extends HorizontalLayout implements MenuView
   {

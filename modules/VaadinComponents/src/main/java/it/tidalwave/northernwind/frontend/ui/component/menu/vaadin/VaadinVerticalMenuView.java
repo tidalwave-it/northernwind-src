@@ -39,7 +39,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/VerticalMenu", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/VerticalMenu/#v1.0", 
               controlledBy=DefaultMenuViewController.class)
 public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
   {

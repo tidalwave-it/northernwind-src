@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Container", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Container/#v1.0", 
               controlledBy=DefaultContainerViewController.class)
 public class HtmlTemplateContainerView extends HtmlTemplateHtmlFragmentView implements ContainerView
   {

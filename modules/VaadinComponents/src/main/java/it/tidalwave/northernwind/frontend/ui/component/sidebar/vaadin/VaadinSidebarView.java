@@ -36,7 +36,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Sidebar", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Sidebar/#v1.0", 
               controlledBy=DefaultSidebarViewController.class)
 public class VaadinSidebarView extends VerticalLayout implements SidebarView
   {

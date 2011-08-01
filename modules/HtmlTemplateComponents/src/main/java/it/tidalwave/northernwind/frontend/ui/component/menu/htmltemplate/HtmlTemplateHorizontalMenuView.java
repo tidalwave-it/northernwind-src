@@ -38,7 +38,7 @@ import lombok.Delegate;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HorizontalMenu", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HorizontalMenu/#v1.0", 
               controlledBy=DefaultMenuViewController.class)
 public class HtmlTemplateHorizontalMenuView extends HtmlHolder implements MenuView
   {

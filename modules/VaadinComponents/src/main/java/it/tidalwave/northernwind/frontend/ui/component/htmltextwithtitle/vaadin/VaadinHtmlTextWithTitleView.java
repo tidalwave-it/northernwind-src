@@ -38,7 +38,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlTextWithTitle", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0", 
               controlledBy=DefaultHtmlTextWithTitleViewController.class)
 public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTitleView
   {

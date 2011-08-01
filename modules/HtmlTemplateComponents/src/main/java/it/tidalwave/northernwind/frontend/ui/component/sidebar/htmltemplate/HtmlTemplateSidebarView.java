@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.frontend.ui.component.sidebar.SidebarView;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Sidebar", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Sidebar/#v1.0", 
               controlledBy=DefaultSidebarViewController.class)
 public class HtmlTemplateSidebarView extends HtmlHolder implements SidebarView
   {

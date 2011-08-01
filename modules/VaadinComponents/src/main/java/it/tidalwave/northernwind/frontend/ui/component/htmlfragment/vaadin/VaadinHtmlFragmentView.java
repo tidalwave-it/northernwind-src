@@ -38,7 +38,7 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlFragment", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0", 
               controlledBy=DefaultHtmlFragmentViewController.class)
 public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
   {

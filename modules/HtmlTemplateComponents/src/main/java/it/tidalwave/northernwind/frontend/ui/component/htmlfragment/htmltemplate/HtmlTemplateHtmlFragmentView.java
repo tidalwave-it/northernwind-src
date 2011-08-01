@@ -37,7 +37,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.DefaultHtmlF
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlFragment", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0", 
               controlledBy=DefaultHtmlFragmentViewController.class)
 public class HtmlTemplateHtmlFragmentView extends HtmlHolder implements HtmlFragmentView
   {

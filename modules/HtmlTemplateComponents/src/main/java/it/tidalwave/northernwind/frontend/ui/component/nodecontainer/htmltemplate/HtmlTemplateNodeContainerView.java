@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContain
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer/#v1.0", 
               controlledBy=DefaultNodeContainerViewController.class)
 public class HtmlTemplateNodeContainerView extends HtmlHolder implements NodeContainerView
   {

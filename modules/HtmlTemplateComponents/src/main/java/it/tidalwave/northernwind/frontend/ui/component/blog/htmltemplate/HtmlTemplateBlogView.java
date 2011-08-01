@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Blog", 
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Blog/#v1.0", 
               controlledBy=DefaultBlogViewController.class)
 @Slf4j
 public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implements BlogView
