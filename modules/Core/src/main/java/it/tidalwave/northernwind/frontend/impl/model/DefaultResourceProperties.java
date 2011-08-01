@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
+import java.util.Collection;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -34,6 +35,8 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.TypeSafeMap;
 import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
+import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,7 +58,7 @@ public class DefaultResourceProperties implements ResourceProperties
           throws NotFoundException, IOException;
       }
     
-    @Nonnull
+    @Nonnull @Getter
     private final Id id;
     
     @CheckForNull
@@ -163,5 +166,27 @@ public class DefaultResourceProperties implements ResourceProperties
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(groups.get(id), id.stringValue());
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Collection<Key<?>> getKeys() 
+      {
+        return properties.getKeys();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Collection<Id> getGroupIds() 
+      {
+        return new CopyOnWriteArrayList<Id>(groups.keySet());
       }
   }

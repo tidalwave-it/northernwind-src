@@ -23,20 +23,22 @@
 package it.tidalwave.northernwind.frontend.model;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
  * 
- * A bag of properties for a {@link Resources}.
+ * A bag of properties for a {@link Resource}s.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceProperties 
+public interface ResourceProperties extends Identifiable
   {
     /*******************************************************************************************************************
      *
@@ -75,4 +77,24 @@ public interface ResourceProperties
     @Nonnull
     public ResourceProperties getGroup (@Nonnull Id id)
       throws NotFoundException;
+    
+    /*******************************************************************************************************************
+     *
+     * Retrieves the collection of property keys.
+     * 
+     * @return                      the property keys
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Collection<Key<?>> getKeys();
+    
+    /*******************************************************************************************************************
+     *
+     * Retrieves the collection of ids of groups.
+     * 
+     * @return                      the group ids
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Collection<Id> getGroupIds();
   }
