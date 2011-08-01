@@ -66,7 +66,7 @@ public class DefaultBlogViewController implements BlogViewController
                                       final @Nonnull SiteNode siteNode) 
     {
         this.view = view;
-        final String uris = "/content/document/Blog"; // FIXME siteNode.getProperty(PROP_CONTENT);
+        final String uris = "/Blog"; // FIXME siteNode.getProperty(PROP_CONTENT);
         setPosts(Arrays.asList(uris.split(",")), viewId);
       }
     
@@ -78,9 +78,7 @@ public class DefaultBlogViewController implements BlogViewController
           {  
             try
               {
-                // FIXME: should be fixed in the Infoglue importer
-                final String fixedUri = "/" + relativeUri.trim().replaceAll("/content/document/Mobile", "").replaceAll("/content/document/", "");
-                final Content postRoot = site.find(Content).withRelativeUri(fixedUri).result();
+                final Content postRoot = site.find(Content).withRelativeUri(relativeUri).result();
                 
                 for (final Content post : postRoot.findChildren().results())
                   {
@@ -92,7 +90,7 @@ public class DefaultBlogViewController implements BlogViewController
                       }
                     catch (NotFoundException e)
                       {
-                        log.warn("", e);
+                        log.warn("", e.toString());
                       }
                     catch (IOException e)
                       {
@@ -102,7 +100,7 @@ public class DefaultBlogViewController implements BlogViewController
               }
             catch (NotFoundException e)
               {
-                log.warn("", e);
+                log.warn("", e.toString());
               }
           }
       }

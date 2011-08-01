@@ -64,33 +64,19 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     {
         try
           {
-            final String contentUri = siteNode.getProperties(viewId).getProperty(PROP_CONTENT);
-            
-            // FIXME: should be fixed in the Infoglue importer
-            final String fixedContentUri = r("/" + contentUri.replaceAll("Mobile", ""));
-            
-            final Content content = site.find(Content).withRelativeUri(fixedContentUri).result();
+            final String contentUri = siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS);
+            final Content content = site.find(Content).withRelativeUri(contentUri).result();
             view.setHtmlFragment(content.getProperties().getProperty(PROPERTY_FULL_TEXT));
           }
         catch (NotFoundException e)
           {
             view.setHtmlFragment(e.toString());
-            log.error("", e);
+            log.error("", e.toString());
           }
         catch (IOException e)
           {
             view.setHtmlFragment(e.toString());
             log.error("", e);
           }
-      }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String r (final @Nonnull String s)
-      {
-        return "".equals(s) ? "/" : s;  
       }
   }

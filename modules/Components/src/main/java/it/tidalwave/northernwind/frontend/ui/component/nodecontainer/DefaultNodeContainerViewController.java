@@ -65,20 +65,19 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         
         try
           {
-            // FIXME: remove workarounds
-            final String x = siteNode.getProperties(viewId).getProperty(new Key<String>("content")); // FIXME: property SCREEN_CSS
-            final List<String> css = new ArrayList<String>();
+            final String styleSheetUris = siteNode.getProperties(viewId).getProperty(PROPERTY_SCREEN_STYLE_SHEETS);
+            final List<String> uris = new ArrayList<String>();
             
-            for (final String xx : x.replace("Top, No Local", "Top@ No Local").split(","))
+            for (final String styleSheetUri : styleSheetUris.split(","))
               {
-                css.add(xx.replace("@", ",").trim().replace(" ", "-").replace("blueBill-Mobile-CSS", "blueBill-Mobile.css"));  
+                uris.add(styleSheetUri.trim());  
               }
             
             final String contextPath = site.getContextPath();
 
-            for (final String c : css)
+            for (final String uri : uris)
               {
-                builder.append("@import url(\"").append(contextPath).append("/css/").append(c).append("\");\n");  
+                builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
               }
 
             view.setScreenCssSection(builder.toString());

@@ -32,5 +32,5 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface BlogViewController 
   {    
-    public static final Key<String> PROP_CONTENT = new Key<String>("content"); 
+    public static final Key<String> PROPERTY_CONTENTS = new Key<String>("contents"); 
   }

@@ -46,7 +46,7 @@ public class ContentParser extends Parser
           }
         else if (inAttributes)
           {
-            if (Arrays.asList("FullText", "Template").contains(name))
+            if (Arrays.asList("FullText", "Template", "Leadin").contains(name))
               {
                 // FIXME: format HTML
                 ResourceManager.addResource(new Resource(dateTime, path + name + "_" + language + ".html", builder.toString().getBytes("UTF-8")));

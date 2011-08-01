@@ -8,6 +8,7 @@ import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.util.Id;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -24,15 +25,15 @@ public class LayoutConverter extends Parser
   {
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
-        put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer");
-        put( "67", "http://northernwind.tidalwave.it/component/Sidebar");
-        put("104", "http://northernwind.tidalwave.it/component/Blog");
-        put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu");
-        put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment");
-        put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle");
-        put("853", "http://northernwind.tidalwave.it/component/StatCounter");
-        put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking");
-        put("873", "http://northernwind.tidalwave.it/component/AddThis");
+        put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0");
+        put( "67", "http://northernwind.tidalwave.it/component/Sidebar/#v1.0");
+        put("104", "http://northernwind.tidalwave.it/component/Blog/#v1.0");
+        put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu/#v1.0");
+        put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
+        put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0");
+        put("853", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0");
+        put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking/#v1.0");
+        put("873", "http://northernwind.tidalwave.it/component/AddThis/#v1.0");
 //        put("", "");
       }};
             
@@ -52,10 +53,10 @@ public class LayoutConverter extends Parser
       }
 
     @Override
-    protected void processStartElement (final @Nonnull String name,  final @Nonnull XMLStreamReader reader)
+    protected void processStartElement (final @Nonnull String elementName,  final @Nonnull XMLStreamReader reader)
       throws Exception
       {
-        if ("component".equals(name))
+        if ("component".equals(elementName))
           {
             String attrNameValue = "";
             String attrIdValue = "";
@@ -93,7 +94,7 @@ public class LayoutConverter extends Parser
                 
                 if (parentLayout == null)
                   {
-                    parentLayout = new DefaultLayout(new Id(attrNameValue), "http://northernwind.tidalwave.it/component/Container"); 
+                    parentLayout = new DefaultLayout(new Id(attrNameValue), "http://northernwind.tidalwave.it/component/Container/#v1.0"); 
                     wrapperLayouts.put(attrNameValue, parentLayout);
                     componentStack.peek().add(parentLayout);
                   }
@@ -111,22 +112,76 @@ public class LayoutConverter extends Parser
               }
 
           }
-        else if ("property".equals(name))
+        else if ("property".equals(elementName))
           {
-            for (int i = 0; i < reader.getAttributeCount(); i++)
+            String propertyName = reader.getAttributeValue("", "name");
+            String propertyValue = reader.getAttributeValue("", "path");
+            
+            if (propertyValue != null)
               {
-                final String attrName = reader.getAttributeName(i).getLocalPart();
-                final String attrValue = reader.getAttributeValue(i);
+                propertyValue = propertyValue.replace("Top, No Local", "Top No Local");
+                propertyValue = propertyValue.replace("blueBill Mobile CSS", "blueBill Mobile.css");
+                propertyValue = propertyValue.replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
 
-                if ("path".equals(attrName))
+                if (Arrays.asList("styleSheets", "items", "contents").contains(propertyName))
                   {
-                    properties.put(componentId + ".content", attrValue);
+                    final StringBuilder b = new StringBuilder();
+                    String separator = "";
+
+                    for (String spl : propertyValue.split(","))
+                      {
+                        if ("styleSheets".equals(propertyName))
+                          {
+                            spl = "css/" + spl.trim();  
+                          }
+
+                        spl = "/" + spl.trim();
+                        spl = spl.replaceAll("/Mobile", "/"); 
+
+                        if ("styleSheets".equals(propertyName))
+                          {
+                            spl = spl.replace(" ", "-").replace("(", "").replace(")", "");
+                          }
+                        
+                        b.append(separator).append(spl);
+                        separator = ",";
+                      }
+
+                    propertyValue = b.toString();
                   }
-//                else FIXME: there are missing properties (e.g. set Blog max posts, etc...)
-//                  {
-//                    properties.put(componentName + "." + attrName, attrValue);
-//                  }
+
+                if ("styleSheets".equals(propertyName))
+                  {
+                    propertyName = "screenStyleSheets";  
+                  }
+
+                if ("items".equals(propertyName))
+                  {
+                    propertyName = "links";  
+                  }
+
+                if ("content".equals(propertyName))
+                  {
+                    propertyName = "contents";  
+                  }
+
+                properties.put(componentId + "." + propertyName, propertyValue);
               }
+
+//            for (int i = 0; i < reader.getAttributeCount(); i++)
+//              {
+//                final String attrName = reader.getAttributeName(i).getLocalPart();
+//                final String attrValue = reader.getAttributeValue(i);
+//
+//                if ("path".equals(attrName))
+//                  {
+//                    properties.put(componentId + ".content", attrValue);
+//                  }
+////                else FIXME: there are missing properties (e.g. set Blog max posts, etc...)
+////                  {
+////                    properties.put(componentName + "." + attrName, attrValue);
+////                  }
+//              }
           }
       }
 

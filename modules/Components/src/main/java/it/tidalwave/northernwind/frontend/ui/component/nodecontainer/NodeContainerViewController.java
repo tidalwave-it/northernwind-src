@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,4 +32,5 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
  **********************************************************************************************************************/
 public interface NodeContainerViewController 
   {  
+    public static final Key<String> PROPERTY_SCREEN_STYLE_SHEETS = new Key<String>("screenStyleSheets");
   }

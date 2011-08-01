@@ -34,5 +34,5 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface MenuViewController
   {
-    public static final Key<String> PROP_CONTENT = new Key<String>("content"); 
+    public static final Key<String> PROPERTY_LINKS = new Key<String>("links"); 
   } 
