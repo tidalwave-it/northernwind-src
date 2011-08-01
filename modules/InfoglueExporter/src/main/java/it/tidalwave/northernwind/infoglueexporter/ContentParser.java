@@ -4,7 +4,8 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
-import java.io.UnsupportedEncodingException;
+import it.tidalwave.util.Key;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
@@ -54,16 +55,16 @@ public class ContentParser extends Parser
               }
             else
               {
-                properties.put(name, builder.toString()); 
+                properties.put(new Key<Object>(name), builder.toString()); 
               }
           }
       }        
 
     @Override
     protected void finish()
-      throws UnsupportedEncodingException
+      throws IOException
       {
-        dumpPropertiesAsResourceBundle("Resource_" + language + ".properties");
+        dumpProperties("Properties_" + language);
       }
   }
 

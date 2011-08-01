@@ -4,8 +4,9 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
+import it.tidalwave.util.Key;
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
 import org.joda.time.DateTime;
@@ -44,14 +45,14 @@ public class StructureParser extends Parser
           }
         else if (!Arrays.asList("attributes", "article").contains(name) &!s.equals("_Standard Pages"))
           {
-            properties.put(name, s); 
+            properties.put(new Key<Object>(name), s); 
           }
       }
 
     @Override
     protected void finish() 
-      throws UnsupportedEncodingException
+      throws IOException
       {
-        dumpPropertiesAsResourceBundle("Resource_" + language + ".properties");
+        dumpProperties("Properties_" + language);
       }
   }

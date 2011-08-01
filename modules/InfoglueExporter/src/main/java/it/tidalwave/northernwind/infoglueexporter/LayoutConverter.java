@@ -6,6 +6,7 @@ package it.tidalwave.northernwind.infoglueexporter;
 
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ public class LayoutConverter extends Parser
 //        put("", "");
       }};
             
-    private final SortedMap<String, String> properties;
+    private final SortedMap<Key<?>, Object> properties;
     private Id componentId;
     private DefaultLayout rootComponent;
     private final Stack<DefaultLayout> componentStack = new Stack<DefaultLayout>();
@@ -46,7 +47,7 @@ public class LayoutConverter extends Parser
     public LayoutConverter (final @Nonnull String xml, 
                             final @Nonnull DateTime dateTime, 
                             final @Nonnull String path,
-                            final @Nonnull SortedMap<String, String> properties) 
+                            final @Nonnull SortedMap<Key<?>, Object> properties) 
       {
         super(xml, path, dateTime);
         this.properties = properties;
@@ -165,7 +166,7 @@ public class LayoutConverter extends Parser
                     propertyName = "contents";  
                   }
 
-                properties.put(componentId + "." + propertyName, propertyValue);
+                properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
 
 //            for (int i = 0; i < reader.getAttributeCount(); i++)

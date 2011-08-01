@@ -4,6 +4,12 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
+import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
+import it.tidalwave.northernwind.frontend.impl.model.io.XmlResourcePropertiesMarshaller;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -13,7 +19,6 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import org.joda.time.DateTime;
 
 /**
@@ -28,7 +33,7 @@ public abstract class Parser
     protected final StringBuilder builder = new StringBuilder();
     private final String spaces = "                                                                ";
     protected int indent;
-    protected final SortedMap<String, String> properties = new TreeMap<String, String>();
+    protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
     protected final DateTime dateTime;        
 
@@ -105,17 +110,23 @@ public abstract class Parser
           {           
           }
         
-        protected void dumpPropertiesAsResourceBundle (final @Nonnull String fileName)
-          throws UnsupportedEncodingException
+        protected void dumpProperties (final @Nonnull String fileName)
+          throws IOException
           {
             final StringBuilder builder = new StringBuilder();
             
-            for (final Entry<String, String> entry : properties.entrySet())
+            for (final Entry<Key<?>, Object> entry : properties.entrySet())
               {
-                builder.append(entry.getKey()).append(" = ").append(entry.getValue()).append("\n");  
+                builder.append(entry.getKey().stringValue()).append(" = ").append(entry.getValue()).append("\n");  
               }
             
-            ResourceManager.addResource(new Resource(dateTime, path + fileName, builder.toString().getBytes("UTF-8")));
+            ResourceManager.addResource(new Resource(dateTime, path + fileName + ".properties", builder.toString().getBytes("UTF-8")));
+            
+            final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            new XmlResourcePropertiesMarshaller(rp).marshal(baos);
+            baos.close();
+            ResourceManager.addResource(new Resource(dateTime, path + fileName + ".xml", baos.toByteArray()));
           }
         
         protected void log (final @Nonnull String format, final @Nonnull Object ... args)

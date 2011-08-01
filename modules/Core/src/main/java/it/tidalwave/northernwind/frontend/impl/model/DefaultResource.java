@@ -146,7 +146,7 @@ import lombok.extern.slf4j.Slf4j;
                 
         final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
 
-        for (final FileObject propertyFile : Utilities.getInheritedPropertyFiles(file, "Resource_en.properties"))
+        for (final FileObject propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.properties"))
           {
             log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
             @Cleanup final Reader r = new InputStreamReader(propertyFile.getInputStream());
