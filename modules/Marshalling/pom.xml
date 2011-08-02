@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>it.tidalwave.northernwind</groupId>
+        <artifactId>it-tidalwave-northernwind-modules</artifactId>
+        <version>1.0-ALPHA-2-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <groupId>it.tidalwave.northernwind</groupId>
+    <artifactId>it-tidalwave-northernwind-frontend-marshalling</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>NorthernWind - Frontend Marshalling</name>
+    <description>NorthernWind - Frontend Marshalling</description>
+   
+    <dependencies>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-frontend-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+    </dependencies>
+   
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageName>it.tidalwave.northernwind.frontend.impl.model.io.jaxb</packageName>
+                    <schemaDirectory>${basedir}/src/main/xsd</schemaDirectory>
+                    <extension>true</extension>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -341,7 +341,12 @@
     </build>
 
     <modules>
+        <module>EventBus</module>
+        <module>Marshalling</module>
+        <module>SpringRoles</module>
+
         <module>Core</module>
+        <module>CoreFileSystems</module>
         <module>Components</module>
         <module>InfoglueExporter</module>
 

@@ -35,7 +35,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
+import it.tidalwave.util.spring.ClassScanner;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -22,19 +22,19 @@
  **********************************************************************************************************************/
 package it.tidalwave.role.spring.spi;
 
-import java.lang.reflect.Constructor;
-import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.role.annotation.RoleImplementation;
-import it.tidalwave.northernwind.frontend.impl.util.ClassScanner;
-import java.util.Collections;
+import it.tidalwave.util.spring.ClassScanner;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

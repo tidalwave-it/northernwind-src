@@ -19,6 +19,14 @@
    
     <dependencies>
         <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-eventbus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-role-spring</artifactId>
+        </dependency>
+        <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
         </dependency>
@@ -49,27 +57,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>it.tidalwave.northernwind.frontend.impl.model.io.jaxb</packageName>
-                    <schemaDirectory>${basedir}/src/main/xsd</schemaDirectory>
-                    <extension>true</extension>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
