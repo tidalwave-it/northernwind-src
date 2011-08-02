@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
@@ -33,7 +34,7 @@ import it.tidalwave.northernwind.frontend.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Layout 
+public interface Layout extends As
   {
     @Nonnull
     public Object createView (@Nonnull SiteNode siteNode)

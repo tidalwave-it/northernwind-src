@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.InputStream;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -32,12 +33,13 @@ import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayoutXmlUnmarshaller;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
+import lombok.Cleanup;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.spi.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
  *
@@ -94,7 +96,9 @@ import lombok.extern.slf4j.Slf4j;
         for (final FileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Layout_en.xml"))
           {
             log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
-            final DefaultLayout overridingLayout = new DefaultLayoutXmlUnmarshaller(layoutFile).unmarshal();
+            final @Cleanup InputStream is = layoutFile.getInputStream();
+            final DefaultLayout overridingLayout = new DefaultLayout().as(Unmarshallable).unmarshal(is);
+            is.close();
             layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
             
             if (log.isDebugEnabled())

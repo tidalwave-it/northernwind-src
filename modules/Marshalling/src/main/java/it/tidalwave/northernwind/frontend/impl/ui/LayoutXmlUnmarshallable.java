@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.InputStream;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,9 +35,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.Id;
+import it.tidalwave.role.annotation.RoleImplementation;
+import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.model.spi.Unmarshallable;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -49,24 +51,23 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @ToString @Slf4j
-public class DefaultLayoutXmlUnmarshaller 
+@RoleImplementation(ownerClass=Layout.class) @RequiredArgsConstructor @ToString @Slf4j
+public class LayoutXmlUnmarshallable implements Unmarshallable // TODO: reimplement with JAXB, rename to LayourJaxbUnmarshallable
   {
     @Nonnull
-    private final FileObject file;
+    private final Layout layout;
     
     private Document document;
     
-    @Nonnull
-    public DefaultLayout unmarshal()
+    @Override @Nonnull
+    public Layout unmarshal (final @Nonnull InputStream is)
       throws IOException
       {  
         try 
           {
-            log.debug("unmarshal() - /{}", file.getPath());
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            document = documentBuilder.parse(FileUtil.toFile(file));
+            document = documentBuilder.parse(is);
             
             final Element layoutElement = document.getDocumentElement();
             

@@ -35,6 +35,7 @@ import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
+import it.tidalwave.role.spring.SpringAsSupport;
 import java.util.Stack;
 import lombok.Getter;
 
@@ -45,7 +46,7 @@ import lombok.Getter;
  *
  **********************************************************************************************************************/
 @Configurable @Getter
-public class DefaultLayout implements Layout
+public class DefaultLayout extends SpringAsSupport implements Layout
   {
     @Nonnull
     private final Id id;
@@ -101,6 +102,12 @@ public class DefaultLayout implements Layout
     @Inject @Nonnull
     private ViewFactory viewFactory;
 
+    public DefaultLayout()
+      {
+        this.id = new Id("");
+        this.typeUri = "";
+      }
+    
     public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
         this.id = id;

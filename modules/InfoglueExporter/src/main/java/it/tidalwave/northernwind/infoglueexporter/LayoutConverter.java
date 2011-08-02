@@ -5,10 +5,10 @@
 package it.tidalwave.northernwind.infoglueexporter;
 
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import it.tidalwave.northernwind.frontend.model.spi.Marshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -207,12 +207,10 @@ public class LayoutConverter extends Parser
           //   DefaultLayout thisLayout = ...
           //   DefaultLayout subLayout = parentLayout.withOverride(thisLayout);
           //   if (parentLayout.equals(subLayout)) then do not produce subLayout
-        final LayoutXmlMarshaller marshaller = new LayoutXmlMarshaller(rootComponent);
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
-        marshaller.marshall(pw);
-        pw.close();
-        ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(sw.getBuffer().toString())));
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        rootComponent.as(Marshallable.class).marshal(baos);
+        baos.close();
+        ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(new String(baos.toByteArray()))));
       }
   }
 
