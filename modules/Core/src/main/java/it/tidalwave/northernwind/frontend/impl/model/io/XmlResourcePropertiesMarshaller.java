@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -60,11 +59,8 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
           {
             // FIXME: inject single instance
             final javax.xml.bind.Marshaller marshaller = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName()).createMarshaller();
-            final StringWriter sw = new StringWriter();
-//            final JAXBElement<PropertiesType> jaxbElement = new JAXBElement<PropertiesType>(new QName("properties"), PropertiesType.class, marshal(resourceProperties));
-            marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), sw);
-            sw.flush();
-            os.write(Utilities.dumpXml(sw.toString()));
+            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
         catch (Exception e) 
           {
