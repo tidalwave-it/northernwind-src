@@ -52,4 +52,9 @@ public class VaadinNodeContainerView extends VerticalLayout implements NodeConta
         setMargin(false);
         setStyleName(NW + id.stringValue());
       }
+
+    @Override
+    public void setScreenCssSection (final @Nonnull String screenCssSection)
+      {
+      }
   }  

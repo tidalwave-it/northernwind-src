@@ -53,4 +53,9 @@ public class VaadinContainerView extends VerticalLayout implements NodeContainer
         setStyleName(NW + id.stringValue());
 //        setCaption(typeUri); TODO:for debugging purposes, add everything into a captioned Panel
       }
+
+    @Override
+    public void setScreenCssSection (final @Nonnull String screenCssSection) 
+      {
+      }
   }  

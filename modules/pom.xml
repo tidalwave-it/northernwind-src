@@ -351,6 +351,7 @@
         <module>InfoglueExporter</module>
 
         <module>HtmlTemplateComponents</module>
+        <module>VaadinComponents</module>
 
         <module>frontend</module>
         <module>webapp</module>
