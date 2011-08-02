@@ -22,23 +22,27 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
-import java.util.ArrayList;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import javax.servlet.ServletContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
-import org.springframework.web.context.WebApplicationContext;
+import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.Content;
 import it.tidalwave.northernwind.frontend.model.Media;
@@ -46,11 +50,9 @@ import it.tidalwave.northernwind.frontend.model.Site;
 import it.tidalwave.northernwind.frontend.model.SiteFinder;
 import it.tidalwave.northernwind.frontend.model.SiteNode;
 import it.tidalwave.northernwind.frontend.filesystem.FileSystemProvider;
-import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.openide.filesystems.FileUtil;
 import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
@@ -93,7 +95,7 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
       };
     
     @Inject
-    private WebApplicationContext webApplicationContext;
+    private ApplicationContext applicationContext;
     
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private FileSystemProvider fileSystemProvider;
@@ -235,8 +237,16 @@ import static it.tidalwave.northernwind.frontend.impl.util.UriUtilities.*;
         mapsByType.put(Content.class, documentMapByRelativeUri);
         mapsByType.put(Media.class, mediaMapByRelativeUri);
         mapsByType.put(SiteNode.class, nodeMapByRelativeUri);
-        
-        contextPath = webApplicationContext.getServletContext().getContextPath();
+                
+        try
+          {
+            contextPath = applicationContext.getBean(ServletContext.class).getContextPath();
+          }
+        catch (NoSuchBeanDefinitionException e)
+          {
+            contextPath = "/";
+            log.warn("Running in a non-web environment, set contextPath = {}", contextPath);
+          }  
         
         final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = findMandatoryFolder(fileSystem, documentPath);

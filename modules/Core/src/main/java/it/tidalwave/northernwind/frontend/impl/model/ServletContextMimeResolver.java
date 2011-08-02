@@ -25,12 +25,13 @@ package it.tidalwave.northernwind.frontend.impl.model;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.lookup.ServiceProvider;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 /***********************************************************************************************************************
  *
@@ -44,13 +45,13 @@ import org.springframework.web.context.WebApplicationContext;
 public class ServletContextMimeResolver extends MIMEResolver
   {
     @Inject 
-    private WebApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
     
     @Override @Nullable
     public String findMIMEType (final @Nonnull FileObject fileObject) 
       {
         final String fileName = fileObject.getNameExt();
-        final String mimeType = applicationContext.getServletContext().getMimeType(fileName);
+        final String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);
         log.trace(">>>> MIME type for {} is {}", fileObject, mimeType);
         return mimeType;
       }
