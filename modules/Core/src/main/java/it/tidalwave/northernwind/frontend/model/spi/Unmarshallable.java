@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.frontend.model.spi;
 import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.io.IOException;
-import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
 
 /***********************************************************************************************************************
  *
@@ -46,7 +45,6 @@ public interface Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <Type> Type unmarshal (@Nonnull InputStream is, 
-                                  @Nonnull DefaultResourceProperties.PropertyResolver propertyResolver) // FIXME: drop this
+    public <Type> Type unmarshal (@Nonnull InputStream is) 
       throws IOException;
   }

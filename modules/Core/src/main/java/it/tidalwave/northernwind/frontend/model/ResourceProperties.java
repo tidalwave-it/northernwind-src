@@ -122,4 +122,12 @@ public interface ResourceProperties extends As, Identifiable
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties merged (@Nonnull ResourceProperties properties);
+
+    /*******************************************************************************************************************
+     *
+     * Returns a clone with a new id.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties withId (@Nonnull Id id);
   }

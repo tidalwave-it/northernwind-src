@@ -70,6 +70,16 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
      *
      *
      ******************************************************************************************************************/
+    public DefaultResourceProperties (final @Nonnull PropertyResolver propertyResolver) 
+      {
+        this.id = new Id("");
+        this.propertyResolver = propertyResolver;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     public DefaultResourceProperties (final @Nonnull Id id,
                                       final @Nonnull PropertyResolver propertyResolver) 
       {
@@ -269,5 +279,16 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
           }
         
         return result;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public ResourceProperties withId (final @Nonnull Id id) 
+      {
+        return new DefaultResourceProperties(id, propertyResolver);
       }
   }

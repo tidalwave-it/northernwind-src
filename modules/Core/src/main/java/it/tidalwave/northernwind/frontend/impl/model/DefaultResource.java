@@ -146,7 +146,7 @@ import static it.tidalwave.northernwind.frontend.model.spi.Unmarshallable.Unmars
           {
             log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
             @Cleanup final InputStream is = propertyFile.getInputStream();
-            final ResourceProperties tempProperties = new DefaultResourceProperties(new Id(""), propertyResolver).as(Unmarshallable).unmarshal(is, propertyResolver);
+            final ResourceProperties tempProperties = new DefaultResourceProperties(propertyResolver).as(Unmarshallable).unmarshal(is);
             log.trace(">>>>>>>> read properties: {}", tempProperties);
             properties = properties.merged(tempProperties);
           }

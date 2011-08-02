@@ -34,7 +34,6 @@ import it.tidalwave.util.Key;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.spi.Unmarshallable;
-import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
 
@@ -68,8 +67,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties unmarshal (final @Nonnull InputStream is, 
-                                         final @Nonnull DefaultResourceProperties.PropertyResolver propertyResolver) 
+    public ResourceProperties unmarshal (final @Nonnull InputStream is) 
       throws IOException
       {
         try
@@ -81,7 +79,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
                 throw new IOException("Unexpected version: " + propertiesType.getVersion());  
               }
             
-            return unmarshal(propertiesType, propertyResolver);
+            return unmarshal(propertiesType);
           }
         catch (Exception e)
           {
@@ -94,11 +92,10 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties unmarshal (final @Nonnull PropertiesType propertiesType,
-                                          final @Nonnull DefaultResourceProperties.PropertyResolver propertyResolver) 
+    private ResourceProperties unmarshal (final @Nonnull PropertiesType propertiesType) 
       {
         final Id id = new Id((propertiesType.getId() != null) ? propertiesType.getId() : "");
-        DefaultResourceProperties properties = new DefaultResourceProperties(id, propertyResolver);
+        ResourceProperties properties = resourceProperties.withId(id);
        
         for (final PropertyType property : propertiesType.getProperty())
           {
@@ -107,7 +104,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
         
         for (final PropertiesType propertiesType2 : propertiesType.getProperties())
           {
-            properties = properties.withProperties(unmarshal(propertiesType2, propertyResolver));
+            properties = properties.withProperties(unmarshal(propertiesType2));
           }
         
         return properties;
