@@ -23,17 +23,17 @@
 package it.tidalwave.northernwind.frontend.impl.model.io;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.spi.Unmarshallable;
 import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
-import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
 
@@ -43,8 +43,12 @@ import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable
 public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable<ResourceProperties>
   {
+    @Inject @Nonnull
+    private Unmarshaller unmarshaller;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -57,7 +61,6 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable<Reso
       {
         try
           {
-            final Unmarshaller unmarshaller = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName()).createUnmarshaller();
             final PropertiesType propertiesType = ((JAXBElement<PropertiesType>)unmarshaller.unmarshal(is)).getValue();
             
             if (!"1.0".equals(propertiesType.getVersion()))
