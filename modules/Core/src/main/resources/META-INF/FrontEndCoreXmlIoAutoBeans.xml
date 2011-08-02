@@ -42,21 +42,21 @@
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
 
-    <bean id="objectFactory" 
+    <bean id="frontendOjectFactory" 
           class="it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory" />
           
-    <bean id="jaxbContext" class="javax.xml.bind.JAXBContext" factory-method="newInstance"> 
+    <bean id="frontendJaxbContext" class="javax.xml.bind.JAXBContext" factory-method="newInstance"> 
         <constructor-arg index="0" value="it.tidalwave.northernwind.frontend.impl.model.io.jaxb"/>
     </bean>
 
-    <bean id="marshaller" 
+    <bean id="frontendMarshaller" 
           class="javax.xml.bind.Marshaller"
-          factory-bean="jaxbContext"
+          factory-bean="frontendJaxbContext"
           factory-method="createMarshaller"/>
     
-    <bean id="unmarshaller" 
+    <bean id="frontendUnmarshaller" 
           class="javax.xml.bind.Unmarshaller"
-          factory-bean="jaxbContext"
+          factory-bean="frontendJaxbContext"
           factory-method="createUnmarshaller"/>
     
 </beans>
