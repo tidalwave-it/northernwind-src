@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
 import it.tidalwave.util.Id;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.model.spi.Unmarshallable;
+import it.tidalwave.northernwind.core.model.spi.Unmarshallable;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

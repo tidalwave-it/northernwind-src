@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem;
 
+import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
+import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

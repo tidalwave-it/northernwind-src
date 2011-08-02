@@ -4,7 +4,7 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import it.tidalwave.northernwind.frontend.model.spi.Marshallable;
+import it.tidalwave.northernwind.core.model.spi.Marshallable;
 import it.tidalwave.role.annotation.RoleImplementation;
 import java.io.IOException;
 import java.io.OutputStream;

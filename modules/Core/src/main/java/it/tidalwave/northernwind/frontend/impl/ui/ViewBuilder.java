@@ -26,7 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 

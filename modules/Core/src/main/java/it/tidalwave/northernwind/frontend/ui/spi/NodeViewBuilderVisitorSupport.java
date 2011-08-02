@@ -27,7 +27,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Stack;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

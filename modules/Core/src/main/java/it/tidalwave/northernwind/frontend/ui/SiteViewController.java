@@ -23,7 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.model.Request;
+import it.tidalwave.northernwind.core.model.Request;
 
 /***********************************************************************************************************************
  *

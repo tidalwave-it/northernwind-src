@@ -81,7 +81,7 @@
     
     <!-- Core objects -->
     <bean id="site" 
-          class="it.tidalwave.northernwind.frontend.impl.model.DefaultSite" >
+          class="it.tidalwave.northernwind.core.impl.model.DefaultSite" >
         <property name="documentPath" value="${nw.documentPath}" />
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
@@ -90,7 +90,7 @@
     </bean>
                             
     <bean id="requestLocaleManager"
-          class="it.tidalwave.northernwind.frontend.impl.model.DefaultRequestLocaleManager" >
+          class="it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager" >
     </bean>
                             
     <bean id="viewFactory"

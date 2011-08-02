@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.sidebar;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *

@@ -39,7 +39,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.stringtemplate.v4.ST;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.core.model.Site;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;

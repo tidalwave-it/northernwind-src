@@ -31,10 +31,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.SiteNode.*;
+import static it.tidalwave.northernwind.core.model.SiteNode.*;
 
 /***********************************************************************************************************************
  *

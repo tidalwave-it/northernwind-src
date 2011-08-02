@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;

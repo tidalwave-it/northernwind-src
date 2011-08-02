@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.springmvc;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;

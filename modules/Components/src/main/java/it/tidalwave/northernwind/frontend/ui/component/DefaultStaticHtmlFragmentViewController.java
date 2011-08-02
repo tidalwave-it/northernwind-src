@@ -32,7 +32,7 @@ import java.nio.CharBuffer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.Cleanup;
 import org.stringtemplate.v4.ST;
 

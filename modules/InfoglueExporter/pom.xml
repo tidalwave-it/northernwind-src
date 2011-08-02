@@ -58,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-frontend-core</artifactId>
+            <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>

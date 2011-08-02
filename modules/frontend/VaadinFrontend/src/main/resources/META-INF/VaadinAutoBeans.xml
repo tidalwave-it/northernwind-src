@@ -46,10 +46,10 @@
           class="it.tidalwave.northernwind.frontend.vaadin.DownloadStreamHolder" />
     
     <bean id="mediaRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.vaadin.RequestProcessor.VaadinMediaRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.vaadin.urihandler.VaadinMediaRequestProcessor" />
 
     <bean id="contentRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.spi.ContentRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.spi.DefaultContentRequestProcessor" />
                       
     <!-- FIXME: pass thru JavaScript calls -->            
     <bean id="siteViewController" 

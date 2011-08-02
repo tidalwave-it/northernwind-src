@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *

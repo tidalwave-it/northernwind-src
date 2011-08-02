@@ -32,13 +32,13 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.Request;
-import it.tidalwave.northernwind.frontend.model.RequestProcessor;
-import it.tidalwave.northernwind.frontend.model.spi.RequestResettable;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestProcessor;
+import it.tidalwave.northernwind.core.model.spi.RequestResettable;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.model.RequestProcessor.Status.*;
+import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *

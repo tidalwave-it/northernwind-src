@@ -43,6 +43,6 @@
        default-autowire="byType">
 
     <bean id="headerLanguageOverrideRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.spi.HeaderLanguageOverrideRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.spi.HeaderLanguageOverrideRequestProcessor" />
     
 </beans>

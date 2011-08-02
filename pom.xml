@@ -130,7 +130,7 @@
 
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-core</artifactId>
+                <artifactId>it-tidalwave-northernwind-core</artifactId>
                 <version>1.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

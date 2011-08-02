@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.menu.htmltemplate;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 

@@ -43,7 +43,7 @@
        default-autowire="byType">
 
     <bean id="parameterLanguageOverrideRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.spi.ParameterLanguageOverrideRequestProcessor">
+          class="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideRequestProcessor">
         <property name="parameterName" value="${nb.languageOverride.parameterName}"/>
     </bean>
     

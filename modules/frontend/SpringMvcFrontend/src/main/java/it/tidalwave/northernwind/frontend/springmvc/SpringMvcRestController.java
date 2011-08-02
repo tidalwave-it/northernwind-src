@@ -31,7 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static it.tidalwave.northernwind.frontend.model.Request.*;
+import static it.tidalwave.northernwind.core.model.Request.*;
 
 /***********************************************************************************************************************
  *

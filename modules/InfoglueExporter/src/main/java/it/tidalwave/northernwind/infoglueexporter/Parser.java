@@ -4,7 +4,7 @@
  */
 package it.tidalwave.northernwind.infoglueexporter;
 
-import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
+import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +18,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.StringReader;
 import org.joda.time.DateTime;
-import static it.tidalwave.northernwind.frontend.model.spi.Marshallable.Marshallable;
+import static it.tidalwave.northernwind.core.model.spi.Marshallable.Marshallable;
 
 /**
  *

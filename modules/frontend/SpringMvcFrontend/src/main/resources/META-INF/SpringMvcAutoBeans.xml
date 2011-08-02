@@ -46,13 +46,13 @@
           class="it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder" />    
     
     <bean id="mediaRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultMediaRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.spi.DefaultMediaRequestProcessor" />
 
     <bean id="cssRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultCssRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.spi.DefaultCssRequestProcessor" />
 
     <bean id="contentRequestProcessor" 
-          class="it.tidalwave.northernwind.frontend.model.spi.DefaultContentRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.spi.DefaultContentRequestProcessor" />
 
     <bean id="siteViewController" 
           class="it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController"

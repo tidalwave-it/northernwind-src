@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.AbstractOrderedLayout;

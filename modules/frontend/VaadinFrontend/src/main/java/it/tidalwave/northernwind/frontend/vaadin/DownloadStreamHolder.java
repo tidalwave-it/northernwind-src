@@ -29,8 +29,8 @@ import java.io.InputStream;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
 import com.vaadin.terminal.DownloadStream;
 
 /***********************************************************************************************************************

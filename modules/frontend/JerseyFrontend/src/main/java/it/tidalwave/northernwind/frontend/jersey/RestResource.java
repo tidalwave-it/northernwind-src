@@ -31,7 +31,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import static it.tidalwave.northernwind.frontend.model.Request.*;
+import static it.tidalwave.northernwind.core.model.Request.*;
 
 /***********************************************************************************************************************
  *

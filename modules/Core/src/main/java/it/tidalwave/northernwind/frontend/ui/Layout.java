@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *

@@ -28,8 +28,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
 
 /***********************************************************************************************************************
  *

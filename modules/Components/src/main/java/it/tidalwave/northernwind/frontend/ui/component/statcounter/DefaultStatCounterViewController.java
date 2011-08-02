@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.frontend.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
 
 /***********************************************************************************************************************

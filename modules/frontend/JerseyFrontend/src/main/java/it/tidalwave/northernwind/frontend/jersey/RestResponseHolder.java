@@ -29,8 +29,8 @@ import java.util.Map.Entry;
 import javax.ws.rs.core.Response;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder;
-import it.tidalwave.northernwind.frontend.model.spi.ResponseHolder.ResponseBuilderSupport;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
 
 /***********************************************************************************************************************
  *
