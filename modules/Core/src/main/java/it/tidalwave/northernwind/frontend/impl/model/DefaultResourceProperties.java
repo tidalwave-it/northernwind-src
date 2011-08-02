@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.impl.model;
 
 import java.util.Collection;
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +31,6 @@ import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.TypeSafeMap;
-import it.tidalwave.util.TypeSafeHashMap;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
@@ -61,8 +58,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Nonnull @Getter
     private final Id id;
     
-    @CheckForNull
-    private transient TypeSafeMap properties;
+    private final Map<Key<?>, Object> properties = new HashMap<Key<?>, Object>();
 
     private final Map<Id, ResourceProperties> groups = new HashMap<Id, ResourceProperties>();
     
@@ -74,12 +70,24 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     public DefaultResourceProperties (final @Nonnull Id id,
+                                      final @Nonnull PropertyResolver propertyResolver) 
+      {
+        this.id = id;
+        this.propertyResolver = propertyResolver;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Legacy code for converting from flat-style properties.
+     *
+     ******************************************************************************************************************/
+    public DefaultResourceProperties (final @Nonnull Id id,
                                       final @Nonnull Map<Key<?>, Object> map,
                                       final @Nonnull PropertyResolver propertyResolver) 
       {
         this.id = id;
+        this.propertyResolver = propertyResolver;
         
-        final Map<Key<?>, Object> rootMap = new HashMap<Key<?>, Object>();
         final Map<Id, Map<Key<?>, Object>> othersMap = new HashMap<Id, Map<Key<?>, Object>>();
         
         for (final Entry<Key<?>, Object> entry : map.entrySet())
@@ -89,7 +97,7 @@ public class DefaultResourceProperties implements ResourceProperties
             
             if (!s.contains("."))
               {
-                rootMap.put(new Key<Object>(s), value);  
+                properties.put(new Key<Object>(s), value);  
               }
             else
               {
@@ -108,14 +116,10 @@ public class DefaultResourceProperties implements ResourceProperties
               }
           }
         
-        properties = new TypeSafeHashMap(rootMap);
-        
         for (final Entry<Id, Map<Key<?>, Object>> entry : othersMap.entrySet())
           {
             groups.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
           }
-        
-        this.propertyResolver = propertyResolver;
       }
     
     /*******************************************************************************************************************
@@ -127,14 +131,8 @@ public class DefaultResourceProperties implements ResourceProperties
     public <Type> Type getProperty (@Nonnull Key<Type> key)
       throws NotFoundException, IOException
       {
-        try
-          { 
-            return properties.get(key);
-          }
-        catch (NotFoundException e)
-          {
-            return propertyResolver.resolveProperty(id, key);
-          }
+        final Type value = (Type)properties.get(key);
+        return (value != null) ? value : propertyResolver.resolveProperty(id, key);
       }
 
     /*******************************************************************************************************************
@@ -176,7 +174,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public Collection<Key<?>> getKeys() 
       {
-        return properties.getKeys();
+        return new CopyOnWriteArrayList<Key<?>>(properties.keySet());
       }
     
     /*******************************************************************************************************************
@@ -188,5 +186,19 @@ public class DefaultResourceProperties implements ResourceProperties
     public Collection<Id> getGroupIds() 
       {
         return new CopyOnWriteArrayList<Id>(groups.keySet());
+      }
+    
+    @Nonnull
+    public DefaultResourceProperties withProperty (final @Nonnull Key<Object> key, final @Nonnull Object value)
+      {
+        properties.put(key, value);
+        return this; // TODO: should clone
+      }
+    
+    @Nonnull
+    public DefaultResourceProperties withProperties (final @Nonnull ResourceProperties properties)
+      {
+        groups.put(properties.getId(), properties);
+        return this; // FIXME: should clone
       }
   }

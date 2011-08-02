@@ -23,14 +23,18 @@
 package it.tidalwave.northernwind.frontend.impl.model.io;
 
 import javax.annotation.Nonnull;
+import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.StringWriter;
+import javax.xml.bind.JAXBContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory;
+import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;
+import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,17 +50,20 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
     @Nonnull
     private final ResourceProperties resourceProperties;
     
+    private final ObjectFactory objectFactory = new ObjectFactory(); // FIXME: inject
+    
     @Override
     public void marshal (final @Nonnull OutputStream os) 
       throws IOException
       {
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
-        marshal(pw, resourceProperties);
-        pw.flush();
-        
         try 
           {
+            // FIXME: inject single instance
+            final javax.xml.bind.Marshaller marshaller = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName()).createMarshaller();
+            final StringWriter sw = new StringWriter();
+//            final JAXBElement<PropertiesType> jaxbElement = new JAXBElement<PropertiesType>(new QName("properties"), PropertiesType.class, marshal(resourceProperties));
+            marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), sw);
+            sw.flush();
             os.write(Utilities.dumpXml(sw.toString()));
           }
         catch (Exception e) 
@@ -64,27 +71,31 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
             throw new IOException("", e);
           }
       }
-        
-    private void marshal (final @Nonnull PrintWriter pw, final @Nonnull ResourceProperties properties) 
+
+    @Nonnull
+    private PropertiesType marshal (final @Nonnull ResourceProperties properties) 
       throws IOException
       {
+        final PropertiesType propertiesType = objectFactory.createPropertiesType();        
         final Id id = properties.getId();
         
         if (id.stringValue().equals(""))
           {
-            pw.printf("<properties version='1.0'>\n");
+            propertiesType.setVersion("1.0");
           }
         else
           {
-            pw.printf("<properties id='%s'>\n", id.stringValue());
+            propertiesType.setId(id.stringValue());
           }
         
-        for (final Key<?> key : properties.getKeys())
+        for (final Key<?> key : new TreeSet<Key<?>>(properties.getKeys()))
           {
             try
               {
-                final String value = properties.getProperty(key).toString().replace("&", "&amp;");
-                pw.printf("<property name='%s'><value>%s</value></property>\n", key.stringValue(), value);
+                final PropertyType propertyType = objectFactory.createPropertyType();
+                propertyType.setName(key.stringValue());
+                propertyType.getValue().add(properties.getProperty(key).toString());
+                propertiesType.getProperty().add(propertyType);
               }
             catch (NotFoundException e)
               {
@@ -93,11 +104,11 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
               }
           }
         
-        for (final Id groupId : properties.getGroupIds())
+        for (final Id groupId : new TreeSet<Id>(properties.getGroupIds()))
           {
             try 
               {
-                marshal(pw, properties.getGroup(groupId));
+                propertiesType.getProperties().add(marshal(properties.getGroup(groupId)));
               }
             catch (NotFoundException e) 
               {
@@ -106,6 +117,6 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
               }
           }
         
-        pw.println("</properties>");
-      }
+        return propertiesType;
+     }
   }
