@@ -58,9 +58,9 @@ public class DefaultResourceProperties implements ResourceProperties
     @Nonnull @Getter
     private final Id id;
     
-    private final Map<Key<?>, Object> properties = new HashMap<Key<?>, Object>();
+    private final Map<Key<?>, Object> propertyMap = new HashMap<Key<?>, Object>();
 
-    private final Map<Id, ResourceProperties> groups = new HashMap<Id, ResourceProperties>();
+    private final Map<Id, DefaultResourceProperties> groupMap = new HashMap<Id, DefaultResourceProperties>();
     
     @Nonnull
     private final PropertyResolver propertyResolver;
@@ -74,6 +74,29 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         this.id = id;
         this.propertyResolver = propertyResolver;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Deep clone constructor.
+     *
+     ******************************************************************************************************************/
+    public DefaultResourceProperties (final @Nonnull DefaultResourceProperties otherProperties) 
+      {
+        this.id = otherProperties.id;
+        this.propertyResolver = otherProperties.propertyResolver;
+        
+        for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
+          {
+            propertyMap.put(entry.getKey(), entry.getValue()); // FIXME: clone the property 
+          }
+        
+        for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
+          {
+            final Id groupId = entry.getKey();
+            final DefaultResourceProperties propertyGroup = new DefaultResourceProperties(entry.getValue());
+            groupMap.put(groupId, propertyGroup);
+          }
       }
     
     /*******************************************************************************************************************
@@ -97,7 +120,7 @@ public class DefaultResourceProperties implements ResourceProperties
             
             if (!s.contains("."))
               {
-                properties.put(new Key<Object>(s), value);  
+                propertyMap.put(new Key<Object>(s), value);  
               }
             else
               {
@@ -118,7 +141,7 @@ public class DefaultResourceProperties implements ResourceProperties
         
         for (final Entry<Id, Map<Key<?>, Object>> entry : othersMap.entrySet())
           {
-            groups.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
+            groupMap.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
           }
       }
     
@@ -131,7 +154,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public <Type> Type getProperty (@Nonnull Key<Type> key)
       throws NotFoundException, IOException
       {
-        final Type value = (Type)properties.get(key);
+        final Type value = (Type)propertyMap.get(key);
         return (value != null) ? value : propertyResolver.resolveProperty(id, key);
       }
 
@@ -163,7 +186,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public ResourceProperties getGroup (final @Nonnull Id id)
       throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(groups.get(id), id.stringValue());
+        return NotFoundException.throwWhenNull(groupMap.get(id), id.stringValue());
       }
     
     /*******************************************************************************************************************
@@ -174,7 +197,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public Collection<Key<?>> getKeys() 
       {
-        return new CopyOnWriteArrayList<Key<?>>(properties.keySet());
+        return new CopyOnWriteArrayList<Key<?>>(propertyMap.keySet());
       }
     
     /*******************************************************************************************************************
@@ -185,20 +208,65 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public Collection<Id> getGroupIds() 
       {
-        return new CopyOnWriteArrayList<Id>(groups.keySet());
+        return new CopyOnWriteArrayList<Id>(groupMap.keySet());
       }
     
-    @Nonnull
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
     public DefaultResourceProperties withProperty (final @Nonnull Key<Object> key, final @Nonnull Object value)
       {
-        properties.put(key, value);
-        return this; // TODO: should clone
+        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        result.propertyMap.put(key, value); // FIXME: clone property
+        return result;
       }
     
-    @Nonnull
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
     public DefaultResourceProperties withProperties (final @Nonnull ResourceProperties properties)
       {
-        groups.put(properties.getId(), properties);
-        return this; // FIXME: should clone
+        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        result.groupMap.put(properties.getId(), new DefaultResourceProperties((DefaultResourceProperties)properties));
+        return result;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public ResourceProperties merged (@Nonnull ResourceProperties properties)
+      {
+        final DefaultResourceProperties otherProperties = (DefaultResourceProperties)properties;
+        
+        if (!id.equals(otherProperties.id))
+          {
+            throw new IllegalArgumentException("Id mismatch " + id + " vs " + otherProperties.id);
+          }
+        
+        ResourceProperties result = new DefaultResourceProperties(this);
+        
+        for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
+          {
+            result = result.withProperty((Key<Object>)entry.getKey(), entry.getValue());  
+          }
+        
+        for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
+          {
+            final Id groupId = entry.getKey();
+            final ResourceProperties propertyGroup = entry.getValue();
+            result = (!groupMap.containsKey(groupId)) ? result.withProperties(propertyGroup)
+                                                      : result.withProperties(groupMap.get(groupId).merged(propertyGroup));   
+          }
+        
+        return result;
       }
   }

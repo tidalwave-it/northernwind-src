@@ -97,4 +97,28 @@ public interface ResourceProperties extends Identifiable
      ******************************************************************************************************************/
     @Nonnull
     public Collection<Id> getGroupIds();
+    
+    /*******************************************************************************************************************
+     *
+     * Returns a new instance with an additional property. 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties withProperty (@Nonnull Key<Object> key, @Nonnull Object value);
+    
+    /*******************************************************************************************************************
+     *
+     * Returns a new instance with an additional property group.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties withProperties (@Nonnull ResourceProperties properties);
+    
+    /*******************************************************************************************************************
+     *
+     * Returns a new instance which is the logical merge with other properties.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties merged (@Nonnull ResourceProperties properties);
   }
