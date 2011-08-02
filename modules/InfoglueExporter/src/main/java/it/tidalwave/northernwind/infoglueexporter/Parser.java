@@ -5,7 +5,6 @@
 package it.tidalwave.northernwind.infoglueexporter;
 
 import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
-import it.tidalwave.northernwind.frontend.impl.model.io.ResourcePropertiesJaxbMarshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import java.io.ByteArrayOutputStream;
@@ -15,11 +14,11 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.StringReader;
 import org.joda.time.DateTime;
+import static it.tidalwave.northernwind.frontend.model.spi.Marshallable.Marshallable;
 
 /**
  *
@@ -115,7 +114,7 @@ public abstract class Parser
           {
             final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            new ResourcePropertiesJaxbMarshallable(rp).marshal(baos);
+            rp.as(Marshallable).marshal(baos);
             baos.close();
             ResourceManager.addResource(new Resource(dateTime, path + fileName + ".xml", baos.toByteArray()));
           }
