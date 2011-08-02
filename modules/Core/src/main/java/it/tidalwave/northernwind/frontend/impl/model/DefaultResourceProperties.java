@@ -22,17 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.model;
 
-import java.util.Collection;
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
-import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString(exclude={"propertyResolver"})
 public class DefaultResourceProperties implements ResourceProperties 
   {
-    public static interface PropertyResolver
+    public static interface PropertyResolver // FIXME: drop this
       {
         @Nonnull
         public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
