@@ -15,6 +15,8 @@ import javax.xml.stream.events.XMLEvent;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sun.misc.BASE64Decoder;
 
 /**
@@ -33,6 +35,8 @@ public class Main
     private static final String REGEXP_getInlineAssetUrl = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*)\\s*,\\s*\"([^\"]*)\"\\)";
     private static final Pattern PATTERN_getPageUrl = Pattern.compile(REGEXP_getPageUrl);
     private static final Pattern PATTERN_getInlineAssetUrl = Pattern.compile(REGEXP_getInlineAssetUrl);
+    
+    private static ApplicationContext applicationContext;
         
     public static final File hgFolder = new File("target/root");      
     
@@ -60,6 +64,11 @@ public class Main
     public static void main (String[] args)
       throws Exception
       {
+        applicationContext = new ClassPathXmlApplicationContext(
+                "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
+                "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml",
+                "classpath*:/META-INF/FrontEndCoreAutoBeans.xml",
+                "classpath*:/META-INF/FrontEndCoreXmlIoAutoBeans.xml");
         process(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml");
         ResourceManager.addAndCommitResources();
         Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
