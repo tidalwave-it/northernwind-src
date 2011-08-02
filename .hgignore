@@ -1,6 +1,6 @@
 target
 \.repository
-\.revision
+\.description
 \.classpath
 \.project
 \.settings
