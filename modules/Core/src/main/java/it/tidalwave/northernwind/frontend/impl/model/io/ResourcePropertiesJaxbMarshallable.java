@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -44,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class XmlResourcePropertiesMarshaller implements Marshaller
+public class ResourcePropertiesJaxbMarshallable implements Marshallable
   {
     @Nonnull
     private final ResourceProperties resourceProperties;
@@ -53,20 +54,29 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
     private ObjectFactory objectFactory;
 
     @Inject @Nonnull
-    private javax.xml.bind.Marshaller marshaller;
+    private Marshaller marshaller;
     
-    public XmlResourcePropertiesMarshaller (final @Nonnull ResourceProperties resourceProperties) 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties) 
       {
         this.resourceProperties = resourceProperties;
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void marshal (final @Nonnull OutputStream os) 
       throws IOException
       {
         try 
           {
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
         catch (Exception e) 
@@ -75,6 +85,10 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private PropertiesType marshal (final @Nonnull ResourceProperties properties) 
       throws IOException
