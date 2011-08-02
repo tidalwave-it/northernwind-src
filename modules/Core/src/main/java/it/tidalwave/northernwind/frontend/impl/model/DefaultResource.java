@@ -25,14 +25,9 @@ package it.tidalwave.northernwind.frontend.impl.model;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.IOException;
-import java.io.Reader;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
@@ -42,6 +37,7 @@ import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.Site;
+import it.tidalwave.northernwind.frontend.impl.model.io.ResourcePropertiesJaxbUnmarshallable;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
@@ -144,24 +140,17 @@ import lombok.extern.slf4j.Slf4j;
       {
         log.trace("loadProperties() for /{}", file.getPath());
                 
-        final Map<Key<?>, Object> map = new HashMap<Key<?>, Object>();
+        properties = new DefaultResourceProperties(new Id(""), propertyResolver);
 
-        for (final FileObject propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.properties"))
+        for (final FileObject propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.xml"))
           {
             log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
-            @Cleanup final Reader r = new InputStreamReader(propertyFile.getInputStream());
-            final Properties tempProperties = new Properties();
-            tempProperties.load(r);
-            log.trace(">>>> local properties: {}", tempProperties);
-            r.close();        
-            
-            for (final Entry<Object, Object> entry : tempProperties.entrySet())
-              {
-                map.put(new Key<Object>(entry.getKey().toString()), entry.getValue());
-              }
+            @Cleanup final InputStream is = propertyFile.getInputStream();
+            final ResourceProperties tempProperties = new ResourcePropertiesJaxbUnmarshallable().unmarshal(is, propertyResolver);
+            log.trace(">>>>>>>> read properties: {}", tempProperties);
+            properties = properties.merged(tempProperties);
           }
 
-        properties = new DefaultResourceProperties(new Id(""), map, propertyResolver);
         log.debug(">>>> properties for /{}: {}", file.getPath(), properties);
       }
     

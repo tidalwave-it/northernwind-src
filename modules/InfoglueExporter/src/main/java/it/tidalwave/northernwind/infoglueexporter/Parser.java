@@ -113,15 +113,6 @@ public abstract class Parser
         protected void dumpProperties (final @Nonnull String fileName)
           throws IOException
           {
-            final StringBuilder builder = new StringBuilder();
-            
-            for (final Entry<Key<?>, Object> entry : properties.entrySet())
-              {
-                builder.append(entry.getKey().stringValue()).append(" = ").append(entry.getValue()).append("\n");  
-              }
-            
-            ResourceManager.addResource(new Resource(dateTime, path + fileName + ".properties", builder.toString().getBytes("UTF-8")));
-            
             final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             new ResourcePropertiesJaxbMarshallable(rp).marshal(baos);
