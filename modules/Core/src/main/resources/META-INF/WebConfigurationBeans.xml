@@ -42,56 +42,17 @@
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
 
-    <!-- Turns on @Autowired, @PostConstruct, etc. -->
-    <context:annotation-config />
-   
-    <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
-    <context:spring-configured />
-
-    <!-- EventBus stuff -->
-    <bean id="applicationEventBusTaskExecutor" 
-          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
-          autowire-candidate="false">
-        <property name="corePoolSize" value="${nw.eventBus.context.corePoolSize}" />
-        <property name="maxPoolSize" value="${nw.eventBus.context.maxPoolSize}" />
-        <property name="queueCapacity" value="${nw.eventBus.context.queueCapacity}" />
-    </bean>
-
-    <bean id="sessionEventBusTaskExecutor" 
-          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
-          autowire-candidate="false">
-        <property name="corePoolSize" value="${nw.eventBus.session.corePoolSize}" />
-        <property name="maxPoolSize" value="${nw.eventBus.session.maxPoolSize}" />
-        <property name="queueCapacity" value="${nw.eventBus.session.queueCapacity}" />
-    </bean>
-
-    <bean id="applicationEventBus" 
-          class="it.tidalwave.eventbus.impl.DefaultEventBus" >
-        <property name="taskExecutor" ref="applicationEventBusTaskExecutor"/>
-    </bean>
-
-    <bean id="sessionEventBus" 
-          class="it.tidalwave.eventbus.impl.DefaultEventBus" > <!-- FIXME: declare scope -->
-        <property name="taskExecutor" ref="sessionEventBusTaskExecutor"/>
-    </bean>
-    
-    <!-- Core objects -->
-    <bean id="site" 
-          class="it.tidalwave.northernwind.frontend.impl.model.DefaultSite" >
-        <property name="documentPath" value="${nw.documentPath}" />
-        <property name="mediaPath" value="${nw.mediaPath}" />
-        <property name="nodePath" value="${nw.nodePath}" />
-        <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
-        <property name="localesAsString" value="${nw.site.locales}" />
-    </bean>
-                            
-    <bean id="requestLocaleManager"
-          class="it.tidalwave.northernwind.frontend.impl.model.DefaultRequestLocaleManager" >
-    </bean>
-                            
-    <bean id="viewFactory"
-          class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
-        <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
+<!--    <context:property-placeholder  location="classpath:datasource.properties"/>-->
+    <bean id="propertyConfigurer" class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="contextOverride" value="true"/>
+        <property name="searchContextAttributes" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:META-INF/configuration.properties</value>
+                <value>file:${user.home}/.nw/configuration.properties</value>
+            </list>
+        </property>
     </bean>
     
 </beans>

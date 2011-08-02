@@ -143,7 +143,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
               }
           }
         
-        final String contextConfigLocation = "classpath*:/META-INF/*AutoBeans.xml," + builder.toString();
+        final String contextConfigLocation = "classpath*:/META-INF/*AutoBeans.xml,classpath*:/META-INF/WebConfigurationBeans.xml," + builder.toString();
         log(">>>> contextConfigLocation: " + contextConfigLocation);
         
         return contextConfigLocation;
