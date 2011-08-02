@@ -31,6 +31,7 @@ import javax.xml.bind.Unmarshaller;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.model.spi.Unmarshallable;
 import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;

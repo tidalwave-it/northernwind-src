@@ -33,6 +33,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.model.spi.Marshallable;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;

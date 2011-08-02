@@ -20,16 +20,15 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.impl.model.io;
+package it.tidalwave.northernwind.frontend.model.spi;
 
 import javax.annotation.Nonnull;
-import java.io.InputStream;
 import java.io.IOException;
-import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
+import java.io.OutputStream;
 
 /***********************************************************************************************************************
  *
- * The role of an object that can be unmarshalled.
+ * The role of an object that can be marshalled.
  * 
  * @stereotype Role
  * 
@@ -37,14 +36,12 @@ import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Unmarshallable<Type>
+public interface Marshallable
   {
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public Type unmarshal (@Nonnull InputStream is, 
-                           @Nonnull DefaultResourceProperties.PropertyResolver propertyResolver) // FIXME: drop this
+    public void marshal (@Nonnull OutputStream os) 
       throws IOException;
   }
