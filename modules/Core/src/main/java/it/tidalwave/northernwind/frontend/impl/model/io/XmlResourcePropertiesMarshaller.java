@@ -23,10 +23,11 @@
 package it.tidalwave.northernwind.frontend.impl.model.io;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.xml.bind.JAXBContext;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -34,7 +35,6 @@ import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;
 import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -43,13 +43,22 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@Configurable @Slf4j
 public class XmlResourcePropertiesMarshaller implements Marshaller
   {
     @Nonnull
     private final ResourceProperties resourceProperties;
     
-    private final ObjectFactory objectFactory = new ObjectFactory(); // FIXME: inject
+    @Inject @Nonnull
+    private ObjectFactory objectFactory;
+
+    @Inject @Nonnull
+    private javax.xml.bind.Marshaller marshaller;
+    
+    public XmlResourcePropertiesMarshaller (final @Nonnull ResourceProperties resourceProperties) 
+      {
+        this.resourceProperties = resourceProperties;
+      }
     
     @Override
     public void marshal (final @Nonnull OutputStream os) 
@@ -57,9 +66,7 @@ public class XmlResourcePropertiesMarshaller implements Marshaller
       {
         try 
           {
-            // FIXME: inject single instance
-            final javax.xml.bind.Marshaller marshaller = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName()).createMarshaller();
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
         catch (Exception e) 
