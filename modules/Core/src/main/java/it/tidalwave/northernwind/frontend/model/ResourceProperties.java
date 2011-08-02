@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.model;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.io.IOException;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -38,7 +39,7 @@ import it.tidalwave.role.Identifiable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceProperties extends Identifiable
+public interface ResourceProperties extends As, Identifiable
   {
     /*******************************************************************************************************************
      *

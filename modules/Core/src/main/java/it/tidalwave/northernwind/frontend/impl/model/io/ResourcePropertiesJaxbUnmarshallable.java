@@ -31,6 +31,7 @@ import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.spi.Unmarshallable;
 import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
@@ -43,11 +44,23 @@ import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
-public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable<ResourceProperties>
+@RoleImplementation(ownerClass=ResourceProperties.class) @Configurable
+public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
   {
+    @Nonnull
+    private final ResourceProperties resourceProperties;
+    
     @Inject @Nonnull
     private Unmarshaller unmarshaller;
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public ResourcePropertiesJaxbUnmarshallable (final @Nonnull ResourceProperties resourceProperties) 
+      {
+        this.resourceProperties = resourceProperties;
+      }
     
     /*******************************************************************************************************************
      *

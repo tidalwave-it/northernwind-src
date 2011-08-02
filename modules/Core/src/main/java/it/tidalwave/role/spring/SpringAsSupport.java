@@ -20,30 +20,56 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi;
+package it.tidalwave.role.spring;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.OutputStream;
+import javax.inject.Inject;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
+import it.tidalwave.util.AsException;
+import it.tidalwave.role.spring.spi.RoleManager;
 
 /***********************************************************************************************************************
  *
- * The role of an object that can be marshalled.
- * 
- * @stereotype Role
+ * An implementation for {@link As} based on Spring.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Marshallable
+@Configurable
+public class SpringAsSupport implements As
   {
-    public static final Class<Marshallable> Marshallable = Marshallable.class;
-            
+    @Inject @Nonnull
+    private RoleManager roleManager;
+    
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void marshal (@Nonnull OutputStream os) 
-      throws IOException;
+    @Override @Nonnull
+    public <T> T as (final @Nonnull Class<T> roleClass) 
+      {
+        final List<? extends T> roles = roleManager.findRoles(this, roleClass);
+        
+        if (roles.isEmpty())
+          {
+            throw new AsException(roleClass);  
+          }
+        
+        return roles.get(0);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public <T> T as (final @Nonnull Class<T> clazz, final @Nonnull NotFoundBehaviour<T> notFoundBehaviour)
+      {
+        throw new UnsupportedOperationException("Not supported yet."); // FIXME
+      }    
   }

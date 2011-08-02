@@ -37,14 +37,16 @@ import it.tidalwave.northernwind.frontend.impl.model.DefaultResourceProperties;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Unmarshallable<Type>
+public interface Unmarshallable
   {
+    public static final Class<Unmarshallable> Unmarshallable = Unmarshallable.class;
+    
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Type unmarshal (@Nonnull InputStream is, 
-                           @Nonnull DefaultResourceProperties.PropertyResolver propertyResolver) // FIXME: drop this
+    public <Type> Type unmarshal (@Nonnull InputStream is, 
+                                  @Nonnull DefaultResourceProperties.PropertyResolver propertyResolver) // FIXME: drop this
       throws IOException;
   }

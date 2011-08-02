@@ -48,6 +48,10 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
+    <!-- DCI role injector -->
+    <bean id="roleManager"
+          class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
+          
     <!-- EventBus stuff -->
     <bean id="applicationEventBusTaskExecutor" 
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"

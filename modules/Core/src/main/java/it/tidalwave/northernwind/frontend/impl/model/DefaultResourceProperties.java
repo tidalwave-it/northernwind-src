@@ -32,6 +32,7 @@ import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import lombok.Getter;
 import lombok.ToString;
@@ -46,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString(exclude={"propertyResolver"})
-public class DefaultResourceProperties implements ResourceProperties 
+public class DefaultResourceProperties extends SpringAsSupport implements ResourceProperties 
   {
     public static interface PropertyResolver // FIXME: drop this
       {

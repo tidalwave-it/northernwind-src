@@ -20,30 +20,28 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi;
+package it.tidalwave.role.annotation;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /***********************************************************************************************************************
  *
- * The role of an object that can be marshalled.
- * 
- * @stereotype Role
+ * Designates a role implementation for a given owner.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Marshallable
+@Target(ElementType.TYPE)
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RoleImplementation 
   {
-    public static final Class<Marshallable> Marshallable = Marshallable.class;
-            
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public void marshal (@Nonnull OutputStream os) 
-      throws IOException;
+    @Nonnull
+    public Class<?> ownerClass();
   }

@@ -20,30 +20,19 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.model.spi;
+package it.tidalwave.role.spring.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.List;
 
 /***********************************************************************************************************************
  *
- * The role of an object that can be marshalled.
- * 
- * @stereotype Role
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Marshallable
+public interface RoleManager 
   {
-    public static final Class<Marshallable> Marshallable = Marshallable.class;
-            
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public void marshal (@Nonnull OutputStream os) 
-      throws IOException;
+    @Nonnull
+    public <RoleType> List<? extends RoleType> findRoles (@Nonnull Object owner, @Nonnull Class<RoleType> roleClass);
   }

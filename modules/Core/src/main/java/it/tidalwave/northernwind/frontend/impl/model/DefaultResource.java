@@ -37,11 +37,11 @@ import it.tidalwave.northernwind.frontend.model.RequestLocaleManager;
 import it.tidalwave.northernwind.frontend.model.Resource;
 import it.tidalwave.northernwind.frontend.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.model.Site;
-import it.tidalwave.northernwind.frontend.impl.model.io.ResourcePropertiesJaxbUnmarshallable;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.model.spi.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
  *
@@ -146,7 +146,7 @@ import lombok.extern.slf4j.Slf4j;
           {
             log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
             @Cleanup final InputStream is = propertyFile.getInputStream();
-            final ResourceProperties tempProperties = new ResourcePropertiesJaxbUnmarshallable().unmarshal(is, propertyResolver);
+            final ResourceProperties tempProperties = new DefaultResourceProperties(new Id(""), propertyResolver).as(Unmarshallable).unmarshal(is, propertyResolver);
             log.trace(">>>>>>>> read properties: {}", tempProperties);
             properties = properties.merged(tempProperties);
           }
