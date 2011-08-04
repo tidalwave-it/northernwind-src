@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--********************************************************************************************************************
  *
- * These Foolish Things - Miscellaneous utilities
- * Copyright (C) 2009-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * NorthernWind - lightweight CMS
+ * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -17,8 +17,8 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://thesefoolishthings.kenai.com
- * SCM: http://kenai.com/hg/thesefoolishthings~src
+ * WWW: http://northernwind.java.net
+ * SCM: http://java.net/hg/northernwind~src
  *
  ********************************************************************************************************************-->
 <configuration debug="true"> 
