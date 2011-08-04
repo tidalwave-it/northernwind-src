@@ -45,6 +45,8 @@
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
         <log.file>target/nw.log</log.file>
+
+        <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
     </properties>
 
     <profiles>
@@ -232,9 +234,13 @@
                     <excludes>
                         <exclude>LICENSE.txt</exclude>
                         <exclude>**/*.mf</exclude>
-                        <exclude>**/.revision</exclude>
+                        <exclude>**/*.orig</exclude>
+                        <exclude>**/.description</exclude>
+                        <exclude>**/main/resources/**/*.html</exclude>
+                        <exclude>**/main/resources/**/*.css</exclude>
                         <exclude>.hgtags</exclude>
                         <exclude>.hgignore</exclude>
+                        <exclude>**/activate-*-profile</exclude>
                     </excludes>
                 </configuration>
             </plugin>
