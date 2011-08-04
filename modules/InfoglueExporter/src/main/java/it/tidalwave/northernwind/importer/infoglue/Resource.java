@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.infoglueexporter;
+package it.tidalwave.northernwind.importer.infoglue;
 
 import java.io.File;
 import java.io.FileOutputStream;

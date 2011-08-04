@@ -20,24 +20,13 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.infoglueexporter;
+package it.tidalwave.northernwind.importer.infoglue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
-import javax.annotation.Nonnull;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import lombok.Cleanup;
-import org.w3c.dom.Document;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSOutput;
-import org.w3c.dom.ls.LSSerializer;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -45,46 +34,54 @@ import org.xml.sax.SAXException;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class Utilities 
+public class ResourceManager 
   {
+    private static final SortedMap<DateTime, List<Resource>> resourceMapByDateTime = new TreeMap<DateTime, List<Resource>>();
+    
+    private static final List<Resource> media = new ArrayList<Resource>();
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void exec (String ... args) 
+    public static void addAndCommitResources() 
       throws Exception
-      {
-        System.err.println(Arrays.toString(args));
-        Runtime.getRuntime().exec(args).waitFor();
+      {        
+        for (final List<Resource> resources : resourceMapByDateTime.values())
+          {
+              // FIXME: first add all of them, then commit all of them
+            for (final Resource resource : resources)
+              {
+                resource.addAndCommit();  
+              }
+          }
+        
+        for (final Resource resource : media)
+          {
+            resource.addAndCommit();  
+          }
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static byte[] dumpXml (final @Nonnull String string)
-      throws Exception
+    public static void addResource (final Resource resource)
       {
-        final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-        final DOMImplementationLS impl = (DOMImplementationLS)registry.getDOMImplementation("LS");
-        final LSSerializer writer = impl.createLSSerializer();
-        writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
-        final LSOutput output = impl.createLSOutput();
-        final @Cleanup ByteArrayOutputStream os = new ByteArrayOutputStream();
-        output.setByteStream(os);
-        writer.write(parseXmlFile(string), output);
-        os.close();
-        return os.toByteArray();
+        List<Resource> resources = resourceMapByDateTime.get(resource.getDateTime());
+        
+        if (resources == null)
+          {
+            resources = new ArrayList<Resource>();
+          }
+        
+        resources.add(resource);
+        resourceMapByDateTime.put(resource.getDateTime(), resources);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Nonnull
-    private static Document parseXmlFile (final @Nonnull String in)
-      throws ParserConfigurationException, SAXException, IOException
+    public static void addMedia (final Resource resource)
       {
-        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        final DocumentBuilder db = dbf.newDocumentBuilder();
-        final InputSource is = new InputSource(new StringReader(in));
-        return db.parse(is);
+        media.add(resource);
       }
   }

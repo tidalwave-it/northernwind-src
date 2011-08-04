@@ -20,13 +20,13 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.infoglueexporter;
+package it.tidalwave.northernwind.importer.infoglue;
 
 import it.tidalwave.util.Key;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
-import javax.xml.stream.XMLStreamReader;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -35,56 +35,44 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ContentParser extends Parser
+public class StructureParser extends Parser
   {
     private final String language;
 
-    private boolean inAttributes = false;
-
-    public ContentParser (final @Nonnull String xml, final @Nonnull DateTime dateTime, final @Nonnull String path, final @Nonnull String language) 
+    public StructureParser (String xml, final @Nonnull DateTime dateTime, String path, String language) 
+      throws FileNotFoundException 
       {
         super(xml, path, dateTime);
         this.language = language;
       }
 
     @Override
-    protected void processStartElement (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
+    protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
-        if ("attributes".equals(name))
+        final String s = builder.toString();
+        
+        if ("ComponentStructure".equals(name))
           {
-            inAttributes = true;  
+            try
+              {
+                new LayoutConverter(s, dateTime, path + "Layout_" + language + ".xml", properties).process();
+              }
+            catch (Exception e)
+              {
+                  System.err.println("ERROR: " + e + " ON " + builder);                        
+              }
+          }
+        else if (!Arrays.asList("attributes", "article").contains(name) &!s.equals("_Standard Pages"))
+          {
+            properties.put(new Key<Object>(name), s); 
           }
       }
 
     @Override
-    protected void processEndElement (final @Nonnull String name)
-      throws Exception
-      {
-        if ("attributes".equals(name))
-          {
-            inAttributes = false;  
-          }
-        else if (inAttributes)
-          {
-            if (Arrays.asList("FullText", "Template", "Leadin").contains(name))
-              {
-                // FIXME: format HTML
-                ResourceManager.addResource(new Resource(dateTime, path + name + "_" + language + ".html", builder.toString().getBytes("UTF-8")));
-//                    addResource(new Resource(dateTime, path + name + ".html", dumpXml("<body>" + builder.toString() + "</body>")));
-              }
-            else
-              {
-                properties.put(new Key<Object>(name), builder.toString()); 
-              }
-          }
-      }        
-
-    @Override
-    protected void finish()
+    protected void finish() 
       throws IOException
       {
         dumpProperties("Properties_" + language);
       }
   }
-
