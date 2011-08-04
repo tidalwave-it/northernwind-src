@@ -95,7 +95,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
     private ResourceProperties unmarshal (final @Nonnull PropertiesType propertiesType) 
       {
         final Id id = new Id((propertiesType.getId() != null) ? propertiesType.getId() : "");
-        ResourceProperties properties = resourceProperties.withId(id);
+        ResourceProperties properties = resourceProperties.withId(id); // FIXME: use ModelFactory
        
         for (final PropertyType property : propertiesType.getProperty())
           {
