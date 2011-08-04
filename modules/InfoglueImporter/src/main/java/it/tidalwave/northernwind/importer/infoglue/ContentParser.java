@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -35,6 +36,7 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class ContentParser extends Parser
   {
     private final String language;
@@ -61,6 +63,8 @@ public class ContentParser extends Parser
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
+        log.debug("processEndElement({})", name);
+        
         if ("attributes".equals(name))
           {
             inAttributes = false;  
