@@ -83,10 +83,9 @@ public class Main
       throws Exception
       {
         applicationContext = new ClassPathXmlApplicationContext(
+                "classpath*:/META-INF/*AutoBeans.xml",
                 "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
-                "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml",
-                "classpath*:/META-INF/FrontEndCoreAutoBeans.xml",
-                "classpath*:/META-INF/FrontEndCoreXmlIoAutoBeans.xml");
+                "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml");
         process(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml");
         ResourceManager.addAndCommitResources();
         Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");

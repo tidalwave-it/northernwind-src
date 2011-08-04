@@ -58,6 +58,10 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-eventbus-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
         <dependency>
