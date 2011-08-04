@@ -26,7 +26,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans  
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
 
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.LocalFileSystemProvider" >
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider" >
         <property name="rootPath" value="${nw.rootPath}" />
     </bean>
     

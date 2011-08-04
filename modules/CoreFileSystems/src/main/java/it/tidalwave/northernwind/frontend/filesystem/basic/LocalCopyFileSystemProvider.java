@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem;
+package it.tidalwave.northernwind.frontend.filesystem.basic;
 
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;

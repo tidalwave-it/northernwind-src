@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-filesystem-core</artifactId>
+            <artifactId>it-tidalwave-northernwind-filesystem-basic</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>

@@ -26,7 +26,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans  
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
 
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.ZipFileSystemProvider" >
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.basic.ZipFileSystemProvider" >
         <property name="zipFilePath" value="${nw.rootPath}" />
         <property name="modificationCheckInterval" value="${nw.zip.modificationCheckInterval}" />
     </bean>
