@@ -147,6 +147,11 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
+                <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-filesystem-basic</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
@@ -154,11 +159,6 @@
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
                 <version>1.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
