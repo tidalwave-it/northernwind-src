@@ -76,69 +76,68 @@ public abstract class Parser
             reader.next();
             final int eventType = reader.getEventType();
 
-                switch (eventType)
-                  {
-                    case XMLEvent.CHARACTERS:
-                      builder.append(reader.getText());
-                      break;
+            switch (eventType)
+              {
+                case XMLEvent.CHARACTERS:
+                  builder.append(reader.getText());
+                  break;
 
-                    case XMLEvent.CDATA:
-                      throw new RuntimeException("CDATA!");
+                case XMLEvent.CDATA:
+                  throw new RuntimeException("CDATA!");
 
-                    case XMLEvent.END_DOCUMENT:
-                      finish();
-                      break;
-                        
-                    case XMLEvent.ATTRIBUTE:
-                      log.debug("{} {}: {}", new Object[] { eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())) });
-                      processAttribute(reader.getName().getLocalPart(), reader);
-                      break;
+                case XMLEvent.END_DOCUMENT:
+                  finish();
+                  break;
 
-                    case XMLEvent.START_ELEMENT:
-                      log.debug("{} {}: {}", new Object[] { eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())) });
-                      builder.delete(0, builder.length());
-                      processStartElement(reader.getName().getLocalPart(), reader);
-                      indent++;
-                      break;
+                case XMLEvent.ATTRIBUTE:
+                  log.debug("{} {}: {}", new Object[] { eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())) });
+                  processAttribute(reader.getName().getLocalPart(), reader);
+                  break;
 
-                    case XMLEvent.END_ELEMENT:
-                      indent--;
-                      processEndElement(reader.getName().getLocalPart());
+                case XMLEvent.START_ELEMENT:
+                  log.debug("{} {}: {}", new Object[] { eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())) });
+                  builder.delete(0, builder.length());
+                  processStartElement(reader.getName().getLocalPart(), reader);
+                  indent++;
+                  break;
 
-                    default:
-                      final QName name = reader.getName();
-                      log.debug("{} {}: {}", new Object[] { eventType, name, builder.substring(0, Math.min(1000, builder.length())) });
-                      break;
-                  }
+                case XMLEvent.END_ELEMENT:
+                  indent--;
+                  processEndElement(reader.getName().getLocalPart());
+
+                default:
+                  final QName name = reader.getName();
+                  log.debug("{} {}: {}", new Object[] { eventType, name, builder.substring(0, Math.min(1000, builder.length())) });
+                  break;
               }
           }
-        
-        protected void processAttribute (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
-          throws Exception
-          {           
-          }
-        
-        protected void processStartElement (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
-          throws Exception
-          {           
-          }
-        
-        protected abstract void processEndElement (@Nonnull String name)
-          throws Exception;
-        
-        protected void finish()
-          throws Exception
-          {           
-          }
-        
-        protected void dumpProperties (final @Nonnull String fileName)
-          throws IOException
-          {
-            final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            rp.as(Marshallable).marshal(baos);
-            baos.close();
-            ResourceManager.addResource(new Resource(dateTime, path + fileName + ".xml", baos.toByteArray()));
-          }
       }
-    
+
+    protected void processAttribute (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
+      throws Exception
+      {           
+      }
+
+    protected void processStartElement (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
+      throws Exception
+      {           
+      }
+
+    protected abstract void processEndElement (@Nonnull String name)
+      throws Exception;
+
+    protected void finish()
+      throws Exception
+      {           
+      }
+
+    protected void dumpProperties (final @Nonnull String fileName)
+      throws IOException
+      {
+        final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        rp.as(Marshallable).marshal(baos);
+        baos.close();
+        ResourceManager.addResource(new Resource(dateTime, path + fileName + ".xml", baos.toByteArray()));
+      }
+  }
