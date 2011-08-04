@@ -23,9 +23,11 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import it.tidalwave.util.As;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.role.Identifiable;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -34,8 +36,14 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Layout extends As
+public interface Layout extends As, Identifiable
   {
+    @Nonnull
+    public Layout withLayout (@Nonnull Layout layout);
+    
+    @Nonnull
+    public Layout withOverride (@Nonnull Layout override);
+
     @Nonnull
     public Object createView (@Nonnull SiteNode siteNode)
       throws NotFoundException;
@@ -45,8 +53,8 @@ public interface Layout extends As
       throws NotFoundException;
     
     @Nonnull
-    public Layout withOverride (@Nonnull Layout override);
-
-    @Nonnull
     public String getTypeUri();
+    
+    @Nonnull
+    public List<Layout> getChildren();
   }

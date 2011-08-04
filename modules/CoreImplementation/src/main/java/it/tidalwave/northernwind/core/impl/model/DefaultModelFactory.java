@@ -25,12 +25,15 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
  *
@@ -85,5 +88,16 @@ public class DefaultModelFactory implements ModelFactory
       throws IOException, NotFoundException
       {
         return new DefaultSiteNode(folder);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Layout createLayout (final @Nonnull Id id, final @Nonnull String type) 
+      {
+        return new DefaultLayout(id, type);
       }
   }

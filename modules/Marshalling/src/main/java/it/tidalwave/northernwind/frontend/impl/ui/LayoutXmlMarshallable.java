@@ -23,12 +23,14 @@
 package it.tidalwave.northernwind.frontend.impl.ui;
 
 import it.tidalwave.northernwind.core.model.spi.Marshallable;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.role.annotation.RoleImplementation;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -36,11 +38,11 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=DefaultLayout.class) @RequiredArgsConstructor
+@RoleImplementation(ownerClass=Layout.class) @RequiredArgsConstructor
 public class LayoutXmlMarshallable implements Marshallable // TODO: reimplement with JAXB, rename to LayourJaxbMarshallable
   {
     @Nonnull
-    private final DefaultLayout layout;
+    private final Layout layout;
     
     @Override @Nonnull
     public void marshal (final @Nonnull OutputStream os)
@@ -53,12 +55,12 @@ public class LayoutXmlMarshallable implements Marshallable // TODO: reimplement 
         pw.flush();
       } 
     
-    private void marshal (final @Nonnull PrintWriter pw, final @Nonnull DefaultLayout layout, final @Nonnull String leading)
+    private void marshal (final @Nonnull PrintWriter pw, final @Nonnull Layout layout, final @Nonnull String leading)
       throws IOException
       {
         pw.printf("%s<component id='%s' type='%s'>\n", leading, layout.getId(), layout.getTypeUri());
         
-        for (final DefaultLayout child : layout.getChildren())
+        for (final Layout child : layout.getChildren())
           {
             marshal(pw, child, leading + "  ");                
           }

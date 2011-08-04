@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
+import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.util.Id;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
@@ -81,4 +83,16 @@ public interface ModelFactory
     @Nonnull
     public SiteNode createSiteNode (@Nonnull FileObject folder)
       throws IOException, NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link Layout}.
+     * 
+     * @param  id    the id
+     * @param  type  the type
+     * @return       the {@code Layout}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Layout createLayout (@Nonnull Id id, @Nonnull String type);
   }

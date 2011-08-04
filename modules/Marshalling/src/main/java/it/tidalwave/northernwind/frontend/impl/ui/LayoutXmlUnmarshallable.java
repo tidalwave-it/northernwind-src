@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.InputStream;
@@ -35,11 +36,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.role.annotation.RoleImplementation;
-import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.spi.Unmarshallable;
-import lombok.RequiredArgsConstructor;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,13 +53,21 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=Layout.class) @RequiredArgsConstructor @ToString @Slf4j
+@Configurable @RoleImplementation(ownerClass=Layout.class) @ToString @Slf4j
 public class LayoutXmlUnmarshallable implements Unmarshallable // TODO: reimplement with JAXB, rename to LayourJaxbUnmarshallable
   {
     @Nonnull
     private final Layout layout;
     
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
+    
     private Document document;
+
+    public LayoutXmlUnmarshallable (final @Nonnull Layout layout) 
+      {
+        this.layout = layout;
+      }
     
     @Override @Nonnull
     public Layout unmarshal (final @Nonnull InputStream is)
@@ -97,19 +107,19 @@ public class LayoutXmlUnmarshallable implements Unmarshallable // TODO: reimplem
       }
     
     @Nonnull
-    private DefaultLayout parseComponent (final @Nonnull Node componentNode)
+    private Layout parseComponent (final @Nonnull Node componentNode)
       {
         final Id id = new Id(componentNode.getAttributes().getNamedItem("id").getNodeValue());
         final String type = componentNode.getAttributes().getNamedItem("type").getNodeValue();
         
-        final DefaultLayout layout = new DefaultLayout(id, type);
+        Layout layout2 = modelFactory.createLayout(id, type);
         
         for (final Node node : getChildComponentNodes(componentNode))
           {
-            layout.add(parseComponent(node));                
+            layout2 = layout2.withLayout(parseComponent(node));                
           }
         
-        return layout;
+        return layout2;
       }
     
     @Nonnull

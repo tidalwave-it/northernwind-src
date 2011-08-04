@@ -62,6 +62,10 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core-default</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-filesystem-basic</artifactId>
         </dependency>
         <dependency>

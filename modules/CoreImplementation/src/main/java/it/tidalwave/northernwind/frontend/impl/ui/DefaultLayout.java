@@ -54,9 +54,9 @@ public class DefaultLayout extends SpringAsSupport implements Layout
     @Nonnull
     private /* final FIXME */ String typeUri;
     
-    private final List<DefaultLayout> children = new ArrayList<DefaultLayout>();
+    private final List<Layout> children = new ArrayList<Layout>();
     
-    private final Map<Id, DefaultLayout> childrenMapById = new HashMap<Id, DefaultLayout>();
+    private final Map<Id, Layout> childrenMapById = new HashMap<Id, Layout>();
     
     static class CloneVisitor implements Visitor<Layout, DefaultLayout>
       {
@@ -135,17 +135,17 @@ public class DefaultLayout extends SpringAsSupport implements Layout
         return result;
       }
     
-    private void applyOverride (final @Nonnull DefaultLayout override)
+    private void applyOverride (final @Nonnull Layout override)
       {
-        this.typeUri = override.typeUri; // FIXME: don't like this approach, as it requires typeUri non final
+        this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
 
         // Complex rule, but it's Infoglue. 
         // FIXME: translate the mapping during the conversion and use a simpler rule here
         if ("base".equals(id.stringValue()))
           {
-            for (final DefaultLayout overridingChild : override.getChildren())
+            for (final Layout overridingChild : override.getChildren())
               {
-                final DefaultLayout overriddenChild = childrenMapById.get(overridingChild.id);
+                final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
 
                 if (overriddenChild == null)
                   {
@@ -153,7 +153,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout
                   }
                 else
                   {
-                    overriddenChild.applyOverride(overridingChild);                    
+                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);                    
                   }
               }
           }
@@ -162,21 +162,31 @@ public class DefaultLayout extends SpringAsSupport implements Layout
             this.children.clear();
             this.childrenMapById.clear();
 
-            for (final DefaultLayout overridingChild : override.getChildren())
+            for (final Layout overridingChild : override.getChildren())
               {
                 add(overridingChild);  
               }
           }
       }
       
-    public void add (final @Nonnull DefaultLayout layout)
+    @Override @Nonnull
+    public Layout withLayout (final @Nonnull Layout layout)
+      {
+        final DefaultLayout clone = clone();
+        clone.children.add(layout);
+        clone.childrenMapById.put(layout.getId(), layout);
+        
+        return clone;
+      }
+    
+    public void add (final @Nonnull Layout layout) // FIXME: drop this
       {
         children.add(layout);
-        childrenMapById.put(layout.id, layout);
+        childrenMapById.put(layout.getId(), layout);
       }
     
     @Nonnull
-    public DefaultLayout findSubComponentById (final @Nonnull Id id)
+    public Layout findSubComponentById (final @Nonnull Id id)
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(childrenMapById.get(id), "Can't find " + id);
@@ -196,7 +206,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout
         visitor.preVisit(this);    
         visitor.visit(this);    
         
-        for (final DefaultLayout child : children)
+        for (final Layout child : children)
           {
             child.accept(visitor);   
           }
