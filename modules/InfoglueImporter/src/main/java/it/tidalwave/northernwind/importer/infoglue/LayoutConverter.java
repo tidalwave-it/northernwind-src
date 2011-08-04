@@ -34,6 +34,7 @@ import java.util.SortedMap;
 import java.util.Stack;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -42,6 +43,7 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class LayoutConverter extends Parser
   {
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
@@ -74,9 +76,11 @@ public class LayoutConverter extends Parser
       }
 
     @Override
-    protected void processStartElement (final @Nonnull String elementName,  final @Nonnull XMLStreamReader reader)
+    protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
+        log.debug("processStartElement({})", elementName);
+        
         if ("component".equals(elementName))
           {
             String attrNameValue = "";
@@ -210,6 +214,8 @@ public class LayoutConverter extends Parser
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
+        log.debug("processEndElement({})", name);
+        
         if ("component".equals(name))
           {
             componentStack.pop();
@@ -227,10 +233,13 @@ public class LayoutConverter extends Parser
           //   DefaultLayout thisLayout = ...
           //   DefaultLayout subLayout = parentLayout.withOverride(thisLayout);
           //   if (parentLayout.equals(subLayout)) then do not produce subLayout
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        rootComponent.as(Marshallable.class).marshal(baos);
-        baos.close();
-        ResourceManager.addResource(new Resource(dateTime, path, Utilities.dumpXml(new String(baos.toByteArray()))));
+          
+        if (rootComponent != null) // might be empty
+          {
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            rootComponent.as(Marshallable.class).marshal(baos);
+            baos.close();
+            ResourceManager.addResource(new Resource(dateTime, path, baos.toByteArray()));
+          }
       }
   }
-
