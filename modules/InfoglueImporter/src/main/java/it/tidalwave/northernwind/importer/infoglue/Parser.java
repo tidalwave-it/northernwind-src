@@ -37,7 +37,7 @@ import java.util.TreeMap;
 import java.io.StringReader;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import static it.tidalwave.northernwind.core.model.spi.Marshallable.Marshallable;
+import static it.tidalwave.role.Marshallable.Marshallable;
 
 /***********************************************************************************************************************
  *

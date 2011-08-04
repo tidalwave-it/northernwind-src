@@ -34,7 +34,7 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.spi.Marshallable;
+import it.tidalwave.role.Marshallable;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;

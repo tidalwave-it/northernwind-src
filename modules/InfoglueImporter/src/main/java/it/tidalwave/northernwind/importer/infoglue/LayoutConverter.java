@@ -23,7 +23,7 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
-import it.tidalwave.northernwind.core.model.spi.Marshallable;
+import it.tidalwave.role.Marshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import java.io.ByteArrayOutputStream;

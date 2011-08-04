@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.role.annotation.RoleImplementation;
-import it.tidalwave.northernwind.core.model.spi.Marshallable;
+import it.tidalwave.role.Marshallable;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.LayoutJaxb;

@@ -40,7 +40,7 @@ import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.spi.Unmarshallable.Unmarshallable;
+import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
  *

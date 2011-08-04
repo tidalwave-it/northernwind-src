@@ -33,7 +33,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.spi.Unmarshallable;
+import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
 

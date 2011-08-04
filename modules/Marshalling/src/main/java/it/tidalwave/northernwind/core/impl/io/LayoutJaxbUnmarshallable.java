@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.spi.Unmarshallable;
+import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.LayoutJaxb;
