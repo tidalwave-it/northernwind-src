@@ -342,6 +342,7 @@
 
     <modules>
         <module>EventBus</module>
+        <module>SpringEventBus</module>
         <module>Marshalling</module>
         <module>SpringRoles</module>
 

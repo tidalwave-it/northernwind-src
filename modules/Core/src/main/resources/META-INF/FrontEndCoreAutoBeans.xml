@@ -70,12 +70,13 @@
     </bean>
 
     <bean id="applicationEventBus" 
-          class="it.tidalwave.eventbus.impl.DefaultEventBus" >
+          class="it.tidalwave.eventbus.impl.spring.SpringEventBus" >
         <property name="taskExecutor" ref="applicationEventBusTaskExecutor"/>
     </bean>
 
     <bean id="sessionEventBus" 
-          class="it.tidalwave.eventbus.impl.DefaultEventBus" > <!-- FIXME: declare scope -->
+          class="it.tidalwave.eventbus.impl.spring.SpringEventBus"
+          scope="session">
         <property name="taskExecutor" ref="sessionEventBusTaskExecutor"/>
     </bean>
     

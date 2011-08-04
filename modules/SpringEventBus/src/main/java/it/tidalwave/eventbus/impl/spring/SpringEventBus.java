@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.eventbus.impl;
+package it.tidalwave.eventbus.impl.spring;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @ThreadSafe @Slf4j
-public class DefaultEventBus implements EventBus
+public class SpringEventBus implements EventBus
   {
     private final Map<Class<?>, List<WeakReference<EventBusListener<?>>>> listenersMapByTopic =
             new HashMap<Class<?>, List<WeakReference<EventBusListener<?>>>>();
