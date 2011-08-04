@@ -36,8 +36,8 @@ import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.spi.Marshallable;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
-import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesType;
-import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyType;
+import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
+import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -92,29 +92,29 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private PropertiesType marshal (final @Nonnull ResourceProperties properties) 
+    private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties) 
       throws IOException
       {
-        final PropertiesType propertiesType = objectFactory.createPropertiesType();        
+        final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();        
         final Id id = properties.getId();
         
         if (id.stringValue().equals(""))
           {
-            propertiesType.setVersion("1.0");
+            propertiesJaxb.setVersion("1.0");
           }
         else
           {
-            propertiesType.setId(id.stringValue());
+            propertiesJaxb.setId(id.stringValue());
           }
         
         for (final Key<?> key : new TreeSet<Key<?>>(properties.getKeys()))
           {
             try
               {
-                final PropertyType propertyType = objectFactory.createPropertyType();
-                propertyType.setName(key.stringValue());
-                propertyType.getValue().add(properties.getProperty(key).toString());
-                propertiesType.getProperty().add(propertyType);
+                final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
+                propertyJaxb.setName(key.stringValue());
+                propertyJaxb.getValue().add(properties.getProperty(key).toString());
+                propertiesJaxb.getProperty().add(propertyJaxb);
               }
             catch (NotFoundException e)
               {
@@ -127,7 +127,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
           {
             try 
               {
-                propertiesType.getProperties().add(marshal(properties.getGroup(groupId)));
+                propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
               }
             catch (NotFoundException e) 
               {
@@ -136,6 +136,6 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
               }
           }
         
-        return propertiesType;
+        return propertiesJaxb;
      }
   }

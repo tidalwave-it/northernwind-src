@@ -26,25 +26,25 @@
             jaxb:version="1.0" 
             jaxb:extensionBindingPrefixes="xjc">
 
-    <xsd:element name="properties" type="PropertiesType"/>
+    <xsd:element name="properties" type="PropertiesJaxb"/>
 
-    <xsd:complexType name="PropertiesType">
+    <xsd:complexType name="PropertiesJaxb">
         <xsd:sequence>
-            <xsd:element name="property" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/> 
+            <xsd:element name="property" type="PropertyJaxb" minOccurs="0" maxOccurs="unbounded"/> 
             <xsd:element ref="properties" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
         <xsd:attribute name="version" type="xsd:string"/> 
         <xsd:attribute name="id" type="xsd:string"/> 
     </xsd:complexType>
 
-    <xsd:complexType name="PropertyType">
+    <xsd:complexType name="PropertyJaxb">
         <xsd:sequence>
-            <xsd:element name="value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/> 
+            <xsd:element name="value" type="ValueJaxb" minOccurs="0" maxOccurs="unbounded"/> 
         </xsd:sequence>
         <xsd:attribute name="name" type="xsd:string"/> 
     </xsd:complexType>
 
-    <xsd:simpleType name="ValueType">
+    <xsd:simpleType name="ValueJaxb">
         <xsd:restriction base="xsd:string"/>
     </xsd:simpleType>
 

@@ -34,8 +34,8 @@ import it.tidalwave.util.Key;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.spi.Unmarshallable;
-import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesType;
-import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyType;
+import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
+import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
 
 /***********************************************************************************************************************
  *
@@ -72,14 +72,14 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
       {
         try
           {
-            final PropertiesType propertiesType = ((JAXBElement<PropertiesType>)unmarshaller.unmarshal(is)).getValue();
+            final PropertiesJaxb propertiesJaxb = ((JAXBElement<PropertiesJaxb>)unmarshaller.unmarshal(is)).getValue();
             
-            if (!"1.0".equals(propertiesType.getVersion()))
+            if (!"1.0".equals(propertiesJaxb.getVersion()))
               {
-                throw new IOException("Unexpected version: " + propertiesType.getVersion());  
+                throw new IOException("Unexpected version: " + propertiesJaxb.getVersion());  
               }
             
-            return unmarshal(propertiesType);
+            return unmarshal(propertiesJaxb);
           }
         catch (Exception e)
           {
@@ -92,19 +92,19 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties unmarshal (final @Nonnull PropertiesType propertiesType) 
+    private ResourceProperties unmarshal (final @Nonnull PropertiesJaxb propertiesJaxb) 
       {
-        final Id id = new Id((propertiesType.getId() != null) ? propertiesType.getId() : "");
+        final Id id = new Id((propertiesJaxb.getId() != null) ? propertiesJaxb.getId() : "");
         ResourceProperties properties = resourceProperties.withId(id); // FIXME: use ModelFactory
        
-        for (final PropertyType property : propertiesType.getProperty())
+        for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
           {
-            properties = properties.withProperty(new Key<Object>(property.getName()), property.getValue().get(0));
+            properties = properties.withProperty(new Key<Object>(propertyJaxb.getName()), propertyJaxb.getValue().get(0));
           }
         
-        for (final PropertiesType propertiesType2 : propertiesType.getProperties())
+        for (final PropertiesJaxb propertiesJaxb2 : propertiesJaxb.getProperties())
           {
-            properties = properties.withProperties(unmarshal(propertiesType2));
+            properties = properties.withProperties(unmarshal(propertiesJaxb2));
           }
         
         return properties;
