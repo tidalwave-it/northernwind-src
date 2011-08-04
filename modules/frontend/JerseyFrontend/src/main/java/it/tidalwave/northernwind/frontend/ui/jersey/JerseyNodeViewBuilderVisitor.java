@@ -28,7 +28,6 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -51,7 +50,7 @@ public class JerseyNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<
     @Override @Nonnull
     protected HtmlHolder createPlaceHolderComponent (final @Nonnull Layout layout)
       {
-        return new HtmlHolder("<div>Missing component: " + ((DefaultLayout)layout).getTypeUri() + "</div>"); // FIXME
+        return new HtmlHolder("<div>Missing component: " + layout.getTypeUri() + "</div>"); // FIXME
       }
 
     @Override

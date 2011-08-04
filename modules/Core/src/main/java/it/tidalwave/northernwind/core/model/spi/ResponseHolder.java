@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi;
 
+import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import it.tidalwave.util.NotFoundException;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;

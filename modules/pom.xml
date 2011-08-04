@@ -347,6 +347,7 @@
         <module>SpringRoles</module>
 
         <module>Core</module>
+        <module>CoreImplementation</module>
         <module>CoreFileSystems</module>
         <module>Components</module>
         <module>InfoglueExporter</module>

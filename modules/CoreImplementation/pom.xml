@@ -11,52 +11,55 @@
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it-tidalwave-northernwind-frontend-marshalling</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>it-tidalwave-northernwind-core-default</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Frontend Marshalling</name>
-    <description>NorthernWind - Frontend Marshalling</description>
+    <name>NorthernWind - Core Default Implementation</name>
+    <description>NorthernWind - Core Default Implementation</description>
    
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
-        <!-- FIXME: remove this dependency -->
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-core-default</artifactId>
+            <artifactId>it-tidalwave-eventbus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-role-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>stringtemplate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
-   
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>it.tidalwave.northernwind.frontend.impl.model.io.jaxb</packageName>
-                    <schemaDirectory>${basedir}/src/main/xsd</schemaDirectory>
-                    <extension>true</extension>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
