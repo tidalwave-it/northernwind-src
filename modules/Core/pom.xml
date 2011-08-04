@@ -20,11 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-eventbus</artifactId>
+            <artifactId>it-tidalwave-role-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-role-spring</artifactId>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-eventbus</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
