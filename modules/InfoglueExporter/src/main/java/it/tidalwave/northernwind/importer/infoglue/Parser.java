@@ -35,6 +35,7 @@ import javax.xml.stream.events.XMLEvent;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.StringReader;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import static it.tidalwave.northernwind.core.model.spi.Marshallable.Marshallable;
 
@@ -44,6 +45,7 @@ import static it.tidalwave.northernwind.core.model.spi.Marshallable.Marshallable
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public abstract class Parser
   {
     @Nonnull
@@ -88,12 +90,12 @@ public abstract class Parser
                       break;
                         
                     case XMLEvent.ATTRIBUTE:
-                      log("%d %s: %s", eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())));
+                      log.debug("{} {}: {}", new Object[] { eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())) });
                       processAttribute(reader.getName().getLocalPart(), reader);
                       break;
 
                     case XMLEvent.START_ELEMENT:
-                      log("%d %s: %s", eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())));
+                      log.debug("{} {}: {}", new Object[] { eventType, reader.getName()  , builder.substring(0, Math.min(1000, builder.length())) });
                       builder.delete(0, builder.length());
                       processStartElement(reader.getName().getLocalPart(), reader);
                       indent++;
@@ -105,7 +107,7 @@ public abstract class Parser
 
                     default:
                       final QName name = reader.getName();
-                      log("%d %s: %s", eventType, name, builder.substring(0, Math.min(1000, builder.length())));
+                      log.debug("{} {}: {}", new Object[] { eventType, name, builder.substring(0, Math.min(1000, builder.length())) });
                       break;
                   }
               }
@@ -137,11 +139,6 @@ public abstract class Parser
             rp.as(Marshallable).marshal(baos);
             baos.close();
             ResourceManager.addResource(new Resource(dateTime, path + fileName + ".xml", baos.toByteArray()));
-          }
-        
-        protected void log (final @Nonnull String format, final @Nonnull Object ... args)
-          {
-            System.err.printf(spaces.substring(0, indent * 2) + format + "\n", args);
           }
       }
     

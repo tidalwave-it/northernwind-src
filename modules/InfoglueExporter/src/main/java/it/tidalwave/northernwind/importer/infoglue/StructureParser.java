@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -35,6 +36,7 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class StructureParser extends Parser
   {
     private final String language;
@@ -60,7 +62,7 @@ public class StructureParser extends Parser
               }
             catch (Exception e)
               {
-                  System.err.println("ERROR: " + e + " ON " + builder);                        
+                  log.error("ERROR ON " + builder, e);                        
               }
           }
         else if (!Arrays.asList("attributes", "article").contains(name) &!s.equals("_Standard Pages"))

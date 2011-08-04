@@ -40,6 +40,7 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sun.misc.BASE64Decoder;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -47,6 +48,7 @@ import sun.misc.BASE64Decoder;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class Main 
   {
     private static final String REGEXP_getPageUrl = "\\$templateLogic\\.getPageUrl\\(([0-9]*)\\s*,\\s*\\$templateLogic\\.languageId\\s*,\\s*-1\\)";
@@ -144,7 +146,7 @@ public class Main
                   if ("name".equals(name))
                     {
                       path += URLEncoder.encode(builder.toString(), "UTF-8") + "/";
-                      System.err.printf("%spath: %s\n", spaces.substring(0, indent * 2), path);
+                      log.trace("{}path: {}", spaces.substring(0, indent * 2), path);
                     }
                   
                   else if ("languageCode".equals(name))
@@ -155,7 +157,7 @@ public class Main
                   else if ("modifiedDateTime".equals(name))
                     {
                       dateTime = FORMATTER.parseDateTime(builder.toString());  
-                        System.err.println("date " + builder + " parsed as " + dateTime);
+                        log.trace("date {} parsed as {}", builder, dateTime);
                     }
                   
                   else if ("assetFileName".equals(name))
@@ -175,7 +177,7 @@ public class Main
                   else if ("escapedVersionValue".equals(name))
                     {
                       String fixedPath = path.replaceAll("/$", "") + "/";
-                      System.err.println("Processing " + fixedPath);
+                      log.info("Processing {} ...", fixedPath);
                       fixedPath = fixedPath.replaceAll("^/blueBill/", "");
                       
                       if (fixedPath.startsWith("Mobile"))
@@ -201,7 +203,7 @@ public class Main
                   else if ("assetBytes".equals(name))
                     {
                       String fixedPath = "content/media/" + assetFileName;
-                      System.err.println("Processing " + fixedPath);
+                      log.info("Processing {} ...", fixedPath);
                       // FIXME: find the timestamp
                       ResourceManager.addMedia(new Resource(new DateTime(), fixedPath, decoder.decodeBuffer(builder.toString())));
                     }
@@ -210,7 +212,10 @@ public class Main
                     
                 default:
                   name = event.getName().toString();
-                  System.err.printf("%s%d %s: %s\n",  spaces.substring(0, indent * 2), eventType, name, builder.substring(0, Math.min(1000, builder.length())));
+                  log.trace("{}{} {}: {}", new Object[]
+                    {
+                           spaces.substring(0, indent * 2), eventType, name, builder.substring(0, Math.min(1000, builder.length()))
+                    });
                   break;
               }
           }

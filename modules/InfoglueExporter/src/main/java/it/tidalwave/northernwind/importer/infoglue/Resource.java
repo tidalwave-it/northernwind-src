@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -35,7 +36,7 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class Resource
   {
     @Getter
@@ -53,7 +54,7 @@ public class Resource
         String fixedPath = this.path;
         final File file = new File(Main.hgFolder, fixedPath);
         file.getParentFile().mkdirs();
-        System.err.println("Writing " + file.getAbsolutePath() + "...");
+        log.info("Writing {} ...", file.getAbsolutePath());
         final OutputStream os = new FileOutputStream(file);
         os.write(contents);
         os.close();

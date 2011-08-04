@@ -31,6 +31,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -45,6 +46,7 @@ import org.xml.sax.SAXException;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class Utilities 
   {
     /*******************************************************************************************************************
@@ -53,7 +55,7 @@ public class Utilities
     public static void exec (String ... args) 
       throws Exception
       {
-        System.err.println(Arrays.toString(args));
+        log.info(Arrays.toString(args));
         Runtime.getRuntime().exec(args).waitFor();
       }
     
