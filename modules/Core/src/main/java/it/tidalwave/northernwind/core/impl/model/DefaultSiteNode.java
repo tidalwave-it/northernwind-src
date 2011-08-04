@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.InputStream;
@@ -61,6 +62,9 @@ import static it.tidalwave.northernwind.core.model.spi.Unmarshallable.Unmarshall
     @Inject @Nonnull
     private DefaultSite site;
 
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
+    
     /*******************************************************************************************************************
      *
      * Creates a new instance with the given configuration file and mapped to the given URI.
@@ -72,7 +76,7 @@ import static it.tidalwave.northernwind.core.model.spi.Unmarshallable.Unmarshall
     public DefaultSiteNode (final @Nonnull FileObject file)
       throws IOException, NotFoundException
       {
-        resource = new DefaultResource(file);  
+        resource = modelFactory.createResource(file);  
         layout = loadLayout();
 
         if (site.isLogConfigurationEnabled() || log.isDebugEnabled())

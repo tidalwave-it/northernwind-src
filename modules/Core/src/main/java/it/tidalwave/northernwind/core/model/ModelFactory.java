@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,66 +16,69 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.java.net
- * SCM: http://java.net/hg/northernwind~src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Finder;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.Site;
-import lombok.Delegate;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
- * A piece of content to be composed into a {@code Node}.
+ * A factory for domain objects.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString
-/* package */ class DefaultContent implements Content
+public interface ModelFactory 
   {
-    @Inject @Nonnull
-    private Site site;
-    
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
-    
-    @Nonnull @Delegate(types=Resource.class)
-    private final Resource resource;
-
     /*******************************************************************************************************************
      *
-     * Creates a new {@code DefaultContent} with the given configuration file.
+     * Creates a new {@link Resource}.
      * 
-     * @param   file   the configuration file
+     * @param  file  the file for the {@code Resource}
+     * @return       the {@code Resource}
      *
      ******************************************************************************************************************/
-    public DefaultContent (final @Nonnull FileObject file)
-      {
-        resource = modelFactory.createResource(file);  
-      }
+    @Nonnull
+    public Resource createResource (@Nonnull FileObject file);
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Creates a new {@link Content}.
+     * 
+     * @param  file  the file for the {@code Content}
+     * @return       the {@code Content}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public Finder<Content> findChildren() 
-      {
-        return new FolderBasedFinderSupport(this);
-      }
+    @Nonnull
+    public Content createContent (@Nonnull FileObject folder);
+
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link Media}.
+     * 
+     * @param  file  the file for the {@code Media}
+     * @return       the {@code Media}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Media createMedia (@Nonnull FileObject file);
+
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link SiteNode}.
+     * 
+     * @param  file  the file for the {@code SiteNode}
+     * @return       the {@code SiteNode}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public SiteNode createSiteNode (@Nonnull FileObject folder)
+      throws IOException, NotFoundException;
   }
-    

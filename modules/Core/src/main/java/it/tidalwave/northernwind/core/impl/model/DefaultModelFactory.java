@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,47 +16,74 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.java.net
- * SCM: http://java.net/hg/northernwind~src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
-import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
-import lombok.Delegate;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *
- * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or such.
+ * The default implementation of {@link ModelFactory}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString
-/* package */ class DefaultMedia implements Media
+public class DefaultModelFactory implements ModelFactory
   {
-    @Nonnull @Getter @Delegate(types=Resource.class)
-    private final Resource resource;
-
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
-    
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public DefaultMedia (final @Nonnull FileObject file)
+    @Override @Nonnull
+    public Resource createResource (final @Nonnull FileObject file)
       {
-        resource = modelFactory.createResource(file);  
+        return new DefaultResource(file);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Content createContent (final @Nonnull FileObject folder) 
+      {
+        return new DefaultContent(folder);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Media createMedia (final @Nonnull FileObject file) 
+      {
+        return new DefaultMedia(file);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public SiteNode createSiteNode (final @Nonnull FileObject folder) 
+      throws IOException, NotFoundException
+      {
+        return new DefaultSiteNode(folder);
       }
   }

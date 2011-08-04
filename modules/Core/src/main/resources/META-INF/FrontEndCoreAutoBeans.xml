@@ -81,6 +81,9 @@
     </bean>
     
     <!-- Core objects -->
+    <bean id="modelFactory"
+          class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
+          
     <bean id="site" 
           class="it.tidalwave.northernwind.core.impl.model.DefaultSite" >
         <property name="documentPath" value="${nw.documentPath}" />

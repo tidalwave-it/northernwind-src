@@ -50,6 +50,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -94,8 +95,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
           }
       };
     
-    @Inject
+    @Inject @Nonnull
     private ApplicationContext applicationContext;
+    
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
     
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private FileSystemProvider fileSystemProvider;
@@ -154,7 +158,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
             @Override
             public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
               {
-                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 1)), new DefaultContent(folder));
+                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
               }
           });
         
@@ -163,7 +167,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
             @Override
             public void visit (final @Nonnull FileObject file, final @Nonnull String relativeUri) 
               {
-                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 1)), new DefaultMedia(file));
+                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 1)), modelFactory.createMedia(file));
               }
           });
         
@@ -174,7 +178,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 try 
                   {
-                    nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), new DefaultSiteNode(folder));
+                    nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), modelFactory.createSiteNode(folder));
                   }
                 catch (IOException e) 
                   {

@@ -66,6 +66,8 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Nonnull
     private final PropertyResolver propertyResolver;
     
+    // TODO: clean up constructors, then use ModelFactory.
+    
     /*******************************************************************************************************************
      *
      *
