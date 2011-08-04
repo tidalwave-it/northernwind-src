@@ -52,17 +52,22 @@ public class StructureParser extends Parser
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
+        log.debug("processEndElement({})", name);
+        
         final String s = builder.toString();
         
         if ("ComponentStructure".equals(name))
           {
-            try
+            if (!"".equals(s.trim()))
               {
-                new LayoutConverter(s, dateTime, path + "Layout_" + language + ".xml", properties).process();
-              }
-            catch (Exception e)
-              {
-                  log.error("ERROR ON " + builder, e);                        
+                try
+                  {
+                    new LayoutConverter(s, dateTime, path + "Layout_" + language + ".xml", properties).process();
+                  }
+                catch (Exception e)
+                  {
+                    log.error("ERROR ON " + builder, e);                        
+                  }
               }
           }
         else if (!Arrays.asList("attributes", "article").contains(name) &!s.equals("_Standard Pages"))
