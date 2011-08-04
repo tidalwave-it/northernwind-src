@@ -348,7 +348,7 @@
 
         <module>Core</module>
         <module>CoreImplementation</module>
-        <module>CoreFileSystems</module>
+        <module>BasicFileSystems</module>
         <module>Components</module>
         <module>InfoglueExporter</module>
 
