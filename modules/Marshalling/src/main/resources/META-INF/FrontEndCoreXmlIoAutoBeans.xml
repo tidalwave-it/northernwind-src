@@ -43,10 +43,10 @@
        default-autowire="byType">
 
     <bean id="frontendOjectFactory" 
-          class="it.tidalwave.northernwind.frontend.impl.model.io.jaxb.ObjectFactory" />
+          class="it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory" />
           
     <bean id="frontendJaxbContext" class="javax.xml.bind.JAXBContext" factory-method="newInstance"> 
-        <constructor-arg index="0" value="it.tidalwave.northernwind.frontend.impl.model.io.jaxb"/>
+        <constructor-arg index="0" value="it.tidalwave.northernwind.core.impl.io.jaxb"/>
     </bean>
 
     <bean id="frontendMarshaller" 

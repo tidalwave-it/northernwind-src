@@ -20,7 +20,7 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.impl.ui;
+package it.tidalwave.northernwind.core.impl.io;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

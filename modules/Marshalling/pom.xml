@@ -11,11 +11,11 @@
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
-    <artifactId>it-tidalwave-northernwind-frontend-marshalling</artifactId>
+    <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Frontend Marshalling</name>
-    <description>NorthernWind - Frontend Marshalling</description>
+    <name>NorthernWind - Core Default Marshalling</name>
+    <description>NorthernWind - Core Default Marshalling</description>
    
     <dependencies>
         <dependency>
@@ -46,7 +46,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <packageName>it.tidalwave.northernwind.frontend.impl.model.io.jaxb</packageName>
+                    <packageName>it.tidalwave.northernwind.core.impl.io.jaxb</packageName>
                     <schemaDirectory>${basedir}/src/main/xsd</schemaDirectory>
                     <extension>true</extension>
                 </configuration>

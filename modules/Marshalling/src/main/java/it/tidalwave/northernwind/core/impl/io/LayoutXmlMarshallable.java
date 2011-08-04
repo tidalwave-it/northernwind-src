@@ -20,17 +20,16 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.impl.ui;
+package it.tidalwave.northernwind.core.impl.io;
 
-import it.tidalwave.northernwind.core.model.spi.Marshallable;
-import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.role.annotation.RoleImplementation;
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import it.tidalwave.role.annotation.RoleImplementation;
+import it.tidalwave.northernwind.core.model.spi.Marshallable;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.RequiredArgsConstructor;
-
-import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *

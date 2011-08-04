@@ -70,7 +70,7 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-frontend-marshalling</artifactId>
+            <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
         </dependency>
                 
         <dependency>

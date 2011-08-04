@@ -20,22 +20,25 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.impl.model.io;
+package it.tidalwave.northernwind.core.impl.io;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.TreeSet;
 import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
+import java.io.OutputStream;
+import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.spi.Unmarshallable;
-import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertiesType;
-import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
+import it.tidalwave.northernwind.core.model.spi.Marshallable;
+import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
+import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesType;
+import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyType;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -43,20 +46,23 @@ import it.tidalwave.northernwind.frontend.impl.model.io.jaxb.PropertyType;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=ResourceProperties.class) @Configurable
-public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
+@RoleImplementation(ownerClass=ResourceProperties.class) @Configurable @Slf4j
+public class ResourcePropertiesJaxbMarshallable implements Marshallable
   {
     @Nonnull
     private final ResourceProperties resourceProperties;
     
     @Inject @Nonnull
-    private Unmarshaller unmarshaller;
+    private ObjectFactory objectFactory;
+
+    @Inject @Nonnull
+    private Marshaller marshaller;
     
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public ResourcePropertiesJaxbUnmarshallable (final @Nonnull ResourceProperties resourceProperties) 
+    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties) 
       {
         this.resourceProperties = resourceProperties;
       }
@@ -66,25 +72,19 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public ResourceProperties unmarshal (final @Nonnull InputStream is) 
+    @Override
+    public void marshal (final @Nonnull OutputStream os) 
       throws IOException
       {
-        try
+        try 
           {
-            final PropertiesType propertiesType = ((JAXBElement<PropertiesType>)unmarshaller.unmarshal(is)).getValue();
-            
-            if (!"1.0".equals(propertiesType.getVersion()))
-              {
-                throw new IOException("Unexpected version: " + propertiesType.getVersion());  
-              }
-            
-            return unmarshal(propertiesType);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
+            marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
-        catch (Exception e)
+        catch (Exception e) 
           {
             throw new IOException("", e);
-          }         
+          }
       }
 
     /*******************************************************************************************************************
@@ -92,21 +92,50 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties unmarshal (final @Nonnull PropertiesType propertiesType) 
+    private PropertiesType marshal (final @Nonnull ResourceProperties properties) 
+      throws IOException
       {
-        final Id id = new Id((propertiesType.getId() != null) ? propertiesType.getId() : "");
-        ResourceProperties properties = resourceProperties.withId(id); // FIXME: use ModelFactory
-       
-        for (final PropertyType property : propertiesType.getProperty())
+        final PropertiesType propertiesType = objectFactory.createPropertiesType();        
+        final Id id = properties.getId();
+        
+        if (id.stringValue().equals(""))
           {
-            properties = properties.withProperty(new Key<Object>(property.getName()), property.getValue().get(0));
+            propertiesType.setVersion("1.0");
+          }
+        else
+          {
+            propertiesType.setId(id.stringValue());
           }
         
-        for (final PropertiesType propertiesType2 : propertiesType.getProperties())
+        for (final Key<?> key : new TreeSet<Key<?>>(properties.getKeys()))
           {
-            properties = properties.withProperties(unmarshal(propertiesType2));
+            try
+              {
+                final PropertyType propertyType = objectFactory.createPropertyType();
+                propertyType.setName(key.stringValue());
+                propertyType.getValue().add(properties.getProperty(key).toString());
+                propertiesType.getProperty().add(propertyType);
+              }
+            catch (NotFoundException e)
+              {
+                // never occurs  
+                log.error("", e);
+              }
           }
         
-        return properties;
-      }  
+        for (final Id groupId : new TreeSet<Id>(properties.getGroupIds()))
+          {
+            try 
+              {
+                propertiesType.getProperties().add(marshal(properties.getGroup(groupId)));
+              }
+            catch (NotFoundException e) 
+              {
+                // never occurs  
+                log.error("", e);
+              }
+          }
+        
+        return propertiesType;
+     }
   }
