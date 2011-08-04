@@ -73,9 +73,9 @@ public class ContentParser extends Parser
           {
             if (Arrays.asList("FullText", "Template", "Leadin").contains(name))
               {
+                // FIXME: prepend the file name with the component name
                 // FIXME: format HTML
                 ResourceManager.addResource(new Resource(dateTime, path + name + "_" + language + ".html", builder.toString().getBytes("UTF-8")));
-//                    addResource(new Resource(dateTime, path + name + ".html", dumpXml("<body>" + builder.toString() + "</body>")));
               }
             else
               {
