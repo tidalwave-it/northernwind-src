@@ -350,7 +350,7 @@
         <module>CoreImplementation</module>
         <module>BasicFileSystems</module>
         <module>Components</module>
-        <module>InfoglueExporter</module>
+        <module>InfoglueImporter</module>
 
         <module>HtmlTemplateComponents</module>
         <module>VaadinComponents</module>
