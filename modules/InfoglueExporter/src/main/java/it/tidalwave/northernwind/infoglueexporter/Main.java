@@ -41,16 +41,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sun.misc.BASE64Decoder;
 
-/**
- * TODO
- *
- * layout_en.xml contiene la struttura dei bean (e.g. Vaadin) della pagina. E' implementato con Spring e XmlBeanContext. Viene istanziato per sessione. Può contenere proprietà. E' ereditario. Particolarmente comoda
- * la struttura nidificata di Spring, ma può anche usare ref se uno preferisce.
- * layour-override_en.xml è simile, ma fa override e non è ereditato.
- * properties_en.xml contiene le proprietà ed è ereditato. Una proprietà può essere p.es. una label o il titolo della pagina o la risorsa con cui popolare il bean.
- * properties-override_en.xml fa override delle proprietà e non è ereditato.
- *
- */
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
