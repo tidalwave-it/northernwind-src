@@ -193,20 +193,10 @@ public class LayoutConverter extends Parser
                 properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
 
-//            for (int i = 0; i < reader.getAttributeCount(); i++)
-//              {
-//                final String attrName = reader.getAttributeName(i).getLocalPart();
-//                final String attrValue = reader.getAttributeValue(i);
-//
-//                if ("path".equals(attrName))
-//                  {
-//                    properties.put(componentId + ".content", attrValue);
-//                  }
 ////                else FIXME: there are missing properties (e.g. set Blog max posts, etc...)
 ////                  {
 ////                    properties.put(componentName + "." + attrName, attrValue);
 ////                  }
-//              }
           }
       }
 
