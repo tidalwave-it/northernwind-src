@@ -22,21 +22,22 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
-import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import javax.annotation.Nonnull;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.StringReader;
-import lombok.extern.slf4j.Slf4j;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
 import org.joda.time.DateTime;
+import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
+import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Marshallable.Marshallable;
 
 /***********************************************************************************************************************
@@ -48,6 +49,8 @@ import static it.tidalwave.role.Marshallable.Marshallable;
 @Slf4j
 public abstract class Parser
   {
+    private static final Map<String, DateTime> creationTimeByPath = new HashMap<String, DateTime>();
+    
     @Nonnull
     private final String contents;
 
@@ -56,14 +59,14 @@ public abstract class Parser
     protected int indent;
     protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
-    protected final DateTime dateTime;        
+    protected final DateTime modifiedDateTime;        
 
-    public Parser (final @Nonnull String contents, final @Nonnull String path, final @Nonnull DateTime dateTime) 
+    public Parser (final @Nonnull String contents, final @Nonnull String path, final @Nonnull DateTime modifiedDateTime) 
       {
         log.debug("Parsing {} ...", contents);
         this.contents = contents;
         this.path = path;
-        this.dateTime = dateTime;
+        this.modifiedDateTime = modifiedDateTime;
       }
 
     public void process() 
@@ -138,10 +141,20 @@ public abstract class Parser
     protected void dumpProperties (final @Nonnull String fileName)
       throws IOException
       {
+        DateTime creationTime = creationTimeByPath.get(path);
+        
+        if (creationTime == null)
+          {
+            creationTime = modifiedDateTime;
+            creationTimeByPath.put(path, creationTime);
+          }
+        
+        properties.put(new Key<Object>("CreationDate"), creationTime);
+        properties.put(new Key<Object>("LatestModificationDate"), modifiedDateTime);
         final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         rp.as(Marshallable).marshal(baos);
         baos.close();
-        ResourceManager.addResource(new Resource(dateTime, path + fileName + ".xml", baos.toByteArray()));
+        ResourceManager.addResource(new Resource(modifiedDateTime, path + fileName + ".xml", baos.toByteArray()));
       }
   }
