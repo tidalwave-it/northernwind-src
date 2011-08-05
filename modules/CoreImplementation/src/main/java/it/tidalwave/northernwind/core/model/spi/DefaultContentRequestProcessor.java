@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi; 
 
+import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;

@@ -23,89 +23,51 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.annotation.concurrent.Immutable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.util.Id;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.io.UnsupportedEncodingException;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.core.model.Request;
-import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
-import it.tidalwave.northernwind.frontend.ui.Layout;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
- * The default implementation of {@link ModelFactory}.
+ * The default implementation of {@link Request}
  * 
  * @author  Fabrizio Giudici
- * @version $Id: $
+ * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultModelFactory implements ModelFactory
+@Immutable @AllArgsConstructor @Getter @ToString
+/* package */ class DefaultRequest implements Request
   {
+    @Nonnull
+    private final String relativeUri;
+    
+    @Nonnull
+    private final Map<String, List<String>> parametersMap;
+        
+    @Nonnull
+    private final List<Locale> preferredLocales;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource createResource (final @Nonnull FileObject file)
+    public String getParameter (final @Nonnull String parameterName)
+      throws NotFoundException
       {
-        return new DefaultResource(file);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Content createContent (final @Nonnull FileObject folder) 
-      {
-        return new DefaultContent(folder);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Media createMedia (final @Nonnull FileObject file) 
-      {
-        return new DefaultMedia(file);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public SiteNode createSiteNode (final @Nonnull FileObject folder) 
-      throws IOException, NotFoundException
-      {
-        return new DefaultSiteNode(folder);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Layout createLayout (final @Nonnull Id id, final @Nonnull String type) 
-      {
-        return new DefaultLayout(id, type);
+        return getMultiValuedParameter(parameterName).get(0);
       }
     
     /*******************************************************************************************************************
@@ -114,9 +76,10 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultRequest createRequest()
+    public List<String> getMultiValuedParameter (final @Nonnull String parameterName)
+      throws NotFoundException
       {
-        return new DefaultRequest("", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
+        return NotFoundException.throwWhenNull(parametersMap.get(parameterName), parameterName);
       }
     
     /*******************************************************************************************************************
@@ -125,11 +88,43 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest)
+    public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
       {
-        final String relativeUri = "/" + httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length() + 1);
-        return createRequest().withRelativeUri(relativeUri)
-                              .withParameterMap(httpServletRequest.getParameterMap())
-                              .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 
+//        try 
+//          {
+            return new DefaultRequest(relativeUri, parametersMap, preferredLocales);
+//            return new DefaultRequest(UriUtilities.urlDecodedPath(relativeUri), parametersMap, preferredLocales);
+//          }
+//        catch (UnsupportedEncodingException e)
+//          {
+//            throw new RuntimeException(e);
+//          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public DefaultRequest withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
+      {
+        final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
+        
+        for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
+          {
+            parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
+          }
+        
+        return new DefaultRequest(relativeUri, parameterMap, preferredLocales);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public DefaultRequest withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
+      {
+        return new DefaultRequest(relativeUri, parametersMap, preferredLocales);  
       }
   }

@@ -30,8 +30,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import static it.tidalwave.northernwind.core.model.Request.*;
 
 /***********************************************************************************************************************
  *
@@ -45,18 +45,21 @@ public class RestResource
     @Inject @Nonnull
     private SiteViewController siteViewController;
     
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
+    
     @Context
     private HttpServletRequest httpServletRequest;
     
     @GET
     public Response getRoot()
       {
-        return siteViewController.processRequest(requestFrom(httpServletRequest));
+        return siteViewController.processRequest(modelFactory.createRequestFrom(httpServletRequest));
       }
     
     @GET @Path("{path: .*}") 
     public Response get()
       {
-        return siteViewController.processRequest(requestFrom(httpServletRequest));
+        return siteViewController.processRequest(modelFactory.createRequestFrom(httpServletRequest));
       }
   }

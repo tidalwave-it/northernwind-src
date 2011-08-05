@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.springmvc;
 
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static it.tidalwave.northernwind.core.model.Request.*;
 
 /***********************************************************************************************************************
  *
@@ -45,9 +45,12 @@ public class SpringMvcRestController
     @Inject @Nonnull
     private SiteViewController siteViewController;
     
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
+    
     @RequestMapping(value="/**", method=GET) @Nonnull
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
       {
-        return siteViewController.processRequest(requestFrom(request));
+        return siteViewController.processRequest(modelFactory.createRequestFrom(request));
       }
   }

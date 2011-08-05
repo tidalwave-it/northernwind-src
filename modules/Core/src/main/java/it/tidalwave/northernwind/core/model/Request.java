@@ -22,22 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
-import java.util.ArrayList;
-import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 import it.tidalwave.util.NotFoundException;
-import java.util.Collections;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
@@ -45,69 +34,23 @@ import static lombok.AccessLevel.PRIVATE;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Immutable @AllArgsConstructor(access=PRIVATE) @Getter @ToString
-public class Request 
+@Immutable
+public interface Request 
   {
     @Nonnull
-    private final String relativeUri;
+    public Request withRelativeUri (@Nonnull String relativeUri);
     
     @Nonnull
-    private final Map<String, List<String>> parametersMap;
-        
-    @Nonnull
-    private final List<Locale> preferredLocales;
+    public String getRelativeUri();
     
     @Nonnull
-    public static Request request()
-      {
-        return new Request("", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
-      }
+    public List<Locale> getPreferredLocales();
     
     @Nonnull
-    public static Request requestFrom (final @Nonnull HttpServletRequest httpServletRequest)
-      {
-        final String relativeUri = "/" + httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length() + 1);
-        return request().withRelativeUri(relativeUri)
-                        .withParameterMap(httpServletRequest.getParameterMap())
-                        .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 
-      }
+    public String getParameter (@Nonnull String parameterName)
+      throws NotFoundException;
     
     @Nonnull
-    public String getParameter (final @Nonnull String parameterName)
-      throws NotFoundException
-      {
-        return getMultiValuedParameter(parameterName).get(0);
-      }
-    
-    @Nonnull
-    public List<String> getMultiValuedParameter (final @Nonnull String parameterName)
-      throws NotFoundException
-      {
-        return NotFoundException.throwWhenNull(parametersMap.get(parameterName), parameterName);
-      }
-    
-    @Nonnull
-    public Request withRelativeUri (final @Nonnull String relativeUri)
-      {
-        return new Request(relativeUri, parametersMap, preferredLocales);     
-      }
-    
-    @Nonnull
-    private Request withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
-      {
-        final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
-        
-        for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
-          {
-            parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
-          }
-        
-        return new Request(relativeUri, parameterMap, preferredLocales);
-      }
-    
-    @Nonnull
-    private Request withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
-      {
-        return new Request(relativeUri, parametersMap, preferredLocales);  
-      }
+    public List<String> getMultiValuedParameter (@Nonnull String parameterName)
+      throws NotFoundException;
   }

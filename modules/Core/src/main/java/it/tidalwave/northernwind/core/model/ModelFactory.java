@@ -22,12 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
-import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.util.Id;
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 import org.openide.filesystems.FileObject;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
  *
@@ -95,4 +96,25 @@ public interface ModelFactory
      ******************************************************************************************************************/
     @Nonnull
     public Layout createLayout (@Nonnull Id id, @Nonnull String type);
+    
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link Request}.
+     * 
+     * @return       the {@code Request}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Request createRequest();
+    
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link Request} from a given {@link HttpServletRequest}.
+     * 
+     * @param        httpServletRequest   the {@code HttpServletRequest}
+     * @return                            the {@code Request}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest);
   }

@@ -28,12 +28,12 @@ import javax.inject.Inject;
 import java.net.URL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.Request.*;
 
 /***********************************************************************************************************************
  *
@@ -46,8 +46,11 @@ import static it.tidalwave.northernwind.core.model.Request.*;
 @Configurable @Scope(value="session") @Slf4j
 public class VaadinSiteViewController extends DefaultSiteViewController
   {
-    @Nonnull @Inject
+    @Inject @Nonnull
     private VaadinSiteView siteView;
+    
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
     
     /*******************************************************************************************************************
      *
@@ -59,7 +62,7 @@ public class VaadinSiteViewController extends DefaultSiteViewController
         @Override
         public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
           {
-            return processRequest(request().withRelativeUri("/" + relativeUri));
+            return processRequest(modelFactory.createRequest().withRelativeUri("/" + relativeUri));
           }
       };
     
