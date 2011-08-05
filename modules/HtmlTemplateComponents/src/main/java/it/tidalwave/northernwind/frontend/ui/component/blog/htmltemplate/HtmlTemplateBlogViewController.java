@@ -56,7 +56,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final ResourceProperties properties = post.getProperties();
 
         htmlBuilder.append("<h3>").append(properties.getProperty(PROPERTY_TITLE)).append("</h3>\n");
-        htmlBuilder.append(properties.getProperty(PROPERTY_CREATION_DATE, new DateTime())).append("\n");
+        htmlBuilder.append(getBlogDateTime(post)).append("\n");
         htmlBuilder.append(properties.getProperty(PROPERTY_FULL_TEXT)).append("\n");
       }
 

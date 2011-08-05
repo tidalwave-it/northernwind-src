@@ -40,5 +40,9 @@ public final class Properties
     
     public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("FullText.html");
     
-    public static final Key<DateTime> PROPERTY_CREATION_DATE = new Key<DateTime>("CreationDate");    
+    public static final Key<DateTime> PROPERTY_CREATION_DATE = new Key<DateTime>("CreationDate"); 
+    
+    public static final Key<DateTime> PROPERTY_PUBLISHING_DATE = new Key<DateTime>("PublishingDate");   
+    
+    public static final Key<DateTime> PROPERTY_LATEST_MODIFICATION_DATE = new Key<DateTime>("LatestModificationDate");    
   }

@@ -25,14 +25,20 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Arrays;
 import java.io.IOException;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -117,4 +123,28 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws IOException, NotFoundException;
 
     protected abstract void render();
+    
+    @Nonnull
+    protected String getBlogDateTime (@Nonnull Content post)
+      {
+        final ResourceProperties properties = post.getProperties();
+        final List<Key<DateTime>> dateTimeKeys = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+        
+        for (final Key<DateTime> dateTimeKey : dateTimeKeys)
+          {
+            try
+              {
+                return "" + properties.getProperty(dateTimeKey);   
+              }
+            catch (NotFoundException e)
+              {
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+          }
+        
+        return "";
+      }
   }
