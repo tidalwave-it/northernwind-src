@@ -27,8 +27,10 @@ import it.tidalwave.role.Marshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.Stack;
@@ -129,10 +131,10 @@ public class LayoutConverter extends Parser
                 componentId = new Id(attrNameValue + "-" + attrIdValue);
                 final DefaultLayout newComponent = new DefaultLayout(componentId, attrTypeValue);
                 
-                if (!"content3-3".equals(componentId)) // FIXME: temp patch until we recover all the properties so this is a blog navigator...
-                  {
+//                if (!new Id("content3-3").equals(componentId)) // FIXME: temp patch until we recover all the properties so this is a blog navigator...
+//                  {
                     parentLayout.add(newComponent);
-                  }
+//                  }
                 componentStack.push(newComponent);
               }
 
@@ -140,20 +142,19 @@ public class LayoutConverter extends Parser
         else if ("property".equals(elementName))
           {
             String propertyName = reader.getAttributeValue("", "name");
-            String propertyValue = reader.getAttributeValue("", "path");
+            Object propertyValue = reader.getAttributeValue("", "path");
             
             if (propertyValue != null)
               {
-                propertyValue = propertyValue.replace("Top, No Local", "Top No Local");
-                propertyValue = propertyValue.replace("blueBill Mobile CSS", "blueBill Mobile.css");
-                propertyValue = propertyValue.replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
+                propertyValue = propertyValue.toString().replace("Top, No Local", "Top No Local");
+                propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
+                propertyValue = propertyValue.toString().replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
 
-                if (Arrays.asList("styleSheets", "items", "contents").contains(propertyName))
+                if (Arrays.asList("styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts").contains(propertyName))
                   {
-                    final StringBuilder b = new StringBuilder();
-                    String separator = "";
+                    final List<Object> values = new ArrayList<Object>();
 
-                    for (String spl : propertyValue.split(","))
+                    for (String spl : propertyValue.toString().split(","))
                       {
                         if ("styleSheets".equals(propertyName))
                           {
@@ -168,11 +169,10 @@ public class LayoutConverter extends Parser
                             spl = spl.replace(" ", "-").replace("(", "").replace(")", "");
                           }
                         
-                        b.append(separator).append(spl);
-                        separator = ",";
+                        values.add(spl);
                       }
 
-                    propertyValue = b.toString();
+                    propertyValue = values;
                   }
 
                 if ("styleSheets".equals(propertyName))
@@ -193,10 +193,20 @@ public class LayoutConverter extends Parser
                 properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
 
-////                else FIXME: there are missing properties (e.g. set Blog max posts, etc...)
-////                  {
-////                    properties.put(componentName + "." + attrName, attrValue);
-////                  }
+            else
+              {
+//                final StringBuilder bb = new StringBuilder();
+//                bb.append(componentId).append(": ");
+//                
+//                for (int i = 0; i < reader.getAttributeCount(); i++)
+//                  {
+//                    bb.append(reader.getAttributeName(i)).append("=").append(reader.getAttributeValue(i)).append(", ");  
+//                  }
+//                
+//                log.warn("MISSING PROPERTY " + bb);
+//                log.warn("PROP: " + new Key<Object>(componentId + "." + propertyName) + ": " + reader.getAttributeValue("", "path_en"));
+                properties.put(new Key<Object>(componentId + "." + propertyName), reader.getAttributeValue("", "path_en"));
+              }
           }
       }
 

@@ -80,6 +80,7 @@ public class StructureParser extends Parser
     protected void finish() 
       throws IOException
       {
+        log.debug("PROPERTIES: " + properties);
         dumpProperties("Properties_" + language);
       }
   }
