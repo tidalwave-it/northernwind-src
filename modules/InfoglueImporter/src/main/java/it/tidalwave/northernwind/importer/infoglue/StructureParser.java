@@ -78,7 +78,19 @@ public class StructureParser extends Parser
           {
             if (!s.equals("_Standard Pages"))
               {
-                properties.put(new Key<Object>(toLower(name)), s); 
+                String propertyName = name;
+                String propertyValue = s;
+                
+                if ("NiceURIName".equals(propertyName))
+                  {
+                    propertyName = "exposedUri";
+                    propertyValue = propertyValue.replace("Blog___News", "Blog").toLowerCase().replaceAll("_", "-");
+                  } 
+                
+                if (!"MetaInfo".equals(propertyName))
+                  {
+                    properties.put(new Key<Object>(toLower(propertyName)), propertyValue); 
+                  } 
               }
           }
       }

@@ -87,11 +87,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try 
           {
-            for (final String relativeUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
+            for (final String relativePath : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
               {  
                 try
                   {
-                    final Content postsFolder = site.find(Content).withRelativeUri(relativeUri).result();
+                    final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
 
                     for (final Content post : postsFolder.findChildren().results())
                       {

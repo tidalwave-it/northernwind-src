@@ -34,5 +34,8 @@ import it.tidalwave.util.spi.ExtendedFinderSupport;
 public interface SiteFinder<Type> extends ExtendedFinderSupport<Type, SiteFinder<Type>>
   {
     @Nonnull
+    public SiteFinder<Type> withRelativePath (@Nonnull String relativePath);
+    
+    @Nonnull
     public SiteFinder<Type> withRelativeUri (@Nonnull String relativeUri);
   }

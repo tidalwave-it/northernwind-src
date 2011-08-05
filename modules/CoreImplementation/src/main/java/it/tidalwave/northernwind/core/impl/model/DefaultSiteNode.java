@@ -22,10 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.InputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
@@ -33,6 +35,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -51,7 +54,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString(exclude={"layout", "site"})
+@Configurable(preConstruction=true) @Slf4j @ToString(exclude={"layout", "site", "modelFactory", "relativeUri"})
 /* package */ class DefaultSiteNode implements SiteNode
   {
     @Nonnull @Delegate(types=Resource.class)
@@ -65,6 +68,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
     @Inject @Nonnull
     private ModelFactory modelFactory;
+    
+    @CheckForNull
+    private String relativeUri;
     
     /*******************************************************************************************************************
      *
@@ -87,6 +93,69 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoe}
+     *
+     ******************************************************************************************************************/
+    @Nonnull @Override
+    public synchronized String getRelativeUri()
+      {
+        if (relativeUri == null)
+          {
+            try 
+              {
+                // FIXME: this works, but it's messy code!!!
+                final FileObject parentFile = resource.getFile().getParent();
+                log.debug("Compute relativeUri for {}: parentFile: {}", resource.getFile(), parentFile);
+                String parentFilePath = UriUtilities.urlDecodedPath(parentFile.getPath());
+                
+                if (!parentFilePath.startsWith("/"))
+                  {
+                    parentFilePath = "/" + parentFilePath;  
+                  }
+                  
+                log.debug(">>>> parent path *{}*", parentFilePath);
+                
+                if ("structure".equals(resource.getFile().getPath()))
+                  {
+                    relativeUri = "/";  
+                  }
+                else
+                  {
+                    parentFilePath = parentFilePath.replaceAll("^/structure", "");       
+                    
+                    if (parentFilePath.equals(""))
+                      {
+                        parentFilePath = "/";  
+                      }
+                    
+                    final SiteNode parentSiteNode = site.find(SiteNode.class).withRelativePath(parentFilePath).result();
+                    log.debug(">>>> found {}", parentSiteNode);
+                    String p = parentSiteNode.getRelativeUri();
+                    
+                    if (!p.endsWith("/"))
+                      { 
+                        p += "/";  
+                      }
+                    
+                    relativeUri = p + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI, URLDecoder.decode(resource.getFile().getNameExt(), "UTF-8"));
+                  }
+                // END FIXME
+              } 
+            catch (IOException e) 
+              {
+                log.error("", e); // should never occur
+              }
+            catch (NotFoundException e) 
+              {
+                log.error("", e); // should never occur
+              }
+          }
+        
+        return relativeUri;
+      }
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoe}

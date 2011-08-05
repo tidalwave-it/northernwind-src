@@ -76,13 +76,13 @@ public class DefaultMenuViewController implements MenuViewController
      {
         try 
           {
-            for (final String relativeUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_LINKS))
+            for (final String relativePath : siteNode.getProperties(view.getId()).getProperty(PROPERTY_LINKS))
               {  
                 try
                   {
-                    final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();
+                    final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
                     final String navigationTitle = targetSiteNode.getProperties().getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
-                    view.addLink(navigationTitle, relativeUri);                
+                    view.addLink(navigationTitle, targetSiteNode.getRelativeUri());                
                   }
                 catch (IOException e)
                   {
@@ -90,7 +90,7 @@ public class DefaultMenuViewController implements MenuViewController
                   }
                 catch (NotFoundException e)
                   {
-                    log.warn("Ignoring link '{}' because of {}", relativeUri, e.toString());
+                    log.warn("Ignoring link '{}' because of {}", relativePath, e.toString());
                   }
               }
           }

@@ -65,7 +65,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         
         if (relativeUri.startsWith("/media"))
           {
-            final Media media = site.find(Media).withRelativeUri(relativeUri.replaceAll("^/media", "")).result();
+            final Media media = site.find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
             final FileObject file = media.getFile();
             createResponse(file);
             return BREAK;

@@ -88,7 +88,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
                 try 
                   {
                     final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
-                    result.add(site.find(typeClass).withRelativeUri(relativeUri).result());
+                    result.add(site.find(typeClass).withRelativePath(relativeUri).result());
                   }
                 catch (UnsupportedEncodingException e) 
                   {

@@ -38,12 +38,18 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(callSuper=true, exclude="mapByRelativeUri")
+@ToString(callSuper=true, exclude="mapByRelativePath")
 /* package */ class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
   {
     @Nonnull
+    private final Map<String, Type> mapByRelativePath;
+    
+    @Nonnull
     private final Map<String, Type> mapByRelativeUri;
     
+    @CheckForNull
+    private String relativePath;
+
     @CheckForNull
     private String relativeUri;
 
@@ -51,12 +57,28 @@ import lombok.ToString;
      *
      *
      ******************************************************************************************************************/
-    public DefaultSiteFinder (final @Nonnull String name, final @Nonnull Map<String, Type> mapByRelativeUri) 
+    public DefaultSiteFinder (final @Nonnull String name, 
+                              final @Nonnull Map<String, Type> mapByRelativePath, 
+                              final @Nonnull Map<String, Type> mapByRelativeUri) 
       {
         super(name);
+        this.mapByRelativePath = mapByRelativePath;
         this.mapByRelativeUri = mapByRelativeUri;
       }    
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public SiteFinder<Type> withRelativePath (final @Nonnull String relativePath) 
+      {
+        final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
+        clone.relativePath = relativePath;
+        return clone;
+      }
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -85,7 +107,7 @@ import lombok.ToString;
           }
         catch (NotFoundException e)
           {
-            throw new NotFoundException(relativeUri + ": " + mapByRelativeUri.keySet());
+            throw new NotFoundException(relativePath + ": " + mapByRelativePath.keySet());
           }
       }
     
@@ -99,8 +121,28 @@ import lombok.ToString;
       {
         final List<Type> results = new ArrayList<Type>();
 
-        if (relativeUri != null)
+        if (relativePath != null)
           {
+            if (mapByRelativePath == null)
+              {
+                throw new IllegalArgumentException("Illegal type");  
+              }
+        
+            final Type result = mapByRelativePath.get(relativePath);
+            
+            if (result != null)
+              {
+                results.add(result);  
+              }
+          }
+        
+        else if (relativeUri != null)
+          {
+            if (mapByRelativeUri == null)
+              {
+                throw new IllegalArgumentException("Illegal type");  
+              }
+        
             final Type result = mapByRelativeUri.get(relativeUri);
             
             if (result != null)
@@ -110,7 +152,7 @@ import lombok.ToString;
           }
         else
           {
-            results.addAll(mapByRelativeUri.values());  
+            results.addAll(mapByRelativePath.values());  
           }
         
         return results;

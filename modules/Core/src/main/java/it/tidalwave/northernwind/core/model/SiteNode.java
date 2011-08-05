@@ -38,7 +38,9 @@ public interface SiteNode extends Resource
   {
     public static final Class<SiteNode> SiteNode = SiteNode.class;
     
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("navigationTitle");
+    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("navigationTitle"); // FIXME: PROPERTY_
+    
+    public static final Key<String> PROPERTY_EXPOSED_URI = new Key<String>("exposedUri");
     
     /*******************************************************************************************************************
      *
@@ -49,4 +51,16 @@ public interface SiteNode extends Resource
      ******************************************************************************************************************/
     @Nonnull
     public Layout getLayout();
+
+    /*******************************************************************************************************************
+     *
+     * Returns the relative URI of this {@code SiteNode}, which is the one exposed to the web. By default the relative
+     * URI is the same as the relative path of the associated file, but each {@code SiteNode} can override it by setting
+     * {@link #PROPERTY_EXPOSED_URI}.
+     * 
+     * @return  the relative URI
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getRelativeUri();
   }

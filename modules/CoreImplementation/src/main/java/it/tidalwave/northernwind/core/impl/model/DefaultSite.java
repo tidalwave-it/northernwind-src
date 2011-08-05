@@ -128,13 +128,17 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     
     private FileObject nodeFolder; 
     
-    private final Map<String, Content> documentMapByRelativeUri = new TreeMap<String, Content>();
+    private final Map<String, Content> documentMapByRelativePath = new TreeMap<String, Content>();
     
-    private final Map<String, Media> mediaMapByRelativeUri = new TreeMap<String, Media>();
+    private final Map<String, Media> mediaMapByRelativePath = new TreeMap<String, Media>();
+    
+    private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<String, SiteNode>();
     
     private final Map<String, SiteNode> nodeMapByRelativeUri = new TreeMap<String, SiteNode>();
     
-    private final Map<Class<?>, Map<String, ?>> mapsByType = new HashMap<Class<?>, Map<String, ?>>();
+    private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<Class<?>, Map<String, ?>>();
+    
+    private final Map<Class<?>, Map<String, ?>> relativeUriMapsByType = new HashMap<Class<?>, Map<String, ?>>();
     
     private final List<Locale> configuredLocales = new ArrayList<Locale>();
 
@@ -149,36 +153,40 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         log.info("reset()");
         
-        documentMapByRelativeUri.clear();
-        mediaMapByRelativeUri.clear();
+        documentMapByRelativePath.clear();
+        mediaMapByRelativePath.clear();
+        nodeMapByRelativePath.clear();
+        
         nodeMapByRelativeUri.clear();
         
         traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
+            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativePath) 
               {
-                documentMapByRelativeUri.put(r(relativeUri.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
+                documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
               }
           });
         
         traverse(mediaFolder, FILE_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject file, final @Nonnull String relativeUri) 
+            public void visit (final @Nonnull FileObject file, final @Nonnull String relativePath) 
               {
-                mediaMapByRelativeUri.put(r(relativeUri.substring(mediaPath.length() + 1)), modelFactory.createMedia(file));
+                mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)), modelFactory.createMedia(file));
               }
           });
         
         traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativeUri) 
+            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativePath) 
               {
                 try 
                   {
-                    nodeMapByRelativeUri.put(r(relativeUri.substring(nodePath.length() + 1)), modelFactory.createSiteNode(folder));
+                    final SiteNode siteNode = modelFactory.createSiteNode(folder);
+                    nodeMapByRelativePath.put(r(relativePath.substring(nodePath.length() + 1)), siteNode);
+                    nodeMapByRelativeUri.put(siteNode.getRelativeUri(), siteNode);
                   }
                 catch (IOException e) 
                   {
@@ -193,9 +201,10 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         
         if (logConfigurationEnabled)
           {
-            logConfiguration("Documents:", documentMapByRelativeUri);
-            logConfiguration("Media:", mediaMapByRelativeUri);
-            logConfiguration("Nodes:", nodeMapByRelativeUri);
+            logConfiguration("Documents by relative path:", documentMapByRelativePath);
+            logConfiguration("Media by relative path:", mediaMapByRelativePath);
+            logConfiguration("Nodes by relative path:", nodeMapByRelativePath);
+            logConfiguration("Nodes by relative URI:", nodeMapByRelativeUri);
           }
       }
     
@@ -207,14 +216,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Override @Nonnull
     public <Type> SiteFinder<Type> find (final @Nonnull Class<Type> type)
       {
-        final Map<String, Type> map = (Map<String, Type>)mapsByType.get(type);
-        
-        if (map == null)
-          {
-            throw new IllegalArgumentException("Illegal type: " + type + "; can be: " + mapsByType.keySet());  
-          }
-        
-        return new DefaultSiteFinder<Type>(type.getSimpleName(), map);
+        final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
+        final Map<String, Type> relativeUriMap = (Map<String, Type>)relativeUriMapsByType.get(type);
+        return new DefaultSiteFinder<Type>(type.getSimpleName(), relativePathMap, relativeUriMap);
       }
     
     /*******************************************************************************************************************
@@ -238,9 +242,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         log.info("initialize()");
         
-        mapsByType.put(Content.class, documentMapByRelativeUri);
-        mapsByType.put(Media.class, mediaMapByRelativeUri);
-        mapsByType.put(SiteNode.class, nodeMapByRelativeUri);
+        relativePathMapsByType.put(Content.class, documentMapByRelativePath);
+        relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
+        relativePathMapsByType.put(SiteNode.class, nodeMapByRelativePath);
+        
+        relativeUriMapsByType.put(SiteNode.class, nodeMapByRelativeUri);
                 
         try
           {

@@ -185,7 +185,7 @@ public class LayoutConverter extends Parser
                   {
                     propertyName = "contents";  
                   }
-
+                
                 properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
 

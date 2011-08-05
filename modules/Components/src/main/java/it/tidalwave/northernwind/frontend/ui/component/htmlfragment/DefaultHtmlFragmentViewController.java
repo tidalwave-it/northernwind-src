@@ -80,9 +80,9 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
           {
             final StringBuilder htmlBuilder = new StringBuilder();
             
-            for (final String contentUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
+            for (final String relativePath : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
-                final Content content = site.find(Content).withRelativeUri(contentUri).result();
+                final Content content = site.find(Content).withRelativePath(relativePath).result();
                 htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
               }
             
