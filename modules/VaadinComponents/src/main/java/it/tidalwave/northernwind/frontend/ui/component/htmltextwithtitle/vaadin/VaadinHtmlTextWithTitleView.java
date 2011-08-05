@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController;
 import com.vaadin.ui.Label;
+import lombok.Getter;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
@@ -42,6 +43,9 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
               controlledBy=DefaultHtmlTextWithTitleViewController.class)
 public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTitleView
   {
+    @Nonnull @Getter
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -51,6 +55,7 @@ public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTi
      ******************************************************************************************************************/
     public VaadinHtmlTextWithTitleView (final @Nonnull Id id) 
       {
+        this.id = id;
         setStyleName(NW + id.stringValue());
       }
     

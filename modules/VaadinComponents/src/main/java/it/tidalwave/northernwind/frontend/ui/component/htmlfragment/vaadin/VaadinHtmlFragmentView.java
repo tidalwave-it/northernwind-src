@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.HtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.DefaultHtmlFragmentViewController;
 import com.vaadin.ui.Label;
+import lombok.Getter;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
@@ -42,6 +43,9 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
               controlledBy=DefaultHtmlFragmentViewController.class)
 public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
   {
+    @Nonnull @Getter
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -51,6 +55,7 @@ public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
      ******************************************************************************************************************/
     public VaadinHtmlFragmentView (final @Nonnull Id id) 
       {
+        this.id = id;
         setStyleName(NW + id.stringValue());
         setContentMode(Label.CONTENT_XHTML);
       }

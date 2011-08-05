@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 import com.vaadin.ui.VerticalLayout;
+import lombok.Getter;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
@@ -40,6 +41,9 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
               controlledBy=DefaultNodeContainerViewController.class)
 public class VaadinNodeContainerView extends VerticalLayout implements NodeContainerView // FIXME: probably it should be a Window
   {// TODO: not VerticalLayout, but something without Layout
+    @Nonnull @Getter
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -49,6 +53,7 @@ public class VaadinNodeContainerView extends VerticalLayout implements NodeConta
      ******************************************************************************************************************/
     public VaadinNodeContainerView (final @Nonnull Id id) 
       {
+        this.id = id;
         setMargin(false);
         setStyleName(NW + id.stringValue());
       }

@@ -27,8 +27,8 @@ import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
@@ -43,6 +43,9 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 @Slf4j
 public class VaadinBlogView extends VerticalLayout implements BlogView
   {
+    @Nonnull @Getter
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -52,6 +55,7 @@ public class VaadinBlogView extends VerticalLayout implements BlogView
      ******************************************************************************************************************/
     public VaadinBlogView (final @Nonnull Id id) 
       {
+        this.id = id;
         setStyleName(NW + id.stringValue());
       }
 
