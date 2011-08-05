@@ -31,6 +31,8 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
@@ -91,5 +93,16 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     public void requestReset()
       {
         localeHolder.remove();  
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public DateTimeFormatter getDateTimeFormatter() 
+      {
+        return DateTimeFormat.fullDateTime().withLocale(getLocales().get(0));
       }
   }

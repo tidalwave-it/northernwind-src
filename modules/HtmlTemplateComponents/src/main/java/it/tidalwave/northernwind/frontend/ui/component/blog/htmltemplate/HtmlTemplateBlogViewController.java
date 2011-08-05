@@ -22,16 +22,19 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
+import java.util.Comparator;
+import java.util.TreeMap;
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -42,27 +45,63 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  **********************************************************************************************************************/
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    private final StringBuilder htmlBuilder = new StringBuilder();
+    private static final Comparator<DateTime> REVERSE_DATE_COMPARATOR = new Comparator<DateTime>() 
+      {
+        @Override
+        public int compare (final @Nonnull DateTime dateTime1, final @Nonnull DateTime dateTime2) 
+          {
+            return -dateTime1.compareTo(dateTime2);
+          }
+      };
+    
+    private final Map<DateTime, String> blogSortedMapByDate = new TreeMap<DateTime, String>(REVERSE_DATE_COMPARATOR);
 
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     public HtmlTemplateBlogViewController (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode) 
       {
         super(view, siteNode);
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     protected void addPost (final @Nonnull Content post)
       throws IOException, NotFoundException 
       {
         final ResourceProperties properties = post.getProperties();
 
-        htmlBuilder.append("<h3>").append(properties.getProperty(PROPERTY_TITLE)).append("</h3>\n");
-        htmlBuilder.append(getBlogDateTime(post)).append("\n");
-        htmlBuilder.append(properties.getProperty(PROPERTY_FULL_TEXT)).append("\n");
+        final DateTime blogDateTime = getBlogDateTime(post);
+        final StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append(String.format("<div id='blogpost-%s'>\n", blogDateTime.toDate().getTime()));
+        htmlBuilder.append(String.format("<h3>%s</h3>\n", properties.getProperty(PROPERTY_TITLE)));
+        htmlBuilder.append(String.format("<span class='.nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
+        htmlBuilder.append(String.format("%s\n", properties.getProperty(PROPERTY_FULL_TEXT)));
+        htmlBuilder.append(String.format("</div>\n"));
+        blogSortedMapByDate.put(blogDateTime, htmlBuilder.toString());
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     protected void render()
       {
+        final StringBuilder htmlBuilder = new StringBuilder();
+       
+        for (final String html : blogSortedMapByDate.values())
+          {
+            htmlBuilder.append(html);
+          }
+        
         ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));
       }
   }

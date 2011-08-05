@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
+import org.joda.time.format.DateTimeFormatter;
 
 /***********************************************************************************************************************
  *
@@ -45,4 +46,7 @@ public interface RequestLocaleManager
      ******************************************************************************************************************/
     @Nonnull
     public List<Locale> getLocales();
+    
+    @Nonnull
+    public DateTimeFormatter getDateTimeFormatter();
   }

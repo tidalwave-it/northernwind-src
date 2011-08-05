@@ -29,10 +29,13 @@ import java.util.List;
 import java.util.Arrays;
 import java.io.IOException;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -49,10 +52,13 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
-    private static final List<Key<DateTime>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+    private static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
     
     @Nonnull @Inject
     private Site site;
+    
+    @Nonnull @Inject
+    protected RequestLocaleManager requestLocaleManager;
     
     @Nonnull
     protected final BlogView view;
@@ -139,15 +145,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected String getBlogDateTime (@Nonnull Content post)
+    protected DateTime getBlogDateTime (@Nonnull Content post)
+      throws NotFoundException
       {
         final ResourceProperties properties = post.getProperties();
+        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
         
-        for (final Key<DateTime> dateTimeKey : DATE_KEYS)
+        for (final Key<String> dateTimeKey : DATE_KEYS)
           {
             try
               {
-                return "" + properties.getProperty(dateTimeKey);   
+                return isoFormatter.parseDateTime(properties.getProperty(dateTimeKey));   
               }
             catch (NotFoundException e)
               {
@@ -158,6 +166,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
           }
         
-        return "";
+        throw new NotFoundException("No available date for /" + post.getFile().getPath());
       }
   }
