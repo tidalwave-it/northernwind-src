@@ -82,12 +82,12 @@ public class ContentParser extends Parser
               {
                 // FIXME: format HTML
                 ResourceManager.addResource(new Resource(modifiedDateTime, 
-                                                         path + name + "_" + language + ".html",
+                                                         path + toLower(name) + "_" + language + ".html",
                                                          builder.toString().getBytes("UTF-8")));
               }
             else
               {
-                properties.put(new Key<Object>(name), builder.toString()); 
+                properties.put(new Key<Object>(toLower(name)), builder.toString()); 
               }
           }
         else

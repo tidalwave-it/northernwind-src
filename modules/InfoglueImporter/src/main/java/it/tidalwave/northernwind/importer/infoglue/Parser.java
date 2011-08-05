@@ -158,22 +158,27 @@ public abstract class Parser
         if (publishDateTime != null)
           {
             publishingTimeByPath.put(path, publishDateTime);
-            properties.put(new Key<Object>("PublishDate"), publishDateTime);  
           }
         
         final DateTime pdt = publishingTimeByPath.get(path);
 
         if (pdt != null)
           {
-            properties.put(new Key<Object>("PublishDate"), pdt);  
+            properties.put(new Key<Object>("publishDateTime"), pdt);  
           }
         
-        properties.put(new Key<Object>("CreationDate"), creationTime);
-        properties.put(new Key<Object>("LatestModificationDate"), modifiedDateTime);
+        properties.put(new Key<Object>("creationDateTime"), creationTime);
+        properties.put(new Key<Object>("latestModificationDateTime"), modifiedDateTime);
         final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         rp.as(Marshallable).marshal(baos);
         baos.close();
         ResourceManager.addResource(new Resource(modifiedDateTime, path + fileName + ".xml", baos.toByteArray()));
+      }
+    
+    @Nonnull
+    public static String toLower (final @Nonnull String string)
+      {
+        return "".equals(string) ? "" : string.substring(0, 1).toLowerCase() + string.substring(1);  
       }
   }

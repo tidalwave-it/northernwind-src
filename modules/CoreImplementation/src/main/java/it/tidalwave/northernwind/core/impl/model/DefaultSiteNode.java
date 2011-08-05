@@ -22,14 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.InputStream;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -97,7 +98,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
       {
         Layout layout = null;
         
-        for (final FileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Layout_en.xml"))
+        // FIXME: Components must be localized
+        for (final FileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml"))
           {
             log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
             final @Cleanup InputStream is = layoutFile.getInputStream();
@@ -111,6 +113,6 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
               }
           }
         
-        return layout;
+        return (layout != null) ? layout : modelFactory.createLayout(new Id(""), "emptyPlaceholder");
       }
   }

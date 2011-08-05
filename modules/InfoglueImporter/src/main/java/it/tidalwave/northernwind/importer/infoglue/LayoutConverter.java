@@ -137,7 +137,7 @@ public class LayoutConverter extends Parser
           }
         else if ("property".equals(elementName))
           {
-            String propertyName = reader.getAttributeValue("", "name");
+            String propertyName = toLower(reader.getAttributeValue("", "name"));
             Object propertyValue = reader.getAttributeValue("", "path");
             
             if (propertyValue != null)

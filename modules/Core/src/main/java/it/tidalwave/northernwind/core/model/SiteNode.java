@@ -38,7 +38,7 @@ public interface SiteNode extends Resource
   {
     public static final Class<SiteNode> SiteNode = SiteNode.class;
     
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("NavigationTitle");
+    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("navigationTitle");
     
     /*******************************************************************************************************************
      *

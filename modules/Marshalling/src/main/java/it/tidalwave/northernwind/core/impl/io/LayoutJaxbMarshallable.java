@@ -32,7 +32,7 @@ import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.role.Marshallable;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.LayoutJaxb;
+import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,11 +75,11 @@ public class LayoutJaxbMarshallable implements Marshallable
       {
         try 
           {
-            final LayoutJaxb layoutJaxb = objectFactory.createLayoutJaxb();        
-            layoutJaxb.setVersion("1.0");            
-            layoutJaxb.setComponent(marshal(layout));
+            final ComponentsJaxb componentsJaxb = objectFactory.createComponentsJaxb();        
+            componentsJaxb.setVersion("1.0");            
+            componentsJaxb.setComponent(marshal(layout));
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
-            marshaller.marshal(objectFactory.createLayout(layoutJaxb), os);
+            marshaller.marshal(objectFactory.createComponents(componentsJaxb), os);
           }
         catch (Exception e) 
           {

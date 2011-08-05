@@ -66,7 +66,7 @@ public class StructureParser extends Parser
               {
                 try
                   {
-                    new LayoutConverter(s, modifiedDateTime, path + "Layout_" + language + ".xml", properties).process();
+                    new LayoutConverter(s, modifiedDateTime, path + "Components_" + language + ".xml", properties).process();
                   }
                 catch (Exception e)
                   {
@@ -78,7 +78,7 @@ public class StructureParser extends Parser
           {
             if (!s.equals("_Standard Pages"))
               {
-                properties.put(new Key<Object>(name), s); 
+                properties.put(new Key<Object>(toLower(name)), s); 
               }
           }
       }

@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component;
 
-import org.joda.time.DateTime;
+//import org.joda.time.DateTime;
 import it.tidalwave.util.Key;
 import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.*;
@@ -36,13 +36,13 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access=PRIVATE)
 public final class Properties 
   {
-    public static final Key<String> PROPERTY_TITLE = new Key<String>("Title");
+    public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
     
-    public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("FullText.html");
+    public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("fullText.html");
+    // FIXME: those should be Key<DateTime>
+    public static final Key<String> PROPERTY_CREATION_DATE = new Key<String>("creationDateTime"); 
     
-    public static final Key<String> PROPERTY_CREATION_DATE = new Key<String>("CreationDate"); 
+    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<String>("publishingDateTime");   
     
-    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<String>("PublishingDate");   
-    
-    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<String>("LatestModificationDate");    
+    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<String>("latestModificationDateTime");    
   }

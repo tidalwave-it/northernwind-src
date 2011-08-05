@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.LayoutJaxb;
+import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,14 +73,14 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
       {
         try
           {
-            final LayoutJaxb layoutJaxb = ((JAXBElement<LayoutJaxb>)unmarshaller.unmarshal(is)).getValue();
+            final ComponentsJaxb componentsJaxb = ((JAXBElement<ComponentsJaxb>)unmarshaller.unmarshal(is)).getValue();
             
-            if (!"1.0".equals(layoutJaxb.getVersion()))
+            if (!"1.0".equals(componentsJaxb.getVersion()))
               {
-                throw new IOException("Unexpected version: " + layoutJaxb.getVersion());  
+                throw new IOException("Unexpected version: " + componentsJaxb.getVersion());  
               }
             
-            return unmarshal(layoutJaxb.getComponent());
+            return unmarshal(componentsJaxb.getComponent());
           }
         catch (Exception e)
           {

@@ -57,9 +57,9 @@
 
 
 
-    <xsd:element name="layout" type="LayoutJaxb"/>
+    <xsd:element name="components" type="ComponentsJaxb"/>
 
-    <xsd:complexType name="LayoutJaxb">
+    <xsd:complexType name="ComponentsJaxb">
         <xsd:sequence>
             <xsd:element name="component" type="ComponentJaxb" minOccurs="0" maxOccurs="1"/> 
         </xsd:sequence>
