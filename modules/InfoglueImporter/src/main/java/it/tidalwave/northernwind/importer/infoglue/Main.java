@@ -111,7 +111,8 @@ public class Main
         String languageCode = "";
         String assetFileName = "";
         String assetKey = "";
-        DateTime dateTime = null;
+        DateTime modifiedDateTime = null;
+        DateTime publishDateTime = null;
         
         hgFolder.mkdirs();
         Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg init");
@@ -156,8 +157,8 @@ public class Main
                   
                   else if ("modifiedDateTime".equals(name))
                     {
-                      dateTime = FORMATTER.parseDateTime(builder.toString());  
-                        log.trace("date {} parsed as {}", builder, dateTime);
+                      modifiedDateTime = FORMATTER.parseDateTime(builder.toString());  
+                      log.trace("date {} parsed as {}", builder, modifiedDateTime);
                     }
                   
                   else if ("assetFileName".equals(name))
@@ -184,7 +185,7 @@ public class Main
                         {
                           fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
                           final String xml = replaceMacros(builder.toString().replace("cdataEnd", "]]>"));
-                          new ContentParser(xml, dateTime, fixedPath, languageCode).process();
+                          new ContentParser(xml, modifiedDateTime, fixedPath, languageCode).process();
                         }
                       
                       else if (fixedPath.startsWith("Meta+info+folder/blueBill/Mobile"))
@@ -196,7 +197,7 @@ public class Main
                           fixedPath = fixedPath.replaceAll("Meta\\+info\\+folder/blueBill/Mobile/", "structure/Override");
 //                          fixedPath = fixedPath.replaceAll("(^.*/)$", "$1layout_");
                           final String xml = builder.toString().replace("cdataEnd", "]]>");
-                          new StructureParser(xml, dateTime, fixedPath, languageCode).process(); 
+                          new StructureParser(xml, modifiedDateTime, fixedPath, languageCode).process(); 
                         }
                     }
                   
@@ -214,7 +215,7 @@ public class Main
                   name = event.getName().toString();
                   log.trace("{}{} {}: {}", new Object[]
                     {
-                           spaces.substring(0, indent * 2), eventType, name, builder.substring(0, Math.min(1000, builder.length()))
+                      spaces.substring(0, indent * 2), eventType, name, builder.substring(0, Math.min(1000, builder.length()))
                     });
                   break;
               }
