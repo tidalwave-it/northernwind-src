@@ -68,7 +68,7 @@ public class DefaultBlogViewController implements BlogViewController
 
         try 
           {
-            setPosts(siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS), viewId);
+            setPosts(siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS));
           } 
         catch (NotFoundException e) 
           {
@@ -80,7 +80,7 @@ public class DefaultBlogViewController implements BlogViewController
           }
       }
     
-    private void setPosts (final @Nonnull List<String> relativeUris, final @Nonnull Id viewId) 
+    private void setPosts (final @Nonnull List<String> relativeUris) 
       {
         log.debug("setPosts({})", relativeUris);
         
