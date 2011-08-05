@@ -151,7 +151,11 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             properties = properties.merged(tempProperties);
           }
 
-        log.debug(">>>> properties for /{}: {}", file.getPath(), properties);
+        if (log.isDebugEnabled())
+          {
+            log.debug(">>>> properties for /{}:", file.getPath());
+            logProperties(">>>>>>>>", properties);
+          }
       }
     
     /*******************************************************************************************************************
@@ -182,5 +186,46 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
           }
 
         return NotFoundException.throwWhenNull(localizedFile, String.format("%s/{%s}", file.getPath(), fileNamesNotFound));  
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void logProperties (final @Nonnull String indent ,final @Nonnull ResourceProperties properties)
+      {
+        log.debug("{} simple property items:", indent);
+        
+        for (final Key<?> key : properties.getKeys())
+          {
+            try 
+              {
+                log.debug("{}>>>> {} = {}", new Object[] { indent, key, properties.getProperty(key) });
+              }
+            catch (NotFoundException e) 
+              {
+                log.error("", e);
+              }
+            catch (IOException e) 
+              {
+                log.error("", e);
+              }
+          }
+        
+        log.debug("{} property groups: {}", indent, properties.getGroupIds());
+        
+        for (final Id groupId : properties.getGroupIds())
+          {
+            log.debug("{}>>>> group: {}", indent, groupId);
+            
+            try 
+              {
+                logProperties(indent + ">>>>", properties.getGroup(groupId));
+              }
+            catch (NotFoundException e) 
+              {
+                log.error("", e);
+              }
+          }
       }
   }
