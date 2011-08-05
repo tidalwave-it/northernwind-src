@@ -57,7 +57,9 @@ public final class UriUtilities
             builder.append("/").append(URLDecoder.decode(part, "UTF-8"));
           }
         
-        return builder.toString();
+        final String s = builder.toString();
+        
+        return "".equals(s) ? "/" : s.replace("//", "/");
       }    
     
     /*******************************************************************************************************************
