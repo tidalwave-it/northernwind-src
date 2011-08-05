@@ -49,6 +49,8 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
+    private static final List<Key<DateTime>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+    
     @Nonnull @Inject
     private Site site;
     
@@ -140,9 +142,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
     protected String getBlogDateTime (@Nonnull Content post)
       {
         final ResourceProperties properties = post.getProperties();
-        final List<Key<DateTime>> dateTimeKeys = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
         
-        for (final Key<DateTime> dateTimeKey : dateTimeKeys)
+        for (final Key<DateTime> dateTimeKey : DATE_KEYS)
           {
             try
               {
