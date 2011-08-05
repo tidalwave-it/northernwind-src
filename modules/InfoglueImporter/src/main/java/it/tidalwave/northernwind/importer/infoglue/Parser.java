@@ -50,6 +50,7 @@ import static it.tidalwave.role.Marshallable.Marshallable;
 public abstract class Parser
   {
     private static final Map<String, DateTime> creationTimeByPath = new HashMap<String, DateTime>();
+    private static final Map<String, DateTime> publishingTimeByPath = new HashMap<String, DateTime>();
     
     @Nonnull
     private final String contents;
@@ -60,13 +61,18 @@ public abstract class Parser
     protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
     protected final DateTime modifiedDateTime;        
+    private final DateTime publishDateTime;
 
-    public Parser (final @Nonnull String contents, final @Nonnull String path, final @Nonnull DateTime modifiedDateTime) 
+    public Parser (final @Nonnull String contents, 
+                   final @Nonnull String path, 
+                   final @Nonnull DateTime modifiedDateTime,
+                   final @Nonnull DateTime publishedDateTime) 
       {
         log.debug("Parsing {} ...", contents);
         this.contents = contents;
         this.path = path;
         this.modifiedDateTime = modifiedDateTime;
+        this.publishDateTime = publishedDateTime;
       }
 
     public void process() 
@@ -147,6 +153,19 @@ public abstract class Parser
           {
             creationTime = modifiedDateTime;
             creationTimeByPath.put(path, creationTime);
+          }
+
+        if (publishDateTime != null)
+          {
+            publishingTimeByPath.put(path, publishDateTime);
+            properties.put(new Key<Object>("PublishDate"), publishDateTime);  
+          }
+        
+        final DateTime pdt = publishingTimeByPath.get(path);
+
+        if (pdt != null)
+          {
+            properties.put(new Key<Object>("PublishDate"), pdt);  
           }
         
         properties.put(new Key<Object>("CreationDate"), creationTime);

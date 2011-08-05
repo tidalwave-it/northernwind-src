@@ -41,10 +41,14 @@ public class StructureParser extends Parser
   {
     private final String language;
 
-    public StructureParser (String xml, final @Nonnull DateTime modifiedDateTime, String path, String language) 
+    public StructureParser (String xml, 
+                            final @Nonnull DateTime modifiedDateTime, 
+                            final @Nonnull DateTime publishingDateTime, 
+                            String path, 
+                            String language) 
       throws FileNotFoundException 
       {
-        super(xml, path, modifiedDateTime);
+        super(xml, path, modifiedDateTime, publishingDateTime);
         this.language = language;
       }
 

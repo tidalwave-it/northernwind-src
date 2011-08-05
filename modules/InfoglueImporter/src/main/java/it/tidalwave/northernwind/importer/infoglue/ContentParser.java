@@ -45,13 +45,14 @@ public class ContentParser extends Parser
     private final String language;
 
     private boolean inAttributes = false;
-
+    
     public ContentParser (final @Nonnull String xml, 
-                          final @Nonnull DateTime dateTime, 
+                          final @Nonnull DateTime latestModificationTime, 
+                          final @Nonnull DateTime publishedDateTime, 
                           final @Nonnull String path, 
                           final @Nonnull String language) 
       {
-        super(xml, path, dateTime);
+        super(xml, path, latestModificationTime, publishedDateTime);
         this.language = language;
       }
 

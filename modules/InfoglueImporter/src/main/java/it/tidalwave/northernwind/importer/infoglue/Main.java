@@ -158,7 +158,13 @@ public class Main
                   else if ("modifiedDateTime".equals(name))
                     {
                       modifiedDateTime = FORMATTER.parseDateTime(builder.toString());  
-                      log.trace("date {} parsed as {}", builder, modifiedDateTime);
+                      log.trace("modifiedDateTime {} parsed as {}", builder, modifiedDateTime);
+                    }
+                  
+                  else if ("publishDateTime".equals(name))
+                    {
+                      publishDateTime = FORMATTER.parseDateTime(builder.toString());  
+                      log.trace("publishDateTime {} parsed as {}", builder, publishDateTime);
                     }
                   
                   else if ("assetFileName".equals(name))
@@ -185,7 +191,8 @@ public class Main
                         {
                           fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
                           final String xml = replaceMacros(builder.toString().replace("cdataEnd", "]]>"));
-                          new ContentParser(xml, modifiedDateTime, fixedPath, languageCode).process();
+                          log.info("PBD " + publishDateTime + " " + fixedPath);
+                          new ContentParser(xml, modifiedDateTime, publishDateTime, fixedPath, languageCode).process();
                         }
                       
                       else if (fixedPath.startsWith("Meta+info+folder/blueBill/Mobile"))
@@ -197,8 +204,10 @@ public class Main
                           fixedPath = fixedPath.replaceAll("Meta\\+info\\+folder/blueBill/Mobile/", "structure/Override");
 //                          fixedPath = fixedPath.replaceAll("(^.*/)$", "$1layout_");
                           final String xml = builder.toString().replace("cdataEnd", "]]>");
-                          new StructureParser(xml, modifiedDateTime, fixedPath, languageCode).process(); 
+                          new StructureParser(xml, modifiedDateTime, publishDateTime, fixedPath, languageCode).process(); 
                         }
+
+                      publishDateTime = null;
                     }
                   
                   else if ("assetBytes".equals(name))

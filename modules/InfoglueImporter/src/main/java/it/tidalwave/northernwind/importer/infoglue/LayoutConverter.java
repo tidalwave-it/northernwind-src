@@ -73,7 +73,7 @@ public class LayoutConverter extends Parser
                             final @Nonnull String path,
                             final @Nonnull SortedMap<Key<?>, Object> properties) 
       {
-        super(xml, path, modifiedDateTime);
+        super(xml, path, modifiedDateTime, null);
         this.properties = properties;
       }
 
