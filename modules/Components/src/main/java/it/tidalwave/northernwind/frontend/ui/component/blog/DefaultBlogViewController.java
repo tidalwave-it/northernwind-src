@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -64,10 +63,21 @@ public class DefaultBlogViewController implements BlogViewController
     public DefaultBlogViewController (final @Nonnull BlogView view, 
                                       final @Nonnull Id viewId, 
                                       final @Nonnull SiteNode siteNode) 
-    {
+      {
         this.view = view;
-        final String uris = "/Blog"; // FIXME siteNode.getProperty(PROP_CONTENT);
-        setPosts(Arrays.asList(uris.split(",")), viewId);
+
+        try 
+          {
+            setPosts(siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS), viewId);
+          } 
+        catch (NotFoundException e) 
+          {
+            log.warn("{}", e.toString());
+          }
+        catch (IOException e) 
+          {
+            log.warn("", e);
+          }
       }
     
     private void setPosts (final @Nonnull List<String> relativeUris, final @Nonnull Id viewId) 
@@ -84,13 +94,13 @@ public class DefaultBlogViewController implements BlogViewController
                   {
                     try
                       {
-                        final ResourceProperties properties = post.getProperties(viewId);
+                        final ResourceProperties properties = post.getProperties();
                         view.addPost(new BlogPost(properties.getProperty(PROPERTY_TITLE),     
                                                   properties.getProperty(PROPERTY_FULL_TEXT)));                
                       }
                     catch (NotFoundException e)
                       {
-                        log.warn("", e.toString());
+                        log.warn("{}", e.toString());
                       }
                     catch (IOException e)
                       {

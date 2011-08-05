@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
+import java.util.List;
 import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
@@ -32,5 +33,5 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface BlogViewController 
   {    
-    public static final Key<String> PROPERTY_CONTENTS = new Key<String>("contents"); 
+    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents"); 
   }
