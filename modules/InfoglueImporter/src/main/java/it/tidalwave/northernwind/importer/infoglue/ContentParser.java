@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.importer.infoglue;
 import it.tidalwave.util.Key;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +40,16 @@ import org.joda.time.DateTime;
 @Slf4j
 public class ContentParser extends Parser
   {
+    private static final List<String> HTML_PROPERTIES = Arrays.asList("FullText", "Template", "Leadin");
+    
     private final String language;
 
     private boolean inAttributes = false;
 
-    public ContentParser (final @Nonnull String xml, final @Nonnull DateTime dateTime, final @Nonnull String path, final @Nonnull String language) 
+    public ContentParser (final @Nonnull String xml, 
+                          final @Nonnull DateTime dateTime, 
+                          final @Nonnull String path, 
+                          final @Nonnull String language) 
       {
         super(xml, path, dateTime);
         this.language = language;
@@ -71,16 +77,21 @@ public class ContentParser extends Parser
           }
         else if (inAttributes)
           {
-            if (Arrays.asList("FullText", "Template", "Leadin").contains(name))
+            if (HTML_PROPERTIES.contains(name))
               {
-                // FIXME: prepend the file name with the component name
                 // FIXME: format HTML
-                ResourceManager.addResource(new Resource(dateTime, path + name + "_" + language + ".html", builder.toString().getBytes("UTF-8")));
+                ResourceManager.addResource(new Resource(modifiedDateTime, 
+                                                         path + name + "_" + language + ".html",
+                                                         builder.toString().getBytes("UTF-8")));
               }
             else
               {
                 properties.put(new Key<Object>(name), builder.toString()); 
               }
+          }
+        else
+          {
+            log.warn("IGNORING {} {}    ", name, builder);  
           }
       }        
 
