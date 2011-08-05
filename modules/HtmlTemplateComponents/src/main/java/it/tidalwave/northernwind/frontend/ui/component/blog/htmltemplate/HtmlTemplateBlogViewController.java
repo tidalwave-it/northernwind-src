@@ -44,8 +44,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
     private final StringBuilder htmlBuilder = new StringBuilder();
 
-    public HtmlTemplateBlogViewController (final @Nonnull BlogView view, 
-                                           final @Nonnull SiteNode siteNode) 
+    public HtmlTemplateBlogViewController (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode) 
       {
         super(view, siteNode);
       }
