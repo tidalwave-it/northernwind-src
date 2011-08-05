@@ -41,10 +41,10 @@ public class StructureParser extends Parser
   {
     private final String language;
 
-    public StructureParser (String xml, final @Nonnull DateTime dateTime, String path, String language) 
+    public StructureParser (String xml, final @Nonnull DateTime modifiedDateTime, String path, String language) 
       throws FileNotFoundException 
       {
-        super(xml, path, dateTime);
+        super(xml, path, modifiedDateTime);
         this.language = language;
       }
 
@@ -62,7 +62,7 @@ public class StructureParser extends Parser
               {
                 try
                   {
-                    new LayoutConverter(s, dateTime, path + "Layout_" + language + ".xml", properties).process();
+                    new LayoutConverter(s, modifiedDateTime, path + "Layout_" + language + ".xml", properties).process();
                   }
                 catch (Exception e)
                   {
@@ -70,9 +70,12 @@ public class StructureParser extends Parser
                   }
               }
           }
-        else if (!Arrays.asList("attributes", "article").contains(name) &!s.equals("_Standard Pages"))
+        else if (!Arrays.asList("attributes", "article").contains(name))
           {
-            properties.put(new Key<Object>(name), s); 
+            if (!s.equals("_Standard Pages"))
+              {
+                properties.put(new Key<Object>(name), s); 
+              }
           }
       }
 
