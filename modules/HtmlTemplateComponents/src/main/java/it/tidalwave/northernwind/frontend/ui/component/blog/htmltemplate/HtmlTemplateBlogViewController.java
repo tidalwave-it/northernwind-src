@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
