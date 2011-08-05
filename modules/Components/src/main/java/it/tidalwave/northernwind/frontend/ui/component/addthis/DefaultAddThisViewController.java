@@ -23,12 +23,14 @@
 package it.tidalwave.northernwind.frontend.ui.component.addthis;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -36,6 +38,7 @@ import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragment
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable
 public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewController implements AddThisViewController
   {  
     /*******************************************************************************************************************
@@ -50,9 +53,19 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
     public DefaultAddThisViewController (final @Nonnull AddThisView view, 
                                          final @Nonnull Id viewId,
                                          final @Nonnull SiteNode siteNode) 
-      throws IOException 
       {
         super(view, viewId, siteNode);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize()
+      throws IOException 
+      {
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("username", "fabriziogiudici"); // FIXME: get from siteNode properties
         attributes.put("url", "http://bluebill.tidalwave.it/mobile/"); // FIXME: get from site

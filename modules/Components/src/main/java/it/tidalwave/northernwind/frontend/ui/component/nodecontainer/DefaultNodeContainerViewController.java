@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -38,11 +39,17 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
     @Inject @Nonnull
     private Site site;
+    
+    private final NodeContainerView view;
+    
+    private final Id viewId;
+    
+    private final SiteNode siteNode;
     
     /*******************************************************************************************************************
      *
@@ -56,8 +63,20 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, 
                                                final @Nonnull Id viewId,
                                                final @Nonnull SiteNode siteNode) 
-      {     
-        
+      {
+        this.view = view;
+        this.siteNode = siteNode;
+        this.viewId = viewId;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize() 
+      {
         final StringBuilder builder = new StringBuilder();
         
         try

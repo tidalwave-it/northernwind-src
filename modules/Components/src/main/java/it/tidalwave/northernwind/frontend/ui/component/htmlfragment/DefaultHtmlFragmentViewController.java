@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -43,11 +44,17 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable @Slf4j
 public class DefaultHtmlFragmentViewController implements HtmlFragmentViewController
   {
     @Nonnull @Inject
     private Site site;
+    
+    private final HtmlFragmentView view;
+    
+    private final Id viewId;
+    
+    private final SiteNode siteNode;
     
     /*******************************************************************************************************************
      *
@@ -61,7 +68,20 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     public DefaultHtmlFragmentViewController (final @Nonnull HtmlFragmentView view, 
                                               final @Nonnull Id viewId,
                                               final @Nonnull SiteNode siteNode) 
-    {
+      {
+        this.view = view;
+        this.viewId = viewId;
+        this.siteNode = siteNode;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize()
+      {
         try
           {
             final StringBuilder htmlBuilder = new StringBuilder();

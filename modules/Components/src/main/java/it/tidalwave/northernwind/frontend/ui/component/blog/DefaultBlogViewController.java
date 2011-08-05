@@ -22,9 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
@@ -41,7 +41,7 @@ import static it.tidalwave.northernwind.core.model.Content.Content;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
     @Nonnull @Inject
@@ -50,6 +50,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     protected final BlogView view;
 
+    private final Id viewId;
+    
+    private final SiteNode siteNode;
+    
     /*******************************************************************************************************************
      *
      * @param  view              the related view
@@ -62,10 +66,49 @@ public abstract class DefaultBlogViewController implements BlogViewController
                                       final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
-        
+        this.viewId = viewId;
+        this.siteNode = siteNode;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize()
+      {
         try 
           {
-            setPosts(siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS));
+            for (final String relativeUri : siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS))
+              {  
+                try
+                  {
+                    final Content postsFolder = site.find(Content).withRelativeUri(relativeUri).result();
+
+                    for (final Content post : postsFolder.findChildren().results())
+                      {
+                        try
+                          {
+                            addPost(post);
+                          }
+                        catch (NotFoundException e)
+                          {
+                            log.warn("{}", e.toString());
+                          }
+                        catch (IOException e)
+                          {
+                            log.warn("", e);
+                          }
+                      }            
+                  }
+                catch (NotFoundException e)
+                  {
+                    log.warn("", e.toString());
+                  }
+              }
+
+            render();
           } 
         catch (NotFoundException e) 
           {
@@ -77,41 +120,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       }
     
-    private void setPosts (final @Nonnull List<String> relativeUris) 
-      {
-        log.debug("setPosts({})", relativeUris);
-        
-        for (final String relativeUri : relativeUris)
-          {  
-            try
-              {
-                final Content postsFolder = site.find(Content).withRelativeUri(relativeUri).result();
-                
-                for (final Content post : postsFolder.findChildren().results())
-                  {
-                    try
-                      {
-                        addPost(post);
-                      }
-                    catch (NotFoundException e)
-                      {
-                        log.warn("{}", e.toString());
-                      }
-                    catch (IOException e)
-                      {
-                        log.warn("", e);
-                      }
-                  }            
-              }
-            catch (NotFoundException e)
-              {
-                log.warn("", e.toString());
-              }
-          }
-        
-        render();
-      }
-
     protected abstract void addPost (@Nonnull Content post)
       throws IOException, NotFoundException;
 

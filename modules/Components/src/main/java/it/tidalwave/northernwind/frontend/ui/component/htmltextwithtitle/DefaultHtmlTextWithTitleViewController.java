@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -43,11 +44,17 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable @Slf4j
 public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitleViewController
   {
     @Nonnull @Inject
     private Site site;
+    
+    private final HtmlTextWithTitleView view;
+    
+    private final Id viewId;
+    
+    private final SiteNode siteNode;
     
     /*******************************************************************************************************************
      *
@@ -61,6 +68,19 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     public DefaultHtmlTextWithTitleViewController (final @Nonnull HtmlTextWithTitleView view, 
                                                    final @Nonnull Id viewId,
                                                    final @Nonnull SiteNode siteNode) 
+      {
+        this.view = view;
+        this.viewId = viewId;
+        this.siteNode = siteNode;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize()
       {
         try
           {

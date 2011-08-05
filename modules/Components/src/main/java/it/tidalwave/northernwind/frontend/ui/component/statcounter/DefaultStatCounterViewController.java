@@ -23,12 +23,14 @@
 package it.tidalwave.northernwind.frontend.ui.component.statcounter;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -36,6 +38,7 @@ import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragment
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable
 public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentViewController implements StatCounterViewController
   {  
     /*******************************************************************************************************************
@@ -53,6 +56,17 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
       throws IOException 
       {
         super(view, viewId, siteNode);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize() 
+      throws IOException
+      {
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("project", "5834368"); // FIXME: get from siteNode properties
         attributes.put("security", "91675212"); // FIXME: get from siteNode properties

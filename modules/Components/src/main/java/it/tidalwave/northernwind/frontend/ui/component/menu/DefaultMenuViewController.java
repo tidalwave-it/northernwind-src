@@ -23,8 +23,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.List;
 import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -43,7 +43,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Scope("session") @Slf4j
+@Configurable @Scope("session") @Slf4j
 public class DefaultMenuViewController implements MenuViewController
   {    
     @Nonnull @Inject
@@ -51,6 +51,12 @@ public class DefaultMenuViewController implements MenuViewController
     
     @Nonnull
     protected final MenuView view;
+    
+    @Nonnull
+    protected final Id viewId;
+    
+    @Nonnull
+    protected final SiteNode siteNode;
 
     /*******************************************************************************************************************
      *
@@ -62,12 +68,39 @@ public class DefaultMenuViewController implements MenuViewController
     public DefaultMenuViewController (final @Nonnull MenuView view, 
                                       final @Nonnull Id viewId, 
                                       final @Nonnull SiteNode siteNode) 
-    {
+      {
         this.view = view;
-        
+        this.viewId = viewId;
+        this.siteNode = siteNode;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+   @PostConstruct
+   /* package */ void initialize()
+     {
         try 
           {
-            setLinks(siteNode.getProperties(viewId).getProperty(PROPERTY_LINKS));
+            for (final String relativeUri : siteNode.getProperties(viewId).getProperty(PROPERTY_LINKS))
+              {  
+                try
+                  {
+                    final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();
+                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
+                    view.addLink(navigationTitle, relativeUri);                
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("", e);
+                  }
+                catch (NotFoundException e)
+                  {
+                    log.warn("Ignoring link '{}' because of {}", relativeUri, e.toString());
+                  }
+              }
           }
         catch (NotFoundException e)
           {
@@ -76,36 +109,6 @@ public class DefaultMenuViewController implements MenuViewController
         catch (IOException e) 
           {
             log.error("", e);
-          }
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * Sets the navigation links.
-     * 
-     * @param  relativeUris   the relative URIs of the targets
-     *
-     ******************************************************************************************************************/
-    private void setLinks (final @Nonnull List<String> relativeUris) 
-      {
-        log.debug("setLinks({})", relativeUris);
-        
-        for (final String relativeUri : relativeUris)
-          {  
-            try
-              {
-                final SiteNode targetSiteNode = site.find(SiteNode).withRelativeUri(relativeUri).result();
-                final String navigationTitle = targetSiteNode.getProperties().getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
-                view.addLink(navigationTitle, relativeUri);                
-              }
-            catch (IOException e)
-              {
-                log.warn("", e);
-              }
-            catch (NotFoundException e)
-              {
-                log.warn("Ignoring link '{}' because of {}", relativeUri, e.toString());
-              }
           }
       }
   }
