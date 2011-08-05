@@ -24,12 +24,9 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -65,17 +62,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         
         try
           {
-            final String styleSheetUris = siteNode.getProperties(viewId).getProperty(PROPERTY_SCREEN_STYLE_SHEETS);
-            final List<String> uris = new ArrayList<String>();
-            
-            for (final String styleSheetUri : styleSheetUris.split(","))
-              {
-                uris.add(styleSheetUri.trim());  
-              }
-            
             final String contextPath = site.getContextPath();
 
-            for (final String uri : uris)
+            for (final String uri : siteNode.getProperties(viewId).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
                 builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
               }

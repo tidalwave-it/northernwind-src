@@ -64,9 +64,15 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
-            final String contentUri = siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS);
-            final Content content = site.find(Content).withRelativeUri(contentUri).result(); // FIXME: it's a multi-value property
-            view.setText(content.getProperties().getProperty(PROPERTY_FULL_TEXT));
+            final StringBuilder htmlBuilder = new StringBuilder();
+            
+            for (final String contentUri : siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS))
+              {
+                final Content content = site.find(Content).withRelativeUri(contentUri).result();
+                htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
+              }
+            
+            view.setText(htmlBuilder.toString());
           }
         catch (NotFoundException e)
           {

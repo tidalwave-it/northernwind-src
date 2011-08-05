@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
+import java.util.List;
 import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
@@ -34,5 +35,5 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface MenuViewController
   {
-    public static final Key<String> PROPERTY_LINKS = new Key<String>("links"); 
+    public static final Key<List<String>> PROPERTY_LINKS = new Key<List<String>>("links"); 
   } 

@@ -64,9 +64,15 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     {
         try
           {
-            final String contentUri = siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS);
-            final Content content = site.find(Content).withRelativeUri(contentUri).result();
-            view.setHtmlFragment(content.getProperties().getProperty(PROPERTY_FULL_TEXT));
+            final StringBuilder htmlBuilder = new StringBuilder();
+            
+            for (final String contentUri : siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS))
+              {
+                final Content content = site.find(Content).withRelativeUri(contentUri).result();
+                htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
+              }
+            
+            view.setHtmlFragment(htmlBuilder.toString());
           }
         catch (NotFoundException e)
           {

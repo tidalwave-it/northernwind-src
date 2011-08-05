@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
 import org.springframework.context.annotation.Scope;
@@ -68,8 +67,7 @@ public class DefaultMenuViewController implements MenuViewController
         
         try 
           {
-            final String uris = siteNode.getProperties(viewId).getProperty(PROPERTY_LINKS);
-            setLinks(Arrays.asList(uris.split(",")));
+            setLinks(siteNode.getProperties(viewId).getProperty(PROPERTY_LINKS));
           }
         catch (NotFoundException e)
           {
