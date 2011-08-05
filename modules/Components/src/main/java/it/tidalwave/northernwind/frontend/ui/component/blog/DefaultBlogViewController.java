@@ -88,9 +88,9 @@ public class DefaultBlogViewController implements BlogViewController
           {  
             try
               {
-                final Content postRoot = site.find(Content).withRelativeUri(relativeUri).result();
+                final Content postsFolder = site.find(Content).withRelativeUri(relativeUri).result();
                 
-                for (final Content post : postRoot.findChildren().results())
+                for (final Content post : postsFolder.findChildren().results())
                   {
                     try
                       {
