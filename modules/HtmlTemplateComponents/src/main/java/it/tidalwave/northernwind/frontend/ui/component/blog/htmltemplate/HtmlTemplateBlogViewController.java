@@ -23,10 +23,10 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import org.joda.time.DateTime;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -43,7 +43,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  **********************************************************************************************************************/
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    private StringBuilder htmlBuilder;
+    private final StringBuilder htmlBuilder = new StringBuilder();
 
     public HtmlTemplateBlogViewController (final @Nonnull BlogView view, 
                                            final @Nonnull Id viewId, 
@@ -56,11 +56,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     protected void addPost (final @Nonnull Content post)
       throws IOException, NotFoundException 
       {
-        if (htmlBuilder == null)
-          {
-            htmlBuilder = new StringBuilder();
-          }
-
         final ResourceProperties properties = post.getProperties();
 
         htmlBuilder.append("<h3>").append(properties.getProperty(PROPERTY_TITLE)).append("</h3>\n");
@@ -71,9 +66,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Override
     protected void render()
       {
-        if (htmlBuilder != null)
-          {            
-            ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));
-          }
+        ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));
       }
   }
