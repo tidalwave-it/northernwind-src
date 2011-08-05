@@ -30,13 +30,10 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView.BlogPost;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -45,7 +42,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @Slf4j
-public class DefaultBlogViewController implements BlogViewController
+public abstract class DefaultBlogViewController implements BlogViewController
   {
     @Nonnull @Inject
     private Site site;
@@ -65,7 +62,7 @@ public class DefaultBlogViewController implements BlogViewController
                                       final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
-
+        
         try 
           {
             setPosts(siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS));
@@ -94,9 +91,7 @@ public class DefaultBlogViewController implements BlogViewController
                   {
                     try
                       {
-                        final ResourceProperties properties = post.getProperties();
-                        view.addPost(new BlogPost(properties.getProperty(PROPERTY_TITLE),     
-                                                  properties.getProperty(PROPERTY_FULL_TEXT)));                
+                        addPost(post);
                       }
                     catch (NotFoundException e)
                       {
@@ -113,5 +108,12 @@ public class DefaultBlogViewController implements BlogViewController
                 log.warn("", e.toString());
               }
           }
+        
+        render();
       }
+
+    protected abstract void addPost (@Nonnull Content post)
+      throws IOException, NotFoundException;
+
+    protected abstract void render();
   }

@@ -55,15 +55,15 @@ public class VaadinBlogView extends VerticalLayout implements BlogView
         setStyleName(NW + id.stringValue());
       }
 
-    @Override
-    public void addPost (final @Nonnull BlogPost blogPost) 
-      {
-        final Label label = new Label();
-        label.setContentMode(Label.CONTENT_XHTML);
-        final StringBuilder builder = new StringBuilder();
-        builder.append("<h3>").append(blogPost.getTitle()).append("</h3>");
-        builder.append(blogPost.getFullText());
-        label.setValue(builder.toString());
-        addComponent(label);
-      }
+//    @Override FIXME
+//    public void addPost (final @Nonnull BlogPost blogPost) 
+//      {
+//        final Label label = new Label();
+//        label.setContentMode(Label.CONTENT_XHTML);
+//        final StringBuilder builder = new StringBuilder();
+//        builder.append("<h3>").append(blogPost.getTitle()).append("</h3>");
+//        builder.append(blogPost.getFullText());
+//        label.setValue(builder.toString());
+//        addComponent(label);
+//      }
   }

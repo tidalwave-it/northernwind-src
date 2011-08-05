@@ -22,11 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import javax.annotation.Nonnull;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -35,15 +30,4 @@ import lombok.ToString;
  **********************************************************************************************************************/
 public interface BlogView 
   {
-    @RequiredArgsConstructor @Getter @ToString
-    public static class BlogPost
-      {
-        @Nonnull
-        private final String title;
-        
-        @Nonnull
-        private final String fullText;
-      }
-    
-    public void addPost (@Nonnull BlogPost blogPost);   
   }
