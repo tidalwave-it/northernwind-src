@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
  *
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface HtmlFragmentView 
+public interface HtmlFragmentView extends Identifiable
   {
     /*******************************************************************************************************************
      *

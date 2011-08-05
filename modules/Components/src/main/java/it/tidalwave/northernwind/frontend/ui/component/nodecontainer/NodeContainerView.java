@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
  *
@@ -33,7 +34,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface NodeContainerView 
+public interface NodeContainerView extends Identifiable
   {
     public void setScreenCssSection (@Nonnull String screenCssSection);
   }

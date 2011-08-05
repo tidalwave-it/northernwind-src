@@ -31,7 +31,6 @@ import java.io.Reader;
 import java.nio.CharBuffer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.Cleanup;
 import org.stringtemplate.v4.ST;
@@ -52,12 +51,10 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
      * Creates an instance for populating the given {@link StaticHtmlFragmentView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultStaticHtmlFragmentViewController (final @Nonnull StaticHtmlFragmentView view, 
-                                                    final @Nonnull Id viewId,
                                                     final @Nonnull SiteNode siteNode) 
       {
         this.view = view; 

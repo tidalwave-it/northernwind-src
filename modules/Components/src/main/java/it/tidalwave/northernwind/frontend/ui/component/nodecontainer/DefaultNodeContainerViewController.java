@@ -27,7 +27,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -47,8 +46,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     
     private final NodeContainerView view;
     
-    private final Id viewId;
-    
     private final SiteNode siteNode;
     
     /*******************************************************************************************************************
@@ -56,17 +53,14 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      * Creates an instance for populating the given {@link NodeContainerView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, 
-                                               final @Nonnull Id viewId,
                                                final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
         this.siteNode = siteNode;
-        this.viewId = viewId;
       }
     
     /*******************************************************************************************************************
@@ -83,7 +77,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String contextPath = site.getContextPath();
 
-            for (final String uri : siteNode.getProperties(viewId).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+            for (final String uri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
                 builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
               }

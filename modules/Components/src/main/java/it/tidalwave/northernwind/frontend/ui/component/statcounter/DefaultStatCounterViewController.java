@@ -27,7 +27,6 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
-import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -46,16 +45,14 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
      * Creates an instance for populating the given {@link StatCounterView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultStatCounterViewController (final @Nonnull StatCounterView view, 
-                                             final @Nonnull Id viewId,
                                              final @Nonnull SiteNode siteNode) 
       throws IOException 
       {
-        super(view, viewId, siteNode);
+        super(view, siteNode);
       }
     
     /*******************************************************************************************************************

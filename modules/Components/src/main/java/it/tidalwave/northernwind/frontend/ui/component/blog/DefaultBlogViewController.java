@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
@@ -50,23 +49,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     protected final BlogView view;
 
-    private final Id viewId;
-    
     private final SiteNode siteNode;
     
     /*******************************************************************************************************************
      *
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultBlogViewController (final @Nonnull BlogView view, 
-                                      final @Nonnull Id viewId, 
-                                      final @Nonnull SiteNode siteNode) 
+    public DefaultBlogViewController (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
-        this.viewId = viewId;
         this.siteNode = siteNode;
       }
     
@@ -80,7 +73,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try 
           {
-            for (final String relativeUri : siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS))
+            for (final String relativeUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
               {  
                 try
                   {

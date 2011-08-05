@@ -46,15 +46,12 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
      * Creates an instance for populating the given {@link AddThisView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultAddThisViewController (final @Nonnull AddThisView view, 
-                                         final @Nonnull Id viewId,
-                                         final @Nonnull SiteNode siteNode) 
+    public DefaultAddThisViewController (final @Nonnull AddThisView view, final @Nonnull SiteNode siteNode) 
       {
-        super(view, viewId, siteNode);
+        super(view, siteNode);
       }
     
     /*******************************************************************************************************************

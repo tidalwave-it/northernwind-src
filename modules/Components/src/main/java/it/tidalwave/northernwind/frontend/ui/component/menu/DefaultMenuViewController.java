@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -53,24 +52,17 @@ public class DefaultMenuViewController implements MenuViewController
     protected final MenuView view;
     
     @Nonnull
-    protected final Id viewId;
-    
-    @Nonnull
     protected final SiteNode siteNode;
 
     /*******************************************************************************************************************
      *
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultMenuViewController (final @Nonnull MenuView view, 
-                                      final @Nonnull Id viewId, 
-                                      final @Nonnull SiteNode siteNode) 
+    public DefaultMenuViewController (final @Nonnull MenuView view, final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
-        this.viewId = viewId;
         this.siteNode = siteNode;
       }
     
@@ -84,7 +76,7 @@ public class DefaultMenuViewController implements MenuViewController
      {
         try 
           {
-            for (final String relativeUri : siteNode.getProperties(viewId).getProperty(PROPERTY_LINKS))
+            for (final String relativeUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_LINKS))
               {  
                 try
                   {

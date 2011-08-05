@@ -58,7 +58,7 @@ import lombok.extern.slf4j.Slf4j;
              IllegalArgumentException, IllegalAccessException, SecurityException 
       {
         viewConstructor = viewClass.getConstructor(Id.class);
-        viewControllerConstructor = viewControllerClass.getConstructor(viewClass.getInterfaces()[0], Id.class, SiteNode.class);
+        viewControllerConstructor = viewControllerClass.getConstructor(viewClass.getInterfaces()[0], SiteNode.class);
       }
     
     /*******************************************************************************************************************
@@ -81,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
             // But it's not a problem: if it's not referenced, it will no more useful (in contrast, e.g. a view
             // would bind itself to a controller listener or action in cases when the controller plays a later role). 
             final Object view = viewConstructor.newInstance(id);
-            viewControllerConstructor.newInstance(view, id, siteNode);  
+            viewControllerConstructor.newInstance(view, siteNode);  
             return view;
           }
         catch (Exception e)

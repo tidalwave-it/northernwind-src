@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -41,6 +42,9 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
               controlledBy=DefaultHtmlTextWithTitleViewController.class)
 public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements HtmlTextWithTitleView
   {
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -51,6 +55,7 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
     public HtmlTemplateHtmlTextWithTitleView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
     
     /*******************************************************************************************************************

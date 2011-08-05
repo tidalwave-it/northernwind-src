@@ -22,12 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
+import it.tidalwave.role.Identifiable;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface BlogView 
+public interface BlogView extends Identifiable
   {
   }

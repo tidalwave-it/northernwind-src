@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.HtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.DefaultHtmlFragmentViewController;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -41,6 +42,9 @@ import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.DefaultHtmlF
               controlledBy=DefaultHtmlFragmentViewController.class)
 public class HtmlTemplateHtmlFragmentView extends HtmlHolder implements HtmlFragmentView
   {
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -51,6 +55,7 @@ public class HtmlTemplateHtmlFragmentView extends HtmlHolder implements HtmlFrag
     public HtmlTemplateHtmlFragmentView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
 //    
 //    /*******************************************************************************************************************

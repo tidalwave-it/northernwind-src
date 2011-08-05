@@ -29,6 +29,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import lombok.Delegate;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -45,6 +46,9 @@ public class HtmlTemplateHorizontalMenuView extends HtmlHolder implements MenuVi
     @Delegate
     private final HtmlTemplateMenuViewHelper helper = new HtmlTemplateMenuViewHelper(this);
     
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -55,5 +59,6 @@ public class HtmlTemplateHorizontalMenuView extends HtmlHolder implements MenuVi
     public HtmlTemplateHorizontalMenuView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
   }

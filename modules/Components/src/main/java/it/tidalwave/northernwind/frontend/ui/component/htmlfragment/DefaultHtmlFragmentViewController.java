@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
@@ -52,8 +51,6 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     
     private final HtmlFragmentView view;
     
-    private final Id viewId;
-    
     private final SiteNode siteNode;
     
     /*******************************************************************************************************************
@@ -61,16 +58,13 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
      * Creates an instance for populating the given {@link HtmlFragmentView} with the given {@link SiteNode}..
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultHtmlFragmentViewController (final @Nonnull HtmlFragmentView view, 
-                                              final @Nonnull Id viewId,
                                               final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
-        this.viewId = viewId;
         this.siteNode = siteNode;
       }
     
@@ -86,7 +80,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
           {
             final StringBuilder htmlBuilder = new StringBuilder();
             
-            for (final String contentUri : siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS))
+            for (final String contentUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativeUri(contentUri).result();
                 htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");

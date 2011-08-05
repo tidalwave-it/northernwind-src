@@ -29,6 +29,7 @@ import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
 import com.vaadin.ui.VerticalLayout;
 import lombok.Delegate;
+import lombok.Getter;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
@@ -46,6 +47,9 @@ public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
     @Delegate
     private final VaadinMenuViewHelper helper = new VaadinMenuViewHelper(this);
     
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -55,6 +59,7 @@ public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
      ******************************************************************************************************************/
     public VaadinVerticalMenuView (final @Nonnull Id id) 
       {
+        this.id = id;
         setMargin(false);
         setStyleName(NW + id.stringValue());
       }

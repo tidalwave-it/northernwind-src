@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
  *
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MenuView 
+public interface MenuView extends Identifiable
   {
     public void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
   }

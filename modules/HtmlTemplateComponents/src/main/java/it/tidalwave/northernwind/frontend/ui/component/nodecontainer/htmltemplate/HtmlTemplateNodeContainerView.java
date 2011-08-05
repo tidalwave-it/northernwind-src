@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -39,6 +40,9 @@ import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContain
               controlledBy=DefaultNodeContainerViewController.class)
 public class HtmlTemplateNodeContainerView extends HtmlHolder implements NodeContainerView
   {
+    @Getter @Nonnull
+    private final Id id;
+        
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -49,6 +53,7 @@ public class HtmlTemplateNodeContainerView extends HtmlHolder implements NodeCon
     public HtmlTemplateNodeContainerView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
 
     /*******************************************************************************************************************

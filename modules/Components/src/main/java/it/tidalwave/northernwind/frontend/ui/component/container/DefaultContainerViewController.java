@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -39,13 +38,10 @@ public class DefaultContainerViewController implements ContainerViewController
      * Creates an instance for populating the given {@link ContainerView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultContainerViewController (final @Nonnull ContainerView view, 
-                                           final @Nonnull Id viewId,
-                                           final @Nonnull SiteNode siteNode) 
+    public DefaultContainerViewController (final @Nonnull ContainerView view, final @Nonnull SiteNode siteNode) 
       {     
       }
   }

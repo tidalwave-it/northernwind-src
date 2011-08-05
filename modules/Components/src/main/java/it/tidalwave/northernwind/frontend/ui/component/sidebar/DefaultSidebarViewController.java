@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.sidebar;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -39,13 +38,10 @@ public class DefaultSidebarViewController implements SidebarViewController
      * Creates an instance for populating the given {@link SidebarView} with the given {@link SiteNode}.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultSidebarViewController (final @Nonnull SidebarView view, 
-                                         final @Nonnull Id viewId,
-                                         final @Nonnull SiteNode siteNode) 
+    public DefaultSidebarViewController (final @Nonnull SidebarView view, final @Nonnull SiteNode siteNode) 
       {     
       }
   }

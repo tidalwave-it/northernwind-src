@@ -52,8 +52,6 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     
     private final HtmlTextWithTitleView view;
     
-    private final Id viewId;
-    
     private final SiteNode siteNode;
     
     /*******************************************************************************************************************
@@ -61,16 +59,13 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      * Creates an instance for populating the given {@link HtmlTextWithTitleView} with the given URI.
      * 
      * @param  view              the related view
-     * @param  viewId            the id of the view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
     public DefaultHtmlTextWithTitleViewController (final @Nonnull HtmlTextWithTitleView view, 
-                                                   final @Nonnull Id viewId,
                                                    final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
-        this.viewId = viewId;
         this.siteNode = siteNode;
       }
     
@@ -86,7 +81,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
           {
             final StringBuilder htmlBuilder = new StringBuilder();
             
-            for (final String contentUri : siteNode.getProperties(viewId).getProperty(PROPERTY_CONTENTS))
+            for (final String contentUri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativeUri(contentUri).result();
                 htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
