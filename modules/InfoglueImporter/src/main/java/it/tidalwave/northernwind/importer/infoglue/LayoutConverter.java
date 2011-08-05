@@ -69,11 +69,11 @@ public class LayoutConverter extends Parser
     private final Map<String, DefaultLayout> wrapperLayouts = new HashMap<String, DefaultLayout>();
 
     public LayoutConverter (final @Nonnull String xml, 
-                            final @Nonnull DateTime dateTime, 
+                            final @Nonnull DateTime modifiedDateTime, 
                             final @Nonnull String path,
                             final @Nonnull SortedMap<Key<?>, Object> properties) 
       {
-        super(xml, path, dateTime);
+        super(xml, path, modifiedDateTime);
         this.properties = properties;
       }
 
@@ -130,11 +130,7 @@ public class LayoutConverter extends Parser
 //                componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
                 componentId = new Id(attrNameValue + "-" + attrIdValue);
                 final DefaultLayout newComponent = new DefaultLayout(componentId, attrTypeValue);
-                
-//                if (!new Id("content3-3").equals(componentId)) // FIXME: temp patch until we recover all the properties so this is a blog navigator...
-//                  {
-                    parentLayout.add(newComponent);
-//                  }
+                parentLayout.add(newComponent);
                 componentStack.push(newComponent);
               }
 
@@ -239,7 +235,7 @@ public class LayoutConverter extends Parser
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);
             baos.close();
-            ResourceManager.addResource(new Resource(dateTime, path, baos.toByteArray()));
+            ResourceManager.addResource(new Resource(modifiedDateTime, path, baos.toByteArray()));
           }
       }
   }
