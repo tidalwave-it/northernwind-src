@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.io;
 
+import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -99,7 +100,9 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
        
         for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
           {
-            properties = properties.withProperty(new Key<Object>(propertyJaxb.getName()), propertyJaxb.getValue().get(0));
+            final ValuesJaxb values = propertyJaxb.getValues();
+            properties = properties.withProperty(new Key<Object>(propertyJaxb.getName()), 
+                                                (values != null) ? values.getValue() : propertyJaxb.getValue());
           }
         
         for (final PropertiesJaxb propertiesJaxb2 : propertiesJaxb.getProperties())

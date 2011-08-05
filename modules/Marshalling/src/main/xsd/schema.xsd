@@ -38,10 +38,17 @@
     </xsd:complexType>
 
     <xsd:complexType name="PropertyJaxb">
+        <xsd:choice>
+            <xsd:element name="value" type="ValueJaxb" minOccurs="0" maxOccurs="1"/> 
+            <xsd:element name="values" type="ValuesJaxb" minOccurs="0" maxOccurs="1"/> 
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/> 
+    </xsd:complexType>
+
+    <xsd:complexType name="ValuesJaxb">
         <xsd:sequence>
             <xsd:element name="value" type="ValueJaxb" minOccurs="0" maxOccurs="unbounded"/> 
         </xsd:sequence>
-        <xsd:attribute name="name" type="xsd:string"/> 
     </xsd:complexType>
 
     <xsd:simpleType name="ValueJaxb">

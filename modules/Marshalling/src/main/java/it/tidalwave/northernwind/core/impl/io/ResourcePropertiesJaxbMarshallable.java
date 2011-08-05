@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.io;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,12 +33,13 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.Marshallable;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.role.Marshallable;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
+import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -113,7 +115,23 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
               {
                 final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
                 propertyJaxb.setName(key.stringValue());
-                propertyJaxb.getValue().add(properties.getProperty(key).toString());
+                final Object value = properties.getProperty(key);
+                
+                if (value instanceof Collection)
+                  { 
+                    final ValuesJaxb valuesJaxb = objectFactory.createValuesJaxb();
+                    propertyJaxb.setValues(valuesJaxb);
+                    
+                    for (final Object valueItem : (Collection<Object>)value)
+                      {
+                        valuesJaxb.getValue().add(valueItem.toString());
+                      }
+                  }
+                else
+                  {
+                    propertyJaxb.setValue(value.toString());
+                  }
+                
                 propertiesJaxb.getProperty().add(propertyJaxb);
               }
             catch (NotFoundException e)
