@@ -90,15 +90,14 @@ import lombok.ToString;
     @Override @Nonnull
     public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
       {
-//        try 
-//          {
-            return new DefaultRequest(relativeUri, parametersMap, preferredLocales);
-//            return new DefaultRequest(UriUtilities.urlDecodedPath(relativeUri), parametersMap, preferredLocales);
-//          }
-//        catch (UnsupportedEncodingException e)
-//          {
-//            throw new RuntimeException(e);
-//          }
+        try 
+          {
+            return new DefaultRequest(UriUtilities.urlDecodedPath(relativeUri), parametersMap, preferredLocales);
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            throw new RuntimeException(e);
+          }
       }
     
     /*******************************************************************************************************************
