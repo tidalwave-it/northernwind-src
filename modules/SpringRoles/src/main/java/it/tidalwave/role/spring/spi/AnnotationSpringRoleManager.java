@@ -93,7 +93,7 @@ public class AnnotationSpringRoleManager implements RoleManager
     @Override @Nonnull
     public <RoleType> List<? extends RoleType> findRoles (final @Nonnull Object owner, final @Nonnull Class<RoleType> roleClass)
       {
-        log.debug("findRoles({}, {})", owner, roleClass);
+        log.trace("findRoles({}, {})", owner, roleClass);
         
         final Class<?> ownerClass = owner.getClass();
         final List<RoleType> roles = new ArrayList<RoleType>();
@@ -118,7 +118,7 @@ public class AnnotationSpringRoleManager implements RoleManager
               }
           }
         
-        log.debug(">>>> returning: {}", roles);
+        log.trace(">>>> returning: {}", roles);
         
         return roles;
       }
@@ -186,11 +186,11 @@ public class AnnotationSpringRoleManager implements RoleManager
      ******************************************************************************************************************/
     public void logRoles()
       {
-        log.info("Configured roles:");
+        log.debug("Configured roles:");
         
         for (final Entry<ClassAndRole, List<Class<?>>> entry : roleMapByOwnerClass.entrySet())
           {
-            log.info(">>>>{} -> {}", entry.getKey(), entry.getValue());
+            log.debug(">>>> {} -> {}", entry.getKey(), entry.getValue());
           }
       }
   }
