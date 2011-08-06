@@ -47,7 +47,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  * The default implementation of {@link ModelFactory}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id: $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class DefaultModelFactory implements ModelFactory

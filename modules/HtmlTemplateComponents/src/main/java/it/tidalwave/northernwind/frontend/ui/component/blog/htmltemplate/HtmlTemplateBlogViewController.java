@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * PROJECT NAME
- * PROJECT COPYRIGHT
+ * NorthernWind - lightweight CMS
+ * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -16,8 +16,8 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: PROJECT URL
- * SCM: PROJECT SCM
+ * WWW: http://northernwind.java.net
+ * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
@@ -40,7 +40,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id: $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController

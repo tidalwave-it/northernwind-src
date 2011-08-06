@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id: $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class MediaLinkMacroExpander extends MacroExpander

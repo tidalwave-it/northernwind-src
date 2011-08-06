@@ -30,7 +30,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id: $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class NodeLinkMacroExpander extends MacroExpander

@@ -33,7 +33,7 @@ import it.tidalwave.northernwind.core.model.Site;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id: $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @ThreadSafe
