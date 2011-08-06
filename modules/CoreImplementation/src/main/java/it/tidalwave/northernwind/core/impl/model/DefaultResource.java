@@ -74,7 +74,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key) 
           throws NotFoundException, IOException
           {
-            return (Type)getFileBasedProperty(key.stringValue()); // FIXME: use also Id
+            return (Type)getFileBasedProperty(key.stringValue()); // FIXME: use also Id for SiteNode?
           }
       };
     
