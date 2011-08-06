@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Locale;
 import java.io.InputStream;
 import java.io.IOException;
@@ -48,11 +49,14 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude={"site", "localeRequestManager", "properties", "propertyResolver"})
+@Configurable @Slf4j @ToString(exclude={"localeRequestManager", "macroExpander", "properties", "propertyResolver"})
 /* package */ class DefaultResource implements Resource
   {
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
+    
+    @Inject @Nonnull
+    private Provider<MacroSetExpander> macroExpander;
     
     @Nonnull @Getter
     private final FileObject file;    
@@ -108,9 +112,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         
         final FileObject propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
-        final MacroSetExpander macroExpander = new MacroSetExpander(); // FIXME: inject
         
-        return macroExpander.filter(propertyFile.asText());
+        return macroExpander.get().filter(propertyFile.asText());
       }  
     
     /*******************************************************************************************************************

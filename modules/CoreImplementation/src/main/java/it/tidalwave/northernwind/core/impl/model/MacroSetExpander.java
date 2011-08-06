@@ -22,9 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -32,16 +33,12 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable
 public class MacroSetExpander 
   {
-    private final List<MacroExpander> filters = new ArrayList<MacroExpander>();
+    @Inject @Nonnull 
+    private List<MacroExpander> filters;
 
-    public MacroSetExpander() 
-      {
-        filters.add(new MediaLinkMacroExpander()); // FIXME: inject
-        filters.add(new NodeLinkMacroExpander());
-      }
-        
     @Nonnull
     public String filter (@Nonnull String text) 
       {

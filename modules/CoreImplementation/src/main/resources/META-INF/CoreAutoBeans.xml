@@ -84,6 +84,15 @@
     <bean id="modelFactory"
           class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
           
+    <bean id="macroSetExpander"
+          class="it.tidalwave.northernwind.core.impl.model.MacroSetExpander" />
+          
+    <bean id="mediaLinkMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.model.MediaLinkMacroExpander" />
+          
+    <bean id="nodeLinkMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.model.NodeLinkMacroExpander" />
+          
     <bean id="site" 
           class="it.tidalwave.northernwind.core.impl.model.DefaultSite" >
         <property name="documentPath" value="${nw.documentPath}" />
