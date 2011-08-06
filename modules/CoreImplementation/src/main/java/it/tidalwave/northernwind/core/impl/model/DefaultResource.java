@@ -120,8 +120,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 //        final STGroup g = new STGroupString("",
 //                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
 //                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        text = text.replaceAll("\\$mediaLink\\(relativeUri=([^)]*)\\)\\$", site.getContextPath() + "/media/$1");
-        text = text.replaceAll("\\$nodeLink\\(relativeUri=([^)]*)\\)\\$", site.getContextPath() + "/$1");
+        text = text.replaceAll("\\$mediaLink\\(relativeUri=(/[^)]*)\\)\\$", site.getContextPath() + "/media$1");
+        text = text.replaceAll("\\$nodeLink\\(relativeUri=(/[^)]*)\\)\\$", site.getContextPath() + "$1");
         
         return text;
       }  
