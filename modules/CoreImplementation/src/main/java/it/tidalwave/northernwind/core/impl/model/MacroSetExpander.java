@@ -22,11 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.util.NotFoundException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import org.openide.util.Exceptions;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -40,7 +38,7 @@ import java.util.regex.Pattern;
  *
  **********************************************************************************************************************/
 @Configurable
-public class MacroExpander 
+public class MacroSetExpander 
   {
     @Inject @Nonnull
     private Site site;

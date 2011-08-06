@@ -108,7 +108,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         
         final FileObject propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
-        final MacroExpander macroExpander = new MacroExpander(); // FIXME: inject
+        final MacroSetExpander macroExpander = new MacroSetExpander(); // FIXME: inject
         
         return macroExpander.filter(propertyFile.asText());
       }  
