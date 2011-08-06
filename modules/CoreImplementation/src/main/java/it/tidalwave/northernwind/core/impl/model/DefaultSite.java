@@ -86,12 +86,12 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
           }
       };
     
-    private static final FileFilter FILE_FILTER = new FileFilter()
+    private static final FileFilter ALL_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull FileObject file) 
           {
-            return file.isData();
+            return true;
           }
       };
     
@@ -168,12 +168,15 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               }
           });
         
-        traverse(mediaFolder, FILE_FILTER, new FileVisitor() 
+        traverse(mediaFolder, ALL_FILTER, new FileVisitor() 
           {
             @Override
             public void visit (final @Nonnull FileObject file, final @Nonnull String relativePath) 
               {
-                mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)), modelFactory.createMedia(file));
+                if (file.isData())
+                  {
+                    mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)), modelFactory.createMedia(file));
+                  }
               }
           });
         
