@@ -33,5 +33,7 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface NodeContainerViewController 
   {  
+    public static final Key<String> PROPERTY_TITLE_PREFIX = new Key<String>("titlePrefix");
+    
     public static final Key<List<String>> PROPERTY_SCREEN_STYLE_SHEETS = new Key<List<String>>("screenStyleSheets");
   }

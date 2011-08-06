@@ -31,6 +31,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -70,8 +71,34 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @PostConstruct
     /* package */ void initialize() 
       {
+        try
+          {
+            // FIXME: use a loop, should catch exception for each property
+            view.addAttribute("titlePrefix", siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE_PREFIX, ""));
+            view.addAttribute("description", siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DESCRIPTION, ""));
+            view.addAttribute("title", siteNode.getProperties().getProperty(PROPERTY_TITLE, ""));
+            view.addAttribute("screenCssSection", computeScreenCssSection());
+          }
+        catch (IOException e)
+          {
+            log.error("", e);
+          }        
+        catch (NotFoundException e)
+          {
+            // ok, no css  
+          }        
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Initializes this controller.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeScreenCssSection() 
+      {
         final StringBuilder builder = new StringBuilder();
-        
+    
         try
           {
             final String contextPath = site.getContextPath();
@@ -80,17 +107,16 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
               {
                 builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
               }
-
-            view.setScreenCssSection(builder.toString());
           }
         catch (IOException e)
           {
-            log.warn("", e);
-            // ok, no css  
+            log.error("", e);
           }        
         catch (NotFoundException e)
           {
             // ok, no css  
-          }        
+          }      
+        
+        return builder.toString();
       }
   }

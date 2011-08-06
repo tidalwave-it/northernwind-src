@@ -59,7 +59,8 @@ public class VaadinNodeContainerView extends VerticalLayout implements NodeConta
       }
 
     @Override
-    public void setScreenCssSection (final @Nonnull String screenCssSection)
+    public void addAttribute (final @Nonnull String name, final @Nonnull String value)
       {
+        // TODO
       }
   }  

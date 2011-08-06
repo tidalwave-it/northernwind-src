@@ -38,6 +38,8 @@ public final class Properties
   {
     public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
     
+    public static final Key<String> PROPERTY_DESCRIPTION = new Key<String>("description");
+    
     public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("fullText.html");
     // FIXME: those should be Key<DateTime>
     public static final Key<String> PROPERTY_CREATION_DATE = new Key<String>("creationDateTime"); 
