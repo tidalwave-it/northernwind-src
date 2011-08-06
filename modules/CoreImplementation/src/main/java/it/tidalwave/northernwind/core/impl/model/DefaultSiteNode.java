@@ -140,7 +140,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                         p += "/";  
                       }
                     
-                    relativeUri = p + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI, URLDecoder.decode(file.getNameExt(), "UTF-8"));
+                    final String localRelativePathPortion = URLDecoder.decode(file.getNameExt(), "UTF-8");                    
+                    relativeUri = p + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI, localRelativePathPortion);
                   }
                 // END FIXME
               } 
