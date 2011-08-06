@@ -106,8 +106,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             try 
               {
                 // FIXME: this works, but it's messy code!!!
-                final FileObject parentFile = resource.getFile().getParent();
-                log.debug("Compute relativeUri for {}: parentFile: {}", resource.getFile(), parentFile);
+                final FileObject file = resource.getFile();
+                final FileObject parentFile = file.getParent();
+                log.debug("Compute relativeUri for {}: parentFile: {}", file, parentFile);
                 String parentFilePath = UriUtilities.urlDecodedPath(parentFile.getPath());
                 
                 if (!parentFilePath.startsWith("/"))
@@ -117,7 +118,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   
                 log.debug(">>>> parent path *{}*", parentFilePath);
                 
-                if ("structure".equals(resource.getFile().getPath()))
+                if ("structure".equals(file.getPath()))
                   {
                     relativeUri = "/";  
                   }
@@ -139,7 +140,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                         p += "/";  
                       }
                     
-                    relativeUri = p + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI, URLDecoder.decode(resource.getFile().getNameExt(), "UTF-8"));
+                    relativeUri = p + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI, URLDecoder.decode(file.getNameExt(), "UTF-8"));
                   }
                 // END FIXME
               } 
