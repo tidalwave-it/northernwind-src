@@ -185,6 +185,12 @@ public class Main
                     {
                       String fixedPath = path.replaceAll("/$", "") + "/";
                       log.info("Processing {} ...", fixedPath);
+                      
+                      if (fixedPath.equals("/blueBill/License/"))
+                        {
+                          fixedPath = "/blueBill/Mobile/License/";   
+                        }
+                      
                       fixedPath = fixedPath.replaceAll("^/blueBill/", "");
                       
                       if (fixedPath.startsWith("Mobile"))
@@ -240,8 +246,14 @@ public class Main
 
         while (matcherGetPageUrl.find())
           {
-            final String r = matcherGetPageUrl.group(1);
-            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativeUri=" + r + ")\\$");
+            String r = matcherGetPageUrl.group(1);
+            
+            if ("250".equals(r))
+              {
+                r = "Getting started/Android"; // FIXME: retrieve ids from the import
+              }
+            
+            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativeUri=/" + r + ")\\$");
           }
         
         matcherGetPageUrl.appendTail(buffer);
@@ -252,7 +264,7 @@ public class Main
         while (matcherGetInlineAssetUrl.find())
           {
             final String r = assetFileNameMapByKey.get(matcherGetInlineAssetUrl.group(2));
-            matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativeUri=" + r + ")\\$");
+            matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativeUri=/" + r + ")\\$");
           }
         
         matcherGetInlineAssetUrl.appendTail(buffer);
