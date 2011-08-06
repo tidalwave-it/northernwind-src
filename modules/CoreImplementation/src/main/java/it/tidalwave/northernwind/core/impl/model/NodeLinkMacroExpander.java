@@ -37,7 +37,7 @@ public class NodeLinkMacroExpander extends MacroExpander
   {
     public NodeLinkMacroExpander()
       {
-        super("\\$nodeLink\\(relativeUri=(/[^)]*)\\)\\$");
+        super("\\$nodeLink\\(relativePath=(/[^)]*)\\)\\$");
       } 
     
     @Override @Nonnull
@@ -45,7 +45,8 @@ public class NodeLinkMacroExpander extends MacroExpander
       {
         try 
           {
-            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(matcher.group(1)).result();
+            final String relativePath = matcher.group(1);
+            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
             return contextPath + siteNode.getRelativeUri();
           }
         catch (NotFoundException e) 

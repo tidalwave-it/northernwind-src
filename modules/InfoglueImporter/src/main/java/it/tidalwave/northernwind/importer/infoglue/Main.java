@@ -253,7 +253,7 @@ public class Main
                 r = "Getting started/Android"; // FIXME: retrieve ids from the import
               }
             
-            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativeUri=/" + r + ")\\$");
+            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativePath=/" + r + ")\\$");
           }
         
         matcherGetPageUrl.appendTail(buffer);
@@ -264,7 +264,7 @@ public class Main
         while (matcherGetInlineAssetUrl.find())
           {
             final String r = assetFileNameMapByKey.get(matcherGetInlineAssetUrl.group(2));
-            matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativeUri=/" + r + ")\\$");
+            matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativePath=/" + r + ")\\$");
           }
         
         matcherGetInlineAssetUrl.appendTail(buffer);
