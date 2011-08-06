@@ -36,7 +36,6 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
@@ -52,9 +51,6 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 @Configurable @Slf4j @ToString(exclude={"site", "localeRequestManager", "properties", "propertyResolver"})
 /* package */ class DefaultResource implements Resource
   {
-    @Inject @Nonnull
-    private Site site;
-    
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
     
@@ -112,18 +108,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         
         final FileObject propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
-        String text = propertyFile.asText();
-
-//        // FIXME: this should be done in a specific postprocessor registered only for Content   
-//        // FIXME: and do this with StringTemplate - remember to escape $'s in the source
-//        final String c = site.getContextPath();
-//        final STGroup g = new STGroupString("",
-//                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
-//                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        text = text.replaceAll("\\$mediaLink\\(relativeUri=(/[^)]*)\\)\\$", site.getContextPath() + "/media$1");
-        text = text.replaceAll("\\$nodeLink\\(relativeUri=(/[^)]*)\\)\\$", site.getContextPath() + "$1");
+        final MacroExpander macroExpander = new MacroExpander(); // FIXME: inject
         
-        return text;
+        return macroExpander.filter(propertyFile.asText());
       }  
     
     /*******************************************************************************************************************
