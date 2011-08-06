@@ -77,7 +77,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String contextPath = site.getContextPath();
 
-            for (final String uri : siteNode.getProperties(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+            for (final String uri : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
                 builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
               }

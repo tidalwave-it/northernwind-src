@@ -77,7 +77,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     /*******************************************************************************************************************
      *
      *
-     ******************************************************************************************************************/
+     *******************************************************************************************************top***********/
     public DefaultResource (final @Nonnull FileObject file) 
       {
         this.file = file;
@@ -98,7 +98,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties getProperties (final @Nonnull Id id)
+    public ResourceProperties getPropertyGroup (final @Nonnull Id id)
       throws NotFoundException
       {
         return properties.getGroup(id);   

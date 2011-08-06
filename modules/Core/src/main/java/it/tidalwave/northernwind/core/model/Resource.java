@@ -29,6 +29,9 @@ import org.openide.filesystems.FileObject;
 
 /***********************************************************************************************************************
  *
+ * A resource is the basic entity of NorthernWind. It's something located in the filesystem and represented by a file
+ * or a folder, with a bag of properties.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -36,10 +39,10 @@ import org.openide.filesystems.FileObject;
 public interface Resource 
   {
     public static final Class<Resource> Resource = Resource.class;
-    
+     
     /*******************************************************************************************************************
      *
-     * Returns the file backing this resource.
+     * Returns the file backing this resource. It can be a plain file or a directory in function of the resource type.
      * 
      * @return  the file
      *
@@ -47,10 +50,26 @@ public interface Resource
     @Nonnull
     public FileObject getFile();
     
+    /*******************************************************************************************************************
+     *
+     * Returns the properties of this resource.
+     * 
+     * @return  the properties
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getProperties();
     
+    /*******************************************************************************************************************
+     *
+     * Returns the property group of this resources with the given id.
+     * 
+     * @param   id                  the id of the property group
+     * @return                      the properties
+     * @throws  NotFoundException   if no property group with that id exists
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties getProperties (@Nonnull Id id)
+    public ResourceProperties getPropertyGroup (@Nonnull Id id)
       throws NotFoundException;
   }

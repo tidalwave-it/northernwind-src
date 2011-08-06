@@ -76,7 +76,7 @@ public class DefaultMenuViewController implements MenuViewController
      {
         try 
           {
-            for (final String relativePath : siteNode.getProperties(view.getId()).getProperty(PROPERTY_LINKS))
+            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_LINKS))
               {  
                 try
                   {
