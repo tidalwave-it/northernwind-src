@@ -109,14 +109,14 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                 final FileObject file = resource.getFile();
                 final FileObject parentFile = file.getParent();
                 log.debug("Compute relativeUri for {}: parentFile: {}", file, parentFile);
-                String parentFilePath = UriUtilities.urlDecodedPath(parentFile.getPath());
+                String parentRelativePath = UriUtilities.urlDecodedPath(parentFile.getPath());
                 
-                if (!parentFilePath.startsWith("/"))
+                if (!parentRelativePath.startsWith("/"))
                   {
-                    parentFilePath = "/" + parentFilePath;  
+                    parentRelativePath = "/" + parentRelativePath;  
                   }
                   
-                log.debug(">>>> parent path *{}*", parentFilePath);
+                log.debug(">>>> parent path *{}*", parentRelativePath);
                 
                 if ("structure".equals(file.getPath()))
                   {
@@ -124,14 +124,14 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
                 else
                   {
-                    parentFilePath = parentFilePath.replaceAll("^/structure", "");       
+                    parentRelativePath = parentRelativePath.replaceAll("^/structure", "");       
                     
-                    if (parentFilePath.equals(""))
+                    if (parentRelativePath.equals(""))
                       {
-                        parentFilePath = "/";  
+                        parentRelativePath = "/";  
                       }
                     
-                    final SiteNode parentSiteNode = site.find(SiteNode.class).withRelativePath(parentFilePath).result();
+                    final SiteNode parentSiteNode = site.find(SiteNode.class).withRelativePath(parentRelativePath).result();
                     log.debug(">>>> found {}", parentSiteNode);
                     String p = parentSiteNode.getRelativeUri();
                     
