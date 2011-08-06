@@ -135,7 +135,8 @@ public class HtmlHolder
     
     private void loadTemplate()
       throws IOException
-      {
+      { 
+        // FIXME: this should be done only once...
         final String templateName = getClass().getSimpleName() + ".html";
         
         try
