@@ -35,5 +35,6 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface MenuViewController
   {
+    /** A list of relative paths pointing to the {@link SiteNode}s that must be linked from a menu. */
     public static final Key<List<String>> PROPERTY_LINKS = new Key<List<String>>("links"); 
   } 

@@ -45,7 +45,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.*;
 @Configurable @Scope("session") @Slf4j
 public class DefaultMenuViewController implements MenuViewController
   {    
-    @Nonnull @Inject
+    @Inject @Nonnull
     private Site site;
     
     @Nonnull
@@ -81,7 +81,7 @@ public class DefaultMenuViewController implements MenuViewController
                 try
                   {
                     final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
-                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROP_NAVIGATION_TITLE, "no nav. title");
+                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL, "no nav. label");
                     view.addLink(navigationTitle, targetSiteNode.getRelativeUri());                
                   }
                 catch (IOException e)

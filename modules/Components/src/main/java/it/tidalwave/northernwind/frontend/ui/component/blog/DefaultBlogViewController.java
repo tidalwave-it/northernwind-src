@@ -54,10 +54,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
   {
     private static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
     
-    @Nonnull @Inject
+    @Inject @Nonnull
     private Site site;
     
-    @Nonnull @Inject
+    @Inject @Nonnull
     protected RequestLocaleManager requestLocaleManager;
     
     @Nonnull

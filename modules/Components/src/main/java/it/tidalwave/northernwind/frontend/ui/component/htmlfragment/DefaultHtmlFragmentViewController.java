@@ -46,7 +46,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public class DefaultHtmlFragmentViewController implements HtmlFragmentViewController
   {
-    @Nonnull @Inject
+    @Inject @Nonnull
     private Site site;
     
     private final HtmlFragmentView view;

@@ -38,8 +38,11 @@ public interface SiteNode extends Resource
   {
     public static final Class<SiteNode> SiteNode = SiteNode.class;
     
-    public static final Key<String> PROP_NAVIGATION_TITLE = new Key<String>("navigationTitle"); // FIXME: PROPERTY_
+    /** The label used for creating navigation links to this {@code SiteNode}. */
+    public static final Key<String> PROPERTY_NAVIGATION_LABEL = new Key<String>("navigationLabel");
     
+    /** The local portion of relativeUri by which this {@code SiteNode} is exposed to the web. If this property is not 
+     *  defined, the local portion of the relative path is used. */
     public static final Key<String> PROPERTY_EXPOSED_URI = new Key<String>("exposedUri");
     
     /*******************************************************************************************************************

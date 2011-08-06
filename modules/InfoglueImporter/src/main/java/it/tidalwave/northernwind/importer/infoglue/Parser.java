@@ -164,7 +164,7 @@ public abstract class Parser
 
         if (pdt != null)
           {
-            properties.put(new Key<Object>("publishDateTime"), pdt);  
+            properties.put(new Key<Object>("publishingDateTime"), pdt);  
           }
         
         properties.put(new Key<Object>("creationDateTime"), creationTime);

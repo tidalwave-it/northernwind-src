@@ -87,6 +87,11 @@ public class StructureParser extends Parser
                     propertyValue = propertyValue.replace("Blog___News", "Blog").toLowerCase().replaceAll("_", "-");
                   } 
                 
+                else if ("NavigationTitle".equals(propertyName))
+                  {
+                    propertyName = "navigationLabel";
+                  } 
+                
                 if (!"MetaInfo".equals(propertyName))
                   {
                     properties.put(new Key<Object>(toLower(propertyName)), propertyValue); 

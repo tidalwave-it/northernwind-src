@@ -43,7 +43,7 @@ import com.vaadin.ui.Link;
     @Nonnull
     private final MenuView view;
     
-    @Nonnull @Inject
+    @Inject @Nonnull
     private Site site;
     
     public VaadinMenuViewHelper (final @Nonnull MenuView view)

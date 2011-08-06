@@ -47,7 +47,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitleViewController
   {
-    @Nonnull @Inject
+    @Inject @Nonnull
     private Site site;
     
     private final HtmlTextWithTitleView view;
@@ -81,7 +81,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
           {
             final StringBuilder htmlBuilder = new StringBuilder();
             
-            for (final String relativePath : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
+            for (final String relativePath   : siteNode.getProperties(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
                 htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");

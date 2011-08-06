@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
     @Nonnull
     private final MenuView view;
     
-    @Nonnull @Inject
+    @Inject @Nonnull
     private Site site;
     
     public HtmlTemplateMenuViewHelper (final @Nonnull MenuView view)
