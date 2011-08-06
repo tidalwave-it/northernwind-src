@@ -56,8 +56,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, 
-                                               final @Nonnull SiteNode siteNode) 
+    public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, final @Nonnull SiteNode siteNode) 
       {
         this.view = view;
         this.siteNode = siteNode;
