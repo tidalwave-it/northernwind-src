@@ -22,9 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.Site;
 
 /***********************************************************************************************************************
  *
@@ -32,31 +36,43 @@ import javax.annotation.Nonnull;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class MacroSetExpander 
+@Configurable(preConstruction=true) @ThreadSafe
+public class MacroExpander 
   {
-    private final List<MacroExpander> filters = new ArrayList<MacroExpander>();
-
-    public MacroSetExpander() 
-      {
-        filters.add(new MediaLinkMacroExpander()); // FIXME: inject
-        filters.add(new NodeLinkMacroExpander());
-      }
-        
+    @Inject @Nonnull
+    protected Site site;
+    
     @Nonnull
-    public String filter (@Nonnull String text) 
+    protected String contextPath;
+    
+    @Nonnull
+    private final Pattern pattern;
+    
+    public MacroExpander (final @Nonnull String regexp)
       {
-//        // FIXME: do this with StringTemplate - remember to escape $'s in the source
-//        final String c = site.getContextPath();
-//        final STGroup g = new STGroupString("",
-//                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
-//                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        String result = text;
+        pattern = Pattern.compile(regexp);
+        contextPath = site.getContextPath();
+      }
+    
+    @Nonnull
+    public String filter (final @Nonnull String text)
+      {
+        final Matcher matcher = pattern.matcher(text);
+        final StringBuffer buffer = new StringBuffer();
         
-        for (final MacroExpander filter : filters)
+        while (matcher.find())
           {
-            result = filter.filter(result);
+            matcher.appendReplacement(buffer, filter(matcher));
           }
         
-        return result;
+        matcher.appendTail(buffer);
+        
+        return buffer.toString();
+      }
+    
+    @Nonnull
+    protected String filter (final @Nonnull Matcher matcher)
+      {
+        return "";  
       }
   }

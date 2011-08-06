@@ -22,9 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.Nonnull;
+import java.util.regex.Matcher;
 
 /***********************************************************************************************************************
  *
@@ -32,31 +31,18 @@ import javax.annotation.Nonnull;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class MacroSetExpander 
+public class MediaLinkMacroExpander extends MacroExpander
   {
-    private final List<MacroExpander> filters = new ArrayList<MacroExpander>();
-
-    public MacroSetExpander() 
+    public MediaLinkMacroExpander()
       {
-        filters.add(new MediaLinkMacroExpander()); // FIXME: inject
-        filters.add(new NodeLinkMacroExpander());
-      }
-        
-    @Nonnull
-    public String filter (@Nonnull String text) 
+        super("\\$mediaLink\\(relativeUri=(/[^)]*)\\)\\$");
+      } 
+    
+    @Override @Nonnull
+    protected String filter (final @Nonnull Matcher matcher)
       {
-//        // FIXME: do this with StringTemplate - remember to escape $'s in the source
-//        final String c = site.getContextPath();
-//        final STGroup g = new STGroupString("",
-//                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
-//                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        String result = text;
-        
-        for (final MacroExpander filter : filters)
-          {
-            result = filter.filter(result);
-          }
-        
-        return result;
+        final String relativeUri = matcher.group(1);
+        return contextPath + "/media" + relativeUri;
+//            final String relativeUri = site.find(Media.class).withRelativePath(matcher1.group(1)).result().get();
       }
   }

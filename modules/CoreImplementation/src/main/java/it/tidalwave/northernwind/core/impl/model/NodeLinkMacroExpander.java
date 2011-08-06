@@ -22,9 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.Nonnull;
+import java.util.regex.Matcher;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -32,31 +33,25 @@ import javax.annotation.Nonnull;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class MacroSetExpander 
+public class NodeLinkMacroExpander extends MacroExpander
   {
-    private final List<MacroExpander> filters = new ArrayList<MacroExpander>();
-
-    public MacroSetExpander() 
+    public NodeLinkMacroExpander()
       {
-        filters.add(new MediaLinkMacroExpander()); // FIXME: inject
-        filters.add(new NodeLinkMacroExpander());
-      }
-        
-    @Nonnull
-    public String filter (@Nonnull String text) 
+        super("\\$nodeLink\\(relativeUri=(/[^)]*)\\)\\$");
+      } 
+    
+    @Override @Nonnull
+    protected String filter (final @Nonnull Matcher matcher)
       {
-//        // FIXME: do this with StringTemplate - remember to escape $'s in the source
-//        final String c = site.getContextPath();
-//        final STGroup g = new STGroupString("",
-//                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
-//                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        String result = text;
-        
-        for (final MacroExpander filter : filters)
+        try 
           {
-            result = filter.filter(result);
+            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(matcher.group(1)).result();
+            return contextPath + siteNode.getRelativeUri();
           }
-        
-        return result;
+        catch (NotFoundException e) 
+          {
+            // FIXME
+            return "";
+          }
       }
   }
