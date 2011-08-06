@@ -22,10 +22,16 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.Media;
+import it.tidalwave.util.NotFoundException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import org.openide.util.Exceptions;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /***********************************************************************************************************************
  *
@@ -47,9 +53,43 @@ public class MacroExpander
 //        final STGroup g = new STGroupString("",
 //                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
 //                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        text = text.replaceAll("\\$mediaLink\\(relativeUri=(/[^)]*)\\)\\$", site.getContextPath() + "/media$1");
-        text = text.replaceAll("\\$nodeLink\\(relativeUri=(/[^)]*)\\)\\$", site.getContextPath() + "$1");
+        StringBuffer buffer = new StringBuffer(text);
         
-        return text;
+        final Pattern pattern1 = Pattern.compile("\\$mediaLink\\(relativeUri=(/[^)]*)\\)\\$");
+        final Matcher matcher1 = pattern1.matcher(buffer.toString());
+        buffer = new StringBuffer();
+        
+        while (matcher1.find())
+          {
+            final String relativeUri = matcher1.group(1);
+//            final String relativeUri = site.find(Media.class).withRelativePath(matcher1.group(1)).result().get();
+            matcher1.appendReplacement(buffer, site.getContextPath() + "/media" + relativeUri);
+          }
+        
+        matcher1.appendTail(buffer);
+
+        
+        final Pattern pattern2 = Pattern.compile("\\$nodeLink\\(relativeUri=(/[^)]*)\\)\\$");
+        final Matcher matcher2 = pattern2.matcher(buffer.toString());
+        buffer = new StringBuffer();
+        
+        while (matcher2.find())
+          {
+            try 
+              {
+                final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(matcher2.group(1)).result();
+                final String relativeUri = siteNode.getRelativeUri();
+                matcher2.appendReplacement(buffer, site.getContextPath() + relativeUri);
+//                matcher2.appendReplacement(buffer, site.getContextPath() + "/" + relativeUri);
+              }
+            catch (NotFoundException e) 
+              {
+                // FIXME
+              }
+          }
+        
+        matcher2.appendTail(buffer);
+        
+        return buffer.toString();
       }
   }
