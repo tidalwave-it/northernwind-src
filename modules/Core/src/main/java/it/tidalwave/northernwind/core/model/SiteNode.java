@@ -30,6 +30,8 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  *
  * A node of the site, mapped to a given URL.
  * 
+ * @stereotype  Model
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
