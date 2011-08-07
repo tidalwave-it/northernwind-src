@@ -97,30 +97,30 @@ public abstract class Parser
                   throw new RuntimeException("CDATA!");
 
                 case XMLEvent.END_DOCUMENT:
-                  log.debug("END DOCUMENT");
+                  log.trace("END DOCUMENT");
                   finish();
                   break;
 
                 case XMLEvent.ATTRIBUTE:
-                  log.debug("ATTRIBUTE     {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("ATTRIBUTE     {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
                   processAttribute(reader.getName().getLocalPart(), reader);
                   break;
 
                 case XMLEvent.START_ELEMENT:
-                  log.debug("START ELEMENT {} {}", eventType, reader.getName());
+                  log.trace("START ELEMENT {} {}", eventType, reader.getName());
                   builder.delete(0, builder.length());
                   processStartElement(reader.getName().getLocalPart(), reader);
                   indent++;
                   break;
 
                 case XMLEvent.END_ELEMENT:
-                  log.debug("END ELEMENT   {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("END ELEMENT   {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
                   indent--;
                   processEndElement(reader.getName().getLocalPart());
                   break;
 
                 default:
-                  log.debug("DEFAULT       {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("DEFAULT       {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
                   break;
               }
           }
