@@ -71,10 +71,10 @@ public class ResourceManager
         if (commands == null)
           {
             commands = new ArrayList<AddResourceCommand>();
+            commandMapByDateTime.put(command.getDateTime(), commands);
           }
         
         commands.add(command);
-        commandMapByDateTime.put(command.getDateTime(), commands);
       }
 
     /*******************************************************************************************************************
