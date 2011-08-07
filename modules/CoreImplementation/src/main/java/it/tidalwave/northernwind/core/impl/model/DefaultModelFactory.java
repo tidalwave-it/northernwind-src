@@ -127,7 +127,8 @@ public class DefaultModelFactory implements ModelFactory
     @Override @Nonnull
     public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest)
       {
-        final String relativeUri = "/" + httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length() + 1);
+        String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
+        relativeUri = relativeUri.equals("") ? "/" : relativeUri;
         return createRequest().withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())
                               .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 

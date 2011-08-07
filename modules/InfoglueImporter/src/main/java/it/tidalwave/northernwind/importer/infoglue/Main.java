@@ -28,8 +28,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
+import sun.misc.BASE64Decoder;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -39,8 +39,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import sun.misc.BASE64Decoder;
-import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -51,16 +49,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Main 
   {
-    private static final String REGEXP_getPageUrl = "\\$templateLogic\\.getPageUrl\\(([0-9]*)\\s*,\\s*\\$templateLogic\\.languageId\\s*,\\s*-1\\)";
-    private static final String REGEXP_getInlineAssetUrl = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*)\\s*,\\s*\"([^\"]*)\"\\)";
-    private static final Pattern PATTERN_getPageUrl = Pattern.compile(REGEXP_getPageUrl);
-    private static final Pattern PATTERN_getInlineAssetUrl = Pattern.compile(REGEXP_getInlineAssetUrl);
-    
     private static ApplicationContext applicationContext;
         
     public static final File hgFolder = new File("target/root");      
     
-    private static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
+    /* package */ static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
     
     private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendYear(4, 4)
                                                                                      .appendLiteral("-")
@@ -192,13 +185,13 @@ public class Main
                         }
                       
                       fixedPath = fixedPath.replaceAll("^/blueBill/", "");
+                      final String content = builder.toString().replace("cdataEnd", "]]>");
                       
                       if (fixedPath.startsWith("Mobile"))
                         {
                           fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
-                          final String xml = replaceMacros(builder.toString().replace("cdataEnd", "]]>"));
                           log.info("PBD " + publishDateTime + " " + fixedPath);
-                          new ContentParser(xml, modifiedDateTime, publishDateTime, fixedPath, languageCode).process();
+                          new ContentParser(content, modifiedDateTime, publishDateTime, fixedPath, languageCode).process();
                         }
                       
                       else if (fixedPath.startsWith("Meta+info+folder/blueBill/Mobile"))
@@ -209,8 +202,7 @@ public class Main
                           fixedPath = fixedPath.replaceAll("_Standard\\+Pages/$", "Override");
                           fixedPath = fixedPath.replaceAll("Meta\\+info\\+folder/blueBill/Mobile/", "structure/Override");
 //                          fixedPath = fixedPath.replaceAll("(^.*/)$", "$1layout_");
-                          final String xml = builder.toString().replace("cdataEnd", "]]>");
-                          new StructureParser(xml, modifiedDateTime, publishDateTime, fixedPath, languageCode).process(); 
+                          new StructureParser(content, modifiedDateTime, publishDateTime, fixedPath, languageCode).process(); 
                         }
 
                       publishDateTime = null;
@@ -236,39 +228,4 @@ public class Main
               }
           }
       }    
-    
-    @Nonnull
-    public static String replaceMacros (final @Nonnull String xml)
-      {
-        final Matcher matcherGetPageUrl = PATTERN_getPageUrl.matcher(xml);
-        
-        StringBuffer buffer = new StringBuffer();
-
-        while (matcherGetPageUrl.find())
-          {
-            String r = matcherGetPageUrl.group(1);
-            
-            if ("250".equals(r))
-              {
-                r = "Getting started/Android"; // FIXME: retrieve ids from the import
-              }
-            
-            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativePath=/" + r + ")\\$");
-          }
-        
-        matcherGetPageUrl.appendTail(buffer);
-
-        final Matcher matcherGetInlineAssetUrl = PATTERN_getInlineAssetUrl.matcher(buffer.toString());
-        buffer = new StringBuffer();
-        
-        while (matcherGetInlineAssetUrl.find())
-          {
-            final String r = assetFileNameMapByKey.get(matcherGetInlineAssetUrl.group(2));
-            matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativePath=/" + r + ")\\$");
-          }
-        
-        matcherGetInlineAssetUrl.appendTail(buffer);
-        
-        return buffer.toString();
-      }
   }

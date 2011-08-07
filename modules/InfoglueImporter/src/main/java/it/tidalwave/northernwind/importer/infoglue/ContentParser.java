@@ -23,19 +23,14 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import it.tidalwave.util.Key;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.w3c.tidy.Tidy;
+import static it.tidalwave.northernwind.importer.infoglue.Utilities.*;
 
 /***********************************************************************************************************************
  *
@@ -86,62 +81,22 @@ public class ContentParser extends Parser
           {
             if (HTML_PROPERTIES.contains(name))
               {
+                String xml = "";           
+                
                 if (name.toLowerCase().startsWith("template"))
                   {
-                    ResourceManager.addResource(new Resource(modifiedDateTime, 
-                                                             path + toLower(name) + "_" + language + ".html",
-                                                             builder.toString().getBytes("UTF-8")));
+                    xml = builder.toString();
                   }
                 else
                   {
-                    final Tidy tidy = new Tidy();
-                    tidy.setXHTML(true);
-                    tidy.setBreakBeforeBR(true);
-                    tidy.setForceOutput(true);
-                    tidy.setLogicalEmphasis(true);
-                    final StringReader r = new StringReader(builder.toString());
-                    final StringWriter w = new StringWriter();
-                    tidy.parse(r, w);                   
-                    r.close();
-                    w.close();
-
-                    final StringWriter sw = new StringWriter();
-                    final BufferedReader br = new BufferedReader(new StringReader(w.toString()));
-
-                    boolean inBody = false;
-
-                    for (;;)
-                      {
-                        final String s = br.readLine();
-
-                        if (s == null)
-                          {
-                            break;  
-                          }
-
-                        if ("</body>".equals(s))
-                          {
-                            break;  
-                          }
-
-                        if (inBody)
-                          {
-                            sw.write(s + "\n");  
-                          }
-
-                        if ("<body>".equals(s))
-                          {
-                            inBody = true;  
-                          }
-                      }
-
-                    sw.close();
-                    br.close();
-
-                    ResourceManager.addResource(new Resource(modifiedDateTime, 
-                                                             path + toLower(name) + "_" + language + ".html",
-                                                             sw.getBuffer().toString().getBytes("UTF-8")));
+                    // Macros must be expanded _before_ formatting HTML, since JTidy screws up Infoglue macro syntax.
+                    // OTOH, JTidy urlencodes the URLs, including our own macros... so we must fix them after the fact.
+                    xml = urlDecodeMacros(formatHtml(replaceMacros(builder.toString())));
                   }
+                
+                ResourceManager.addResource(new Resource(modifiedDateTime, 
+                                                         path + toLower(name) + "_" + language + ".html",
+                                                         xml.getBytes("UTF-8")));
               }
             else
               {

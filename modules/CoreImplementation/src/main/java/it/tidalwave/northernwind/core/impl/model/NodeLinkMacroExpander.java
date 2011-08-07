@@ -37,7 +37,7 @@ public class NodeLinkMacroExpander extends MacroExpander
   {
     public NodeLinkMacroExpander()
       {
-        super("\\$nodeLink\\(relativePath=(/[^)]*)\\)\\$");
+        super("\\$nodeLink\\(relativePath='(.*)'\\)\\$");
       } 
     
     @Override @Nonnull
