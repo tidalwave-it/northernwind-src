@@ -36,9 +36,9 @@ import org.joda.time.DateTime;
  **********************************************************************************************************************/
 public class ResourceManager 
   {
-    private static final SortedMap<DateTime, List<Resource>> resourceMapByDateTime = new TreeMap<DateTime, List<Resource>>();
+    private static final SortedMap<DateTime, List<AddResourceCommand>> commandMapByDateTime = new TreeMap<DateTime, List<AddResourceCommand>>();
     
-    private static final List<Resource> media = new ArrayList<Resource>();
+    private static final List<AddResourceCommand> media = new ArrayList<AddResourceCommand>();
     
     /*******************************************************************************************************************
      *
@@ -46,16 +46,16 @@ public class ResourceManager
     public static void addAndCommitResources() 
       throws Exception
       {        
-        for (final List<Resource> resources : resourceMapByDateTime.values())
+        for (final List<AddResourceCommand> resources : commandMapByDateTime.values())
           {
               // FIXME: first add all of them with the same timestamp, then commit all of them in a single round
-            for (final Resource resource : resources)
+            for (final AddResourceCommand resource : resources)
               {
                 resource.addAndCommit();  
               }
           }
         
-        for (final Resource resource : media) // FIXME: when they have a timestamp, manage like the others
+        for (final AddResourceCommand resource : media) // FIXME: when they have a timestamp, manage like the others
           {
             resource.addAndCommit();  
           }
@@ -64,23 +64,23 @@ public class ResourceManager
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void addResource (final Resource resource)
+    public static void addCommand (final AddResourceCommand command)
       {
-        List<Resource> resources = resourceMapByDateTime.get(resource.getDateTime());
+        List<AddResourceCommand> commands = commandMapByDateTime.get(command.getDateTime());
         
-        if (resources == null)
+        if (commands == null)
           {
-            resources = new ArrayList<Resource>();
+            commands = new ArrayList<AddResourceCommand>();
           }
         
-        resources.add(resource);
-        resourceMapByDateTime.put(resource.getDateTime(), resources);
+        commands.add(command);
+        commandMapByDateTime.put(command.getDateTime(), commands);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void addMedia (final Resource resource)
+    public static void addMedia (final AddResourceCommand resource)
       {
         media.add(resource);
       }

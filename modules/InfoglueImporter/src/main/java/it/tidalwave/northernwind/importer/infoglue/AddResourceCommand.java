@@ -37,7 +37,7 @@ import org.joda.time.DateTime;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class Resource
+public class AddResourceCommand
   {
     @Getter
     private final DateTime dateTime;

@@ -94,7 +94,7 @@ public class ContentParser extends Parser
                     xml = urlDecodeMacros(formatHtml(replaceMacros(builder.toString())));
                   }
                 
-                ResourceManager.addResource(new Resource(modifiedDateTime, 
+                ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
                                                          path + toLower(name) + "_" + language + ".html",
                                                          xml.getBytes("UTF-8")));
               }

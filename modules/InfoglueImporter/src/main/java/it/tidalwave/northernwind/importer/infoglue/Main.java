@@ -223,7 +223,7 @@ public class Main
                       String fixedPath = "content/media/" + assetFileName;
                       log.info("Processing {} ...", fixedPath);
                       // FIXME: find the timestamp
-                      ResourceManager.addMedia(new Resource(new DateTime(), fixedPath, decoder.decodeBuffer(builder.toString())));
+                      ResourceManager.addMedia(new AddResourceCommand(new DateTime(), fixedPath, decoder.decodeBuffer(builder.toString())));
                     }
                   
                   indent--;
