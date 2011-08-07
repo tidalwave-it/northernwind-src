@@ -168,9 +168,9 @@ public abstract class Parser
         
         properties.put(new Key<Object>("creationDateTime"), creationTime);
         properties.put(new Key<Object>("latestModificationDateTime"), modifiedDateTime);
-        final DefaultResourceProperties rp = new DefaultResourceProperties(new Id(""), properties, null);
+        final DefaultResourceProperties resourceProperties = new DefaultResourceProperties(new Id(""), properties, null);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        rp.as(Marshallable).marshal(baos);
+        resourceProperties.as(Marshallable).marshal(baos);
         baos.close();
         ResourceManager.addResource(new Resource(modifiedDateTime, path + fileName + ".xml", baos.toByteArray()));
       }
