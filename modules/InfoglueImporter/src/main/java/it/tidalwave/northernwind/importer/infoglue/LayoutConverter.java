@@ -83,7 +83,7 @@ public class LayoutConverter extends Parser
     protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
-        log.debug("processStartElement({})", elementName);
+        log.trace("processStartElement({})", elementName);
         
         if ("component".equals(elementName))
           {
@@ -202,7 +202,7 @@ public class LayoutConverter extends Parser
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
-        log.debug("processEndElement({})", name);
+        log.trace("processEndElement({})", name);
         
         if ("component".equals(name))
           {

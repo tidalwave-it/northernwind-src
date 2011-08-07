@@ -56,7 +56,7 @@ public class StructureParser extends Parser
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
-        log.debug("processEndElement({})", name);
+        log.trace("processEndElement({})", name);
         
         final String s = builder.toString();
         
@@ -104,7 +104,7 @@ public class StructureParser extends Parser
     protected void finish() 
       throws IOException
       {
-        log.debug("PROPERTIES: " + properties);
+        log.debug("properties: " + properties);
         dumpProperties("Properties_" + language);
       }
   }
