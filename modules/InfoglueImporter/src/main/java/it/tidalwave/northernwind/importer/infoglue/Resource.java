@@ -46,8 +46,6 @@ public class Resource
 
     private final byte[] contents;
 
-    // TODO: add an XML bag of properties (metadata.xml) with mime type and language list
-    // XML must be formatted and fields sorted
     public void addAndCommit() 
       throws Exception
       {
