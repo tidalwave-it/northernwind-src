@@ -48,14 +48,14 @@ public class ResourceManager
       {        
         for (final List<Resource> resources : resourceMapByDateTime.values())
           {
-              // FIXME: first add all of them, then commit all of them in a single round
+              // FIXME: first add all of them with the same timestamp, then commit all of them in a single round
             for (final Resource resource : resources)
               {
                 resource.addAndCommit();  
               }
           }
         
-        for (final Resource resource : media)
+        for (final Resource resource : media) // FIXME: when they have a timestamp, manage like the others
           {
             resource.addAndCommit();  
           }
