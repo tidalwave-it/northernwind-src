@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.importer.infoglue;
 import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
+import lombok.Getter;
 import org.joda.time.DateTime;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,6 +40,7 @@ class ExportContentsVersionConverter extends Converter
   {
     private int stateId;
 
+    @Getter 
     private DateTime modifiedDateTime;
  
     private String versionComment;
@@ -65,10 +67,11 @@ class ExportContentsVersionConverter extends Converter
     protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
-//        if ("children".equals(elementName))
-//          {
-//            new ExportContentsVersionConverter(this).process();  
-//          }
+        if ("digitalAssets".equals(elementName))
+          {
+            new ExportDigitalAssetsConverter(this).process();  
+            localLevel--; // FIXME: doesn't properly receive the endElement for this
+          }
       }
     
     @Override
