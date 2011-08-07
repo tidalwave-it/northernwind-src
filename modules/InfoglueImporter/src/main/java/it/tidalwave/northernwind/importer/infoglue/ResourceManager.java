@@ -48,7 +48,7 @@ public class ResourceManager
       {        
         for (final List<Resource> resources : resourceMapByDateTime.values())
           {
-              // FIXME: first add all of them, then commit all of them
+              // FIXME: first add all of them, then commit all of them in a single round
             for (final Resource resource : resources)
               {
                 resource.addAndCommit();  
