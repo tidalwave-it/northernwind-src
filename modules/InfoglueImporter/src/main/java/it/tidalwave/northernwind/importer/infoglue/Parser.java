@@ -27,12 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.io.StringReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.XMLEvent;
+import javax.xml.stream.XMLStreamException;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties;
 import it.tidalwave.util.Id;
@@ -47,16 +44,11 @@ import static it.tidalwave.role.Marshallable.Marshallable;
  *
  **********************************************************************************************************************/
 @Slf4j
-public abstract class Parser
+public abstract class Parser extends Converter
   {
     private static final Map<String, DateTime> creationTimeByPath = new HashMap<String, DateTime>();
     private static final Map<String, DateTime> publishingTimeByPath = new HashMap<String, DateTime>();
     
-    @Nonnull
-    private final String contents;
-
-    protected final StringBuilder builder = new StringBuilder();
-    protected int indent;
     protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
     protected final DateTime modifiedDateTime;        
@@ -66,81 +58,12 @@ public abstract class Parser
                    final @Nonnull String path, 
                    final @Nonnull DateTime modifiedDateTime,
                    final @Nonnull DateTime publishedDateTime) 
+      throws XMLStreamException 
       {
-        log.debug("Parsing {} ...", contents);
-        this.contents = contents;
+        super(contents);
         this.path = path;
         this.modifiedDateTime = modifiedDateTime;
         this.publishDateTime = publishedDateTime;
-      }
-
-    public void process() 
-      throws Exception
-      {
-        log.trace("process()");
-        final XMLInputFactory f = XMLInputFactory.newInstance();
-        final XMLStreamReader reader = f.createXMLStreamReader(new StringReader(contents));
-
-        while (reader.hasNext()) 
-          {
-            reader.next();
-            final int eventType = reader.getEventType();
-
-            switch (eventType)
-              {
-                case XMLEvent.CHARACTERS:
-                  builder.append(reader.getText());
-                  break;
-
-                case XMLEvent.CDATA:
-                  throw new RuntimeException("CDATA!");
-
-                case XMLEvent.END_DOCUMENT:
-                  log.trace("END DOCUMENT");
-                  finish();
-                  break;
-
-                case XMLEvent.ATTRIBUTE:
-                  log.trace("ATTRIBUTE     {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
-                  processAttribute(reader.getName().getLocalPart(), reader);
-                  break;
-
-                case XMLEvent.START_ELEMENT:
-                  log.trace("START ELEMENT {} {}", eventType, reader.getName());
-                  builder.delete(0, builder.length());
-                  processStartElement(reader.getName().getLocalPart(), reader);
-                  indent++;
-                  break;
-
-                case XMLEvent.END_ELEMENT:
-                  log.trace("END ELEMENT   {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
-                  indent--;
-                  processEndElement(reader.getName().getLocalPart());
-                  break;
-
-                default:
-                  log.trace("DEFAULT       {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
-                  break;
-              }
-          }
-      }
-
-    protected void processAttribute (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
-      throws Exception
-      {           
-      }
-
-    protected void processStartElement (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
-      throws Exception
-      {           
-      }
-
-    protected abstract void processEndElement (@Nonnull String name)
-      throws Exception;
-
-    protected void finish()
-      throws Exception
-      {           
       }
 
     protected void dumpProperties (final @Nonnull String fileName)

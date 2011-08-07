@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -51,7 +52,8 @@ public class ContentParser extends Parser
                           final @Nonnull DateTime latestModificationTime, 
                           final @Nonnull DateTime publishedDateTime, 
                           final @Nonnull String path, 
-                          final @Nonnull String language) 
+                          final @Nonnull String language)
+      throws XMLStreamException 
       {
         super(xml, path, latestModificationTime, publishedDateTime);
         this.language = language;
@@ -116,4 +118,3 @@ public class ContentParser extends Parser
         dumpProperties("Properties_" + language);
       }
   }
-

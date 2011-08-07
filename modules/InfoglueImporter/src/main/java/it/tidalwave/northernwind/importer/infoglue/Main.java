@@ -81,6 +81,8 @@ public class Main
                 "classpath*:/META-INF/*AutoBeans.xml",
                 "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
                 "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml");
+        
+        new ExportConverter(new FileInputStream(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml")).process() ;
         process(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml");
         ResourceManager.addAndCommitResources();
         Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
@@ -199,9 +201,9 @@ public class Main
                       
                       if (fixedPath.startsWith("Mobile"))
                         {
-                          fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
-                          log.info("PBD " + publishDateTime + " " + fixedPath);
-                          new ContentParser(content, modifiedDateTime, publishDateTime, fixedPath, languageCode).process();
+//                          fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
+//                          log.info("PBD " + publishDateTime + " " + fixedPath);
+//                          new ContentParser(content, modifiedDateTime, publishDateTime, fixedPath, languageCode).process();
                         }
                       
                       else if (fixedPath.startsWith("Meta+info+folder/blueBill/Mobile"))

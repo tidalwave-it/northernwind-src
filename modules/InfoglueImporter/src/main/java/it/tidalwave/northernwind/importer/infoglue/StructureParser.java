@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
+import javax.xml.stream.XMLStreamException;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
@@ -46,7 +47,7 @@ public class StructureParser extends Parser
                             final @Nonnull DateTime publishingDateTime, 
                             String path, 
                             String language) 
-      throws FileNotFoundException 
+      throws FileNotFoundException, XMLStreamException 
       {
         super(xml, path, modifiedDateTime, publishingDateTime);
         this.language = language;
