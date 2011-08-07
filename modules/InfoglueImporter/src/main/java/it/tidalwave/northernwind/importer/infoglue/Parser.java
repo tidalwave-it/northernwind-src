@@ -95,7 +95,7 @@ public abstract class Parser extends Converter
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         resourceProperties.as(Marshallable).marshal(baos);
         baos.close();
-        ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path + fileName + ".xml", baos.toByteArray()));
+        ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path + fileName + ".xml", baos.toByteArray(), "No comment"));
       }
     
     @Nonnull

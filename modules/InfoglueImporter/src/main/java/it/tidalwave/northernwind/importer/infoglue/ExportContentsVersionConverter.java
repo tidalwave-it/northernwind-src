@@ -43,12 +43,14 @@ class ExportContentsVersionConverter extends Converter
     @Getter 
     private DateTime modifiedDateTime;
  
+    @Getter 
     private String versionComment;
     
     private boolean checkedOut;
     
     private boolean active;
     
+    @Getter 
     private String versionModifier;
     
     private String escapedVersionValue;
@@ -144,7 +146,8 @@ class ExportContentsVersionConverter extends Converter
                               modifiedDateTime, 
                               parent.getPublishDateTime(),
                               UriUtilities.urlEncodedPath(fixedPath) + "/", 
-                              languageCode)
+                              languageCode,
+                              versionComment)
                     .process();
           }
       }

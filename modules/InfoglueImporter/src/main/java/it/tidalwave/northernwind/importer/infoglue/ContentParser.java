@@ -45,6 +45,8 @@ public class ContentParser extends Parser
     private static final List<String> HTML_PROPERTIES = Arrays.asList("FullText", "Template", "Leadin");
     
     private final String language;
+    
+    private final String comment;
 
     private boolean inAttributes = false;
     
@@ -52,11 +54,13 @@ public class ContentParser extends Parser
                           final @Nonnull DateTime latestModificationTime, 
                           final @Nonnull DateTime publishedDateTime, 
                           final @Nonnull String path, 
-                          final @Nonnull String language)
+                          final @Nonnull String language,
+                          final @Nonnull String comment)
       throws XMLStreamException 
       {
         super(xml, path, latestModificationTime, publishedDateTime);
         this.language = language;
+        this.comment = comment;
       }
 
     @Override
@@ -97,8 +101,9 @@ public class ContentParser extends Parser
                   }
                 
                 ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
-                                                         path + toLower(name) + "_" + language + ".html",
-                                                         xml.getBytes("UTF-8")));
+                                                                  path + toLower(name) + "_" + language + ".html",
+                                                                  xml.getBytes("UTF-8"),
+                                                                  comment));
               }
             else
               {

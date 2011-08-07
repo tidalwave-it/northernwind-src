@@ -229,7 +229,7 @@ public class LayoutConverter extends Parser
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);
             baos.close();
-            ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path, baos.toByteArray()));
+            ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path, baos.toByteArray(), "No comment"));
           }
       }
   }

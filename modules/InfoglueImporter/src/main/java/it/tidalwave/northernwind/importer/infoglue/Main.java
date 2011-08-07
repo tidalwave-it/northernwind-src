@@ -104,8 +104,6 @@ public class Main
         String path = "/";
         final String spaces = "                                                                ";
         String languageCode = "";
-//        String assetFileName = "";
-//        String assetKey = "";
         DateTime modifiedDateTime = null;
         DateTime publishDateTime = null;
         
@@ -162,17 +160,6 @@ public class Main
                       log.trace("publishDateTime {} parsed as {}", builder, publishDateTime);
                     }
                   
-//                  else if ("assetFileName".equals(name))
-//                    {
-//                      assetFileName = builder.toString();  
-//                    }
-                  
-//                  else if ("assetKey".equals(name))
-//                    {
-//                      assetKey = builder.toString();  
-//                      assetFileNameMapByKey.put(assetKey, assetFileName);
-//                    }
-                  
                   // TODO: we're not tracking document deletion
                   // TODO: when a document was added, it wasn't necessarily immediately published - put those documents in branches, merged when they are published
                   
@@ -201,9 +188,6 @@ public class Main
                       
                       if (fixedPath.startsWith("Mobile"))
                         {
-//                          fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
-//                          log.info("PBD " + publishDateTime + " " + fixedPath);
-//                          new ContentParser(content, modifiedDateTime, publishDateTime, fixedPath, languageCode).process();
                         }
                       
                       else if (fixedPath.startsWith("Meta+info+folder/blueBill/Mobile"))
@@ -222,10 +206,6 @@ public class Main
                   
                   else if ("assetBytes".equals(name))
                     {
-//                      String fixedPath = "content/media/" + assetFileName;
-//                      log.info("Processing {} ...", fixedPath);
-//                      // FIXME: find the timestamp
-//                      ResourceManager.addMedia(new AddResourceCommand(new DateTime(), fixedPath, decoder.decodeBuffer(builder.toString())));
                     }
                   
                   else
