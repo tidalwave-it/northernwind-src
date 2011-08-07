@@ -54,7 +54,7 @@ public class Resource
         String fixedPath = this.path;
         final File file = new File(Main.hgFolder, fixedPath);
         file.getParentFile().mkdirs();
-        log.info("Writing {} ...", file.getAbsolutePath());
+        log.info("Adding and committing {} {} ...", dateTime, file.getAbsolutePath());
         final OutputStream os = new FileOutputStream(file);
         os.write(contents);
         os.close();
