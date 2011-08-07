@@ -48,6 +48,8 @@ import org.joda.time.DateTime;
 @Slf4j
 public class LayoutConverter extends Parser
   {
+    private static final List<String> PROPERTIES_REFERRING_RELATIVE_PATHS = Arrays.asList("styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts");
+    
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
         put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0");
@@ -146,7 +148,7 @@ public class LayoutConverter extends Parser
                 propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
                 propertyValue = propertyValue.toString().replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
 
-                if (Arrays.asList("styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts").contains(propertyName))
+                if (PROPERTIES_REFERRING_RELATIVE_PATHS.contains(propertyName))
                   {
                     final List<Object> values = new ArrayList<Object>();
 
