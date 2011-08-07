@@ -58,7 +58,7 @@ public class Utilities
     public static void exec (final @Nonnull String ... args) 
       throws Exception
       {
-        log.info(Arrays.toString(args));
+        log.debug(Arrays.toString(args));
         Runtime.getRuntime().exec(args).waitFor();
       }
     
