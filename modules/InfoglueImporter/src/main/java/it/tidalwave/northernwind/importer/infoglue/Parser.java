@@ -77,7 +77,7 @@ public abstract class Parser
     public void process() 
       throws Exception
       {
-        log.info("process()");
+        log.trace("process()");
         final XMLInputFactory f = XMLInputFactory.newInstance();
         final XMLStreamReader reader = f.createXMLStreamReader(new StringReader(contents));
 

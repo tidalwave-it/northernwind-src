@@ -71,7 +71,7 @@ public class ContentParser extends Parser
     protected void processEndElement (final @Nonnull String name)
       throws Exception
       {
-        log.debug("processEndElement({})", name);
+        log.trace("processEndElement({})", name);
         
         if ("attributes".equals(name))
           {
