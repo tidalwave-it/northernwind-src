@@ -226,6 +226,11 @@ public class Main
                       ResourceManager.addMedia(new AddResourceCommand(new DateTime(), fixedPath, decoder.decodeBuffer(builder.toString())));
                     }
                   
+                  else
+                    {
+                      log.warn("Ignoring {} = {}", name, builder.toString());  
+                    }
+                  
                   indent--;
                     
                 default:
