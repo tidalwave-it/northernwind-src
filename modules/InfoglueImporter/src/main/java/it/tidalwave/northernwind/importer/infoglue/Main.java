@@ -184,6 +184,16 @@ public class Main
                           fixedPath = "/blueBill/Mobile/License/";   
                         }
                       
+                      else if (fixedPath.equals("/blueBill/Mobile/Contact/"))
+                        {
+                          fixedPath = "/blueBill/Mobile/Contacts/";   
+                        }
+                      
+                      else if (fixedPath.equals("/blueBill/Meta+info+folder/blueBill/_Standard+Pages/Contacts+Metainfo/"))
+                        {
+                          fixedPath = "/blueBill/Meta+info+folder/blueBill/Mobile/_Standard+Pages/Contacts+Metainfo/";   
+                        }
+                      
                       fixedPath = fixedPath.replaceAll("^/blueBill/", "");
                       final String content = builder.toString().replace("cdataEnd", "]]>");
                       
