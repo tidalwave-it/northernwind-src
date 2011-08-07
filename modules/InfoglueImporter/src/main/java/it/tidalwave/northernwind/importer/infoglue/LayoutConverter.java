@@ -191,16 +191,6 @@ public class LayoutConverter extends Parser
 
             else
               {
-//                final StringBuilder bb = new StringBuilder();
-//                bb.append(componentId).append(": ");
-//                
-//                for (int i = 0; i < reader.getAttributeCount(); i++)
-//                  {
-//                    bb.append(reader.getAttributeName(i)).append("=").append(reader.getAttributeValue(i)).append(", ");  
-//                  }
-//                
-//                log.warn("MISSING PROPERTY " + bb);
-//                log.warn("PROP: " + new Key<Object>(componentId + "." + propertyName) + ": " + reader.getAttributeValue("", "path_en"));
                 properties.put(new Key<Object>(componentId + "." + propertyName), reader.getAttributeValue("", "path_en"));
               }
           }
