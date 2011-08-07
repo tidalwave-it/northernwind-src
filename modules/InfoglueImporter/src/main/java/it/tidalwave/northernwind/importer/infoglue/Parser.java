@@ -56,7 +56,6 @@ public abstract class Parser
     private final String contents;
 
     protected final StringBuilder builder = new StringBuilder();
-    private final String spaces = "                                                                ";
     protected int indent;
     protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
