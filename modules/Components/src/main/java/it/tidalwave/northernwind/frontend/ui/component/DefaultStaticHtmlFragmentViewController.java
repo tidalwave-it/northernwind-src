@@ -77,6 +77,6 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
             template = template.add(entry.getKey(), entry.getValue());  
           }
         
-        view.setHtmlFragment(template.render());
+        view.setContent(template.render());
       } 
   }

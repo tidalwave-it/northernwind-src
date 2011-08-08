@@ -42,5 +42,5 @@ public interface HtmlFragmentView extends Identifiable
      * @param  text  the text
      *
      ******************************************************************************************************************/
-    public void setHtmlFragment (@Nonnull String html);
+    public void setContent (@Nonnull String html);
   }

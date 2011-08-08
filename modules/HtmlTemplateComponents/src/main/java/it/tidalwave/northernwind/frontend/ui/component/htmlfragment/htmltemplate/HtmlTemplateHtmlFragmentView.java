@@ -57,15 +57,4 @@ public class HtmlTemplateHtmlFragmentView extends HtmlHolder implements HtmlFrag
         super(id);
         this.id = id;
       }
-//    
-//    /*******************************************************************************************************************
-//     *
-//     * {@inheritDoc}
-//     *
-//     ******************************************************************************************************************/
-//    @Override
-//    public void setHtmlFragment (final @Nonnull String html)
-//      {
-//        setValue(html);
-//      }
   }

@@ -32,5 +32,5 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface StaticHtmlFragmentView 
   {
-    public void setHtmlFragment (@Nonnull String html);  
+    public void setContent (@Nonnull String html);  
   }

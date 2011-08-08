@@ -66,6 +66,6 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
     @Override
     public void setText (final @Nonnull String text)
       {
-        setHtmlFragment(text);
+        setContent(text);
       }
   }

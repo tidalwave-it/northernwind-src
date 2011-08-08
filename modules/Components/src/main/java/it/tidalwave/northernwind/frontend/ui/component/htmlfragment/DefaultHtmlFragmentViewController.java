@@ -86,16 +86,16 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
                 htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
               }
             
-            view.setHtmlFragment(htmlBuilder.toString());
+            view.setContent(htmlBuilder.toString());
           }
         catch (NotFoundException e)
           {
-            view.setHtmlFragment(e.toString());
+            view.setContent(e.toString());
             log.error("", e.toString());
           }
         catch (IOException e)
           {
-            view.setHtmlFragment(e.toString());
+            view.setContent(e.toString());
             log.error("", e);
           }
       }

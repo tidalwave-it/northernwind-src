@@ -93,9 +93,9 @@ public class HtmlHolder
       }
     
 //    @Override
-    public void setHtmlFragment (final @Nonnull String html) 
+    public void setContent (final @Nonnull String content) 
       {
-        addAttribute("content", html);
+        addAttribute("content", content);
 //        setValue(html);
       }    
     
