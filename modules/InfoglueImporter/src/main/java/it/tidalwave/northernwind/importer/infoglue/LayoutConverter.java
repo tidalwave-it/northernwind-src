@@ -130,6 +130,18 @@ public class LayoutConverter extends Parser
           {
             String propertyName = toLower(reader.getAttributeValue("", "name"));
             Object propertyValue = reader.getAttributeValue("", "path");
+            Object propertyType = reader.getAttributeValue("", "type");
+            
+            // TODO: if type == contentBinding, you should rather read entityIds from the binding elements as below.
+//<property name="styleSheets" path="Layout.css, Typography.css, Forms.css, Tools.css, Horizontal Navigation.css, Layout (Navigation Top, Local Left).css, Tidalwave defaults.css" path_en="Layout.css, Typography.css, Forms.css, Tools.css, Horizontal Navigation.css, Layout (Navigation Top, Local Left).css, Tidalwave defaults.css" type="contentBinding" > 
+//    <binding assetKey="" entity="SiteNode" entityId="5" > </binding > 
+//    <binding assetKey="" entity="SiteNode" entityId="6" > </binding > 
+//    <binding assetKey="" entity="SiteNode" entityId="8" > </binding > 
+//    <binding assetKey="" entity="SiteNode" entityId="7" > </binding > 
+//    <binding assetKey="" entity="SiteNode" entityId="9" > </binding > 
+//    <binding assetKey="" entity="SiteNode" entityId="10" > </binding > 
+//    <binding assetKey="" entity="SiteNode" entityId="50" > </binding > 
+//</property >
             
             if (propertyValue != null)
               {
