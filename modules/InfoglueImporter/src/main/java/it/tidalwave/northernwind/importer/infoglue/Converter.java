@@ -95,7 +95,8 @@ public abstract class Converter
       throws Exception
       {
         log.trace("process() - {}", this);
-
+        start();
+        
         while (reader.hasNext()) 
           {
             reader.next();
@@ -160,6 +161,11 @@ public abstract class Converter
           }
       }
 
+    protected void start()
+      throws Exception
+      {           
+      }
+    
     protected void processAttribute (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
       throws Exception
       {           

@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +40,6 @@ public class Main
   {
     private static ApplicationContext applicationContext;
         
-    public static final File hgFolder = new File("target/root");      
-    
     /* package */ static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
     
     /* package */ static final ContentMap contentMap = new ContentMap();
@@ -58,11 +55,6 @@ public class Main
                 "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
                 "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml");
         
-        hgFolder.mkdirs();
-        Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg init");
-        
         new ExportConverter(new FileInputStream(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml")).process() ;
-        ResourceManager.addAndCommitResources();
-        Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
       }
   }

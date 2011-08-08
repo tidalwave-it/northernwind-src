@@ -58,14 +58,14 @@ public class AddResourceCommand
             fixedPath = "." + fixedPath;
           }
         
-        final File file = new File(Main.hgFolder, fixedPath);
+        final File file = new File(ResourceManager.hgFolder, fixedPath);
         file.getParentFile().mkdirs();
         log.info("Adding and committing {} {} ...", dateTime, file.getAbsolutePath());
         final OutputStream os = new FileOutputStream(file);
         os.write(contents);
         os.close();
-        Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg add " + fixedPath);
-        Utilities.exec("/bin/sh", "-c", "cd " + Main.hgFolder.getAbsolutePath() + " && /usr/bin/hg commit -m \"" + comment + "\" " + fixedPath + " --date \'" + dateTime.toDate().getTime() / 1000 + " 0\'");
+        Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg add " + fixedPath);
+        Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg commit -m \"" + comment + "\" " + fixedPath + " --date \'" + dateTime.toDate().getTime() / 1000 + " 0\'");
       }
   }
 

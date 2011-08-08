@@ -56,10 +56,23 @@ public class ExportConverter extends Converter
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
+
+    @Override
+    protected void start() throws Exception
+      {
+        ResourceManager.initialize();
+      }
     
     @Override
     protected void processEndElement (final @Nonnull String elementName) 
       throws Exception
       {
+      }
+
+    @Override
+    protected void finish() throws Exception 
+      {
+        ResourceManager.addAndCommitResources();
+        ResourceManager.tagConversionCompleted();
       }
   } 

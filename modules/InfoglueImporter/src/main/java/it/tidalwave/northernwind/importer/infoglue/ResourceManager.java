@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -36,9 +37,9 @@ import org.joda.time.DateTime;
  **********************************************************************************************************************/
 public class ResourceManager 
   {
-    private static final SortedMap<DateTime, List<AddResourceCommand>> commandMapByDateTime = new TreeMap<DateTime, List<AddResourceCommand>>();
+    public static final File hgFolder = new File("target/root");      
     
-    private static final List<AddResourceCommand> media = new ArrayList<AddResourceCommand>();
+    private static final SortedMap<DateTime, List<AddResourceCommand>> commandMapByDateTime = new TreeMap<DateTime, List<AddResourceCommand>>();
     
     /*******************************************************************************************************************
      *
@@ -48,16 +49,11 @@ public class ResourceManager
       {        
         for (final List<AddResourceCommand> resources : commandMapByDateTime.values())
           {
-              // FIXME: first add all of them with the same timestamp, then commit all of them in a single round
+              // FIXME: first add all of them with the same timestamp, then commit all of them in a single round?
             for (final AddResourceCommand resource : resources)
               {
                 resource.addAndCommit();  
               }
-          }
-        
-        for (final AddResourceCommand resource : media) // FIXME: when they have a timestamp, manage like the others
-          {
-            resource.addAndCommit();  
           }
       }
     
@@ -80,8 +76,19 @@ public class ResourceManager
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void addMedia (final AddResourceCommand resource)
+    public static void initialize() 
+      throws Exception 
       {
-        media.add(resource);
+        hgFolder.mkdirs();
+        Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg init");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public static void tagConversionCompleted() 
+      throws Exception 
+      {
+        Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
       }
   }
