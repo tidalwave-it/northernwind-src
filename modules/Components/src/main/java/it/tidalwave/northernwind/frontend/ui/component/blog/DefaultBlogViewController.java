@@ -25,8 +25,9 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -52,6 +53,15 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
+    protected static final Comparator<DateTime> REVERSE_DATE_COMPARATOR = new Comparator<DateTime>() 
+      {
+        @Override
+        public int compare (final @Nonnull DateTime dateTime1, final @Nonnull DateTime dateTime2) 
+          {
+            return -dateTime1.compareTo(dateTime2);
+          }
+      };
+    
     private static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
     
     @Inject @Nonnull
@@ -83,7 +93,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @PostConstruct
-    /* package */ void initialize()
+    protected void initialize()
+      throws Exception
       {
         try 
           {
@@ -138,7 +149,28 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract void render();
+    protected abstract void render()
+      throws Exception;
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String getExposedUri (final @Nonnull Content post) 
+      throws IOException, NotFoundException 
+      {
+        try 
+          {
+            return post.getProperties().getProperty(SiteNode.PROPERTY_EXPOSED_URI);
+          }
+        catch (NotFoundException e) 
+          {
+            String title = post.getProperties().getProperty(PROPERTY_TITLE);
+            title = title.replaceAll(" ", "-").replaceAll("[^\\w-]*", ""); 
+            return title.toLowerCase();
+          } 
+      }
     
     /*******************************************************************************************************************
      *

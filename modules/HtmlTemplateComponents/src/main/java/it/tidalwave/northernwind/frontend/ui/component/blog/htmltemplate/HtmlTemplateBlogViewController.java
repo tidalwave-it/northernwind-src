@@ -22,7 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
-import java.util.Comparator;
+import it.tidalwave.northernwind.core.model.Site;
+import javax.inject.Inject;
 import java.util.TreeMap;
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -35,6 +36,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
+import org.springframework.beans.factory.annotation.Configurable;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -43,18 +45,16 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    private static final Comparator<DateTime> REVERSE_DATE_COMPARATOR = new Comparator<DateTime>() 
-      {
-        @Override
-        public int compare (final @Nonnull DateTime dateTime1, final @Nonnull DateTime dateTime2) 
-          {
-            return -dateTime1.compareTo(dateTime2);
-          }
-      };
-    
     private final Map<DateTime, String> blogSortedMapByDate = new TreeMap<DateTime, String>(REVERSE_DATE_COMPARATOR);
+    
+    @Inject @Nonnull
+    private Site site;
+    
+    @Nonnull
+    private final SiteNode siteNode;
 
     /*******************************************************************************************************************
      *
@@ -64,6 +64,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     public HtmlTemplateBlogViewController (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode) 
       {
         super(view, siteNode);
+        this.siteNode = siteNode;
       }
     
     /*******************************************************************************************************************
@@ -79,10 +80,24 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         final DateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
-        htmlBuilder.append(String.format("<div id='blogpost-%s'>\n", blogDateTime.toDate().getTime()));
+        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
+        htmlBuilder.append(String.format("<div id='%s'>\n", idPrefix));
         htmlBuilder.append(String.format("<h3>%s</h3>\n", properties.getProperty(PROPERTY_TITLE)));
+        htmlBuilder.append("<div>");
         htmlBuilder.append(String.format("<span class='.nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
-        htmlBuilder.append(String.format("%s\n", properties.getProperty(PROPERTY_FULL_TEXT)));
+        
+        try
+          {
+           final String link = site.getContextPath() + siteNode.getRelativeUri() + "/" + getExposedUri(post) + "/";
+           htmlBuilder.append(String.format("&nbsp;<a href='%s'>Permalink</a>\n", link));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no link  
+          }
+            
+        htmlBuilder.append("</div>");        
+        htmlBuilder.append(String.format("<div>%s</div>\n", properties.getProperty(PROPERTY_FULL_TEXT)));
         htmlBuilder.append(String.format("</div>\n"));
         blogSortedMapByDate.put(blogDateTime, htmlBuilder.toString());
       }

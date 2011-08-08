@@ -22,8 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
-import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
+import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
@@ -31,7 +30,28 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface RssFeedView extends BlogView
+public interface RssFeedViewController 
   {
-    public void setContent (@Nonnull String content);
+    public static final Key<String> PROPERTY_CREATOR = new Key<String>("creator");
+    
+    public static final Key<String> PROPERTY_DESCRIPTION = new Key<String>("description");
+    
+    public static final Key<String> PROPERTY_LINK = new Key<String>("link");
+    
+    public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
+    
+//    public static final Key<String> PROPERTY_X = new Key<String>("");
+//        <property name="contents"
+//            <values>
+//                <value>/Blog</value>
+//            </values>
+//        </property>
+
+//    <property name="copyright">
+//        <property name="">
+//        <property name="">
+//        <property name="">
+//        <property name="maxItems">
+//        <property name="">
+    
   }

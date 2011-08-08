@@ -22,19 +22,26 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+import java.io.IOException;
+import org.joda.time.DateTime;
 import com.sun.syndication.feed.rss.Channel;
-import com.sun.syndication.feed.rss.Description;
+import com.sun.syndication.feed.rss.Content;
+import com.sun.syndication.feed.rss.Guid;
 import com.sun.syndication.feed.rss.Item;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
-import javax.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import it.tidalwave.northernwind.frontend.ui.component.Properties;
+import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -43,55 +50,88 @@ import org.springframework.beans.factory.annotation.Configurable;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class DefaultRssFeedViewController 
+public class DefaultRssFeedViewController extends DefaultBlogViewController implements RssFeedViewController
   {
+    private final Map<DateTime, Item> blogSortedMapByDate = new TreeMap<DateTime, Item>(REVERSE_DATE_COMPARATOR);
+
     @Nonnull
     private final RssFeedView view;
+
+    @Nonnull
+    private final SiteNode siteNode;
     
+    private String linkBase;
+    
+    private Channel feed;
+    
+    private ResourceProperties properties;
+
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view, final @Nonnull SiteNode siteNode)
+      throws Exception
       {
+        super(view, siteNode);
         this.view = view;
+        this.siteNode = siteNode;
+//      }
+//    
+////    @PostConstruct
+//    @Override
+//    protected void initialize()
+//      {
+//        super.initialize();
+        feed = new Channel("rss_2.0");
+        properties = siteNode.getPropertyGroup(view.getId());
+        linkBase = properties.getProperty(PROPERTY_LINK, "");
+        feed.setTitle(properties.getProperty(PROPERTY_TITLE, ""));  
+        feed.setDescription(properties.getProperty(PROPERTY_DESCRIPTION, ""));  
+        feed.setLink(linkBase);  
+        feed.setCopyright(properties.getProperty(PROPERTY_CREATOR, ""));  
       }
     
-    @PostConstruct
-    public void initialize() 
-      throws IllegalArgumentException, FeedException
+    @Override
+    protected void addPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
+      throws IOException, NotFoundException 
       {
-        log.info("initialize()");
-        final Channel feed = new Channel("rss_2.0");
-        feed.setTitle("feed title");  
-        feed.setDescription("feed description");  
-        feed.setLink("feed link");  
-          
-        final List<Item> feedItems = new ArrayList<Item>();  
-                  
-        for (int i = 0; i < 10; i++) 
-          {                             
-            final Item item = new Item();  
-            item.setTitle("title " + i);  
-            item.setAuthor("author " + i);  
-            item.setPubDate(new Date());  
-              
-            final Description description = new Description();  
-            description.setType("text/html");  
-            description.setValue("description " + 1);  
-            item.setDescription(description);  
-              
-            item.setLink("link " + i);  
-            feedItems.add(item);  
-          }    
+        final DateTime blogDateTime = getBlogDateTime(post);
+        final ResourceProperties postProperties = post.getProperties();
+        final Item item = new Item();  
+        final Content content = new Content();  
+        content.setType("text/html");  
+        content.setValue(postProperties.getProperty(Properties.PROPERTY_FULL_TEXT));  
+        item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));  
+//        item.setAuthor("author " + i); TODO
+        item.setPubDate(blogDateTime.toDate());  
+        item.setContent(content);  
         
-        feed.setItems(feedItems);
+        try
+          {
+            final String link = linkBase + getExposedUri(post) + "/";
+            final Guid guid = new Guid();
+            guid.setPermaLink(true);
+            guid.setValue(link);
+            item.setGuid(guid);
+            item.setLink(link);  
+          }
+        catch (NotFoundException e)
+          {
+            // ok. no link 
+          }
         
+        blogSortedMapByDate.put(blogDateTime,item);
+      }
 
+    @Override
+    protected void render()
+      throws IllegalArgumentException, FeedException, NotFoundException, IOException 
+      {
+        feed.setItems(new ArrayList<Item>(blogSortedMapByDate.values()));
+        
 //        if (!StringUtils.hasText(feed.getEncoding())) 
 //          {
 //            feed.setEncoding("UTF-8");
 //          }
 
         final WireFeedOutput feedOutput = new WireFeedOutput();
-        final String s = feedOutput.outputString(feed);
-        log.info("RSS FEED {}", s);
-        view.setContent(s);      
+        view.setContent(feedOutput.outputString(feed));      
       }
   }
