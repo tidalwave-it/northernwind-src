@@ -141,24 +141,24 @@ public class DefaultLayout extends SpringAsSupport implements Layout
 
         // Complex rule, but it's Infoglue. 
         // FIXME: translate the mapping during the conversion and use a simpler rule here
-        if ("base".equals(id.stringValue()))
-          {
-            for (final Layout overridingChild : override.getChildren())
-              {
-                final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
-
-                if (overriddenChild == null)
-                  {
-                    add(overridingChild);  
-                  }
-                else
-                  {
-                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);                    
-                  }
-              }
-          }
-        else
-          {
+//        if ("base".equals(id.stringValue()))
+//          {
+//            for (final Layout overridingChild : override.getChildren())
+//              {
+//                final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
+//
+//                if (overriddenChild == null)
+//                  {
+//                    add(overridingChild);  
+//                  }
+//                else
+//                  {
+//                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);                    
+//                  }
+//              }
+//          }
+//        else
+//          {
             this.children.clear();
             this.childrenMapById.clear();
 
@@ -166,7 +166,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout
               {
                 add(overridingChild);  
               }
-          }
+//          }
       }
       
     @Override @Nonnull
