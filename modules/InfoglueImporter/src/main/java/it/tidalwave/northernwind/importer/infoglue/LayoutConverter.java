@@ -95,28 +95,9 @@ public class LayoutConverter extends Parser
         
         if ("component".equals(elementName))
           {
-            String attrNameValue = "";
-            String attrIdValue = "";
-            String attrTypeValue = "";
-
-            for (int i = 0; i < reader.getAttributeCount(); i++) // FIXME: use reader.getAttributeValue(String, String)
-              {
-                final String attrName = reader.getAttributeName(i).getLocalPart();
-                final String attrValue = reader.getAttributeValue(i);
-
-                if ("name".equals(attrName))
-                  {
-                    attrNameValue = attrValue;
-                  }
-                else if ("id".equals(attrName))
-                  {
-                    attrIdValue = attrValue;
-                  }
-                else if ("contentId".equals(attrName))
-                  {
-                    attrTypeValue = TYPE_MAP.get(attrValue);
-                  }
-              }
+            final String attrNameValue = reader.getAttributeValue("", "name");
+            final String attrIdValue = reader.getAttributeValue("", "id");
+            final String attrTypeValue = TYPE_MAP.get(reader.getAttributeValue("", "contentId"));
             
             if (componentStack.isEmpty())
               {
