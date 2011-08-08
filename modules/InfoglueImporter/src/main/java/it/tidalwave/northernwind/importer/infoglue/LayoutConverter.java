@@ -61,6 +61,7 @@ public class LayoutConverter extends Parser
       {{
         put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0");
         put( "67", "http://northernwind.tidalwave.it/component/Sidebar/#v1.0");
+        put( "71", "http://northernwind.tidalwave.it/component/RssFeed/#v1.0");
         put("104", "http://northernwind.tidalwave.it/component/Blog/#v1.0");
         put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu/#v1.0");
         put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
@@ -97,7 +98,13 @@ public class LayoutConverter extends Parser
           {
             final String attrNameValue = reader.getAttributeValue("", "name");
             final String attrIdValue = reader.getAttributeValue("", "id");
-            final String attrTypeValue = TYPE_MAP.get(reader.getAttributeValue("", "contentId"));
+            final String xxx = reader.getAttributeValue("", "contentId");
+            final String attrTypeValue = TYPE_MAP.get(xxx);
+            
+            if (attrTypeValue == null)
+              {
+                log.error("No component for {}", xxx);  
+              }
             
             if (componentStack.isEmpty())
               {

@@ -117,19 +117,26 @@ class ExportSiteNodeVersionConverter extends Converter
     protected void finish()
       throws Exception 
       {
-//        log.info("New process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
-//                new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
         String path = parent.getPath();
-      
-//        log.info("NEWCONTENT {} {} {}", new Object[] { fixedPath, metaInfoContentId, modifiedDateTime });
+        log.trace("Now processing {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
+                   new Object[] { path, stateId, checkedOut, active, modifiedDateTime, versionComment });
+        
+        if (path.equals("/blueBill/RSS Feeds/Mobile News"))
+          {
+            path = "/blueBill/Mobile/RSS Feeds/News";  
+          }
+        else if (path.equals("/blueBill/RSS Feeds"))
+          {
+            path = "/blueBill/Mobile/RSS Feeds";  
+          }
       
         if (path.startsWith("/blueBill/Mobile"))
           {
             path = path.replaceAll("^/blueBill/Mobile", "");
-            final String suffix = path.startsWith("/_Standard Pages") ? "/" : "/Override";
+            final String suffix = path.startsWith("/_Standard Pages") || path.startsWith("/RSS Feeds") ? "/" : "/Override";
             path = path.replaceAll("^/_Standard\\ Pages", "");
             path = UriUtilities.urlEncodedPath("/structure" + path) + suffix;
-            log.info("XXX {} -> {}", parent.getPath(), path);
+            log.info("Processing {} -> {}", parent.getPath(), path);
 
             final Map<String, String> languageMap = Main.contentMap.get(metaInfoContentId, modifiedDateTime);
             
