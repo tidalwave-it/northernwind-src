@@ -123,17 +123,17 @@ class ExportSiteNodeVersionConverter extends Converter
         
         if (path.equals("/blueBill/RSS Feeds/Mobile News"))
           {
-            path = "/blueBill/Mobile/RSS Feeds/News";  
+            path = "/blueBill/Mobile/Blog RSS Feed";  
           }
-        else if (path.equals("/blueBill/RSS Feeds"))
-          {
-            path = "/blueBill/Mobile/RSS Feeds";  
-          }
+//        else if (path.equals("/blueBill/RSS Feeds"))
+//          {
+//            path = "/blueBill/Mobile/RSS Feeds";  
+//          }
       
         if (path.startsWith("/blueBill/Mobile"))
           {
             path = path.replaceAll("^/blueBill/Mobile", "");
-            final String suffix = path.startsWith("/_Standard Pages") || path.startsWith("/RSS Feeds") ? "/" : "/Override";
+            final String suffix = path.startsWith("/_Standard Pages") || path.startsWith("/Blog RSS Feed") ? "/" : "/Override";
             path = path.replaceAll("^/_Standard\\ Pages", "");
             path = UriUtilities.urlEncodedPath("/structure" + path) + suffix;
             log.info("Processing {} -> {}", parent.getPath(), path);
