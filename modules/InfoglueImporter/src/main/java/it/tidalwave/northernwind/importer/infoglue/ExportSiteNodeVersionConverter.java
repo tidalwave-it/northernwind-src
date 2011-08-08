@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import it.tidalwave.northernwind.core.impl.util.UriUtilities;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
 import lombok.Getter;
@@ -36,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-class ExportContentsVersionConverter extends Converter
+class ExportSiteNodeVersionConverter extends Converter
   {
     private int stateId;
 
@@ -53,13 +55,15 @@ class ExportContentsVersionConverter extends Converter
     @Getter 
     private String versionModifier;
     
-    private String escapedVersionValue;
+    private String contentType;
     
-    private String languageCode;
+    private final ExportSiteNodeConverter parent;
     
-    private final ExportContentConverter parent;
+    private int metaInfoContentId;
     
-    public ExportContentsVersionConverter (final @Nonnull ExportContentConverter parent)
+    // TODO: bindingQualifyers.name & value (contentId) & sortOrder
+    
+    public ExportSiteNodeVersionConverter (final @Nonnull ExportSiteNodeConverter parent)
       {
         super(parent);        
         this.parent = parent;
@@ -69,11 +73,6 @@ class ExportContentsVersionConverter extends Converter
     protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
-        if ("digitalAssets".equals(elementName))
-          {
-            new ExportDigitalAssetsConverter(this).process();  
-            localLevel--; // FIXME: doesn't properly receive the endElement for this
-          }
       }
     
     @Override
@@ -104,58 +103,56 @@ class ExportContentsVersionConverter extends Converter
           {
             versionModifier = contentAsString();  
           }
-        else if ("escapedVersionValue".equals(elementName))
+        else if ("contentType".equals(elementName))
           {
-            escapedVersionValue = contentAsString();  
+            contentType = contentAsString();  
           }
-        else if ("languageCode".equals(elementName))
+        else if ("value".equals(elementName)) // FIXME: it's in a inner element
           {
-            languageCode = contentAsString();  
+            metaInfoContentId = contentAsInteger();  
           }
       }
 
     @Override
-    protected void finish() throws Exception 
+    protected void finish()
+      throws Exception 
       {
-        log.info("New process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
-                new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
-        String fixedPath = parent.getPath() + "/";
+//        log.info("New process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
+//                new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
+        String path = parent.getPath();
       
-        if (fixedPath.equals("/blueBill/License/"))
+//        log.info("NEWCONTENT {} {} {}", new Object[] { fixedPath, metaInfoContentId, modifiedDateTime });
+      
+        if (path.startsWith("/blueBill/Mobile"))
           {
-            fixedPath = "/blueBill/Mobile/License/";   
-          }
-        else if (fixedPath.equals("/blueBill/Mobile/Contact/"))
-          {
-            fixedPath = "/blueBill/Mobile/Contacts/";   
-          }
-        else if (fixedPath.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
-          {
-            fixedPath = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
-          }
+            path = path.replaceAll("^/blueBill/Mobile", "");
+            final String suffix = path.startsWith("/_Standard Pages") ? "/" : "/Override";
+            path = path.replaceAll("^/_Standard\\ Pages", "");
+            path = UriUtilities.urlEncodedPath("/structure" + path) + suffix;
+            log.info("XXX {} -> {}", parent.getPath(), path);
 
-        fixedPath = fixedPath.replaceAll("^/blueBill/", "");
-        final String content = escapedVersionValue.replace("cdataEnd", "]]>");
-        Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
-  
-        if (fixedPath.startsWith("Mobile"))
-          {
-            fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
-            log.info("PBD " + parent.getPublishDateTime() + " " + fixedPath);
-            // FIXME: comment and creationDate
-            new ContentParser(content, 
-                              modifiedDateTime, 
-                              parent.getPublishDateTime(),
-                              UriUtilities.urlEncodedPath(fixedPath) + "/", 
-                              languageCode,
-                              versionComment)
-                    .process();
+            final Map<String, String> languageMap = Main.contentMap.get(metaInfoContentId, modifiedDateTime);
+            
+            for (final Entry<String, String> entry : languageMap.entrySet())
+              {
+                final String languageCode = entry.getKey();
+                final String content = entry.getValue();
+
+                if (content == null)
+                  {
+                    log.error("No content for " + "" + metaInfoContentId + "/" + modifiedDateTime);  
+                    return;
+                  }
+
+                // FIXME: creationDateTime, comment
+                new StructureParser(content, modifiedDateTime, parent.getPublishDateTime(), path, languageCode).process(); 
+              }
           }
       }
 
     @Override @Nonnull
     public String toString() 
       {
-        return String.format("ExportContentsVersionConverter(%s)", parent.getPath());
+        return String.format("ExportSiteNodeVersionConverter(%s)", parent.getPath());
       }
   }

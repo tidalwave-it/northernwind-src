@@ -23,9 +23,11 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import javax.annotation.Nonnull;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.InputStream;
+import lombok.Getter;
+import lombok.ToString;
+import org.joda.time.DateTime;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -33,33 +35,65 @@ import java.io.InputStream;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ExportConverter extends Converter 
+@Slf4j @ToString(exclude={"publishDateTime", "expireDateTime"})
+class ExportSiteNodeConverter extends Converter
   {
-    public ExportConverter (final @Nonnull InputStream is)
-      throws XMLStreamException 
+    private String name;
+
+    @Getter
+    private DateTime publishDateTime;
+    
+    @Getter
+    private DateTime expireDateTime;
+
+    private final ExportSiteNodeConverter parent;
+    
+    // metaInfoContentId?
+    
+    public ExportSiteNodeConverter (final @Nonnull Converter parent)
       {
-        super(is);
+        super(parent);        
+        this.parent = (parent instanceof ExportSiteNodeConverter) ? ((ExportSiteNodeConverter)parent) : null;
       }
 
     @Override
     protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
-        if ("root-content".equals(elementName))
-          {  
-            new ExportContentConverter(this).process();
+        if ("childSiteNodes".equals(elementName))
+          {
+            log.info("Created child - {}", getPath());
+            new ExportSiteNodeConverter(this).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
-        if ("root-site-node".equals(elementName))
-          {  
-            new ExportSiteNodeConverter(this).process();
+        else if ("siteNodeVersions".equals(elementName))
+          {
+            new ExportSiteNodeVersionConverter(this).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
     
     @Override
-    protected void processEndElement (final @Nonnull String elementName) 
+    protected void processEndElement (final @Nonnull String elementName)
       throws Exception
       {
+        if ("name".equals(elementName))
+          {
+            name = contentAsString();  
+          }
+        else if ("publishDateTime".equals(elementName))
+          {
+            publishDateTime = contentAsDateTime();  
+          }
+        else if ("expireDateTime".equals(elementName))
+          {
+            expireDateTime = contentAsDateTime();  
+          }
       }
-  } 
+
+    @Nonnull
+    public String getPath()
+      {
+        return ((parent != null) ? parent.getPath() : "") + "/" + name;
+      }
+  }

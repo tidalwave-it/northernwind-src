@@ -22,10 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import javax.annotation.Nonnull;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.InputStream;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -33,33 +35,38 @@ import java.io.InputStream;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ExportConverter extends Converter 
+public class ContentMap 
   {
-    public ExportConverter (final @Nonnull InputStream is)
-      throws XMLStreamException 
+    private Map<Integer, SortedMap<DateTime, Map<String, String>>> map = new HashMap<Integer, SortedMap<DateTime, Map<String, String>>>();
+    
+    public void put (final int id, final @Nonnull DateTime dateTime, final @Nonnull String language, final @Nonnull String content)
       {
-        super(is);
-      }
-
-    @Override
-    protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
-      throws Exception
-      {
-        if ("root-content".equals(elementName))
-          {  
-            new ExportContentConverter(this).process();
-            localLevel--; // FIXME: doesn't properly receive the endElement for this
-          }
-        if ("root-site-node".equals(elementName))
-          {  
-            new ExportSiteNodeConverter(this).process();
-            localLevel--; // FIXME: doesn't properly receive the endElement for this
-          }
+        getLanguageMap(id, dateTime).put(language, content);
       }
     
-    @Override
-    protected void processEndElement (final @Nonnull String elementName) 
-      throws Exception
+    @Nonnull
+    public Map<String, String> get (final int id, final @Nonnull DateTime dateTime)
       {
+        return getLanguageMap(id, dateTime);
       }
-  } 
+    
+    @Nonnull
+    private Map<String, String> getLanguageMap (final int id, final @Nonnull DateTime dateTime)
+      {
+        SortedMap<DateTime, Map<String, String>> dateTimeMap = map.get(id);
+        
+        if (dateTimeMap == null)
+          { 
+            map.put(id, dateTimeMap = new TreeMap<DateTime, Map<String, String>>());  
+          }
+        
+        Map<String, String> languageMap = dateTimeMap.get(dateTime);
+        
+        if (languageMap == null)
+          {
+            dateTimeMap.put(dateTime, languageMap = new HashMap<String, String>());
+          }
+        
+        return languageMap;
+      }
+  }

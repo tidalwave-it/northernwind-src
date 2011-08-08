@@ -45,6 +45,9 @@ class ExportContentConverter extends Converter
     
     @Getter
     private DateTime expireDateTime;
+    
+    @Getter
+    private int id;
 
     private final ExportContentConverter parent;
     
@@ -52,15 +55,16 @@ class ExportContentConverter extends Converter
       {
         super(parent);        
         this.parent = (parent instanceof ExportContentConverter) ? ((ExportContentConverter)parent) : null;
+        id = Integer.parseInt(parent.reader.getAttributeValue("", "content-id"));
       }
-
+    
     @Override
     protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
         if ("children".equals(elementName))
           {
-            log.info("Created child - {}", getPath());
+//            log.info("Created child - {}", getPath());
             new ExportContentConverter(this).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
