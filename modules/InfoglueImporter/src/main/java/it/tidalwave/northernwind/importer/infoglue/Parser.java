@@ -22,6 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
+import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties.PropertyResolver;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.role.Marshallable;
+import it.tidalwave.role.Unmarshallable;
+import it.tidalwave.util.NotFoundException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import lombok.Cleanup;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,6 +77,32 @@ public abstract class Parser extends Converter
     protected void dumpProperties (final @Nonnull String fileName)
       throws IOException
       {
+        String resourcePropertiesPath = path + fileName + ".xml";
+        
+        
+        if (resourcePropertiesPath.contains("OverrideProperties_"))
+          {
+            final String nonOverridePath = resourcePropertiesPath.replaceAll("OverrideProperties_", "Properties_");
+
+            try
+              { 
+                final byte[] nonOverridePropertiesBytes  = ResourceManager.findRecentContents(nonOverridePath);
+                log.info("Patching {} with {} ...", nonOverridePath, resourcePropertiesPath);
+                final @Cleanup InputStream is = new ByteArrayInputStream(nonOverridePropertiesBytes);
+                ResourceProperties nonOverrideProperties = new DefaultResourceProperties((PropertyResolver)null).as(Unmarshallable.class).unmarshal(is);
+                final DefaultResourceProperties resourceProperties2 = new DefaultResourceProperties(new Id(""), properties, null);
+                nonOverrideProperties = resourceProperties2.merged(nonOverrideProperties);
+                final ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+                nonOverrideProperties.as(Marshallable.class).marshal(baos2);
+                baos2.close();
+                ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, nonOverridePath, baos2.toByteArray(), "Patched with OverridePropeties"));
+              }
+            catch (NotFoundException e)
+              {
+                log.warn(e.toString());
+              }
+          }       
+        
         DateTime creationTime = creationTimeByPath.get(path);
         
         if (creationTime == null)
@@ -95,7 +129,7 @@ public abstract class Parser extends Converter
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         resourceProperties.as(Marshallable).marshal(baos);
         baos.close();
-        ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path + fileName + ".xml", baos.toByteArray(), "No comment"));
+        ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, resourcePropertiesPath, baos.toByteArray(), "No comment"));
       }
     
     @Nonnull

@@ -42,8 +42,10 @@ public class AddResourceCommand
     @Getter
     private final DateTime dateTime;
 
+    @Getter
     private final String path;
 
+    @Getter
     private final byte[] contents;
     
     private final String comment;

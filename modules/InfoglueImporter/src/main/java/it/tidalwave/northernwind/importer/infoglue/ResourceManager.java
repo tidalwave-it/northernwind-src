@@ -22,11 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
+import it.tidalwave.util.NotFoundException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import javax.annotation.Nonnull;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -90,5 +92,28 @@ public class ResourceManager
       throws Exception 
       {
         Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static byte[] findRecentContents (final @Nonnull String path) 
+      throws NotFoundException
+      {
+        byte[] result = null;
+        
+        for (final List<AddResourceCommand> resources : commandMapByDateTime.values())
+          {
+            for (final AddResourceCommand resource : resources)
+              {
+                if (resource.getPath().equals(path))
+                  {
+                    result = resource.getContents();  
+                  }
+              }
+          }
+        
+        return NotFoundException.throwWhenNull(result, path);
       }
   }

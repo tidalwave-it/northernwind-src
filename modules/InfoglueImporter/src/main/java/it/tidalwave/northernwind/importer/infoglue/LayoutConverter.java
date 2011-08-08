@@ -23,10 +23,15 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.role.Marshallable;
+import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,6 +42,7 @@ import java.util.Stack;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
@@ -230,6 +236,28 @@ public class LayoutConverter extends Parser
             rootComponent.as(Marshallable.class).marshal(baos);
             baos.close();
             ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path, baos.toByteArray(), "No comment"));
+            
+            if (path.contains("OverrideComponents_"))
+              {
+                final String nonOverridePath = path.replaceAll("OverrideComponents_", "Components_");
+    
+                try
+                  { 
+                    final byte[] nonOverrideComponents  = ResourceManager.findRecentContents(nonOverridePath);
+                    log.info("Patching {} with {} ...", nonOverridePath, path);
+                    final @Cleanup InputStream is = new ByteArrayInputStream(nonOverrideComponents);
+                    Layout nonOverrideLayout = new DefaultLayout(new Id(""), "").as(Unmarshallable.class).unmarshal(is);
+                    nonOverrideLayout = (DefaultLayout)nonOverrideLayout.withOverride(rootComponent);
+                    final ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+                    rootComponent.as(Marshallable.class).marshal(baos2);
+                    baos2.close();
+                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, nonOverridePath, baos.toByteArray(), "Patched with OverrideComponents"));
+                  }
+                catch (NotFoundException e)
+                  {
+                    log.warn(e.toString());
+                  }
+              }
           }
       }
   }
