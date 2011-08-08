@@ -20,12 +20,14 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.rssfeed.springmvc;
+package it.tidalwave.northernwind.frontend.ui.component.rssfeed.htmltemplate;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
+import it.tidalwave.northernwind.frontend.ui.component.rssfeed.DefaultRssFeedViewController;
+import it.tidalwave.northernwind.frontend.ui.component.rssfeed.RssFeedView;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -35,13 +37,13 @@ import lombok.Getter;
  *
  **********************************************************************************************************************/
 @ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/RssFeed/#v1.0",
-              controlledBy=SpringMvcRssFeedViewController.class)
-public class SpringMvcRssFeedView extends TextHolder implements RssFeedView
+              controlledBy=DefaultRssFeedViewController.class)
+public class HtmlTemplateRssFeedView extends TextHolder implements RssFeedView
   {
     @Getter @Nonnull
     private final Id id;
 
-    public SpringMvcRssFeedView (final @Nonnull Id id) 
+    public HtmlTemplateRssFeedView (final @Nonnull Id id) 
       {
         super(id);
         setMimeType("application/rss+xml");

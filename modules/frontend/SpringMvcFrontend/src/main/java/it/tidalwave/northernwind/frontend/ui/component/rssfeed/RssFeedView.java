@@ -20,7 +20,7 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.rssfeed.springmvc;
+package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.role.Identifiable;

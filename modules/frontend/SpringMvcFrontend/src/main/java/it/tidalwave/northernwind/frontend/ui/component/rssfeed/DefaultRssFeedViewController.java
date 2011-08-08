@@ -20,7 +20,7 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.rssfeed.springmvc;
+package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import com.sun.syndication.feed.rss.Channel;
 import com.sun.syndication.feed.rss.Description;
@@ -29,7 +29,6 @@ import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,12 +43,12 @@ import org.springframework.beans.factory.annotation.Configurable;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class SpringMvcRssFeedViewController 
+public class DefaultRssFeedViewController 
   {
     @Nonnull
     private final RssFeedView view;
     
-    public SpringMvcRssFeedViewController (final @Nonnull RssFeedView view, final @Nonnull SiteNode siteNode)
+    public DefaultRssFeedViewController (final @Nonnull RssFeedView view, final @Nonnull SiteNode siteNode)
       {
         this.view = view;
       }
@@ -95,4 +94,4 @@ public class SpringMvcRssFeedViewController
         log.info("RSS FEED {}", s);
         view.setContent(s);      
       }
-  } 
+  }
