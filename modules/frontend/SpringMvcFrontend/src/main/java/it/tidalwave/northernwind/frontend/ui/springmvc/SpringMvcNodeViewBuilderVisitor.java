@@ -26,8 +26,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
 import lombok.extern.slf4j.Slf4j;   
 
 /***********************************************************************************************************************
@@ -39,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<HtmlHolder, HtmlHolder> 
+public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder> 
   {
     public SpringMvcNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
       {
@@ -48,13 +49,13 @@ public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSuppo
     
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
-    protected HtmlHolder createPlaceHolderComponent (final @Nonnull Layout layout)
+    protected TextHolder createPlaceHolderComponent (final @Nonnull Layout layout)
       {
         return new HtmlHolder("<div>Missing component: " + layout.getTypeUri() + "</div>"); // FIXME
       }
 
     @Override
-    protected void attach (final @Nonnull HtmlHolder parent, final @Nonnull HtmlHolder child)
+    protected void attach (final @Nonnull TextHolder parent, final @Nonnull TextHolder child)
       {
         parent.addComponent(child);
       }

@@ -66,6 +66,6 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("username", "fabriziogiudici"); // FIXME: get from siteNode properties
         attributes.put("url", "http://bluebill.tidalwave.it/mobile/"); // FIXME: get from site
-        populate("AddThisHtmlFragment.html", attributes); 
+        populate("AddThisHtmlFragment.txt", attributes); 
       }
   }

@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.rssfeed.springmvc;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -36,7 +36,7 @@ import lombok.Getter;
  **********************************************************************************************************************/
 @ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/RssFeed/#v1.0",
               controlledBy=SpringMvcRssFeedViewController.class)
-public class SpringMvcRssFeedView extends HtmlHolder implements RssFeedView
+public class SpringMvcRssFeedView extends TextHolder implements RssFeedView
   {
     @Getter @Nonnull
     private final Id id;
@@ -44,6 +44,7 @@ public class SpringMvcRssFeedView extends HtmlHolder implements RssFeedView
     public SpringMvcRssFeedView (final @Nonnull Id id) 
       {
         super(id);
+        setMimeType("application/rss+xml");
         this.id = id;
       }
   }

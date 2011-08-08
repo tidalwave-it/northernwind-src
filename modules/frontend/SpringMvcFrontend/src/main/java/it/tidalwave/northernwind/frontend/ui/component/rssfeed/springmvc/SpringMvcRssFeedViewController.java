@@ -93,6 +93,6 @@ public class SpringMvcRssFeedViewController
         final WireFeedOutput feedOutput = new WireFeedOutput();
         final String s = feedOutput.outputString(feed);
         log.info("RSS FEED {}", s);
-        ((HtmlHolder)view).setContent(s);      
+        view.setContent(s);      
       }
   } 

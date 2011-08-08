@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed.springmvc;
 
+import javax.annotation.Nonnull;
 import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
@@ -32,5 +33,5 @@ import it.tidalwave.role.Identifiable;
  **********************************************************************************************************************/
 public interface RssFeedView extends Identifiable
   {
-    public static final Class<RssFeedView> RssFeedView = RssFeedView.class;
+    public void setContent (@Nonnull String content);
   }

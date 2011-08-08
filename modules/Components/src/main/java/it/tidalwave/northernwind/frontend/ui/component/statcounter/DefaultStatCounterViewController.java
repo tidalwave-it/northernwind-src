@@ -67,6 +67,6 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("project", "5834368"); // FIXME: get from siteNode properties
         attributes.put("security", "91675212"); // FIXME: get from siteNode properties
-        populate("StatCounterHtmlFragment.html", attributes);
+        populate("StatCounterHtmlFragment.txt", attributes);
       }
   }
