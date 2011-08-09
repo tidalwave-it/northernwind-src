@@ -231,8 +231,7 @@
                         <exclude>**/*.mf</exclude>
                         <exclude>**/*.orig</exclude>
                         <exclude>**/.description</exclude>
-                        <exclude>**/main/resources/**/*.html</exclude>
-                        <exclude>**/main/resources/**/*.css</exclude>
+                        <exclude>**/main/resources/**/*.txt</exclude>
                         <exclude>.hgtags</exclude>
                         <exclude>.hgignore</exclude>
                         <exclude>**/activate-*-profile</exclude>
