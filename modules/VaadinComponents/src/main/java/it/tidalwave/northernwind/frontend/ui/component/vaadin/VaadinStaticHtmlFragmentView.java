@@ -36,6 +36,9 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  **********************************************************************************************************************/
 public class VaadinStaticHtmlFragmentView extends Label implements StaticHtmlFragmentView
   {
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given name.
@@ -45,6 +48,7 @@ public class VaadinStaticHtmlFragmentView extends Label implements StaticHtmlFra
      ******************************************************************************************************************/
     public VaadinStaticHtmlFragmentView (final @Nonnull Id id) 
       {
+        this.id = id;
         setStyleName(NW + id.stringValue());
         setContentMode(Label.CONTENT_RAW);
       }
