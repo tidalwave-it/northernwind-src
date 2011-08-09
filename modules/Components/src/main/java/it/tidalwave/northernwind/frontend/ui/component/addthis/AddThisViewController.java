@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.addthis;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,4 +32,7 @@ package it.tidalwave.northernwind.frontend.ui.component.addthis;
  **********************************************************************************************************************/
 public interface AddThisViewController
   {  
+    public static final Key<String> PROPERTY_URL = new Key<String>("url");
+    
+    public static final Key<String> PROPERTY_USER_NAME = new Key<String>("userName");
   }

@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.statcounter;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,4 +32,7 @@ package it.tidalwave.northernwind.frontend.ui.component.statcounter;
  **********************************************************************************************************************/
 public interface StatCounterViewController
   {  
+    public static final Key<String> PROPERTY_PROJECT = new Key<String>("project");
+    
+    public static final Key<String> PROPERTY_SECURITY = new Key<String>("security");
   }

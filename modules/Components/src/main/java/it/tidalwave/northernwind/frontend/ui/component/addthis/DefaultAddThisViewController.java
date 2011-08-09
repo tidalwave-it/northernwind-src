@@ -27,10 +27,11 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
-import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
 
 /***********************************************************************************************************************
  *
@@ -40,7 +41,13 @@ import org.springframework.beans.factory.annotation.Configurable;
  **********************************************************************************************************************/
 @Configurable
 public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewController implements AddThisViewController
-  {  
+  { 
+    @Nonnull
+    private final AddThisView view;
+    
+    @Nonnull
+    private final SiteNode siteNode;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance for populating the given {@link AddThisView} with the given {@link SiteNode}.
@@ -52,6 +59,8 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
     public DefaultAddThisViewController (final @Nonnull AddThisView view, final @Nonnull SiteNode siteNode) 
       {
         super(view, siteNode);
+        this.view = view;
+        this.siteNode = siteNode;
       }
     
     /*******************************************************************************************************************
@@ -61,11 +70,12 @@ public class DefaultAddThisViewController extends DefaultStaticHtmlFragmentViewC
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize()
-      throws IOException 
+      throws IOException, NotFoundException 
       {
+        final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
         final Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("username", "fabriziogiudici"); // FIXME: get from siteNode properties
-        attributes.put("url", "http://bluebill.tidalwave.it/mobile/"); // FIXME: get from site
+        attributes.put("username", properties.getProperty(PROPERTY_USER_NAME, "")); 
+        attributes.put("url", properties.getProperty(PROPERTY_URL, "")); 
         populate("AddThisHtmlFragment.txt", attributes); 
       }
   }

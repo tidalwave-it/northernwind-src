@@ -27,9 +27,11 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
+import it.tidalwave.util.NotFoundException;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.DefaultStaticHtmlFragmentViewController;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -40,6 +42,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable
 public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentViewController implements StatCounterViewController
   {  
+    @Nonnull
+    private final StatCounterView view;
+    
+    @Nonnull
+    private final SiteNode siteNode;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance for populating the given {@link StatCounterView} with the given {@link SiteNode}.
@@ -53,6 +61,8 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
       throws IOException 
       {
         super(view, siteNode);
+        this.view = view;
+        this.siteNode = siteNode;
       }
     
     /*******************************************************************************************************************
@@ -62,11 +72,12 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize() 
-      throws IOException
+      throws IOException, NotFoundException
       {
+        final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
         final Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("project", "5834368"); // FIXME: get from siteNode properties
-        attributes.put("security", "91675212"); // FIXME: get from siteNode properties
+        attributes.put("project", properties.getProperty(PROPERTY_PROJECT, "")); 
+        attributes.put("security", properties.getProperty(PROPERTY_SECURITY, "")); 
         populate("StatCounterHtmlFragment.txt", attributes);
       }
   }
