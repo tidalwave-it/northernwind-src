@@ -26,7 +26,6 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /***********************************************************************************************************************
@@ -38,8 +37,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 @Slf4j
 public class Main 
   {
-    private static ApplicationContext applicationContext;
-        
     /* package */ static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
     
     /* package */ static final ContentMap contentMap = new ContentMap();
@@ -50,10 +47,12 @@ public class Main
     public static void main (String[] args)
       throws Exception
       {
-        applicationContext = new ClassPathXmlApplicationContext(
-                "classpath*:/META-INF/*AutoBeans.xml",
-                "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
-                "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml");
+        new ClassPathXmlApplicationContext
+          (
+            "classpath*:/META-INF/*AutoBeans.xml",
+            "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
+            "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml"
+          );
         
         new ExportConverter(new FileInputStream(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml")).process() ;
       }
