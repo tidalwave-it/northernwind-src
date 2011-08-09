@@ -23,9 +23,17 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import javax.annotation.Nonnull;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.InputStream;
+import org.joda.time.DateTime;
+import org.apache.commons.io.IOUtils;
+import lombok.Cleanup;
 
 /***********************************************************************************************************************
  *
@@ -73,7 +81,32 @@ public class ExportConverter extends Converter
     @Override
     protected void finish() throws Exception 
       {
+        final DateTime dateTime = ResourceManager.getTimeBase().minusSeconds(1);
+        addLibraries("/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/" + "blueBillWebsiteLibrary.zip", dateTime);
+        
         ResourceManager.addAndCommitResources();
         ResourceManager.tagConversionCompleted();
+      }
+    
+    protected void addLibraries (final @Nonnull String zippedLibraryPath, final @Nonnull DateTime dateTime)
+      throws IOException
+      {
+        final ZipFile zipFile = new ZipFile(zippedLibraryPath);
+        final Enumeration enumeration = zipFile.entries();
+
+        while (enumeration.hasMoreElements())
+          {
+            final ZipEntry zipEntry = (ZipEntry)enumeration.nextElement();
+            
+            if (!zipEntry.isDirectory())
+              {
+    //                System.out.println("Unzipping: " + zipEntry.getName());
+                final @Cleanup InputStream is = new BufferedInputStream(zipFile.getInputStream(zipEntry));
+                ResourceManager.addCommand(new AddResourceCommand(dateTime,
+                                                                  zipEntry.getName(), 
+                                                                  IOUtils.toByteArray(is), 
+                                                                  "Extracted from library"));
+              }
+          }
       }
   } 

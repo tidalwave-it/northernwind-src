@@ -98,6 +98,15 @@ public class ResourceManager
      *
      ******************************************************************************************************************/
     @Nonnull
+    public static DateTime getTimeBase()
+      {
+        return commandMapByDateTime.firstKey();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     public static byte[] findRecentContents (final @Nonnull String path) 
       throws NotFoundException
       {
