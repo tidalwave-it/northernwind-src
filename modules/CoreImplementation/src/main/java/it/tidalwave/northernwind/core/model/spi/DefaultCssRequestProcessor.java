@@ -24,19 +24,16 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.CharBuffer;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.openide.filesystems.FileObject;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
-import lombok.Cleanup;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.impl.model.MacroSetExpander;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
@@ -51,6 +48,12 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 public class DefaultCssRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
+    private Site site;
+    
+    @Inject @Nonnull
+    private MacroSetExpander macroExpander;
+    
+    @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
     /*******************************************************************************************************************
@@ -60,7 +63,6 @@ public class DefaultCssRequestProcessor implements RequestProcessor
      ******************************************************************************************************************/
     @Override @Nonnull
     public Status process (final @Nonnull Request request) 
-      throws NotFoundException, IOException
       {
         final String relativeUri = request.getRelativeUri();
         
@@ -68,10 +70,17 @@ public class DefaultCssRequestProcessor implements RequestProcessor
           {
             try
               {
-                responseHolder.response().withContentType("text/css").withBody(loadCss(relativeUri)).put();  
+                final Resource cssResource = site.find(Resource.class).withRelativePath(relativeUri).result();
+                final FileObject file = cssResource.getFile();
+                final String cssText = macroExpander.filter(file.asText());
+                responseHolder.response().withContentType(file.getMIMEType()).withBody(cssText).put();  
                 return BREAK;
               }
-            catch (FileNotFoundException e)
+            catch (IOException e)
+              {
+                log.info("Cannot find {}, continuing...", relativeUri);  
+              }
+            catch (NotFoundException e)
               {
                 log.info("Cannot find {}, continuing...", relativeUri);  
               }
@@ -79,21 +88,4 @@ public class DefaultCssRequestProcessor implements RequestProcessor
         
         return CONTINUE;
       }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String loadCss (final @Nonnull String path)
-      throws IOException
-      {
-        final Resource htmlResource = new ClassPathResource(path, getClass());  
-        final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
-        log.info(">>>> serving contents of {} ...", path);            
-        final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
-        final int length = r.read(charBuffer);
-        r.close();
-        return new String(charBuffer.array(), 0, length);
-      }  
   }
