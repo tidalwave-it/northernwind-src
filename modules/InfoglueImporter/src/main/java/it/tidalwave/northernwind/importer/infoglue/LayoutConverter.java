@@ -55,7 +55,10 @@ import org.joda.time.DateTime;
 @Slf4j
 public class LayoutConverter extends Parser
   {
-    private static final List<String> PROPERTIES_REFERRING_RELATIVE_PATHS = Arrays.asList("styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts");
+    private static final List<String> PROPERTIES_REFERRING_RELATIVE_PATHS = Arrays.asList
+      (
+        "styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts"
+      );
     
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
@@ -67,9 +70,8 @@ public class LayoutConverter extends Parser
         put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
         put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0");
         put("853", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0");
-        put("883", "http://northernwind.tidalwave.it/component/Top1000Ranking/#v1.0");
+        put("883", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
         put("873", "http://northernwind.tidalwave.it/component/AddThis/#v1.0");
-//        put("", "");
       }};
             
     private final SortedMap<Key<?>, Object> properties;
@@ -150,12 +152,19 @@ public class LayoutConverter extends Parser
 //    <binding assetKey="" entity="SiteNode" entityId="50" > </binding > 
 //</property >
             
-            if (propertyValue != null)
+            if (propertyValue == null)
+              {
+                propertyValue = reader.getAttributeValue("", "path_en");
+              }
+            else
               {
                 propertyValue = propertyValue.toString().replace("Top, No Local", "Top No Local");
                 propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
                 propertyValue = propertyValue.toString().replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
-
+                propertyValue = propertyValue.toString().replace("Features Header", "Resources/Features Header");
+                propertyValue = propertyValue.toString().replace("Google Analytics", "Resources/Google Analytics");
+                propertyValue = propertyValue.toString().replace("Mobile News", "Blog RSS Feed");
+                
                 if (PROPERTIES_REFERRING_RELATIVE_PATHS.contains(propertyName))
                   {
                     final List<Object> values = new ArrayList<Object>();
@@ -195,14 +204,9 @@ public class LayoutConverter extends Parser
                   {
                     propertyName = "contents";  
                   }
-                
-                properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
 
-            else
-              {
-                properties.put(new Key<Object>(componentId + "." + propertyName), reader.getAttributeValue("", "path_en"));
-              }
+            properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
           }
       }
 
