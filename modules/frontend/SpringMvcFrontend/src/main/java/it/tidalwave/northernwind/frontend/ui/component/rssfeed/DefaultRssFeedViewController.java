@@ -37,10 +37,11 @@ import com.sun.syndication.io.WireFeedOutput;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -59,6 +60,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Nonnull
     private final SiteNode siteNode;
+    
+    @Inject @Nonnull
+    private Site site;
     
     private String linkBase;
     
@@ -124,6 +128,13 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void render()
       throws IllegalArgumentException, FeedException, NotFoundException, IOException 
       {
+        feed.setGenerator("NorthernWind v" + site.getVersionString());
+        
+        if (!blogSortedMapByDate.isEmpty())
+          {
+            feed.setLastBuildDate(blogSortedMapByDate.keySet().iterator().next().toDate());
+          }
+    
         feed.setItems(new ArrayList<Item>(blogSortedMapByDate.values()));
         
 //        if (!StringUtils.hasText(feed.getEncoding())) 
