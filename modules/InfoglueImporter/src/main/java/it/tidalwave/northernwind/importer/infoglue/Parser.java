@@ -78,8 +78,7 @@ public abstract class Parser extends Converter
       throws IOException
       {
         String resourcePropertiesPath = path + fileName + ".xml";
-        
-        
+                
         if (resourcePropertiesPath.contains("OverrideProperties_"))
           {
             final String nonOverridePath = resourcePropertiesPath.replaceAll("OverrideProperties_", "Properties_");
