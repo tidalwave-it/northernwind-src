@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
+import it.tidalwave.northernwind.core.model.Content;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -78,6 +79,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             view.addAttribute("description", siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DESCRIPTION, ""));
             view.addAttribute("title", siteNode.getProperties().getProperty(PROPERTY_TITLE, ""));
             view.addAttribute("screenCssSection", computeScreenCssSection());
+            view.addAttribute("rssFeeds", computeRssFeedsSection());
+            view.addAttribute("scripts", computeScriptsSection());
+            view.addAttribute("inlinedScripts", computeInlinedScriptsSection());
           }
         catch (IOException e)
           {
@@ -91,7 +95,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * .
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -106,6 +110,116 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             for (final String uri : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
                 builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
+              }
+          }
+        catch (IOException e)
+          {
+            log.error("", e);
+          }        
+        catch (NotFoundException e)
+          {
+            // ok, no css  
+          }      
+        
+        return builder.toString();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeRssFeedsSection() 
+      {
+        final StringBuilder builder = new StringBuilder();
+    
+        try
+          {
+            final String contextPath = site.getContextPath();
+
+            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_RSS_FEEDS))
+              {
+                final SiteNode rssSiteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
+                final String mimeType = "application/rss+xml";
+                final String relativeUri = rssSiteNode.getRelativeUri();
+                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s%s\" />", mimeType, contextPath, relativeUri));
+              }
+          }
+        catch (IOException e)
+          {
+            log.error("", e);
+          }        
+        catch (NotFoundException e)
+          {
+            // ok, no css  
+          }      
+        
+        return builder.toString();
+      }
+            /*
+                     <c:forEach items="{rssFeeds}" var="rssFeed" >
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="{rssFeed.url}" />
+        </c:forEach>
+        <c:forEach items="{scripts}" var="script" >
+            <script type="text/javascript" src="{script.url}"></script>
+        </c:forEach>
+        <c:forEach items="{inlinedScripts}" var="inlinedScript">
+            <c:set var="inlinedScriptId" value="{inlinedScript.id}"/>
+            <% Integer contentId = (Integer)pageContext.findAttribute("inlinedScriptId"); %>
+            <%= ((BasicTemplateController)request.getAttribute("templateLogic")).getParsedContentAttribute(contentId, "Template") %>
+        </c:forEach>
+
+             */
+    
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeScriptsSection() 
+      {
+        final StringBuilder builder = new StringBuilder();
+    
+//        try
+//          {
+//            final String contextPath = site.getContextPath();
+//
+//            for (final String uri : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+//              {
+//                builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
+//              }
+//          }
+//        catch (IOException e)
+//          {
+//            log.error("", e);
+//          }        
+//        catch (NotFoundException e)
+//          {
+//            // ok, no css  
+//          }      
+        
+        return builder.toString();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeInlinedScriptsSection() 
+      {
+        final StringBuilder builder = new StringBuilder();
+    
+        try
+          {
+            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_INLINED_SCRIPTS))
+              {
+                final Content script = site.find(Content.class).withRelativePath(relativePath).result();
+                final String template = script.getProperties().getProperty(PROPERTY_TEMPLATE);
+                builder.append(template);  
               }
           }
         catch (IOException e)

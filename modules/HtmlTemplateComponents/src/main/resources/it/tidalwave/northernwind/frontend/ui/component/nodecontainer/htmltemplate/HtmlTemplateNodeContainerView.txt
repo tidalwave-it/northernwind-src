@@ -15,20 +15,16 @@
             div#breadcrumb { display: none }
         </style>
 
+        $rssFeeds$
+        $scripts$
+        $inlinedScripts$
+
 <!--
-        <style type="text/css" media="screen">
-            @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shCore.css");
-            @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shThemeDefault.css");
-            @import url("http://services.tidalwave.it/LightBox/css/lightbox.css");
-        </style>
-
-        <c:forEach items="{scripts}" var="script" >
-            <script type="text/javascript" src="{script.url}"></script>
-        </c:forEach>
-
-        <c:forEach items="{rssFeeds}" var="rssFeed" >
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="{rssFeed.url}" />
-        </c:forEach>
+    <style type="text/css" media="screen">
+        @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shCore.css");
+        @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shThemeDefault.css");
+        @import url("http://services.tidalwave.it/LightBox/css/lightbox.css");
+    </style>
 
     <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shCore.js"></script>
     <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushGroovy.js"></script>
@@ -43,13 +39,6 @@
     <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/prototype.js"></script>
     <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/scriptaculous.js?load=effects,builder"></script>
     <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/lightbox.js"></script>
-
-        <c:forEach items="{inlinedScripts}" var="inlinedScript">
-            <c:set var="inlinedScriptId" value="{inlinedScript.id}"/>
-            <% Integer contentId = (Integer)pageContext.findAttribute("inlinedScriptId"); %>
-            <%= ((BasicTemplateController)request.getAttribute("templateLogic")).getParsedContentAttribute(contentId, "Template") %>
-
-        </c:forEach>
 -->
     </head>
 
