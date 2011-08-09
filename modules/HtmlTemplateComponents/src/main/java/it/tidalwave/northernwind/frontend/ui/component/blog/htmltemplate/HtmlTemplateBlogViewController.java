@@ -81,10 +81,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final DateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
         final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
-        htmlBuilder.append(String.format("<div id='%s'>\n", idPrefix));
+        htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>\n", idPrefix));
         htmlBuilder.append(String.format("<h3>%s</h3>\n", properties.getProperty(PROPERTY_TITLE)));
-        htmlBuilder.append("<div>");
-        htmlBuilder.append(String.format("<span class='.nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
+        htmlBuilder.append("<div class='nw-blog-post-meta'>");
+        htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
         
         try
           {
@@ -97,7 +97,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           }
             
         htmlBuilder.append("</div>");        
-        htmlBuilder.append(String.format("<div>%s</div>\n", properties.getProperty(PROPERTY_FULL_TEXT)));
+        htmlBuilder.append(String.format("<div  class='nw-blog-post-content'>%s</div>\n", properties.getProperty(PROPERTY_FULL_TEXT)));
         htmlBuilder.append(String.format("</div>\n"));
         blogSortedMapByDate.put(blogDateTime, htmlBuilder.toString());
       }
