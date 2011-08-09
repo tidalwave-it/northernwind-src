@@ -22,15 +22,19 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
+import it.tidalwave.northernwind.frontend.ui.component.Properties;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import org.openide.util.Exceptions;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -76,27 +80,35 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     @PostConstruct
     /* package */ void initialize()
       {
-        try
+        final StringBuilder htmlBuilder = new StringBuilder();
+
+        try 
           {
-            final StringBuilder htmlBuilder = new StringBuilder();
-            
             for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
-                htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
+                
+                try
+                  {
+                    htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
+                  }
+                catch (NotFoundException e)
+                  {
+                    htmlBuilder.append(content.getProperties().getProperty(PROPERTY_TEMPLATE)).append("\n");
+                  }
               }
-            
-            view.setContent(htmlBuilder.toString());
           }
         catch (NotFoundException e)
           {
-            view.setContent(e.toString());
+            htmlBuilder.append(e.toString());
             log.error("", e.toString());
           }
         catch (IOException e)
           {
-            view.setContent(e.toString());
+            htmlBuilder.append(e.toString());
             log.error("", e);
           }
+            
+        view.setContent(htmlBuilder.toString());
       }
   }
