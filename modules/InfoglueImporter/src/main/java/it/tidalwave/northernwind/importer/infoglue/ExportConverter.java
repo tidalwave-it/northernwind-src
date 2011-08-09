@@ -50,7 +50,8 @@ public class ExportConverter extends Converter
             new ExportContentConverter(this).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
-        if ("root-site-node".equals(elementName))
+        
+        else if ("root-site-node".equals(elementName))
           {  
             new ExportSiteNodeConverter(this).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
