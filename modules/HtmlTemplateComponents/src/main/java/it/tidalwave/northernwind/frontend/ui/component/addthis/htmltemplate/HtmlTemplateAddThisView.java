@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.addthis.AddThisView;
 import it.tidalwave.northernwind.frontend.ui.component.addthis.DefaultAddThisViewController;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -39,6 +40,9 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
               controlledBy=DefaultAddThisViewController.class)
 public class HtmlTemplateAddThisView extends HtmlHolder implements AddThisView
   {
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -49,5 +53,6 @@ public class HtmlTemplateAddThisView extends HtmlHolder implements AddThisView
     public HtmlTemplateAddThisView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
   }

@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.statcounter.DefaultStatCounterViewController;
 import it.tidalwave.northernwind.frontend.ui.component.statcounter.StatCounterView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -39,6 +40,9 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
               controlledBy=DefaultStatCounterViewController.class)
 public class HtmlTemplateStatCounterView extends HtmlHolder implements StatCounterView
   {
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -49,5 +53,6 @@ public class HtmlTemplateStatCounterView extends HtmlHolder implements StatCount
     public HtmlTemplateStatCounterView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
   }

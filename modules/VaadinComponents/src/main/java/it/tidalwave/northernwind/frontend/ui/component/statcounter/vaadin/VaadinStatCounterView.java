@@ -28,6 +28,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.statcounter.DefaultStatCounterViewController;
 import it.tidalwave.northernwind.frontend.ui.component.statcounter.StatCounterView;
 import it.tidalwave.northernwind.frontend.ui.component.vaadin.VaadinStaticHtmlFragmentView;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -39,6 +40,9 @@ import it.tidalwave.northernwind.frontend.ui.component.vaadin.VaadinStaticHtmlFr
               controlledBy=DefaultStatCounterViewController.class)
 public class VaadinStatCounterView extends VaadinStaticHtmlFragmentView implements StatCounterView
   {
+    @Getter @Nonnull
+    private final Id id;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
@@ -49,5 +53,6 @@ public class VaadinStatCounterView extends VaadinStaticHtmlFragmentView implemen
     public VaadinStatCounterView (final @Nonnull Id id) 
       {
         super(id);
+        this.id = id;
       }
   }
