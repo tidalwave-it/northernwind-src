@@ -22,12 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
@@ -80,11 +80,34 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
         try
           {
             final StringBuilder htmlBuilder = new StringBuilder();
+            String titleMarkup = "h2";
             
-            for (final String relativePath   : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
+            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
-                htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
+                final ResourceProperties contentProperties = content.getProperties();
+                
+                try
+                  {
+                    final String title = contentProperties.getProperty(PROPERTY_TITLE);
+                    htmlBuilder.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
+                  }
+                catch (NotFoundException e)
+                  {
+                    // ok, no title
+                  }
+                
+                try
+                  {
+                    htmlBuilder.append(contentProperties.getProperty(PROPERTY_FULL_TEXT)).append("\n");
+                  }
+                catch (NotFoundException e)
+                  {
+                    log.warn("", e);
+                    htmlBuilder.append(e.toString());
+                  }
+
+                titleMarkup = "h3";
               }
             
             view.setText(htmlBuilder.toString());
