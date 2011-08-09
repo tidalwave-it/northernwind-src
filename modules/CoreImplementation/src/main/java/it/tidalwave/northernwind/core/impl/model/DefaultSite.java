@@ -54,6 +54,7 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.util.NbBundle;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
@@ -233,6 +234,17 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     public List<Locale> getConfiguredLocales()
       {
         return new CopyOnWriteArrayList<Locale>(configuredLocales);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String getVersionString()
+      {
+        return NbBundle.getMessage(DefaultSite.class, "NorthernWind.version");
       }
     
     /*******************************************************************************************************************

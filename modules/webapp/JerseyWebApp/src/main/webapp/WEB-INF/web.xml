@@ -44,6 +44,7 @@
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
+    
     <!-- Jersey (REST) configuration -->
     <servlet>
         <servlet-name>JerseyServlet</servlet-name>
@@ -58,6 +59,7 @@
         <servlet-name>JerseyServlet</servlet-name>
         <url-pattern>/*</url-pattern>    
     </servlet-mapping>
+    
     <!-- LogBack status viewer -->
     <servlet>
         <servlet-name>LogBackViewStatusMessages</servlet-name>
@@ -67,6 +69,7 @@
         <servlet-name>LogBackViewStatusMessages</servlet-name>
         <url-pattern>/admin/logback</url-pattern>
     </servlet-mapping>
+    
     <!-- Initialization DiagnosticsFilter -->
     <filter>
         <filter-name>InitializationDiagnosticsFilter</filter-name>
@@ -74,6 +77,16 @@
     </filter>
     <filter-mapping>
         <filter-name>InitializationDiagnosticsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <!--  -->
+    <filter>
+        <filter-name>NorthernWindResponseHeaderFilter</filter-name>
+        <filter-class>it.tidalwave.northernwind.frontend.util.NorthernWindResponseHeaderFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>NorthernWindResponseHeaderFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

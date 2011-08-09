@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,81 +16,80 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.java.net
- * SCM: http://java.net/hg/northernwind~src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.model;
+package it.tidalwave.northernwind.frontend.util;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Locale;
+import javax.inject.Inject;
 import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.Site;
 
 /***********************************************************************************************************************
  *
- * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and 
- * {@link SiteNode}s.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Site
+@Configurable
+public class NorthernWindResponseHeaderFilter implements Filter 
   {
-    /*******************************************************************************************************************
-     *
-     * Returns the context path for this web site.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getContextPath();
+    @Inject @Nonnull
+    private Site site;
     
     /*******************************************************************************************************************
      *
-     * Reloads the whole configuration, e.g. to get and update.
-     * 
-     ******************************************************************************************************************/
-    public void reset()
-      throws IOException, NotFoundException;
-    
-    /*******************************************************************************************************************
-     *
-     * Finds something.
-     * 
-     ******************************************************************************************************************/
-    @Nonnull
-    public <Type> SiteFinder<Type> find (@Nonnull Class<Type> type);
-    
-    /*******************************************************************************************************************
-     *
-     * Returns the {@link FileSystemProvider} used by this {@code Site}.
-     * 
-     * @return  the {@code FileSystemProvider}
-     * 
-     ******************************************************************************************************************/
-    @Nonnull
-    public FileSystemProvider getFileSystemProvider();
-    
-    /*******************************************************************************************************************
-     *
-     * Returns the {@link Locale}s configured for this site.
-     * 
-     * @return   the {@code Locale}s.
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public List<Locale> getConfiguredLocales();
+    @Override
+    public void init (final @Nonnull FilterConfig filterConfig)
+      {        
+      }
 
     /*******************************************************************************************************************
      *
-     * Returns the version string of NorthernWind.
-     * 
-     * @return   the version
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public String getVersionString();
+    @Override
+    public void destroy() 
+      {        
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void doFilter (final @Nonnull ServletRequest request,
+                          final @Nonnull ServletResponse response,
+                          final @Nonnull FilterChain chain)
+      throws IOException, ServletException
+      {
+        doBeforeProcessing(request, response);
+        chain.doFilter(request, response);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void doBeforeProcessing (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
+      throws IOException, ServletException 
+      {
+        ((HttpServletResponse)response).addHeader("X-NorthernWind-Version", site.getVersionString());
+      }
   }
