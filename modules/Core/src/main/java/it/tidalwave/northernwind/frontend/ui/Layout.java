@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.ui;
 import javax.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.util.As;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.role.Identifiable;
@@ -57,4 +58,8 @@ public interface Layout extends As, Identifiable
     
     @Nonnull
     public List<Layout> getChildren();
+    
+    @Nonnull
+    public Layout findSubComponentById (@Nonnull Id id)
+      throws NotFoundException;
   }
