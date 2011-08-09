@@ -236,6 +236,39 @@ public class LayoutConverter extends Parser
           
         if (rootComponent != null) // might be empty
           {
+            try
+              {                
+                rootComponent.findSubComponentById(new Id("main"))
+                             .findSubComponentById(new Id("main-8"));
+                properties.put(new Key<Object>("main-8.contents"), Arrays.asList("/Resources/Top 1000 Ranking"));
+              }
+            catch (NotFoundException e)
+              {
+                // ok  
+              }
+            try
+              {                
+                rootComponent.findSubComponentById(new Id("main"))
+                             .findSubComponentById(new Id("main-9"));
+                properties.put(new Key<Object>("main-9.url"), "http://bluebill.tidalwave.it/mobile/");
+                properties.put(new Key<Object>("main-9.userName"), "fabriziogiudici");
+              }
+            catch (NotFoundException e)
+              {
+                // ok  
+              }
+            try
+              {                
+                rootComponent.findSubComponentById(new Id("footer"))
+                             .findSubComponentById(new Id("footer-7"));
+                properties.put(new Key<Object>("footer-7.project"), "5834368");
+                properties.put(new Key<Object>("footer-7.security"), "91675212");
+              }
+            catch (NotFoundException e)
+              {
+                // ok  
+              }
+            
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);
             baos.close();
