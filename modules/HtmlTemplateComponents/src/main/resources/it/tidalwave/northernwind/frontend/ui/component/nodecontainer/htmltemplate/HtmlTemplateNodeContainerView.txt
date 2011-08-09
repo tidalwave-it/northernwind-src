@@ -3,7 +3,6 @@
     <head>
         <title>$titlePrefix$$title$</title>
         <meta name="description" content="$description$" />
-        
         <style type="text/css" media="screen">
             $screenCssSection$
         </style>        
@@ -14,40 +13,14 @@
             div#local { display: none }
             div#breadcrumb { display: none }
         </style>
-
         $rssFeeds$
         $scripts$
         $inlinedScripts$
-
-<!--
-    <style type="text/css" media="screen">
-        @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shCore.css");
-        @import url("http://services.tidalwave.it/SyntaxHighlighter/styles/shThemeDefault.css");
-        @import url("http://services.tidalwave.it/LightBox/css/lightbox.css");
-    </style>
-
-    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shCore.js"></script>
-    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushGroovy.js"></script>
-    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushJava.js"></script>
-    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushXml.js"></script>
-    <script type="text/javascript" src="http://services.tidalwave.it/SyntaxHighlighter/scripts/shBrushBash.js"></script>
-    <script type="text/javascript">
-            SyntaxHighlighter.config.clipboardSwf = 'http://services.tidalwave.it/SyntaxHighlighter/scripts/clipboard.swf';
-            SyntaxHighlighter.all();
-    </script>
-
-    <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/prototype.js"></script>
-    <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/scriptaculous.js?load=effects,builder"></script>
-    <script type="text/javascript" src="http://services.tidalwave.it/LightBox/js/lightbox.js"></script>
--->
     </head>
 
     <body id="page-home">
         <div class="nw-page">
-            
-            <div class="nw-header"></div> <!-- FIXME: move header in layout; 
-                                                     FIXME: components don't have clearfix -->
-                
+            <div class="nw-header"></div> <!-- FIXME: move header in layout; FIXME: components don't have clearfix -->
             <div class="nw-content">
                 $content$
             </div>
