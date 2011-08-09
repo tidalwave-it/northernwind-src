@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.component.StaticHtmlFragmentView;
 import com.vaadin.ui.Label;
+import lombok.Getter;
 import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 
 /***********************************************************************************************************************
