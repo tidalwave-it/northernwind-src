@@ -40,21 +40,22 @@ import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.openide.util.NbBundle;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
+import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.openide.util.NbBundle;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
@@ -112,6 +113,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private String mediaPath = "content/media";
 
     @Getter @Setter @Nonnull
+    private String libraryPath = "content/library";
+
+    @Getter @Setter @Nonnull
     private String nodePath = "structure";
     
     @Getter @Setter
@@ -125,11 +129,15 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
             
     private FileObject documentFolder;
     
+    private FileObject libraryFolder;
+    
     private FileObject mediaFolder;
     
     private FileObject nodeFolder; 
     
     private final Map<String, Content> documentMapByRelativePath = new TreeMap<String, Content>();
+    
+    private final Map<String, Resource> libraryMapByRelativePath = new TreeMap<String, Resource>();
     
     private final Map<String, Media> mediaMapByRelativePath = new TreeMap<String, Media>();
     
@@ -155,9 +163,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         log.info("reset()");
         
         documentMapByRelativePath.clear();
+        libraryMapByRelativePath.clear();
         mediaMapByRelativePath.clear();
         nodeMapByRelativePath.clear();
-        
         nodeMapByRelativeUri.clear();
         
         traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
@@ -166,6 +174,18 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
             public void visit (final @Nonnull FileObject folder, final @Nonnull String relativePath) 
               {
                 documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
+              }
+          });
+        
+        traverse(libraryFolder, ALL_FILTER, new FileVisitor() 
+          {
+            @Override
+            public void visit (final @Nonnull FileObject file, final @Nonnull String relativePath) 
+              {
+                if (file.isData())
+                  {
+                    libraryMapByRelativePath.put(r(relativePath.substring(libraryPath.length() + 1)), modelFactory.createResource(file));
+                  }
               }
           });
         
@@ -206,6 +226,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         if (logConfigurationEnabled)
           {
             logConfiguration("Documents by relative path:", documentMapByRelativePath);
+            logConfiguration("Library by relative path:", libraryMapByRelativePath);
             logConfiguration("Media by relative path:", mediaMapByRelativePath);
             logConfiguration("Nodes by relative path:", nodeMapByRelativePath);
             logConfiguration("Nodes by relative URI:", nodeMapByRelativeUri);
@@ -259,6 +280,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         
         relativePathMapsByType.put(Content.class, documentMapByRelativePath);
         relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
+        relativePathMapsByType.put(Resource.class, libraryMapByRelativePath);
         relativePathMapsByType.put(SiteNode.class, nodeMapByRelativePath);
         
         relativeUriMapsByType.put(SiteNode.class, nodeMapByRelativeUri);
@@ -275,8 +297,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         
         final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = findMandatoryFolder(fileSystem, documentPath);
-        mediaFolder = findMandatoryFolder(fileSystem, mediaPath);
-        nodeFolder = findMandatoryFolder(fileSystem, nodePath);
+        libraryFolder  = findMandatoryFolder(fileSystem, libraryPath);
+        mediaFolder    = findMandatoryFolder(fileSystem, mediaPath);
+        nodeFolder     = findMandatoryFolder(fileSystem, nodePath);
         
         for (final String localeAsString : localesAsString.split(","))
           {
@@ -286,6 +309,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         log.info(">>>> contextPath:  {}", contextPath);
         log.info(">>>> fileSystem:   {}", fileSystem);
         log.info(">>>> documentPath: {}", documentFolder.getPath());
+        log.info(">>>> libraryPath:  {}", libraryFolder.getPath());
         log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
         log.info(">>>> nodePath:     {}", nodeFolder.getPath());
         log.info(">>>> locales:      {}", configuredLocales);
