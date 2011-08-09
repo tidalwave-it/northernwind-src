@@ -135,12 +135,14 @@ public class DefaultLayout extends SpringAsSupport implements Layout
         return result;
       }
     
+    // Here everything is already cloned
     private void applyOverride (final @Nonnull Layout override)
       {
+        final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
         this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
 
         // Complex rule, but it's Infoglue. 
-        if (this.getTypeUri().equals(override.getTypeUri()))
+        if (sameType)
           {
             for (final Layout overridingChild : override.getChildren())
               {
@@ -152,7 +154,16 @@ public class DefaultLayout extends SpringAsSupport implements Layout
                   }
                 else
                   {
-                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);                    
+                    childrenMapById.put(overridingChild.getId(), overridingChild);
+                    final int i = children.indexOf(overriddenChild);
+                    
+                    if (i < 0)
+                      {
+                        throw new IllegalArgumentException();  
+                      }
+                    
+                    children.set(i, overridingChild);
+                    //                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);                    
                   }
               }
           }
@@ -180,8 +191,8 @@ public class DefaultLayout extends SpringAsSupport implements Layout
     
     public void add (final @Nonnull Layout layout) // FIXME: drop this
       {
-        children.add(layout);
-        childrenMapById.put(layout.getId(), layout);
+        children.add(layout); // FIXME: clone
+        childrenMapById.put(layout.getId(), layout);// FIXME: clone
       }
     
     @Nonnull
