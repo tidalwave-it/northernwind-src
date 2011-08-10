@@ -101,7 +101,10 @@
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
         <property name="localesAsString" value="${nw.site.locales}" />
     </bean>
-                            
+                       
+    <bean id="voidLinkPostProcessor"
+          class="it.tidalwave.northernwind.core.impl.model.VoidLinkPostProcessor" />
+          
     <bean id="requestLocaleManager"
           class="it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager" >
     </bean>
