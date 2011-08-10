@@ -22,11 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
-import java.io.FileInputStream;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
+import java.io.FileInputStream;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -44,7 +45,7 @@ public class Main
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void main (String[] args)
+    public static void main (final @Nonnull String ... args)
       throws Exception
       {
         new ClassPathXmlApplicationContext
@@ -54,6 +55,8 @@ public class Main
             "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml"
           );
         
-        new ExportConverter(new FileInputStream(System.getProperty("user.home") + "/Downloads/Export__blueBill_2011-07-17_1747.xml")).process() ;
+        final String folder = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/";
+        final String file = "Export__blueBill_2011-08-10_0414.xml";
+        new ExportConverter(new FileInputStream(folder + file)).process() ;
       }
   }
