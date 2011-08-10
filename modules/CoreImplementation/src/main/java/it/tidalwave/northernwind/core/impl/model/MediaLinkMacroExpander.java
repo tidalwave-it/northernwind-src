@@ -42,7 +42,7 @@ public class MediaLinkMacroExpander extends MacroExpander
     protected String filter (final @Nonnull Matcher matcher)
       {
         final String relativePath = matcher.group(1);
-        return contextPath + "/media" + relativePath;
+        return site.createLink("/media" + relativePath);
 //            final String relativeUri = site.find(Media.class).withRelativePath(matcher1.group(1)).result().get();
       }
   }

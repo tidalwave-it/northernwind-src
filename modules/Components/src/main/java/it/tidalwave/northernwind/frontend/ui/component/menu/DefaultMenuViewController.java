@@ -82,7 +82,7 @@ public class DefaultMenuViewController implements MenuViewController
                   {
                     final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
                     final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL, "no nav. label");
-                    view.addLink(navigationTitle, targetSiteNode.getRelativeUri());                
+                    view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));                
                   }
                 catch (IOException e)
                   {

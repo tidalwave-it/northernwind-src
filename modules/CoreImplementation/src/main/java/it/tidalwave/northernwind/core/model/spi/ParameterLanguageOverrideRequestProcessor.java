@@ -50,6 +50,8 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
             
     @Inject @Nonnull
     private DefaultRequestLocaleManager requestLocaleManager;
+    
+    private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<String>();
 
     /*******************************************************************************************************************
      *
@@ -61,7 +63,9 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
       {
         try
           {
-            requestLocaleManager.setRequestLocale(new Locale(request.getParameter(parameterName)));
+            final String parameterValue = request.getParameter(parameterName);
+            parameterValueHolder.set(parameterValue);
+            requestLocaleManager.setRequestLocale(new Locale(parameterValue));
           }
         catch (NotFoundException ex) 
           {
@@ -69,5 +73,17 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
           }
 
         return CONTINUE;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getParameterValue()
+      throws NotFoundException
+      {
+        return NotFoundException.throwWhenNull(parameterValueHolder.get(), "parameterValue");  
       }
   }

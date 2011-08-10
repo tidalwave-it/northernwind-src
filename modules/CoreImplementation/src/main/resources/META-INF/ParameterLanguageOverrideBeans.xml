@@ -47,4 +47,7 @@
         <property name="parameterName" value="${nb.languageOverride.parameterName}"/>
     </bean>
     
+    <bean id="parameterLanguageOverrideLinkPostProcessor"
+          class="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor" />
+    
 </beans>

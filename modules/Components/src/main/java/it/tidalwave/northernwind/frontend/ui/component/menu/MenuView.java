@@ -35,5 +35,5 @@ import it.tidalwave.role.Identifiable;
  **********************************************************************************************************************/
 public interface MenuView extends Identifiable
   {
-    public void addLink (@Nonnull String navigationTitle, @Nonnull String relativeUri);  
+    public void addLink (@Nonnull String navigationTitle, @Nonnull String link);  
   }

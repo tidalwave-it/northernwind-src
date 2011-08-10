@@ -43,15 +43,11 @@ public class MacroExpander
     protected Site site;
     
     @Nonnull
-    protected String contextPath;
-    
-    @Nonnull
     private final Pattern pattern;
     
     public MacroExpander (final @Nonnull String regexp)
       {
         pattern = Pattern.compile(regexp);
-        contextPath = site.getContextPath();
       }
     
     @Nonnull

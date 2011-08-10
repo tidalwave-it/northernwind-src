@@ -20,15 +20,12 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.regex.Matcher;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -37,26 +34,31 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  *
  **********************************************************************************************************************/
 @Configurable
-public class NodeLinkMacroExpander extends MacroExpander
+public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor 
   {
-    public NodeLinkMacroExpander()
-      {
-        super("\\$nodeLink\\(relativePath='(.*)'\\)\\$");
-      } 
-    
+    @Inject @Nonnull
+    private ParameterLanguageOverrideRequestProcessor parameterLanguageOverrideRequestProcessor;
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
+    public String postProcess (final @Nonnull String link)
       {
         try 
           {
-            final String relativePath = matcher.group(1);
-            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-            return site.createLink(siteNode.getRelativeUri());
-          }
+            final String parameterValue = parameterLanguageOverrideRequestProcessor.getParameterValue();
+            final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
+            final StringBuilder builder = new StringBuilder(link);
+            builder.append(link.contains("?") ? "&" : "?");
+            builder.append(parameterName).append("=").append(parameterValue);
+            return builder.toString();
+          } 
         catch (NotFoundException e) 
           {
-            // FIXME
-            return "";
+            return link;
           }
       }
-  }
+  }    

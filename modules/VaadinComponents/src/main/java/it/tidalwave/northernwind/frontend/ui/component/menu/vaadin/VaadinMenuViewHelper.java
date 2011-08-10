@@ -23,13 +23,12 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Link;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -37,22 +36,14 @@ import com.vaadin.ui.Link;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @RequiredArgsConstructor
  /* package */ class VaadinMenuViewHelper 
   {
     @Nonnull
     private final MenuView view;
     
-    @Inject @Nonnull
-    private Site site;
-    
-    public VaadinMenuViewHelper (final @Nonnull MenuView view)
+    public void addLink (final @Nonnull String navigationTitle, final @Nonnull String link)
       {
-        this.view = view;
-      }
-        
-    public void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
-      {
-        ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(site.getContextPath() + relativeUri)));                        
+        ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(link)));                        
       }
   }

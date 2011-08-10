@@ -23,11 +23,10 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu.htmltemplate;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -35,23 +34,15 @@ import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @RequiredArgsConstructor
  /* package */ class HtmlTemplateMenuViewHelper 
   {
     @Nonnull
     private final MenuView view;
-    
-    @Inject @Nonnull
-    private Site site;
-    
-    public HtmlTemplateMenuViewHelper (final @Nonnull MenuView view)
-      {
-        this.view = view;
-      }
         
-    public void addLink (final @Nonnull String navigationTitle, final @Nonnull String relativeUri)
+    public void addLink (final @Nonnull String navigationTitle, final @Nonnull String link)
       {
         ((HtmlHolder)view).addComponent(new HtmlHolder(
-                String.format("<li><a href='%s'>%s</a></li>", site.getContextPath() + relativeUri, navigationTitle)));                        
+                String.format("<li><a href='%s'>%s</a></li>", link, navigationTitle)));                        
       }
   }

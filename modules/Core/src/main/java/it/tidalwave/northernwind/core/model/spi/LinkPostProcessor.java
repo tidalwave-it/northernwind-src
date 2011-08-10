@@ -20,15 +20,9 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.util.regex.Matcher;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -36,27 +30,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
-public class NodeLinkMacroExpander extends MacroExpander
+public interface LinkPostProcessor 
   {
-    public NodeLinkMacroExpander()
-      {
-        super("\\$nodeLink\\(relativePath='(.*)'\\)\\$");
-      } 
-    
-    @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
-      {
-        try 
-          {
-            final String relativePath = matcher.group(1);
-            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-            return site.createLink(siteNode.getRelativeUri());
-          }
-        catch (NotFoundException e) 
-          {
-            // FIXME
-            return "";
-          }
-      }
+    public String postProcess (@Nonnull String link);
   }

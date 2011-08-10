@@ -53,6 +53,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -99,6 +100,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     
     @Inject @Nonnull
     private ApplicationContext applicationContext;
+    
+    @Inject @Nonnull
+    private List<LinkPostProcessor> linkPostProcessors;
     
     @Inject @Nonnull
     private ModelFactory modelFactory;
@@ -244,6 +248,29 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
         final Map<String, Type> relativeUriMap = (Map<String, Type>)relativeUriMapsByType.get(type);
         return new DefaultSiteFinder<Type>(type.getSimpleName(), relativePathMap, relativeUriMap);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String createLink (final @Nonnull String relativeUri) 
+      {
+        String link = contextPath + relativeUri;
+        
+        if (!link.contains(".") && !link.endsWith("/"))
+          {
+            link += "/";
+          }
+        
+        for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)
+          {
+            link = linkPostProcessor.postProcess(link);
+          }
+        
+        return link;
       }
     
     /*******************************************************************************************************************
