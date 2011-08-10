@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-webapp</artifactId>
-        <version>1.0-ALPHA-2-SNAPSHOT</version>
+        <version>1.0-ALPHA-2</version>
         <relativePath>..</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-vaadin-webapp</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>war</packaging>
     <name>NorthernWind - Frontend Webapp (Vaadin)</name>
     <description>NorthernWind - Frontend Webapp (Vaadin)</description>
