@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>1.5</version>
+        <version>1.6-SNAPSHOT</version>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
@@ -26,7 +26,7 @@
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
         <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
         <openbluesky.version>0.12</openbluesky.version>
-        <thesefoolishthings.version>1.17-SNAPSHOT</thesefoolishthings.version>
+        <thesefoolishthings.version>1.17.1-SNAPSHOT</thesefoolishthings.version>
         <netbeans.version>RELEASE691</netbeans.version>
         <slf4j.version>1.6.1</slf4j.version>
         <logback.version>0.9.28</logback.version>
