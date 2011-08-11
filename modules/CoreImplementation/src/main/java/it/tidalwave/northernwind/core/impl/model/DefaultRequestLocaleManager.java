@@ -24,16 +24,17 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -47,7 +48,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 public class DefaultRequestLocaleManager implements RequestLocaleManager, RequestResettable
   {
     @Inject @Nonnull
-    private Site site;
+    private Provider<Site> site;
     
     private final ThreadLocal<Locale> localeHolder = new ThreadLocal<Locale>();
     
@@ -60,7 +61,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     public List<Locale> getLocales() 
       {
         final Locale requestLocale = localeHolder.get();
-        final List<Locale> locales = new ArrayList<Locale>(site.getConfiguredLocales());
+        final List<Locale> locales = new ArrayList<Locale>(site.get().getConfiguredLocales());
         
         
         if (requestLocale != null)

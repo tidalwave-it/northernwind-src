@@ -22,9 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi; 
 
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
@@ -49,7 +49,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 public class DefaultContentRequestProcessor implements RequestProcessor 
   {
     @Inject @Nonnull
-    private Site site;
+    private Provider<Site> site;
     
     @Inject @Nonnull
     private SiteView siteView;
@@ -63,7 +63,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException 
       {
-        final SiteNode siteNode = site.find(SiteNode).withRelativeUri(request.getRelativeUri()).result();            
+        final SiteNode siteNode = site.get().find(SiteNode).withRelativeUri(request.getRelativeUri()).result();            
 //            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
         siteView.renderSiteNode(siteNode);
         

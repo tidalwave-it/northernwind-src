@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.core.annotation.Order;
@@ -47,7 +48,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 public class DefaultMediaRequestProcessor<ResponseType> implements RequestProcessor
   {
     @Inject @Nonnull
-    private Site site;
+    private Provider<Site> site;
     
     @Inject @Nonnull
     protected ResponseHolder<ResponseType> responseHolder;
@@ -65,7 +66,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         
         if (relativeUri.startsWith("/media"))
           {
-            final Media media = site.find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
+            final Media media = site.get().find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
             final FileObject file = media.getFile();
             createResponse(file);
             return BREAK;

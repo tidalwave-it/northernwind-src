@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.core.annotation.Order;
@@ -48,10 +49,10 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 public class DefaultCssRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
-    private Site site;
+    private Provider<Site> site;
     
     @Inject @Nonnull
-    private MacroSetExpander macroExpander;
+    private Provider<MacroSetExpander> macroExpander;
     
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
@@ -70,9 +71,9 @@ public class DefaultCssRequestProcessor implements RequestProcessor
           {
             try
               {
-                final Resource cssResource = site.find(Resource.class).withRelativePath(relativeUri).result();
+                final Resource cssResource = site.get().find(Resource.class).withRelativePath(relativeUri).result();
                 final FileObject file = cssResource.getFile();
-                final String cssText = macroExpander.filter(file.asText());
+                final String cssText = macroExpander.get().filter(file.asText());
                 responseHolder.response().withContentType(file.getMIMEType()).withBody(cssText).put();  
                 return BREAK;
               }
