@@ -76,6 +76,22 @@
             <scope>runtime</scope>
         </dependency>    
     </dependencies>
+
+    <!-- The default configuration would create jar and test-jar, with the jar contents overriding
+         the war contents when initializing -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     
     <modules>
         <module>JerseyWebApp</module>
