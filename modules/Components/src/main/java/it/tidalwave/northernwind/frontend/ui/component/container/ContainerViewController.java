@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
+import it.tidalwave.util.Key;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,4 +32,6 @@ package it.tidalwave.northernwind.frontend.ui.component.container;
  **********************************************************************************************************************/
 public interface ContainerViewController 
   {  
+    // FIXME: must be boolean
+    public static final Key<String> PROPERTY_CLEARFIX = new Key<String>("clearFix");
   }

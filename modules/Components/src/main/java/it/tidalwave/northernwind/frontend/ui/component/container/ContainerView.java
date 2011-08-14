@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
+import it.tidalwave.role.Identifiable;
+
 /***********************************************************************************************************************
  *
  * A generic container of other views.
@@ -30,6 +32,7 @@ package it.tidalwave.northernwind.frontend.ui.component.container;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ContainerView 
-  {    
+public interface ContainerView extends Identifiable
+  {
+    public void setClearFix (boolean clearFix);
   }

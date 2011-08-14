@@ -18,12 +18,9 @@
         $inlinedScripts$
     </head>
 
-    <body id="page-home"> <!-- FIXME: remove the id or set an id for all components -->
+    <body>
         <div class="nw-page">
-            <div class="nw-header clearfix"></div> <!-- FIXME: move header in layout; FIXME: components don't have clearfix -->
-            <div class="nw-content clearfix">
-                $content$
-            </div>
+            $content$
         </div>
     </body>
 </html>

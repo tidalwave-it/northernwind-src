@@ -51,4 +51,10 @@ public class HtmlTemplateContainerView extends HtmlTemplateHtmlFragmentView impl
         super(id);
 //        setCaption(typeUri); TODO:for debugging purposes, add everything into a captioned Panel
       }
+
+    @Override
+    public void setClearFix (final boolean clearFix) 
+      {
+        addAttribute("clearFixClass", clearFix ? " clearfix" : "");
+      }
   }  

@@ -20,12 +20,15 @@
  * SCM: http://java.net/hg/northernwind~src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.container;
+package it.tidalwave.northernwind.frontend.ui.component.nodecontainer.htmltemplate;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -33,27 +36,23 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultContainerViewController implements ContainerViewController
+@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer/#v2.0", 
+              controlledBy=DefaultNodeContainerViewController.class)
+public class HtmlTemplateNodeContainerView_2 extends HtmlHolder implements NodeContainerView
   {
+    @Getter @Nonnull
+    private final Id id;
+        
     /*******************************************************************************************************************
      *
-     * Creates an instance for populating the given {@link ContainerView} with the given {@link SiteNode}.
+     * Creates an instance with the given id.
      * 
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
+     * @param  id  the id
      *
      ******************************************************************************************************************/
-    public DefaultContainerViewController (final @Nonnull ContainerView view, final @Nonnull SiteNode siteNode) 
-      throws IOException 
+    public HtmlTemplateNodeContainerView_2 (final @Nonnull Id id) 
       {
-        try
-          {  
-            final boolean clearFix = Boolean.parseBoolean(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CLEARFIX, "false"));
-            view.setClearFix(clearFix);
-          }
-        catch (NotFoundException e) // propertyGroup
-          {
-            // ok  
-          } 
+        super(id);
+        this.id = id;
       }
-  }
+  }  
