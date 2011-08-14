@@ -32,14 +32,15 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.spring.ClassScanner;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.util.spring.ClassScanner;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.util.NotFoundException.*;
 
 /***********************************************************************************************************************
  *
@@ -65,14 +66,15 @@ public class DefaultViewFactory implements ViewFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Object createView (final @Nonnull String typeUri, 
-                              final @Nonnull Id id, 
+    public Object createView (final @Nonnull String viewTypeUri, 
+                              final @Nonnull Id viewId, 
                               final @Nonnull SiteNode siteNode)
       throws NotFoundException
       {        
-        final ViewBuilder viewBuilder = NotFoundException.throwWhenNull(viewBuilderMapByTypeUri.get(typeUri),
-                                                                        "Cannot find " + typeUri + ": available: " + viewBuilderMapByTypeUri.keySet());
-        return viewBuilder.createView(id, siteNode);
+        final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
+                                                      String.format("Cannot find %s: available: %s", 
+                                                                    viewTypeUri, viewBuilderMapByTypeUri.keySet()));
+        return viewBuilder.createView(viewId, siteNode);
       }
      
     /*******************************************************************************************************************
