@@ -121,18 +121,20 @@ class ExportContentsVersionConverter extends Converter
                 new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
         String path = parent.getPath() + "/";
       
-        if (path.equals("/blueBill/License/"))
-          {
-            path = "/blueBill/Mobile/License/";   
-          }
-        else if (path.equals("/blueBill/Mobile/Contact/"))
-          {
-            path = "/blueBill/Mobile/Contacts/";   
-          }
-        else if (path.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
-          {
-            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
-          }
+        // FIXME for blueBill Mobile, put in configuration
+//        if (path.equals("/blueBill/License/"))
+//          {
+//            path = "/blueBill/Mobile/License/";   
+//          }
+//        else if (path.equals("/blueBill/Mobile/Contact/"))
+//          {
+//            path = "/blueBill/Mobile/Contacts/";   
+//          }
+//        else if (path.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
+//          {
+//            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
+//          }
+        // END FIXME for blueBill Mobile, put in configuration
 
         final String content = escapedVersionValue.replace("cdataEnd", "]]>");
         Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
@@ -146,7 +148,7 @@ class ExportContentsVersionConverter extends Converter
             path = path.replaceAll(Main.contentPrefix, "");
             path = "/content/document" + path;
             log.info("PBD " + parent.getPublishDateTime() + " " + path);
-            // FIXME: comment and creationDate
+            // FIXME: creationDate
             
             if (!"".equals(content))
               {
