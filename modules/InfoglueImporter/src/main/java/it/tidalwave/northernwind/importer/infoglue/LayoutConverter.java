@@ -63,15 +63,15 @@ public class LayoutConverter extends Parser
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
         put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0");
+        put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
+        put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu/#v1.0");
+        put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0");
         put( "67", "http://northernwind.tidalwave.it/component/Sidebar/#v1.0");
         put( "71", "http://northernwind.tidalwave.it/component/RssFeed/#v1.0");
         put("104", "http://northernwind.tidalwave.it/component/Blog/#v1.0");
-        put( "36", "http://northernwind.tidalwave.it/component/HorizontalMenu/#v1.0");
-        put( "21", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
-        put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0");
         put("853", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0");
-        put("883", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
         put("873", "http://northernwind.tidalwave.it/component/AddThis/#v1.0");
+        put("883", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
       }};
             
     private final SortedMap<Key<?>, Object> properties;
