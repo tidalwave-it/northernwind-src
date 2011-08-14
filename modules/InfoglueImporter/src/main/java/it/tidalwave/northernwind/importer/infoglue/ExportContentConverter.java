@@ -64,7 +64,6 @@ class ExportContentConverter extends Converter
       {
         if ("children".equals(elementName))
           {
-//            log.info("Created child - {}", getPath());
             new ExportContentConverter(this).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
