@@ -195,7 +195,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout
         childrenMapById.put(layout.getId(), layout);// FIXME: clone
       }
     
-    @Nonnull
+    @Override @Nonnull
     public Layout findSubComponentById (final @Nonnull Id id)
       throws NotFoundException
       {
