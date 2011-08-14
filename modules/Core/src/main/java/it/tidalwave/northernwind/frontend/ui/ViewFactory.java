@@ -51,8 +51,6 @@ public interface ViewFactory
      * 
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (@Nonnull String viewTypeUri, 
-                              @Nonnull Id viewId, 
-                              @Nonnull SiteNode siteNode) 
+    public Object createView (@Nonnull String viewTypeUri, @Nonnull Id viewId, @Nonnull SiteNode siteNode) 
       throws NotFoundException;
   }
