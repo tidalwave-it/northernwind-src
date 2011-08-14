@@ -25,7 +25,9 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.io.IOException;
@@ -53,11 +55,13 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
-    protected static final Comparator<DateTime> REVERSE_DATE_COMPARATOR = new Comparator<DateTime>() 
+    private final Comparator<Content> REVERSE_DATE_COMPARATOR = new Comparator<Content>() 
       {
         @Override
-        public int compare (final @Nonnull DateTime dateTime1, final @Nonnull DateTime dateTime2) 
+        public int compare (final @Nonnull Content post1, final @Nonnull Content post2) 
           {
+            final DateTime dateTime1 = getBlogDateTime(post1);
+            final DateTime dateTime2 = getBlogDateTime(post2);
             return -dateTime1.compareTo(dateTime2);
           }
       };
@@ -98,33 +102,47 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try 
           {
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
-              {  
+            final ResourceProperties propertyGroup = siteNode.getPropertyGroup(view.getId());
+            final int maxFullItems = Integer.parseInt(propertyGroup.getProperty(PROPERTY_MAX_FULL_ITEMS, "99"));
+            final int maxLeadinItems = Integer.parseInt(propertyGroup.getProperty(PROPERTY_MAX_LEADIN_ITEMS, "99"));
+            final int maxItems = Integer.parseInt(propertyGroup.getProperty(PROPERTY_MAX_ITEMS, "99"));
+            
+            log.debug(">>>> initializing controller for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
+                          new Object[]{ view.getId(), maxFullItems, maxLeadinItems, maxItems });
+    
+            int currentItem = 0;
+            
+            for (final Content post : findPostsInReverseDateOrder(propertyGroup))
+              {
                 try
                   {
-                    final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
+                    log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
+                    post.getProperties().getProperty(PROPERTY_FULL_TEXT); // Probe existence of fullText
 
-                    for (final Content post : postsFolder.findChildren().results())
+                    if (currentItem < maxFullItems)
                       {
-                        try
-                          {
-                            addPost(post);
-                          }
-                        catch (NotFoundException e)
-                          {
-                            log.warn("{}", e.toString());
-                          }
-                        catch (IOException e)
-                          {
-                            log.warn("", e);
-                          }
-                      }            
+                        addFullPost(post);
+                      }
+                    else if (currentItem < maxFullItems + maxLeadinItems)
+                      {
+                        addLeadInPost(post);
+                      }
+                    else if (currentItem < maxItems)
+                      {
+                        addReference(post);
+                      }
+
+                    currentItem++;
                   }
                 catch (NotFoundException e)
                   {
-                    log.warn("", e.toString());
+                    log.warn("{}", e.toString());
                   }
-              }
+                catch (IOException e)
+                  {
+                    log.warn("", e);
+                  }
+              }            
 
             render();
           } 
@@ -137,12 +155,51 @@ public abstract class DefaultBlogViewController implements BlogViewController
             log.warn("", e);
           }
       }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    // TODO: embed the sort by reverse date in the finder
+    @Nonnull
+    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties propertyGroup) 
+      throws IOException, NotFoundException 
+      {
+        final List<Content> posts = new ArrayList<Content>();
+        
+        for (final String relativePath : propertyGroup.getProperty(PROPERTY_CONTENTS))
+          {  
+            final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
+
+            for (final Content post : postsFolder.findChildren().results())
+              {
+                posts.add(post);   
+              }
+          }
+      
+        Collections.sort(posts, REVERSE_DATE_COMPARATOR);
+        return posts;
+      }
     
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addPost (@Nonnull Content post)
+    protected abstract void addFullPost (@Nonnull Content post)
+      throws IOException, NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    protected abstract void addLeadInPost (@Nonnull Content post)
+      throws IOException, NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    protected abstract void addReference (@Nonnull Content post)
       throws IOException, NotFoundException;
 
     /*******************************************************************************************************************
@@ -177,8 +234,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected DateTime getBlogDateTime (@Nonnull Content post)
-      throws NotFoundException
+    protected DateTime getBlogDateTime (final @Nonnull Content post)
       {
         final ResourceProperties properties = post.getProperties();
         final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
@@ -197,7 +253,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 log.warn("", e);
               }
           }
-        
-        throw new NotFoundException("No available date for /" + post.getFile().getPath());
+   
+        return new DateTime(0);
       }
   }

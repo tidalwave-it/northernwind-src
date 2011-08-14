@@ -34,4 +34,11 @@ import it.tidalwave.util.Key;
 public interface BlogViewController 
   {    
     public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents"); 
+    
+    // FIXME: these should be Integer
+    public static final Key<String> PROPERTY_MAX_FULL_ITEMS = new Key<String>("maxFullItems"); 
+    
+    public static final Key<String> PROPERTY_MAX_ITEMS = new Key<String>("maxItems"); 
+    
+    public static final Key<String> PROPERTY_MAX_LEADIN_ITEMS = new Key<String>("maxLeadInItems"); 
   }

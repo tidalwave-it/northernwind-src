@@ -22,21 +22,22 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
-import it.tidalwave.northernwind.core.model.Site;
-import javax.inject.Inject;
-import java.util.TreeMap;
 import javax.annotation.Nonnull;
-import java.util.Map;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import org.springframework.beans.factory.annotation.Configurable;
+import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -45,16 +46,18 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    private final Map<DateTime, String> blogSortedMapByDate = new TreeMap<DateTime, String>(REVERSE_DATE_COMPARATOR);
+    private final List<String> htmlParts = new ArrayList<String>();
     
     @Inject @Nonnull
     private Site site;
     
     @Nonnull
     private final SiteNode siteNode;
+    
+    private boolean referencesRendered;
 
     /*******************************************************************************************************************
      *
@@ -73,16 +76,79 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void addPost (final @Nonnull Content post)
+    protected void addFullPost (final @Nonnull Content post)
       throws IOException, NotFoundException 
       {
+        log.debug("addFullPost()");        
+        addPost(post, true);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void addLeadInPost (final @Nonnull Content post)
+      throws IOException, NotFoundException 
+      {
+        log.debug("addLeadInPost()");        
+        addPost(post, false);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void addReference (final @Nonnull Content post)
+      throws IOException, NotFoundException 
+      {
+        log.debug("addReference()");
+        
         final ResourceProperties properties = post.getProperties();
 
         final DateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
-        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
+        
+        if (!referencesRendered)
+          {
+            htmlBuilder.append("<ul>\n");
+            referencesRendered = true;
+          }
+        
+//        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
+        
+        try
+          {
+           final String link = site.getContextPath() + siteNode.getRelativeUri() + "/" + getExposedUri(post) + "/";
+           htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>\n", link, properties.getProperty(PROPERTY_TITLE)));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no link  
+          }
+            
+        htmlParts.add(htmlBuilder.toString());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    private void addPost (final @Nonnull Content post, final boolean addBody)
+      throws IOException, NotFoundException 
+      {
+        final ResourceProperties properties = post.getProperties();
+        final StringBuilder htmlBuilder = new StringBuilder();
+        
+        final DateTime blogDateTime = getBlogDateTime(post);
+        final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>\n", idPrefix));
         htmlBuilder.append(String.format("<h3>%s</h3>\n", properties.getProperty(PROPERTY_TITLE)));
+        
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
         
@@ -97,9 +163,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           }
             
         htmlBuilder.append("</div>");        
-        htmlBuilder.append(String.format("<div  class='nw-blog-post-content'>%s</div>\n", properties.getProperty(PROPERTY_FULL_TEXT)));
+        
+        if (addBody)
+          {
+            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>\n", properties.getProperty(PROPERTY_FULL_TEXT)));
+          }
+
         htmlBuilder.append(String.format("</div>\n"));
-        blogSortedMapByDate.put(blogDateTime, htmlBuilder.toString());
+        htmlParts.add(htmlBuilder.toString());
       }
 
     /*******************************************************************************************************************
@@ -112,9 +183,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         final StringBuilder htmlBuilder = new StringBuilder();
        
-        for (final String html : blogSortedMapByDate.values())
+        for (final String html : htmlParts)
           {
             htmlBuilder.append(html);
+          }
+        
+        if (referencesRendered)
+          {
+            htmlBuilder.append("</ul>\n");
           }
         
         ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));

@@ -23,9 +23,9 @@
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import com.sun.syndication.feed.rss.Channel;
@@ -41,7 +41,6 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -53,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultRssFeedViewController extends DefaultBlogViewController implements RssFeedViewController
   {
-    private final Map<DateTime, Item> blogSortedMapByDate = new TreeMap<DateTime, Item>(REVERSE_DATE_COMPARATOR);
+    private final List<Item> items = new ArrayList<Item>();
 
     @Nonnull
     private final RssFeedView view;
@@ -93,10 +92,16 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
       }
     
     @Override
-    protected void addPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
+    protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
       throws IOException, NotFoundException 
       {
         final DateTime blogDateTime = getBlogDateTime(post);
+
+        if (feed.getLastBuildDate() == null)
+          {
+            feed.setLastBuildDate(blogDateTime.toDate());
+          }
+        
         final ResourceProperties postProperties = post.getProperties();
         final Item item = new Item();  
         final Content content = new Content();  
@@ -121,7 +126,18 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
             // ok. no link 
           }
         
-        blogSortedMapByDate.put(blogDateTime,item);
+        items.add(item);
+      }
+    
+
+    @Override
+    protected void addLeadInPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
+      {
+      }
+
+    @Override
+    protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
+      {
       }
 
     @Override
@@ -129,13 +145,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
       throws IllegalArgumentException, FeedException, NotFoundException, IOException 
       {
         feed.setGenerator("NorthernWind v" + site.getVersionString());
-        
-        if (!blogSortedMapByDate.isEmpty())
-          {
-            feed.setLastBuildDate(blogSortedMapByDate.keySet().iterator().next().toDate());
-          }
-    
-        feed.setItems(new ArrayList<Item>(blogSortedMapByDate.values()));
+        feed.setItems(items);
         
 //        if (!StringUtils.hasText(feed.getEncoding())) 
 //          {
