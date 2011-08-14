@@ -117,39 +117,47 @@ class ExportContentsVersionConverter extends Converter
     @Override
     protected void finish() throws Exception 
       {
-        log.info("New process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
+        log.info("Now process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
                 new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
-        String fixedPath = parent.getPath() + "/";
+        String path = parent.getPath() + "/";
       
-        if (fixedPath.equals("/blueBill/License/"))
+        if (path.equals("/blueBill/License/"))
           {
-            fixedPath = "/blueBill/Mobile/License/";   
+            path = "/blueBill/Mobile/License/";   
           }
-        else if (fixedPath.equals("/blueBill/Mobile/Contact/"))
+        else if (path.equals("/blueBill/Mobile/Contact/"))
           {
-            fixedPath = "/blueBill/Mobile/Contacts/";   
+            path = "/blueBill/Mobile/Contacts/";   
           }
-        else if (fixedPath.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
+        else if (path.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
           {
-            fixedPath = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
+            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
           }
 
-        fixedPath = fixedPath.replaceAll("^/blueBill/", "");
         final String content = escapedVersionValue.replace("cdataEnd", "]]>");
         Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
   
-        if (fixedPath.startsWith("Mobile"))
+        if (!path.matches(Main.contentPrefix + ".*"))
           {
-            fixedPath = fixedPath.replaceAll("^Mobile", "content/document");
-            log.info("PBD " + parent.getPublishDateTime() + " " + fixedPath);
+            log.warn("Ignoring content: {}", path);
+          }
+        else
+          {
+            path = path.replaceAll(Main.contentPrefix, "");
+            path = "/content/document" + path;
+            log.info("PBD " + parent.getPublishDateTime() + " " + path);
             // FIXME: comment and creationDate
-            new ContentParser(content, 
-                              modifiedDateTime, 
-                              parent.getPublishDateTime(),
-                              UriUtilities.urlEncodedPath(fixedPath) + "/", 
-                              languageCode,
-                              versionComment)
-                    .process();
+            
+            if (!"".equals(content))
+              {
+                new ContentParser(content, 
+                                  modifiedDateTime, 
+                                  parent.getPublishDateTime(),
+                                  UriUtilities.urlEncodedPath(path) + "/", 
+                                  languageCode,
+                                  versionComment)
+                        .process();
+              }
           }
       }
 
