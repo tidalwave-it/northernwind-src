@@ -28,15 +28,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.Parameters;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.role.spring.SpringAsSupport;
-import java.util.Stack;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -110,6 +111,8 @@ public class DefaultLayout extends SpringAsSupport implements Layout
     
     public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
+        Parameters.checkNonNull(id, "id");
+        Parameters.checkNonNull(typeUri, "typeUri");
         this.id = id;
         this.typeUri = typeUri;
       }
