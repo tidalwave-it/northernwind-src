@@ -62,7 +62,6 @@ class ExportSiteNodeConverter extends Converter
       {
         if ("childSiteNodes".equals(elementName))
           {
-            log.info("Created child - {}", getPath());
             new ExportSiteNodeConverter(this).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
