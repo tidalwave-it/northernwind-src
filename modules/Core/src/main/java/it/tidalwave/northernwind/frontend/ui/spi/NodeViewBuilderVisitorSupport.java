@@ -93,6 +93,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
           }
         catch (NotFoundException e) 
           {
+            log.warn("Component not found", e);
             return createPlaceHolderComponent(layout);
           }
       }
