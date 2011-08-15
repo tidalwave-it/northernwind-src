@@ -34,6 +34,7 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
@@ -58,6 +59,9 @@ public class DefaultSiteViewController implements SiteViewController
     private List<RequestProcessor> requestProcessors;
     
     @Inject @Nonnull
+    private RequestHolder requestHolder;
+    
+    @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
     /*******************************************************************************************************************
@@ -72,6 +76,7 @@ public class DefaultSiteViewController implements SiteViewController
           {
             log.info("processRequest({})", request);
             resetRequestResettables();
+            requestHolder.set(request);
             
             for (final RequestProcessor requestProcessor : requestProcessors)
               {

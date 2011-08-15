@@ -81,6 +81,9 @@
     </bean>
     
     <!-- Core objects -->
+    <bean id="requestHolder"
+          class="it.tidalwave.northernwind.core.model.spi.RequestHolder"/>
+          
     <bean id="modelFactory"
           class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
           
