@@ -55,6 +55,8 @@ import org.joda.time.DateTime;
 @Slf4j
 public class LayoutConverter extends Parser
   {
+    private static final String CONTAINER = "http://northernwind.tidalwave.it/component/Container/#v1.0";
+    
     private static final List<String> PROPERTIES_REFERRING_RELATIVE_PATHS = Arrays.asList
       (
         "styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts"
@@ -68,10 +70,22 @@ public class LayoutConverter extends Parser
         put( "44", "http://northernwind.tidalwave.it/component/HtmlTextWithTitle/#v1.0");
         put( "67", "http://northernwind.tidalwave.it/component/Sidebar/#v1.0");
         put( "71", "http://northernwind.tidalwave.it/component/RssFeed/#v1.0");
+        put( "89", "http://northernwind.tidalwave.it/component/BreadCrumb/#v1.0");
         put("104", "http://northernwind.tidalwave.it/component/Blog/#v1.0");
         put("853", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0");
         put("873", "http://northernwind.tidalwave.it/component/AddThis/#v1.0");
         put("883", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
+
+        put("509", "http://northernwind.tidalwave.it/component/StoppingDownCSS/#v1.0"); // StoppingDown CSS
+        put("513", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0"); 
+//        put("544", "http://northernwind.tidalwave.it/component/Splash/#v1.0"); // Splash
+        put("544", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0"); // Splash
+        put("547", "http://northernwind.tidalwave.it/component/Calendar/#v1.0");
+        put("572", CONTAINER); // Categories header
+        put("577", "http://northernwind.tidalwave.it/component/NikonianWebringBadge/#v1.0"); // Nikonian WebRing Badge
+        put("602", CONTAINER); // Post Index header
+        put("603", "http://northernwind.tidalwave.it/component/Unknown603/#v1.0");
+        put("764", "http://northernwind.tidalwave.it/component/LightBoxCSS/#v1.0"); // LightBox CSS
       }};
             
     private final SortedMap<Key<?>, Object> properties;
@@ -121,7 +135,7 @@ public class LayoutConverter extends Parser
                 
                 if (parentLayout == null)
                   {
-                    parentLayout = new DefaultLayout(new Id(attrNameValue), "http://northernwind.tidalwave.it/component/Container/#v1.0"); 
+                    parentLayout = new DefaultLayout(new Id(attrNameValue), CONTAINER); 
                     wrapperLayouts.put(attrNameValue, parentLayout);
                     componentStack.peek().add(parentLayout);
                   }
@@ -155,15 +169,34 @@ public class LayoutConverter extends Parser
             if (propertyValue == null)
               {
                 propertyValue = reader.getAttributeValue("", "path_en");
+                
+                if ("--".equals(propertyValue.toString()))
+                  {
+                    propertyValue = "";
+                  }
               }
             else
               {
                 propertyValue = propertyValue.toString().replace("Top, No Local", "Top No Local");
-                propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
-                propertyValue = propertyValue.toString().replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
-                propertyValue = propertyValue.toString().replace("Features Header", "Resources/Features Header");
+                
+                // FIXME: for blueBill Mobile
+//                propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
+//                propertyValue = propertyValue.toString().replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
+//                propertyValue = propertyValue.toString().replace("Features Header", "Resources/Features Header");
+//                propertyValue = propertyValue.toString().replace("Google Analytics", "Resources/Google Analytics");
+//                propertyValue = propertyValue.toString().replace("Mobile News", "Blog RSS Feed");
+                // END FIXME: for blueBill Mobile
+
+                propertyValue = propertyValue.toString().replaceAll("Layout.Navigation.Top", "Layout Navigation Top.css");
+                propertyValue = propertyValue.toString().replace("StoppingDown CSS", "StoppingDown.css");
+                propertyValue = propertyValue.toString().replace("LightBox Override CSS", "LightBox Override.css");
                 propertyValue = propertyValue.toString().replace("Google Analytics", "Resources/Google Analytics");
-                propertyValue = propertyValue.toString().replace("Mobile News", "Blog RSS Feed");
+                propertyValue = propertyValue.toString().replace("Album instructions", "Resources/Album instructions");
+                propertyValue = propertyValue.toString().replace("Photographers", "Resources/Photographers");
+                propertyValue = propertyValue.toString().replace("Blog RSS Feed", "RSS Feeds/Blog RSS Feed");
+//                propertyValue = propertyValue.toString().replace("News RSS Feed", "RSS Feeds/News RSS Feed");
+                propertyValue = propertyValue.toString().replace("News RSS Feed", "Resources/Feed Panel");
+                propertyValue = propertyValue.toString().replace("Nikonian WebRing badge", "Resources/Nikonian WebRing badge");
                 
                 if (PROPERTIES_REFERRING_RELATIVE_PATHS.contains(propertyName))
                   {
@@ -177,7 +210,12 @@ public class LayoutConverter extends Parser
                           }
 
                         spl = "/" + spl.trim();
-                        spl = spl.replaceAll("/Mobile", "/"); 
+//                        spl = spl.replaceAll("/Mobile", "/"); // blueBill Mobile
+                        
+                        if ("content3-3".equals(componentId.stringValue())) // StoppingDown
+                          {
+                            spl = "/Blog" + spl;  
+                          }
 
                         if ("styleSheets".equals(propertyName))
                           {
@@ -236,11 +274,50 @@ public class LayoutConverter extends Parser
           
         if (rootComponent != null) // might be empty
           {
+            // blueBill Mobile
+//            try
+//              {                
+//                rootComponent.findSubComponentById(new Id("main"))
+//                             .findSubComponentById(new Id("main-8"));
+//                properties.put(new Key<Object>("main-8.contents"), Arrays.asList("/Resources/Top 1000 Ranking"));
+//              }
+//            catch (NotFoundException e)
+//              {
+//                // ok  
+//              }
+//            try
+//              {                
+//                rootComponent.findSubComponentById(new Id("main"))
+//                             .findSubComponentById(new Id("main-9"));
+//                properties.put(new Key<Object>("main-9.url"), "http://bluebill.tidalwave.it/mobile/");
+//                properties.put(new Key<Object>("main-9.userName"), "fabriziogiudici");
+//              }
+//            catch (NotFoundException e)
+//              {
+//                // ok  
+//              }
+//            try
+//              {                
+//                rootComponent.findSubComponentById(new Id("footer"))
+//                             .findSubComponentById(new Id("footer-7"));
+//                properties.put(new Key<Object>("footer-7.project"), "5834368");
+//                properties.put(new Key<Object>("footer-7.security"), "91675212");
+//              }
+//            catch (NotFoundException e)
+//              {
+//                // ok  
+//              }
+            // end blueBill Mobile
+
             try
               {                
-                rootComponent.findSubComponentById(new Id("main"))
-                             .findSubComponentById(new Id("main-8"));
-                properties.put(new Key<Object>("main-8.contents"), Arrays.asList("/Resources/Top 1000 Ranking"));
+                rootComponent.findSubComponentById(new Id("local"))
+                             .findSubComponentById(new Id("local-5"))
+                             .findSubComponentById(new Id("content1"))
+                             .findSubComponentById(new Id("content1-9"));
+                properties.put(new Key<Object>("content1-9.project"), "4204333");
+                properties.put(new Key<Object>("content1-9.security"), "b11c31c8");
+                properties.put(new Key<Object>("content1-9.invisible"), "false");
               }
             catch (NotFoundException e)
               {
@@ -248,10 +325,11 @@ public class LayoutConverter extends Parser
               }
             try
               {                
-                rootComponent.findSubComponentById(new Id("main"))
-                             .findSubComponentById(new Id("main-9"));
-                properties.put(new Key<Object>("main-9.url"), "http://bluebill.tidalwave.it/mobile/");
-                properties.put(new Key<Object>("main-9.userName"), "fabriziogiudici");
+                rootComponent.findSubComponentById(new Id("local"))
+                             .findSubComponentById(new Id("local-2"))
+                             .findSubComponentById(new Id("content5"))
+                             .findSubComponentById(new Id("content5-7"));
+                properties.put(new Key<Object>("content5-7.title"), "Post index");
               }
             catch (NotFoundException e)
               {
@@ -259,15 +337,17 @@ public class LayoutConverter extends Parser
               }
             try
               {                
-                rootComponent.findSubComponentById(new Id("footer"))
-                             .findSubComponentById(new Id("footer-7"));
-                properties.put(new Key<Object>("footer-7.project"), "5834368");
-                properties.put(new Key<Object>("footer-7.security"), "91675212");
+                rootComponent.findSubComponentById(new Id("local"))
+                             .findSubComponentById(new Id("local-2"))
+                             .findSubComponentById(new Id("content3"))
+                             .findSubComponentById(new Id("content3-3"));
+                properties.put(new Key<Object>("content3-3.title"), "Categories");
               }
             catch (NotFoundException e)
               {
                 // ok  
               }
+            
             
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);

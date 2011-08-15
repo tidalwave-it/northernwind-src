@@ -130,9 +130,15 @@ class ExportSiteNodeVersionConverter extends Converter
 //            path = "/blueBill/Mobile/RSS Feeds";  
 //          }
       
-        if (path.startsWith("/blueBill/Mobile"))
+//        if (path.startsWith("/blueBill/Mobile"))
+        if (!path.matches(Main.siteNodePrefix + ".*"))
           {
-            path = path.replaceAll("^/blueBill/Mobile", "");
+            log.warn("Ignoring sitenode: {}", path);
+          }
+        else
+          {
+            path = path.replaceAll(Main.siteNodePrefix, "");
+            log.debug(">>>> replaced path: {}", path);
             final String suffix = path.startsWith("/_Standard Pages") || path.startsWith("/Blog RSS Feed") ? "/" : "/Override";
             path = path.replaceAll("^/_Standard\\ Pages", "");
             path = UriUtilities.urlEncodedPath("/structure" + path) + suffix;
@@ -148,7 +154,7 @@ class ExportSiteNodeVersionConverter extends Converter
                 if (content == null)
                   {
                     log.error("No content for " + "" + metaInfoContentId + "/" + modifiedDateTime);  
-                    return;
+                    continue;
                   }
 
                 // FIXME: creationDateTime, comment

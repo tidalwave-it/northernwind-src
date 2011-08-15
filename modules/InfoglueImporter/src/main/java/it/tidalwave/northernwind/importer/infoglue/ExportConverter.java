@@ -82,7 +82,7 @@ public class ExportConverter extends Converter
     protected void finish() throws Exception 
       {
         final DateTime dateTime = ResourceManager.getTimeBase().minusSeconds(1);
-        addLibraries("/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/" + "blueBillWebsiteLibrary.zip", dateTime);
+        addLibraries(Main.zipLibraryFile, dateTime);
         
         ResourceManager.addAndCommitResources();
         ResourceManager.tagConversionCompleted();

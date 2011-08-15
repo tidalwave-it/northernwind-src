@@ -42,6 +42,18 @@ public class Main
     
     /* package */ static final ContentMap contentMap = new ContentMap();
     
+    // blueBill Mobile
+//    /* package */ static String xmlFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/Export__blueBill_2011-08-10_0414.xml";
+//    /* package */ static String zipLibraryFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/blueBillWebsiteLibrary.zip";
+//    /* package */ static public String contentPrefix = "^/blueBill/Mobile";
+//    /* package */ static public String siteNodePrefix = "^/blueBill/Mobile";
+    
+    // StoppingDown
+    /* package */ static String xmlFile = "/home/fritz/Personal/WebSites/Export__stoppingdown.net_2011-08-11_0536.xml";
+    /* package */ static String zipLibraryFile = "/home/fritz/Personal/WebSites/StoppingDownWebsiteLibrary.zip";
+    /* package */ static String contentPrefix = "^/Stopping Down";
+    /* package */ static String siteNodePrefix = "^/stoppingdown\\.net";
+                    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -55,8 +67,6 @@ public class Main
             "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml"
           );
         
-        final String folder = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/";
-        final String file = "Export__blueBill_2011-08-10_0414.xml";
-        new ExportConverter(new FileInputStream(folder + file)).process() ;
+        new ExportConverter(new FileInputStream(xmlFile)).process() ;
       }
   }
