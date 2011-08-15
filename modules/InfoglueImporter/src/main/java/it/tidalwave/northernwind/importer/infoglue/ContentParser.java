@@ -61,6 +61,7 @@ public class ContentParser extends Parser
         super(xml, path, latestModificationTime, publishedDateTime);
         this.language = language;
         this.comment = comment;
+        log.debug("path: {}", path);
       }
 
     @Override
@@ -100,10 +101,29 @@ public class ContentParser extends Parser
                     xml = urlDecodeMacros(formatHtml(replaceMacros(builder.toString())));
                   }
                 
-                ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
-                                                                  path + toLower(name) + "_" + language + ".html",
-                                                                  xml.getBytes("UTF-8"),
-                                                                  comment));
+                // FIXME: for StoppingDown
+                if (path.equals("//content/document/Resources/Diary.xml/"))
+                  {
+                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
+                                                                      "/structure/Diary/entries_en.xml", 
+                                                                      xml.getBytes("UTF-8"),
+                                                                      comment));
+                  }
+                else if (path.equals("//content/document/Resources/Travels.xml/"))
+                  {
+                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
+                                                                      "/structure/Travels/entries_en.xml", 
+                                                                      xml.getBytes("UTF-8"),
+                                                                      comment));
+                  }
+                // END FIXME: for StoppingDown
+                else
+                  {
+                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
+                                                                      path + toLower(name) + "_" + language + ".html",
+                                                                      xml.getBytes("UTF-8"),
+                                                                      comment));
+                  }
               }
             else
               {
@@ -120,6 +140,12 @@ public class ContentParser extends Parser
     protected void finish()
       throws IOException
       {
-        dumpProperties("Properties_" + language);
+        // FIXME: for StoppingDown
+        if (!path.equals("//content/document/Resources/Diary.xml/") 
+            && !path.equals("//content/document/Resources/Travels.xml/"))
+        // END FIXME: for StoppingDown
+          {
+            dumpProperties("Properties_" + language);
+          }
       }
   }
