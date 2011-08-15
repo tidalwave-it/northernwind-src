@@ -75,7 +75,7 @@ public class DefaultCalendarViewController implements CalendarViewController
         final int columns = 4;
 
         // FIXME: style and border, cellpadding etc... must go in to the CSS
-        builder.append("<table style='text-align: left; width: 100%;' class='.nw-calendar' border='1' cellpadding='2' cellspacing='0'>\n")
+        builder.append("<table style='text-align: left; width: 100%;' class='nw-calendar' border='1' cellpadding='2' cellspacing='0'>\n")
                .append("<tbody>\n");
 
         builder.append(String.format("<tr>\n<th colspan='%d' style='font-size:150%%'>%d</th>\n</tr>\n", columns, selectedYear));
@@ -110,7 +110,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 
         builder.append("</tbody>\n</table>\n");
         
-        builder.append("<div class='.nw-calendar-yearselector'>");
+        builder.append("<div class='nw-calendar-yearselector'>");
         String separator = "";
         
         for (int year = firstYear; year <= lastYear; year++)
