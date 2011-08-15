@@ -33,7 +33,6 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
@@ -63,9 +62,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException 
       {
-        final SiteNode siteNode = site.get().find(SiteNode).withRelativeUri(request.getRelativeUri()).result();            
-//            siteView.setCaption(structure.getProperties().getProperty("Title")); TODO
-        siteView.renderSiteNode(siteNode);
+        siteView.renderSiteNode(site.get().find(SiteNode).withRelativeUri(request.getRelativeUri()).result());
         
         return BREAK;
       }
