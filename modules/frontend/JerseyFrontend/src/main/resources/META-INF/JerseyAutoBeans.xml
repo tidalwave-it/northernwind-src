@@ -49,7 +49,7 @@
           class="it.tidalwave.northernwind.core.model.spi.DefaultMediaRequestProcessor" />
 
     <bean id="cssRequestProcessor" 
-          class="it.tidalwave.northernwind.core.model.spi.DefaultCssRequestProcessor" />
+          class="it.tidalwave.northernwind.core.model.spi.DefaultLibraryRequestProcessor" />
     
     <bean id="contentRequestProcessor" 
           class="it.tidalwave.northernwind.core.model.spi.DefaultContentRequestProcessor" />

@@ -96,6 +96,9 @@
     <bean id="nodeLinkMacroExpander"
           class="it.tidalwave.northernwind.core.impl.model.NodeLinkMacroExpander" />
           
+    <bean id="libraryLinkMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.model.LibraryLinkMacroExpander" />
+          
     <bean id="site" 
           class="it.tidalwave.northernwind.core.impl.model.DefaultSite" >
         <property name="documentPath" value="${nw.documentPath}" />

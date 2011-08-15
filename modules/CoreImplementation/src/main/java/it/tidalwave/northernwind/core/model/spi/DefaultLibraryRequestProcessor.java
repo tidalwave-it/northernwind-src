@@ -46,7 +46,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  *
  **********************************************************************************************************************/
 @Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
-public class DefaultCssRequestProcessor implements RequestProcessor
+public class DefaultLibraryRequestProcessor implements RequestProcessor 
   {
     @Inject @Nonnull
     private Provider<Site> site;
@@ -65,26 +65,25 @@ public class DefaultCssRequestProcessor implements RequestProcessor
     @Override @Nonnull
     public Status process (final @Nonnull Request request) 
       {
-        final String relativeUri = request.getRelativeUri();
-        
-        if (relativeUri.startsWith("/css"))
+        final String relativePath = request.getRelativeUri();
+
+        try
           {
-            try
-              {
-                final Resource cssResource = site.get().find(Resource.class).withRelativePath(relativeUri).result();
-                final FileObject file = cssResource.getFile();
-                final String cssText = macroExpander.get().filter(file.asText());
-                responseHolder.response().withContentType(file.getMIMEType()).withBody(cssText).put();  
-                return BREAK;
-              }
-            catch (IOException e)
-              {
-                log.info("Cannot find {}, continuing...", relativeUri);  
-              }
-            catch (NotFoundException e)
-              {
-                log.info("Cannot find {}, continuing...", relativeUri);  
-              }
+            final Resource resource = site.get().find(Resource.class).withRelativePath(relativePath).result();
+            final FileObject file = resource.getFile();
+            final String mimeType = file.getMIMEType();
+            final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText())
+                                                                : file.asBytes();
+            responseHolder.response().withContentType(mimeType).withBody(content).put();  
+            return BREAK;
+          }
+        catch (IOException e)
+          {
+            log.info("Cannot find {}, continuing...", relativePath);  
+          }
+        catch (NotFoundException e)
+          {
+            log.info("Cannot find {}, continuing...", relativePath);  
           }
         
         return CONTINUE;
