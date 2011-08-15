@@ -116,7 +116,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                     parentRelativePath = "/" + parentRelativePath;  
                   }
                   
-                log.debug(">>>> parent path *{}*", parentRelativePath);
+                log.debug(">>>> parent path '{}'", parentRelativePath);
                 
                 if ("structure".equals(file.getPath()))
                   {
