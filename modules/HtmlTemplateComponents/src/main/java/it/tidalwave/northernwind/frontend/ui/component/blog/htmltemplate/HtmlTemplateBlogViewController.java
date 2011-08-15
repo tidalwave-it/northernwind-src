@@ -182,6 +182,18 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     protected void render()
       {
         final StringBuilder htmlBuilder = new StringBuilder();
+        
+        try 
+          {
+            final String title = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
+            htmlBuilder.append(String.format("<h2>%s</h2>\n", title));
+          } 
+        catch (NotFoundException e) 
+          {
+          }
+        catch (IOException e) 
+          {
+          }
        
         for (final String html : htmlParts)
           {

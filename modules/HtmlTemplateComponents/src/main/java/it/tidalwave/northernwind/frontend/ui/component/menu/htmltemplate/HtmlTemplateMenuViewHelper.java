@@ -39,10 +39,18 @@ import lombok.RequiredArgsConstructor;
   {
     @Nonnull
     private final MenuView view;
+    
+    @Nonnull
+    private String title = "";
+    
+    public void setTitle (final @Nonnull String title)
+      {
+        ((HtmlHolder)view).addAttribute("title", String.format("<h2>%s</h2>", title));
+      }
         
     public void addLink (final @Nonnull String navigationTitle, final @Nonnull String link)
       {
-        ((HtmlHolder)view).addComponent(new HtmlHolder(
-                String.format("<li><a href='%s'>%s</a></li>", link, navigationTitle)));                        
+        ((HtmlHolder)view).addComponent(new HtmlHolder(String.format("<li><a href='%s'>%s</a></li>", 
+                                                       link, navigationTitle)));                        
       }
   }

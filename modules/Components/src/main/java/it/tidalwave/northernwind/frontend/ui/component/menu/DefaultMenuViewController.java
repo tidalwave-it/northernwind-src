@@ -33,6 +33,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -74,6 +75,17 @@ public class DefaultMenuViewController implements MenuViewController
    @PostConstruct
    /* package */ void initialize()
      {
+        try 
+          {
+            view.setTitle(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE));
+          } 
+        catch (NotFoundException e) 
+          {
+          }
+        catch (IOException e) 
+          {
+          }
+        
         try 
           {
             for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_LINKS))

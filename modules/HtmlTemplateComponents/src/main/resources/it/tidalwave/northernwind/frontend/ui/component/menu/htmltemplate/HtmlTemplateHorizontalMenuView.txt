@@ -1,6 +1,7 @@
 <div class="wrapper">
     <h2 class="accessibility">Navigation</h2>
     <div class="nw-HorizontalMenu">
+        $title$
         <ul>
             $content$
         </ul>

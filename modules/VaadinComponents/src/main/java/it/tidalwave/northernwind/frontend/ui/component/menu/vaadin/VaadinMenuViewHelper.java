@@ -42,6 +42,11 @@ import lombok.RequiredArgsConstructor;
     @Nonnull
     private final MenuView view;
     
+    public void setTitle (final @Nonnull String title)
+      {
+        // TODO   
+      }
+    
     public void addLink (final @Nonnull String navigationTitle, final @Nonnull String link)
       {
         ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(link)));                        
