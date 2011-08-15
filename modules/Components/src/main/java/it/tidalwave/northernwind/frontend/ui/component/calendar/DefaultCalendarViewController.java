@@ -25,8 +25,21 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.Locale;
 import java.text.DateFormatSymbols;
 import java.io.IOException;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -34,6 +47,10 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import java.io.StringReader;
+import lombok.extern.slf4j.Slf4j;
+import org.xml.sax.InputSource;
 
 /***********************************************************************************************************************
  *
@@ -41,7 +58,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @Slf4j
 public class DefaultCalendarViewController implements CalendarViewController
   {
     @Nonnull
@@ -55,6 +72,9 @@ public class DefaultCalendarViewController implements CalendarViewController
 
     @Inject @Nonnull
     private RequestLocaleManager requestLocaleManager;
+    
+    @Inject @Nonnull
+    private RequestHolder requestHolder;
 
     public DefaultCalendarViewController (final @Nonnull CalendarView view, final @Nonnull SiteNode siteNode) 
       {
@@ -64,23 +84,45 @@ public class DefaultCalendarViewController implements CalendarViewController
     
     @PostConstruct
     /* package */ void initialize()
-      throws NotFoundException, IOException
+      throws NotFoundException, IOException, ParserConfigurationException, SAXException, XPathExpressionException
       {
+        final String entries = siteNode.getProperties().getProperty(ENTRIES);
+        final String requestRelativeUri = requestHolder.get().getRelativeUri();
+        final String relativeUri = siteNode.getRelativeUri();
+        log.debug(">>>> requestRelativeUri: {}, relativeUri: {}", requestRelativeUri, relativeUri);
+        final String pathParams = requestRelativeUri.substring(relativeUri.length());
+        int currentYear = new DateTime().getYear();
+        
+        try
+          {
+            currentYear = Integer.parseInt(pathParams.replaceAll("/", ""));
+          }
+        catch (NumberFormatException e)
+          {
+            // ok, keep the default value
+          }
+        
         final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
         final StringBuilder builder = new StringBuilder();
-        final int currentYear = new DateTime().getYear();
         final int selectedYear = Integer.parseInt(properties.getProperty(SELECTED_YEAR, "" + currentYear));
         final int firstYear = Integer.parseInt(properties.getProperty(FIRST_YEAR, "" + Math.min(selectedYear, currentYear)));
         final int lastYear = Integer.parseInt(properties.getProperty(LAST_YEAR, "" + Math.max(selectedYear, currentYear)));
         final int columns = 4;
 
-        // FIXME: style and border, cellpadding etc... must go in to the CSS
-        builder.append("<table style='text-align: left; width: 100%;' class='nw-calendar' border='1' cellpadding='2' cellspacing='0'>\n")
+        builder.append("<div class='nw-calendar'>\n")
+               .append("<table class='nw-calendar-table'>\n")
                .append("<tbody>\n");
 
-        builder.append(String.format("<tr>\n<th colspan='%d' style='font-size:150%%'>%d</th>\n</tr>\n", columns, selectedYear));
+        builder.append(String.format("<tr>\n<th colspan='%d' class='nw-calendar-title'>%d</th>\n</tr>\n", columns, selectedYear));
 
         final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
+        final String[] shortMonthNames = DateFormatSymbols.getInstance(Locale.ENGLISH).getShortMonths();
+        
+        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder db = dbf.newDocumentBuilder();
+        final Document document = db.parse(new InputSource(new StringReader(entries)));
+        final XPathFactory xPathFactory = XPathFactory.newInstance();
+        final XPath xPath = xPathFactory.newXPath();
                
         for (int month = 1; month <= 12; month++)
           {
@@ -97,9 +139,18 @@ public class DefaultCalendarViewController implements CalendarViewController
               }
             
             builder.append("<td>\n<ul>\n");
-//          <x:forEach var="n" select="$doc/calendar/year[@id=$year]/month[@id='jan']/item">
-//              <li><a href="${baseURL}<x:out select="$n/@link"/>"><x:out select="$n/@name"/></a></li>
-//          </x:forEach></ul>
+            final String jq1 = String.format("/calendar/year[@id='%d']/month[@id='%s']/item", selectedYear, shortMonthNames[month - 1].toLowerCase());
+            final XPathExpression jx1 = xPath.compile(jq1);            
+            final NodeList nodes = (NodeList)jx1.evaluate(document, XPathConstants.NODESET);
+            
+            for (int i = 0; i < nodes.getLength(); i++)
+              {
+                final Node node = nodes.item(i);
+                final String link = site.createLink(node.getAttributes().getNamedItem("link").getNodeValue());
+                final String name = node.getAttributes().getNamedItem("name").getNodeValue();
+                builder.append(String.format("<li><a href='%s'/>%s</a></li>\n", link, name));
+              }
+            
             builder.append("</ul>\n</td>\n");
             
             if ((month - 1) % columns == (columns - 1))
@@ -120,9 +171,9 @@ public class DefaultCalendarViewController implements CalendarViewController
             
             if (year != selectedYear)
               {
-                final String url = site.createLink(siteNode.getRelativeUri() + "/" + year);
+                final String url = site.createLink(relativeUri + "/" + year);
                 // FIXME: style stuff should go to CSS
-                builder.append(String.format("<b><a href='%s'>%d</a></b>\n", url, year));
+                builder.append(String.format("<a href='%s'>%d</a>\n", url, year));
               }
             else
               {
@@ -130,7 +181,7 @@ public class DefaultCalendarViewController implements CalendarViewController
               }
           }
         
-        builder.append("</div>");
+        builder.append("</div>\n</div>\n");
         view.setContent(builder.toString());
       }
   }
