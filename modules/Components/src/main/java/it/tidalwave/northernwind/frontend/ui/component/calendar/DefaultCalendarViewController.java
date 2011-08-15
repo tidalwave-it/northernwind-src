@@ -22,20 +22,18 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
-import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.text.DateFormatSymbols;
+import java.io.IOException;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.text.DateFormatSymbols;
-import java.util.Calendar;
-import java.util.Locale;
-import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
