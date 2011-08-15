@@ -95,6 +95,6 @@ class ExportContentConverter extends Converter
     @Nonnull
     public String getPath()
       {
-        return ((parent != null) ? parent.getPath() : "") + "/" + name;
+        return ((parent != null) ? parent.getPath() : "") + "/" + name.replace('/', '-');
       }
   }
