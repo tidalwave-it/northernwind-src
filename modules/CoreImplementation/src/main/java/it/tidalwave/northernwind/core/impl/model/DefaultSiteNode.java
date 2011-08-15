@@ -155,6 +155,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
               }
           }
         
+        log.debug(">>>> relativeUri: {}", relativeUri);
+        
         return relativeUri;
       }
     

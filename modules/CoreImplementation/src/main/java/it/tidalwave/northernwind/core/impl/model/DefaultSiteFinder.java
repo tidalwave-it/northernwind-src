@@ -45,7 +45,7 @@ import lombok.ToString;
     private final Map<String, Type> mapByRelativePath;
     
     @Nonnull
-    private final Map<String, Type> mapByRelativeUri;
+    private final RegexTreeMap<Type> mapByRelativeUri;
     
     @CheckForNull
     private String relativePath;
@@ -59,7 +59,7 @@ import lombok.ToString;
      ******************************************************************************************************************/
     public DefaultSiteFinder (final @Nonnull String name, 
                               final @Nonnull Map<String, Type> mapByRelativePath, 
-                              final @Nonnull Map<String, Type> mapByRelativeUri) 
+                              final @Nonnull RegexTreeMap<Type> mapByRelativeUri) 
       {
         super(name);
         this.mapByRelativePath = mapByRelativePath;

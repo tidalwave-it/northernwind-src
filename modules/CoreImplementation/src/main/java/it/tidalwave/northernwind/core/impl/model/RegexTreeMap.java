@@ -1,0 +1,92 @@
+/***********************************************************************************************************************
+ *
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
+ *
+ ***********************************************************************************************************************
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ ***********************************************************************************************************************
+ *
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
+ *
+ **********************************************************************************************************************/
+package it.tidalwave.northernwind.core.impl.model;
+
+import javax.annotation.Nonnull;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
+/***********************************************************************************************************************
+ *
+ * A specialization of {@link TreeMap} that is capable to deal with regular expressions. When a value must be bound to
+ * a regular expression, use the method {@link #putRegex(java.lang.String, java.lang.Object)} instead of 
+ * {@link #put(java.lang.String, java.lang.Object)}.
+ * 
+ * @author  Fabrizio Giudici
+ * @version $Id$
+ *
+ **********************************************************************************************************************/
+public class RegexTreeMap<Type> extends TreeMap<String, Type>
+  {
+    @Nonnull
+    public static String escape (final @Nonnull String string) 
+      {
+        final StringBuilder builder = new StringBuilder();  
+      
+        for (int i = 0; i < string.length(); i++)
+          {
+            final char c = string.charAt(i);
+            
+            if ("[\\^$.|?*+()".contains("" + c))
+              {
+                builder.append('\\');
+              }
+            
+            builder.append(c);
+          }
+        
+        return builder.toString();
+      }
+    
+    @Override
+    public Type put (final @Nonnull String string, final Type value)
+      {
+        return super.put(Pattern.quote(string), value);
+      }
+    
+    public Type putRegex (final @Nonnull String regex, final Type value)
+      {
+        return super.put(regex, value);
+      }
+    
+    @Override
+    public Type get (final @Nonnull Object value)
+      {
+        Type result = super.get(Pattern.quote((String)value)); // first try a direct match that is fast
+        
+        if (result == null)
+          { 
+            for (final Entry<String, Type> entry : super.entrySet())
+              {
+                if (((String)value).matches(entry.getKey()))
+                  {
+                    result = entry.getValue();
+                    break;
+                  }
+              }
+          }
+        
+        return result;
+      }
+  }

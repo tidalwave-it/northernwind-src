@@ -147,11 +147,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     
     private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<String, SiteNode>();
     
-    private final Map<String, SiteNode> nodeMapByRelativeUri = new TreeMap<String, SiteNode>();
+    private final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<SiteNode>();
     
     private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<Class<?>, Map<String, ?>>();
     
-    private final Map<Class<?>, Map<String, ?>> relativeUriMapsByType = new HashMap<Class<?>, Map<String, ?>>();
+    private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<Class<?>, RegexTreeMap<?>>();
     
     private final List<Locale> configuredLocales = new ArrayList<Locale>();
 
@@ -214,7 +214,17 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   {
                     final SiteNode siteNode = modelFactory.createSiteNode(folder);
                     nodeMapByRelativePath.put(r(relativePath.substring(nodePath.length() + 1)), siteNode);
-                    nodeMapByRelativeUri.put(siteNode.getRelativeUri(), siteNode);
+                    final String relativeUri = siteNode.getRelativeUri();
+                    
+                    if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
+//                    if (relativeUri.contains("Diary"))
+                      {
+                        nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri) + "(|/.*$)", siteNode);
+                      }
+                    else
+                      {
+                        nodeMapByRelativeUri.put(relativeUri, siteNode);
+                      }
                   }
                 catch (IOException e) 
                   {
@@ -246,7 +256,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     public <Type> SiteFinder<Type> find (final @Nonnull Class<Type> type)
       {
         final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
-        final Map<String, Type> relativeUriMap = (Map<String, Type>)relativeUriMapsByType.get(type);
+        final RegexTreeMap<Type> relativeUriMap = (RegexTreeMap<Type>)relativeUriMapsByType.get(type);
         return new DefaultSiteFinder<Type>(type.getSimpleName(), relativePathMap, relativeUriMap);
       }
     

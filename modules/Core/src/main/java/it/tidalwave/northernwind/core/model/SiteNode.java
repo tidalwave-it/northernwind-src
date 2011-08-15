@@ -47,6 +47,11 @@ public interface SiteNode extends Resource
      *  defined, the local portion of the relative path is used. */
     public static final Key<String> PROPERTY_EXPOSED_URI = new Key<String>("exposedUri");
     
+    /** If sets to true, this property makes the {@code SiteNode} to match not only its {@code /relativeUri}, but also
+     *  {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
+    // FIXME: must be Boolean
+    public static final Key<String> PROPERTY_MANAGES_PATH_PARAMS = new Key<String>("managesPathParams");
+    
     /*******************************************************************************************************************
      *
      * Returns the {@link Layout} of this {@code SiteNode}.
