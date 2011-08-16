@@ -22,12 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi;
 
-import it.tidalwave.util.NotFoundException;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -35,6 +37,7 @@ import org.openide.filesystems.FileObject;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public abstract class ResponseHolder<ResponseType> implements RequestResettable
   { 
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -98,17 +101,36 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e) 
           {
-            return withContentType("text/plain")
-                  .withBody("Not found\n" + e.getMessage()) // FIXME: use StringTemplate
-                  .withStatus(404);
+            log.error("", e);
+            return forException(new HttpStatusException(404));
           }
 
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e) 
           {
-            return withContentType("text/plain")
-                  .withBody("Internal error\n" + e.getMessage()) // FIXME: use StringTemplate
-                  .withStatus(500);
+            log.error("", e);
+            return forException(new HttpStatusException(500));
+          }
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e) 
+          {
+            String message = String.format("<h1>HTTP Status: %d</h1>\n", e.getHttpStatus());
+            
+            switch (e.getHttpStatus()) // FIXME: get from a resource bundle
+              {
+                case 404:
+                  message = "<h1>Not found</h1>";
+                  break;
+                    
+                case 500:
+                  message = "<h1>Internal error</h1>";
+                  break;
+              }
+            
+            return withContentType("text/html")
+                  .withBody(message) 
+                  .withStatus(e.getHttpStatus());
           }
         
         @Nonnull

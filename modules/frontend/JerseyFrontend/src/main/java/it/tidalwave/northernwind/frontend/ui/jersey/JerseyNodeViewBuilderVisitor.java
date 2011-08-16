@@ -49,9 +49,9 @@ public class JerseyNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<
     
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
-    protected TextHolder createPlaceHolderComponent (final @Nonnull Layout layout)
+    protected TextHolder createPlaceHolderComponent (final @Nonnull Layout layout, final @Nonnull String message)
       {
-        return new HtmlHolder("<div>Missing component: " + layout.getTypeUri() + "</div>"); // FIXME
+        return new HtmlHolder("<div>" + message + "</div>"); 
       }
 
     @Override

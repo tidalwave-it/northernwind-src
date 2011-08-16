@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui;
 
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import javax.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.util.As;
@@ -45,9 +46,15 @@ public interface Layout extends As, Identifiable
     @Nonnull
     public Layout withOverride (@Nonnull Layout override);
 
+    /*******************************************************************************************************************
+     *
+     * @throws  NotFoundException   if no view component is found
+     * @throws  HttpStatusException if a component asked to return a specific HTTP status
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public Object createView (@Nonnull SiteNode siteNode)
-      throws NotFoundException;
+      throws NotFoundException, HttpStatusException;
     
     @Nonnull // TODO: refactor with Composite
     public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor) 

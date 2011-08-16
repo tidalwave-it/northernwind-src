@@ -22,10 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Constructor;
+import org.springframework.beans.factory.BeanCreationException;
 import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +73,8 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (final @Nonnull Id id, final @Nonnull SiteNode siteNode)
+    public Object createView (final @Nonnull Id id, final @Nonnull SiteNode siteNode) 
+      throws HttpStatusException
       {
         log.debug("createView({}, {})", id, siteNode);
         
@@ -83,6 +86,18 @@ import lombok.extern.slf4j.Slf4j;
             final Object view = viewConstructor.newInstance(id);
             viewControllerConstructor.newInstance(view, siteNode);  
             return view;
+          }
+        catch (InvocationTargetException e)
+          {
+            if (e.getCause() instanceof BeanCreationException) // FIXME: cumbersome
+              {
+                if (e.getCause().getCause() instanceof HttpStatusException)
+                  {
+                    throw (HttpStatusException)e.getCause().getCause();
+                  }
+              }
+            
+            throw new RuntimeException(e);
           }
         catch (Exception e)
           {

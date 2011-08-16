@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
@@ -60,10 +61,9 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      ******************************************************************************************************************/
     @Override @Nonnull
     public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException 
+      throws NotFoundException, IOException, HttpStatusException 
       {
         siteView.renderSiteNode(site.get().find(SiteNode).withRelativeUri(request.getRelativeUri()).result());
-        
         return BREAK;
       }
   }

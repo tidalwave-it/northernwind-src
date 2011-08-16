@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
@@ -96,6 +97,11 @@ public class DefaultSiteViewController implements SiteViewController
             return (ResponseType)responseHolder.response().forException(e).build();
           }
         catch (IOException e) 
+          {
+            log.warn("processing: " + request, e);
+            return (ResponseType)responseHolder.response().forException(e).build();
+          }
+        catch (HttpStatusException e) 
           {
             log.warn("processing: " + request, e);
             return (ResponseType)responseHolder.response().forException(e).build();

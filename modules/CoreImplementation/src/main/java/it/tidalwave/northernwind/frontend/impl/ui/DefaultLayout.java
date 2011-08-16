@@ -34,6 +34,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Parameters;
 import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
@@ -207,7 +208,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout
 
     @Override @Nonnull
     public Object createView (final @Nonnull SiteNode siteNode) 
-      throws NotFoundException
+      throws NotFoundException, HttpStatusException
       {
         return viewFactory.createView(typeUri, id, siteNode);
       }

@@ -33,6 +33,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
@@ -69,7 +70,7 @@ public class DefaultViewFactory implements ViewFactory
     public Object createView (final @Nonnull String viewTypeUri, 
                               final @Nonnull Id viewId, 
                               final @Nonnull SiteNode siteNode)
-      throws NotFoundException
+      throws NotFoundException, HttpStatusException
       {        
         final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
                                                       String.format("Cannot find %s: available: %s", 

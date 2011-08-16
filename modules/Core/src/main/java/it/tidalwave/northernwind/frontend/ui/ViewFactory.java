@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.ui;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -48,9 +49,10 @@ public interface ViewFactory
      * @param   siteNode            the node this view is created for 
      * @return  
      * @throws  NotFoundException   if no view component is found
+     * @throws  HttpStatusException if a component asked to return a specific HTTP status
      * 
      ******************************************************************************************************************/
     @Nonnull
     public Object createView (@Nonnull String viewTypeUri, @Nonnull Id viewId, @Nonnull SiteNode siteNode) 
-      throws NotFoundException;
+      throws NotFoundException, HttpStatusException; 
   }

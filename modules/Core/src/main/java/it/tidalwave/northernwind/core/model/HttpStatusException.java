@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,15 +16,15 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.java.net
- * SCM: http://java.net/hg/northernwind~src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -32,18 +32,9 @@ import it.tidalwave.util.NotFoundException;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface RequestProcessor
+@RequiredArgsConstructor @ToString
+public class HttpStatusException extends Exception 
   {
-    public enum Status
-      {
-        CONTINUE, BREAK
-      }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Status process (@Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException;
+    @Getter
+    private final int httpStatus;
   }

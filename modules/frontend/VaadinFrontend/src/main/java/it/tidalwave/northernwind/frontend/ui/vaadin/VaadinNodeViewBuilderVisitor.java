@@ -51,11 +51,11 @@ public class VaadinNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<
     
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
-    protected Component createPlaceHolderComponent (final @Nonnull Layout layout)
+    protected Component createPlaceHolderComponent (final @Nonnull Layout layout, final @Nonnull String message)
       {
-        final Label panel = new Label(); // TODO: id?
-        panel.setValue("Missing component: " + ((DefaultLayout)layout).getTypeUri()); // FIXME
-        return panel;
+        final Label label = new Label(); // TODO: id?
+        label.setValue(message);
+        return label;
       }
 
     @Override

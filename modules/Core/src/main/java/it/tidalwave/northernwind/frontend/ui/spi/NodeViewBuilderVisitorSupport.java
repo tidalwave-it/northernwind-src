@@ -27,6 +27,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Stack;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
     private Stack<ComponentType> components = new Stack<ComponentType>();
 
     @Override
-    public void preVisit (final @Nonnull Layout layout) 
+    public void preVisit (final @Nonnull Layout layout)
       {
         final ComponentType component = createComponent(layout);
 
@@ -85,7 +86,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
       }
     
     @Nonnull
-    private ComponentType createComponent (@Nonnull Layout layout)
+    private ComponentType createComponent (@Nonnull Layout layout) 
       {
         try 
           {
@@ -94,12 +95,25 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
         catch (NotFoundException e) 
           {
             log.warn("Component not found", e);
-            return createPlaceHolderComponent(layout);
+            return createPlaceHolderComponent(layout, "Missing component: " + layout.getTypeUri());
+          }
+        catch (HttpStatusException e) 
+          {
+            // FIXME: should set the status in the response - unfortunately at this level the ResponseHolder is abstract
+            log.warn("Returning HTTP status {}", e.getHttpStatus());
+            String message = "<h1>Status " + e.getHttpStatus() + "</h1>"; // FIXME: use a resource bundle
+            
+            if (e.getHttpStatus() == 404)
+              {
+                message = "<h1>Not found</h1>";
+              }
+            
+            return createPlaceHolderComponent(layout, message);
           }
       }
     
     @Nonnull
-    protected abstract ComponentType createPlaceHolderComponent (@Nonnull Layout layout);
+    protected abstract ComponentType createPlaceHolderComponent (@Nonnull Layout layout, @Nonnull String message);
     
     protected abstract void attach (@Nonnull ComponentContainerType parent, @Nonnull ComponentType child);
   }
