@@ -86,11 +86,7 @@ public class DefaultCalendarViewController implements CalendarViewController
     /* package */ void initialize()
       throws NotFoundException, IOException, ParserConfigurationException, SAXException, XPathExpressionException
       {
-        final String entries = siteNode.getProperties().getProperty(ENTRIES);
-        final String requestRelativeUri = requestHolder.get().getRelativeUri();
-        final String relativeUri = siteNode.getRelativeUri();
-        log.debug(">>>> requestRelativeUri: {}, relativeUri: {}", requestRelativeUri, relativeUri);
-        final String pathParams = requestRelativeUri.substring(relativeUri.length());
+        final String pathParams = requestHolder.get().getPathParams(siteNode);
         int currentYear = new DateTime().getYear();
         
         try
@@ -102,6 +98,7 @@ public class DefaultCalendarViewController implements CalendarViewController
             // ok, keep the default value
           }
         
+        final String entries = siteNode.getProperties().getProperty(ENTRIES);
         final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
         final StringBuilder builder = new StringBuilder();
         final int selectedYear = Integer.parseInt(properties.getProperty(SELECTED_YEAR, "" + currentYear));
@@ -171,8 +168,7 @@ public class DefaultCalendarViewController implements CalendarViewController
             
             if (year != selectedYear)
               {
-                final String url = site.createLink(relativeUri + "/" + year);
-                // FIXME: style stuff should go to CSS
+                final String url = site.createLink(siteNode.getRelativeUri() + "/" + year);
                 builder.append(String.format("<a href='%s'>%d</a>\n", url, year));
               }
             else
