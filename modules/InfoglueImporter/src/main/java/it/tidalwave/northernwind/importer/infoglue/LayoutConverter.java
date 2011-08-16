@@ -56,6 +56,10 @@ import org.joda.time.DateTime;
 public class LayoutConverter extends Parser
   {
     private static final String CONTAINER = "http://northernwind.tidalwave.it/component/Container/#v1.0";
+    private static final String BLOG = "http://northernwind.tidalwave.it/component/Blog/#v1.0";
+    private static final String CALENDAR = "http://northernwind.tidalwave.it/component/Calendar/#v1.0";
+
+    private static final List<String> PATH_PARAMS_COMPONENTS = Arrays.asList(BLOG, CALENDAR);
     
     private static final List<String> PROPERTIES_REFERRING_RELATIVE_PATHS = Arrays.asList
       (
@@ -71,7 +75,7 @@ public class LayoutConverter extends Parser
         put( "67", "http://northernwind.tidalwave.it/component/Sidebar/#v1.0");
         put( "71", "http://northernwind.tidalwave.it/component/RssFeed/#v1.0");
         put( "89", "http://northernwind.tidalwave.it/component/BreadCrumb/#v1.0");
-        put("104", "http://northernwind.tidalwave.it/component/Blog/#v1.0");
+        put("104", BLOG);
         put("853", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0");
         put("873", "http://northernwind.tidalwave.it/component/AddThis/#v1.0");
         put("883", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
@@ -80,7 +84,7 @@ public class LayoutConverter extends Parser
         put("513", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0"); 
 //        put("544", "http://northernwind.tidalwave.it/component/Splash/#v1.0"); // Splash
         put("544", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0"); // Splash
-        put("547", "http://northernwind.tidalwave.it/component/Calendar/#v1.0");
+        put("547", CALENDAR);
         put("572", CONTAINER); // Categories header
         put("577", "http://northernwind.tidalwave.it/component/NikonianWebringBadge/#v1.0"); // Nikonian WebRing Badge
         put("602", CONTAINER); // Post Index header
@@ -120,6 +124,11 @@ public class LayoutConverter extends Parser
             if (attrTypeValue == null)
               {
                 log.error("No component for {}", xxx);  
+              }
+            
+            if (PATH_PARAMS_COMPONENTS.contains(attrTypeValue))
+              {
+                properties.put(new Key<Object>("managesPathParams"), "true");
               }
             
             if (componentStack.isEmpty())
@@ -244,7 +253,10 @@ public class LayoutConverter extends Parser
                   }
               }
 
-            properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
+            if (!StructureParser.IGNORED_PROPERTIES.contains(propertyName))
+              { 
+                properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
+              }
           }
       }
 

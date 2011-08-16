@@ -26,6 +26,7 @@ import it.tidalwave.util.Key;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamException;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,8 @@ import org.joda.time.DateTime;
 @Slf4j
 public class StructureParser extends Parser
   {
+    public static final List<String> IGNORED_PROPERTIES = Arrays.asList("MetaInfo", "baseURL", "dataSource", "xMLData");
+
     private final String language;
 
     public StructureParser (String xml, 
@@ -93,7 +96,7 @@ public class StructureParser extends Parser
                     propertyName = "navigationLabel";
                   } 
                 
-                if (!"MetaInfo".equals(propertyName))
+                if (!IGNORED_PROPERTIES.contains(propertyName))
                   {
                     properties.put(new Key<Object>(toLower(propertyName)), propertyValue); 
                   } 
