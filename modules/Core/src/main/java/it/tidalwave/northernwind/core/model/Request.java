@@ -53,4 +53,7 @@ public interface Request
     @Nonnull
     public List<String> getMultiValuedParameter (@Nonnull String parameterName)
       throws NotFoundException;
+
+    @Nonnull
+    public String getPathParams (@Nonnull SiteNode siteNode);
   }

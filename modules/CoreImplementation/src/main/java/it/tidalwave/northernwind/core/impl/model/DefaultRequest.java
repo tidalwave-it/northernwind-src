@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.SiteNode;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.util.Arrays;
@@ -98,6 +99,18 @@ import lombok.ToString;
           {
             throw new RuntimeException(e);
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String getPathParams (final @Nonnull SiteNode siteNode) 
+      {
+        final String siteNodeRelativeUri = siteNode.getRelativeUri();
+        return relativeUri.substring(siteNodeRelativeUri.length());
       }
     
     /*******************************************************************************************************************
