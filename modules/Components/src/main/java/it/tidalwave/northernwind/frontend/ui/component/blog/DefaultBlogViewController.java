@@ -38,10 +38,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -68,17 +70,21 @@ public abstract class DefaultBlogViewController implements BlogViewController
     
     private static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
     
+    @Nonnull
+    protected final BlogView view;
+
+    @Nonnull
+    private final SiteNode siteNode;
+    
     @Inject @Nonnull
     private Site site;
     
     @Inject @Nonnull
     protected RequestLocaleManager requestLocaleManager;
     
-    @Nonnull
-    protected final BlogView view;
+    @Inject @Nonnull
+    private RequestHolder requestHolder;
 
-    private final SiteNode siteNode;
-    
     /*******************************************************************************************************************
      *
      * @param  view              the related view
@@ -102,17 +108,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try 
           {
-            final ResourceProperties propertyGroup = siteNode.getPropertyGroup(view.getId());
-            final int maxFullItems = Integer.parseInt(propertyGroup.getProperty(PROPERTY_MAX_FULL_ITEMS, "99"));
-            final int maxLeadinItems = Integer.parseInt(propertyGroup.getProperty(PROPERTY_MAX_LEADIN_ITEMS, "99"));
-            final int maxItems = Integer.parseInt(propertyGroup.getProperty(PROPERTY_MAX_ITEMS, "99"));
+            final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
+            final int maxFullItems = Integer.parseInt(componentProperties.getProperty(PROPERTY_MAX_FULL_ITEMS, "99"));
+            final int maxLeadinItems = Integer.parseInt(componentProperties.getProperty(PROPERTY_MAX_LEADIN_ITEMS, "99"));
+            final int maxItems = Integer.parseInt(componentProperties.getProperty(PROPERTY_MAX_ITEMS, "99"));
             
             log.debug(">>>> initializing controller for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                           new Object[]{ view.getId(), maxFullItems, maxLeadinItems, maxItems });
     
             int currentItem = 0;
             
-            for (final Content post : findPostsInReverseDateOrder(propertyGroup))
+            for (final Content post : findPostsInReverseDateOrder(componentProperties))
               {
                 try
                   {
@@ -162,22 +168,50 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: embed the sort by reverse date in the finder
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties propertyGroup) 
-      throws IOException, NotFoundException 
+    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties) 
+      throws IOException, NotFoundException, HttpStatusException 
       {
+        String pathParams = requestHolder.get().getPathParams(siteNode);
+        pathParams = pathParams.replace("/", "");
+        log.debug(">>>> pathParams: {}", pathParams);
+        final boolean filterByPathParams = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_FILTER_BY_PATH_PARAMS, "false"));
+        final boolean filtering = filterByPathParams && !"".equals(pathParams);
+        
         final List<Content> posts = new ArrayList<Content>();
         
-        for (final String relativePath : propertyGroup.getProperty(PROPERTY_CONTENTS))
+        for (final String relativePath : siteNodeProperties.getProperty(PROPERTY_CONTENTS))
           {  
             final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
 
             for (final Content post : postsFolder.findChildren().results())
               {
-                posts.add(post);   
+                try
+                  {
+                    if (!filtering
+                        || pathParams.equals(getExposedUri(post))
+                        || pathParams.equals(post.getProperties().getProperty(PROPERTY_CATEGORY, "---")))
+                      {
+                        posts.add(post);   
+                      }
+                  }
+                catch (NotFoundException e) 
+                  {
+                    log.warn("{}", e.toString());
+                  }
+                catch (IOException e) 
+                  {
+                    log.warn("", e);
+                  }
               }
+          }
+        
+        if (filtering && posts.isEmpty())
+          {
+            throw new HttpStatusException(404);
           }
       
         Collections.sort(posts, REVERSE_DATE_COMPARATOR);
+        
         return posts;
       }
     

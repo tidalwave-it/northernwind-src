@@ -153,9 +153,18 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
         
         try
+          {  
+            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>", properties.getProperty(PROPERTY_CATEGORY)));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no category
+          }
+        
+        try
           {
            final String link = site.getContextPath() + siteNode.getRelativeUri() + "/" + getExposedUri(post) + "/";
-           htmlBuilder.append(String.format("&nbsp;<a href='%s'>Permalink</a>\n", link));
+           htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>\n", link));
           }
         catch (NotFoundException e)
           {

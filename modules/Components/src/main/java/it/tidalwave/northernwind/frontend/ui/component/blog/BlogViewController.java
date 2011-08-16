@@ -41,4 +41,9 @@ public interface BlogViewController
     public static final Key<String> PROPERTY_MAX_ITEMS = new Key<String>("maxItems"); 
     
     public static final Key<String> PROPERTY_MAX_LEADIN_ITEMS = new Key<String>("maxLeadInItems"); 
+    
+    // FIXME: this should be Boolean
+    public static final Key<String> PROPERTY_FILTER_BY_PATH_PARAMS = new Key<String>("filterByPathParams"); 
+    
+    public static final Key<String> PROPERTY_CATEGORY = new Key<String>("category"); 
   }
