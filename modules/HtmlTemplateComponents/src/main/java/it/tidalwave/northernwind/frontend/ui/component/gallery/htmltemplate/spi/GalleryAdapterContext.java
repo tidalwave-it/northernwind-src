@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi;
 
+import it.tidalwave.northernwind.core.model.SiteNode;
 import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
@@ -33,4 +34,7 @@ import javax.annotation.Nonnull;
 public interface GalleryAdapterContext 
   {
     public void addAttribute (@Nonnull String name, @Nonnull String value);
+
+    @Nonnull
+    public SiteNode getSiteNode();
   } 

@@ -66,6 +66,12 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
           {
             ((TextHolder)view).addAttribute(name, value);
           }
+
+        @Override @Nonnull
+        public SiteNode getSiteNode() 
+          {
+            return siteNode;
+          }
       };
     
     private GalleryAdapter galleryAdapter;
@@ -117,8 +123,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
               }
           }
         
-        getGalleryAdapter().initialize(context);
-        
         textHolder.addAttribute("title", "StoppingDown");
       }
 
@@ -153,6 +157,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
             try 
               {
                 galleryAdapter = new BluetteGalleryAdapter();
+                galleryAdapter.initialize(context);        
               } 
             catch (IOException e) 
               {

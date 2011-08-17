@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette;
 
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,8 +32,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterSupport;
+import javax.inject.Inject;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -39,9 +43,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Configurable @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
+    private GalleryAdapterContext context;
+    
+    @Inject @Nonnull
+    private Site site;
+    
     private final String content;
     
     public BluetteGalleryAdapter() 
@@ -53,12 +62,21 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         r.read(buffer);
         content = new String(buffer);        
       }
-
+    
+    @Override // FIXME: what about @PostConstruct and injecting the context?
+    public void initialize (final @Nonnull GalleryAdapterContext context) 
+      {
+        this.context = context;
+        context.addAttribute("content", content);        
+      }
+    
     @Override @Nonnull
     public String getInlinedScript()
       {
+        final SiteNode siteNode = context.getSiteNode();
+        final String link = site.createLink(siteNode.getRelativeUri() + "/images.xml");
         return "<script type=\"text/javascript\">\n"
-           + "var catalogUrl = \"/nw/diary/2011/01/13/images.xml\";\n"
+           + "var catalogUrl = \"" + link + "\";\n"
            + "var photoPrefix = \"http://stoppingdown.net/media/stillimages/\";\n"
            + "var home = \"/nw/blog/\";\n"
            + "var titlePrefix = \"Stopping Down: \";\n"
@@ -73,13 +91,5 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
            + "var titleVisible = true;\n"
            + "var logging = true;\n"
            + "</script>\n";
-      }
-
-    
-    @Override
-    public void initialize (final @Nonnull GalleryAdapterContext context) 
-      {
-        context.addAttribute("content", content);        
-        log.warn("CONTENT " + content);
       }
   }
