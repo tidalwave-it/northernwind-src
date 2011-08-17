@@ -214,16 +214,19 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   {
                     final SiteNode siteNode = modelFactory.createSiteNode(folder);
                     nodeMapByRelativePath.put(r(relativePath.substring(nodePath.length() + 1)), siteNode);
-                    final String relativeUri = siteNode.getRelativeUri();
                     
-                    if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
-//                    if (relativeUri.contains("Diary"))
+                    if (!siteNode.isPlaceHolder())
                       {
-                        nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri) + "(|/.*$)", siteNode);
-                      }
-                    else
-                      {
-                        nodeMapByRelativeUri.put(relativeUri, siteNode);
+                        final String relativeUri = siteNode.getRelativeUri();
+
+                        if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
+                          {
+                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri) + "(|/.*$)", siteNode);
+                          }
+                        else
+                          {
+                            nodeMapByRelativeUri.put(relativeUri, siteNode);
+                          }
                       }
                   }
                 catch (IOException e) 

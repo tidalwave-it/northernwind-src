@@ -72,4 +72,13 @@ public interface Resource
     @Nonnull
     public ResourceProperties getPropertyGroup (@Nonnull Id id)
       throws NotFoundException;
+    
+    /*******************************************************************************************************************
+     *
+     * A placeholder resource doesn't contain anything, it just provides a placeholder for a path element. For instance,
+     * if in the pair parent/child child is a placeholder, the relative URI /parent/child will be mapped to parent 
+     * (which supposedly manages path params).
+     *
+     ******************************************************************************************************************/
+    public boolean isPlaceHolder();
   }
