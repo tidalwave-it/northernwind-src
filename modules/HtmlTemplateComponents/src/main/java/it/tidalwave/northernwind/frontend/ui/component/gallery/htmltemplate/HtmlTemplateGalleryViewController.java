@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -107,7 +108,14 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
           {
             try 
               {
-                final String images = siteNode.getProperties().getProperty(new Key<String>(pathParams));
+                String images = siteNode.getProperties().getProperty(new Key<String>(pathParams));
+                
+                for (final String s : Arrays.asList("lgpath", "tnpath", "popuppath", "fspath", "tn"))
+                  {
+                    images = images.replace(s + "=\"/", s + "=\"/http://stoppingdown.net");
+                    images = images.replace(s + "=\"../../../../", s + "=\"/http://stoppingdown.net");
+                  }
+                
                 textHolder.setTemplate("$content$\n");
                 textHolder.setContent(images);
                 textHolder.setMimeType("text/xml");
