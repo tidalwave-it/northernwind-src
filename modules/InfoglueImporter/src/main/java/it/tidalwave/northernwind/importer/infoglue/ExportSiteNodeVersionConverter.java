@@ -131,7 +131,7 @@ class ExportSiteNodeVersionConverter extends Converter
 //          }
       
 //        if (path.startsWith("/blueBill/Mobile"))
-        if (!path.matches(Main.siteNodePrefix + ".*"))
+        if (!path.matches(Main.siteNodePrefix + ".*") || path.contains("/Blog/"))
           {
             log.warn("Ignoring sitenode: {}", path);
           }

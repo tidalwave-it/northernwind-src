@@ -109,6 +109,15 @@ public class StructureParser extends Parser
       throws IOException
       {
         log.debug("properties: " + properties);
+        final Key<Object> PROPERTY_EXPOSED_URI = new Key<Object>("exposedUri");
+        final Key<Object> PROPERTY_NAVIGATION_LABEL = new Key<Object>("navigationLabel");
+        
+        if (!properties.containsKey(PROPERTY_EXPOSED_URI) && properties.containsKey(PROPERTY_NAVIGATION_LABEL))
+          {
+            log.info("Missing EXPOSED: {}", properties);
+            properties.put(PROPERTY_EXPOSED_URI, properties.get(PROPERTY_NAVIGATION_LABEL).toString().toLowerCase());                    
+          }
+        
         dumpProperties("Properties_" + language);
       }
   }

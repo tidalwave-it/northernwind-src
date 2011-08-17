@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.importer.infoglue;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
 import it.tidalwave.util.Key;
 import java.io.IOException;
 import java.util.Arrays;
@@ -102,6 +104,16 @@ public class ContentParser extends Parser
                   }
                 
                 // FIXME: for StoppingDown
+                if (path.startsWith("//content/document/Blog/"))
+                  {
+                    final String category = path.replace("//content/document/Blog/", "").replaceAll("/.*", "");
+                    final String path2 = "/content/document/Blog/" + category + "/";
+                    final SortedMap<Key<?>, Object> properties2 = new TreeMap<Key<?>, Object>();
+                    properties2.put(new Key<Object>("category"), category.toLowerCase()); 
+                    dumpProperties(properties2, path2, "Properties_en");
+                  }
+                // END FIXME: for StoppingDown
+                
                 if (path.equals("//content/document/Resources/Diary.xml/"))
                   {
                     ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 

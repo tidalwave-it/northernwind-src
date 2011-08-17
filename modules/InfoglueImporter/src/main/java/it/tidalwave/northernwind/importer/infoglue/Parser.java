@@ -77,6 +77,12 @@ public abstract class Parser extends Converter
     protected void dumpProperties (final @Nonnull String fileName)
       throws IOException
       {
+        dumpProperties(properties, path, fileName);
+      }
+        
+    protected void dumpProperties (final @Nonnull SortedMap<Key<?>, Object> properties, final @Nonnull String path, final @Nonnull String fileName)
+      throws IOException
+      {
         String resourcePropertiesPath = path + fileName + ".xml";
                 
         if (resourcePropertiesPath.contains("OverrideProperties_"))

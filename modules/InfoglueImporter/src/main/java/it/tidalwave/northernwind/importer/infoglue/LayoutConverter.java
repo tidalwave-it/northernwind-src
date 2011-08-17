@@ -236,6 +236,13 @@ public class LayoutConverter extends Parser
 
                     propertyValue = values;
                   }
+                
+                // FIXME: for StoppingDown
+                if (componentId.stringValue().contains("main") && path.contains("/Blog"))
+                  {
+                    properties.put(new Key<Object>(componentId + "." + "filterByPathParams"), "true");
+                  }
+                // END FIXME: for StoppingDown
 
                 if ("styleSheets".equals(propertyName))
                   {
