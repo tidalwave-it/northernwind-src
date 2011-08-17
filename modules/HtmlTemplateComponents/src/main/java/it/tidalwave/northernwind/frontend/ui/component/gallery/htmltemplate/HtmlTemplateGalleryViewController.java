@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -36,6 +37,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,14 +68,28 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
           }
       };
     
+    private GalleryAdapter galleryAdapter;
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view, final @Nonnull SiteNode siteNode)
+      throws IOException
       {
+        super(view, siteNode);
         this.view = view;
         this.siteNode = siteNode;
       }
     
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @PostConstruct
-    /* package */ void initialize() 
+    /* package */ void initializeHtmlTemplateGalleryViewController() 
       throws HttpStatusException, IOException
       {
         String pathParams = requestHolder.get().getPathParams(siteNode);
@@ -101,8 +117,49 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
               }
           }
         
-        new BluetteGalleryAdapter().initialize(context);
+        getGalleryAdapter().initialize(context);
         
         textHolder.addAttribute("title", "StoppingDown");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    protected String computeInlinedScriptsSection() 
+      {
+        return super.computeInlinedScriptsSection() + "\n" + getGalleryAdapter().getInlinedScript();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    protected ResourceProperties getViewProperties() 
+      throws NotFoundException 
+      {
+        return super.getViewProperties().merged(getGalleryAdapter().getExtraViewProperties(view.getId()));
+      } 
+    
+    @Nonnull
+    private GalleryAdapter getGalleryAdapter()
+      {
+        if (galleryAdapter == null)
+          {
+            try 
+              {
+                galleryAdapter = new BluetteGalleryAdapter();
+              } 
+            catch (IOException e) 
+              {
+                throw new RuntimeException(e);
+              }
+          }
+        
+        return galleryAdapter;  
       }
   }

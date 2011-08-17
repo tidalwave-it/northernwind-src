@@ -23,15 +23,9 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -41,6 +35,10 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class DefaultGalleryViewController implements GalleryViewController
+public class DefaultGalleryViewController extends DefaultNodeContainerViewController implements GalleryViewController
   {
+    public DefaultGalleryViewController (final @Nonnull GalleryView view, final @Nonnull SiteNode siteNode) 
+      {
+        super(view, siteNode);
+      }
   }

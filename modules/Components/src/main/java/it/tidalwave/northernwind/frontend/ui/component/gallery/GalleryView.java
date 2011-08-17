@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
-import it.tidalwave.role.Identifiable;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 
 /***********************************************************************************************************************
  *
@@ -30,6 +30,6 @@ import it.tidalwave.role.Identifiable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryView extends Identifiable
+public interface GalleryView extends NodeContainerView
   {
   }
