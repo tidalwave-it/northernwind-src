@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,5 +133,16 @@ public class DefaultModelFactory implements ModelFactory
         return createRequest().withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())
                               .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public ResourceProperties createProperties (final @Nonnull Id id) 
+      {
+        return new DefaultResourceProperties(id, null);
       }
   }

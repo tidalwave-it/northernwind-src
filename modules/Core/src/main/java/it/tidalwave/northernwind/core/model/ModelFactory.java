@@ -116,5 +116,12 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest);
+    public Request createRequestFrom (@Nonnull HttpServletRequest httpServletRequest);
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties createProperties (@Nonnull Id id);
   }
