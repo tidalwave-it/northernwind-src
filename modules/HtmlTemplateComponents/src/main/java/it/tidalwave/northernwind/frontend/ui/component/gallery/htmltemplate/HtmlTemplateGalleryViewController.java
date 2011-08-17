@@ -35,6 +35,8 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -44,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class HtmlTemplateGalleryViewController extends DefaultGalleryViewController
+public class HtmlTemplateGalleryViewController extends DefaultGalleryViewController 
   {
     @Nonnull
     private final GalleryView view;
@@ -55,6 +57,15 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Inject @Nonnull
     private RequestHolder requestHolder;
     
+    private final GalleryAdapterContext context = new GalleryAdapterContext()
+      {
+        @Override
+        public void addAttribute (final @Nonnull String name, final @Nonnull String value) 
+          {
+            ((TextHolder)view).addAttribute(name, value);
+          }
+      };
+    
     public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view, final @Nonnull SiteNode siteNode)
       {
         this.view = view;
@@ -63,20 +74,21 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     
     @PostConstruct
     /* package */ void initialize() 
-      throws HttpStatusException
+      throws HttpStatusException, IOException
       {
         String pathParams = requestHolder.get().getPathParams(siteNode);
         pathParams = pathParams.replace("/", "");
         log.debug(">>>> pathParams: {}", pathParams);
-
+        final TextHolder textHolder = (TextHolder)view;
+        
         if (!"".equals(pathParams))
           {
             try 
               {
                 final String images = siteNode.getProperties().getProperty(new Key<String>(pathParams));
-                ((TextHolder)view).setTemplate("$content$\n");
-                ((TextHolder)view).setContent(images);
-                ((TextHolder)view).setMimeType("text/xml");
+                textHolder.setTemplate("$content$\n");
+                textHolder.setContent(images);
+                textHolder.setMimeType("text/xml");
                 return;
               }
             catch (NotFoundException e) 
@@ -88,5 +100,9 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                 throw new HttpStatusException(404);
               }
           }
+        
+        new BluetteGalleryAdapter().initialize(context);
+        
+        textHolder.addAttribute("title", "StoppingDown");
       }
   }
