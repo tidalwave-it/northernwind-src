@@ -73,16 +73,20 @@ public class RegexTreeMap<Type> extends TreeMap<String, Type>
     @Override
     public Type get (final @Nonnull Object value)
       {
-        Type result = super.get(Pattern.quote((String)value)); // first try a direct match that is fast
+        final String stringValue = (String)value;
+        Type result = super.get(Pattern.quote(stringValue)); // first try a direct match that is fast
+        int matchLength = 0;
         
-        if (result == null)
+        if (result == null) // otherwise returns the longest match
           { 
             for (final Entry<String, Type> entry : super.entrySet())
               {
-                if (((String)value).matches(entry.getKey()))
+                final String regex = entry.getKey();
+                
+                if (stringValue.matches(regex) && (regex.length() > matchLength))
                   {
                     result = entry.getValue();
-                    break;
+                    matchLength = regex.length();
                   }
               }
           }
