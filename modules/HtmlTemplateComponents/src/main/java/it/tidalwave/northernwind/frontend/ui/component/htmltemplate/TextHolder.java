@@ -61,6 +61,7 @@ public class TextHolder
             
     private final List<TextHolder> contents = new ArrayList<TextHolder>();
     
+    @Getter @Setter
     private String template;
     
     @Inject

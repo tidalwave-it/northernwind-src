@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Stopping Down</title>
+
+    <style type="text/css" media="screen">
+      @import url("/nw/css/bluette.css");
+    </style>
+
+    <script type="text/javascript">
+        var catalogUrl = "/nw/diary/2011/01/13/images.xml";
+        var photoPrefix = "http://stoppingdown.net/media/stillimages/";
+        var home = "/nw/blog/";
+        var titlePrefix = "Stopping Down: ";
+        var slideshowSpeed = 8000;
+        var sizes = [1920, 1280, 800, 400, 200];
+        var thumbnailsPerRow = 10;
+        var availWidthPercentage = 1.0;
+        var availHeightPercentage = 0.85;
+        var borderScale = 6.0 / 1920.0;
+        var captionFontSizeScale = 25.0 / 1280.0;
+        var headerFontSizeScale = 25.0 / 1280.0;
+        var titleVisible = true;
+        var logging = true;
+    </script>
+    <script type="text/javascript" src="/nw/js/tracker.js"></script>
+    <script type="text/javascript" src="/nw/js/jquery/1.4.2/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/nw/js/bluette/bluette.js"></script>
+  </head>
+
+  <body>
+    <div id="page">
+      <div id="content">
+        <div id="initialWaitingWidget"></div>
+        <div id="slideshow">
+          <div id="navigationWidgets">
+            <div id="navigationPreviousWidget">&nbsp;</div>
+            <div id="navigationLightBoxWidget">&nbsp;</div>
+            <div id="navigationHomeWidget">&nbsp;</div>
+            <div id="navigationPauseWidget">&nbsp;</div>
+            <div id="navigationPlayWidget">&nbsp;</div>
+            <div id="navigationNextWidget">&nbsp;</div>
+          </div>
+          <div id="imageRenderer">
+            <div id="divimage1"><img id="image1"></img></div>
+            <div id="divimage2"><img id="image2"></img></div>
+            <div id="imageOverlay">
+              <div id="header"></div>
+              <div id="waitingWidget"></div>
+              <div id="loadingWidget"></div>
+            </div>
+          </div>
+          <div id="title1"></div>
+          <div id="title2"></div>
+          <div id="copyright">&copy; Copyright by Fabrizio Giudici. All rights reserved.</div>
+        </div>
+        <div id="lightbox">
+            <span id="navigationCloseWidget">&nbsp;&nbsp;</span>
+            <div id="thumbnails"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
