@@ -22,13 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
-import it.tidalwave.northernwind.core.model.Content;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
@@ -75,8 +76,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         try
           {
             // FIXME: use a loop, should catch exception for each property
-            view.addAttribute("titlePrefix", siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE_PREFIX, ""));
-            view.addAttribute("description", siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DESCRIPTION, ""));
+            view.addAttribute("titlePrefix", getViewProperties().getProperty(PROPERTY_TITLE_PREFIX, ""));
+            view.addAttribute("description", getViewProperties().getProperty(PROPERTY_DESCRIPTION, ""));
             view.addAttribute("title", siteNode.getProperties().getProperty(PROPERTY_TITLE, ""));
             view.addAttribute("screenCssSection", computeScreenCssSection());
             view.addAttribute("rssFeeds", computeRssFeedsSection());
@@ -99,6 +100,18 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Nonnull
+    protected ResourceProperties getViewProperties()
+      throws NotFoundException 
+      {
+        return siteNode.getPropertyGroup(view.getId());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     private String computeScreenCssSection() 
       {
         final StringBuilder builder = new StringBuilder();
@@ -107,7 +120,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String contextPath = site.getContextPath();
 
-            for (final String uri : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+            for (final String uri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
                 builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
               }
@@ -138,7 +151,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String contextPath = site.getContextPath();
 
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_RSS_FEEDS))
+            for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS))
               {
                 final SiteNode rssSiteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
                 final String mimeType = "application/rss+xml";
@@ -157,20 +170,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         
         return builder.toString();
       }
-            /*
-                     <c:forEach items="{rssFeeds}" var="rssFeed" >
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="{rssFeed.url}" />
-        </c:forEach>
-        <c:forEach items="{scripts}" var="script" >
-            <script type="text/javascript" src="{script.url}"></script>
-        </c:forEach>
-        <c:forEach items="{inlinedScripts}" var="inlinedScript">
-            <c:set var="inlinedScriptId" value="{inlinedScript.id}"/>
-            <% Integer contentId = (Integer)pageContext.findAttribute("inlinedScriptId"); %>
-            <%= ((BasicTemplateController)request.getAttribute("templateLogic")).getParsedContentAttribute(contentId, "Template") %>
-        </c:forEach>
-
-             */
     
     /*******************************************************************************************************************
      *
@@ -182,23 +181,23 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final StringBuilder builder = new StringBuilder();
     
-//        try
-//          {
-//            final String contextPath = site.getContextPath();
-//
-//            for (final String uri : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
-//              {
-//                builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
-//              }
-//          }
-//        catch (IOException e)
-//          {
-//            log.error("", e);
-//          }        
-//        catch (NotFoundException e)
-//          {
-//            // ok, no css  
-//          }      
+        try
+          {
+            final String contextPath = site.getContextPath();
+
+            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS))
+              {
+                builder.append(String.format("<script type=\"text/javascript\" src=\"%s%s\"></script>\n", contextPath, relativeUri));
+              }
+          }
+        catch (IOException e)
+          {
+            log.error("", e);
+          }        
+        catch (NotFoundException e)
+          {
+            // ok, no css  
+          }      
         
         return builder.toString();
       }
@@ -209,13 +208,13 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String computeInlinedScriptsSection() 
+    protected String computeInlinedScriptsSection() 
       {
         final StringBuilder builder = new StringBuilder();
     
         try
           {
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_INLINED_SCRIPTS))
+            for (final String relativePath : getViewProperties().getProperty(PROPERTY_INLINED_SCRIPTS))
               {
                 final Content script = site.find(Content.class).withRelativePath(relativePath).result();
                 final String template = script.getProperties().getProperty(PROPERTY_TEMPLATE);
@@ -234,3 +233,4 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         return builder.toString();
       }
   }
+
