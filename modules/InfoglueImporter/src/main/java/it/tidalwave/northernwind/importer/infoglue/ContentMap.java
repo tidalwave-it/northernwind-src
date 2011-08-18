@@ -90,7 +90,7 @@ public class ContentMap
               }
           }
         
-        if (languageMap.isEmpty())
+        if (languageMap.isEmpty() && !exactDateTime) // FIXME: drop this log, useless
           {
             log.error("Empty language map for {}: {}", "" + id + " / " + dateTime, dateTimeMap.keySet());  
           }

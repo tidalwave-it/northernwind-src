@@ -59,10 +59,13 @@ class ExportContentsVersionConverter extends Converter
     
     private final ExportContentConverter parent;
     
-    public ExportContentsVersionConverter (final @Nonnull ExportContentConverter parent)
+    private final boolean onlyMapAssets;
+    
+    public ExportContentsVersionConverter (final @Nonnull ExportContentConverter parent, final boolean onlyMapAssets)
       {
         super(parent);        
         this.parent = parent;
+        this.onlyMapAssets = onlyMapAssets;
       }
 
     @Override
@@ -71,7 +74,7 @@ class ExportContentsVersionConverter extends Converter
       {
         if ("digitalAssets".equals(elementName))
           {
-            new ExportDigitalAssetsConverter(this).process();  
+            new ExportDigitalAssetsConverter(this, onlyMapAssets).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
@@ -80,85 +83,91 @@ class ExportContentsVersionConverter extends Converter
     protected void processEndElement (final @Nonnull String elementName)
       throws Exception
       {
-        if ("stateId".equals(elementName))
+        if (!onlyMapAssets)
           {
-            stateId = contentAsInteger();  
-          }
-        else if ("modifiedDateTime".equals(elementName))
-          {
-            modifiedDateTime = contentAsDateTime();  
-          }
-        else if ("versionComment".equals(elementName))
-          {
-            versionComment = contentAsString();  
-          }
-        else if ("isCheckedOut".equals(elementName))
-          {
-            checkedOut = contentAsBoolean();  
-          }
-        else if ("isActive".equals(elementName))
-          {
-            active = contentAsBoolean();  
-          }
-        else if ("versionModifier".equals(elementName))
-          {
-            versionModifier = contentAsString();  
-          }
-        else if ("escapedVersionValue".equals(elementName))
-          {
-            escapedVersionValue = contentAsString();  
-          }
-        else if ("languageCode".equals(elementName))
-          {
-            languageCode = contentAsString();  
+            if ("stateId".equals(elementName))
+              {
+                stateId = contentAsInteger();  
+              }
+            else if ("modifiedDateTime".equals(elementName))
+              {
+                modifiedDateTime = contentAsDateTime();  
+              }
+            else if ("versionComment".equals(elementName))
+              {
+                versionComment = contentAsString();  
+              }
+            else if ("isCheckedOut".equals(elementName))
+              {
+                checkedOut = contentAsBoolean();  
+              }
+            else if ("isActive".equals(elementName))
+              {
+                active = contentAsBoolean();  
+              }
+            else if ("versionModifier".equals(elementName))
+              {
+                versionModifier = contentAsString();  
+              }
+            else if ("escapedVersionValue".equals(elementName))
+              {
+                escapedVersionValue = contentAsString();  
+              }
+            else if ("languageCode".equals(elementName))
+              {
+                languageCode = contentAsString();  
+              }
           }
       }
 
     @Override
     protected void finish() throws Exception 
       {
-        log.info("Now process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
-                new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
-        String path = parent.getPath() + "/";
-      
-        // FIXME for blueBill Mobile, put in configuration
-//        if (path.equals("/blueBill/License/"))
-//          {
-//            path = "/blueBill/Mobile/License/";   
-//          }
-//        else if (path.equals("/blueBill/Mobile/Contact/"))
-//          {
-//            path = "/blueBill/Mobile/Contacts/";   
-//          }
-//        else if (path.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
-//          {
-//            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
-//          }
-        // END FIXME for blueBill Mobile, put in configuration
+        if (!onlyMapAssets)
+          {
+            log.info("Now process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
+                    new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
+            String path = parent.getPath() + "/";
 
-        final String content = escapedVersionValue.replace("cdataEnd", "]]>");
-        Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
-  
-        if (!path.matches(Main.contentPrefix + ".*"))
-          {
-            log.warn("Ignoring content: {}", path);
-          }
-        else
-          {
-            path = path.replaceAll(Main.contentPrefix, "");
-            path = "/content/document" + path;
-            log.info("PBD " + parent.getPublishDateTime() + " " + path);
-            // FIXME: creationDate
-            
-            if (!"".equals(content))
+            // FIXME for blueBill Mobile, put in configuration
+    //        if (path.equals("/blueBill/License/"))
+    //          {
+    //            path = "/blueBill/Mobile/License/";   
+    //          }
+    //        else if (path.equals("/blueBill/Mobile/Contact/"))
+    //          {
+    //            path = "/blueBill/Mobile/Contacts/";   
+    //          }
+    //        else if (path.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
+    //          {
+    //            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
+    //          }
+            // END FIXME for blueBill Mobile, put in configuration
+
+            final String content = escapedVersionValue.replace("cdataEnd", "]]>");
+            Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
+
+            if (!path.matches(Main.contentPrefix + ".*"))
               {
-                new ContentParser(content, 
-                                  modifiedDateTime, 
-                                  parent.getPublishDateTime(),
-                                  UriUtilities.urlEncodedPath(path) + "/", 
-                                  languageCode,
-                                  versionComment)
-                        .process();
+                log.warn("Ignoring content: {}", path);
+              }
+            else
+              {
+                path = path.replaceAll(Main.contentPrefix, "");
+                path = "/content/document" + path;
+    //            log.info("PBD " + parent.getPublishDateTime() + " " + path);
+                // FIXME: creationDate
+
+                if (!"".equals(content))
+                  {
+                    new ContentParser(content, 
+                                      modifiedDateTime, 
+                                      parent.getPublishDateTime(),
+                                      UriUtilities.urlEncodedPath(path) + "/", 
+                                      languageCode,
+                                      versionComment)
+                            .process();
+                  }
               }
           }
       }

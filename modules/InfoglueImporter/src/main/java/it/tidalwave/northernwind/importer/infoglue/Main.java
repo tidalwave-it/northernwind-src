@@ -67,6 +67,7 @@ public class Main
             "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml"
           );
         
-        new ExportConverter(new FileInputStream(xmlFile)).process() ;
+        new ExportConverter(new FileInputStream(xmlFile), true).process() ;
+        new ExportConverter(new FileInputStream(xmlFile), false).process() ;
       }
   }

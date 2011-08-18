@@ -43,10 +43,13 @@ import lombok.Cleanup;
  **********************************************************************************************************************/
 public class ExportConverter extends Converter 
   {
-    public ExportConverter (final @Nonnull InputStream is)
+    private final boolean onlyMapAssets;
+    
+    public ExportConverter (final @Nonnull InputStream is, final boolean onlyMapAssets)
       throws XMLStreamException 
       {
         super(is);
+        this.onlyMapAssets = onlyMapAssets;
       }
 
     @Override
@@ -55,11 +58,11 @@ public class ExportConverter extends Converter
       {
         if ("root-content".equals(elementName))
           {  
-            new ExportContentConverter(this).process();
+            new ExportContentConverter(this, onlyMapAssets).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
         
-        else if ("root-site-node".equals(elementName))
+        else if ("root-site-node".equals(elementName) && !onlyMapAssets)
           {  
             new ExportSiteNodeConverter(this).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
@@ -69,7 +72,10 @@ public class ExportConverter extends Converter
     @Override
     protected void start() throws Exception
       {
-        ResourceManager.initialize();
+        if (!onlyMapAssets)
+          {
+            ResourceManager.initialize();
+          }
       }
     
     @Override
@@ -81,11 +87,14 @@ public class ExportConverter extends Converter
     @Override
     protected void finish() throws Exception 
       {
-        final DateTime dateTime = ResourceManager.getTimeBase().minusSeconds(1);
-        addLibraries(Main.zipLibraryFile, dateTime);
-        
-        ResourceManager.addAndCommitResources();
-        ResourceManager.tagConversionCompleted();
+        if (!onlyMapAssets)
+          {
+            final DateTime dateTime = ResourceManager.getTimeBase().minusSeconds(1);
+            addLibraries(Main.zipLibraryFile, dateTime);
+
+            ResourceManager.addAndCommitResources();
+            ResourceManager.tagConversionCompleted();
+          }
       }
     
     protected void addLibraries (final @Nonnull String zippedLibraryPath, final @Nonnull DateTime dateTime)

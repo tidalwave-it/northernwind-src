@@ -43,10 +43,13 @@ public class ExportDigitalAssetsConverter extends Converter
     
     private final ExportContentsVersionConverter parent;
     
-    public ExportDigitalAssetsConverter (final @Nonnull ExportContentsVersionConverter parent)
+    private final boolean onlyMapAssets;
+    
+    public ExportDigitalAssetsConverter (final @Nonnull ExportContentsVersionConverter parent, final boolean onlyMapAssets)
       {
         super(parent);        
         this.parent = parent;
+        this.onlyMapAssets = onlyMapAssets;
       }
 
     @Override
@@ -74,11 +77,15 @@ public class ExportDigitalAssetsConverter extends Converter
           {
             final String fixedPath = "/content/media/" + assetFileName;
             Main.assetFileNameMapByKey.put(assetKey, assetFileName);
-            log.info("Converting {} ...", fixedPath);
-            ResourceManager.addCommand(new AddResourceCommand(parent.getModifiedDateTime(), 
-                                                              fixedPath, 
-                                                              contentAsBytes(),
-                                                              parent.getVersionComment()));
+            
+            if (!onlyMapAssets)
+              {
+                log.info("Converting {} ...", fixedPath);
+                ResourceManager.addCommand(new AddResourceCommand(parent.getModifiedDateTime(), 
+                                                                  fixedPath, 
+                                                                  contentAsBytes(), // FIXME: assetBytes?
+                                                                  parent.getVersionComment()));
+              }
           } 
         catch (IOException e) 
           {

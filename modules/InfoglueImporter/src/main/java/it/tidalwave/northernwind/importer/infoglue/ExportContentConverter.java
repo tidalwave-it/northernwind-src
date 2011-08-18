@@ -51,11 +51,14 @@ class ExportContentConverter extends Converter
 
     private final ExportContentConverter parent;
     
-    public ExportContentConverter (final @Nonnull Converter parent)
+    private final boolean onlyMapAssets;
+    
+    public ExportContentConverter (final @Nonnull Converter parent, final boolean onlyMapAssets)
       {
         super(parent);        
         this.parent = (parent instanceof ExportContentConverter) ? ((ExportContentConverter)parent) : null;
         id = Integer.parseInt(parent.reader.getAttributeValue("", "content-id"));
+        this.onlyMapAssets = onlyMapAssets;
       }
     
     @Override
@@ -64,12 +67,12 @@ class ExportContentConverter extends Converter
       {
         if ("children".equals(elementName))
           {
-            new ExportContentConverter(this).process();  
+            new ExportContentConverter(this, onlyMapAssets).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
         else if ("contentVersions".equals(elementName))
           {
-            new ExportContentsVersionConverter(this).process();  
+            new ExportContentsVersionConverter(this, onlyMapAssets).process();  
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
