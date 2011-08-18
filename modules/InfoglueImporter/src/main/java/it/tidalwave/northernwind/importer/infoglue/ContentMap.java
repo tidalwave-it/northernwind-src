@@ -24,9 +24,11 @@ package it.tidalwave.northernwind.importer.infoglue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -35,23 +37,24 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class ContentMap 
   {
     private Map<Integer, SortedMap<DateTime, Map<String, String>>> map = new HashMap<Integer, SortedMap<DateTime, Map<String, String>>>();
     
     public void put (final int id, final @Nonnull DateTime dateTime, final @Nonnull String language, final @Nonnull String content)
       {
-        getLanguageMap(id, dateTime).put(language, content);
+        getLanguageMap(id, dateTime, true).put(language, content);
       }
     
     @Nonnull
     public Map<String, String> get (final int id, final @Nonnull DateTime dateTime)
       {
-        return getLanguageMap(id, dateTime);
+        return getLanguageMap(id, dateTime, false);
       }
     
     @Nonnull
-    private Map<String, String> getLanguageMap (final int id, final @Nonnull DateTime dateTime)
+    private Map<String, String> getLanguageMap (final int id, final @Nonnull DateTime dateTime, final boolean exactDateTime)
       {
         SortedMap<DateTime, Map<String, String>> dateTimeMap = map.get(id);
         
@@ -64,7 +67,32 @@ public class ContentMap
         
         if (languageMap == null)
           {
-            dateTimeMap.put(dateTime, languageMap = new HashMap<String, String>());
+            if (exactDateTime)
+              {
+                dateTimeMap.put(dateTime, languageMap = new HashMap<String, String>());
+              }
+            else
+              {
+                for (final Entry<DateTime, Map<String, String>> entry : dateTimeMap.entrySet())
+                  {
+                    if (entry.getKey().isAfter(dateTime))
+                      { 
+                        break;  
+                      }
+                    
+                    languageMap = entry.getValue();
+                  }
+                
+                if (languageMap == null)
+                  {
+                    throw new RuntimeException("Cannot find dateTime earlier than: " + dateTime + " - available: " + dateTimeMap.keySet());
+                  }
+              }
+          }
+        
+        if (languageMap.isEmpty())
+          {
+            log.error("Empty language map for {}: {}", "" + id + " / " + dateTime, dateTimeMap.keySet());  
           }
         
         return languageMap;

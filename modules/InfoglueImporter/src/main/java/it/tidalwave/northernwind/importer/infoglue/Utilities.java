@@ -147,8 +147,8 @@ public class Utilities
             
             if (asset == null)
               {
-                asset = "???";
-                log.error("Null asset: {}", assetKey);
+                asset = "notfound";
+                log.error("Cannot find asset {}: available: {}", assetKey, Main.assetFileNameMapByKey.keySet());
               }
 
             matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativePath='/" + asset + "')\\$");

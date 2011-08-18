@@ -145,6 +145,7 @@ class ExportSiteNodeVersionConverter extends Converter
             log.info("Processing {} -> {}", parent.getPath(), path);
 
             final Map<String, String> languageMap = Main.contentMap.get(metaInfoContentId, modifiedDateTime);
+            log.debug("languageMap: {}", languageMap);
             
             for (final Entry<String, String> entry : languageMap.entrySet())
               {
