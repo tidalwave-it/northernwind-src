@@ -66,8 +66,8 @@ public class AddResourceCommand
         final OutputStream os = new FileOutputStream(file);
         os.write(contents);
         os.close();
-        Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg add " + fixedPath);
-        Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg commit -m \"" + comment + "\" " + fixedPath + " --date \'" + dateTime.toDate().getTime() / 1000 + " 0\'");
+        Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg add \"" + fixedPath + "\"");
+        Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg commit -m \"" + comment + "\" \"" + fixedPath + "\" --date \'" + dateTime.toDate().getTime() / 1000 + " 0\'");
       }
   }
 
