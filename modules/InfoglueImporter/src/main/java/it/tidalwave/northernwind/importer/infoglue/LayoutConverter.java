@@ -32,6 +32,7 @@ import it.tidalwave.util.NotFoundException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -366,7 +367,21 @@ public class LayoutConverter extends Parser
               {
                 // ok  
               }
-            
+            try // move footer at the bottom of base
+              {                
+                final Layout footer = rootComponent.findSubComponentById(new Id("footer"));
+                final Field children = DefaultLayout.class.getDeclaredField("children");
+                final Field childrenMapById = DefaultLayout.class.getDeclaredField("childrenMapById");
+                children.setAccessible(true);
+                childrenMapById.setAccessible(true);
+                ((List)children.get(rootComponent)).remove(footer);
+                ((Map)childrenMapById.get(rootComponent)).remove("footer");
+                ((DefaultLayout)rootComponent).add(footer);
+              }
+            catch (NotFoundException e)
+              {
+                // ok  
+              }
             
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);
