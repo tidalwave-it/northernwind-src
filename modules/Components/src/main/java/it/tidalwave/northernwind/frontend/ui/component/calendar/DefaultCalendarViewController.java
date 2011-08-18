@@ -28,6 +28,9 @@ import javax.inject.Inject;
 import java.util.Locale;
 import java.text.DateFormatSymbols;
 import java.io.IOException;
+import java.io.StringReader;
+import org.joda.time.DateTime;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -40,7 +43,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -48,9 +50,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import java.io.StringReader;
 import lombok.extern.slf4j.Slf4j;
-import org.xml.sax.InputSource;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -106,8 +107,18 @@ public class DefaultCalendarViewController implements CalendarViewController
         final int lastYear = Integer.parseInt(properties.getProperty(LAST_YEAR, "" + Math.max(selectedYear, currentYear)));
         final int columns = 4;
 
-        builder.append("<div class='nw-calendar'>\n")
-               .append("<table class='nw-calendar-table'>\n")
+        builder.append("<div class='nw-calendar'>\n");
+        
+        try
+          {
+            builder.append(String.format("<h2>%s</h2>\n", siteNode.getProperties().getProperty(PROPERTY_TITLE)));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no title  
+          }
+                
+        builder.append("<table class='nw-calendar-table'>\n")
                .append("<tbody>\n");
 
         builder.append(String.format("<tr>\n<th colspan='%d' class='nw-calendar-title'>%d</th>\n</tr>\n", columns, selectedYear));
