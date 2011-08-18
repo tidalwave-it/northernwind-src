@@ -154,6 +154,7 @@ class ExportContentsVersionConverter extends Converter
             else
               {
                 path = path.replaceAll(Main.contentPrefix, "");
+                Main.contentRelativePathMapById.put(parent.getId(), path);
                 path = "/content/document" + path;
     //            log.info("PBD " + parent.getPublishDateTime() + " " + path);
                 // FIXME: creationDate

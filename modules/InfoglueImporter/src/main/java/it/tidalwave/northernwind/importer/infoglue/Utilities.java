@@ -45,9 +45,13 @@ import org.w3c.tidy.Tidy;
 public class Utilities 
   {
     private static final String REGEXP_getPageUrl = "\\$templateLogic\\.getPageUrl\\(([0-9]*),\\s*\\$templateLogic\\.languageId,\\s*-1\\)";
+//        $templateLogic.getPageUrl(180, $templateLogic.languageId,766)
+    private static final String REGEXP_getPageUrlWithContent = "\\$templateLogic\\.getPageUrl\\(([0-9]*)\\s*,\\s*\\$templateLogic\\.languageId,\\s*([0-9]*)\\)";
     private static final String REGEXP_getInlineAssetUrl = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*)\\s*,\\s*\"([^\"]*)\"\\)";
     private static final String REGEXP_urlDecodeMacros = "(\\$[a-zA-Z0-9]*\\([a-zA-Z0-9]*=')(.*)('\\)\\$)";
+
     private static final Pattern PATTERN_getPageUrl = Pattern.compile(REGEXP_getPageUrl);
+    private static final Pattern PATTERN_getPageUrlWithContent = Pattern.compile(REGEXP_getPageUrlWithContent);
     private static final Pattern PATTERN_getInlineAssetUrl = Pattern.compile(REGEXP_getInlineAssetUrl);
     private static final Pattern PATTERN_urlDecodeMacros = Pattern.compile(REGEXP_urlDecodeMacros);
     
@@ -136,6 +140,32 @@ public class Utilities
           }
         
         matcherGetPageUrl.appendTail(buffer);
+
+        final Matcher matcherGetPageUrlWithContent = PATTERN_getPageUrlWithContent.matcher(buffer.toString());
+        buffer = new StringBuffer();
+        
+        while (matcherGetPageUrlWithContent.find())
+          {
+            String r1 = URLDecoder.decode(matcherGetPageUrlWithContent.group(1), "UTF-8");
+            String i2 = URLDecoder.decode(matcherGetPageUrlWithContent.group(2), "UTF-8");
+            
+            if (r1.equals("159") || r1.equals("180"))
+              {
+                r1 = "/Blog";  
+              }
+            
+            String r2 = Main.contentRelativePathMapById.get(Integer.parseInt(i2));
+                    
+            if (r2 == null)
+              {
+                r2 = "NOTFOUND_" + i2;
+              }
+            
+            r2 = r2.replaceAll("/$", "");
+            matcherGetPageUrlWithContent.appendReplacement(buffer, "\\$nodeLinkWithContent(relativePath='" + r1 + "', contentRelativePath='" + r2 + "')\\$");
+          }
+        
+        matcherGetPageUrlWithContent.appendTail(buffer);
 
         final Matcher matcherGetInlineAssetUrl = PATTERN_getInlineAssetUrl.matcher(buffer.toString());
         buffer = new StringBuffer();

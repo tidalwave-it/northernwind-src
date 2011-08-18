@@ -42,6 +42,8 @@ public class Main
     
     /* package */ static final ContentMap contentMap = new ContentMap();
     
+    /* package */ static final Map<Integer, String> contentRelativePathMapById = new HashMap<Integer, String>();
+    
     // blueBill Mobile
 //    /* package */ static String xmlFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/Export__blueBill_2011-08-10_0414.xml";
 //    /* package */ static String zipLibraryFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/blueBillWebsiteLibrary.zip";
