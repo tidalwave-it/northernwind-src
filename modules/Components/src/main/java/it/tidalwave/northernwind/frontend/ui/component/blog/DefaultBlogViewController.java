@@ -257,9 +257,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
         catch (NotFoundException e) 
           {
-            String title = post.getProperties().getProperty(PROPERTY_TITLE);
-            title = title.replaceAll(" ", "-").replaceAll("[^\\w-]*", ""); 
-            return title.toLowerCase();
+            return post.getExposedUri();
           } 
       }
     

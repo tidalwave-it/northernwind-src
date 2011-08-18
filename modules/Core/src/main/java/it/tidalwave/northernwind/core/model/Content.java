@@ -22,7 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import it.tidalwave.util.Finder;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
 
 /***********************************************************************************************************************
@@ -36,4 +39,8 @@ import it.tidalwave.role.Composite;
 public interface Content extends Resource, Composite<Content, Finder<Content>> 
   {
     public static final Class<Content> Content = Content.class;
+
+    @Nonnull
+    public String getExposedUri()
+      throws NotFoundException, IOException;
   }

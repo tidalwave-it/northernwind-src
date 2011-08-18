@@ -24,9 +24,12 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -34,6 +37,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+//import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -77,5 +81,22 @@ import lombok.extern.slf4j.Slf4j;
       {
         return new FolderBasedFinderSupport(this);
       }
-  }
+
+    // FIXME: this is declared in Frontend Components. Either move some properties in this module, or this the next
+    // method can't stay here.
+    public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String getExposedUri()
+      throws NotFoundException, IOException 
+      {
+        String title = resource.getProperties().getProperty(PROPERTY_TITLE);
+        title = title.replaceAll(" ", "-").replaceAll("[^\\w-]*", ""); 
+        return title.toLowerCase();
+      }
+  }
