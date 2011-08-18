@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
-import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.htmltemplate.HtmlTemplateNodeContainerView_2;
 
 /***********************************************************************************************************************
  *
@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate
  **********************************************************************************************************************/
 @ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Gallery/#v1.0", 
               controlledBy=HtmlTemplateGalleryViewController.class)
-public class HtmlTemplateGalleryView extends HtmlTemplateHtmlFragmentView implements GalleryView
+public class HtmlTemplateGalleryView extends HtmlTemplateNodeContainerView_2 implements GalleryView
   {
     public HtmlTemplateGalleryView (final @Nonnull Id id) 
       {
