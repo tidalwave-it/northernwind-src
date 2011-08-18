@@ -98,20 +98,22 @@ public class DefaultCalendarViewController implements CalendarViewController
           {
             // ok, keep the default value
           }
+
+        final ResourceProperties siteNodeProperties = siteNode.getProperties();
+        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         
-        final String entries = siteNode.getProperties().getProperty(ENTRIES);
-        final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
+        final String entries = siteNodeProperties.getProperty(PROPERTY_ENTRIES);
         final StringBuilder builder = new StringBuilder();
-        final int selectedYear = Integer.parseInt(properties.getProperty(SELECTED_YEAR, "" + currentYear));
-        final int firstYear = Integer.parseInt(properties.getProperty(FIRST_YEAR, "" + Math.min(selectedYear, currentYear)));
-        final int lastYear = Integer.parseInt(properties.getProperty(LAST_YEAR, "" + Math.max(selectedYear, currentYear)));
+        final int selectedYear = Integer.parseInt(viewProperties.getProperty(PROPERTY_SELECTED_YEAR, "" + currentYear));
+        final int firstYear = Integer.parseInt(viewProperties.getProperty(PROPERTY_FIRST_YEAR, "" + Math.min(selectedYear, currentYear)));
+        final int lastYear = Integer.parseInt(viewProperties.getProperty(PROPERTY_LAST_YEAR, "" + Math.max(selectedYear, currentYear)));
         final int columns = 4;
 
         builder.append("<div class='nw-calendar'>\n");
         
         try
           {
-            builder.append(String.format("<h2>%s</h2>\n", siteNode.getProperties().getProperty(PROPERTY_TITLE)));
+            builder.append(String.format("<h2>%s</h2>\n", siteNodeProperties.getProperty(PROPERTY_TITLE)));
           }
         catch (NotFoundException e)
           {
@@ -169,7 +171,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 
         builder.append("</tbody>\n</table>\n");
         
-        builder.append("<div class='nw-calendar-yearselector'>");
+        builder.append("<div class='nw-calendar-yearselector'>\n");
         String separator = "";
         
         for (int year = firstYear; year <= lastYear; year++)
