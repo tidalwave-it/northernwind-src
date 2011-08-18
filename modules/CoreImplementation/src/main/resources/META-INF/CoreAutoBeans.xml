@@ -96,6 +96,9 @@
     <bean id="nodeLinkMacroExpander"
           class="it.tidalwave.northernwind.core.impl.model.NodeLinkMacroExpander" />
           
+    <bean id="nodeLinkWithContentMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.model.NodeLinkWithContentMacroExpander" />
+          
     <bean id="libraryLinkMacroExpander"
           class="it.tidalwave.northernwind.core.impl.model.LibraryLinkMacroExpander" />
           
