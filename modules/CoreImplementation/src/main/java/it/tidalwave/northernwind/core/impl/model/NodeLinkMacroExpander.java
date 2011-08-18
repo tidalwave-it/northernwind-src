@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -34,7 +35,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @Slf4j
 public class NodeLinkMacroExpander extends MacroExpander
   {
     public NodeLinkMacroExpander()
@@ -53,7 +54,7 @@ public class NodeLinkMacroExpander extends MacroExpander
           }
         catch (NotFoundException e) 
           {
-            // FIXME
+            log.error("", e);
             return "";
           }
       }
