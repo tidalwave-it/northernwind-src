@@ -23,11 +23,9 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.regex.Matcher;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
