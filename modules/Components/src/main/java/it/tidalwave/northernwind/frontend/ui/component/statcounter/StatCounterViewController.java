@@ -35,4 +35,16 @@ public interface StatCounterViewController
     public static final Key<String> PROPERTY_PROJECT = new Key<String>("project");
     
     public static final Key<String> PROPERTY_SECURITY = new Key<String>("security");
+    
+    // FIXME: should be Boolean
+    public static final Key<String> PROPERTY_INVISIBLE = new Key<String>("invisible");
+    
+    public static final Key<String> PROPERTY_MESSAGE = new Key<String>("message");
+    
+    // FIXME: these should be Integer
+    public static final Key<String> PROPERTY_PARTITION = new Key<String>("partition");
+    
+    public static final Key<String> PROPERTY_CLICK_STAT = new Key<String>("clickStat");
+    
+    public static final Key<String> PROPERTY_TEXT = new Key<String>("text");
   }

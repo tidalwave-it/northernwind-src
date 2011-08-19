@@ -78,6 +78,39 @@ public class DefaultStatCounterViewController extends DefaultStaticHtmlFragmentV
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("project", properties.getProperty(PROPERTY_PROJECT, "")); 
         attributes.put("security", properties.getProperty(PROPERTY_SECURITY, "")); 
+        attributes.put("invisible", Boolean.parseBoolean(properties.getProperty(PROPERTY_INVISIBLE, "true")) ? "1" : "0"); 
+
+        final String message = properties.getProperty(PROPERTY_MESSAGE, "{0}");
+        String messagePrefix = message.replaceAll("\\{0\\}.*", "");
+        String messagePostfix = message.replaceAll(".*\\{0\\}", "");
+        attributes.put("messagePrefix", messagePrefix); 
+        attributes.put("messagePostfix", messagePostfix); 
+        
+        final StringBuilder builder = new StringBuilder();
+        try
+          {
+            builder.append(String.format("var sc_partition = %s;\n", properties.getProperty(PROPERTY_PARTITION)));
+          }
+        catch (NotFoundException e)
+          {
+          }
+        try
+          {
+            builder.append(String.format("var sc_click_stat = %s;\n", properties.getProperty(PROPERTY_CLICK_STAT)));
+          }
+        catch (NotFoundException e)
+          {
+          }
+        try
+          {
+            builder.append(String.format("var sc_text = %s;\n", properties.getProperty(PROPERTY_TEXT)));
+          }
+        catch (NotFoundException e)
+          {
+          }
+        
+        attributes.put("otherParameters", builder.toString()); 
+        
         populate("StatCounterHtmlFragment.txt", attributes);
       }
   }
