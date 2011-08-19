@@ -112,9 +112,24 @@ public class StructureParser extends Parser
         final Key<Object> PROPERTY_EXPOSED_URI = new Key<Object>("exposedUri");
         final Key<Object> PROPERTY_NAVIGATION_LABEL = new Key<Object>("navigationLabel");
         
+        // FIXME: for StoppingDown
+        log.warn("XXXX " + path);
+        if (path.equals("//structure/RSS+Feeds/Override"))
+          {
+            properties.put(PROPERTY_EXPOSED_URI, "feeds");                    
+          }
+        if (path.equals("//structure/RSS+Feeds/Blog+RSS+Feed/Override"))
+          {
+            properties.put(PROPERTY_EXPOSED_URI, "blog.rss");                    
+          }
+        if (path.equals("//structure/RSS+Feeds/News+RSS+Feed/Override"))
+          {
+            properties.put(PROPERTY_EXPOSED_URI, "news.rss");                    
+          }
+        // END FIXME: for StoppingDown
+        
         if (!properties.containsKey(PROPERTY_EXPOSED_URI) && properties.containsKey(PROPERTY_NAVIGATION_LABEL))
           {
-            log.info("Missing EXPOSED: {}", properties);
             properties.put(PROPERTY_EXPOSED_URI, properties.get(PROPERTY_NAVIGATION_LABEL).toString().toLowerCase());                    
           }
         
