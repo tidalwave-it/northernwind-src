@@ -164,6 +164,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
+     * FIXME: works, but it's really cumbersome
      *
      ******************************************************************************************************************/
     // TODO: embed the sort by reverse date in the finder
@@ -174,38 +175,49 @@ public abstract class DefaultBlogViewController implements BlogViewController
         String pathParams = requestHolder.get().getPathParams(siteNode);
         pathParams = pathParams.replace("/", "");
         log.debug(">>>> pathParams: {}", pathParams);
-        final boolean filterByPathParams = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_FILTER_BY_PATH_PARAMS, "false"));
-        final boolean filtering = filterByPathParams && !"".equals(pathParams);
-        
-        final List<Content> posts = new ArrayList<Content>();
-        
+        final boolean index = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_INDEX, "false"));
+
+        final List<Content> allPosts = new ArrayList<Content>();
+
         for (final String relativePath : siteNodeProperties.getProperty(PROPERTY_CONTENTS))
           {  
             final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
-
-            for (final Content post : postsFolder.findChildren().results())
+            allPosts.addAll(postsFolder.findChildren().results());
+          }
+        
+        final List<Content> posts = new ArrayList<Content>();
+        
+        try
+          {
+            posts.add(findPostByExposedUri(allPosts, pathParams));
+            
+            if (index) // pathParams matches an exposedUri; thus it's not a category, so an index wants all
+              {
+                posts.clear();
+                posts.addAll(allPosts);
+                throw new NotFoundException();
+              }
+          }
+        catch (NotFoundException e) // pathParams doesn't match an exposedUri; it will eventually match a category 
+          {
+            for (final Content post : allPosts)
               {
                 try
                   {
-                    if (!filtering
-                        || pathParams.equals(getExposedUri(post))
+                    if (pathParams.equals("")
                         || pathParams.equals(post.getProperties().getProperty(PROPERTY_CATEGORY, "---")))
                       {
                         posts.add(post);   
                       }
                   }
-                catch (NotFoundException e) 
+                catch (IOException e2) 
                   {
-                    log.warn("{}", e.toString());
-                  }
-                catch (IOException e) 
-                  {
-                    log.warn("", e);
+                    log.warn("", e2);
                   }
               }
           }
         
-        if (filtering && posts.isEmpty())
+        if (!index && !"".equals(pathParams) && posts.isEmpty())
           {
             throw new HttpStatusException(404);
           }
@@ -213,6 +225,36 @@ public abstract class DefaultBlogViewController implements BlogViewController
         Collections.sort(posts, REVERSE_DATE_COMPARATOR);
         
         return posts;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Content findPostByExposedUri (final List<Content> allPosts, final @Nonnull String exposedUri) 
+      throws NotFoundException, IOException
+      {
+        for (final Content post : allPosts)
+          {
+            try
+              {
+                if (exposedUri.equals(getExposedUri(post)))
+                  {
+                    return post;
+                  }
+              }
+            catch (NotFoundException e) 
+              {
+                log.warn("{}", e.toString());
+              }
+            catch (IOException e) 
+              {
+                log.warn("", e);
+              }
+          }
+        
+        throw new NotFoundException("Blog post with exposedUri=" + exposedUri);
       }
     
     /*******************************************************************************************************************
