@@ -87,7 +87,8 @@ public class LayoutConverter extends Parser
         put("544", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0"); // Splash
         put("547", CALENDAR);
         put("572", CONTAINER); // Categories header
-        put("577", "http://northernwind.tidalwave.it/component/NikonianWebringBadge/#v1.0"); // Nikonian WebRing Badge
+        put("577", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
+//        put("577", "http://northernwind.tidalwave.it/component/NikonianWebringBadge/#v1.0"); // Nikonian WebRing Badge
         put("602", CONTAINER); // Post Index header
         put("603", "http://northernwind.tidalwave.it/component/Unknown603/#v1.0");
         put("764", "http://northernwind.tidalwave.it/component/LightBoxCSS/#v1.0"); // LightBox CSS
@@ -338,6 +339,7 @@ public class LayoutConverter extends Parser
                 properties.put(new Key<Object>("content1-9.project"), "4204333");
                 properties.put(new Key<Object>("content1-9.security"), "b11c31c8");
                 properties.put(new Key<Object>("content1-9.invisible"), "false");
+                properties.put(new Key<Object>("content1-9.message"), "{0} visits since November 2008.");
               }
             catch (NotFoundException e)
               {
@@ -362,6 +364,18 @@ public class LayoutConverter extends Parser
                              .findSubComponentById(new Id("content3"))
                              .findSubComponentById(new Id("content3-3"));
                 properties.put(new Key<Object>("content3-3.title"), "Categories");
+              }
+            catch (NotFoundException e)
+              {
+                // ok  
+              }
+            try
+              {                
+                rootComponent.findSubComponentById(new Id("local"))
+                             .findSubComponentById(new Id("local-5"))
+                             .findSubComponentById(new Id("content6"))
+                             .findSubComponentById(new Id("content6-13"));
+                properties.put(new Key<Object>("content6-13.contents"), Arrays.asList("/Resources/Nikonian WebRing badge"));
               }
             catch (NotFoundException e)
               {
