@@ -22,19 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import org.openide.util.Exceptions;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
