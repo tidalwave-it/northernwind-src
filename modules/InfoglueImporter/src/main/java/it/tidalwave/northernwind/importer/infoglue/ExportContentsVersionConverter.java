@@ -144,7 +144,21 @@ class ExportContentsVersionConverter extends Converter
     //          }
             // END FIXME for blueBill Mobile, put in configuration
 
-            final String content = escapedVersionValue.replace("cdataEnd", "]]>");
+            String content = escapedVersionValue.replace("cdataEnd", "]]>");
+            
+            // FIXME: for StoppingDown
+            if (path.equals("/Stopping Down/Splash/"))
+              {
+                content = content.replace("/resources/css/style.css", "$libraryLink(relativePath='/css/style.css')$");
+                content = content.replace("/resources/js/jquery/1.4.1/jquery.min.js", "$libraryLink(relativePath='/js/jquery/1.4.1/jquery.min.js')$");
+                content = content.replace("/resources/js/splash.js", "$libraryLink(relativePath='/js/splash.js')$");
+                content = content.replace("/blog/", "$nodeLink(relativePath='/Blog')$");
+                content = content.replace("/diary.html", "$nodeLink(relativePath='/Diary')$");
+                content = content.replace("/travels.html", "$nodeLink(relativePath='/Travels')$");
+              }
+            // END FIXME: for StoppingDown
+            
+            
             Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
 
             if (!path.matches(Main.contentPrefix + ".*"))

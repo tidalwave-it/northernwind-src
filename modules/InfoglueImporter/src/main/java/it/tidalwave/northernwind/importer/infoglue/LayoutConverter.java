@@ -83,12 +83,10 @@ public class LayoutConverter extends Parser
 
         put("509", "http://northernwind.tidalwave.it/component/StoppingDownCSS/#v1.0"); // StoppingDown CSS
         put("513", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0"); 
-//        put("544", "http://northernwind.tidalwave.it/component/Splash/#v1.0"); // Splash
         put("544", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0"); // Splash
         put("547", CALENDAR);
         put("572", CONTAINER); // Categories header
-        put("577", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
-//        put("577", "http://northernwind.tidalwave.it/component/NikonianWebringBadge/#v1.0"); // Nikonian WebRing Badge
+        put("577", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0"); // Nikonian WebRing Badge
         put("602", CONTAINER); // Post Index header
         put("603", "http://northernwind.tidalwave.it/component/Unknown603/#v1.0");
         put("764", "http://northernwind.tidalwave.it/component/LightBoxCSS/#v1.0"); // LightBox CSS
@@ -120,13 +118,20 @@ public class LayoutConverter extends Parser
           {
             final String attrNameValue = reader.getAttributeValue("", "name");
             final String attrIdValue = reader.getAttributeValue("", "id");
-            final String xxx = reader.getAttributeValue("", "contentId");
-            final String attrTypeValue = TYPE_MAP.get(xxx);
+            final String contentId = reader.getAttributeValue("", "contentId");
+            final String attrTypeValue = TYPE_MAP.get(contentId);
             
             if (attrTypeValue == null)
               {
-                log.error("No component for {}", xxx);  
+                log.error("No component for {}", contentId);  
               }
+            
+            // FIXME: for StoppingDown
+            if ("544".equals(contentId))
+              {
+                properties.put(new Key<Object>("base.template"), "/Splash");
+              }
+            // END FIXME: for StoppingDown
             
             if (PATH_PARAMS_COMPONENTS.contains(attrTypeValue))
               {
@@ -240,9 +245,9 @@ public class LayoutConverter extends Parser
                   }
                 
                 // FIXME: for StoppingDown
-                if (componentId.stringValue().contains("main") && path.contains("/Blog"))
+                if (!componentId.stringValue().contains("main") && path.contains("/Blog"))
                   {
-                    properties.put(new Key<Object>(componentId + "." + "filterByPathParams"), "true");
+                    properties.put(new Key<Object>(componentId + "." + "index"), "true");
                   }
                 // END FIXME: for StoppingDown
 
@@ -339,6 +344,9 @@ public class LayoutConverter extends Parser
                 properties.put(new Key<Object>("content1-9.project"), "4204333");
                 properties.put(new Key<Object>("content1-9.security"), "b11c31c8");
                 properties.put(new Key<Object>("content1-9.invisible"), "false");
+                properties.put(new Key<Object>("content1-9.partition"), "48");
+                properties.put(new Key<Object>("content1-9.clickStat"), "1");
+                properties.put(new Key<Object>("content1-9.text"), "4");
                 properties.put(new Key<Object>("content1-9.message"), "{0} visits since November 2008.");
               }
             catch (NotFoundException e)
