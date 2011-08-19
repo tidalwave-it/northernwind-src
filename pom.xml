@@ -68,6 +68,15 @@
                 <main.webapp.url>http://northernwind.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
             </properties>
         </profile>
+        <profile>
+            <id>stoppingdown</id>
+            <properties>
+                <tft.webapp.deployServerId>stoppingdown.net</tft.webapp.deployServerId>
+                <tft.webapp.deployServerUrl>http://stoppingdown.net:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
+                <main.webapp.contextPath>/pre</main.webapp.contextPath>
+                <main.webapp.url>http://stoppingdown.net${main.webapp.contextPath}</main.webapp.url>
+            </properties>
+        </profile>
     </profiles>
 
     <url>http://northernwind.java.net</url>
