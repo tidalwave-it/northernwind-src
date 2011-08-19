@@ -35,6 +35,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.Cleanup;
+import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
 
 /***********************************************************************************************************************
  *
@@ -46,9 +47,6 @@ import lombok.Cleanup;
  **********************************************************************************************************************/
 public class ExternalConfigurationServletContextListener implements ServletContextListener
   {
-//    @CheckForNull
-//    private static Logger log;
-    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -147,24 +145,6 @@ public class ExternalConfigurationServletContextListener implements ServletConte
         log(">>>> contextConfigLocation: " + contextConfigLocation);
         
         return contextConfigLocation;
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * We can't log to the real thing, since we first need to compute the path of the logging file. Logging to the real
-     * thing would instantiate the logging facility before we have a chance to configure it.
-     *
-     ******************************************************************************************************************/
-    protected static void log (final @Nonnull String string)
-      {
-    //        if (log != null)
-    //          {
-    //            log.info(string);  
-    //          }
-    //        else
-          {
-            System.err.println(string);
-          } 
       }
 
     /*******************************************************************************************************************

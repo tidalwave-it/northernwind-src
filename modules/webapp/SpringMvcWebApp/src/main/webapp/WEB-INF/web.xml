@@ -48,7 +48,7 @@
     <!-- Spring Mvc configuration -->
     <servlet>
         <servlet-name>SpringMvcServlet</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <servlet-class>it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsDispatcherServletDecorator</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -67,16 +67,6 @@
         <url-pattern>/admin/logback</url-pattern>
     </servlet-mapping>
     
-    <!-- Initialization DiagnosticsFilter -->
-    <filter>
-        <filter-name>InitializationDiagnosticsFilter</filter-name>
-        <filter-class>it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>InitializationDiagnosticsFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <!--  -->
     <filter>
         <filter-name>NorthernWindResponseHeaderFilter</filter-name>

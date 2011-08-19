@@ -25,9 +25,7 @@ package it.tidalwave.northernwind.frontend.util;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -42,31 +40,11 @@ import it.tidalwave.northernwind.core.model.Site;
  *
  **********************************************************************************************************************/
 @Configurable
-public class NorthernWindResponseHeaderFilter implements Filter 
+public class NorthernWindResponseHeaderFilter extends FilterSupport
   {
     @Inject @Nonnull
     private Site site;
     
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void init (final @Nonnull FilterConfig filterConfig)
-      {        
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void destroy() 
-      {        
-      }
-
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -90,6 +68,9 @@ public class NorthernWindResponseHeaderFilter implements Filter
     private void doBeforeProcessing (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
       throws IOException, ServletException 
       {
-        ((HttpServletResponse)response).addHeader("X-NorthernWind-Version", site.getVersionString());
+        if (bootThrowable == null)
+          {
+            ((HttpServletResponse)response).addHeader("X-NorthernWind-Version", site.getVersionString());
+          }
       }
   }

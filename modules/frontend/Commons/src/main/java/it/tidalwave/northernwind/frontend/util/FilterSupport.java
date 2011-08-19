@@ -22,45 +22,32 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import org.springframework.web.context.ContextLoaderListener;
-import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterConfig;
+import static it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator.*;
 
 /***********************************************************************************************************************
  *
- * A decorator for the Spring {@code ContextLoaderListener} that catches any error occurring at Spring boot and makes
- * it available to the {@link InitializationDiagnosticsFilter}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class InitializationDiagnosticsServletContextListenerDecorator implements ServletContextListener
+public abstract class FilterSupport implements Filter 
   {
-    public static final String ATTRIBUTE_BOOT_THROWABLE = "it.tidalwave.northernwind.bootThrowable";
+    @CheckForNull
+    protected Throwable bootThrowable;
     
-    private final ContextLoaderListener delegate = new ContextAttributeContextLoaderListener();
-
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event)
-      {
-        try
-          {
-            log("Initializing Spring...");
-//            throw new RuntimeException("xxx");
-            delegate.contextInitialized(event);
-          }
-        catch (Throwable t)
-          {
-            event.getServletContext().setAttribute(ATTRIBUTE_BOOT_THROWABLE, t);
-          }
+    public void init (final @Nonnull FilterConfig filterConfig)
+      {        
+        bootThrowable = (Throwable)filterConfig.getServletContext().getAttribute(ATTRIBUTE_BOOT_THROWABLE);
       }
 
     /*******************************************************************************************************************
@@ -69,8 +56,7 @@ public class InitializationDiagnosticsServletContextListenerDecorator implements
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event) 
-      {
-        delegate.contextDestroyed(event);
+    public void destroy() 
+      {        
       }
   }

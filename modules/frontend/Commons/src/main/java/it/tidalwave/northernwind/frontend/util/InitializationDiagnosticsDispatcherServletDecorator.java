@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,58 +16,37 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.java.net
- * SCM: http://java.net/hg/northernwind~src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.DispatcherServlet;
 import static it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator.*;
 
 /***********************************************************************************************************************
  *
- * A Servlet Filter that shows an error page when an error occurred during Spring boot. 
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class InitializationDiagnosticsFilter implements Filter 
+public class InitializationDiagnosticsDispatcherServletDecorator extends HttpServlet
   {
-    private FilterConfig filterConfig = null;
+    private final DispatcherServlet delegate = new DispatcherServlet();
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void init (final @Nonnull FilterConfig filterConfig)
-      {        
-        this.filterConfig = filterConfig;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void destroy() 
-      {
-      }
+    @CheckForNull
+    private Throwable bootThrowable;
     
     /*******************************************************************************************************************
      *
@@ -75,20 +54,35 @@ public class InitializationDiagnosticsFilter implements Filter
      *
      ******************************************************************************************************************/
     @Override
-    public void doFilter (final @Nonnull ServletRequest request, 
-                          final @Nonnull ServletResponse response, 
-                          final @Nonnull FilterChain chain)
-      throws IOException, ServletException 
+    public void init (final @Nonnull ServletConfig config) 
+      throws ServletException 
       {
-        final Throwable bootThrowable = (Throwable)filterConfig.getServletContext().getAttribute(ATTRIBUTE_BOOT_THROWABLE);
+        super.init(config);
+
+        bootThrowable = (Throwable)getServletContext().getAttribute(ATTRIBUTE_BOOT_THROWABLE);
         
-        if (bootThrowable != null)
+        if (bootThrowable == null)
           {
-            sendProcessingError(findUpperCauseWithMessage(bootThrowable), response);                
+            delegate.init(config);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void service (final @Nonnull HttpServletRequest request, final @Nonnull HttpServletResponse response)
+      throws ServletException, IOException 
+      {
+        if (bootThrowable == null)
+          {
+            delegate.service(request, response);
           }
         else
           {
-            chain.doFilter(request, response);                
+            sendProcessingError(findUpperCauseWithMessage(bootThrowable), response);                
           }
       }
 
@@ -97,9 +91,9 @@ public class InitializationDiagnosticsFilter implements Filter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Throwable findUpperCauseWithMessage (final @Nonnull Throwable t)
+    private Throwable findUpperCauseWithMessage (final @Nonnull Throwable throwable)
       {
-        Throwable cause = t;
+        Throwable cause = throwable;
 
         for (Throwable parent = cause.getCause(); parent != null; parent = parent.getCause())
           {
@@ -118,14 +112,18 @@ public class InitializationDiagnosticsFilter implements Filter
      *
      *
      ******************************************************************************************************************/
-    private void sendProcessingError (final @Nonnull Throwable t, final @Nonnull ServletResponse response)
+    private void sendProcessingError (final @Nonnull Throwable t, final @Nonnull HttpServletResponse response)
       throws IOException
       {
+        response.setStatus(500);
         response.setContentType("text/html");
         final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream()));                
         pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n"); 
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");                
-        pw.print(t.getMessage());                
+        pw.print(t.getMessage());          
+        pw.print("</pre>\n");
+        pw.print("<h2>Boot log</h2>\n<pre>\n");                
+        pw.print(BootLogger.getLogContent());          
         pw.print("</pre></body>\n</html>");
         pw.close();
         response.getOutputStream().close();

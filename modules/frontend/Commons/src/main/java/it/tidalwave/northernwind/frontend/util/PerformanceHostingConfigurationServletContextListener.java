@@ -29,6 +29,7 @@ import java.net.UnknownHostException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
 
 /***********************************************************************************************************************
  *
