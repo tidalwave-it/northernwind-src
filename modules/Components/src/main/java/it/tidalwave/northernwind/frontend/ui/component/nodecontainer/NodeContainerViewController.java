@@ -42,4 +42,6 @@ public interface NodeContainerViewController
     public static final Key<List<String>> PROPERTY_SCRIPTS = new Key<List<String>>("scripts");
     
     public static final Key<List<String>> PROPERTY_INLINED_SCRIPTS = new Key<List<String>>("inlinedScripts");
+    
+    public static final Key<String> PROPERTY_TEMPLATE_RESOURCE = new Key<String>("template");
   }

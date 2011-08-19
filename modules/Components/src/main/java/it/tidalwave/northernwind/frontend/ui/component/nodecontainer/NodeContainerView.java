@@ -37,4 +37,6 @@ import it.tidalwave.role.Identifiable;
 public interface NodeContainerView extends Identifiable
   {
     public void addAttribute (@Nonnull String string, @Nonnull String property);
+
+    public void setTemplate (@Nonnull String template);
   }

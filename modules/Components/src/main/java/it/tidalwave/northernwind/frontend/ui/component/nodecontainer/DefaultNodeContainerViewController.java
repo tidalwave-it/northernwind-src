@@ -72,26 +72,29 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize() 
+      throws IOException, NotFoundException 
       {
+        final ResourceProperties viewProperties = getViewProperties();
+        final ResourceProperties siteNodeProperties = siteNode.getProperties();
+        
         try
           {
-            // FIXME: use a loop, should catch exception for each property
-            view.addAttribute("titlePrefix", getViewProperties().getProperty(PROPERTY_TITLE_PREFIX, ""));
-            view.addAttribute("description", getViewProperties().getProperty(PROPERTY_DESCRIPTION, ""));
-            view.addAttribute("title", siteNode.getProperties().getProperty(PROPERTY_TITLE, ""));
-            view.addAttribute("screenCssSection", computeScreenCssSection());
-            view.addAttribute("rssFeeds", computeRssFeedsSection());
-            view.addAttribute("scripts", computeScriptsSection());
-            view.addAttribute("inlinedScripts", computeInlinedScriptsSection());
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
+            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }
-        catch (IOException e)
-          {
-            log.error("", e);
-          }        
         catch (NotFoundException e)
           {
-            // ok, no css  
-          }        
+            // ok, use the default template  
+          }
+            
+        view.addAttribute("titlePrefix", viewProperties.getProperty(PROPERTY_TITLE_PREFIX, ""));
+        view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION, ""));
+        view.addAttribute("title", siteNodeProperties.getProperty(PROPERTY_TITLE, ""));
+        view.addAttribute("screenCssSection", computeScreenCssSection());
+        view.addAttribute("rssFeeds", computeRssFeedsSection());
+        view.addAttribute("scripts", computeScriptsSection());
+        view.addAttribute("inlinedScripts", computeInlinedScriptsSection());
       }
 
     /*******************************************************************************************************************
