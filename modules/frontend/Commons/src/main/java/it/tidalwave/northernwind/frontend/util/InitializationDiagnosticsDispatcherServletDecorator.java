@@ -37,6 +37,11 @@ import static it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsS
 
 /***********************************************************************************************************************
  *
+ * A decorator for a {@link HttpServlet} that returns an error diagnostic page when there are problems during the boot.
+ *
+ * A simple {@code Filter} wouldn't accomplish the job, since we need to prevent the delegate servlet from initializing
+ * in case of error.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
