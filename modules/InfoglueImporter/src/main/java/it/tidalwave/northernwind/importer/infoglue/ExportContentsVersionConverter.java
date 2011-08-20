@@ -161,7 +161,7 @@ class ExportContentsVersionConverter extends Converter
             
             Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
 
-            if (!path.matches(Main.contentPrefix + ".*"))
+            if (!path.matches(Main.contentPrefix + ".*") || path.contains("Meta info folder"))
               {
                 log.warn("Ignoring content: {}", path);
               }
