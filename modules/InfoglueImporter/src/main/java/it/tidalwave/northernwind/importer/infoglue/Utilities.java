@@ -209,10 +209,39 @@ public class Utilities
           {
             final String g2 = matcherUrlDecodeMacros.group(2);
             final String r = URLDecoder.decode(g2, "UTF-8");
-            matcherUrlDecodeMacros.appendReplacement(buffer, "$1" + r + "$3");
+            
+            try
+              {
+                matcherUrlDecodeMacros.appendReplacement(buffer, "$1" + escape(r) + "$3");
+              }
+            catch (IllegalArgumentException e)
+              {
+//                matcherUrlDecodeMacros.appendReplacement(buffer, "$1" + r);
+                throw new IllegalArgumentException("Buffer: *" + buffer + "* replacement: *" + "$1" + r + "$3*", e);  
+              }
           }
         
         matcherUrlDecodeMacros.appendTail(buffer);
         return buffer.toString();
+      }
+    
+    @Nonnull
+    public static String escape (final @Nonnull String string) 
+      {
+        final StringBuilder builder = new StringBuilder();  
+      
+        for (int i = 0; i < string.length(); i++)
+          {
+            final char c = string.charAt(i);
+            
+            if ("[\\^$.|?*+()".contains("" + c))
+              {
+                builder.append('\\');
+              }
+            
+            builder.append(c);
+          }
+        
+        return builder.toString();
       }
   }

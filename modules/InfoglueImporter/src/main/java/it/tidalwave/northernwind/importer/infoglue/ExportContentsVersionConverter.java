@@ -156,8 +156,12 @@ class ExportContentsVersionConverter extends Converter
                 content = content.replace("/diary.html", "$nodeLink(relativePath='/Diary')$");
                 content = content.replace("/travels.html", "$nodeLink(relativePath='/Travels')$");
               }
-            // END FIXME: for StoppingDown
             
+            content = content.replaceAll("=\"http://stoppingdown.net/media/stillimages([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
+            content = content.replaceAll("=\"http://stoppingdown.net/media/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
+            content = content.replaceAll("=\"http://www.timelesswanderings.net/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
+            content = content.replaceAll("=\"http://stoppingdown.net/media/movies([^\"]*)\"", "=\"\\$mediaLink(relativePath='/movies$1')\\$\"");
+            // END FIXME: for StoppingDown
             
             Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
 
