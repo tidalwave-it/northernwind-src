@@ -117,7 +117,7 @@ public class DefaultModelFactory implements ModelFactory
     @Override @Nonnull
     public DefaultRequest createRequest()
       {
-        return new DefaultRequest("", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
+        return new DefaultRequest("", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
       }
     
     /*******************************************************************************************************************

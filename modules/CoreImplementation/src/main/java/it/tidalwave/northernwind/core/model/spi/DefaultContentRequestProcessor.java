@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi; 
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -53,7 +55,10 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     
     @Inject @Nonnull
     private SiteView siteView;
-        
+    
+    @Inject @Nonnull
+    private RequestHolder requestHolder;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -63,7 +68,20 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException, HttpStatusException 
       {
-        siteView.renderSiteNode(site.get().find(SiteNode).withRelativeUri(request.getRelativeUri()).result());
+        final String relativeUri = request.getRelativeUri();
+        siteView.renderSiteNode(site.get().find(SiteNode).withRelativeUri(relativeUri).result());
+        //
+        // Check *after* finding the SiteNode, since a not found must be properly handled.
+        //
+        final String originalRelativeUri = requestHolder.get().getOriginalRelativeUri();
+        
+        if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
+          {
+            final Map<String, String> headers = new HashMap<String, String>();
+            headers.put("Location", site.get().createLink(relativeUri + "/"));
+            throw new HttpStatusException(302, headers);
+          }
+        
         return BREAK;
       }
   }

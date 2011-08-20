@@ -22,8 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.Map;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -32,9 +34,23 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @ToString
+@ToString
 public class HttpStatusException extends Exception 
   {
     @Getter
     private final int httpStatus;
+    
+    @Getter
+    private final Map<String, String> headers;
+
+    public HttpStatusException (final int httpStatus)
+      {
+        this(httpStatus, Collections.<String, String>emptyMap());
+      }
+
+    public HttpStatusException (final int httpStatus, final @Nonnull Map<String, String> headers)
+      {
+        this.httpStatus = httpStatus;
+        this.headers = headers;
+      }
   }

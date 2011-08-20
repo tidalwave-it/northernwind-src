@@ -54,6 +54,9 @@ import lombok.ToString;
     private final String relativeUri;
     
     @Nonnull
+    private final String originalRelativeUri;
+    
+    @Nonnull
     private final Map<String, List<String>> parametersMap;
         
     @Nonnull
@@ -93,7 +96,7 @@ import lombok.ToString;
       {
         try 
           {
-            return new DefaultRequest(UriUtilities.urlDecodedPath(relativeUri), parametersMap, preferredLocales);
+            return new DefaultRequest(UriUtilities.urlDecodedPath(relativeUri), relativeUri, parametersMap, preferredLocales);
           }
         catch (UnsupportedEncodingException e)
           {
@@ -127,7 +130,7 @@ import lombok.ToString;
             parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
           }
         
-        return new DefaultRequest(relativeUri, parameterMap, preferredLocales);
+        return new DefaultRequest(relativeUri, originalRelativeUri, parameterMap, preferredLocales);
       }
     
     /*******************************************************************************************************************
@@ -137,6 +140,6 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
       {
-        return new DefaultRequest(relativeUri, parametersMap, preferredLocales);  
+        return new DefaultRequest(relativeUri, originalRelativeUri, parametersMap, preferredLocales);  
       }
   }

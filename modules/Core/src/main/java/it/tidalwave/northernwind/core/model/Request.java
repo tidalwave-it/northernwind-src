@@ -44,6 +44,9 @@ public interface Request
     public String getRelativeUri();
     
     @Nonnull
+    public String getOriginalRelativeUri();
+    
+    @Nonnull
     public List<Locale> getPreferredLocales();
     
     @Nonnull

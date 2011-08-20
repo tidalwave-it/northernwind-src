@@ -24,6 +24,8 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
@@ -58,6 +60,19 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         
         @Nonnull
         public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withHeaders (@Nonnull Map<String, String> headers)
+          {
+            ResponseBuilderSupport<ResponseType> result = this;
+            
+            for (final Entry<String, String> entry : headers.entrySet())
+              {
+                result = result.withHeader(entry.getKey(), entry.getValue());
+              }
+            
+            return result;
+          }
         
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
@@ -129,6 +144,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
               }
             
             return withContentType("text/html")
+                  .withHeaders(e.getHeaders())
                   .withBody(message) 
                   .withStatus(e.getHttpStatus());
           }
