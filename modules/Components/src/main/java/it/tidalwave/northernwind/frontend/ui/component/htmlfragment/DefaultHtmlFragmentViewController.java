@@ -96,7 +96,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
           }
         catch (NotFoundException e)
           {
-            htmlBuilder.append(e.toString());
+            htmlBuilder.append(e.toString().replaceAll("\\[.*\\]", ""));
             log.error("", e.toString());
           }
         catch (IOException e)
