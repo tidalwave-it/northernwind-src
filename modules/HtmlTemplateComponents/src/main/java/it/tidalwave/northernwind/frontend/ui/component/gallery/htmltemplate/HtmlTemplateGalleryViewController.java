@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -31,6 +30,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
@@ -39,7 +39,6 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
-import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -109,13 +108,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
             try 
               {
                 String images = siteNode.getProperties().getProperty(new Key<String>(pathParams));
-                
-                for (final String s : Arrays.asList("lgpath", "tnpath", "popuppath", "fspath", "tn"))
-                  {
-                    images = images.replace(s + "=\"/", s + "=\"http://stoppingdown.net");
-                    images = images.replace(s + "=\"../../../../", s + "=\"/http://stoppingdown.net");
-                  }
-                
                 textHolder.setTemplate("$content$\n");
                 textHolder.setContent(images);
                 textHolder.setMimeType("text/xml");
