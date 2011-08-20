@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import org.openide.filesystems.FileObject;
 
@@ -38,6 +39,10 @@ import org.openide.filesystems.FileObject;
  **********************************************************************************************************************/
 public interface Resource 
   {
+    /** This property, controls whether this resource is a placeholder. A placeholder resource is not mapped to any
+        relative URI, but can be found by relative path. */
+    public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<String>("placeHolder");
+    
     public static final Class<Resource> Resource = Resource.class;
      
     /*******************************************************************************************************************
