@@ -66,7 +66,7 @@ public class JerseySiteView implements SiteView
           {
             final Visitor<Layout, TextHolder> nodeViewBuilderVisitor = new JerseyNodeViewBuilderVisitor(siteNode);
             final TextHolder textHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);    
-            responseHolder.response().withBody(textHolder.asString())
+            responseHolder.response().withBody(textHolder.asBytes("UTF-8"))
                                      .withContentType(textHolder.getMimeType())
                                      .put();
           }

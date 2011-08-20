@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -46,6 +47,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
   {
     @Inject @Nonnull
     private Site site;
+    
+    @Inject @Nonnull
+    private RequestLocaleManager requestLocaleManager;
     
     private final NodeContainerView view;
     
@@ -87,7 +91,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             // ok, use the default template  
           }
-            
+           
+        view.addAttribute("language", requestLocaleManager.getLocales().get(0).getLanguage());
         view.addAttribute("titlePrefix", viewProperties.getProperty(PROPERTY_TITLE_PREFIX, ""));
         view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION, ""));
         view.addAttribute("title", siteNodeProperties.getProperty(PROPERTY_TITLE, ""));

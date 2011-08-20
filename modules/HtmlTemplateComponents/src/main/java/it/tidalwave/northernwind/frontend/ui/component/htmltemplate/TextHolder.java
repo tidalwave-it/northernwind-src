@@ -115,7 +115,14 @@ public class TextHolder
       }
     
     @Nonnull
-    public String asString()
+    public byte[] asBytes (final @Nonnull String charset)
+      throws IOException
+      {
+        return asString(charset).getBytes(charset);
+      }
+    
+    @Nonnull
+    public String asString (final @Nonnull String charset)
       throws IOException
       {
         ST t = new ST(template, '$', '$');
@@ -129,12 +136,14 @@ public class TextHolder
 
         for (final TextHolder child : contents)
           {
-            builder.append(child.asString()).append("\n");  
+            builder.append(child.asString(charset)).append("\n");  
           }
 
         t = t.add("content", builder.toString());
         t = t.add("contextPath", site.getContextPath());
-
+        t = t.add("charset", charset);
+        t = t.add("language", "");
+  
         return t.render();
       }
     
