@@ -73,7 +73,7 @@
             <properties>
                 <tft.webapp.deployServerId>stoppingdown.net</tft.webapp.deployServerId>
                 <tft.webapp.deployServerUrl>http://stoppingdown.net:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
-                <main.webapp.contextPath>/pre</main.webapp.contextPath>
+                <main.webapp.contextPath>/</main.webapp.contextPath>
                 <main.webapp.url>http://stoppingdown.net${main.webapp.contextPath}</main.webapp.url>
             </properties>
         </profile>
