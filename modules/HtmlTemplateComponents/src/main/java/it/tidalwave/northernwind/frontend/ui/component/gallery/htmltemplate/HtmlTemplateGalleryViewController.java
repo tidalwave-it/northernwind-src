@@ -112,7 +112,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                 
                 for (final String s : Arrays.asList("lgpath", "tnpath", "popuppath", "fspath", "tn"))
                   {
-                    images = images.replace(s + "=\"/", s + "=\"/http://stoppingdown.net");
+                    images = images.replace(s + "=\"/", s + "=\"http://stoppingdown.net");
                     images = images.replace(s + "=\"../../../../", s + "=\"/http://stoppingdown.net");
                   }
                 
