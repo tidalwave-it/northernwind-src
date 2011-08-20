@@ -194,6 +194,7 @@ public class LayoutConverter extends Parser
             else
               {
                 propertyValue = propertyValue.toString().replace("Top, No Local", "Top No Local");
+                propertyValue = propertyValue.toString().replace("Top, Local", "Top Local");
                 
                 // FIXME: for blueBill Mobile
 //                propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
@@ -203,15 +204,19 @@ public class LayoutConverter extends Parser
 //                propertyValue = propertyValue.toString().replace("Mobile News", "Blog RSS Feed");
                 // END FIXME: for blueBill Mobile
 
-                propertyValue = propertyValue.toString().replaceAll("Layout.Navigation.Top", "Layout Navigation Top.css");
+                if (propertyValue.toString().contains("Feed Panel"))
+                {
+                    log.warn("CHECCAZZO " + propertyValue);
+                }
+                propertyValue = propertyValue.toString().replace("Layout Navigation Top", "Layout Navigation Top.css");
                 propertyValue = propertyValue.toString().replace("StoppingDown CSS", "StoppingDown.css");
                 propertyValue = propertyValue.toString().replace("LightBox Override CSS", "LightBox Override.css");
                 propertyValue = propertyValue.toString().replace("Google Analytics", "Resources/Google Analytics");
                 propertyValue = propertyValue.toString().replace("Album instructions", "Resources/Album instructions");
                 propertyValue = propertyValue.toString().replace("Photographers", "Resources/Photographers");
                 propertyValue = propertyValue.toString().replace("Blog RSS Feed", "RSS Feeds/Blog RSS Feed");
-//                propertyValue = propertyValue.toString().replace("News RSS Feed", "RSS Feeds/News RSS Feed");
-                propertyValue = propertyValue.toString().replace("News RSS Feed", "Resources/Feed Panel");
+                propertyValue = propertyValue.toString().replace("News RSS Feed", "RSS Feeds/News RSS Feed");
+//                propertyValue = propertyValue.toString().replace("News RSS Feed", "Resources/Feed Panel");
                 propertyValue = propertyValue.toString().replace("Nikonian WebRing badge", "Resources/Nikonian WebRing badge");
                 
                 if (PROPERTIES_REFERRING_RELATIVE_PATHS.contains(propertyName))
@@ -248,6 +253,30 @@ public class LayoutConverter extends Parser
                 if (!componentId.stringValue().contains("main") && path.contains("/Blog"))
                   {
                     properties.put(new Key<Object>(componentId + "." + "index"), "true");
+                  }
+                if (componentId.stringValue().contains("main") && path.contains("/Blog"))
+                  {
+                    final List<String> scripts = Arrays.asList
+                      (
+                        "/js/prototype.js",
+                        "/js/scriptaculous.js?load=effects,builder",
+                        "/js/lightbox.js"
+                      );
+                    final List<String> css = Arrays.asList
+                      (
+                        "/css/Layout.css",
+                        "/css/Typography.css",
+                        "/css/Forms.css",
+                        "/css/Tools.css",
+                        "/css/Horizontal-Navigation.css",
+                        "/css/Layout-Navigation-Top-Local-Right.css",
+                        "/css/StoppingDown.css",
+                        "/css/lightbox.css",
+                        "/css/LightBox-Override.css"
+                      );
+
+                    properties.put(new Key<Object>("base.scripts"), scripts);
+                    properties.put(new Key<Object>("base.screenStyleSheets"), css);
                   }
                 // END FIXME: for StoppingDown
 

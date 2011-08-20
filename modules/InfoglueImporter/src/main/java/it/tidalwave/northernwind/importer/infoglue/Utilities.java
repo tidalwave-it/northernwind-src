@@ -131,9 +131,17 @@ public class Utilities
           {
             String r = URLDecoder.decode(matcherGetPageUrl.group(1), "UTF-8");
             
-            if ("250".equals(r))
+//            if ("250".equals(r))
+//              {
+//                r = "Getting started/Android"; // FIXME: retrieve ids from the import
+//              }
+            if (r.equals("164"))
               {
-                r = "Getting started/Android"; // FIXME: retrieve ids from the import
+                r = "RSS Feeds/Blog RSS Feed";  
+              }
+            if (r.equals("166"))
+              {
+                r = "RSS Feeds/News RSS Feed";  
               }
             
             matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativePath='/" + r + "')\\$");
