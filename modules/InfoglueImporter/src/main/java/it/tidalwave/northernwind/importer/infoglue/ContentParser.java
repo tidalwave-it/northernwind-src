@@ -157,6 +157,13 @@ public class ContentParser extends Parser
             && !path.equals("//content/document/Resources/Travels.xml/"))
         // END FIXME: for StoppingDown
           {
+            if (path.startsWith("//content/document/Blog"))
+              {
+                String title = (String)properties.get(new Key<String>("title"));
+                title = title.replaceAll(" ", "-").replaceAll("[^\\w-]*", "").toLowerCase(); 
+                properties.put(new Key<String>("exposedUri"), title);  
+              }
+                
             dumpProperties("Properties_" + language);
           }
       }
