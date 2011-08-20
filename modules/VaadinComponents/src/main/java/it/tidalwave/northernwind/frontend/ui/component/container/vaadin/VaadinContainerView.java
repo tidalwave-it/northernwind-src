@@ -64,4 +64,10 @@ public class VaadinContainerView extends VerticalLayout implements NodeContainer
       {
         // TODO
       }
+
+    @Override
+    public void setTemplate (final @Nonnull String template) 
+      {
+        // TODO
+      }
   }  
