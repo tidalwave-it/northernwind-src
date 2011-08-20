@@ -42,7 +42,7 @@ public class NodeLinkWithContentMacroExpander extends MacroExpander
   {
     public NodeLinkWithContentMacroExpander()
       {
-        super("\\$nodeLinkWithContent\\(relativePath='(.*)', contentRelativePath='(.*)'\\)\\$");
+        super("\\$nodeLink\\(relativePath='(.*)', contentRelativePath='(.*)'\\)\\$");
       } 
     
     @Override @Nonnull

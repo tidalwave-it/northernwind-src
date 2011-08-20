@@ -170,7 +170,7 @@ public class Utilities
               }
             
             r2 = r2.replaceAll("/$", "");
-            matcherGetPageUrlWithContent.appendReplacement(buffer, "\\$nodeLinkWithContent(relativePath='" + r1 + "', contentRelativePath='" + r2 + "')\\$");
+            matcherGetPageUrlWithContent.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r1 + "', contentRelativePath='" + r2 + "')\\$");
           }
         
         matcherGetPageUrlWithContent.appendTail(buffer);
