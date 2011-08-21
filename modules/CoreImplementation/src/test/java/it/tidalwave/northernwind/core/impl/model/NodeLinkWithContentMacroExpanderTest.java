@@ -22,19 +22,102 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.northernwind.core.model.Content;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteFinder;
 import lombok.Delegate;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.openide.util.Exceptions;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+
+class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>> implements SiteFinder<Content>
+  {
+    private String relativePath;
+    
+    private String relativeUri;
+    
+    @Override @Nonnull
+    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath) 
+      {
+        this.relativePath = relativePath;
+        return this;
+      }
+
+    @Override @Nonnull
+    public SiteFinder<Content> withRelativeUri (final @Nonnull String relativeUri)
+      {
+        this.relativeUri = relativeUri;
+        return this;
+      }
+
+    @Override @Nonnull
+    protected List<? extends Content> computeResults() 
+      {
+        try
+          {
+            final Content content = mock(Content.class);
+            when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
+            return Arrays.asList(content);
+          } 
+        catch (NotFoundException e) 
+          { 
+            throw new RuntimeException(e);  
+          }
+        catch (IOException e) 
+          {
+            throw new RuntimeException(e);  
+          }
+      }
+  }
+
+class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>> implements SiteFinder<SiteNode>
+  {
+    private String relativePath;
+    
+    private String relativeUri;
+    
+    @Override @Nonnull
+    public SiteFinder<SiteNode> withRelativePath (final @Nonnull String relativePath) 
+      {
+        this.relativePath = relativePath;
+        return this;
+      }
+
+    @Override @Nonnull
+    public SiteFinder<SiteNode> withRelativeUri (final @Nonnull String relativeUri)
+      {
+        this.relativeUri = relativeUri;
+        return this;
+      }
+
+    @Override @Nonnull
+    protected List<? extends SiteNode> computeResults() 
+      {
+        final SiteNode content = mock(SiteNode.class);
+        when(content.getRelativeUri()).thenReturn("URI-" + relativePath.substring(1));
+        return Arrays.asList(content);
+      }
+  }
+
 
 class MacroExpanderTestHelper
   {
@@ -69,6 +152,7 @@ class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroEx
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class NodeLinkWithContentMacroExpanderTest 
   {
     private Site site;
@@ -76,7 +160,7 @@ public class NodeLinkWithContentMacroExpanderTest
     @BeforeClass
     public void setUp() 
       {
-        site = mock(Site.class);
+//        site = mock(Site.class);
       }
     
     @Test
@@ -88,5 +172,32 @@ public class NodeLinkWithContentMacroExpanderTest
         final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title")));
+      }
+    
+    @Test
+    public void must_perform_the_proper_substitutions() 
+      {
+          
+        final ApplicationContext context = new ClassPathXmlApplicationContext("NodeLinkWithContentMacroExpanderTestBeans.xml");
+        site = context.getBean(Site.class);
+        
+        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
+        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
+        when(site.createLink(anyString())).thenAnswer(new Answer<String>()
+          {
+            @Override @Nonnull
+            public String answer (final @Nonnull InvocationOnMock invocation) 
+              {
+                return "/LINK/" + invocation.getArguments()[0];
+              }
+          });
+        
+        final NodeLinkWithContentMacroExpander fixture = context.getBean(NodeLinkWithContentMacroExpander.class);
+        
+        final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
+        
+        final String filtered = fixture.filter(text);
+        
+        assertThat(filtered, is("href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"));
       }
   }
