@@ -22,10 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Delegate;
 import lombok.Getter;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -60,15 +62,24 @@ public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSuppo
         assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title")));
       }
     
-    @Test
-    public void must_perform_the_proper_substitutions() 
+    @Test(dataProvider="textProvider")
+    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected) 
       {
         final NodeLinkWithContentMacroExpander fixture = context.getBean(NodeLinkWithContentMacroExpander.class);
-        
-        final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
-        
         final String filtered = fixture.filter(text);
         
-        assertThat(filtered, is("href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"));
+        assertThat(filtered, is(expected));
+      }
+    
+    @DataProvider(name="textProvider")
+    public Object[][] textProvider()
+      {
+        return new Object[][]
+          {
+            {
+              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
+              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"
+            }
+          };        
       }
   }
