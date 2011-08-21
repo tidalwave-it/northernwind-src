@@ -43,7 +43,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  *
  **********************************************************************************************************************/
 @Configurable @Order(2000) @Slf4j // order must come after HeaderLanguageOverrideRequestProcessor
-public class ParameterLanguageOverrideRequestProcessor implements RequestProcessor
+public class ParameterLanguageOverrideRequestProcessor implements RequestProcessor, RequestResettable
   {
     @Getter @Setter @Nonnull
     private String parameterName = "l";
@@ -67,7 +67,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
             parameterValueHolder.set(parameterValue);
             requestLocaleManager.setRequestLocale(new Locale(parameterValue));
           }
-        catch (NotFoundException ex) 
+        catch (NotFoundException e) 
           {
             // ok, no override
           }
@@ -85,5 +85,16 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(parameterValueHolder.get(), "parameterValue");  
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void requestReset() 
+      {
+        parameterValueHolder.remove();
       }
   }
