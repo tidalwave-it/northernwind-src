@@ -34,6 +34,8 @@ import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -96,6 +98,7 @@ import lombok.extern.slf4j.Slf4j;
       throws NotFoundException, IOException 
       {
         String title = resource.getProperties().getProperty(PROPERTY_TITLE);
+        title = deAccent(title);
         title = title.replaceAll(" ", "-")
                      .replaceAll(",", "")
                      .replaceAll("\\.", "")
@@ -106,5 +109,18 @@ import lombok.extern.slf4j.Slf4j;
                      .replaceAll(":", "")
                      .replaceAll("[^\\w-]*", ""); 
         return title.toLowerCase();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * See http://stackoverflow.com/questions/1008802/converting-symbols-accent-letters-to-english-alphabet
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String deAccent (final @Nonnull String str) 
+      {
+        final String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD); 
+        final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfdNormalizedString).replaceAll("");
       }
   }
