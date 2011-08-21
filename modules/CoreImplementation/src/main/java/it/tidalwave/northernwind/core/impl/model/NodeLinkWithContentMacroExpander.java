@@ -30,6 +30,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 
 /***********************************************************************************************************************
  *
@@ -37,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @Order(NodeLinkMacroExpander.ORDER - 1) @Slf4j
 public class NodeLinkWithContentMacroExpander extends MacroExpander
   {
     public NodeLinkWithContentMacroExpander()

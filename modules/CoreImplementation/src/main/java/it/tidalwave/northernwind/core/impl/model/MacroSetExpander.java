@@ -23,9 +23,12 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 /***********************************************************************************************************************
  *
@@ -39,6 +42,12 @@ public class MacroSetExpander
     @Inject @Nonnull 
     private List<MacroExpander> filters;
 
+    @PostConstruct
+    /* package */ void initialize()
+      {
+        Collections.sort(filters, new AnnotationAwareOrderComparator());
+      }
+    
     @Nonnull
     public String filter (@Nonnull String text) 
       {
