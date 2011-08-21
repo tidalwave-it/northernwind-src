@@ -46,6 +46,7 @@ public class NodeLinkWithContentMacroExpander extends MacroExpander
     @Inject @Nonnull
     private ParameterLanguageOverrideLinkPostProcessor postProcessor;
     
+    // FIXME: merge with NodeLinkMacroExpander, using an optional block for contentRelativePath
     public NodeLinkWithContentMacroExpander()
       {
         super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
