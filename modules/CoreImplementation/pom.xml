@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
     <name>NorthernWind - Core Default Implementation</name>
     <description>NorthernWind - Core Default Implementation</description>
-   
+
     <properties>
          <NorthernWind.version>${project.parent.parent.version}</NorthernWind.version>
     </properties>
