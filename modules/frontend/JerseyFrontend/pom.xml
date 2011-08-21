@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-frontend</artifactId>
-        <version>1.0-ALPHA-4-SNAPSHOT</version>
+        <version>1.0-ALPHA-4</version>
         <relativePath>..</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend (Jersey)</name>
     <description>NorthernWind - Frontend (Jersey)</description>
