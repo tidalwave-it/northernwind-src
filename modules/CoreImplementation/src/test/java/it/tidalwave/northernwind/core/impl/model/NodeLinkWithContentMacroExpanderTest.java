@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import it.tidalwave.northernwind.core.model.Site;
+import lombok.Delegate;
 import lombok.Getter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -35,13 +36,13 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
 
-class X extends NodeLinkWithContentMacroExpander
+class MacroExpanderTestHelper
   {
     @Getter
     private List<List<String>> matches = new ArrayList<List<String>>();
     
-    @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher) 
+    @Nonnull
+    public String filter (final @Nonnull Matcher matcher) 
       {
         final List<String> match = new ArrayList<String>();
         
@@ -54,6 +55,12 @@ class X extends NodeLinkWithContentMacroExpander
         
         return "";
       }
+  }
+
+class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroExpander
+  {
+    @Delegate(types=MacroExpanderTestHelper.class) @Getter
+    private final MacroExpanderTestHelper helper = new MacroExpanderTestHelper();
   }
 
 /***********************************************************************************************************************
@@ -75,10 +82,10 @@ public class NodeLinkWithContentMacroExpanderTest
     @Test
     public void must_find_the_correct_matches() 
       {
-        final X fixture = new X();
+        final NodeLinkWithContentMacroExpanderFixture fixture = new NodeLinkWithContentMacroExpanderFixture();
         final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
         fixture.filter(text);
-        final List<List<String>> matches = fixture.getMatches();
+        final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title")));
       }
