@@ -22,24 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.Delegate;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.mockito.Mockito.*;
 
 class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroExpander
   {
@@ -53,29 +42,11 @@ class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroEx
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class NodeLinkWithContentMacroExpanderTest 
+public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSupport
   {
-    private ApplicationContext context;
-    
-    private Site site;
-    
-    @BeforeClass
-    public void setUp() 
+    public NodeLinkWithContentMacroExpanderTest()
       {
-        context = new ClassPathXmlApplicationContext("NodeLinkWithContentMacroExpanderTestBeans.xml");
-        site = context.getBean(Site.class);
-        
-        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
-        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
-        when(site.createLink(anyString())).thenAnswer(new Answer<String>()
-          {
-            @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation) 
-              {
-                return "/LINK/" + invocation.getArguments()[0];
-              }
-          });
+        super("NodeLinkWithContentMacroExpanderTestBeans.xml");
       }
     
     @Test
