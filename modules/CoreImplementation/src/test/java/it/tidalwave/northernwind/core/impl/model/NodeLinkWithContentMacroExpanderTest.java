@@ -59,7 +59,7 @@ public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSuppo
         fixture.filter(text);
         final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
-        assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title")));
+        assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null)));
       }
     
     @Test(dataProvider="textProvider")
@@ -79,6 +79,14 @@ public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSuppo
             {
               "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
               "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"
+            },
+            {
+              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
+              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=it\">1</a>"
+            },
+            {
+              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='fr')$\">1</a>",
+              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=fr\">1</a>"
             }
           };        
       }

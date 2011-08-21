@@ -96,7 +96,15 @@ import lombok.extern.slf4j.Slf4j;
       throws NotFoundException, IOException 
       {
         String title = resource.getProperties().getProperty(PROPERTY_TITLE);
-        title = title.replaceAll(" ", "-").replaceAll("[^\\w-]*", ""); 
+        title = title.replaceAll(" ", "-")
+                     .replaceAll(",", "")
+                     .replaceAll("\\.", "")
+                     .replaceAll(";", "")
+                     .replaceAll("/", "")
+                     .replaceAll("!", "")
+                     .replaceAll("\\?", "")
+                     .replaceAll(":", "")
+                     .replaceAll("[^\\w-]*", ""); 
         return title.toLowerCase();
       }
   }

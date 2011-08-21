@@ -273,7 +273,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         String link = contextPath + relativeUri;
         
-        if (!link.contains(".") && !link.endsWith("/"))
+        if (!link.contains(".") && !link.contains("?") && !link.endsWith("/"))
           {
             link += "/";
           }

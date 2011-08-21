@@ -50,15 +50,43 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
         try 
           {
             final String parameterValue = parameterLanguageOverrideRequestProcessor.getParameterValue();
-            final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
-            final StringBuilder builder = new StringBuilder(link);
-            builder.append(link.contains("?") ? "&" : "?");
-            builder.append(parameterName).append("=").append(parameterValue);
-            return builder.toString();
+            return postProcess(link, parameterValue);
           } 
         catch (NotFoundException e) 
           {
             return link;
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public String postProcess (final @Nonnull String link, final @Nonnull String parameterValue)
+      {
+        final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
+        final StringBuilder builder = new StringBuilder(link);
+        
+        if (!link.matches(".*[\\?&]" + parameterName + "=.*")) // might have been previously explicitly set
+          {
+            if (link.contains("?"))
+              {
+                builder.append("&");
+              }
+            else
+              {
+                if (!builder.toString().endsWith("/"))
+                  {
+                    builder.append("/");
+                  }
+                
+                builder.append("?");
+              }
+
+            builder.append(parameterName).append("=").append(parameterValue);
+          }
+
+        return builder.toString();
       }
   }    

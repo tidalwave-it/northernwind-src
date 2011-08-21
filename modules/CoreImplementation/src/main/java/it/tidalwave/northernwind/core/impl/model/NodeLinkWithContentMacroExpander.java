@@ -23,14 +23,16 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.regex.Matcher;
 import java.io.IOException;
+import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 
 /***********************************************************************************************************************
  *
@@ -41,9 +43,12 @@ import org.springframework.core.annotation.Order;
 @Configurable @Order(NodeLinkMacroExpander.ORDER - 1) @Slf4j
 public class NodeLinkWithContentMacroExpander extends MacroExpander
   {
+    @Inject @Nonnull
+    private ParameterLanguageOverrideLinkPostProcessor postProcessor;
+    
     public NodeLinkWithContentMacroExpander()
       {
-        super("\\$nodeLink\\(relativePath='(.*)', contentRelativePath='(.*)'\\)\\$");
+        super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
       } 
     
     @Override @Nonnull
@@ -52,8 +57,11 @@ public class NodeLinkWithContentMacroExpander extends MacroExpander
       {
         final String relativePath = matcher.group(1);
         final String contentRelativePath = matcher.group(2);
+        final String language = matcher.group(4);
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        return site.createLink(siteNode.getRelativeUri() + "/" + content.getExposedUri());
+        final String link = siteNode.getRelativeUri() + "/" + content.getExposedUri();
+        
+        return site.createLink((language == null) ? link : postProcessor.postProcess(link, language));
       }
   }
