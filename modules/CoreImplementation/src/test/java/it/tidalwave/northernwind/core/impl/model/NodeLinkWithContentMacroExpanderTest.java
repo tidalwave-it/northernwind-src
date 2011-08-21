@@ -22,123 +22,24 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.FinderSupport;
-import it.tidalwave.northernwind.core.model.Content;
-import java.io.IOException;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteFinder;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.openide.util.Exceptions;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.any;
-
-class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>> implements SiteFinder<Content>
-  {
-    private String relativePath;
-    
-    private String relativeUri;
-    
-    @Override @Nonnull
-    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath) 
-      {
-        this.relativePath = relativePath;
-        return this;
-      }
-
-    @Override @Nonnull
-    public SiteFinder<Content> withRelativeUri (final @Nonnull String relativeUri)
-      {
-        this.relativeUri = relativeUri;
-        return this;
-      }
-
-    @Override @Nonnull
-    protected List<? extends Content> computeResults() 
-      {
-        try
-          {
-            final Content content = mock(Content.class);
-            when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
-            return Arrays.asList(content);
-          } 
-        catch (NotFoundException e) 
-          { 
-            throw new RuntimeException(e);  
-          }
-        catch (IOException e) 
-          {
-            throw new RuntimeException(e);  
-          }
-      }
-  }
-
-class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>> implements SiteFinder<SiteNode>
-  {
-    private String relativePath;
-    
-    private String relativeUri;
-    
-    @Override @Nonnull
-    public SiteFinder<SiteNode> withRelativePath (final @Nonnull String relativePath) 
-      {
-        this.relativePath = relativePath;
-        return this;
-      }
-
-    @Override @Nonnull
-    public SiteFinder<SiteNode> withRelativeUri (final @Nonnull String relativeUri)
-      {
-        this.relativeUri = relativeUri;
-        return this;
-      }
-
-    @Override @Nonnull
-    protected List<? extends SiteNode> computeResults() 
-      {
-        final SiteNode content = mock(SiteNode.class);
-        when(content.getRelativeUri()).thenReturn("URI-" + relativePath.substring(1));
-        return Arrays.asList(content);
-      }
-  }
-
-
-class MacroExpanderTestHelper
-  {
-    @Getter
-    private List<List<String>> matches = new ArrayList<List<String>>();
-    
-    @Nonnull
-    public String filter (final @Nonnull Matcher matcher) 
-      {
-        final List<String> match = new ArrayList<String>();
-        
-        for (int i = 1; i <= matcher.groupCount(); i++)
-          {
-            match.add(matcher.group(i));
-          }
-        
-        matches.add(match);
-        
-        return "";
-      }
-  }
 
 class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroExpander
   {
