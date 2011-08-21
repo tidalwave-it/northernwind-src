@@ -56,12 +56,26 @@ class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroEx
 @Slf4j
 public class NodeLinkWithContentMacroExpanderTest 
   {
+    private ApplicationContext context;
+    
     private Site site;
     
     @BeforeClass
     public void setUp() 
       {
-//        site = mock(Site.class);
+        context = new ClassPathXmlApplicationContext("NodeLinkWithContentMacroExpanderTestBeans.xml");
+        site = context.getBean(Site.class);
+        
+        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
+        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
+        when(site.createLink(anyString())).thenAnswer(new Answer<String>()
+          {
+            @Override @Nonnull
+            public String answer (final @Nonnull InvocationOnMock invocation) 
+              {
+                return "/LINK/" + invocation.getArguments()[0];
+              }
+          });
       }
     
     @Test
@@ -78,21 +92,6 @@ public class NodeLinkWithContentMacroExpanderTest
     @Test
     public void must_perform_the_proper_substitutions() 
       {
-          
-        final ApplicationContext context = new ClassPathXmlApplicationContext("NodeLinkWithContentMacroExpanderTestBeans.xml");
-        site = context.getBean(Site.class);
-        
-        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
-        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
-        when(site.createLink(anyString())).thenAnswer(new Answer<String>()
-          {
-            @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation) 
-              {
-                return "/LINK/" + invocation.getArguments()[0];
-              }
-          });
-        
         final NodeLinkWithContentMacroExpander fixture = context.getBean(NodeLinkWithContentMacroExpander.class);
         
         final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
