@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import org.joda.time.Duration;
 import org.openide.filesystems.FileObject;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -35,6 +36,8 @@ import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.impl.model.MacroSetExpander;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
@@ -57,6 +60,9 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
+    @Getter @Setter
+    private Duration duration = Duration.standardDays(7);
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -74,7 +80,11 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
             final String mimeType = file.getMIMEType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText())
                                                                 : file.asBytes();
-            responseHolder.response().withContentType(mimeType).withBody(content).put();  
+            responseHolder.response().withContentType(mimeType)
+                                     .withLastModified(file.lastModified())
+                                     .withExpirationTime(duration)
+                                     .withBody(content)
+                                     .put();  
             return BREAK;
           }
         catch (IOException e)

@@ -24,14 +24,17 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
+import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.Duration;
 
 /***********************************************************************************************************************
  *
@@ -46,6 +49,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     protected static final String HEADER_ETAG = "ETag";
     protected static final String HEADER_CONTENT_TYPE = "Content-Type";
     protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
+    protected static final String HEADER_EXPIRES = "Expires";
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<Object>();
@@ -87,6 +91,20 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           }
         
         @Nonnull
+        public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
+          {
+            final Date expirationTime = new DateTime().plus(duration).toDate();
+            return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123).format(expirationTime));
+          }
+        
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withLastModified (final @Nonnull Date lastModified)
+          {
+            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(lastModified))
+                  .withHeader(HEADER_ETAG, String.format("\"%d\"", lastModified.getTime()));
+          }
+        
+        @Nonnull
         public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
           {
             this.body = body;
@@ -101,8 +119,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
 
             return withContentType(file.getMIMEType())
                   .withContentLength(bytes.length)
-                  .withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(file.lastModified()))
-                  .withHeader(HEADER_ETAG, String.format("\"%d\"", file.lastModified().getTime()))
+                  .withLastModified(file.lastModified())
                   .withBody(bytes);
           }
         

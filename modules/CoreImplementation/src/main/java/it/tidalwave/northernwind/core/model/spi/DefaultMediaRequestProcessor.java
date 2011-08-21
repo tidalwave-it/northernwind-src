@@ -22,10 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi; 
 
+import lombok.Getter;
+import lombok.Setter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
+import org.joda.time.Duration;
 import org.openide.filesystems.FileObject;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
@@ -52,6 +55,9 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     
     @Inject @Nonnull
     protected ResponseHolder<ResponseType> responseHolder;
+
+    @Getter @Setter
+    private Duration duration = Duration.standardDays(7);
 
     /*******************************************************************************************************************
      *
@@ -83,6 +89,8 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
       throws IOException
       {
         log.info(">>>> serving contents of /{} ...", file.getPath());
-        responseHolder.response().fromFile(file).put();
+        responseHolder.response().fromFile(file)
+                                 .withExpirationTime(duration)
+                                 .put();
       }
   }
