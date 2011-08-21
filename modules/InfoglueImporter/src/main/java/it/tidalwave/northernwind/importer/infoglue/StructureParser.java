@@ -113,7 +113,6 @@ public class StructureParser extends Parser
         final Key<Object> PROPERTY_NAVIGATION_LABEL = new Key<Object>("navigationLabel");
         
         // FIXME: for StoppingDown
-        log.warn("XXXX " + path);
         if (path.equals("//structure/RSS+Feeds/Override"))
           {
             properties.put(PROPERTY_EXPOSED_URI, "feeds");                    
@@ -126,6 +125,15 @@ public class StructureParser extends Parser
           {
             properties.put(PROPERTY_EXPOSED_URI, "news.rss");                    
           }
+        if (path.startsWith("//structure/Blog/") && !path.equals("//structure/Blog/"))  
+          {
+            properties.clear();
+            final String category = path.replace("//structure/Blog/", "").replace('+', ' ').replaceAll("/$", "");
+            properties.put(new Key<String>("placeHolder"), "true");
+            properties.put(new Key<String>("navigationLabel"), category);
+            properties.put(new Key<String>("exposedUri"), category.toLowerCase());
+          }
+
         // END FIXME: for StoppingDown
         
         if (!properties.containsKey(PROPERTY_EXPOSED_URI) && properties.containsKey(PROPERTY_NAVIGATION_LABEL))

@@ -131,7 +131,13 @@ class ExportSiteNodeVersionConverter extends Converter
 //          }
       
 //        if (path.startsWith("/blueBill/Mobile"))
-        if (!path.matches(Main.siteNodePrefix + ".*") || path.contains("/Blog/"))
+        if (!path.matches(Main.siteNodePrefix + ".*") 
+                || path.equals("/stoppingdown.net/_Standard Pages/Equipment")
+                || path.equals("/stoppingdown.net/_Standard Pages/Field notes")
+                || path.equals("/stoppingdown.net/_Standard Pages/Birds")
+                || path.equals("/stoppingdown.net/_Standard Pages/Places")
+                || path.equals("/stoppingdown.net/_Standard Pages/Miscellaneous")
+                )
           {
             log.warn("Ignoring sitenode: {}", path);
           }

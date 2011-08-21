@@ -109,7 +109,7 @@ public class ContentParser extends Parser
                     final String category = path.replace("//content/document/Blog/", "").replaceAll("/.*", "");
                     final String path2 = "/content/document/Blog/" + category + "/";
                     final SortedMap<Key<?>, Object> properties2 = new TreeMap<Key<?>, Object>();
-                    properties2.put(new Key<Object>("category"), category.toLowerCase()); 
+                    properties2.put(new Key<Object>("category"), category.toLowerCase().replace('+', ' ')); 
                     dumpProperties(properties2, path2, "Properties_en");
                   }
                 // END FIXME: for StoppingDown

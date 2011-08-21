@@ -47,11 +47,13 @@ public class Utilities
     private static final String REGEXP_getPageUrl = "\\$templateLogic\\.getPageUrl\\(([0-9]*),\\s*\\$templateLogic\\.languageId,\\s*-1\\)";
 //        $templateLogic.getPageUrl(180, $templateLogic.languageId,766)
     private static final String REGEXP_getPageUrlWithContent = "\\$templateLogic\\.getPageUrl\\(([0-9]*)\\s*,\\s*\\$templateLogic\\.languageId,\\s*([0-9]*)\\)";
+    private static final String REGEXP_getPageUrlWithContentAndLanguage = "\\$templateLogic\\.getPageUrl\\(([0-9]*)\\s*,\\s*([0-9]*),\\s*([0-9]*)\\)";
     private static final String REGEXP_getInlineAssetUrl = "\\$templateLogic\\.getInlineAssetUrl\\(([0-9]*)\\s*,\\s*\"([^\"]*)\"\\)";
     private static final String REGEXP_urlDecodeMacros = "(\\$[a-zA-Z0-9]*\\([a-zA-Z0-9]*=')(.*)('\\)\\$)";
 
     private static final Pattern PATTERN_getPageUrl = Pattern.compile(REGEXP_getPageUrl);
     private static final Pattern PATTERN_getPageUrlWithContent = Pattern.compile(REGEXP_getPageUrlWithContent);
+    private static final Pattern PATTERN_getPageUrlWithContentAndLanguage = Pattern.compile(REGEXP_getPageUrlWithContentAndLanguage);
     private static final Pattern PATTERN_getInlineAssetUrl = Pattern.compile(REGEXP_getInlineAssetUrl);
     private static final Pattern PATTERN_urlDecodeMacros = Pattern.compile(REGEXP_urlDecodeMacros);
     
@@ -130,24 +132,42 @@ public class Utilities
         while (matcherGetPageUrl.find())
           {
             String r = URLDecoder.decode(matcherGetPageUrl.group(1), "UTF-8");
-            
-//            if ("250".equals(r))
-//              {
-//                r = "Getting started/Android"; // FIXME: retrieve ids from the import
-//              }
-            if (r.equals("164"))
-              {
-                r = "RSS Feeds/Blog RSS Feed";  
-              }
-            if (r.equals("166"))
-              {
-                r = "RSS Feeds/News RSS Feed";  
-              }
-            
-            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativePath='/" + r + "')\\$");
+            r = resolveSiteNode(r);
+            matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r + "')\\$");
           }
         
         matcherGetPageUrl.appendTail(buffer);
+
+        final Matcher matcherGetPageUrlWithContentAndLanguage = PATTERN_getPageUrlWithContentAndLanguage.matcher(buffer.toString());
+        buffer = new StringBuffer();
+        
+        while (matcherGetPageUrlWithContentAndLanguage.find())
+          {
+            String r1 = URLDecoder.decode(matcherGetPageUrlWithContentAndLanguage.group(1), "UTF-8");
+            String l  = URLDecoder.decode(matcherGetPageUrlWithContentAndLanguage.group(2), "UTF-8");
+            String i2 = URLDecoder.decode(matcherGetPageUrlWithContentAndLanguage.group(3), "UTF-8");
+            r1 = resolveSiteNode(r1);
+            String r2 = resolveContent(i2);
+            
+            if (l.equals("4"))
+              {
+                l = ", language='it'";  
+              }
+            else if (l.equals("1"))
+              {
+                l = ", language='en'";  
+              }
+            else
+              {
+                l = "";  
+              } 
+            
+            r2 = r2.replaceAll("/$", "");
+            matcherGetPageUrlWithContentAndLanguage.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r1 + 
+                                                                              "', contentRelativePath='" + r2 + "'" + l + ")\\$");
+          }
+        
+        matcherGetPageUrlWithContentAndLanguage.appendTail(buffer);
 
         final Matcher matcherGetPageUrlWithContent = PATTERN_getPageUrlWithContent.matcher(buffer.toString());
         buffer = new StringBuffer();
@@ -156,25 +176,15 @@ public class Utilities
           {
             String r1 = URLDecoder.decode(matcherGetPageUrlWithContent.group(1), "UTF-8");
             String i2 = URLDecoder.decode(matcherGetPageUrlWithContent.group(2), "UTF-8");
-            
-            if (r1.equals("159") || r1.equals("180"))
-              {
-                r1 = "/Blog";  
-              }
-            
-            String r2 = Main.contentRelativePathMapById.get(Integer.parseInt(i2));
-                    
-            if (r2 == null)
-              {
-                r2 = "NOTFOUND_" + i2;
-              }
+            r1 = resolveSiteNode(r1);
+            String r2 = resolveContent(i2);
             
             r2 = r2.replaceAll("/$", "");
             matcherGetPageUrlWithContent.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r1 + "', contentRelativePath='" + r2 + "')\\$");
           }
         
         matcherGetPageUrlWithContent.appendTail(buffer);
-
+        
         final Matcher matcherGetInlineAssetUrl = PATTERN_getInlineAssetUrl.matcher(buffer.toString());
         buffer = new StringBuffer();
         
@@ -195,6 +205,62 @@ public class Utilities
         matcherGetInlineAssetUrl.appendTail(buffer);
         
         return buffer.toString();
+      }
+
+    private static String resolveContent (String i2) 
+      {
+        String r2 = Main.contentRelativePathMapById.get(Integer.parseInt(i2));
+        
+        if (r2 == null)
+          {
+            switch (Integer.parseInt(i2))
+              {
+                case 605: r2 = "/Blog/Places/20080827. Boating in the marshes (I)"; break;
+                case 606: r2 = "/Blog/Places/20080827. Boating in the marshes (II)"; break;
+                case 766: r2 = "/Blog/Places/20091104. Nikon D5000, first experience on the field"; break;
+                case 779: r2 = "/Blog/Places/20091210. Birding at the village of Orbetello (II)"; break;
+                default:  r2 = "NOTFOUND_" + i2;
+              }
+          }
+  
+        return r2;
+      }
+
+    private static String resolveSiteNode (String siteNodeId) 
+      {
+        String result = siteNodeId;
+        siteNodeId = siteNodeId.replaceAll("^/", "");
+        
+        if (siteNodeId.equals("159") || siteNodeId.equals("162") || siteNodeId.equals("179") || siteNodeId.equals("180") || siteNodeId.equals("181"))
+          {
+            result = "/Blog";  
+          }
+        else if (siteNodeId.equals("157"))
+          {
+            result = "/Diary";  
+          }
+        else if (siteNodeId.equals("152"))
+          {
+            result = "/Travels";  
+          }
+        else if (siteNodeId.equals("158"))
+          {
+            result = "/Time lapse";  
+          }
+        else if (siteNodeId.equals("154"))
+          {
+            result = "/Equipment";  
+          }
+        if (siteNodeId.equals("164"))
+          {
+            result = "/RSS Feeds/Blog RSS Feed";  
+          }
+        if (siteNodeId.equals("166"))
+          {
+            result = "/RSS Feeds/News RSS Feed";  
+          }
+      
+        return result;
       }
     
     @Nonnull

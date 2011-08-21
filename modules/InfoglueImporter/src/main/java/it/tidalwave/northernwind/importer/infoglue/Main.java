@@ -66,6 +66,7 @@ public class Main
           (
             "classpath*:/META-INF/*AutoBeans.xml",
             "classpath*:/META-INF/StandAloneConfigurationBeans.xml",
+            "classpath*:/META-INF/ParameterLanguageOverrideBeans.xml",
             "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml"
           );
         

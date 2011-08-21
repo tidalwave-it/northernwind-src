@@ -204,10 +204,6 @@ public class LayoutConverter extends Parser
 //                propertyValue = propertyValue.toString().replace("Mobile News", "Blog RSS Feed");
                 // END FIXME: for blueBill Mobile
 
-                if (propertyValue.toString().contains("Feed Panel"))
-                {
-                    log.warn("CHECCAZZO " + propertyValue);
-                }
                 propertyValue = propertyValue.toString().replace("Layout Navigation Top", "Layout Navigation Top.css");
                 propertyValue = propertyValue.toString().replace("StoppingDown CSS", "StoppingDown.css");
                 propertyValue = propertyValue.toString().replace("LightBox Override CSS", "LightBox Override.css");
@@ -250,11 +246,11 @@ public class LayoutConverter extends Parser
                   }
                 
                 // FIXME: for StoppingDown
-                if (!componentId.stringValue().contains("main") && path.contains("/Blog"))
+                if (!componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
                   {
                     properties.put(new Key<Object>(componentId + "." + "index"), "true");
                   }
-                if (componentId.stringValue().contains("main") && path.contains("/Blog"))
+                if (componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
                   {
                     final List<String> scripts = Arrays.asList
                       (
@@ -298,6 +294,13 @@ public class LayoutConverter extends Parser
 
             if (!StructureParser.IGNORED_PROPERTIES.contains(propertyName))
               { 
+                // FIXME: for StoppingDown
+                if ("content1-6".equals(componentId.stringValue()) && "contents".equals(propertyName))
+                  {
+                    propertyValue = Arrays.asList("/Resources/Feed Panel");  
+                  }
+                // END FIXME
+                
                 properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
           }
@@ -433,6 +436,11 @@ public class LayoutConverter extends Parser
               {
                 // ok  
               }
+            
+            if (path.contains("/Blog/"))
+              {
+                return;
+              }  
             
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);
