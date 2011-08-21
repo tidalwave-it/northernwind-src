@@ -29,6 +29,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -36,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Site;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @ThreadSafe
+@Configurable(preConstruction=true) @ThreadSafe @Slf4j
 public class MacroExpander 
   {
     @Inject @Nonnull
@@ -58,7 +61,7 @@ public class MacroExpander
         
         while (matcher.find())
           {
-            matcher.appendReplacement(buffer, filter(matcher));
+            matcher.appendReplacement(buffer, doFilter(matcher));
           }
         
         matcher.appendTail(buffer);
@@ -68,7 +71,27 @@ public class MacroExpander
     
     @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
+      throws NotFoundException, IOException
       {
         return "";  
+      }
+    
+    @Nonnull
+    private String doFilter (final @Nonnull Matcher matcher)
+      {
+        try 
+          {
+            return filter(matcher);
+          }
+        catch (NotFoundException e) 
+          {
+            log.error("", e);
+            return "";
+          }
+        catch (IOException e) 
+          {
+            log.error("", e);
+            return "";
+          }
       }
   }

@@ -45,17 +45,10 @@ public class NodeLinkMacroExpander extends MacroExpander
     
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
+      throws NotFoundException
       {
-        try 
-          {
-            final String relativePath = matcher.group(1);
-            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-            return site.createLink(siteNode.getRelativeUri());
-          }
-        catch (NotFoundException e) 
-          {
-            log.error("", e);
-            return "";
-          }
+        final String relativePath = matcher.group(1);
+        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
+        return site.createLink(siteNode.getRelativeUri());
       }
   }

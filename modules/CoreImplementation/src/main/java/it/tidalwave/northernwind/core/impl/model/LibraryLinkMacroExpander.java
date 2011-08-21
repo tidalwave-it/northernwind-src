@@ -43,6 +43,5 @@ public class LibraryLinkMacroExpander extends MacroExpander
       {
         final String relativePath = matcher.group(1);
         return site.createLink(relativePath);
-//            final String relativeUri = site.find(Media.class).withRelativePath(matcher1.group(1)).result().get();
       }
   }

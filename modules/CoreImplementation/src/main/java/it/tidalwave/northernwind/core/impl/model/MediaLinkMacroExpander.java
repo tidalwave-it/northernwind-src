@@ -43,6 +43,5 @@ public class MediaLinkMacroExpander extends MacroExpander
       {
         final String relativePath = matcher.group(1);
         return site.createLink("/media" + relativePath);
-//            final String relativeUri = site.find(Media.class).withRelativePath(matcher1.group(1)).result().get();
       }
   }

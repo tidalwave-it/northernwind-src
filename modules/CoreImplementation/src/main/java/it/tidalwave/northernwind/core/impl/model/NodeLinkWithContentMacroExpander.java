@@ -22,13 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.Content;
 import javax.annotation.Nonnull;
 import java.util.regex.Matcher;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -47,24 +47,12 @@ public class NodeLinkWithContentMacroExpander extends MacroExpander
     
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
+      throws NotFoundException, IOException
       {
-        try 
-          {
-            final String relativePath = matcher.group(1);
-            final String contentRelativePath = matcher.group(2);
-            final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-            final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-            return site.createLink(siteNode.getRelativeUri() + "/" + content.getExposedUri());
-          }
-        catch (NotFoundException e) 
-          {
-            log.error("", e);
-            return "";
-          }
-        catch (IOException e) 
-          {
-            log.error("", e);
-            return "";
-          }
+        final String relativePath = matcher.group(1);
+        final String contentRelativePath = matcher.group(2);
+        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
+        final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
+        return site.createLink(siteNode.getRelativeUri() + "/" + content.getExposedUri());
       }
   }
