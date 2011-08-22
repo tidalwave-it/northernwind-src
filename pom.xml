@@ -177,32 +177,32 @@
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-vaadin</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0-ALPHA-5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-vaadin-webapp</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0-ALPHA-5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0-ALPHA-5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0-ALPHA-5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0-ALPHA-5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc-webapp</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0-ALPHA-5-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
