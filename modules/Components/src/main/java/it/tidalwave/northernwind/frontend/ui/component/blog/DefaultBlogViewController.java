@@ -185,14 +185,23 @@ public abstract class DefaultBlogViewController implements BlogViewController
             allPosts.addAll(postsFolder.findChildren().results());
           }
         
+        log.debug(">>>> all posts: {}", allPosts.size());
+        
         final List<Content> posts = new ArrayList<Content>();
         
         try
           {
+            if ("".equals(pathParams))
+              {
+                throw new NotFoundException();
+              }
+            
             posts.add(findPostByExposedUri(allPosts, pathParams));
+            log.debug(">>>> found a single post matching exposed Uri");
             
             if (index) // pathParams matches an exposedUri; thus it's not a category, so an index wants all
               {
+                log.debug(">>>> we're an index, adding all");
                 posts.clear();
                 posts.addAll(allPosts);
                 throw new NotFoundException();
@@ -200,6 +209,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
         catch (NotFoundException e) // pathParams doesn't match an exposedUri; it will eventually match a category 
           {
+            log.debug(">>>> now filtering by category..."); 
+            
             for (final Content post : allPosts)
               {
                 try
@@ -223,6 +234,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       
         Collections.sort(posts, REVERSE_DATE_COMPARATOR);
+        
+        log.debug(">>>> found {} items", posts.size());
         
         return posts;
       }
