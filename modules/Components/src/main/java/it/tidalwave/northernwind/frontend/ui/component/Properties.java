@@ -49,4 +49,11 @@ public final class Properties
     public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<String>("publishingDateTime");   
     
     public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<String>("latestModificationDateTime");    
+    
+    public static final Key<String> PROPERTY_CLASS = new Key<String>("class");
+    
+    public static final Key<String> PROPERTY_TEMPLATE_RESOURCE = new Key<String>("template");
+    
+    public static final Key<String> PROPERTY_WRAPPER_TEMPLATE_RESOURCE = new Key<String>("wrapperTemplate");
+    
   }

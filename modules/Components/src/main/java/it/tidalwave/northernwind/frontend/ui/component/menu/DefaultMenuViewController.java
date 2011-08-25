@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -81,6 +83,22 @@ public class DefaultMenuViewController implements MenuViewController
           } 
         catch (NotFoundException e) 
           {
+          }
+        catch (IOException e) 
+          {
+          }
+        
+        try
+          {
+            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+            
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
+            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, use the default template  
           }
         catch (IOException e) 
           {

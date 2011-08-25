@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
+import org.stringtemplate.v4.ST;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -79,38 +80,63 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
+            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             final StringBuilder htmlBuilder = new StringBuilder();
             String titleMarkup = "h2";
             
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
+            String wrapperTemplate = "$content$";
+            
+            try
               {
+                final String wrapperTemplateResourceRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
+                final Content content = site.find(Content).withRelativePath(wrapperTemplateResourceRelativePath).result();
+                final ResourceProperties wrapperTemplateResourceProperties = content.getProperties();
+                wrapperTemplate = wrapperTemplateResourceProperties.getProperty(PROPERTY_TEMPLATE, "$content$");
+              }
+            catch (NotFoundException e)
+              {
+                
+              }
+            
+            log.debug(">>>> wrapperTemplate: {}", wrapperTemplate);
+            
+            for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS))
+              {
+                final StringBuilder htmlBuilder2 = new StringBuilder();
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
                 final ResourceProperties contentProperties = content.getProperties();
                 
                 try
                   {
                     final String title = contentProperties.getProperty(PROPERTY_TITLE);
-                    htmlBuilder.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
+                    htmlBuilder2.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
                   }
                 catch (NotFoundException e)
                   {
                     // ok, no title
                   }
-                
+
+                String s = "";
                 try
                   {
-                    htmlBuilder.append(contentProperties.getProperty(PROPERTY_FULL_TEXT)).append("\n");
+                    s = contentProperties.getProperty(PROPERTY_FULL_TEXT) + "\n";
                   }
                 catch (NotFoundException e)
                   {
                     log.warn("", e);
-                    htmlBuilder.append(e.toString());
+                    s = e.toString();
                   }
-
+                
+                htmlBuilder2.append(s);
+                final ST t = new ST(wrapperTemplate, '$', '$').add("content", htmlBuilder2.toString());
+                htmlBuilder.append(t.render());
+                
                 titleMarkup = "h3";
               }
             
             view.setText(htmlBuilder.toString());
+            
+            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (NotFoundException e)
           {

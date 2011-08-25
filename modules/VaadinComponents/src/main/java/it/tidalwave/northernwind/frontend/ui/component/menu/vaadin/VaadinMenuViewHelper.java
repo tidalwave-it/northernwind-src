@@ -47,6 +47,11 @@ import lombok.RequiredArgsConstructor;
         // TODO   
       }
     
+    public void setTemplate (final @Nonnull String template)
+      {
+        // TODO   
+      }
+    
     public void addLink (final @Nonnull String navigationTitle, final @Nonnull String link)
       {
         ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(link)));                        

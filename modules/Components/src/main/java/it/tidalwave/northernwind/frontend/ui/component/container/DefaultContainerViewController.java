@@ -23,9 +23,16 @@
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import javax.annotation.PostConstruct;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -33,8 +40,18 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Configurable
 public class DefaultContainerViewController implements ContainerViewController
   {
+    @Nonnull
+    private final ContainerView view;
+    
+    @Nonnull
+    private final SiteNode siteNode;
+    
+    @Inject @Nonnull
+    private Site site;
+    
     /*******************************************************************************************************************
      *
      * Creates an instance for populating the given {@link ContainerView} with the given {@link SiteNode}.
@@ -44,12 +61,34 @@ public class DefaultContainerViewController implements ContainerViewController
      *
      ******************************************************************************************************************/
     public DefaultContainerViewController (final @Nonnull ContainerView view, final @Nonnull SiteNode siteNode) 
+      {
+        this.view = view;
+        this.siteNode = siteNode;
+      }
+    
+    @PostConstruct
+    /* package */ void initialize()
       throws IOException 
       {
         try
+          {
+            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+            
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
+            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, use the default template  
+          }
+        
+        try
           {  
-            final boolean clearFix = Boolean.parseBoolean(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CLEARFIX, "false"));
-            view.setClearFix(clearFix);
+            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+            
+            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
+            view.setClearFix(Boolean.parseBoolean(viewProperties.getProperty(PROPERTY_CLEARFIX, "false")));
           }
         catch (NotFoundException e) // propertyGroup
           {

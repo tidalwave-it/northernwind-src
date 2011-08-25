@@ -70,4 +70,15 @@ public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
       {
         setValue(html);
       }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setClassName (final @Nonnull String className) 
+      {
+        setStyleName(className);
+      }
   }

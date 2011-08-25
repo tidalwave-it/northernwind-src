@@ -43,4 +43,6 @@ public interface HtmlFragmentView extends Identifiable
      *
      ******************************************************************************************************************/
     public void setContent (@Nonnull String html);
+
+    public void setClassName (@Nonnull String property);
   }

@@ -38,4 +38,6 @@ public interface MenuView extends Identifiable
     public void addLink (@Nonnull String navigationTitle, @Nonnull String link);
 
     public void setTitle (@Nonnull String title);
+
+    public void setTemplate (@Nonnull String template);
   }

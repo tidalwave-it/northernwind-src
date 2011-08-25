@@ -43,4 +43,6 @@ public interface HtmlTextWithTitleView extends Identifiable
      *
      ******************************************************************************************************************/
     public void setText (@Nonnull String string);
+
+    public void setClassName (@Nonnull String property);
   }

@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -106,5 +107,20 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
           }
             
         view.setContent(htmlBuilder.toString());
+        
+        try
+          {  
+            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+            
+            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
+          }
+        catch (NotFoundException e) // propertyGroup
+          {
+            // ok  
+          } 
+        catch (IOException e)
+          {
+            // ok  
+          } 
       }
   }

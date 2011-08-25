@@ -56,4 +56,9 @@ public class HtmlHolder extends TextHolder
         super(html);
         setMimeType("text/html");
       }
+    
+    public void setClassName (final @Nonnull String className)
+      {
+        addAttribute("style", className);
+      }
   }

@@ -70,4 +70,15 @@ public class VaadinHtmlTextWithTitleView extends Label implements HtmlTextWithTi
         setContentMode(Label.CONTENT_XHTML);
         setValue(text);
       }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void setClassName (final @Nonnull String className) 
+      {
+        setStyleName(className);
+      }
   }
