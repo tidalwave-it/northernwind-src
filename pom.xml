@@ -77,6 +77,15 @@
                 <main.webapp.url>http://stoppingdown.net${main.webapp.contextPath}</main.webapp.url>
             </properties>
         </profile>
+        <profile>
+            <id>fabriziogiudici</id>
+            <properties>
+                <tft.webapp.deployServerId>fabriziogiudici.it</tft.webapp.deployServerId>
+                <tft.webapp.deployServerUrl>http://fabriziogiudici.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
+                <main.webapp.contextPath>/pre</main.webapp.contextPath>
+                <main.webapp.url>http://fabriziogiudici.it${main.webapp.contextPath}</main.webapp.url>
+            </properties>
+        </profile>
     </profiles>
 
     <url>http://northernwind.java.net</url>
