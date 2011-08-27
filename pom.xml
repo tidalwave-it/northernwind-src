@@ -17,9 +17,9 @@
     <description>NorthernWind - lightweight CMS</description>
 
     <properties>
-        <scm.repo.url>ssh://hg.java.net/northernwind~src</scm.repo.url>
-        <scm.repo.readonly.url>http://java.net/hg/northernwind~src</scm.repo.readonly.url>
-        <scm.repo.browse.url>http://java.net/projects/northernwind/sources/src/show</scm.repo.browse.url>
+        <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
+        <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
+        <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
 
         <vaadin.version>6.6.1</vaadin.version>
         <javax.servlet-api.version>2.5</javax.servlet-api.version>
