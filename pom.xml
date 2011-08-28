@@ -51,15 +51,6 @@
 
     <profiles>
         <profile>
-            <id>bluebill-mobile</id>
-            <properties>
-                <tft.webapp.deployServerId>bluebill.tidalwave.it</tft.webapp.deployServerId>
-                <tft.webapp.deployServerUrl>http://bluebill.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
-                <main.webapp.contextPath>/mobile2</main.webapp.contextPath>
-                <main.webapp.url>http://bluebill.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
-            </properties>
-        </profile>
-        <profile>
             <id>northernwind</id>
             <properties>
                 <tft.webapp.deployServerId>northernwind.tidalwave.it</tft.webapp.deployServerId>
