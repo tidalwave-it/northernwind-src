@@ -7,7 +7,7 @@
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
         <version>1.0-ALPHA-7-SNAPSHOT</version>
-        <relativePath>../..</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
