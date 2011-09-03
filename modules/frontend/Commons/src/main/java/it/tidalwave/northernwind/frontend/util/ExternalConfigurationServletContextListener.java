@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import java.lang.reflect.Method;
 import javax.annotation.Nonnull;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -31,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -55,10 +57,12 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Override
     public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
-        final String configurationFile = System.getProperty("user.home") + "/.nw/configuration.properties";
-        loadProperties(event.getServletContext(), configurationFile);
+        final ServletContext servletContext = event.getServletContext();
+        final String configurationPath = getConfigurationPath(servletContext) + "/configuration.properties";
+        log(">>>> configurationPath: " + configurationPath);
+        loadProperties(servletContext, configurationPath);
       }
-
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -105,6 +109,38 @@ public class ExternalConfigurationServletContextListener implements ServletConte
       {
         // Logging should have been configured at this point
 //        log = LoggerFactory.getLogger(ExternalConfigurationServletContextListener.class);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String getConfigurationPath (final @Nonnull ServletContext servletContext)
+      {
+        String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
+        
+        if (configurationPath != null)
+          {
+            return configurationPath;   
+          }
+        
+        try // Jetty specific JNDI setting - see e.g. http://stackoverflow.com/questions/3895047/jetty-set-system-property 
+          {
+            final InitialContext context = new InitialContext();
+            final Object env = context.lookup("org.mortbay.jetty.plus.naming.EnvEntry/it.tidalwave.northernwind.configurationPath");
+            final Class<?> envClass = env.getClass();
+            final Method method = envClass.getDeclaredMethod("getObjectToBind");
+            return (String)method.invoke(env);
+          }
+        catch (Exception e) 
+          {
+            BootLogger.log(e.toString());
+            e.printStackTrace(); // FIXME  
+          }
+          
+        return System.getProperty("user.home") + "/.nw";
       }
 
     /*******************************************************************************************************************
