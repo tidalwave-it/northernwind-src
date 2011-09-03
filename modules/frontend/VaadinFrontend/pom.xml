@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-frontend</artifactId>
-        <version>1.0-ALPHA-7</version>
+        <version>1.0-ALPHA-8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-vaadin</artifactId>
-    <version>1.0-ALPHA-7</version>
+    <version>1.0-ALPHA-8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend (Vaadin)</name>
     <description>NorthernWind - Frontend (Vaadin)</description>
