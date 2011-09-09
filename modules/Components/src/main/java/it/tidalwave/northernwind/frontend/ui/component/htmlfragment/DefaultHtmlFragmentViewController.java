@@ -22,16 +22,16 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -44,30 +44,17 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultHtmlFragmentViewController implements HtmlFragmentViewController
   {
-    @Inject @Nonnull
-    private Site site;
-    
+    @Nonnull
     private final HtmlFragmentView view;
     
+    @Nonnull
     private final SiteNode siteNode;
     
-    /*******************************************************************************************************************
-     *
-     * Creates an instance for populating the given {@link HtmlFragmentView} with the given {@link SiteNode}..
-     * 
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public DefaultHtmlFragmentViewController (final @Nonnull HtmlFragmentView view, 
-                                              final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
+    @Nonnull
+    private final Site site;
     
     /*******************************************************************************************************************
      *

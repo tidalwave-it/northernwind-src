@@ -24,13 +24,14 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
@@ -56,8 +57,8 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Nonnull
     private final SiteNode siteNode;
     
-    @Inject @Nonnull
-    private RequestHolder requestHolder;
+    @Nonnull
+    private final RequestHolder requestHolder;
     
     private final GalleryAdapterContext context = new GalleryAdapterContext()
       {
@@ -75,18 +76,22 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       };
     
     private GalleryAdapter galleryAdapter;
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view, final @Nonnull SiteNode siteNode)
-      throws IOException
+    public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view, 
+                                              final @Nonnull SiteNode siteNode, 
+                                              final @Nonnull Site site, 
+                                              final @Nonnull RequestHolder requestHolder, 
+                                              final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(view, siteNode);
+        super(view, siteNode, site, requestLocaleManager);
         this.view = view;
         this.siteNode = siteNode;
+        this.requestHolder = requestHolder;
       }
     
     /*******************************************************************************************************************

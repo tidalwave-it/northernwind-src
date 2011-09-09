@@ -23,7 +23,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -31,7 +31,7 @@ import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -40,7 +40,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@RequiredArgsConstructor @Configurable
 public class DefaultContainerViewController implements ContainerViewController
   {
     @Nonnull
@@ -49,22 +49,8 @@ public class DefaultContainerViewController implements ContainerViewController
     @Nonnull
     private final SiteNode siteNode;
     
-    @Inject @Nonnull
-    private Site site;
-    
-    /*******************************************************************************************************************
-     *
-     * Creates an instance for populating the given {@link ContainerView} with the given {@link SiteNode}.
-     * 
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public DefaultContainerViewController (final @Nonnull ContainerView view, final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
+    @Nonnull
+    private final Site site;
     
     @PostConstruct
     /* package */ void initialize()

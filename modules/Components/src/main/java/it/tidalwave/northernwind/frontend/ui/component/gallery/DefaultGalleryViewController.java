@@ -24,8 +24,11 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
 import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -37,8 +40,11 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultGalleryViewController extends DefaultNodeContainerViewController implements GalleryViewController
   {
-    public DefaultGalleryViewController (final @Nonnull GalleryView view, final @Nonnull SiteNode siteNode) 
+    public DefaultGalleryViewController (final @Nonnull NodeContainerView view, 
+                                         final @Nonnull SiteNode siteNode,
+                                         final @Nonnull Site site, 
+                                         final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(view, siteNode);
+        super(view, siteNode, site, requestLocaleManager);
       }
   }

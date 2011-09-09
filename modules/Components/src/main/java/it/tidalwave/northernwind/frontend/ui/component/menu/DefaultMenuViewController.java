@@ -26,13 +26,13 @@ import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -45,29 +45,17 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope("session") @Slf4j
+@RequiredArgsConstructor @Configurable @Scope("session") @Slf4j
 public class DefaultMenuViewController implements MenuViewController
   {    
-    @Inject @Nonnull
-    private Site site;
-    
     @Nonnull
     protected final MenuView view;
     
     @Nonnull
     protected final SiteNode siteNode;
 
-    /*******************************************************************************************************************
-     *
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public DefaultMenuViewController (final @Nonnull MenuView view, final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
+    @Nonnull
+    private final Site site;
     
     /*******************************************************************************************************************
      *

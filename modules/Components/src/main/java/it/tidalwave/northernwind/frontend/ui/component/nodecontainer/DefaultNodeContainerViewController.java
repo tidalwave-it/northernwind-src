@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -33,6 +32,7 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -42,32 +42,20 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
-    @Inject @Nonnull
-    private Site site;
-    
-    @Inject @Nonnull
-    private RequestLocaleManager requestLocaleManager;
-    
+    @Nonnull
     private final NodeContainerView view;
     
+    @Nonnull
     private final SiteNode siteNode;
     
-    /*******************************************************************************************************************
-     *
-     * Creates an instance for populating the given {@link NodeContainerView} with the given {@link SiteNode}.
-     * 
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public DefaultNodeContainerViewController (final @Nonnull NodeContainerView view, final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
+    @Nonnull
+    private final Site site;
+    
+    @Nonnull
+    private final RequestLocaleManager requestLocaleManager;
     
     /*******************************************************************************************************************
      *

@@ -22,17 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
-import org.stringtemplate.v4.ST;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.stringtemplate.v4.ST;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -45,30 +45,17 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitleViewController
   {
-    @Inject @Nonnull
-    private Site site;
-    
+    @Nonnull
     private final HtmlTextWithTitleView view;
     
+    @Nonnull
     private final SiteNode siteNode;
     
-    /*******************************************************************************************************************
-     *
-     * Creates an instance for populating the given {@link HtmlTextWithTitleView} with the given URI.
-     * 
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public DefaultHtmlTextWithTitleViewController (final @Nonnull HtmlTextWithTitleView view, 
-                                                   final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
+    @Nonnull
+    private final Site site;
     
     /*******************************************************************************************************************
      *

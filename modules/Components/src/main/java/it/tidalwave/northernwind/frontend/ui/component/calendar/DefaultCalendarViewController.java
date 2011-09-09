@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.Locale;
 import java.text.DateFormatSymbols;
 import java.io.IOException;
@@ -50,6 +49,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -59,7 +59,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultCalendarViewController implements CalendarViewController
   {
     @Nonnull
@@ -68,21 +68,15 @@ public class DefaultCalendarViewController implements CalendarViewController
     @Nonnull
     private final SiteNode siteNode;
     
-    @Inject @Nonnull
-    private Site site;
+    @Nonnull
+    private final Site site;
 
-    @Inject @Nonnull
-    private RequestLocaleManager requestLocaleManager;
+    @Nonnull
+    private final RequestLocaleManager requestLocaleManager;
     
-    @Inject @Nonnull
-    private RequestHolder requestHolder;
+    @Nonnull
+    private final RequestHolder requestHolder;
 
-    public DefaultCalendarViewController (final @Nonnull CalendarView view, final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
-    
     @PostConstruct
     /* package */ void initialize()
       throws NotFoundException, IOException, ParserConfigurationException, SAXException, XPathExpressionException
