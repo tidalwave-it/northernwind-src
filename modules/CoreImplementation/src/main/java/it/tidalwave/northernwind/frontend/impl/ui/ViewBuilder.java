@@ -23,9 +23,14 @@
 package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -42,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString
+@Configurable @Slf4j @ToString
 /* package */ class ViewBuilder
   {
     @Nonnull
@@ -50,6 +55,9 @@ import lombok.extern.slf4j.Slf4j;
     
     @Nonnull
     private final Constructor<?> viewControllerConstructor;
+    
+    @Inject @Nonnull
+    private BeanFactory beanFactory;
 
     /*******************************************************************************************************************
      *
@@ -59,8 +67,8 @@ import lombok.extern.slf4j.Slf4j;
       throws NoSuchMethodException, InvocationTargetException, InstantiationException, 
              IllegalArgumentException, IllegalAccessException, SecurityException 
       {
-        viewConstructor = viewClass.getConstructor(Id.class);
-        viewControllerConstructor = viewControllerClass.getConstructor(viewClass.getInterfaces()[0], SiteNode.class);
+        viewConstructor = viewClass.getConstructors()[0];
+        viewControllerConstructor = viewControllerClass.getConstructors()[0];
       }
     
     /*******************************************************************************************************************
@@ -83,8 +91,8 @@ import lombok.extern.slf4j.Slf4j;
             // Note that the viewController is not assigned to any object. Indeed, it might be GCed sooner or later.
             // But it's not a problem: if it's not referenced, it will be no more useful (in contrast, e.g. a view
             // would bind itself to a controller listener or action in cases when the controller plays a later role). 
-            final Object view = viewConstructor.newInstance(id);
-            viewControllerConstructor.newInstance(view, siteNode);  
+            final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
+            viewControllerConstructor.newInstance(computeConstructorArguments(viewControllerConstructor, id, siteNode, view));  
             return view;
           }
         catch (InvocationTargetException e)
@@ -103,5 +111,38 @@ import lombok.extern.slf4j.Slf4j;
           {
             throw new RuntimeException(e);
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Computes the argument values for calling the given constructor. They are taken from the current 
+     * {@link BeanFactory}, with {@code instanceArgs} eventually overriding them.
+     * 
+     * @param  constructor      the constructor
+     * @param  overridingArgs   the overriding arguments
+     * @return                  the arguments to pass to the constructor
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Object[] computeConstructorArguments (final @Nonnull Constructor<?> constructor,
+                                                  final @Nonnull Object ... overridingArgs) 
+      {
+        final List<Object> result = new ArrayList<Object>();
+        
+        x: for (final Class<?> argumentType : constructor.getParameterTypes())
+          {
+            for (final Object overridingArg : overridingArgs)
+              {
+                if (argumentType.isAssignableFrom(overridingArg.getClass()))
+                  {  
+                    result.add(overridingArg);
+                    continue x;
+                  }
+              }
+            
+            result.add(beanFactory.getBean(argumentType));
+          }
+        
+        return result.toArray();
       }
   }
