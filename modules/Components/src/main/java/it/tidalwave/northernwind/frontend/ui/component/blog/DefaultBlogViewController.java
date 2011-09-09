@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,11 +38,11 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -54,7 +53,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
     private final Comparator<Content> REVERSE_DATE_COMPARATOR = new Comparator<Content>() 
@@ -76,27 +75,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private final SiteNode siteNode;
     
-    @Inject @Nonnull
-    private Site site;
+    @Nonnull
+    private final Site site;
     
-    @Inject @Nonnull
-    protected RequestLocaleManager requestLocaleManager;
-    
-    @Inject @Nonnull
-    private RequestHolder requestHolder;
+    @Nonnull
+    private final RequestHolder requestHolder;
 
-    /*******************************************************************************************************************
-     *
-     * @param  view              the related view
-     * @param  siteNode          the related {@link SiteNode}
-     *
-     ******************************************************************************************************************/
-    public DefaultBlogViewController (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode) 
-      {
-        this.view = view;
-        this.siteNode = siteNode;
-      }
-    
     /*******************************************************************************************************************
      *
      * Initializes this controller.

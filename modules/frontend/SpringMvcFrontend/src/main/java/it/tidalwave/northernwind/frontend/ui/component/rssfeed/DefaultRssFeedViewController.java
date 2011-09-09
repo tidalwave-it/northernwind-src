@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -36,9 +35,11 @@ import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
@@ -52,36 +53,34 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultRssFeedViewController extends DefaultBlogViewController implements RssFeedViewController
   {
-    private final List<Item> items = new ArrayList<Item>();
-
     @Nonnull
     private final RssFeedView view;
 
     @Nonnull
     private final SiteNode siteNode;
     
-    @Inject @Nonnull
-    private Site site;
+    @Nonnull
+    private final Site site;
     
-    private String linkBase;
-    
-    private Channel feed;
-    
-    private ResourceProperties properties;
+    private final List<Item> items = new ArrayList<Item>();
 
-    public DefaultRssFeedViewController (final @Nonnull RssFeedView view, final @Nonnull SiteNode siteNode)
-      throws Exception
+    private final String linkBase;
+    
+    private final Channel feed;
+    
+    private final ResourceProperties properties;
+
+    public DefaultRssFeedViewController (final @Nonnull RssFeedView view, 
+                                         final @Nonnull SiteNode siteNode, 
+                                         final @Nonnull Site site, 
+                                         final @Nonnull RequestLocaleManager requestLocaleManager, 
+                                         final @Nonnull RequestHolder requestHolder)
+      throws NotFoundException, IOException 
       {
-        super(view, siteNode);
+        super(view, siteNode, site, requestHolder);
         this.view = view;
         this.siteNode = siteNode;
-//      }
-//    
-////    @PostConstruct
-//    @Override
-//    protected void initialize()
-//      {
-//        super.initialize();
+        this.site = site;
         feed = new Channel("rss_2.0");
         properties = siteNode.getPropertyGroup(view.getId());
         linkBase = properties.getProperty(PROPERTY_LINK, "");

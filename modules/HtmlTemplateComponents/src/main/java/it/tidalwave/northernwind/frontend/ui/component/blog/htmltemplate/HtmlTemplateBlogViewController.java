@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -31,9 +30,11 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
@@ -49,25 +50,33 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    private final List<String> htmlParts = new ArrayList<String>();
-    
-    @Inject @Nonnull
-    private Site site;
-    
     @Nonnull
     private final SiteNode siteNode;
     
+    @Nonnull
+    private final Site site;
+    
+    @Nonnull
+    private final RequestLocaleManager requestLocaleManager;
+    
     private boolean referencesRendered;
-
+    
+    private final List<String> htmlParts = new ArrayList<String>();
+    
     /*******************************************************************************************************************
      *
-     * 
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogViewController (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode) 
+    public HtmlTemplateBlogViewController (final @Nonnull BlogView view, 
+                                           final @Nonnull SiteNode siteNode,
+                                           final @Nonnull Site site, 
+                                           final @Nonnull RequestHolder requestHolder,
+                                           final @Nonnull RequestLocaleManager requestLocaleManager) 
       {
-        super(view, siteNode);
+        super(view, siteNode, site, requestHolder);
         this.siteNode = siteNode;
+        this.site = site;
+        this.requestLocaleManager = requestLocaleManager;
       }
     
     /*******************************************************************************************************************
