@@ -81,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
         try
           { 
             // Note that the viewController is not assigned to any object. Indeed, it might be GCed sooner or later.
-            // But it's not a problem: if it's not referenced, it will no more useful (in contrast, e.g. a view
+            // But it's not a problem: if it's not referenced, it will be no more useful (in contrast, e.g. a view
             // would bind itself to a controller listener or action in cases when the controller plays a later role). 
             final Object view = viewConstructor.newInstance(id);
             viewControllerConstructor.newInstance(view, siteNode);  
