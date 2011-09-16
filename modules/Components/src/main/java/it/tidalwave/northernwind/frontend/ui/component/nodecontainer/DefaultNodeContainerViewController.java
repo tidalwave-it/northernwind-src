@@ -22,19 +22,21 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -118,7 +120,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
             for (final String uri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
-                builder.append("@import url(\"").append(contextPath).append(uri).append("\");\n");  
+                final String link = contextPath + uri;
+                builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\">\n", link));
               }
           }
         catch (IOException e)

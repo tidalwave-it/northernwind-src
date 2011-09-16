@@ -5,9 +5,7 @@
         <meta name="description" content="$description$" />
         <meta http-equiv="Content-type" content="text/html;charset=$charset$">       
         <meta http-equiv="Content-Language" content="$language$"/>
-        <style type="text/css" media="screen">
-            $screenCssSection$
-        </style>        
+        $screenCssSection$
         <style type="text/css" media="print">
             div#header { display: none }
             div#sub { display: none }
