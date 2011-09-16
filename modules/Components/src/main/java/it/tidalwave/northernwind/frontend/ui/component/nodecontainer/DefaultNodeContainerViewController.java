@@ -120,7 +120,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
             for (final String uri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
-                final String link = contextPath + uri;
+                final String link = uri.startsWith("http") ? uri : contextPath + uri;
                 builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\">\n", link));
               }
           }
