@@ -54,6 +54,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -103,6 +104,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     
     @Inject @Nonnull
     private List<LinkPostProcessor> linkPostProcessors;
+    
+    @Inject @Nonnull
+    private RequestHolder requestHolder;
     
     @Inject @Nonnull
     private ModelFactory modelFactory;
@@ -271,7 +275,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Override @Nonnull
     public String createLink (final @Nonnull String relativeUri) 
       {
-        String link = contextPath + relativeUri;
+        String link = requestHolder.get().getBaseUrl() + contextPath + relativeUri;
         
         if (!link.contains(".") && !link.contains("?") && !link.endsWith("/"))
           {
@@ -356,7 +360,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         
         reset();
       }
-    
+
     /*******************************************************************************************************************
      *
      * Accepts a {@link FileVisitor} to visit a file or folder.

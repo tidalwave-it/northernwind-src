@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
 import javax.servlet.http.HttpServletRequest;
+import org.openide.filesystems.FileObject;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
@@ -39,6 +38,7 @@ import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -117,7 +117,7 @@ public class DefaultModelFactory implements ModelFactory
     @Override @Nonnull
     public DefaultRequest createRequest()
       {
-        return new DefaultRequest("", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
+        return new DefaultRequest("", "", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
       }
     
     /*******************************************************************************************************************
@@ -130,7 +130,8 @@ public class DefaultModelFactory implements ModelFactory
       {
         String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
         relativeUri = relativeUri.equals("") ? "/" : relativeUri;
-        return createRequest().withRelativeUri(relativeUri)
+        return createRequest().withBaseUrl(getBaseUrl(httpServletRequest))
+                              .withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())
                               .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 
       }
@@ -144,5 +145,15 @@ public class DefaultModelFactory implements ModelFactory
     public ResourceProperties createProperties (final @Nonnull Id id) 
       {
         return new DefaultResourceProperties(id, null);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String getBaseUrl (final @Nonnull HttpServletRequest httpServletRequest)
+      {
+        return httpServletRequest.getRequestURL().toString().replaceAll(":.*", "") + "://" + httpServletRequest.getHeader("Host");
       }
   }

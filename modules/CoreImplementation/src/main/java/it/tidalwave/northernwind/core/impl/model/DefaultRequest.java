@@ -51,6 +51,9 @@ import lombok.ToString;
 /* package */ class DefaultRequest implements Request
   {
     @Nonnull
+    private final String baseUrl;
+    
+    @Nonnull
     private final String relativeUri;
     
     @Nonnull
@@ -96,12 +99,23 @@ import lombok.ToString;
       {
         try 
           {
-            return new DefaultRequest(UriUtilities.urlDecodedPath(relativeUri), relativeUri, parametersMap, preferredLocales);
+            return new DefaultRequest(baseUrl, UriUtilities.urlDecodedPath(relativeUri), relativeUri, parametersMap, preferredLocales);
           }
         catch (UnsupportedEncodingException e)
           {
             throw new RuntimeException(e);
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public DefaultRequest withBaseUrl (final @Nonnull String baseUrl)
+      {
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);
       }
     
     /*******************************************************************************************************************
@@ -130,7 +144,7 @@ import lombok.ToString;
             parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
           }
         
-        return new DefaultRequest(relativeUri, originalRelativeUri, parameterMap, preferredLocales);
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parameterMap, preferredLocales);
       }
     
     /*******************************************************************************************************************
@@ -140,6 +154,6 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
       {
-        return new DefaultRequest(relativeUri, originalRelativeUri, parametersMap, preferredLocales);  
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);  
       }
   }

@@ -22,21 +22,19 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Configurable;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -116,11 +114,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     
         try
           {
-            final String contextPath = site.getContextPath();
-
-            for (final String uri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
               {
-                final String link = uri.startsWith("http") ? uri : contextPath + uri;
+                final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
                 builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\">\n", link));
               }
           }
@@ -155,7 +151,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                 final SiteNode rssSiteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
                 final String mimeType = "application/rss+xml";
                 final String relativeUri = rssSiteNode.getRelativeUri();
-                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s%s\" />", mimeType, contextPath, relativeUri));
+                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s%s\" />", 
+                                             mimeType, contextPath, site.createLink(relativeUri)));
               }
           }
         catch (IOException e)

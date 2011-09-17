@@ -41,6 +41,9 @@ public interface Request
     public Request withRelativeUri (@Nonnull String relativeUri);
     
     @Nonnull
+    public String getBaseUrl();
+    
+    @Nonnull
     public String getRelativeUri();
     
     @Nonnull
@@ -48,7 +51,7 @@ public interface Request
     
     @Nonnull
     public List<Locale> getPreferredLocales();
-    
+
     @Nonnull
     public String getParameter (@Nonnull String parameterName)
       throws NotFoundException;
