@@ -98,13 +98,8 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
         try
           {  
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            
             view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
           }
-        catch (NotFoundException e) // propertyGroup
-          {
-            // ok  
-          } 
         catch (IOException e)
           {
             // ok  

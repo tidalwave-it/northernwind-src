@@ -76,8 +76,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties getGroup (@Nonnull Id id)
-      throws NotFoundException;
+    public ResourceProperties getGroup (@Nonnull Id id);
     
     /*******************************************************************************************************************
      *

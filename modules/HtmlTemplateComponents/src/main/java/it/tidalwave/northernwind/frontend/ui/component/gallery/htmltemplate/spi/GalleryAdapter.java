@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
@@ -38,8 +37,7 @@ public interface GalleryAdapter
     public void initialize (@Nonnull GalleryAdapterContext context);
 
     @Nonnull
-    public ResourceProperties getExtraViewProperties (@Nonnull Id viewId) 
-      throws NotFoundException;
+    public ResourceProperties getExtraViewProperties (@Nonnull Id viewId);
     
     @Nonnull
     public String getInlinedScript();

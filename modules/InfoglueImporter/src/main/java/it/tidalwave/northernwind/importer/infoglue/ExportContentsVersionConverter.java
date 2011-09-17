@@ -146,22 +146,22 @@ class ExportContentsVersionConverter extends Converter
 
             String content = escapedVersionValue.replace("cdataEnd", "]]>");
             
-            // FIXME: for StoppingDown
-            if (path.equals("/Stopping Down/Splash/"))
-              {
-                content = content.replace("/resources/css/style.css", "$libraryLink(relativePath='/css/style.css')$");
-                content = content.replace("/resources/js/jquery/1.4.1/jquery.min.js", "$libraryLink(relativePath='/js/jquery/1.4.1/jquery.min.js')$");
-                content = content.replace("/resources/js/splash.js", "$libraryLink(relativePath='/js/splash.js')$");
-                content = content.replace("/blog/", "$nodeLink(relativePath='/Blog')$");
-                content = content.replace("/diary.html", "$nodeLink(relativePath='/Diary')$");
-                content = content.replace("/travels.html", "$nodeLink(relativePath='/Travels')$");
-              }
-            
-            content = content.replaceAll("=\"http://stoppingdown.net/media/stillimages([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
-            content = content.replaceAll("=\"http://stoppingdown.net/media/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
-            content = content.replaceAll("=\"http://www.timelesswanderings.net/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
-            content = content.replaceAll("=\"http://stoppingdown.net/media/movies([^\"]*)\"", "=\"\\$mediaLink(relativePath='/movies$1')\\$\"");
-            // END FIXME: for StoppingDown
+//            // FIXME: for StoppingDown
+//            if (path.equals("/Stopping Down/Splash/"))
+//              {
+//                content = content.replace("/resources/css/style.css", "$libraryLink(relativePath='/css/style.css')$");
+//                content = content.replace("/resources/js/jquery/1.4.1/jquery.min.js", "$libraryLink(relativePath='/js/jquery/1.4.1/jquery.min.js')$");
+//                content = content.replace("/resources/js/splash.js", "$libraryLink(relativePath='/js/splash.js')$");
+//                content = content.replace("/blog/", "$nodeLink(relativePath='/Blog')$");
+//                content = content.replace("/diary.html", "$nodeLink(relativePath='/Diary')$");
+//                content = content.replace("/travels.html", "$nodeLink(relativePath='/Travels')$");
+//              }
+//            
+//            content = content.replaceAll("=\"http://stoppingdown.net/media/stillimages([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
+//            content = content.replaceAll("=\"http://stoppingdown.net/media/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
+//            content = content.replaceAll("=\"http://www.timelesswanderings.net/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
+//            content = content.replaceAll("=\"http://stoppingdown.net/media/movies([^\"]*)\"", "=\"\\$mediaLink(relativePath='/movies$1')\\$\"");
+//            // END FIXME: for StoppingDown
             
             Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
 

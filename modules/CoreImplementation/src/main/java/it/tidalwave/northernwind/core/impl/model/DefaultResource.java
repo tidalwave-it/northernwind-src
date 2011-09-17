@@ -97,7 +97,6 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      ******************************************************************************************************************/
     @Override @Nonnull
     public ResourceProperties getPropertyGroup (final @Nonnull Id id)
-      throws NotFoundException
       {
         return properties.getGroup(id);   
       }
@@ -210,15 +209,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         for (final Id groupId : properties.getGroupIds())
           {
             log.debug("{}>>>> group: {}", indent, groupId);
-            
-            try 
-              {
-                logProperties(indent + ">>>>", properties.getGroup(groupId));
-              }
-            catch (NotFoundException e) 
-              {
-                log.error("", e);
-              }
+            logProperties(indent + ">>>>", properties.getGroup(groupId));
           }
       }
   }

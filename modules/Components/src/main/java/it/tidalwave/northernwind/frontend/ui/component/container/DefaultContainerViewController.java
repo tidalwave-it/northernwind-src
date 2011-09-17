@@ -69,16 +69,9 @@ public class DefaultContainerViewController implements ContainerViewController
             // ok, use the default template  
           }
         
-        try
-          {  
-            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            
-            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
-            view.setClearFix(Boolean.parseBoolean(viewProperties.getProperty(PROPERTY_CLEARFIX, "false")));
-          }
-        catch (NotFoundException e) // propertyGroup
-          {
-            // ok  
-          } 
+        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+
+        view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
+        view.setClearFix(Boolean.parseBoolean(viewProperties.getProperty(PROPERTY_CLEARFIX, "false")));
       }
   }

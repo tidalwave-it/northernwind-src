@@ -143,15 +143,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
         
         for (final Id groupId : new TreeSet<Id>(properties.getGroupIds()))
           {
-            try 
-              {
-                propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
-              }
-            catch (NotFoundException e) 
-              {
-                // never occurs  
-                log.error("", e);
-              }
+            propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
           }
         
         return propertiesJaxb;

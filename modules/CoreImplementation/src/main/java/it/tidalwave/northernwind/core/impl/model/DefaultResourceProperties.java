@@ -197,10 +197,9 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
      ******************************************************************************************************************/
     @Override @Nonnull
     public ResourceProperties getGroup (final @Nonnull Id id)
-      throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(groupMap.get(id), 
-                "Property group id: " + id + " - available: " + groupMap.keySet());
+        final DefaultResourceProperties properties = groupMap.get(id);        
+        return properties != null ? properties : new DefaultResourceProperties(id, propertyResolver);
       }
     
     /*******************************************************************************************************************

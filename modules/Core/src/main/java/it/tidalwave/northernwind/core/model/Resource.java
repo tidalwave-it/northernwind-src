@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import org.openide.filesystems.FileObject;
 
 /***********************************************************************************************************************
@@ -67,16 +66,15 @@ public interface Resource
     
     /*******************************************************************************************************************
      *
-     * Returns the property group of this resources with the given id.
+     * Returns the property group of this resources with the given id. Empty properties are returned when id doesn't
+     * match.
      * 
      * @param   id                  the id of the property group
      * @return                      the properties
-     * @throws  NotFoundException   if no property group with that id exists
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties getPropertyGroup (@Nonnull Id id)
-      throws NotFoundException;
+    public ResourceProperties getPropertyGroup (@Nonnull Id id);
     
     /*******************************************************************************************************************
      *

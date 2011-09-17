@@ -51,11 +51,17 @@ public class Main
 //    /* package */ static public String siteNodePrefix = "^/blueBill/Mobile";
     
     // StoppingDown
-    /* package */ static String xmlFile = "/home/fritz/Personal/WebSites/Export__stoppingdown.net_2011-08-11_0536.xml";
-    /* package */ static String zipLibraryFile = "/home/fritz/Personal/WebSites/StoppingDownWebsiteLibrary.zip";
-    /* package */ static String contentPrefix = "^/Stopping Down";
-    /* package */ static String siteNodePrefix = "^/stoppingdown\\.net";
-                    
+//    /* package */ static String xmlFile = "/home/fritz/Personal/WebSites/Export__stoppingdown.net_2011-08-11_0536.xml";
+//    /* package */ static String zipLibraryFile = "/home/fritz/Personal/WebSites/StoppingDownWebsiteLibrary.zip";
+//    /* package */ static String contentPrefix = "^/Stopping Down";
+//    /* package */ static String siteNodePrefix = "^/stoppingdown\\.net";
+             
+    // jrawio
+    /* package */ static String xmlFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/jrawio/Export__jrawio_2011-08-11_0542.xml";
+    /* package */ static String zipLibraryFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/jrawio/jrawioWebsiteLibrary.zip";
+    /* package */ static String contentPrefix = "^/jrawio";
+    /* package */ static String siteNodePrefix = "^/jrawio";
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/

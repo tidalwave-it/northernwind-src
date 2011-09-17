@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -97,7 +98,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      ******************************************************************************************************************/
     @Nonnull
     protected ResourceProperties getViewProperties()
-      throws NotFoundException 
       {
         return siteNode.getPropertyGroup(view.getId());
       }
@@ -114,7 +114,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     
         try
           {
-            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS, Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
                 builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\">\n", link));
@@ -124,10 +124,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             log.error("", e);
           }        
-        catch (NotFoundException e)
-          {
-            // ok, no css  
-          }      
         
         return builder.toString();
       }
@@ -146,23 +142,26 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String contextPath = site.getContextPath();
 
-            for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS))
+            for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS, Collections.<String>emptyList()))
               {
-                final SiteNode rssSiteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-                final String mimeType = "application/rss+xml";
-                final String relativeUri = rssSiteNode.getRelativeUri();
-                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s%s\" />", 
-                                             mimeType, contextPath, site.createLink(relativeUri)));
+                try
+                  {
+                    final SiteNode rssSiteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
+                    final String mimeType = "application/rss+xml";
+                    final String relativeUri = rssSiteNode.getRelativeUri();
+                    builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s\" />", 
+                                                 mimeType, site.createLink(relativeUri)));
+                  }
+                catch (NotFoundException e2)
+                  {
+                    log.warn("", e2);
+                  }
               }
           }
         catch (IOException e)
           {
             log.error("", e);
           }        
-        catch (NotFoundException e)
-          {
-            // ok, no css  
-          }      
         
         return builder.toString();
       }
@@ -181,7 +180,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String contextPath = site.getContextPath();
 
-            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS))
+            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS, Collections.<String>emptyList()))
               {
                 builder.append(String.format("<script type=\"text/javascript\" src=\"%s%s\"></script>\n", contextPath, relativeUri));
               }
@@ -190,10 +189,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             log.error("", e);
           }        
-        catch (NotFoundException e)
-          {
-            // ok, no css  
-          }      
         
         return builder.toString();
       }
@@ -210,23 +205,24 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     
         try
           {
-            for (final String relativePath : getViewProperties().getProperty(PROPERTY_INLINED_SCRIPTS))
+            for (final String relativePath : getViewProperties().getProperty(PROPERTY_INLINED_SCRIPTS, Collections.<String>emptyList()))
               {
-                final Content script = site.find(Content.class).withRelativePath(relativePath).result();
-                final String template = script.getProperties().getProperty(PROPERTY_TEMPLATE);
-                builder.append(template);  
+                try
+                  {
+                    final Content script = site.find(Content.class).withRelativePath(relativePath).result();
+                    builder.append(script.getProperties().getProperty(PROPERTY_TEMPLATE));  
+                  }        
+                catch (NotFoundException e)
+                  {
+                    // ok, no css  
+                  }      
               }
           }
         catch (IOException e)
           {
             log.error("", e);
           }        
-        catch (NotFoundException e)
-          {
-            // ok, no css  
-          }      
         
         return builder.toString();
       }
   }
-

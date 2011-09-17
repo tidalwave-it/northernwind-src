@@ -126,12 +126,12 @@ public class LayoutConverter extends Parser
                 log.error("No component for {}", contentId);  
               }
             
-            // FIXME: for StoppingDown
-            if ("544".equals(contentId))
-              {
-                properties.put(new Key<Object>("base.template"), "/Splash");
-              }
-            // END FIXME: for StoppingDown
+//            // FIXME: for StoppingDown
+//            if ("544".equals(contentId))
+//              {
+//                properties.put(new Key<Object>("base.template"), "/Splash");
+//              }
+//            // END FIXME: for StoppingDown
             
             if (PATH_PARAMS_COMPONENTS.contains(attrTypeValue))
               {
@@ -246,35 +246,35 @@ public class LayoutConverter extends Parser
                   }
                 
                 // FIXME: for StoppingDown
-                if (!componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
-                  {
-                    properties.put(new Key<Object>(componentId + "." + "index"), "true");
-                  }
-                if (componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
-                  {
-                    final List<String> scripts = Arrays.asList
-                      (
-                        "/js/prototype.js",
-                        "/js/scriptaculous.js?load=effects,builder",
-                        "/js/lightbox.js"
-                      );
-                    final List<String> css = Arrays.asList
-                      (
-                        "/css/Layout.css",
-                        "/css/Typography.css",
-                        "/css/Forms.css",
-                        "/css/Tools.css",
-                        "/css/Horizontal-Navigation.css",
-                        "/css/Layout-Navigation-Top-Local-Right.css",
-                        "/css/StoppingDown.css",
-                        "/css/lightbox.css",
-                        "/css/LightBox-Override.css"
-                      );
-
-                    properties.put(new Key<Object>("base.scripts"), scripts);
-                    properties.put(new Key<Object>("base.screenStyleSheets"), css);
-                  }
-                // END FIXME: for StoppingDown
+//                if (!componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
+//                  {
+//                    properties.put(new Key<Object>(componentId + "." + "index"), "true");
+//                  }
+//                if (componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
+//                  {
+//                    final List<String> scripts = Arrays.asList
+//                      (
+//                        "/js/prototype.js",
+//                        "/js/scriptaculous.js?load=effects,builder",
+//                        "/js/lightbox.js"
+//                      );
+//                    final List<String> css = Arrays.asList
+//                      (
+//                        "/css/Layout.css",
+//                        "/css/Typography.css",
+//                        "/css/Forms.css",
+//                        "/css/Tools.css",
+//                        "/css/Horizontal-Navigation.css",
+//                        "/css/Layout-Navigation-Top-Local-Right.css",
+//                        "/css/StoppingDown.css",
+//                        "/css/lightbox.css",
+//                        "/css/LightBox-Override.css"
+//                      );
+//
+//                    properties.put(new Key<Object>("base.scripts"), scripts);
+//                    properties.put(new Key<Object>("base.screenStyleSheets"), css);
+//                  }
+//                // END FIXME: for StoppingDown
 
                 if ("styleSheets".equals(propertyName))
                   {
@@ -409,18 +409,18 @@ public class LayoutConverter extends Parser
               {
                 // ok  
               }
-            try
-              {                
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-5"))
-                             .findSubComponentById(new Id("content6"))
-                             .findSubComponentById(new Id("content6-13"));
-                properties.put(new Key<Object>("content6-13.contents"), Arrays.asList("/Resources/Nikonian WebRing badge"));
-              }
-            catch (NotFoundException e)
-              {
-                // ok  
-              }
+//            try
+//              {                
+//                rootComponent.findSubComponentById(new Id("local"))
+//                             .findSubComponentById(new Id("local-5"))
+//                             .findSubComponentById(new Id("content6"))
+//                             .findSubComponentById(new Id("content6-13"));
+//                properties.put(new Key<Object>("content6-13.contents"), Arrays.asList("/Resources/Nikonian WebRing badge"));
+//              }
+//            catch (NotFoundException e)
+//              {
+//                // ok  
+//              }
             try // move footer at the bottom of base
               {                
                 final Layout footer = rootComponent.findSubComponentById(new Id("footer"));

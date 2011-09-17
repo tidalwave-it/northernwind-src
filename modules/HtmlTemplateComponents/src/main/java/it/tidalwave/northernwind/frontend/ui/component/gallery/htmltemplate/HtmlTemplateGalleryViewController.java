@@ -149,7 +149,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      ******************************************************************************************************************/
     @Override @Nonnull
     protected ResourceProperties getViewProperties() 
-      throws NotFoundException 
       {
         return super.getViewProperties().merged(getGalleryAdapter().getExtraViewProperties(view.getId()));
       } 

@@ -114,22 +114,22 @@ public class ContentParser extends Parser
                   }
                 // END FIXME: for StoppingDown
                 
-                if (path.equals("//content/document/Resources/Diary.xml/"))
-                  {
-                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
-                                                                      "/structure/Diary/entries_en.xml", 
-                                                                      xml.getBytes("UTF-8"),
-                                                                      comment));
-                  }
-                else if (path.equals("//content/document/Resources/Travels.xml/"))
-                  {
-                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
-                                                                      "/structure/Travels/entries_en.xml", 
-                                                                      xml.getBytes("UTF-8"),
-                                                                      comment));
-                  }
-                // END FIXME: for StoppingDown
-                else
+//                if (path.equals("//content/document/Resources/Diary.xml/"))
+//                  {
+//                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
+//                                                                      "/structure/Diary/entries_en.xml", 
+//                                                                      xml.getBytes("UTF-8"),
+//                                                                      comment));
+//                  }
+//                else if (path.equals("//content/document/Resources/Travels.xml/"))
+//                  {
+//                    ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
+//                                                                      "/structure/Travels/entries_en.xml", 
+//                                                                      xml.getBytes("UTF-8"),
+//                                                                      comment));
+//                  }
+//                // END FIXME: for StoppingDown
+//                else
                   {
                     ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, 
                                                                       path + toLower(name) + "_" + language + ".html",
@@ -152,10 +152,10 @@ public class ContentParser extends Parser
     protected void finish()
       throws IOException
       {
-        // FIXME: for StoppingDown
-        if (!path.equals("//content/document/Resources/Diary.xml/") 
-            && !path.equals("//content/document/Resources/Travels.xml/"))
-        // END FIXME: for StoppingDown
+//        // FIXME: for StoppingDown
+//        if (!path.equals("//content/document/Resources/Diary.xml/") 
+//            && !path.equals("//content/document/Resources/Travels.xml/"))
+//        // END FIXME: for StoppingDown
           {
             if (path.startsWith("//content/document/Blog"))
               {
