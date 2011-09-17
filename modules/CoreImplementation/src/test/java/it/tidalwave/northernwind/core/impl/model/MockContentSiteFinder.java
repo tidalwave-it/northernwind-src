@@ -76,4 +76,10 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
             throw new RuntimeException(e);  
           }
       }
+
+    @Override
+    public void doWithResults (final @Nonnull Predicate<Content> predicate) 
+      {
+        throw new UnsupportedOperationException("Not supported.");
+      }
   }

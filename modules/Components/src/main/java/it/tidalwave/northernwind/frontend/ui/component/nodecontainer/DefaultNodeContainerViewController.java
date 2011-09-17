@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
+import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.Collections;
@@ -46,6 +47,31 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    private final Predicate<SiteNode> createRssLink = new Predicate<SiteNode>() 
+      {
+        private final String mimeType = "application/rss+xml";
+    
+        private final StringBuilder builder = new StringBuilder();
+        
+        @Override
+        public void run (final @Nonnull SiteNode rssSiteNode) 
+          {
+            builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s\" />\n", 
+                                         mimeType, site.createLink(rssSiteNode.getRelativeUri())));
+          }
+
+        @Override @Nonnull
+        public String toString() 
+          {
+            return builder.toString();
+          }
+      };
+    
     @Nonnull
     private final NodeContainerView view;
     
@@ -136,24 +162,11 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection() 
       {
-        final StringBuilder builder = new StringBuilder();
-    
         try
           {
             for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS, Collections.<String>emptyList()))
               {
-                try
-                  {
-                    final SiteNode rssSiteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-                    final String mimeType = "application/rss+xml";
-                    final String relativeUri = rssSiteNode.getRelativeUri();
-                    builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s\" />", 
-                                                 mimeType, site.createLink(relativeUri)));
-                  }
-                catch (NotFoundException e2)
-                  {
-                    log.warn("", e2);
-                  }
+                site.find(SiteNode.class).withRelativePath(relativePath).doWithResults(createRssLink);
               }
           }
         catch (IOException e)
@@ -161,7 +174,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             log.error("", e);
           }        
         
-        return builder.toString();
+        return createRssLink.toString();
       }
     
     /*******************************************************************************************************************
@@ -176,11 +189,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     
         try
           {
-            final String contextPath = site.getContextPath();
-
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS, Collections.<String>emptyList()))
               {
-                builder.append(String.format("<script type=\"text/javascript\" src=\"%s%s\"></script>\n", contextPath, relativeUri));
+                builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>\n", site.createLink(relativeUri)));
               }
           }
         catch (IOException e)

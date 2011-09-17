@@ -33,9 +33,17 @@ import it.tidalwave.util.spi.ExtendedFinderSupport;
  **********************************************************************************************************************/
 public interface SiteFinder<Type> extends ExtendedFinderSupport<Type, SiteFinder<Type>>
   {
+    public static interface Predicate<Type>
+      {
+        public void run (@Nonnull Type object);  
+      }
+    
     @Nonnull
     public SiteFinder<Type> withRelativePath (@Nonnull String relativePath);
     
     @Nonnull
     public SiteFinder<Type> withRelativeUri (@Nonnull String relativeUri);
+    
+    // TODO: move to Finder
+    public void doWithResults (@Nonnull Predicate<Type> predicate);
   }

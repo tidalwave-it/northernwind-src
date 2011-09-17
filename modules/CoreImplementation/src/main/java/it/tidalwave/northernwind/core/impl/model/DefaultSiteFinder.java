@@ -157,4 +157,18 @@ import lombok.ToString;
         
         return results;
       }
+        
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void doWithResults (final @Nonnull Predicate<Type> predicate)
+      {
+        for (final Type object : results())
+          {
+            predicate.run(object);    
+          }
+      }
   }
