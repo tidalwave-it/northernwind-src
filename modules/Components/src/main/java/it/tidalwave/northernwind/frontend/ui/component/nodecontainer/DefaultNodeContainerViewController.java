@@ -140,8 +140,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     
         try
           {
-            final String contextPath = site.getContextPath();
-
             for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS, Collections.<String>emptyList()))
               {
                 try
