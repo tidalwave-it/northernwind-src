@@ -131,7 +131,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         try
           {
-           final String link = site.getContextPath() + siteNode.getRelativeUri() + "/" + getExposedUri(post) + "/";
+           final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
            htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>\n", link, properties.getProperty(PROPERTY_TITLE)));
           }
         catch (NotFoundException e)
@@ -172,7 +172,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         try
           {
-           final String link = site.getContextPath() + siteNode.getRelativeUri() + "/" + getExposedUri(post) + "/";
+           final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
            htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>\n", link));
           }
         catch (NotFoundException e)
