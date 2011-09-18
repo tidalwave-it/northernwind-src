@@ -77,6 +77,10 @@ public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSuppo
         return new Object[][]
           {
             {
+              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/')$\">1</a>",
+              "href=\"/LINK/URI-Blog/\">1</a>"
+            },
+            {
               "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
               "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"
             },

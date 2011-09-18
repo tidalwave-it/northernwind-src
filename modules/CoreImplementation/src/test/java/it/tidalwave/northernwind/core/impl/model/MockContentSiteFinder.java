@@ -64,7 +64,16 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
         try
           {
             final Content content = mock(Content.class);
-            when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
+
+            if (relativePath.equals("/"))
+              {
+                when(content.getExposedUri()).thenReturn("");
+              }
+            else
+              {
+                when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
+              }
+            
             return Arrays.asList(content);
           } 
         catch (NotFoundException e) 

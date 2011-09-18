@@ -61,7 +61,7 @@ public class NodeLinkWithContentMacroExpander extends MacroExpander
         final String language = matcher.group(4);
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final String link = siteNode.getRelativeUri() + content.getExposedUri();
+        final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();
         
         return site.createLink((language == null) ? link : postProcessor.postProcess(link, language));
       }
