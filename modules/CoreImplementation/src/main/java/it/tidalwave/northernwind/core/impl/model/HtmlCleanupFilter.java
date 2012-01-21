@@ -75,6 +75,11 @@ public class HtmlCleanupFilter implements Filter
               {
                 break;  
               }
+            
+            if (s.contains("<!-- @nw.HtmlCleanupFilter.enabled=false"))
+              {
+                return text;  
+              }
 
             if ("</body>".equals(s.trim()))
               {

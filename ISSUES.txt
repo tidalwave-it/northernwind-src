@@ -1,2 +1,8 @@
+1.0-ALPHA-11
+
 NW-70: 		Make it possible to ignore some folders (such as .hg). They can also cause problems since file names aren't necessarily properly urlencoded.
 NW-71:		Add a HtmlCleanupFilter that accepts HTML documents with full <html> and <body>, as they are produced by most editors, and strips them away.
+
+1.0-ALPHA-12
+
+NW-72:		HtmlCleanUpFilter must be deactivated for some resources (e.g. full page templates).
