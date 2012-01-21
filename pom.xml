@@ -20,6 +20,8 @@
         <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
+        <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
+        <tidalwave.issues>NW</tidalwave.issues>
 
         <vaadin.version>6.6.1</vaadin.version>
         <javax.servlet-api.version>2.5</javax.servlet-api.version>
@@ -46,6 +48,7 @@
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
         <log.file>target/nw.log</log.file>
+        <tft.nexus-maven-plugin.version>1.9.2.4</tft.nexus-maven-plugin.version>
 
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
     </properties>
@@ -82,11 +85,6 @@
 
     <url>http://northernwind.java.net</url>
     <inceptionYear>2011</inceptionYear>
-
-    <issueManagement>
-        <system>Jira</system>
-        <url>http://java.net/jira/browse/it-tidalwave-northernwind</url>
-    </issueManagement>
 
     <distributionManagement>
         <site>
