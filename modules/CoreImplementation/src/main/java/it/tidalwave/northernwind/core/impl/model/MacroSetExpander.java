@@ -49,7 +49,7 @@ public class MacroSetExpander
       }
     
     @Nonnull
-    public String filter (@Nonnull String text) 
+    public String filter (final @Nonnull String text) 
       {
 //        // FIXME: do this with StringTemplate - remember to escape $'s in the source
 //        final String c = site.getContextPath();
