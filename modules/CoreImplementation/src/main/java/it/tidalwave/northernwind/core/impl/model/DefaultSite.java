@@ -386,7 +386,7 @@ import java.io.File;
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.info("traverse({}}", file);
+        log.trace("traverse({}}", file);
         final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 
