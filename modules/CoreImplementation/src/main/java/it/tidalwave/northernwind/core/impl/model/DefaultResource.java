@@ -56,7 +56,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     private RequestLocaleManager localeRequestManager;
     
     @Inject @Nonnull
-    private Provider<MacroSetExpander> macroExpander;
+    private Provider<FilterSetExpander> macroExpander;
     
     @Nonnull @Getter
     private final FileObject file;    

@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @ThreadSafe @Slf4j
-public class MacroExpander 
+public class MacroExpander implements Filter
   {
     @Inject @Nonnull
     protected Site site;
@@ -53,7 +53,7 @@ public class MacroExpander
         pattern = Pattern.compile(regexp);
       }
     
-    @Nonnull
+    @Override @Nonnull
     public String filter (final @Nonnull String text)
       {
         final Matcher matcher = pattern.matcher(text);

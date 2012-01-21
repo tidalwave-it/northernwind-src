@@ -37,10 +37,10 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
  *
  **********************************************************************************************************************/
 @Configurable
-public class MacroSetExpander 
+public class FilterSetExpander 
   {
     @Inject @Nonnull 
-    private List<MacroExpander> filters;
+    private List<Filter> filters;
 
     @PostConstruct
     /* package */ void initialize()
@@ -58,7 +58,7 @@ public class MacroSetExpander
 //                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
         String result = text;
         
-        for (final MacroExpander filter : filters)
+        for (final Filter filter : filters)
           {
             result = filter.filter(result);
           }

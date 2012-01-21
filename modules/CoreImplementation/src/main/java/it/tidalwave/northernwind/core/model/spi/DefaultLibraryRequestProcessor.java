@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.impl.model.MacroSetExpander;
+import it.tidalwave.northernwind.core.impl.model.FilterSetExpander;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
     private Provider<Site> site;
     
     @Inject @Nonnull
-    private Provider<MacroSetExpander> macroExpander;
+    private Provider<FilterSetExpander> macroExpander;
     
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;

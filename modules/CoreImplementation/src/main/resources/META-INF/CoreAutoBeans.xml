@@ -87,8 +87,8 @@
     <bean id="modelFactory"
           class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
           
-    <bean id="macroSetExpander"
-          class="it.tidalwave.northernwind.core.impl.model.MacroSetExpander" />
+    <bean id="filterSetExpander"
+          class="it.tidalwave.northernwind.core.impl.model.FilterSetExpander" />
           
     <bean id="mediaLinkMacroExpander"
           class="it.tidalwave.northernwind.core.impl.model.MediaLinkMacroExpander" />
