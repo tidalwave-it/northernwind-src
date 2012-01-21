@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.beans.PropertyVetoException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +60,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
+import java.io.File;
 
 /***********************************************************************************************************************
  *
@@ -81,21 +83,21 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         public boolean accept (@Nonnull FileObject file);  
       }
     
-    private static final FileFilter DIRECTORY_FILTER = new FileFilter()
+    private final FileFilter DIRECTORY_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull FileObject file) 
           {
-            return file.isFolder();
+            return file.isFolder() && !ignoredFolders.contains(file.getNameExt());
           }
       };
     
-    private static final FileFilter ALL_FILTER = new FileFilter()
+    private final FileFilter ALL_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull FileObject file) 
           {
-            return true;
+            return !ignoredFolders.contains(file.getNameExt());
           }
       };
     
@@ -135,6 +137,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Getter @Setter @Nonnull
     private String localesAsString;
             
+    @Getter @Setter @Nonnull
+    private String ignoredFoldersAsString = "";
+    
+    private final List<String> ignoredFolders = new ArrayList<String>();
+        
     private FileObject documentFolder;
     
     private FileObject libraryFolder;
@@ -323,6 +330,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         log.info("initialize()");
         
+        ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
+        
         relativePathMapsByType.put(Content.class, documentMapByRelativePath);
         relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
         relativePathMapsByType.put(Resource.class, libraryMapByRelativePath);
@@ -351,13 +360,14 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
             configuredLocales.add(new Locale(localeAsString.trim()));  
           }
         
-        log.info(">>>> contextPath:  {}", contextPath);
-        log.info(">>>> fileSystem:   {}", fileSystem);
-        log.info(">>>> documentPath: {}", documentFolder.getPath());
-        log.info(">>>> libraryPath:  {}", libraryFolder.getPath());
-        log.info(">>>> mediaPath:    {}", mediaFolder.getPath());
-        log.info(">>>> nodePath:     {}", nodeFolder.getPath());
-        log.info(">>>> locales:      {}", configuredLocales);
+        log.info(">>>> contextPath:    {}", contextPath);
+        log.info(">>>> ignoredFolders: {}", ignoredFolders);
+        log.info(">>>> fileSystem:     {}", fileSystem);
+        log.info(">>>> documentPath:   {}", documentFolder.getPath());
+        log.info(">>>> libraryPath:    {}", libraryFolder.getPath());
+        log.info(">>>> mediaPath:      {}", mediaFolder.getPath());
+        log.info(">>>> nodePath:       {}", nodeFolder.getPath());
+        log.info(">>>> locales:        {}", configuredLocales);
         
         reset();
       }
@@ -376,7 +386,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.trace("traverse({}}", file);
+        log.info("traverse({}}", file);
         final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 

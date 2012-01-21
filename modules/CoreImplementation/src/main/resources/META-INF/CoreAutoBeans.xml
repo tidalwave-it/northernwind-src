@@ -109,6 +109,7 @@
         <property name="nodePath" value="${nw.nodePath}" />
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
         <property name="localesAsString" value="${nw.site.locales}" />
+        <property name="ignoredFoldersAsString" value="${nw.ignoredFolders}" />
     </bean>
                        
     <bean id="voidLinkPostProcessor"
