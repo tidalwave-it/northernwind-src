@@ -59,11 +59,11 @@ public class HtmlCleanupFilter implements Filter
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static String formatHtml (final @Nonnull String string) 
+    public static String formatHtml (final @Nonnull String text) 
       throws IOException
       {
         final StringWriter sw = new StringWriter();
-        final BufferedReader br = new BufferedReader(new StringReader(string));
+        final BufferedReader br = new BufferedReader(new StringReader(text));
 
         boolean inBody = false;
 
@@ -95,6 +95,6 @@ public class HtmlCleanupFilter implements Filter
         sw.close();
         br.close();
        
-        return sw.getBuffer().toString();
+        return inBody ? sw.getBuffer().toString() : text;
       }
   }
