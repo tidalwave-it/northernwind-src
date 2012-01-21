@@ -19,12 +19,22 @@
     
     <dependencies>
         <dependency>
-            <artifactId>it-tidalwave-util</artifactId>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util</artifactId>
             <exclusions>
                 <exclusion>
-                    <artifactId>org-slf4j-jdk14</artifactId>
                     <groupId>com.kenai.nbpwr</groupId>
+                    <artifactId>org-slf4j-jdk14</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-messagebus</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.kenai.nbpwr</groupId>
+                    <artifactId>org-slf4j-jdk14</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -33,8 +43,8 @@
             <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
             <exclusions>
                 <exclusion>
-                    <artifactId>org-slf4j-jdk14</artifactId>
                     <groupId>com.kenai.nbpwr</groupId>
+                    <artifactId>org-slf4j-jdk14</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
