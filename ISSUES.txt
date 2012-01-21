@@ -1,0 +1,1 @@
+NW-70: 		Make it possible to ignore some folders (such as .hg). They can also cause problems since file names aren't necessarily properly urlencoded.
