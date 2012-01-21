@@ -6,3 +6,7 @@ NW-71:		Add a HtmlCleanupFilter that accepts HTML documents with full <html> and
 1.0-ALPHA-12
 
 NW-72:		HtmlCleanUpFilter must be deactivated for some resources (e.g. full page templates).
+
+1.0-ALPHA-13
+
+NW-73:		slf4j binding for jdk14 is erroneously included and causes a StackOverflowError at boot.
