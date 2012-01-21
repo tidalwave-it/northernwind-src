@@ -56,7 +56,7 @@ public class NodeLinkMacroExpanderTest extends MacroExpanderTestSupport
       {
         final NodeLinkMacroExpanderFixture fixture = new NodeLinkMacroExpanderFixture();
         final String text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
-        fixture.filter(text);
+        fixture.filter(text, "text/html");
         final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(Arrays.asList("/Blog")));
@@ -66,7 +66,7 @@ public class NodeLinkMacroExpanderTest extends MacroExpanderTestSupport
     public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected) 
       {
         final NodeLinkMacroExpander fixture = context.getBean(NodeLinkMacroExpander.class);
-        final String filtered = fixture.filter(text);
+        final String filtered = fixture.filter(text, "text/html");
         
         assertThat(filtered, is(expected));
       }

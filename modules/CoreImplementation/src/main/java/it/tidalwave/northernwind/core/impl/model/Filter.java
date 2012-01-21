@@ -35,5 +35,5 @@ public interface Filter
     public static final Class<Filter> Filter = Filter.class;
     
     @Nonnull
-    public String filter (@Nonnull String text);
+    public String filter (@Nonnull String text, @Nonnull String mimeType);
   }

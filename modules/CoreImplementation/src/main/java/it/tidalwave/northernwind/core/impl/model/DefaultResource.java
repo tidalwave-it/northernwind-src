@@ -115,7 +115,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         final FileObject propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
         
-        return macroExpander.get().filter(propertyFile.asText());
+        return macroExpander.get().filter(propertyFile.asText(), propertyFile.getMIMEType());
       }  
     
     /*******************************************************************************************************************

@@ -37,7 +37,7 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
  *
  **********************************************************************************************************************/
 @Configurable
-public class FilterSetExpander 
+public class FilterSetExpander implements Filter
   {
     @Inject @Nonnull 
     private List<Filter> filters;
@@ -48,8 +48,8 @@ public class FilterSetExpander
         Collections.sort(filters, new AnnotationAwareOrderComparator());
       }
     
-    @Nonnull
-    public String filter (final @Nonnull String text) 
+    @Override @Nonnull
+    public String filter (final @Nonnull String text, final @Nonnull String mimeType) 
       {
 //        // FIXME: do this with StringTemplate - remember to escape $'s in the source
 //        final String c = site.getContextPath();
@@ -60,7 +60,7 @@ public class FilterSetExpander
         
         for (final Filter filter : filters)
           {
-            result = filter.filter(result);
+            result = filter.filter(result, mimeType);
           }
         
         return result;

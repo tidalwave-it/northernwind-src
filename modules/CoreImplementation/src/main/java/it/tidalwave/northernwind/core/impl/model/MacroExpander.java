@@ -27,10 +27,10 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -54,7 +54,7 @@ public class MacroExpander implements Filter
       }
     
     @Override @Nonnull
-    public String filter (final @Nonnull String text)
+    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
         final Matcher matcher = pattern.matcher(text);
         final StringBuffer buffer = new StringBuffer();
