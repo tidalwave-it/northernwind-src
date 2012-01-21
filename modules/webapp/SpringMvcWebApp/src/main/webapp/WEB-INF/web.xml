@@ -2,7 +2,7 @@
 <!--********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2011 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -18,7 +18,7 @@
  ***********************************************************************************************************************
  *
  * WWW: http://northernwind.java.net
- * SCM: http://java.net/hg/northernwind~src
+ * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  ********************************************************************************************************************-->
 <web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
