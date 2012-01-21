@@ -28,8 +28,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.eventbus.EventBus;
-import it.tidalwave.eventbus.EventBusListener;
+import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.Site;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +48,10 @@ public class SiteResetterOnFileSystemChange
     @Inject @Nonnull
     private Site site;  
     
-    @Inject @Named("applicationEventBus") @Nonnull
-    private EventBus eventBus;
+    @Inject @Named("applicationMessageBus") @Nonnull
+    private MessageBus messageBus;
     
-    private final EventBusListener<FileSystemChangedEvent> listener = new EventBusListener<FileSystemChangedEvent>() 
+    private final Listener<FileSystemChangedEvent> listener = new Listener<FileSystemChangedEvent>() 
       {
         @Override
         public void notify (final @Nonnull FileSystemChangedEvent event) 
@@ -79,6 +79,6 @@ public class SiteResetterOnFileSystemChange
     /* package */ void initialize()
       {
         log.info("SiteResetterOnFileSystemChange installed");
-        eventBus.subscribe(FileSystemChangedEvent.class, listener);            
+        messageBus.subscribe(FileSystemChangedEvent.class, listener);            
       }
   }

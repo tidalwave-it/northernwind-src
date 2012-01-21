@@ -52,8 +52,8 @@
     <bean id="roleManager"
           class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
           
-    <!-- EventBus stuff -->
-    <bean id="applicationEventBusTaskExecutor" 
+    <!-- MessageBus stuff -->
+    <bean id="applicationMessageBusTaskExecutor" 
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
           autowire-candidate="false">
         <property name="corePoolSize" value="${nw.eventBus.context.corePoolSize}" />
@@ -61,7 +61,7 @@
         <property name="queueCapacity" value="${nw.eventBus.context.queueCapacity}" />
     </bean>
 
-    <bean id="sessionEventBusTaskExecutor" 
+    <bean id="sessionMessageBusTaskExecutor" 
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
           autowire-candidate="false">
         <property name="corePoolSize" value="${nw.eventBus.session.corePoolSize}" />
@@ -69,15 +69,15 @@
         <property name="queueCapacity" value="${nw.eventBus.session.queueCapacity}" />
     </bean>
 
-    <bean id="applicationEventBus" 
-          class="it.tidalwave.eventbus.impl.spring.SpringEventBus" >
-        <property name="taskExecutor" ref="applicationEventBusTaskExecutor"/>
+    <bean id="applicationMessageBus" 
+          class="it.tidalwave.messagebus.impl.spring.SpringMessageBus">
+        <property name="taskExecutor" ref="applicationMessageBusTaskExecutor"/>
     </bean>
 
-    <bean id="sessionEventBus" 
-          class="it.tidalwave.eventbus.impl.spring.SpringEventBus"
+    <bean id="sessionMessageBus" 
+          class="it.tidalwave.messagebus.impl.spring.SpringMessageBus"
           scope="session">
-        <property name="taskExecutor" ref="sessionEventBusTaskExecutor"/>
+        <property name="taskExecutor" ref="sessionMessageBusTaskExecutor"/>
     </bean>
     
     <!-- Core objects -->

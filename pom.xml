@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>1.6</version>
+        <version>1.11</version>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
@@ -25,14 +25,14 @@
         <javax.servlet-api.version>2.5</javax.servlet-api.version>
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
         <org.springframework.version>3.0.5.RELEASE</org.springframework.version>
-        <openbluesky.version>0.12</openbluesky.version>
-        <thesefoolishthings.version>1.17.1</thesefoolishthings.version>
-        <netbeans.version>RELEASE691</netbeans.version>
+        <openbluesky.version>0.15</openbluesky.version>
+        <thesefoolishthings.version>1.19</thesefoolishthings.version>
+        <netbeans.version>RELEASE71</netbeans.version>
         <slf4j.version>1.6.1</slf4j.version>
         <logback.version>0.9.28</logback.version>
         <jersey.version>1.8</jersey.version>
         <javax-ws-rs.version>1.1.1</javax-ws-rs.version>
-        <tft.lombok.version>0.10.0</tft.lombok.version>
+        <tft.lombok.version>0.10.6</tft.lombok.version>
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
 

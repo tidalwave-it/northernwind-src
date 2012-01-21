@@ -37,7 +37,7 @@ import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.JarFileSystem;
-import it.tidalwave.eventbus.EventBus;
+import it.tidalwave.messagebus.MessageBus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -64,8 +64,8 @@ public class ZipFileSystemProvider implements FileSystemProvider
     
     private DateTime latestModified;
     
-    @Inject @Named("applicationEventBus")
-    private EventBus eventBus;
+    @Inject @Named("applicationMessageBus")
+    private MessageBus messageBus;
     
     private final Timer timer = new Timer("ZipFileSystemProvider.modificationTracker"); 
             
@@ -105,7 +105,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
                     latestModified = timestamp;  
                     changeWasDetected = false;
                     log.info("Detected stable change of {}: last modified time: {}", zipFile, latestModified);
-                    eventBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+                    messageBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
                   }
               }
           }

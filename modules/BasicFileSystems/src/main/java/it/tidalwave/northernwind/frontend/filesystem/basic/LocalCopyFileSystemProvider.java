@@ -34,8 +34,8 @@ import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
-import it.tidalwave.eventbus.EventBus;
-import it.tidalwave.eventbus.EventBusListener;
+import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.messagebus.MessageBus.Listener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -60,14 +60,14 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
     
     private LocalFileSystemProvider targetProvider = new LocalFileSystemProvider();
     
-    @Inject @Named("applicationEventBus") @Nonnull
-    private EventBus eventBus;
+    @Inject @Named("applicationMessageBus") @Nonnull
+    private MessageBus messageBus;
     
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    private final EventBusListener<FileSystemChangedEvent> sourceProviderChangeListener = new EventBusListener<FileSystemChangedEvent>() 
+    private final Listener<FileSystemChangedEvent> sourceProviderChangeListener = new Listener<FileSystemChangedEvent>() 
       {
         @Override
         public void notify (final @Nonnull FileSystemChangedEvent event) 
@@ -78,7 +78,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
                   {
                     log.info("Detected file change, regenerating local file system...");
                     generateLocalFileSystem();
-                    eventBus.publish(new FileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
+                    messageBus.publish(new FileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
                   }
                 catch (IOException e) 
                   {
@@ -110,7 +110,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
       {
         log.info("initialize()");
         generateLocalFileSystem();
-        eventBus.subscribe(FileSystemChangedEvent.class, sourceProviderChangeListener);            
+        messageBus.subscribe(FileSystemChangedEvent.class, sourceProviderChangeListener);            
       }
     
     /*******************************************************************************************************************
