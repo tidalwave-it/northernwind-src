@@ -81,17 +81,31 @@ public class ExternalConfigurationServletContextListener implements ServletConte
       {  
         final File file = new File(configurationFile);
         
-        if (!file.exists())
+        if (Boolean.getBoolean("nw.useSystemProperties"))
           {
-            log(file.getAbsolutePath() + " does not exist");
+            log("Using system properties, ignoring any configuration file");
+            
+            final Properties properties = new Properties();
+            
+            for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(System.getProperties()).entrySet())
+              {
+                final Object propertyName = entry.getKey();
+                final Object propertyValue = entry.getValue();
+                
+                if (((String)propertyName).startsWith("nw."))
+                  {
+                    properties.put(propertyName, propertyValue);
+                  }
+
+                loadProperties(servletContext, properties);
+              }
           }
-        else
+        else if (file.exists())
           {
             try
               {                
                 final Properties properties = loadProperties(configurationFile);
-                copyPropertiesToServletContextAttributes(properties, servletContext);                
-                servletContext.setAttribute("nwcontextConfigLocation", computeConfigLocation(properties));
+                loadProperties(servletContext, properties);
               }
             catch (IOException e)
               {
@@ -99,6 +113,16 @@ public class ExternalConfigurationServletContextListener implements ServletConte
                 e.printStackTrace(); // FIXME  
               }
           }
+        else
+          {
+            log(file.getAbsolutePath() + " does not exist");
+          }
+      }
+    
+    protected void loadProperties (final @Nonnull ServletContext servletContext, final @Nonnull Properties properties)
+      {
+        copyPropertiesToServletContextAttributes(properties, servletContext);                
+        servletContext.setAttribute("nwcontextConfigLocation", computeConfigLocation(properties));
       }
     
     /*******************************************************************************************************************

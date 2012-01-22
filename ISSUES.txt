@@ -33,3 +33,7 @@ NW-72:		HtmlCleanUpFilter must be deactivated for some resources (e.g. full page
 1.0-ALPHA-13
 
 NW-73:		slf4j binding for jdk14 is erroneously included and causes a StackOverflowError at boot.
+
+1.0-ALPHA-14
+
+NW-74:		Make it possible to boot only with system properties, without using any configuration file.
