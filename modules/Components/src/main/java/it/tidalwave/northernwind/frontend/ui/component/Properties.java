@@ -40,9 +40,9 @@ public final class Properties
     
     public static final Key<String> PROPERTY_DESCRIPTION = new Key<String>("description");
     
-    public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("fullText.html");
+    public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("fullText.xhtml");
     
-    public static final Key<String> PROPERTY_TEMPLATE = new Key<String>("template.html");
+    public static final Key<String> PROPERTY_TEMPLATE = new Key<String>("template.xhtml");
     // FIXME: those should be Key<DateTime>
     public static final Key<String> PROPERTY_CREATION_DATE = new Key<String>("creationDateTime"); 
     

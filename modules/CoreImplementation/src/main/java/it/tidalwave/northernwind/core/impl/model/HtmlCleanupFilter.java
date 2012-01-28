@@ -48,7 +48,7 @@ public class HtmlCleanupFilter implements Filter
       {
         try
           {
-            return mimeType.equals("text/html") ? formatHtml(text) : text;
+            return mimeType.equals("text/html") || mimeType.equals("application/xhtml+xml") ? formatHtml(text) : text;
           }
         catch (IOException e)
           {

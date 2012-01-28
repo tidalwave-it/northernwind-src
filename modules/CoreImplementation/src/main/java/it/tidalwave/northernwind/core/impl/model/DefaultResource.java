@@ -29,6 +29,7 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.io.InputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
@@ -114,8 +115,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         
         final FileObject propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
+        final String charset = propertyFile.getMIMEType().equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
         
-        return macroExpander.get().filter(propertyFile.asText(), propertyFile.getMIMEType());
+        return macroExpander.get().filter(propertyFile.asText(charset), propertyFile.getMIMEType());
       }  
     
     /*******************************************************************************************************************
@@ -158,6 +160,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     private FileObject findLocalizedFile (final @Nonnull String fileName)
       throws NotFoundException
       {
+        log.trace("findLocalizedFile({})", fileName);
         FileObject localizedFile = null;
         final StringBuilder fileNamesNotFound = new StringBuilder();
         String separator = "";
@@ -166,6 +169,11 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
           {
             final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
             localizedFile = file.getFileObject(localizedFileName);
+            
+            if ((localizedFile == null) && localizedFileName.endsWith(".xhtml"))
+              {
+                localizedFile = file.getFileObject(localizedFileName.replaceAll("\\.xhtml$", ".html"));
+              }
             
             if (localizedFile != null)
               {
