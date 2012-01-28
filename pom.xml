@@ -239,6 +239,7 @@
                         <exclude>**/*.orig</exclude>
                         <exclude>**/.description</exclude>
                         <exclude>**/main/resources/**/*.txt</exclude>
+                        <exclude>**/src/test/resources/**/*.xhtml</exclude>
                         <exclude>.hgtags</exclude>
                         <exclude>.hgignore</exclude>
                         <exclude>**/activate-*-profile</exclude>
