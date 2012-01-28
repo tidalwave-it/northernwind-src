@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,8 +40,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.annotation.Order;
 import static org.springframework.core.Ordered.*;
+import org.stringtemplate.v4.ST;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -59,6 +63,25 @@ public class XsltMacroFilter implements Filter
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    
+    private String xslt = "";
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    public void initialize()
+      throws IOException
+      {
+        final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/XsltTemplate.xslt"));
+        ST t = new ST(template, '$', '$');
+        
+        final File f = new File("/Users/fritz/Business/Tidalwave/Projects/WorkAreas/NorthernWind/northernwind-src/modules/CoreImplementation/src/test/resources/it/tidalwave/northernwind/core/impl/model/xsltMacro1.xslt");
+
+        t = t.add("content", FileUtils.readFileToString(f));
+  
+        xslt = t.render();
+      }
             
     /*******************************************************************************************************************
      *
@@ -74,13 +97,11 @@ public class XsltMacroFilter implements Filter
         
         try
           {
-            final Node document = stringToNode(text);
-                    
-            final Source transformation = new StreamSource(new File("/Users/fritz/Business/Tidalwave/Projects/WorkAreas/NorthernWind/northernwind-src/modules/CoreImplementation/src/test/resources/it/tidalwave/northernwind/core/impl/model/xsltMacro1.xslt"));
+            final Source transformation = new StreamSource(new StringReader(xslt));
             final Transformer transformer = transformerFactory.newTransformer(transformation); 
             final StringWriter stringWriter = new StringWriter();
             final Result result = new StreamResult(stringWriter);
-            transformer.transform(new DOMSource(document), result); 
+            transformer.transform(new DOMSource(stringToNode(text)), result); 
             return stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)
@@ -107,6 +128,9 @@ public class XsltMacroFilter implements Filter
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private Node stringToNode (final @Nonnull String string) 
       throws IOException, SAXException, ParserConfigurationException 

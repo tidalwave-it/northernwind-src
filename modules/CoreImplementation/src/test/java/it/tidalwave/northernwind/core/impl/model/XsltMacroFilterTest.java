@@ -45,8 +45,10 @@ public class XsltMacroFilterTest
     
     @BeforeMethod
     public void setupFixture()
+      throws Exception
       {
         fixture = new XsltMacroFilter();  
+        fixture.initialize();
       }
     
     @Test
