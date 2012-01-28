@@ -42,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import static org.springframework.core.Ordered.*;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -54,6 +55,10 @@ import org.xml.sax.SAXException;
 @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class XsltMacroFilter implements Filter
   {
+    private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        
+    private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -68,13 +73,8 @@ public class XsltMacroFilter implements Filter
         
         try
           {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setValidating(false);
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            final InputSource source = new InputSource(new StringReader(text));
-            final Document document = builder.parse(source);
+            final Node document = stringToNode(text);
                     
-            final TransformerFactory transformerFactory = TransformerFactory.newInstance();
             final Source transformation = new StreamSource(new File("/Users/fritz/Business/Tidalwave/Projects/WorkAreas/NorthernWind/northernwind-src/modules/CoreImplementation/src/test/resources/it/tidalwave/northernwind/core/impl/model/xsltMacro1.xslt"));
             final Transformer transformer = transformerFactory.newTransformer(transformation); 
             final StringWriter stringWriter = new StringWriter();
@@ -98,5 +98,16 @@ public class XsltMacroFilter implements Filter
           {
             throw new RuntimeException(e);
           }
+      }
+
+    @Nonnull
+    private Node stringToNode (final @Nonnull String string) 
+      throws IOException, SAXException, ParserConfigurationException 
+      {
+        factory.setValidating(false);
+        final DocumentBuilder builder = factory.newDocumentBuilder();
+        final InputSource source = new InputSource(new StringReader(string));
+        final Document document = builder.parse(source);
+        return document;
       }
   }
