@@ -35,7 +35,7 @@ public class LibraryLinkMacroExpander extends MacroExpander
   {
     public LibraryLinkMacroExpander()
       {
-        super("\\$libraryLink\\(relativePath='(.*)'\\)\\$");
+        super("\\$libraryLink\\(relativePath='([^']*)'\\)\\$");
       } 
     
     @Override @Nonnull

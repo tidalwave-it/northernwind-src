@@ -35,7 +35,7 @@ public class MediaLinkMacroExpander extends MacroExpander
   {
     public MediaLinkMacroExpander()
       {
-        super("\\$mediaLink\\(relativePath='(.*)'\\)\\$");
+        super("\\$mediaLink\\(relativePath='([^']*)'\\)\\$");
       } 
     
     @Override @Nonnull
