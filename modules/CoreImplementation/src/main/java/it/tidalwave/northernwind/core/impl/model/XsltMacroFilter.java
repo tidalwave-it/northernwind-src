@@ -45,6 +45,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /***********************************************************************************************************************
  *
@@ -81,6 +82,12 @@ public class XsltMacroFilter implements Filter
             final Result result = new StreamResult(stringWriter);
             transformer.transform(new DOMSource(document), result); 
             return stringWriter.toString();
+          }
+        catch (SAXParseException e)
+          {
+            log.error("XML parse error: {} at l{}:c{}", new Object[] { e.getMessage(), e.getLineNumber(), e.getColumnNumber() });
+            log.error(text);
+            throw new RuntimeException(e);
           }
         catch (IOException e)
           {

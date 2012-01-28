@@ -18,7 +18,8 @@
                 <xsl:attribute name="rel">lightbox</xsl:attribute>
                 <xsl:attribute name="href">$mediaLink(relativePath='/stillimages/1280/<xsl:value-of select="p[@class='nwXsltMacro.Photo.photoId']"/>.jpg')$</xsl:attribute>
                 <xsl:element name="img">
-                    <xsl:attribute name="href">$mediaLink(relativePath='/stillimages/800/<xsl:value-of select="p[@class='nwXsltMacro.Photo.photoId']"/>.jpg')$</xsl:attribute>
+                    <xsl:attribute name="src">$mediaLink(relativePath='/stillimages/800/<xsl:value-of select="p[@class='nwXsltMacro.Photo.photoId']"/>.jpg')$</xsl:attribute>
+                    <xsl:attribute name="class">framedPhoto</xsl:attribute>
                 </xsl:element>
             </xsl:element>
             <xsl:element name="p">

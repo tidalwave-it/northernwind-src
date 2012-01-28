@@ -69,7 +69,7 @@ public class XsltMacroFilterTest
         
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml", fileName));
         final File actualFile = new File(String.format("target/test-artifacts/%s-filtered.xhtml", fileName));
-        actualFile.getParentFile().mkdir();
+        actualFile.getParentFile().mkdirs();
         FileUtils.write(actualFile, result);
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
