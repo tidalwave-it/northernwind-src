@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteFinder;
@@ -139,12 +141,7 @@ import lombok.ToString;
                 throw new IllegalArgumentException("Illegal type");  
               }
         
-            final Type result = mapByRelativePath.get(relativePath);
-            
-            if (result != null)
-              {
-                results.add(result);  
-              }
+            addResults(results, mapByRelativePath, relativePath);
           }
         
         else if (relativeUri != null)
@@ -154,13 +151,9 @@ import lombok.ToString;
                 throw new IllegalArgumentException("Illegal type");  
               }
         
-            final Type result = mapByRelativeUri.get(relativeUri);
-            
-            if (result != null)
-              {
-                results.add(result);  
-              }
+            addResults(results, mapByRelativeUri, relativeUri);
           }
+        
         else
           {
             results.addAll(mapByRelativePath.values());  
@@ -168,7 +161,7 @@ import lombok.ToString;
         
         return results;
       }
-        
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -180,6 +173,40 @@ import lombok.ToString;
         for (final Type object : results())
           {
             predicate.run(object);    
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static <Type> void addResults (final @Nonnull List<Type> results, 
+                                           final @Nonnull Map<String, Type> map,
+                                           final @Nonnull String string)
+      {
+        if (!string.contains("*")) // FIXME: better way to guess a regexp
+          {
+            final Type result = map.get(string);
+
+            if (result != null)
+              {
+                results.add(result);  
+              }
+          }
+        
+        else
+          {
+            final Pattern pattern = Pattern.compile(string);
+
+            for (final Entry<String, Type> entry : map.entrySet())
+              {
+                if (pattern.matcher(entry.getKey()).matches())
+                  {
+                    results.add(entry.getValue());  
+                  }
+              }   
           }
       }
   }

@@ -22,17 +22,25 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.openide.filesystems.FileObject;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.util.test.FileComparisonUtils;
-import javax.annotation.Nonnull;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /***********************************************************************************************************************
  *
@@ -43,12 +51,27 @@ public class XsltMacroFilterTest
   {
     private XsltMacroFilter fixture;
     
+    private Site site;
+    
     @BeforeMethod
     public void setupFixture()
       throws Exception
       {
-        fixture = new XsltMacroFilter();  
-        fixture.initialize();
+        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
+        site = applicationContext.getBean(Site.class);
+        
+        final FileObject fileObject = mock(FileObject.class);
+        final String xslt = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/Photo.xslt"));
+        when(fileObject.asText(anyString())).thenReturn(xslt);
+        
+        final Resource resource = mock(Resource.class);
+        when(resource.getFile()).thenReturn(fileObject);
+        
+        final Map<String, Resource> map = new HashMap<String, Resource>();
+        map.put("/XsltTemplates/Photo.xlst", resource);
+        when(site.find(eq(Resource.class))).thenReturn(new DefaultSiteFinder<Resource>("name", map, new RegexTreeMap<Resource>()));
+        
+        fixture = applicationContext.getBean(XsltMacroFilter.class);  
       }
     
     @Test
@@ -66,7 +89,6 @@ public class XsltMacroFilterTest
       throws IOException
       {
         final String text = IOUtils.toString(getClass().getResourceAsStream(String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName)));
-        
         final String result = fixture.filter(text, "application/xhtml+xml");
         
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml", fileName));

@@ -22,12 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.io.File;
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,17 +44,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.annotation.Order;
-import static org.springframework.core.Ordered.*;
 import org.stringtemplate.v4.ST;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.springframework.core.annotation.Order;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteFinder;
+import lombok.extern.slf4j.Slf4j;
+import org.openide.filesystems.FileObject;
+import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************
  *
@@ -57,12 +61,17 @@ import org.xml.sax.SAXParseException;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Order(HIGHEST_PRECEDENCE) @Slf4j
+@Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class XsltMacroFilter implements Filter
   {
+    private static final String XSLT_TEMPLATES_PATH = "/XsltTemplates/.*";
+
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    
+    @Inject
+    private Site site;
     
     private String xslt = "";
     
@@ -73,13 +82,19 @@ public class XsltMacroFilter implements Filter
     public void initialize()
       throws IOException
       {
+        log.info("Retrieving XSLT templates");
         final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/XsltTemplate.xslt"));
-        ST t = new ST(template, '$', '$');
+        final StringBuilder xsltBuffer = new StringBuilder();
+        SiteFinder<Resource> find = site.find(Resource.class);
         
-        final File f = new File("/Users/fritz/Business/Tidalwave/Projects/WorkAreas/NorthernWind/northernwind-src/modules/CoreImplementation/src/test/resources/it/tidalwave/northernwind/core/impl/model/xsltMacro1.xslt");
-
-        t = t.add("content", FileUtils.readFileToString(f));
-  
+        for (final Resource resource : site.find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
+          {
+            final FileObject file = resource.getFile();
+            log.info(">>>> /{}", file.getPath());
+            xsltBuffer.append(file.asText("UTF-8")); 
+          }
+        
+        final ST t = new ST(template, '$', '$').add("content", xsltBuffer.toString());
         xslt = t.render();
       }
             
