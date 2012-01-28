@@ -61,8 +61,17 @@ public class MacroExpander implements Filter
         
         while (matcher.find())
           {
-            matcher.appendReplacement(buffer, doFilter(matcher));
-          }
+            final String filtered = doFilter(matcher);
+            try
+              {
+                matcher.appendReplacement(buffer, filtered);
+              }
+            catch (IllegalArgumentException e) // better diagnostics
+              {
+                throw new IllegalArgumentException(String.format("Pattern error: %s regexp: %s\n**** filtered: %s\n**** buffer: %s", 
+                                                   e.getMessage(), pattern.pattern(), filtered, buffer));
+              }
+          }   
         
         matcher.appendTail(buffer);
         
