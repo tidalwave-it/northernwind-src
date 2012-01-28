@@ -29,8 +29,10 @@ import org.apache.commons.io.IOUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.util.test.FileComparisonUtils;
+import javax.annotation.Nonnull;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -57,18 +59,24 @@ public class XsltMacroFilterTest
         assertThat(result, is(text));
       }
     
-    @Test
-    public void must_filter_XHTML_resources()
+    @Test(dataProvider="fileNames")
+    public void must_filter_XHTML_resources (final @Nonnull String fileName)
       throws IOException
       {
-        final String text = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/file1.xhtml"));
+        final String text = IOUtils.toString(getClass().getResourceAsStream(String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName)));
         
         final String result = fixture.filter(text, "application/xhtml+xml");
         
-        final File expectedFile = new File("src/test/resources/expected-results/file1-filtered.xhtml");
-        final File actualFile = new File("target/test-artifacts/file1-filtered.xhtml");
+        final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml", fileName));
+        final File actualFile = new File(String.format("target/test-artifacts/%s-filtered.xhtml", fileName));
         actualFile.getParentFile().mkdir();
         FileUtils.write(actualFile, result);
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
-}
+    
+    @DataProvider(name="fileNames")
+    public Object[][] fileNamesProvider()
+      {
+        return new Object[][] {{ "file1" }, { "file2" }};
+      }
+  }

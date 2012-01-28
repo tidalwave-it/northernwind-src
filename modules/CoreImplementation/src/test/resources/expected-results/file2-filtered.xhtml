@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <body>
+    <div class="right-note">
+<em>Edited on January 21, 2012.</em>
+</div>
+    <p>
+<span class="firstLetter">O</span>ne of the things that most casual photographers don't get is <a href="http://en.wikipedia.org/wiki/Color_management">color
+        management</a>. What's the matter? Well, if you are the only person looking at your photos - or, better, your
+      photos are only shown through a single appliance - and you don't look at others' photos, there's no issue. If you
+      use multiple devices, publish your photos to the web, send them to a print lab or look at others' works, you have
+      a problem. The fact is that the culture behind home computers and TV appliances has spread the false notion that a
+      color on a display can be described as a simple triplet of numbers, the famous <a href="http://en.wikipedia.org/wiki/RGB_color_model">RGB</a>
+      values. This is only partially true: yes, displays render colors by means of those three values, but a given RGB
+      triplet won't render the same color in two different displays, or a display and a print. First, for displays,
+      rendered colors depend also on the settings of the device (e.g. brightness, contrast, saturation, etc...), but
+      above all different models are capable of rendering different ranges of colors (technically called <a href="http://en.wikipedia.org/wiki/Gamut">
+<em>
+          gamut</em>
+</a>). This means that if you don't consider color management, that fantastic RGB value that renders
+      the garden grass so good on your monitor will appear different in every other display. Not to mention your
+      printing lab: if you don't cope with color management in the proper fashion, there's no way to get your prints
+      without an annoying color cast. The problem, indeed, started even at a prior step, since even the RGB values in a
+      digital photo file are relative to the camera capabilities, so perhaps you're blaming your camera for producing
+      poor colors, while it's your monitor. Sure, you can postprocess your photo with an editing software until it looks
+      good on your display, but other people will see the results of your editing in a different way.</p>
+    <div xmlns="" align="center">
+<a title="Saturated primary colors and white in this photo from Zurich." rel="lightbox" href="$mediaLink(relativePath='/stillimages/1280/20070624-0047.jpg')$">
+<img href="$mediaLink(relativePath='/stillimages/800/20070624-0047.jpg')$"/>
+</a>
+<p class="caption">Saturated primary colors and white in this photo from Zurich.</p>
+</div>
+    <p> There is a number of excellent technical introductions to color calibration and the science behind it. Here I'd
+      only like to give a fundamental recap for practical purposes. </p>
+    <h4>Where do colors come from</h4>
+    <p>First, color is related to <a href="http://en.wikipedia.org/wiki/Light">
+<em>light</em>
+</a>, which is
+      electromagnetic radiation, whose main property is the <em>frequency</em> (or the related <a href="http://en.wikipedia.org/wiki/Wavelength">
+<em>wavelength</em>
+</a>).
+      The so-called <em>rainbow colors</em> are the range of all the kinds of visible light which is <em>monochromatic</em>,
+      that is composed by a single radiation with a given frequency. In practice, pure monochromatic colors seldom occur
+      (basically, only in laser emitters), while an everyday color is made by a mixture of different frequencies and a
+      physicist would describe it with a <a href="http://en.wikipedia.org/wiki/Visible_spectrum">
+<em>spectrum</em>
+</a>,
+      a diagram that tells us the relative distribution of different light frequencies in a given measurement.</p>
+    <p> But we're talking about photos, thus how a human being perceives things. Perception is related to physics, but
+      by means of an indirection layer. It happens that our eyes are composed by three kinds of receptor cells, that are
+      sensible to three different wavelengths (roughly red, green and blue). This means that if we want to describe a
+      perceived color in a unique and unambiguous way we must use values representing the stimuli of the receptor cells.
+      Ignoring the slight differences of perception among individuals (and pathologies too), experts have defined a
+      standard set of coordinates to represent those stimuli: the <a href="http://en.wikipedia.org/wiki/CIE_1931_color_space">
+<em>CIE
+          1931 XYZ space</em>
+</a> (for practical purposes experts have defined also alternate perceptual spaces which
+      are equivalent, but for simplicity we can just refer to XYZ). </p>
+    <div align="center"> <img alt="" class="framedPhoto" src="$mediaLink(relativePath='/graphics/325px-CIE_1931_XYZ_Color_Matching_Functions.svg.png')$"/> <img alt="" class="framedPhoto" src="$mediaLink(relativePath='/graphics/300px-CIExy1931.png')$"/>
+      <p class="caption">The responses to wavelength of human eye receptors (as defined by the CIE standard observer)
+        and the CIE 1931 xyY color space (seen in two dimensions), a close relative of the XYZ color space. The colored
+        area is known as the "chromaticity diagram": everything inside it is a perceivable color (courtesy of Wikimedia
+        Commons).</p>
+    </div>
+    <h4>There's white and white</h4>
+    <p>There's a further point to deal with, the notion of white. <a href="http://en.wikipedia.org/wiki/White">
+<em>White
+          color</em>
+</a> is defined as the brightest possible light perception and for human beings living on the Earth
+      the natural brightest light source is the sun. So, perceptually talking, the sun is white (beware that an
+      astronomer classifies it in a different way) and it's extremely stable. It apparently changes color through the
+      day because of the relative position to the atmosphere, with the brightest light occurring around noon. From a
+      physical point of view, the sun emits light because it's hot, and physics relates that kind of thermal light
+      emission to the surface temperature. That's why white quality is referred as <a href="http://en.wikipedia.org/wiki/Color_temperature">
+<em>color
+          temperature</em>
+</a> and is measured in Kelvin degrees, usually between 5000K and 6500K. Lower temperatures
+      are called "warm" or "reddish" whites, upper temperatures are called "cool" or "bluish" whites (note that warm and
+      cool are referred in the opposite way as in our general culture that associates blue with ice or fresh water).</p>
+    <p> Things are not so easy, though, because the human vision is capable of <a href="http://en.wikipedia.org/wiki/Chromatic_adaptation">
+<em>chromatic
+          adaptation</em>
+</a>: it's more a brain than eye thing and it involves identifying objects. For instance, we
+      identify a red apple under the sunlight and we will still identify it as red when it's lighted in a different way.
+      Furthermore, we tend to mentally define as "white" the brightest color in a scene after a given time, so when we
+      are at home in the evening we'll designate as white the color of a lightbulb, which is very different than the
+      sun, and appropriately compensate the perception of the object colors lighted by that lightbulb. </p>
+        <div xmlns="" align="center">
+<a title="This little white-egret has been shot with a complex lighting environment: backlighted by the&#10;        late-afternoon sun, with a flash to fill shadows. These two light sources have different color temperatures, so&#10;        the parts lighted by the sun look slightly warmer. Great care has been done during post-processing to preserve&#10;        this subtleness, but if you look through a monitor which is not properly profiled the effect is likely to be&#10;        destroyed." rel="lightbox" href="$mediaLink(relativePath='/stillimages/1280/20050313-0354.jpg')$">
+<img href="$mediaLink(relativePath='/stillimages/800/20050313-0354.jpg')$"/>
+</a>
+<p class="caption">This little white-egret has been shot with a complex lighting environment: backlighted by the
+        late-afternoon sun, with a flash to fill shadows. These two light sources have different color temperatures, so
+        the parts lighted by the sun look slightly warmer. Great care has been done during post-processing to preserve
+        this subtleness, but if you look through a monitor which is not properly profiled the effect is likely to be
+        destroyed.</p>
+</div>
+    <p> Managing color temperature (also known as <em>white balancing</em>) is important, since the "warmness" of a
+      color has a relevant impact on how a photo is interpreted. Lack of or bad color management might render in a cool
+      way a sunset, which is supposed to give a warm feeling, or render warm a depiction of penguins on ice. To make
+      things even more complex, since a printed photo is always seen under an external lighting source, its perceived
+      color temperature can be very different in function of the ambient light. Given this mess, experts have defined
+      some standards to operate: the practice mandates that a printed photo is viewed under a light at 5000K (called
+      also D50), and not by chance in professional exhibitions the light bulbs are picked accordingly, while <a href="http://www.boscarol.com/blog/?p=8014">monitors
+        should be calibrated at 6500K</a> (D65). The difference in temperature compensates perceptual changes due to the
+      fact that a photo print relies on reflected light, while a monitor is self-illuminated. Following this practice,
+      in a properly profiled environment a photo viewed at 5000K will match in the best way its rendering on a screen
+      calibrated at 6500K. Note that if you want to print your photos for hanging on a wall at home, not an exhibit, it
+      might make more sense to measure the white point of the lights in the room and properly compensate the printing
+      rather than buy a set of 5000K lightbulbs, which are expensive and might not produce the best lighting environment
+      to live within.</p>
+    <h4>Calibration and characterization</h4>
+    <p>Given the previous premises, we can now describe what color management is. The first thing to do is <a href="http://en.wikipedia.org/wiki/Color_management#Calibration">
+<em>calibration</em>
+</a>,
+      that is to adjust the behavior of the monitor so its colors are rendered in a consistent fashion. For instance,
+      once one has set the white point, all the gray shades must appear "neutral", without color casts. Calibration
+      doesn't solve our problem yet, but prepares the monitor so the next steps will achieve better results.</p>
+    <p> The second thing to do is to define the gamut for the monitor, a process called <a href="http://en.wikipedia.org/wiki/Color_management#Characterization">
+<em>characterization</em>
+</a>,
+      together with a formula to convert the RGB values specific to the device to the universally valid XYZ and back to
+      the RGB values specific to another device. This makes it possible to consistently render the same color through a
+      number of different devices. This formula is part of a <em>color profile</em>, which in a computer is typically
+      an <a href="http://en.wikipedia.org/wiki/ICC_profile">ICC</a> file. The idea is that since RGB values are
+      relative to a device, a photo should always travel with an embedded profile, and any rendering device should have
+      its profile as well; this makes it possible to have that RGB(1) - XYZ - RGB(2) translation. Characterization is
+      meaningful for printing too, even though printers don't use RGB but other ways to create colors (<a href="http://en.wikipedia.org/wiki/CMYK_color_model">CMYK</a>).
+In
+      a perfect world, manufacturers would ship a working profile together with their monitor or printer, but in
+      practice they don't do that, or ship a profile which is extremely imprecise. It's also to be said that devices
+      slightly change their color capabilities with time, so you have to repeat the process every in a while, thus
+      having an initial factory profile probably doesn't make much sense. </p>
+    <h4>Rendering intents</h4>
+    <p>Once we have the conversion formula, we must realize that not every conversion is possible: for instance if we
+      try to render a photo with a wide gamut on a display with a narrower gamut. In this case some colors are  not
+      renderable and they are said <em>out-of-gamut</em>. Out-of-gamut colors can be handled in different ways (<a href="http://en.wikipedia.org/wiki/Color_management#Rendering_intent">
+<em>rendering
+          intents</em>
+</a>): for instance, a graphic designer wants to accurately preserve in-gamut colors such as in
+      brands and logos, at expense of clipping (burning) out-of-gamut colors, while a photographer usually prefers to do
+      some global adjustment to fit everything. Since gamuts are described by three coordinates, much like 3D objects in
+      real life, it helps visualizing them as physical objects (in the original XYZ space gamuts have got a very strange
+      shape, for this reason experts defined alternate equivalent spaces, such as L*a*b*, where shapes are simpler). So,
+      the problem of adapting an image to a device with a smaller gamut is analogous to the problem of fitting an object
+      into a smaller box: you can just clip exceeding parts (<em>relative colorimetric intent</em>, which replaces
+      clipped colors with the closest ones inside the target gamut, and visually will burn some colors), or
+      proportionally shrink the object, preserving its overall shape (<em>perceptual intent</em>). Images with colors
+      near or beyond the boundary of the target gamut (typically saturated colors) will be better handled by a
+      perceptual intent, partially changing most of the original hues in the whole photo, in order not to introduce burn
+      outs; images whose colors are within the target gamut (typically pastel colors) will be better handled with a
+      relative colorimetric intent which won't introduce any change in the perception.</p>
+    <div xmlns="" align="center">
+<a title="The Gordolasque River, Alpes-Maritimes, France. This scene depicts the quick transition between&#10;        light and shadow at sunset. Exposure and post-processing have been chosen in order to still perceive details of&#10;        the rocks in the shadow. Without a properly profiled monitor, shadow could look either completely black or&#10;        reveal too much." rel="lightbox" href="$mediaLink(relativePath='/stillimages/1280/20100910-0282.jpg')$">
+<img href="$mediaLink(relativePath='/stillimages/800/20100910-0282.jpg')$"/>
+</a>
+<p class="caption">The Gordolasque River, Alpes-Maritimes, France. This scene depicts the quick transition between
+        light and shadow at sunset. Exposure and post-processing have been chosen in order to still perceive details of
+        the rocks in the shadow. Without a properly profiled monitor, shadow could look either completely black or
+        reveal too much.</p>
+</div>
+    <h4>Standard gamuts</h4>
+    <p>There is a number of standard gamuts defined by the industry. The NTSC gamut is a very wide one used in
+      broadcasting (not to be confused with the NTSC scanline standard); <a href="http://en.wikipedia.org/wiki/ProPhoto_RGB_color_space">ProPhoto
+        RGB</a> is another very wide gamut, once uncommon, but made popular since it's the one used by Adobe Lightroom;
+      <a href="http://en.wikipedia.org/wiki/Adobe_RGB_color_space">Adobe RGB</a> is a very popular one with
+      professionals, smaller than NTSC or ProPhoto; <a href="http://en.wikipedia.org/wiki/SRGB_color_space">sRGB</a> is
+      an even smaller gamut for generic web rendering. <a href="http://www.brucelindbloom.com/index.html?WorkingSpaceInfo.html">Bruce
+        Lindbloom has got a more comprehensive list</a>, as well as an interactive 3D viewer (in L*a*b* coordinates).
+      The gamut of many consumer computer displays is definitely small - things have started to change only recently,
+      with "wide gamut" products (even in this case, quite a range of greens are left out). Clearly, the best things
+      happen when you use a monitor and printer capable of the largest possible gamuts and process the image with the
+      largest space available. While this in the past was the domain of expensive professional products, now things are
+      changing fast.</p>
+    <div align="center"> <img alt="" class="framedPhoto" src="$mediaLink(relativePath='/graphics/250px-CIExy1931_ProPhoto.png')$"/> <img alt="" class="framedPhoto" src="$mediaLink(relativePath='/graphics/250px-CIExy1931_AdobeRGB.png')$"/> <img alt="" class="framedPhoto" src="$mediaLink(relativePath='/graphics/250px-CIE1931xy_sRGB.svg.png')$"/>
+      <p class="caption">The ProPhoto RGB, the AdobeRGB and the sRGB gamuts shown in comparison to the CIE 1931
+        chromaticity diagram (courtesy of Wikimedia Commons).</p>
+    </div>
+    <h4>Profiling in practice</h4>
+    <p>The process for profiling a monitor needs a physical device, called <a href="http://en.wikipedia.org/wiki/Tristimulus_colorimeter">colorimeter</a>,
+      which is a sensor laid over the screen capable to measure colors. After suggesting the proper settings for the
+      monitor (that must not be changed), a specific software fills the monitor with a set of color patches (usually a
+      few hundreds) and measures them. With some mathematical computations, the software produces an ICC file which
+      contains both the calibration and the characterization. There are pieces of software that offers profiling without
+      a sensor, by relying instead on feedback from human observation, but don't trust them: they will inevitably lead
+      to inaccurate results. If you repeat the profiling process for all the rendering devices you own, you will be able
+      to see your photos in a way so that they match as much as possible (they will look identical in devices with the
+      same gamut). Of course, if you publish your photos to the web, you must invite people to seriously consider
+      calibration. If they don't, they won't see your work as they should, but at least they have been warned.</p>
+    <div xmlns="" align="center">
+<a title="Lavender field at Senanque. In my experience lavender can be a critical subject for the correct&#10;        reproduction of colors. Its violet tint can have or not a pinkish hue in function of the color temperature. I&#10;        needed a very long learning path to be able to properly calibrate both my laptop screen and the external monitor&#10;        so this and similar photos are rendered in the same way. I'm sure most people looking at my lavender photos on&#10;        the web with an uncalibrated monitor see something quite different from the original." rel="lightbox" href="$mediaLink(relativePath='/stillimages/1280/20060703-0060.jpg')$">
+<img href="$mediaLink(relativePath='/stillimages/800/20060703-0060.jpg')$"/>
+</a>
+<p class="caption">Lavender field at Senanque. In my experience lavender can be a critical subject for the correct
+        reproduction of colors. Its violet tint can have or not a pinkish hue in function of the color temperature. I
+        needed a very long learning path to be able to properly calibrate both my laptop screen and the external monitor
+        so this and similar photos are rendered in the same way. I'm sure most people looking at my lavender photos on
+        the web with an uncalibrated monitor see something quite different from the original.</p>
+</div>
+    <h4>The web is broken</h4>
+    <p>There are two other problems. Unfortunately most of smartphones and tablets, though they are more and more used
+      to render photos, lack any calibration software. But even the old plain web can be a problem, as most of the
+      current popular desktop browsers <a href="http://www.gballard.net/psd/go_live_page_profile/embeddedJPEGprofiles.html">can't
+        properly manage color profiles different than sRGB</a>. Unfortunately the noble art of photography undergoes a
+      sort of violence perpetrated by the consumer market ignorance. This means that in order to maximize the chances
+      that your photos are properly viewed by other people, including those who calibrated their monitors, you must
+      convert the published copy of your work to the sRGB color space that, being so small, will inevitably destroy part
+      of the subtle color hues that you might have. You can alternatively publish a second set of photos with a broader
+      space, such as AdobeRGB or ProPhoto RGB, to be enjoyed by people who not only have calibrated their display, but
+      also know what software to use for the proper rendering. Harder job, but which delivers an enhanced viewing
+      experience. </p>
+    <div xmlns="" align="center">
+<a title="Poppies in a sunny day, Fiumicello. Poppies in direct sunlight pose some problems in exposure&#10;        and postprocessing that could lead to burned out reds. For publishing to the web, this photo has been converted&#10;        to the sRGB space and reds have lost part of their saturation to accomodate into the small gamut. Their red is&#10;        very different when the same image is looked at with Lightroom in ProPhoto RGB, or even printed." rel="lightbox" href="$mediaLink(relativePath='/stillimages/1280/20080602-0444.jpg')$">
+<img href="$mediaLink(relativePath='/stillimages/800/20080602-0444.jpg')$"/>
+</a>
+<p class="caption">Poppies in a sunny day, Fiumicello. Poppies in direct sunlight pose some problems in exposure
+        and postprocessing that could lead to burned out reds. For publishing to the web, this photo has been converted
+        to the sRGB space and reds have lost part of their saturation to accomodate into the small gamut. Their red is
+        very different when the same image is looked at with Lightroom in ProPhoto RGB, or even printed.</p>
+</div>
+  </body>
+</html>
