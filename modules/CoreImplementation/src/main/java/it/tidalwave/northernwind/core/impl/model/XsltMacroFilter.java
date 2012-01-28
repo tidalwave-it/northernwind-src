@@ -81,7 +81,7 @@ public class XsltMacroFilter implements Filter
             final StringWriter stringWriter = new StringWriter();
             final Result result = new StreamResult(stringWriter);
             transformer.transform(new DOMSource(document), result); 
-            return stringWriter.toString();
+            return stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)
           {
