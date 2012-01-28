@@ -107,7 +107,18 @@ import lombok.ToString;
           }
         catch (NotFoundException e)
           {
-            throw new NotFoundException(relativePath + ": " + mapByRelativePath.keySet());
+            String message = "????";
+            
+            if (relativePath != null)
+              {
+                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet()); 
+              }
+            else if (relativeUri != null)
+              {
+                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet()); 
+              }
+            
+            throw new NotFoundException(message);
           }
       }
     
