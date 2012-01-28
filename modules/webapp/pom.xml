@@ -20,7 +20,6 @@
     <properties>
         <tft.webapp.contextPath>${main.webapp.contextPath}</tft.webapp.contextPath>
         <changeSet>null</changeSet> <!-- FIXME -->
-        <netbeans.hint.deploy.server>Tomcat70</netbeans.hint.deploy.server>
     </properties>
 
     <dependencies>
