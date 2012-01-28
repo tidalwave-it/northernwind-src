@@ -37,7 +37,7 @@ import static org.springframework.core.Ordered.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Order(HIGHEST_PRECEDENCE) @Slf4j
+@Order(HIGHEST_PRECEDENCE + 10) @Slf4j
 public class HtmlCleanupFilter implements Filter
   {
     /*******************************************************************************************************************
