@@ -22,8 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
-import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -36,8 +34,11 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
+import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
+import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -49,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j @ToString(of={"rootPath"})
 public class LocalCopyFileSystemProvider implements FileSystemProvider
   {
     @Getter @Setter @Nonnull
