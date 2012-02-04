@@ -143,7 +143,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS, Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
-                builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\">\n", link));
+                builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />\n", link));
               }
           }
         catch (IOException e)

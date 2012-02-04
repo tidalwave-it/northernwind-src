@@ -1,10 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$titlePrefix$$title$</title>
         <meta name="description" content="$description$" />
-        <meta http-equiv="Content-type" content="text/html;charset=$charset$">       
-        <meta http-equiv="Content-Language" content="$language$"/>
+        <meta http-equiv="Content-type" content="text/html;charset=$charset$" /> 
+        <meta http-equiv="Content-Language" content="$language$" />
         $screenCssSection$
         <style type="text/css" media="print">
             div#header { display: none }
