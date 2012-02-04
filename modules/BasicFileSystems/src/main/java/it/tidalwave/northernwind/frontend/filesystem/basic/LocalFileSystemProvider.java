@@ -29,11 +29,12 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import lombok.Getter;
-import lombok.Setter;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.LocalFileSystem;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -43,6 +44,7 @@ import org.openide.filesystems.LocalFileSystem;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@ToString(of={"rootPath"})
 public class LocalFileSystemProvider implements FileSystemProvider
   {
     @Getter @Setter @Nonnull
