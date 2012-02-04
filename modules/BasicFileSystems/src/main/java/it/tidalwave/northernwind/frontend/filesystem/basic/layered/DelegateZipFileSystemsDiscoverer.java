@@ -45,6 +45,9 @@ import lombok.extern.slf4j.Slf4j;
 public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProvider
   {
     @Getter @Setter
+    private String fileSystemsFolder = "filesystems";
+    
+    @Getter @Setter
     private FileSystemProvider localFileSystemProvider;
     
     @Override @Nonnull
@@ -54,7 +57,7 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
         
         try
           { 
-            final FileObject zipFolder = localFileSystemProvider.getFileSystem().findResource("filesystems");
+            final FileObject zipFolder = localFileSystemProvider.getFileSystem().findResource(fileSystemsFolder);
 
             if (zipFolder != null)
               {
