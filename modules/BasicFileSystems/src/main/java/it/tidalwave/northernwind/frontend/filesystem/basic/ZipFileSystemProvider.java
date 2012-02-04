@@ -40,6 +40,7 @@ import org.openide.filesystems.JarFileSystem;
 import it.tidalwave.messagebus.MessageBus;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -50,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j @ToString(of={"zipFilePath", "latestModified", "changeWasDetected"})
 public class ZipFileSystemProvider implements FileSystemProvider
   {
     @Getter @Setter @Nonnull
