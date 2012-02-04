@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletContext;
@@ -44,7 +45,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.openide.util.NbBundle;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -60,7 +60,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
-import java.io.File;
 
 /***********************************************************************************************************************
  *
@@ -319,6 +318,17 @@ import java.io.File;
       {
         return NbBundle.getMessage(DefaultSite.class, "NorthernWind.version");
       }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String toString() 
+      {
+        return String.format("DefaultSite(@%x)", System.identityHashCode(this));
+      }
     
     /*******************************************************************************************************************
      *
@@ -349,6 +359,7 @@ import java.io.File;
             log.warn("Running in a non-web environment, set contextPath = {}", contextPath);
           }  
         
+        log.info(">>>> fileSystemProvider: {}", fileSystemProvider);
         final FileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = findMandatoryFolder(fileSystem, documentPath);
         libraryFolder  = findMandatoryFolder(fileSystem, libraryPath);
@@ -360,14 +371,14 @@ import java.io.File;
             configuredLocales.add(new Locale(localeAsString.trim()));  
           }
         
-        log.info(">>>> contextPath:    {}", contextPath);
-        log.info(">>>> ignoredFolders: {}", ignoredFolders);
-        log.info(">>>> fileSystem:     {}", fileSystem);
-        log.info(">>>> documentPath:   {}", documentFolder.getPath());
-        log.info(">>>> libraryPath:    {}", libraryFolder.getPath());
-        log.info(">>>> mediaPath:      {}", mediaFolder.getPath());
-        log.info(">>>> nodePath:       {}", nodeFolder.getPath());
-        log.info(">>>> locales:        {}", configuredLocales);
+        log.info(">>>> contextPath:        {}", contextPath);
+        log.info(">>>> ignoredFolders:     {}", ignoredFolders);
+        log.info(">>>> fileSystem:         {}", fileSystem);
+        log.info(">>>> documentPath:       {}", documentFolder.getPath());
+        log.info(">>>> libraryPath:        {}", libraryFolder.getPath());
+        log.info(">>>> mediaPath:          {}", mediaFolder.getPath());
+        log.info(">>>> nodePath:           {}", nodeFolder.getPath());
+        log.info(">>>> locales:            {}", configuredLocales);
         
         reset();
       }
@@ -422,8 +433,9 @@ import java.io.File;
     private static FileObject findMandatoryFolder (final @Nonnull FileSystem fileSystem, final @Nonnull String path) 
       throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(fileSystem.findResource(path), "Cannot find folder: " + 
-                            FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/" + path);  
+        return NotFoundException.throwWhenNull(fileSystem.findResource(path), "Cannot find folder: " + path);
+        // don't log fileSystem.getRoot() since if fileSystem is broken it can trigger secondary errors
+                            // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);  
       }
     
     /*******************************************************************************************************************
