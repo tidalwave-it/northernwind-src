@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -51,6 +52,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@ToString
 public class DefaultModelFactory implements ModelFactory
   {
     /*******************************************************************************************************************
