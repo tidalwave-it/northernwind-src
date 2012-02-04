@@ -20,20 +20,20 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem.basic;
+package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
-import it.tidalwave.util.test.FileComparisonUtils;
-import java.io.File;
-import java.io.IOException;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nonnull;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
+import it.tidalwave.util.test.FileComparisonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -47,16 +47,26 @@ import org.testng.annotations.Test;
 @Slf4j
 public class LayeredFileSystemProviderTest
   {
-    private static final String XXX = "target/filesystems/";
+    private static final String FS_BASE = "target/filesystems/";
     
     private LayeredFileSystemProvider fixture;
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void createFixture()
       {
         fixture = new LayeredFileSystemProvider();
       }
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void createFiles()
       throws IOException
@@ -90,8 +100,13 @@ public class LayeredFileSystemProviderTest
         createFile("TC4", "fs2", "/dir4/dir3/file5.txt");
       }
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider="testCases")
-    public void test (final @Nonnull String testCase, final @Nonnull String[] fileSystemNames)
+    public void must_navigate_through_the_whole_filesystem (final @Nonnull String testCase, final @Nonnull String[] fileSystemNames)
       throws IOException
       {
         final List<LocalFileSystemProvider> fileSystemProviders = new ArrayList<LocalFileSystemProvider>();
@@ -99,7 +114,7 @@ public class LayeredFileSystemProviderTest
         for (final String fileSystemName : fileSystemNames)
           {
             LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
-            fs1.setRootPath(XXX + testCase + fileSystemName);
+            fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
           }
         
@@ -113,6 +128,11 @@ public class LayeredFileSystemProviderTest
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }  
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @DataProvider(name="testCases")
     public Object[][] getTestCases()
       {
@@ -125,6 +145,11 @@ public class LayeredFileSystemProviderTest
           };
       }
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     private void dump (final @Nonnull File file, final @Nonnull FileSystem fileSystem)
       throws IOException
       {
@@ -135,6 +160,11 @@ public class LayeredFileSystemProviderTest
         FileUtils.writeLines(file, lines, "\n");
       }
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     private static void dump (final @Nonnull List<String> lines, final @Nonnull FileObject fileObject)
       throws IOException
       {
@@ -151,12 +181,17 @@ public class LayeredFileSystemProviderTest
           }
       }
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     private static void createFile (final @Nonnull String testCase, 
                                     final @Nonnull String fileSystemName, 
                                     final @Nonnull String path) 
       throws IOException
       {
-        final File file = new File(XXX + testCase + fileSystemName + path);
+        final File file = new File(FS_BASE + testCase + fileSystemName + path);
         file.getParentFile().mkdirs();
         FileUtils.write(file, fileSystemName + ": " + path);
         log.info("Created {} - {}:{}", new Object[] { testCase, fileSystemName, path });
