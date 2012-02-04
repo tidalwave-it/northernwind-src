@@ -95,16 +95,16 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final ResourceProperties viewProperties = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
+        final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
         
         try
           {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }
         catch (NotFoundException e)
           {
-            // ok, use the default template  
+            log.warn("Cannot find {}, using default template ({})", templateRelativePath, e.toString());
           }
            
         view.addAttribute("language", requestLocaleManager.getLocales().get(0).getLanguage());
@@ -191,6 +191,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS, Collections.<String>emptyList()))
               {
+                // Always use </script> to close, as some browsers get broken without
                 builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>\n", site.createLink(relativeUri)));
               }
           }
