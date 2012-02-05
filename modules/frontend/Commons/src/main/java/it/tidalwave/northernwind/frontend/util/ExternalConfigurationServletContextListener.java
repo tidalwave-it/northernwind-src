@@ -38,6 +38,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.Cleanup;
 import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
+import javax.naming.NameNotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -150,18 +151,24 @@ public class ExternalConfigurationServletContextListener implements ServletConte
             return configurationPath;   
           }
         
+        final String jndiName = "org.mortbay.jetty.plus.naming.EnvEntry/it.tidalwave.northernwind.configurationPath";
+        
         try // Jetty specific JNDI setting - see e.g. http://stackoverflow.com/questions/3895047/jetty-set-system-property 
           {
             final InitialContext context = new InitialContext();
-            final Object env = context.lookup("org.mortbay.jetty.plus.naming.EnvEntry/it.tidalwave.northernwind.configurationPath");
+            final Object env = context.lookup(jndiName);
             final Class<?> envClass = env.getClass();
             final Method method = envClass.getDeclaredMethod("getObjectToBind");
             return (String)method.invoke(env);
           }
+        catch (NameNotFoundException e)
+          {
+            BootLogger.log("JNDI name not found: " + jndiName);  
+          }
         catch (Exception e) 
           {
             BootLogger.log(e.toString());
-            e.printStackTrace(); // FIXME  
+//            e.printStackTrace(); // FIXME  
           }
           
         return System.getProperty("user.home") + "/.nw";
