@@ -55,36 +55,6 @@
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>northernwind</id>
-            <properties>
-                <tft.webapp.deployServerId>northernwind.tidalwave.it</tft.webapp.deployServerId>
-                <tft.webapp.deployServerUrl>http://northernwind.tidalwave.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
-                <main.webapp.contextPath>/</main.webapp.contextPath>
-                <main.webapp.url>http://northernwind.tidalwave.it${main.webapp.contextPath}</main.webapp.url>
-            </properties>
-        </profile>
-        <profile>
-            <id>stoppingdown</id>
-            <properties>
-                <tft.webapp.deployServerId>stoppingdown.net</tft.webapp.deployServerId>
-                <tft.webapp.deployServerUrl>http://stoppingdown.net:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
-                <main.webapp.contextPath>/pre</main.webapp.contextPath>
-                <main.webapp.url>http://stoppingdown.net${main.webapp.contextPath}</main.webapp.url>
-            </properties>
-        </profile>
-        <profile>
-            <id>fabriziogiudici</id>
-            <properties>
-                <tft.webapp.deployServerId>fabriziogiudici.it</tft.webapp.deployServerId>
-                <tft.webapp.deployServerUrl>http://fabriziogiudici.it:8180/tomcatmanager/html</tft.webapp.deployServerUrl>
-                <main.webapp.contextPath>/pre</main.webapp.contextPath>
-                <main.webapp.url>http://fabriziogiudici.it${main.webapp.contextPath}</main.webapp.url>
-            </properties>
-        </profile>
-    </profiles>
-
     <distributionManagement>
         <site>
             <id>website-northernwind.java.net</id>
@@ -246,6 +216,19 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+ <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+<type>range</type>
+          <range>9999</range>
+          <dateFormat>EEE MMM dd HH:mm:ss yyyy zzzz</dateFormat>
+        </configuration>
+      </plugin>
+
+
         </plugins>
     </build>
 
