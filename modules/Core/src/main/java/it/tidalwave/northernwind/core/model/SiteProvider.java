@@ -49,5 +49,5 @@ public interface SiteProvider
     @Nonnull
     public String getVersionString();
 
-    public boolean isSiteInitialized();
+    public boolean isSiteAvailable();
   }
