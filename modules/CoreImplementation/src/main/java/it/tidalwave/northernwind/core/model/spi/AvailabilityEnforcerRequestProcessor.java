@@ -35,6 +35,8 @@ import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
@@ -51,6 +53,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
+    @Getter @Setter // TODO: required for test, try to drop
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
@@ -58,32 +61,32 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException, HttpStatusException 
       {
-        if (!siteProvider.get().isSiteAvailable())
+        if (siteProvider.get().isSiteAvailable())
           {
-            log.warn("Site unavailable, sending maintenance page");
-            // TODO: use a resource
-            final String page = String.format("<!DOCTYPE html>"
-                    + "<html>\n"
-                    + "<head>\n"
-                    + "<meta http-equiv=\"Refresh\" content=\"15; url=%s%s\"/>\n"
-                    + "</head>\n"
-                    + "<body>\n"
-                    + "<div style=\"padding: 5%% 0pt;\">\n"
-                    + "<div style=\"padding: 10%% 0pt; text-align: center\">"
-                    + "<p style=\"font-family: sans-serif; font-size: 24px\">Site under maintenance, please retry in a short time.<br/>"
-                    + "This page will reload automatically.</p>"
-                    + "</div>\n"
-                    + "</div>\n"
-                    + "</body>\n"
-                    + "</html>", request.getBaseUrl(), request.getOriginalRelativeUri());
-            responseHolder.response().withContentType("text/html")
-                                     .withStatus(503)
-                                     .withExpirationTime(new Duration(0))
-                                     .withBody(page)
-                                     .put();   
-            return BREAK;
+            return CONTINUE;
           }
         
-        return CONTINUE;
+        log.warn("Site unavailable, sending maintenance page");
+        // TODO: use a resource
+        final String page = String.format("<!DOCTYPE html>\n"
+                + "<html>\n"
+                + "<head>\n"
+                + "<meta http-equiv=\"Refresh\" content=\"15; url=%s%s\"/>\n"
+                + "</head>\n"
+                + "<body>\n"
+                + "<div style=\"padding: 5%% 0pt;\">\n"
+                + "<div style=\"padding: 10%% 0pt; text-align: center\">"
+                + "<p style=\"font-family: sans-serif; font-size: 24px\">Site under maintenance, please retry in a short time.<br/>"
+                + "This page will reload automatically.</p>"
+                + "</div>\n"
+                + "</div>\n"
+                + "</body>\n"
+                + "</html>", request.getBaseUrl(), request.getOriginalRelativeUri());
+        responseHolder.response().withContentType("text/html")
+                                 .withStatus(503)
+                                 .withExpirationTime(new Duration(0))
+                                 .withBody(page)
+                                 .put();   
+        return BREAK;
       }
   }

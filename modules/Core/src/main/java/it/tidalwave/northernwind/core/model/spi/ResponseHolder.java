@@ -93,7 +93,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
           {
-            final Date expirationTime = new DateTime().plus(duration).toDate();
+            final Date expirationTime = getTime().plus(duration).toDate();
             return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123).format(expirationTime));
           }
         
@@ -193,5 +193,16 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     public void requestReset()
       {
         threadLocal.remove(); 
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected DateTime getTime()
+      {
+        return new DateTime();  
       }
   }
