@@ -45,10 +45,10 @@ public class NodeLinkMacroExpander extends MacroExpander
   {
     /* package */ static final int ORDER = 20;
             
-   @Inject @Nonnull
-   private Provider<SiteProvider> siteProvider;
+    @Inject @Nonnull
+    private Provider<SiteProvider> siteProvider;
     
-   public NodeLinkMacroExpander()
+    public NodeLinkMacroExpander()
       {
         super("\\$nodeLink\\(relativePath='([^']*)'\\)\\$");
       } 
