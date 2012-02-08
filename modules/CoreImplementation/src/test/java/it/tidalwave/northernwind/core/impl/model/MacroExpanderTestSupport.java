@@ -28,6 +28,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 import org.testng.annotations.BeforeClass;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -48,13 +49,17 @@ public class MacroExpanderTestSupport
     
     protected ApplicationContext context;
     
+    protected SiteProvider siteProvider;
+    
     protected Site site;
     
     @BeforeClass
     public void setUp() 
       {
         context = new ClassPathXmlApplicationContext(contextName);
+        siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
+        when(siteProvider.getSite()).thenReturn(site);
         
         when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
         when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());

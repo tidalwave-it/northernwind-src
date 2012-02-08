@@ -34,6 +34,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.util.test.FileComparisonUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -51,14 +52,18 @@ public class XsltMacroFilterTest
   {
     private XsltMacroFilter fixture;
     
+    private SiteProvider siteProvider;
+    
     private Site site;
     
     @BeforeMethod
     public void setupFixture()
       throws Exception
       {
-        final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
-        site = applicationContext.getBean(Site.class);
+        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
+        siteProvider = context.getBean(SiteProvider.class);
+        site = context.getBean(Site.class);
+        when(siteProvider.getSite()).thenReturn(site);
         
         final FileObject fileObject = mock(FileObject.class);
         final String xslt = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/Photo.xslt"));
@@ -71,7 +76,7 @@ public class XsltMacroFilterTest
         map.put("/XsltTemplates/Photo.xlst", resource);
         when(site.find(eq(Resource.class))).thenReturn(new DefaultSiteFinder<Resource>("name", map, new RegexTreeMap<Resource>()));
         
-        fixture = applicationContext.getBean(XsltMacroFilter.class);  
+        fixture = context.getBean(XsltMacroFilter.class);  
       }
     
     @Test
