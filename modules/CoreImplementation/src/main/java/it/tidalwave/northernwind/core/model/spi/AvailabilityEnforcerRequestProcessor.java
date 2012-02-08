@@ -20,7 +20,6 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
