@@ -40,9 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable(preConstruction=true) @ThreadSafe @Slf4j
 public class MacroExpander implements Filter
   {
-//    @Inject @Nonnull
-//    protected SiteProvider siteProvider;
-//    
     @Nonnull
     private final Pattern pattern;
     
