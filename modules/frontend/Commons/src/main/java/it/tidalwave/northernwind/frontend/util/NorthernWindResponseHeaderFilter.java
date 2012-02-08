@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.util;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -43,7 +44,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 public class NorthernWindResponseHeaderFilter extends FilterSupport
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     /*******************************************************************************************************************
      *
@@ -70,7 +71,7 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
       {
         if (bootThrowable == null)
           {
-            ((HttpServletResponse)response).addHeader("X-NorthernWind-Version", siteProvider.getVersionString());
+            ((HttpServletResponse)response).addHeader("X-NorthernWind-Version", siteProvider.get().getVersionString());
           }
       }
   }

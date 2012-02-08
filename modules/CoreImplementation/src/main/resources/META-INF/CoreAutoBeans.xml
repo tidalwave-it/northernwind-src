@@ -52,6 +52,15 @@
     <bean id="roleManager"
           class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
           
+    <!-- Generic task executor -->
+    <bean id="taskExecutor" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          autowire-candidate="false">
+        <property name="corePoolSize" value="${nw.task.corePoolSize}" />
+        <property name="maxPoolSize" value="${nw.task.maxPoolSize}" />
+        <property name="queueCapacity" value="${nw.task.queueCapacity}" />
+    </bean>
+    
     <!-- MessageBus stuff -->
     <bean id="applicationMessageBusTaskExecutor" 
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
@@ -110,6 +119,7 @@
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
         <property name="localesAsString" value="${nw.site.locales}" />
         <property name="ignoredFoldersAsString" value="${nw.ignoredFolders}" />
+        <property name="executor" ref="taskExecutor"/>
     </bean>
     
     <bean id="voidLinkPostProcessor"
@@ -123,5 +133,8 @@
           class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
     </bean>
+    
+    <bean id="availabilityEnforcerRequestProcessor" 
+          class="it.tidalwave.northernwind.core.model.spi.AvailabilityEnforcerRequestProcessor" />
     
 </beans>

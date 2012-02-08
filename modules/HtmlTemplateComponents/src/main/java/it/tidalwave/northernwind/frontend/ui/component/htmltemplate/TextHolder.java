@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltemplate;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +66,7 @@ public class TextHolder
     private String template;
     
     @Inject
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     @Getter @Setter
     private String mimeType = "text/plain";
@@ -140,7 +141,7 @@ public class TextHolder
           }
 
         t = t.add("content", builder.toString());
-        t = t.add("contextPath", siteProvider.getSite().getContextPath());
+        t = t.add("contextPath", siteProvider.get().getSite().getContextPath());
         t = t.add("charset", charset);
         t = t.add("language", "");
   

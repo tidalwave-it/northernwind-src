@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.regex.Matcher;
 import java.io.IOException;
 import org.springframework.core.annotation.Order;
@@ -46,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NodeLinkWithContentMacroExpander extends MacroExpander
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     @Inject @Nonnull
     private ParameterLanguageOverrideLinkPostProcessor postProcessor;
@@ -64,7 +65,7 @@ public class NodeLinkWithContentMacroExpander extends MacroExpander
         final String relativePath = matcher.group(1);
         final String contentRelativePath = matcher.group(2);
         final String language = matcher.group(4);
-        final Site site = siteProvider.getSite();
+        final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
         final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();

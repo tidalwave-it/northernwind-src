@@ -24,6 +24,8 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.regex.Pattern;
+import java.text.Normalizer;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -33,8 +35,6 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
-import java.text.Normalizer;
-import java.util.regex.Pattern;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -51,9 +51,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable(preConstruction=true) @Slf4j @ToString
 /* package */ class DefaultContent implements Content
   {
-//    @Inject @Nonnull
-//    private SiteProvider siteProvider;
-//    
     @Inject @Nonnull
     private ModelFactory modelFactory;
     

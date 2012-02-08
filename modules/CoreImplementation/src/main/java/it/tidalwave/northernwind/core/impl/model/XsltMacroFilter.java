@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -70,7 +71,7 @@ public class XsltMacroFilter implements Filter
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
     
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     private String xslt = "";
     
@@ -86,7 +87,7 @@ public class XsltMacroFilter implements Filter
         final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/XsltTemplate.xslt"));
         final StringBuilder xsltBuffer = new StringBuilder();
         
-        for (final Resource resource : siteProvider.getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
+        for (final Resource resource : siteProvider.get().getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
           {
             final FileObject file = resource.getFile();
             log.info(">>>> /{}", file.getPath());

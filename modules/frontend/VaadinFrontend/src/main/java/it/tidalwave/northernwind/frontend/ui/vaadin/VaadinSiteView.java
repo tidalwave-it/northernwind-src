@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VaadinSiteView extends Window implements SiteView
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
             
     /*******************************************************************************************************************
      *
@@ -90,7 +91,7 @@ public class VaadinSiteView extends Window implements SiteView
 //                  }
 //              }, file.getNameExt(), getApplication())));
            
-            final String uri = siteProvider.getSite().getContextPath() + "/media/blueBill_Mobile-Banner.png";
+            final String uri = siteProvider.get().getSite().getContextPath() + "/media/blueBill_Mobile-Banner.png";
             final Label label = new Label();
             label.setContentMode(Label.CONTENT_RAW);
             label.setValue("<img src='" + uri + "'/>");

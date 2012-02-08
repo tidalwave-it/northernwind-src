@@ -26,8 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
+import javax.inject.Provider;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
@@ -47,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFileSystemChange
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;  
+    private Provider<SiteProvider> siteProvider;  
     
     @Inject @Named("applicationMessageBus") @Nonnull
     private MessageBus messageBus;
@@ -57,21 +56,10 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
         @Override
         public void notify (final @Nonnull FileSystemChangedEvent event) 
           {
-            try 
+            if (event.getFileSystemProvider() == siteProvider.get().getSite().getFileSystemProvider())
               {
-                if (event.getFileSystemProvider() == siteProvider.getSite().getFileSystemProvider())
-                  {
-                    log.info("Detected file change, resetting site...");
-                    siteProvider.reset();
-                  }
-              }
-            catch (IOException e) 
-              {
-                log.warn("While resetting site: ", e);
-              }
-            catch (NotFoundException e) 
-              {
-                log.warn("While resetting site: ", e);
+                log.info("Detected file change, resetting site...");
+                siteProvider.get().reload();
               }
           }
       };

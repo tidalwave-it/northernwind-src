@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.blu
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -53,7 +54,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     private GalleryAdapterContext context;
     
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     private final String content;
     
@@ -82,7 +83,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         try 
           {
             final SiteNode siteNode = context.getSiteNode();
-            final String link = siteProvider.getSite().createLink(siteNode.getRelativeUri() + "/images.xml");
+            final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri() + "/images.xml");
 
             builder.append("<script type=\"text/javascript\">\n");
             builder.append(String.format("var catalogUrl = \"%s\";\n", link));

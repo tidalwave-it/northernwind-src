@@ -24,19 +24,18 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.beans.PropertyVetoException;
-import java.io.IOException;
 import javax.servlet.ServletContext;
 import org.openide.util.NbBundle;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -45,11 +44,15 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Slf4j @ToString
 public class DefaultSiteProvider implements SiteProvider
   {
     @Inject @Nonnull
     private ApplicationContext applicationContext;
+    
+//    @Inject @Named("taskExecutor") @Nonnull
+    @Getter @Setter @Nonnull
+    private TaskExecutor executor;
     
     @Getter @Setter @Nonnull
     private String documentPath = "content/document";
@@ -75,6 +78,9 @@ public class DefaultSiteProvider implements SiteProvider
     @CheckForNull
     private DefaultSite site;
     
+    @Getter
+    private boolean siteInitialized = false;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -83,11 +89,6 @@ public class DefaultSiteProvider implements SiteProvider
     @Override @Nonnull
     public Site getSite() 
       {
-        if (!initialized)
-          {
-            initialize();
-          }
-        
         return site;
       }
 
@@ -97,33 +98,43 @@ public class DefaultSiteProvider implements SiteProvider
      *
      ******************************************************************************************************************/
     @Override
-    public void reset()
-      throws NotFoundException, IOException 
+    public void reload()
       {
-        log.info("reset()");
-        String contextPath = "/";
-        
-        try
-          {
-            contextPath = applicationContext.getBean(ServletContext.class).getContextPath();
-          }
-        catch (NoSuchBeanDefinitionException e)
-          {
-            log.warn("Running in a non-web environment, set contextPath = {}", contextPath);
-          }  
+        log.info("reload()");
+        siteInitialized = false;
         
         // TODO: use ModelFactory
-        site = new DefaultSite(contextPath, documentPath, mediaPath, libraryPath, nodePath, logConfigurationEnabled, localesAsString, ignoredFoldersAsString);
-        try 
+        site = new DefaultSite(getContextPath(), 
+                               documentPath,
+                               mediaPath, 
+                               libraryPath,
+                               nodePath,
+                               logConfigurationEnabled, 
+                               localesAsString, 
+                               ignoredFoldersAsString);
+        
+        executor.execute(new Runnable() 
           {
-            site.initialize();
-          }
-        catch (PropertyVetoException e)
-          {
-            throw new RuntimeException(e);
-          } 
+            @Override
+            public void run() 
+              {
+                try 
+                  {
+                    final long time = System.currentTimeMillis();
+                    site.initialize();
+                    siteInitialized = true;
+                    log.info("********************************");
+                    log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
+                    log.info("********************************");
+                  }
+                catch (Exception e)
+                  {
+                    log.error("While initializing site", e);
+                  } 
+              }
+          });
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -135,29 +146,34 @@ public class DefaultSiteProvider implements SiteProvider
         return NbBundle.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
       }
     
-    private boolean initialized = false;
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @PostConstruct
+    /* package */ void initialize()
+      {
+        log.info("initialize()");
+        reload();
+      }
     
     /*******************************************************************************************************************
      *
      * 
      *
      ******************************************************************************************************************/
-    /* package */ synchronized void initialize()
+    @Nonnull
+    private String getContextPath() 
       {
-        initialized = true;
-        log.info("initialize()");
-                
-        try 
+        try
           {
-            reset();
+            return applicationContext.getBean(ServletContext.class).getContextPath();
           }
-        catch (NotFoundException e)
+        catch (NoSuchBeanDefinitionException e)
           {
-            log.error("During initialization", e);
-          }
-        catch (IOException e)
-          {
-            log.error("During initialization", e);
+            log.warn("Running in a non-web environment, set contextPath = /");
+            return "/";
           }
       }
   }

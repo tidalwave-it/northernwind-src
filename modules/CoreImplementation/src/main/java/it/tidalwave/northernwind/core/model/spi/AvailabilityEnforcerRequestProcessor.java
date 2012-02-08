@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,38 +16,58 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.regex.Matcher;
+import java.io.IOException;
+import org.joda.time.Duration;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.annotation.Order;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import lombok.extern.slf4j.Slf4j;
+import static org.springframework.core.Ordered.*;
+import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author  fritz
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MediaLinkMacroExpander extends MacroExpander
+@Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
+public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    public MediaLinkMacroExpander()
-      {
-        super("\\$mediaLink\\(relativePath='([^']*)'\\)\\$");
-      } 
-    
+    @Inject @Nonnull
+    private ResponseHolder<?> responseHolder;
+
     @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
+    public Status process (final @Nonnull Request request)
+      throws NotFoundException, IOException, HttpStatusException 
       {
-        final String relativePath = matcher.group(1);
-        return siteProvider.get().getSite().createLink("/media" + relativePath);
+        if (!siteProvider.get().isSiteInitialized())
+          {
+            responseHolder.response().withContentType("text/html")
+                                     .withStatus(503)
+                                     .withExpirationTime(new Duration(0))
+                                     .withBody("Please retry in a short time")
+                                     .put();   
+            return BREAK;
+          }
+        
+        return CONTINUE;
       }
   }

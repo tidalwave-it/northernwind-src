@@ -23,8 +23,6 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -39,8 +37,7 @@ public interface SiteProvider
     @Nonnull
     public Site getSite();
 
-    public void reset() // FIXME: rename to reload()
-      throws NotFoundException, IOException;
+    public void reload();
     
     /*******************************************************************************************************************
      *
@@ -51,4 +48,6 @@ public interface SiteProvider
      ******************************************************************************************************************/
     @Nonnull
     public String getVersionString();
+
+    public boolean isSiteInitialized();
   }

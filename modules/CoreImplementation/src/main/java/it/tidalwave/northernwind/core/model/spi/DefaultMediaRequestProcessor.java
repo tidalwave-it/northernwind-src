@@ -22,10 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi; 
 
-import lombok.Getter;
-import lombok.Setter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.IOException;
 import org.joda.time.Duration;
 import org.openide.filesystems.FileObject;
@@ -35,6 +34,8 @@ import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.Media.Media;
@@ -50,7 +51,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 public class DefaultMediaRequestProcessor<ResponseType> implements RequestProcessor
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     @Inject @Nonnull
     protected ResponseHolder<ResponseType> responseHolder;
@@ -71,7 +72,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         
         if (relativeUri.startsWith("/media"))
           {
-            final Media media = siteProvider.getSite().find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
+            final Media media = siteProvider.get().getSite().find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
             final FileObject file = media.getFile();
             createResponse(file);
             return BREAK;

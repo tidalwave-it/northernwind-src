@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.regex.Matcher;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 
@@ -36,7 +37,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 public class LibraryLinkMacroExpander extends MacroExpander
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     public LibraryLinkMacroExpander()
       {
@@ -47,6 +48,6 @@ public class LibraryLinkMacroExpander extends MacroExpander
     protected String filter (final @Nonnull Matcher matcher)
       {
         final String relativePath = matcher.group(1);
-        return siteProvider.getSite().createLink(relativePath);
+        return siteProvider.get().getSite().createLink(relativePath);
       }
   }

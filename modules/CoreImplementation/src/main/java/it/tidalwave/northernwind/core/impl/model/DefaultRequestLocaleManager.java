@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultRequestLocaleManager implements RequestLocaleManager, RequestResettable
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     private final ThreadLocal<Locale> localeHolder = new ThreadLocal<Locale>();
     
@@ -60,7 +61,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     public List<Locale> getLocales() 
       {
         final Locale requestLocale = localeHolder.get();
-        final List<Locale> locales = new ArrayList<Locale>(siteProvider.getSite().getConfiguredLocales());
+        final List<Locale> locales = new ArrayList<Locale>(siteProvider.get().getSite().getConfiguredLocales());
 
         if (requestLocale != null)
           {

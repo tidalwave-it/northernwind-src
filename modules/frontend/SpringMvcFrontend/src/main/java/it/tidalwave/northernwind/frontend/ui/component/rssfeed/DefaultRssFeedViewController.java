@@ -44,6 +44,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
+import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -56,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultRssFeedViewController extends DefaultBlogViewController implements RssFeedViewController
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     @Nonnull
     private final RssFeedView view;
@@ -148,7 +149,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void render()
       throws IllegalArgumentException, FeedException, NotFoundException, IOException 
       {
-        feed.setGenerator("NorthernWind v" + siteProvider.getVersionString());
+        feed.setGenerator("NorthernWind v" + siteProvider.get().getVersionString());
         feed.setItems(items);
         
 //        if (!StringUtils.hasText(feed.getEncoding())) 

@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +57,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private final FileObject file;
     
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     private final String uriPrefix;
     
@@ -88,7 +89,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
                 try 
                   {
                     final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
-                    result.add(siteProvider.getSite().find(typeClass).withRelativePath(relativeUri).result());
+                    result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
                 catch (UnsupportedEncodingException e) 
                   {

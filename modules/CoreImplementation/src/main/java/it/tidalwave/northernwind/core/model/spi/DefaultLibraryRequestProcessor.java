@@ -48,11 +48,11 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
+@Configurable @Order(HIGHEST_PRECEDENCE + 1) @Slf4j
 public class DefaultLibraryRequestProcessor implements RequestProcessor 
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     @Inject @Nonnull
     private Provider<FilterSetExpander> macroExpander;
@@ -75,7 +75,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
 
         try
           {
-            final Resource resource = siteProvider.getSite().find(Resource.class).withRelativePath(relativePath).result();
+            final Resource resource = siteProvider.get().getSite().find(Resource.class).withRelativePath(relativePath).result();
             final FileObject file = resource.getFile();
             final String mimeType = file.getMIMEType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText(), mimeType)

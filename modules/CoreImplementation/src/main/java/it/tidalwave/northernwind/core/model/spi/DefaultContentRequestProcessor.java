@@ -22,10 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.spi; 
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +52,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 public class DefaultContentRequestProcessor implements RequestProcessor 
   {
     @Inject @Nonnull
-    private SiteProvider siteProvider;
+    private Provider<SiteProvider> siteProvider;
     
     @Inject @Nonnull
     private SiteView siteView;
@@ -69,7 +70,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
       throws NotFoundException, IOException, HttpStatusException 
       {
         final String relativeUri = request.getRelativeUri();
-        final Site site = siteProvider.getSite();
+        final Site site = siteProvider.get().getSite();
         siteView.renderSiteNode(site.find(SiteNode).withRelativeUri(relativeUri).result());
         //
         // Check *after* finding the SiteNode, since a not found must be properly handled.

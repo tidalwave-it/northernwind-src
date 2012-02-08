@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.regex.Matcher;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
@@ -45,7 +46,7 @@ public class NodeLinkMacroExpander extends MacroExpander
     /* package */ static final int ORDER = 20;
             
    @Inject @Nonnull
-   private SiteProvider siteProvider;
+   private Provider<SiteProvider> siteProvider;
     
    public NodeLinkMacroExpander()
       {
@@ -57,7 +58,7 @@ public class NodeLinkMacroExpander extends MacroExpander
       throws NotFoundException
       {
         final String relativePath = matcher.group(1);
-        final Site site = siteProvider.getSite();
+        final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         return site.createLink(siteNode.getRelativeUri());
       }
