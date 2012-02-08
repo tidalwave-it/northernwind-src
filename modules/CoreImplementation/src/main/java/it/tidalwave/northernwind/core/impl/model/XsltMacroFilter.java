@@ -85,7 +85,6 @@ public class XsltMacroFilter implements Filter
         log.info("Retrieving XSLT templates");
         final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/XsltTemplate.xslt"));
         final StringBuilder xsltBuffer = new StringBuilder();
-        SiteFinder<Resource> find = site.find(Resource.class);
         
         for (final Resource resource : site.find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
           {
@@ -139,6 +138,8 @@ public class XsltMacroFilter implements Filter
           }
         catch (TransformerException e)
           {
+            log.error("XSL error: {} at {}", e.toString(), e.getLocationAsString());
+            log.error(xslt);
             throw new RuntimeException(e);
           }
       }
