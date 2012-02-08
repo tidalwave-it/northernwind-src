@@ -79,7 +79,7 @@ public class DefaultSiteProvider implements SiteProvider
     private DefaultSite site;
     
     @Getter
-    private boolean siteInitialized = false;
+    private boolean siteAvailable = false;
     
     /*******************************************************************************************************************
      *
@@ -101,7 +101,7 @@ public class DefaultSiteProvider implements SiteProvider
     public void reload()
       {
         log.info("reload()");
-        siteInitialized = false;
+        siteAvailable = false;
         
         // TODO: use ModelFactory
         site = new DefaultSite(getContextPath(), 
@@ -122,7 +122,7 @@ public class DefaultSiteProvider implements SiteProvider
                   {
                     final long time = System.currentTimeMillis();
                     site.initialize();
-                    siteInitialized = true;
+                    siteAvailable = true;
                     log.info("********************************");
                     log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
                     log.info("********************************");
