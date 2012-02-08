@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>it.tidalwave.northernwind</groupId>
+        <artifactId>it-tidalwave-northernwind-modules</artifactId>
+        <version>1.0-ALPHA-18-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>it.tidalwave.northernwind</groupId>
+    <artifactId>it-tidalwave-northernwind-core-default</artifactId>
+    <version>1.0.17-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>NorthernWind - Core Default Implementation</name>
+    <description>NorthernWind - Core Default Implementation</description>
+
+    <properties>
+         <NorthernWind.version>${project.parent.parent.version}</NorthernWind.version>
+    </properties>
+   
+    <dependencies>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-role-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-messagebus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>stringtemplate</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
