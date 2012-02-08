@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.beans.PropertyVetoException;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +34,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -122,12 +120,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Getter
     private final boolean logConfigurationEnabled;
     
-    @Nonnull
-    private final String localesAsString;
-            
-    @Nonnull
-    private final String ignoredFoldersAsString;
-    
     @Getter @Nonnull
     private final String contextPath;
     
@@ -168,8 +160,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                         final @Nonnull String libraryPath, 
                         final @Nonnull String nodePath, 
                         final boolean logConfigurationEnabled, 
-                        final @Nonnull String localesAsString,
-                        final @Nonnull String ignoredFoldersAsString) 
+                        final @Nonnull List<Locale> configuredLocales,
+                        final @Nonnull List<String> ignoredFolders) 
       {
         this.contextPath = contextPath;
         this.documentPath = documentPath;
@@ -177,8 +169,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         this.libraryPath = libraryPath;
         this.nodePath = nodePath;
         this.logConfigurationEnabled = logConfigurationEnabled;
-        this.localesAsString = localesAsString;
-        this.ignoredFoldersAsString = ignoredFoldersAsString;
+        this.configuredLocales.addAll(configuredLocales);
+        this.ignoredFolders.addAll(ignoredFolders);
       }
     
     /*******************************************************************************************************************
@@ -249,8 +241,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         log.info("initialize()");
         
-        ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
-        
         relativePathMapsByType.put(Content.class, documentMapByRelativePath);
         relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
         relativePathMapsByType.put(Resource.class, libraryMapByRelativePath);
@@ -264,11 +254,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         libraryFolder  = findMandatoryFolder(fileSystem, libraryPath);
         mediaFolder    = findMandatoryFolder(fileSystem, mediaPath);
         nodeFolder     = findMandatoryFolder(fileSystem, nodePath);
-        
-        for (final String localeAsString : localesAsString.split(","))
-          {
-            configuredLocales.add(new Locale(localeAsString.trim()));  
-          }
         
         log.info(">>>> contextPath:        {}", contextPath);
         log.info(">>>> ignoredFolders:     {}", ignoredFolders);

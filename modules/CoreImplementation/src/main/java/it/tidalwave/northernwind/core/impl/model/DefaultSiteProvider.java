@@ -33,6 +33,11 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -75,6 +80,10 @@ public class DefaultSiteProvider implements SiteProvider
     @Getter @Setter @Nonnull
     private String ignoredFoldersAsString = "";
     
+    private final List<String> ignoredFolders = new ArrayList<String>();
+    
+    private final List<Locale> configuredLocales = new ArrayList<Locale>();
+    
     @CheckForNull
     private DefaultSite site;
     
@@ -110,8 +119,8 @@ public class DefaultSiteProvider implements SiteProvider
                                libraryPath,
                                nodePath,
                                logConfigurationEnabled, 
-                               localesAsString, 
-                               ignoredFoldersAsString);
+                               configuredLocales, 
+                               ignoredFolders);
         
         executor.execute(new Runnable() 
           {
@@ -123,9 +132,9 @@ public class DefaultSiteProvider implements SiteProvider
                     final long time = System.currentTimeMillis();
                     site.initialize();
                     siteAvailable = true;
-                    log.info("********************************");
+                    log.info("****************************************");
                     log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
-                    log.info("********************************");
+                    log.info("****************************************");
                   }
                 catch (Exception e)
                   {
@@ -155,6 +164,13 @@ public class DefaultSiteProvider implements SiteProvider
     /* package */ void initialize()
       {
         log.info("initialize()");
+        ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
+        
+        for (final String localeAsString : localesAsString.split(","))
+          {
+            configuredLocales.add(new Locale(localeAsString.trim()));  
+          }
+        
         reload();
       }
     
