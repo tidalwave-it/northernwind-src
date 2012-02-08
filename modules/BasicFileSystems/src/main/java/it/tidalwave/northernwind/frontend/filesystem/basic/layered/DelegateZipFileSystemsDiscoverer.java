@@ -63,7 +63,7 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
               {
                 for (final FileObject fo : zipFolder.getChildren())
                   {
-                    if (fo.hasExt("zip"))
+                    if (fo.hasExt("zip") || fo.hasExt("jar"))
                       {
                         final ZipFileSystemProvider zipFileSystemProvider = new ZipFileSystemProvider();
                         zipFileSystemProvider.setZipFilePath(FileUtil.toFile(fo).getAbsolutePath());
