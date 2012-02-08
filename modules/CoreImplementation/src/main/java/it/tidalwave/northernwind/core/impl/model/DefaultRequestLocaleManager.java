@@ -25,13 +25,11 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.RequestResettable;
@@ -61,25 +59,18 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override @Nonnull
     public List<Locale> getLocales() 
       {
-        try
+        final Locale requestLocale = localeHolder.get();
+        final List<Locale> locales = new ArrayList<Locale>(siteProvider.getSite().getConfiguredLocales());
+
+        if (requestLocale != null)
           {
-            final Locale requestLocale = localeHolder.get();
-            final List<Locale> locales = new ArrayList<Locale>(siteProvider.getSite().getConfiguredLocales());
-
-            if (requestLocale != null)
-              {
-                locales.remove(requestLocale);
-                locales.add(0, requestLocale);
-              }
-
-            log.debug(">>>> locales: {}", locales);
-
-            return locales;
+            locales.remove(requestLocale);
+            locales.add(0, requestLocale);
           }
-        catch (NotFoundException e)
-          {
-            return Collections.<Locale>emptyList();
-          }
+
+        log.debug(">>>> locales: {}", locales);
+
+        return locales;
       }
     
     /*******************************************************************************************************************

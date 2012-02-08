@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.regex.Matcher;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 
 /***********************************************************************************************************************
@@ -47,14 +46,7 @@ public class MediaLinkMacroExpander extends MacroExpander
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        try
-          {
-            final String relativePath = matcher.group(1);
-            return siteProvider.getSite().createLink("/media" + relativePath);
-          }
-        catch (NotFoundException e)
-          {
-            return "";  
-          }
+        final String relativePath = matcher.group(1);
+        return siteProvider.getSite().createLink("/media" + relativePath);
       }
   }

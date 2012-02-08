@@ -37,8 +37,7 @@ public interface SiteProvider
     public static final Class<SiteProvider> SiteProvider = SiteProvider.class;
     
     @Nonnull
-    public Site getSite()
-      throws NotFoundException;
+    public Site getSite();
 
     public void reset() // FIXME: rename to reload()
       throws NotFoundException, IOException;

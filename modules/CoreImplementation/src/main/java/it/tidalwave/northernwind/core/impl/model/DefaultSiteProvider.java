@@ -82,10 +82,13 @@ public class DefaultSiteProvider implements SiteProvider
      ******************************************************************************************************************/
     @Override @Nonnull
     public Site getSite() 
-      throws NotFoundException 
       {
-        initialize();
-        return NotFoundException.throwWhenNull(site, "no site available");
+        if (!initialized)
+          {
+            initialize();
+          }
+        
+        return site;
       }
 
     /*******************************************************************************************************************
@@ -139,13 +142,8 @@ public class DefaultSiteProvider implements SiteProvider
      * 
      *
      ******************************************************************************************************************/
-    /* package */ void initialize()
+    /* package */ synchronized void initialize()
       {
-        if (initialized)
-          {
-            return;  
-          }
-        
         initialized = true;
         log.info("initialize()");
                 

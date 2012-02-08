@@ -25,8 +25,6 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 
 /***********************************************************************************************************************

@@ -24,18 +24,16 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Locale;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
-import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -60,21 +58,15 @@ public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
     @Override @Nonnull
     public Status process (final @Nonnull Request request) 
       {
-        try
-          {
-            final Site site = siteProvider.getSite();
+        final Site site = siteProvider.getSite();
 
-            for (final Locale locale : request.getPreferredLocales())
-              {
-                if (site.getConfiguredLocales().contains(locale))
-                  {
-                    requestLocaleManager.setRequestLocale(locale);
-                    break;
-                  }
-              }
-          }
-        catch (NotFoundException e)
+        for (final Locale locale : request.getPreferredLocales())
           {
+            if (site.getConfiguredLocales().contains(locale))
+              {
+                requestLocaleManager.setRequestLocale(locale);
+                break;
+              }
           }
 
         return CONTINUE;

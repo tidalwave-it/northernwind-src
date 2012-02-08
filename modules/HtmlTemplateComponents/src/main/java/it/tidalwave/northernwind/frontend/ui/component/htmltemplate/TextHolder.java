@@ -41,7 +41,6 @@ import org.stringtemplate.v4.ST;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import it.tidalwave.util.NotFoundException;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
@@ -141,16 +140,7 @@ public class TextHolder
           }
 
         t = t.add("content", builder.toString());
-        
-        try
-          {
-            t = t.add("contextPath", siteProvider.getSite().getContextPath());
-          }
-        catch (NotFoundException e)
-          {
-            
-          }
-        
+        t = t.add("contextPath", siteProvider.getSite().getContextPath());
         t = t.add("charset", charset);
         t = t.add("language", "");
   
