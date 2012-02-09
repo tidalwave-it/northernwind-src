@@ -22,8 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Locale;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -34,16 +41,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import java.util.Arrays;
-import java.util.Locale;
-import javax.annotation.CheckForNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.*;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.ISODateTimeFormat;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -66,6 +65,9 @@ public class HtmlTemplateBlogViewControllerTest
     
     private RequestLocaleManager requestLocaleManager;
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       {
@@ -77,6 +79,9 @@ public class HtmlTemplateBlogViewControllerTest
         fixture = new HtmlTemplateBlogViewController(view, node, site, requestHolder, requestLocaleManager);  
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider="mainTitleTestDataProvider")
     public void must_properly_render_the_main_title (final @Nonnull String viewId,
                                                      final @Nonnull String title, 
@@ -91,6 +96,9 @@ public class HtmlTemplateBlogViewControllerTest
         assertThat(builder.toString(), is(expectedRendering));
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider="dateTestDataProvider")
     public void must_properly_render_the_date (final @Nonnull String viewId,
                                                final @Nonnull String localeCode,
@@ -110,6 +118,9 @@ public class HtmlTemplateBlogViewControllerTest
         assertThat(builder.toString(), is(expectedRendering));
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void mockNodeProperty (final @Nonnull String viewId,
                                    final @Nonnull Key<?> propertyKey, 
                                    final @CheckForNull String propertyValue)
@@ -130,6 +141,9 @@ public class HtmlTemplateBlogViewControllerTest
           }
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name="mainTitleTestDataProvider")
     private Object[][] mainTitleTestDataProvider()
       {
@@ -142,6 +156,9 @@ public class HtmlTemplateBlogViewControllerTest
           };
       }  
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name="dateTestDataProvider")
     private Object[][] dateTestDataProvider()
       {
