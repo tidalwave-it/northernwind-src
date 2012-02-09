@@ -22,23 +22,21 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
+import javax.annotation.Nonnull;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
-import it.tidalwave.util.Id;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import javax.annotation.Nonnull;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
-import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
