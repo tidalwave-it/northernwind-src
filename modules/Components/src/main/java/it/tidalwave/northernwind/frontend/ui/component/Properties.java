@@ -56,4 +56,6 @@ public final class Properties
     
     public static final Key<String> PROPERTY_WRAPPER_TEMPLATE_RESOURCE = new Key<String>("wrapperTemplate");
     
+    public static final Key<String> PROPERTY_DATE_FORMAT = new Key<String>("dateFormat");
+    
   }

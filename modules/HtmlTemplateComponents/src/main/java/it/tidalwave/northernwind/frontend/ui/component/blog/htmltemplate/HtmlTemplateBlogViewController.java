@@ -40,6 +40,9 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import java.util.Locale;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /***********************************************************************************************************************
  *
@@ -214,12 +217,12 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * Renders the date of the blog post.
      *
      ******************************************************************************************************************/
-    private void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull DateTime blogDateTime) 
+    /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull DateTime blogDateTime) 
       {
         htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", 
-                           requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
+                           getDateTimeFormatter().print(blogDateTime)));
       }
-
+    
     /*******************************************************************************************************************
      *
      * Renders the permalink of the blog post.
@@ -279,5 +282,29 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           {
             // ok, no category
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private DateTimeFormatter getDateTimeFormatter()
+      {
+        try
+          {
+            final String pattern = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DATE_FORMAT);
+            return ((pattern.length() == 2) ? DateTimeFormat.forStyle(pattern)
+                                            : DateTimeFormat.forPattern(pattern)).withLocale(requestLocaleManager.getLocales().get(0));
+          }
+        catch (NotFoundException e)
+          {
+          }
+        catch (IOException e)
+          {
+          }
+        
+        return requestLocaleManager.getDateTimeFormatter();
       }
   }

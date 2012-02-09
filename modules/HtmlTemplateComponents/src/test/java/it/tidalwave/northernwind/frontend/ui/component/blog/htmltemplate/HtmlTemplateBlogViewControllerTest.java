@@ -34,8 +34,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import java.util.Arrays;
+import java.util.Locale;
+import javax.annotation.CheckForNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.*;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.ISODateTimeFormat;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -75,16 +83,51 @@ public class HtmlTemplateBlogViewControllerTest
                                                      final @Nonnull String expectedRendering) 
       throws Exception
       {
-        final Id id = new Id(viewId);
-        when(view.getId()).thenReturn(id);
-        final ResourceProperties properties = mock(ResourceProperties.class);
-        when(node.getPropertyGroup(eq(id))).thenReturn(properties);
-        when(properties.getProperty(eq(PROPERTY_TITLE))).thenReturn(title);
-          
+        mockNodeProperty(viewId, PROPERTY_TITLE, title);
+        
         final StringBuilder builder = new StringBuilder();
         fixture.renderMainTitle(builder);
         
         assertThat(builder.toString(), is(expectedRendering));
+      }
+    
+    @Test(dataProvider="dateTestDataProvider")
+    public void must_properly_render_the_date (final @Nonnull String viewId,
+                                               final @Nonnull String localeCode,
+                                               final @CheckForNull String dateFormat,
+                                               final @Nonnull DateTime dateTime, 
+                                               final @Nonnull String expectedRendering) 
+      throws Exception
+      {
+        final Locale locale = new Locale(localeCode);
+        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
+        when(requestLocaleManager.getDateTimeFormatter()).thenReturn(DateTimeFormat.fullDateTime().withLocale(locale));
+        mockNodeProperty(viewId, PROPERTY_DATE_FORMAT, dateFormat);   
+        
+        final StringBuilder builder = new StringBuilder();
+        fixture.renderDate(builder, dateTime);
+        
+        assertThat(builder.toString(), is(expectedRendering));
+      }
+    
+    private void mockNodeProperty (final @Nonnull String viewId,
+                                   final @Nonnull Key<?> propertyKey, 
+                                   final @CheckForNull String propertyValue)
+      throws Exception
+      {
+        final Id id = new Id(viewId);
+        when(view.getId()).thenReturn(id);
+        final ResourceProperties properties = mock(ResourceProperties.class);
+        when(node.getPropertyGroup(eq(id))).thenReturn(properties);
+        
+        if (propertyValue != null)
+          {
+            when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
+          }
+        else
+          {
+            when(properties.getProperty(eq(propertyKey))).thenThrow(new NotFoundException());
+          }
       }
     
     @DataProvider(name="mainTitleTestDataProvider")
@@ -92,10 +135,32 @@ public class HtmlTemplateBlogViewControllerTest
       {
         return new Object[][]
           {
-            { "id1", "title1",  "<h2>title1</h2>\n"},  
-            { "id2", "title 2", "<h2>title 2</h2>\n"},  
-            { "id3", "",        ""},  
-            { "id4", "  ",      "" } 
+            { "id1", "title1",  "<h2>title1</h2>\n"  },  
+            { "id2", "title 2", "<h2>title 2</h2>\n" },  
+            { "id3", "",        ""                   },  
+            { "id4", "  ",      ""                   } 
           };
       }  
-}
+    
+    @DataProvider(name="dateTestDataProvider")
+    private Object[][] dateTestDataProvider()
+      {
+        final DateTime dateTime = new DateTime(1344353463985L);
+        
+        return new Object[][]
+          {
+            { "id1", "en", null,                         dateTime, "<span class='nw-publishDate'>Tuesday, August 7, 2012 5:31:03 PM CEST</span>\n"},
+            { "id2", "it", null,                         dateTime, "<span class='nw-publishDate'>marted\u00ec 7 agosto 2012 17.31.03 CEST</span>\n"},
+            { "id3", "en", "EEEEEEEEEE, MMMMMM d, yyyy", dateTime, "<span class='nw-publishDate'>Tuesday, August 7, 2012</span>\n"},
+            { "id4", "it", "EEEEEEEEEE, MMMMMM d, yyyy", dateTime, "<span class='nw-publishDate'>marted\u00ec, agosto 7, 2012</span>\n"},
+            { "id5", "en", "S-",                         dateTime, "<span class='nw-publishDate'>8/7/12</span>\n"},
+            { "id6", "it", "S-",                         dateTime, "<span class='nw-publishDate'>07/08/12</span>\n"},
+            { "id5", "en", "M-",                         dateTime, "<span class='nw-publishDate'>Aug 7, 2012</span>\n"},
+            { "id6", "it", "M-",                         dateTime, "<span class='nw-publishDate'>7-ago-2012</span>\n"},
+            { "id5", "en", "L-",                         dateTime, "<span class='nw-publishDate'>August 7, 2012</span>\n"},
+            { "id6", "it", "L-",                         dateTime, "<span class='nw-publishDate'>7 agosto 2012</span>\n"},
+            { "id5", "en", "F-",                         dateTime, "<span class='nw-publishDate'>Tuesday, August 7, 2012</span>\n"},
+            { "id6", "it", "F-",                         dateTime, "<span class='nw-publishDate'>marted\u00ec 7 agosto 2012</span>\n"},
+          };
+      }  
+  }
