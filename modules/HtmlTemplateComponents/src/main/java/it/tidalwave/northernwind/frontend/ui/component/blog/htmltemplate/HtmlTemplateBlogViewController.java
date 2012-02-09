@@ -114,7 +114,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     protected void render()
       {
         final StringBuilder htmlBuilder = new StringBuilder();
-        renderTitle(htmlBuilder);
+        renderMainTitle(htmlBuilder);
        
         for (final String html : htmlParts)
           {
@@ -189,12 +189,16 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * Renders the general title of the blog.
      *
      ******************************************************************************************************************/
-    private void renderTitle (final @Nonnull StringBuilder htmlBuilder)
+    /* package */ void renderMainTitle (final @Nonnull StringBuilder htmlBuilder)
       {
         try 
           {
             final String title = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
-            htmlBuilder.append(String.format("<h2>%s</h2>\n", title));
+            
+            if (!title.trim().equals(""))
+              {
+                htmlBuilder.append(String.format("<h2>%s</h2>\n", title));
+              }
           } 
         catch (NotFoundException e) 
           {
