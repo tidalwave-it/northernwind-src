@@ -22,10 +22,16 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.io.File;
 import javax.servlet.ServletContext;
 import org.openide.util.NbBundle;
 import org.springframework.core.task.TaskExecutor;
@@ -33,11 +39,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -54,6 +55,10 @@ public class DefaultSiteProvider implements SiteProvider
   {
     @Inject @Nonnull
     private ApplicationContext applicationContext;
+    
+    @Getter @Setter 
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
     
 //    @Inject @Named("taskExecutor") @Nonnull
     @Getter @Setter @Nonnull
@@ -112,15 +117,14 @@ public class DefaultSiteProvider implements SiteProvider
         log.info("reload()");
         siteAvailable = false;
         
-        // TODO: use ModelFactory
-        site = new DefaultSite(getContextPath(), 
-                               documentPath,
-                               mediaPath, 
-                               libraryPath,
-                               nodePath,
-                               logConfigurationEnabled, 
-                               configuredLocales, 
-                               ignoredFolders);
+        site = (DefaultSite)modelFactory.createSite(getContextPath(), 
+                                                    documentPath,
+                                                    mediaPath, 
+                                                    libraryPath,
+                                                    nodePath,
+                                                    logConfigurationEnabled, 
+                                                    configuredLocales, 
+                                                    ignoredFolders);
         
         executor.execute(new Runnable() 
           {
@@ -180,7 +184,7 @@ public class DefaultSiteProvider implements SiteProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getContextPath() 
+    /* package */ String getContextPath() 
       {
         try
           {

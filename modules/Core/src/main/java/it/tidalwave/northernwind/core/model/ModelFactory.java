@@ -23,6 +23,8 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import org.openide.filesystems.FileObject;
@@ -124,4 +126,18 @@ public interface ModelFactory
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties createProperties (@Nonnull Id id);
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Site createSite (@Nonnull String contextPath, 
+                            @Nonnull String documentPath, 
+                            @Nonnull String mediaPath, 
+                            @Nonnull String libraryPath,
+                            @Nonnull String nodePath,
+                            boolean logConfigurationEnabled,
+                            @Nonnull List<Locale> configuredLocales, 
+                            @Nonnull List<String> ignoredFolders);
   }
