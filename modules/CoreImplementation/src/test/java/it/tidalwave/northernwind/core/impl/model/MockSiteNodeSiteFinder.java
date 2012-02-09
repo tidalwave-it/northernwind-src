@@ -22,10 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
+import com.google.common.base.Predicate;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;

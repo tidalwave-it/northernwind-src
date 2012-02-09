@@ -22,11 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
-import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
@@ -59,10 +59,11 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         private final StringBuilder builder = new StringBuilder();
         
         @Override
-        public void run (final @Nonnull SiteNode rssSiteNode) 
+        public boolean apply (final @Nonnull SiteNode rssSiteNode) 
           {
             builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s\" />\n", 
                                          mimeType, site.createLink(rssSiteNode.getRelativeUri())));
+            return false;
           }
 
         @Override @Nonnull
