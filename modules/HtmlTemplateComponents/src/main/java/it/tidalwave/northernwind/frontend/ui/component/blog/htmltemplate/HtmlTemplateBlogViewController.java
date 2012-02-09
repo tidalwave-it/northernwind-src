@@ -163,7 +163,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         try
           {  
-            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>", properties.getProperty(PROPERTY_CATEGORY)));
+            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>", 
+                               properties.getProperty(PROPERTY_CATEGORY)));
           }
         catch (NotFoundException e)
           {
