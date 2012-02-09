@@ -111,13 +111,35 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
+    protected void render()
+      {
+        final StringBuilder htmlBuilder = new StringBuilder();
+        renderTitle(htmlBuilder);
+       
+        for (final String html : htmlParts)
+          {
+            htmlBuilder.append(html);
+          }
+        
+        if (referencesRendered)
+          {
+            htmlBuilder.append("</ul>\n");
+          }
+        
+        ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     protected void addReference (final @Nonnull Content post)
       throws IOException, NotFoundException 
       {
         log.debug("addReference()");
         
-        final ResourceProperties properties = post.getProperties();
-
         final DateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
         
@@ -127,18 +149,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             referencesRendered = true;
           }
         
-//        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
-        
-        try
-          {
-           final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
-           htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>\n", link, properties.getProperty(PROPERTY_TITLE)));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no link  
-          }
-            
+        renderReferenceLink(htmlBuilder, post);            
         htmlParts.add(htmlBuilder.toString());
       }
 
@@ -159,28 +170,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         htmlBuilder.append(String.format("<h3>%s</h3>\n", properties.getProperty(PROPERTY_TITLE)));
         
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
-        htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
-        
-        try
-          {  
-            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>", 
-                               properties.getProperty(PROPERTY_CATEGORY)));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no category
-          }
-        
-        try
-          {
-           final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
-           htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>\n", link));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no link  
-          }
-            
+        renderDate(htmlBuilder, blogDateTime);
+        renderCategory(htmlBuilder, post);
+        renderPermalink(htmlBuilder, post);
         htmlBuilder.append("</div>");        
         
         if (addBody)
@@ -194,14 +186,11 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Renders the general title of the blog.
      *
      ******************************************************************************************************************/
-    @Override
-    protected void render()
+    private void renderTitle (final @Nonnull StringBuilder htmlBuilder)
       {
-        final StringBuilder htmlBuilder = new StringBuilder();
-        
         try 
           {
             final String title = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
@@ -209,21 +198,82 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           } 
         catch (NotFoundException e) 
           {
+            // ok, no title  
           }
         catch (IOException e) 
           {
           }
-       
-        for (final String html : htmlParts)
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Renders the date of the blog post.
+     *
+     ******************************************************************************************************************/
+    private void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull DateTime blogDateTime) 
+      {
+        htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", 
+                           requestLocaleManager.getDateTimeFormatter().print(blogDateTime)));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the permalink of the blog post.
+     *
+     ******************************************************************************************************************/
+    private void renderPermalink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post) 
+      throws IOException 
+      {
+        try
           {
-            htmlBuilder.append(html);
+           final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
+           htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>\n", link));
           }
-        
-        if (referencesRendered)
+        catch (NotFoundException e)
           {
-            htmlBuilder.append("</ul>\n");
+            // ok, no link  
           }
-        
-        ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders a reference link.
+     *
+     ******************************************************************************************************************/
+    private void renderReferenceLink (final @Nonnull StringBuilder htmlBuilder, 
+                                      final @Nonnull Content post) 
+      throws IOException 
+      {
+        //        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
+
+        try
+          {
+            final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
+            final String title = post.getProperties().getProperty(PROPERTY_TITLE);
+            htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>\n", link, title));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no link  
+          }
+      } 
+
+    /*******************************************************************************************************************
+     *
+     * Renders the permalink of the blog post. 
+     *
+     ******************************************************************************************************************/
+    private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post) 
+      throws IOException 
+      {
+        try
+          {  
+            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>", 
+                               post.getProperties().getProperty(PROPERTY_CATEGORY)));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no category
+          }
       }
   }
