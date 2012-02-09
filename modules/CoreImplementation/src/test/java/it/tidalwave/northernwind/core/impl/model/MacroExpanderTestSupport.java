@@ -53,7 +53,7 @@ public class MacroExpanderTestSupport
     
     protected Site site;
     
-    @BeforeClass
+    @BeforeClass // FIXME: should be BeforeMethod?
     public void setUp() 
       {
         context = new ClassPathXmlApplicationContext(contextName);
