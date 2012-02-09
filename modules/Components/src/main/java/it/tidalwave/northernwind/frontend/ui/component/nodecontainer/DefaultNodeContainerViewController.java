@@ -61,8 +61,17 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         @Override
         public boolean apply (final @Nonnull SiteNode rssSiteNode) 
           {
-            builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"RSS\" href=\"%s\" />\n", 
-                                         mimeType, site.createLink(rssSiteNode.getRelativeUri())));
+            try
+              {
+                final String title = rssSiteNode.getProperties().getProperty(PROPERTY_TITLE, "RSS");
+                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />\n", 
+                                             mimeType, title, site.createLink(rssSiteNode.getRelativeUri())));
+              }
+            catch (IOException e)
+              {
+                log.warn("", e); // shouldn't occur  
+              }
+
             return false;
           }
 
