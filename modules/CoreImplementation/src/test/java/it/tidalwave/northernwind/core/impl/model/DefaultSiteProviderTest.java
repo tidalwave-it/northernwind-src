@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -46,6 +47,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
 
@@ -135,6 +137,8 @@ public class DefaultSiteProviderTest
     private DefaultSite site;
     
     private WaitingTaskExecutor executor;
+    
+    private ServletContext servletContext;
             
     @BeforeMethod
     public void setupFixture()
@@ -142,8 +146,10 @@ public class DefaultSiteProviderTest
         context = new ClassPathXmlApplicationContext("DefaultSiteProviderTestBeans.xml");
         modelFactory = context.getBean(MockModelFactory.class);
         executor = context.getBean(WaitingTaskExecutor.class);
+        servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
         modelFactory.setSite(site);
+        when(servletContext.getContextPath()).thenReturn("thecontextpath");
         reset(modelFactory);
 //        when(modelFactory.createSite(anyString(), FIXME: throws NPE
 //                                     anyString(), 
@@ -157,11 +163,11 @@ public class DefaultSiteProviderTest
       }
     
     @Test
-    public void must_properly_create_and_initialize_Site()
+    public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
       {
         fixture = context.getBean(DefaultSiteProvider.class);
-        verify(modelFactory).createSite(eq("/"), 
+        verify(modelFactory).createSite(eq("thecontextpath"), 
                                         eq("testDocumentPath"), 
                                         eq("testMediaPath"), 
                                         eq("testLibraryPath"), 
@@ -179,5 +185,19 @@ public class DefaultSiteProviderTest
         verify(site).initialize();
         assertThat(fixture.getSite(), sameInstance((Site)site));
         assertThat(fixture.isSiteAvailable(), is(true));
+      }
+    
+    @Test
+    public void must_return_the_correct_version_string()
+      {
+        fixture = context.getBean(DefaultSiteProvider.class);
+        assertThat(fixture.getVersionString(), is(notNullValue()));  
+      }
+    
+    @Test
+    public void must_return_the_correct_context_path_in_a_web_environment()
+      {
+        fixture = context.getBean(DefaultSiteProvider.class);
+        assertThat(fixture.getContextPath(), is("thecontextpath"));
       }
   }

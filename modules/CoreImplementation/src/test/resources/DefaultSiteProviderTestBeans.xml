@@ -48,9 +48,16 @@
             <bean class="it.tidalwave.northernwind.core.impl.model.MockModelFactory" />
        </constructor-arg>
     </bean>
-<!--    <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
+    
+<!--
+    <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
-    </bean>-->
+    </bean>
+-->
+
+    <bean id="servletContext" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="javax.servlet.ServletContext" />
+    </bean>
 
     <bean id="fixture" 
           class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider"
