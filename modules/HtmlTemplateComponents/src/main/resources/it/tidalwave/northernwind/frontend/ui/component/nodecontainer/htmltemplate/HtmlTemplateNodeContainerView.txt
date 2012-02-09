@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>$titlePrefix$$title$</title>
+        <meta name="description" content="$description$" />
+        <meta http-equiv="Content-type" content="text/html;charset=$charset$">       
+        <meta http-equiv="Content-Language" content="$language$"/>
+        $screenCssSection$
+        <style type="text/css" media="print">
+            div#header { display: none }
+            div#sub { display: none }
+            div#nav { display: none }
+            div#local { display: none }
+            div#breadcrumb { display: none }
+        </style>
+        $rssFeeds$
+        $inlinedScripts$
+        $scripts$
+    </head>
+
+    <body id="page-home"> <!-- FIXME: remove the id or set an id for all components -->
+        <div class="nw-page">
+            <div class="nw-header clearfix"></div> <!-- FIXME: move header in layout; FIXME: components don't have clearfix -->
+            <div class="nw-content clearfix">
+                $content$
+            </div>
+        </div>
+    </body>
+</html>
