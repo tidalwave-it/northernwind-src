@@ -42,6 +42,9 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
  *
+ * This {@link RequestProcessor} returns an HTTP 503 status code, with a proper readable message, when the site is not
+ * available.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
