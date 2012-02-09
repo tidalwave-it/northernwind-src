@@ -135,7 +135,4 @@
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
     </bean>
     
-    <bean id="availabilityEnforcerRequestProcessor" 
-          class="it.tidalwave.northernwind.core.model.spi.AvailabilityEnforcerRequestProcessor" />
-    
 </beans>
