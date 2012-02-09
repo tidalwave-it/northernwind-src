@@ -116,6 +116,7 @@
         <property name="documentPath" value="${nw.documentPath}" />
         <property name="mediaPath" value="${nw.mediaPath}" />
         <property name="nodePath" value="${nw.nodePath}" />
+        <property name="libraryPath" value="${nw.libraryPath}" />
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
         <property name="localesAsString" value="${nw.site.locales}" />
         <property name="ignoredFoldersAsString" value="${nw.ignoredFolders}" />
