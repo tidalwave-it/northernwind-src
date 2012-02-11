@@ -234,7 +234,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                   }        
                 catch (NotFoundException e)
                   {
-                    // ok, no css  
+                    // ok, no script  
                   }      
               }
           }
