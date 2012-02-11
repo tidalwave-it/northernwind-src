@@ -15,7 +15,6 @@
     <version>1.1-ALPHA-2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (modules)</name>
-    <description>NorthernWind (modules)</description>
 
     <dependencyManagement>
         <dependencies>
@@ -366,5 +365,5 @@
         <module>frontend</module>
         <module>webapp</module>
     </modules>
-
+    <description>The parent POM for modules.</description>
 </project>

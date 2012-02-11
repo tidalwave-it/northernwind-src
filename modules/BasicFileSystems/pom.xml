@@ -15,7 +15,6 @@
     <version>1.0.18-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Basic Filesystems</name>
-    <description>NorthernWind - Basic Filesystems</description>
    
     <dependencies>
         <dependency>
@@ -48,5 +47,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-   
+    <description>The implementation of some basic filesystems.</description>
 </project>

@@ -14,7 +14,6 @@
     <version>1.1-ALPHA-2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (master)</name>
-    <description>NorthernWind - lightweight CMS</description>
     <url>http://northernwind.tidalwave.it</url>
     <inceptionYear>2011</inceptionYear>
 
@@ -236,4 +235,5 @@
     <modules>
         <module>modules</module>
     </modules>
+    <description>The master POM of the project.</description>
 </project>

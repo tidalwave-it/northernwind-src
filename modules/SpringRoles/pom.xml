@@ -15,7 +15,6 @@
     <version>1.0.18-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Spring Roles</name>
-    <description>Spring Roles</description>
     
     <dependencies>
         <dependency>
@@ -31,4 +30,5 @@
             <artifactId>spring-context</artifactId>
         </dependency>
     </dependencies>
+    <description>---</description>
 </project>

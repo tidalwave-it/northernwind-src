@@ -15,7 +15,6 @@
     <version>1.1-ALPHA-2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>NorthernWind - Frontend Webapp (Vaadin)</name>
-    <description>NorthernWind - Frontend Webapp (Vaadin)</description>
     
     <dependencies>
         <dependency>
@@ -28,4 +27,5 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+    <description>A webapp containing the Vaadin front end implementation.</description>
 </project>

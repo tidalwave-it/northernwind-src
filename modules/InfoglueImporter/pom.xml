@@ -14,7 +14,6 @@
     <version>1.19-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Infoglue Importer</name>
-    <description>NorthernWind - Infoglue Importer</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,5 +99,5 @@
             <version>1.4</version>
         </dependency>
     </dependencies>
-
+    <description>---</description>
 </project>

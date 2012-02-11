@@ -15,7 +15,6 @@
     <version>1.0.19-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Components (HTML Template)</name>
-    <description>NorthernWind - Frontend Vaadin Components (HTML Template)</description>
     
     <dependencies>
         <dependency>
@@ -46,4 +45,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <description>An implementation of page components based on HTML templating.</description>
 </project>

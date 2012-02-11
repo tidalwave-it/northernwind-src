@@ -15,7 +15,6 @@
     <version>1.0.18-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Core Default Marshalling</name>
-    <description>NorthernWind - Core Default Marshalling</description>
    
     <dependencies>
         <dependency>
@@ -53,5 +52,5 @@
             </plugin>
         </plugins>
     </build>
-
+    <description>The default implementation of marshalling for some Core classes.</description>
 </project>

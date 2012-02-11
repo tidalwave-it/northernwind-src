@@ -15,7 +15,6 @@
     <version>1.1-ALPHA-2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend (Vaadin)</name>
-    <description>NorthernWind - Frontend (Vaadin)</description>
     
     <dependencies>
         <dependency>
@@ -56,4 +55,5 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+    <description>An implementation of the front end based on Vaadin.</description>
 </project>

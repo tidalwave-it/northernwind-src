@@ -15,7 +15,6 @@
     <version>1.0.19-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Components</name>
-    <description>NorthernWind - Frontend Components</description>
     
     <dependencies>
         <dependency>
@@ -39,4 +38,5 @@
             <artifactId>stringtemplate</artifactId>
         </dependency>
     </dependencies>
+    <description>The definitions of page components.</description>
 </project>

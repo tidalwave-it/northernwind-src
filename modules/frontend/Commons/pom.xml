@@ -15,7 +15,6 @@
     <version>1.0.18-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Commons</name>
-    <description>NorthernWind - Frontend Commons</description>
     
     <dependencies>
         <dependency>
@@ -40,4 +39,5 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <description>Utilities used by the front end implementations.</description>
 </project>
