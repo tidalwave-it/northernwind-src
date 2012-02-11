@@ -90,7 +90,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getExposedUri()
+    public String getExposedUri() // TODO: rename to getDefaultExposedUri
       throws NotFoundException, IOException 
       {
         String title = resource.getProperties().getProperty(PROPERTY_TITLE);
