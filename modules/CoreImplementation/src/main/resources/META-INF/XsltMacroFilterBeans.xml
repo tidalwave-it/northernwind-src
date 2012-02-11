@@ -42,6 +42,7 @@
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd"
        default-autowire="byType">
     
-    <bean id="xsltMacroFilter" class="it.tidalwave.northernwind.core.impl.model.XsltMacroFilter"/>
+    <bean id="xsltMacroFilter" 
+          class="it.tidalwave.northernwind.core.impl.model.XsltMacroFilter"/>
               
 </beans>
