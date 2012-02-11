@@ -41,12 +41,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.IOUtils;
 import org.stringtemplate.v4.ST;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
@@ -66,6 +69,9 @@ public class XsltMacroFilter implements Filter
   {
     private static final String XSLT_TEMPLATES_PATH = "/XsltTemplates/.*";
 
+    @Inject @Nonnull
+    private ApplicationContext context;
+        
     @Inject @Nonnull
     private DocumentBuilderFactory factory;
         
@@ -136,6 +142,18 @@ public class XsltMacroFilter implements Filter
           {
             final Source transformation = new StreamSource(new StringReader(xslt));
             final Transformer transformer = transformerFactory.newTransformer(transformation); 
+
+            try
+              {
+                final URIResolver uriResolver = context.getBean(URIResolver.class);
+                log.info("Using URIResolver: {}", uriResolver.getClass());
+                transformer.setURIResolver(uriResolver);
+              }
+            catch (NoSuchBeanDefinitionException e)
+              {
+                // ok, not installed 
+              }
+
             final StringWriter stringWriter = new StringWriter();
             final Result result = new StreamResult(stringWriter);
             transformer.transform(new DOMSource(stringToNode(text)), result); 

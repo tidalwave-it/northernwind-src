@@ -34,6 +34,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.impl.model.util.CachedURIResolver;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
@@ -90,8 +91,11 @@ public class XsltTemplateTestSupport
     public void setup() 
       throws Exception
       {
-        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("META-INF/XsltTemplateTestBeans.xml");
+        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml", 
+                                                                                          "META-INF/XsltTemplateTestBeans.xml",
+                                                                                          "META-INF/CachedUriResolverBeans.xml");
         filter = context.getBean(XsltMacroFilter.class);
+        context.getBean(CachedURIResolver.class).setCacheFolderPath("target/CachedUriResolver");
         final SiteProvider siteProvider = context.getBean(SiteProvider.class);
         final Site site = mock(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
