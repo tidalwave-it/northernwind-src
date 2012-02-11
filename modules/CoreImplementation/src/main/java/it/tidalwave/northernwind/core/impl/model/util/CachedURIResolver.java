@@ -100,7 +100,7 @@ public class CachedURIResolver implements URIResolver
       throws IOException 
       {
         log.debug(">>>> caching external document to {}", cachedFile);
-        final File tempFile = File.createTempFile("", ".txt", new File(cacheFolderPath));
+        final File tempFile = File.createTempFile("temp", ".txt", new File(cacheFolderPath));
         tempFile.deleteOnExit();
         final FileChannel channel = new RandomAccessFile(tempFile, "rw").getChannel();
         log.debug(">>>> waiting for lock...");
