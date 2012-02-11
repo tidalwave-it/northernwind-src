@@ -69,7 +69,6 @@ public class DefaultContainerViewController implements ContainerViewController
           }
         
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-
         view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
         view.setClearFix(Boolean.parseBoolean(viewProperties.getProperty(PROPERTY_CLEARFIX, "false")));
       }
