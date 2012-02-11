@@ -66,9 +66,11 @@ public class XsltMacroFilter implements Filter
   {
     private static final String XSLT_TEMPLATES_PATH = "/XsltTemplates/.*";
 
-    private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    @Inject @Nonnull
+    private DocumentBuilderFactory factory;
         
-    private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    @Inject @Nonnull
+    private TransformerFactory transformerFactory;
     
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
