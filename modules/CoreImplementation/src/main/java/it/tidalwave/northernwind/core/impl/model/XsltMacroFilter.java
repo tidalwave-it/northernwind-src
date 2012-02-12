@@ -55,6 +55,7 @@ import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import javax.xml.transform.TransformerConfigurationException;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 
@@ -140,22 +141,9 @@ public class XsltMacroFilter implements Filter
         
         try
           {
-            final Source transformation = new StreamSource(new StringReader(xslt));
-            final Transformer transformer = transformerFactory.newTransformer(transformation); 
-
-            try
-              {
-                final URIResolver uriResolver = context.getBean(URIResolver.class);
-                log.info("Using URIResolver: {}", uriResolver.getClass());
-                transformer.setURIResolver(uriResolver);
-              }
-            catch (NoSuchBeanDefinitionException e)
-              {
-                // ok, not installed 
-              }
-
             final StringWriter stringWriter = new StringWriter();
             final Result result = new StreamResult(stringWriter);
+            final Transformer transformer = createTransformer();
             transformer.transform(new DOMSource(stringToNode(text)), result); 
             return stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
           }
@@ -185,6 +173,30 @@ public class XsltMacroFilter implements Filter
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Transformer createTransformer() 
+      throws TransformerConfigurationException
+      {  
+        final Source transformation = new StreamSource(new StringReader(xslt));
+        final Transformer transformer = transformerFactory.newTransformer(transformation); 
+
+        try
+          {
+            final URIResolver uriResolver = context.getBean(URIResolver.class);
+            log.info("Using URIResolver: {}", uriResolver.getClass());
+            transformer.setURIResolver(uriResolver);
+          }
+        catch (NoSuchBeanDefinitionException e)
+          {
+            // ok, not installed 
+          }
+
+        return transformer;
+      }
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
