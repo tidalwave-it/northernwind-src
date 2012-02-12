@@ -59,7 +59,7 @@ public class XhtmlMarkupSerializer extends XHTMLSerializer
           {
             if (shouldOmitCDATA())
               {
-                content();
+                content(); // flushes element start
                 printText(chars, start, length, true, true);
               }
             else
@@ -80,7 +80,7 @@ public class XhtmlMarkupSerializer extends XHTMLSerializer
           {
             if (shouldOmitCDATA())
               {
-                content();
+                content(); // flushes element start
                 printText(text, true, true);
               }
             else
