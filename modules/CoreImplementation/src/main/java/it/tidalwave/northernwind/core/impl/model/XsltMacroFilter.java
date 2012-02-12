@@ -70,6 +70,8 @@ public class XsltMacroFilter implements Filter
   {
     private static final String XSLT_TEMPLATES_PATH = "/XsltTemplates/.*";
 
+    private static final String DOCTYPE_HTML = "<!DOCTYPE html>";
+    
     @Inject @Nonnull
     private ApplicationContext context;
         
@@ -145,7 +147,14 @@ public class XsltMacroFilter implements Filter
             final Result result = new StreamResult(stringWriter);
             final Transformer transformer = createTransformer();
             transformer.transform(new DOMSource(stringToNode(text)), result); 
-            return stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
+            String string = stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
+            
+            if (text.startsWith(DOCTYPE_HTML))
+              {
+                string = DOCTYPE_HTML + "\n" + string;  
+              }
+            
+            return string;
           }
         catch (SAXParseException e)
           {

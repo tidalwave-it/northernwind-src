@@ -106,6 +106,6 @@ public class XsltMacroFilterTest
     @DataProvider(name="fileNames")
     public Object[][] fileNamesProvider()
       {
-        return new Object[][] {{ "file1" }, { "file2" }};
+        return new Object[][] {{ "file1" }, { "file2" }, { "issue-NW-97-a" }};
       }
   }
