@@ -113,6 +113,12 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
+                <artifactId>it-tidalwave-northernwind-core-default</artifactId> 
+                <classifier>tests</classifier>
+                <version>1.0.20-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
                 <version>1.0.19-SNAPSHOT</version>
             </dependency>
