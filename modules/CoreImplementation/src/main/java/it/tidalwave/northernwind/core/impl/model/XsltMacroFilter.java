@@ -36,14 +36,14 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.IOUtils;
 import org.stringtemplate.v4.ST;
@@ -55,7 +55,7 @@ import org.openide.filesystems.FileObject;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import javax.xml.transform.TransformerConfigurationException;
+import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 
@@ -143,18 +143,21 @@ public class XsltMacroFilter implements Filter
         
         try
           {
-            final StringWriter stringWriter = new StringWriter();
-            final Result result = new StreamResult(stringWriter);
+            final DOMResult result = new DOMResult();
             final Transformer transformer = createTransformer();
             transformer.transform(new DOMSource(stringToNode(text)), result); 
-            String string = stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
+            
+            final StringWriter stringWriter = new StringWriter();
             
             if (text.startsWith(DOCTYPE_HTML))
               {
-                string = DOCTYPE_HTML + "\n" + string;  
+                stringWriter.append(DOCTYPE_HTML).append("\n");  
               }
             
-            return string;
+            // Fix for NW-96
+            final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
+            xhtmlSerializer.serialize(result.getNode());
+            return stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)
           {
