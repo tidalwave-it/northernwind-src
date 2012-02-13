@@ -145,7 +145,8 @@ public class XsltMacroFilter implements Filter
           {
             final DOMResult result = new DOMResult();
             final Transformer transformer = createTransformer();
-            transformer.transform(new DOMSource(stringToNode(text)), result); 
+            // Fix for NW-100
+            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), result); 
             
             final StringWriter stringWriter = new StringWriter();
             
@@ -157,7 +158,7 @@ public class XsltMacroFilter implements Filter
             // Fix for NW-96
             final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
             xhtmlSerializer.serialize(result.getNode());
-            return stringWriter.toString().replace(" xmlns=\"\"", ""); // FIXME:
+            return stringWriter.toString().replace("xml_lang", "xml:lang").replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)
           {
