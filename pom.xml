@@ -15,7 +15,7 @@
     <packaging>pom</packaging>
     <name>NorthernWind (master)</name>
     <url>http://northernwind.tidalwave.it</url>
-    <inceptionYear>2011</inceptionYear>
+    <inceptionYear>2012</inceptionYear>
 
     <properties>
         <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>

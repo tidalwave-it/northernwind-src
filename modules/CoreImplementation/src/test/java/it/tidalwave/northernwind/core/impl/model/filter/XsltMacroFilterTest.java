@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
-import it.tidalwave.northernwind.core.impl.model.RegexTreeMap;
+import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import it.tidalwave.util.test.FileComparisonUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;

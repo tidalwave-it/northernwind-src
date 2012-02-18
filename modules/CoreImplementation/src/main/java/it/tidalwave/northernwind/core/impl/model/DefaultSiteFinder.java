@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteFinder;
+import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.ToString;
 
 /***********************************************************************************************************************

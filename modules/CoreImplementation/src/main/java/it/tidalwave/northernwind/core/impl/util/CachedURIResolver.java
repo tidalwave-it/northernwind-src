@@ -20,7 +20,7 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.util;
+package it.tidalwave.northernwind.core.impl.util;
 
 import javax.annotation.Nonnull;
 import java.io.File;

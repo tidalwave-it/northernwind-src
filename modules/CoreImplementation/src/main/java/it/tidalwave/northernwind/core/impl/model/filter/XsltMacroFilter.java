@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model.filter;
 
-import it.tidalwave.northernwind.core.impl.model.Filter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -57,6 +56,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
+import it.tidalwave.northernwind.core.impl.model.Filter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 

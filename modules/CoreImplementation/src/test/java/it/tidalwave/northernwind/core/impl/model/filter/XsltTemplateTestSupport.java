@@ -34,7 +34,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
-import it.tidalwave.northernwind.core.impl.model.util.CachedURIResolver;
+import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
