@@ -20,13 +20,19 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.annotation.Order;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -34,20 +40,26 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class LibraryLinkMacroExpander extends MacroExpander
+@Configurable @Order(NodeLinkMacroFilter.ORDER) @Slf4j
+public class NodeLinkMacroFilter extends MacroFilter
   {
+    /* package */ static final int ORDER = 20;
+            
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    public LibraryLinkMacroExpander()
+    public NodeLinkMacroFilter()
       {
-        super("\\$libraryLink\\(relativePath='([^']*)'\\)\\$");
+        super("\\$nodeLink\\(relativePath='([^']*)'\\)\\$");
       } 
     
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
+      throws NotFoundException
       {
         final String relativePath = matcher.group(1);
-        return siteProvider.get().getSite().createLink(relativePath);
+        final Site site = siteProvider.get().getSite();
+        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
+        return site.createLink(siteNode.getRelativeUri());
       }
   }

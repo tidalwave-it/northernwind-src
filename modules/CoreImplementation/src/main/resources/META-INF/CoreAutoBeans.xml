@@ -100,16 +100,16 @@
           class="it.tidalwave.northernwind.core.impl.model.FilterSetExpander" />
           
     <bean id="mediaLinkMacroExpander"
-          class="it.tidalwave.northernwind.core.impl.model.filter.MediaLinkMacroExpander" />
+          class="it.tidalwave.northernwind.core.impl.filter.MediaLinkMacroFilter" />
           
     <bean id="nodeLinkMacroExpander"
-          class="it.tidalwave.northernwind.core.impl.model.filter.NodeLinkMacroExpander" />
+          class="it.tidalwave.northernwind.core.impl.filter.NodeLinkMacroFilter" />
           
     <bean id="nodeLinkWithContentMacroExpander"
-          class="it.tidalwave.northernwind.core.impl.model.filter.NodeLinkWithContentMacroExpander" />
+          class="it.tidalwave.northernwind.core.impl.filter.NodeLinkWithContentMacroFilter" />
           
     <bean id="libraryLinkMacroExpander"
-          class="it.tidalwave.northernwind.core.impl.model.filter.LibraryLinkMacroExpander" />
+          class="it.tidalwave.northernwind.core.impl.filter.LibraryLinkMacroFilter" />
     
     <bean id="siteProvider"
           class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider">

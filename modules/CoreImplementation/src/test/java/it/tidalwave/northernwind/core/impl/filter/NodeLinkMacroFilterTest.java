@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -32,10 +32,10 @@ import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
-class NodeLinkMacroExpanderFixture extends NodeLinkMacroExpander
+class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
   {
-    @Delegate(types=MacroExpanderTestHelper.class) @Getter
-    private final MacroExpanderTestHelper helper = new MacroExpanderTestHelper();
+    @Delegate(types=MacroFilterTestHelper.class) @Getter
+    private final MacroFilterTestHelper helper = new MacroFilterTestHelper();
   }
 
 /***********************************************************************************************************************
@@ -44,11 +44,11 @@ class NodeLinkMacroExpanderFixture extends NodeLinkMacroExpander
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NodeLinkMacroExpanderTest extends MacroExpanderTestSupport
+public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
   {
-    public NodeLinkMacroExpanderTest()
+    public NodeLinkMacroFilterTest()
       {
-        super("NodeLinkMacroExpanderTestBeans.xml");
+        super("NodeLinkMacroFilterTestBeans.xml");
       }
     
     @Test
@@ -65,7 +65,7 @@ public class NodeLinkMacroExpanderTest extends MacroExpanderTestSupport
     @Test(dataProvider="textProvider")
     public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected) 
       {
-        final NodeLinkMacroExpander fixture = context.getBean(NodeLinkMacroExpander.class);
+        final NodeLinkMacroFilter fixture = context.getBean(NodeLinkMacroFilter.class);
         final String filtered = fixture.filter(text, "text/html");
         
         assertThat(filtered, is(expected));

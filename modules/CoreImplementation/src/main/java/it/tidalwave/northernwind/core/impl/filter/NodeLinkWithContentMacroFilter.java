@@ -20,22 +20,22 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.regex.Matcher;
+import java.io.IOException;
+import org.springframework.core.annotation.Order;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.model.MockContentSiteFinder;
-import it.tidalwave.northernwind.core.impl.model.MockSiteNodeSiteFinder;
-import org.testng.annotations.BeforeClass;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import lombok.RequiredArgsConstructor;
-import static org.mockito.Mockito.*;
+import it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -43,35 +43,33 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
-public class MacroExpanderTestSupport 
+@Configurable @Order(NodeLinkMacroFilter.ORDER - 1) @Slf4j
+public class NodeLinkWithContentMacroFilter extends MacroFilter
   {
-    @Nonnull
-    private final String contextName;
+    @Inject @Nonnull
+    private Provider<SiteProvider> siteProvider;
     
-    protected ApplicationContext context;
+    @Inject @Nonnull
+    private ParameterLanguageOverrideLinkPostProcessor postProcessor;
     
-    protected SiteProvider siteProvider;
-    
-    protected Site site;
-    
-    @BeforeClass // FIXME: should be BeforeMethod?
-    public void setUp() 
+    // FIXME: merge with NodeLinkMacroExpander, using an optional block for contentRelativePath
+    public NodeLinkWithContentMacroFilter()
       {
-        context = new ClassPathXmlApplicationContext(contextName);
-        siteProvider = context.getBean(SiteProvider.class);
-        site = context.getBean(Site.class);
-        when(siteProvider.getSite()).thenReturn(site);
+        super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
+      } 
+    
+    @Override @Nonnull
+    protected String filter (final @Nonnull Matcher matcher)
+      throws NotFoundException, IOException
+      {
+        final String relativePath = matcher.group(1);
+        final String contentRelativePath = matcher.group(2);
+        final String language = matcher.group(4);
+        final Site site = siteProvider.get().getSite();
+        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
+        final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
+        final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();
         
-        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
-        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
-        when(site.createLink(anyString())).thenAnswer(new Answer<String>()
-          {
-            @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation) 
-              {
-                return "/LINK/" + invocation.getArguments()[0];
-              }
-          });
+        return site.createLink((language == null) ? link : postProcessor.postProcess(link, language));
       }
   }

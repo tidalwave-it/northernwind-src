@@ -20,19 +20,22 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.regex.Matcher;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.annotation.Order;
-import it.tidalwave.util.NotFoundException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.impl.model.MockContentSiteFinder;
+import it.tidalwave.northernwind.core.impl.model.MockSiteNodeSiteFinder;
+import org.testng.annotations.BeforeClass;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import lombok.RequiredArgsConstructor;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
@@ -40,26 +43,35 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Order(NodeLinkMacroExpander.ORDER) @Slf4j
-public class NodeLinkMacroExpander extends MacroExpander
+@RequiredArgsConstructor
+public class MacroFilterTestSupport 
   {
-    /* package */ static final int ORDER = 20;
-            
-    @Inject @Nonnull
-    private Provider<SiteProvider> siteProvider;
+    @Nonnull
+    private final String contextName;
     
-    public NodeLinkMacroExpander()
-      {
-        super("\\$nodeLink\\(relativePath='([^']*)'\\)\\$");
-      } 
+    protected ApplicationContext context;
     
-    @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
-      throws NotFoundException
+    protected SiteProvider siteProvider;
+    
+    protected Site site;
+    
+    @BeforeClass // FIXME: should be BeforeMethod?
+    public void setUp() 
       {
-        final String relativePath = matcher.group(1);
-        final Site site = siteProvider.get().getSite();
-        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-        return site.createLink(siteNode.getRelativeUri());
+        context = new ClassPathXmlApplicationContext(contextName);
+        siteProvider = context.getBean(SiteProvider.class);
+        site = context.getBean(Site.class);
+        when(siteProvider.getSite()).thenReturn(site);
+        
+        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
+        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
+        when(site.createLink(anyString())).thenAnswer(new Answer<String>()
+          {
+            @Override @Nonnull
+            public String answer (final @Nonnull InvocationOnMock invocation) 
+              {
+                return "/LINK/" + invocation.getArguments()[0];
+              }
+          });
       }
   }

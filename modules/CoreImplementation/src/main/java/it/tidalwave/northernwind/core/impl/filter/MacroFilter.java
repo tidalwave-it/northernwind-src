@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -39,12 +39,12 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @ThreadSafe @Slf4j
-public class MacroExpander implements Filter
+public class MacroFilter implements Filter
   {
     @Nonnull
     private final Pattern pattern;
     
-    public MacroExpander (final @Nonnull String regexp)
+    public MacroFilter (final @Nonnull String regexp)
       {
         pattern = Pattern.compile(regexp);
       }

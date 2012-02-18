@@ -45,12 +45,6 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.Site" />
     </bean>
 
-    <bean id="requestLocalemanager" class="it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager" />
-
-    <bean id="parameterLanguageOverrideRequestProcessor" class="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideRequestProcessor" />
-
-    <bean id="parameterLanguageOverrideLinkPostProcessor" class="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor" />
-
-    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.model.filter.NodeLinkWithContentMacroExpander" />
+    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.filter.NodeLinkMacroFilter" />
 
 </beans>

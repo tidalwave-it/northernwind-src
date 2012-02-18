@@ -20,22 +20,13 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
-import java.io.IOException;
-import org.springframework.core.annotation.Order;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor;
-import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -43,33 +34,20 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Order(NodeLinkMacroExpander.ORDER - 1) @Slf4j
-public class NodeLinkWithContentMacroExpander extends MacroExpander
+public class LibraryLinkMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    @Inject @Nonnull
-    private ParameterLanguageOverrideLinkPostProcessor postProcessor;
-    
-    // FIXME: merge with NodeLinkMacroExpander, using an optional block for contentRelativePath
-    public NodeLinkWithContentMacroExpander()
+    public LibraryLinkMacroFilter()
       {
-        super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
+        super("\\$libraryLink\\(relativePath='([^']*)'\\)\\$");
       } 
     
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
-      throws NotFoundException, IOException
       {
         final String relativePath = matcher.group(1);
-        final String contentRelativePath = matcher.group(2);
-        final String language = matcher.group(4);
-        final Site site = siteProvider.get().getSite();
-        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-        final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();
-        
-        return site.createLink((language == null) ? link : postProcessor.postProcess(link, language));
+        return siteProvider.get().getSite().createLink(relativePath);
       }
   }

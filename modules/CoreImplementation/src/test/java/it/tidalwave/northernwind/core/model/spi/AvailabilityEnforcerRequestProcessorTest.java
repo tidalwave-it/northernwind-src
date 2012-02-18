@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.core.model.spi;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import it.tidalwave.util.test.FileComparisonUtils;
-import it.tidalwave.northernwind.core.impl.model.filter.MacroExpanderTestSupport;
+import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import org.testng.annotations.BeforeMethod;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class AvailabilityEnforcerRequestProcessorTest extends MacroExpanderTestSupport
+public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSupport
   {
     private AvailabilityEnforcerRequestProcessor fixture;
     

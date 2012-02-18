@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -96,7 +96,7 @@ public class XsltMacroFilter implements Filter
       throws IOException, NotFoundException
       {
         log.info("Retrieving XSLT templates");
-        final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/XsltTemplate.xslt"));
+        final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/filter/XsltTemplate.xslt"));
         final StringBuilder xsltBuffer = new StringBuilder();
         
         for (final Resource resource : siteProvider.get().getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())

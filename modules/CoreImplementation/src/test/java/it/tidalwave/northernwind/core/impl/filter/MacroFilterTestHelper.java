@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model.filter;
+package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroExpanderTestHelper
+public class MacroFilterTestHelper
   {
     @Getter
     private List<List<String>> matches = new ArrayList<List<String>>();
