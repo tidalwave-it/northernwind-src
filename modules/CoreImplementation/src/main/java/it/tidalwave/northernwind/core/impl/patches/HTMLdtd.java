@@ -470,6 +470,7 @@ public final class HTMLdtd
     static
     {
         _elemDefs = new Hashtable();
+        defineElement( "A", PRESERVE );
         defineElement( "ADDRESS", CLOSE_P );
         defineElement( "AREA", EMPTY );
         defineElement( "BASE",  EMPTY | ALLOWED_HEAD );
@@ -495,6 +496,7 @@ public final class HTMLdtd
         defineElement( "HEAD", ELEM_CONTENT | OPT_CLOSING );
         defineElement( "HR", EMPTY | CLOSE_P );
         defineElement( "HTML", ELEM_CONTENT | OPT_CLOSING );
+        defineElement( "I", PRESERVE );
         defineElement( "IMG", EMPTY );
         defineElement( "INPUT", EMPTY );
         defineElement( "ISINDEX", EMPTY | ALLOWED_HEAD );
@@ -511,10 +513,11 @@ public final class HTMLdtd
         defineElement( "SCRIPT", ALLOWED_HEAD | PRESERVE );
         defineElement( "NOSCRIPT", ALLOWED_HEAD | PRESERVE );
         defineElement( "SELECT", ELEM_CONTENT );
+        defineElement( "SPAN", PRESERVE );
         defineElement( "STYLE", ALLOWED_HEAD | PRESERVE );
         defineElement( "TABLE", ELEM_CONTENT | CLOSE_P );
         defineElement( "TBODY", ELEM_CONTENT | OPT_CLOSING | CLOSE_TABLE );
-        defineElement( "TD", OPT_CLOSING | CLOSE_TH_TD );
+        defineElement( "TD", OPT_CLOSING | CLOSE_TH_TD | PRESERVE );
         defineElement( "TEXTAREA", PRESERVE );
         defineElement( "TFOOT", ELEM_CONTENT | OPT_CLOSING | CLOSE_TABLE );
         defineElement( "TH", OPT_CLOSING | CLOSE_TH_TD );

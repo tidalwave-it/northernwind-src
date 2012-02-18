@@ -349,9 +349,8 @@ public class HTMLSerializer
             state = enterElementState( namespaceURI, localName, rawName, preserveSpace );
 
             // Prevents line breaks inside A/TD
-
-            if ( htmlName != null && ( htmlName.equalsIgnoreCase( "A" ) ||
-                                       htmlName.equalsIgnoreCase( "TD" ) ) ) {
+            
+            if ( HTMLdtd.isPreserveSpace(htmlName)) {
                 state.empty = false;
                 _printer.printText( '>' );
             }
@@ -578,8 +577,7 @@ public class HTMLSerializer
             // We still do not change the curent element state.
             state = enterElementState( null, null, tagName, preserveSpace );
 
-            // Prevents line breaks inside A/TD
-            if ( tagName.equalsIgnoreCase( "A" ) || tagName.equalsIgnoreCase( "TD" ) ) {
+            if ( HTMLdtd.isPreserveSpace(tagName)) {
                 state.empty = false;
                 _printer.printText( '>' );
             }
@@ -803,11 +801,10 @@ public class HTMLSerializer
         // serialize an opening tag.
         if ( elem.hasChildNodes() || ! HTMLdtd.isEmptyTag( tagName ) ) {
             // Enter an element state, and serialize the children
-            // one by one. Finally, end the element.
+            // one by one. Finally, end the element.            
             state = enterElementState( null, null, tagName, preserveSpace );
 
-            // Prevents line breaks inside A/TD
-            if ( tagName.equalsIgnoreCase( "A" ) || tagName.equalsIgnoreCase( "TD" ) ) {
+            if ( HTMLdtd.isPreserveSpace(tagName)) {
                 state.empty = false;
                 _printer.printText( '>' );
             }
