@@ -73,8 +73,20 @@ public class DefaultContentRequestProcessor implements RequestProcessor
         final Site site = siteProvider.get().getSite();
         siteView.renderSiteNode(site.find(SiteNode).withRelativeUri(relativeUri).result());
         //
-        // Check *after* finding the SiteNode, since a not found must be properly handled.
+        // Check *after* finding the SiteNode, since a "not found" must have been already handled here.
         //
+        enforceTrailingSlash(relativeUri, site);
+        return BREAK;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * If relativeUri doesn't end with a trailing slash, send a redirect to the proper Uri.
+     *
+     ******************************************************************************************************************/
+    private void enforceTrailingSlash (final @Nonnull String relativeUri, final @Nonnull Site site) 
+      throws HttpStatusException
+      {
         final String originalRelativeUri = requestHolder.get().getOriginalRelativeUri();
         
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
@@ -83,7 +95,5 @@ public class DefaultContentRequestProcessor implements RequestProcessor
             headers.put("Location", site.createLink(relativeUri + "/"));
             throw new HttpStatusException(302, headers);
           }
-        
-        return BREAK;
       }
   }
