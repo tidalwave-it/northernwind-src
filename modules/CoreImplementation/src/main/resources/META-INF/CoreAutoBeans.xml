@@ -110,6 +110,9 @@
           
     <bean id="libraryLinkMacroExpander"
           class="it.tidalwave.northernwind.core.impl.filter.LibraryLinkMacroFilter" />
+          
+    <bean id="globalPropertyResolverMacroFilter"
+          class="it.tidalwave.northernwind.core.impl.filter.GlobalPropertyResolverMacroFilter" />
     
     <bean id="siteProvider"
           class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider">
