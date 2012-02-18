@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.impl.model.Filter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************

@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
-class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroExpander
+class NodeLinkMacroExpanderFixture extends NodeLinkMacroExpander
   {
     @Delegate(types=MacroExpanderTestHelper.class) @Getter
     private final MacroExpanderTestHelper helper = new MacroExpanderTestHelper();
@@ -44,28 +44,28 @@ class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroEx
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSupport
+public class NodeLinkMacroExpanderTest extends MacroExpanderTestSupport
   {
-    public NodeLinkWithContentMacroExpanderTest()
+    public NodeLinkMacroExpanderTest()
       {
-        super("NodeLinkWithContentMacroExpanderTestBeans.xml");
+        super("NodeLinkMacroExpanderTestBeans.xml");
       }
     
     @Test
     public void must_find_the_correct_matches() 
       {
-        final NodeLinkWithContentMacroExpanderFixture fixture = new NodeLinkWithContentMacroExpanderFixture();
-        final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
+        final NodeLinkMacroExpanderFixture fixture = new NodeLinkMacroExpanderFixture();
+        final String text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
         fixture.filter(text, "text/html");
         final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
-        assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null)));
+        assertThat(matches.get(0), is(Arrays.asList("/Blog")));
       }
     
     @Test(dataProvider="textProvider")
     public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected) 
       {
-        final NodeLinkWithContentMacroExpander fixture = context.getBean(NodeLinkWithContentMacroExpander.class);
+        final NodeLinkMacroExpander fixture = context.getBean(NodeLinkMacroExpander.class);
         final String filtered = fixture.filter(text, "text/html");
         
         assertThat(filtered, is(expected));
@@ -77,20 +77,8 @@ public class NodeLinkWithContentMacroExpanderTest extends MacroExpanderTestSuppo
         return new Object[][]
           {
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/')$\">1</a>",
-              "href=\"/LINK/URI-Blog/\">1</a>"
-            },
-            {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
-              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"
-            },
-            {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
-              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=it\">1</a>"
-            },
-            {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='fr')$\">1</a>",
-              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=fr\">1</a>"
+              "href=\"$nodeLink(relativePath='/Blog')$\">1</a>",
+              "href=\"/LINK/URI-Blog\">1</a>"
             }
           };        
       }

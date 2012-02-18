@@ -20,8 +20,9 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
+import it.tidalwave.northernwind.core.impl.model.Filter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;

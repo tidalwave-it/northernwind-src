@@ -20,13 +20,13 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
-import it.tidalwave.northernwind.core.model.SiteProvider;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -34,20 +34,23 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class LibraryLinkMacroExpander extends MacroExpander
+public class MacroExpanderTestHelper
   {
-    @Inject @Nonnull
-    private Provider<SiteProvider> siteProvider;
+    @Getter
+    private List<List<String>> matches = new ArrayList<List<String>>();
     
-    public LibraryLinkMacroExpander()
+    @Nonnull
+    public String filter (final @Nonnull Matcher matcher) 
       {
-        super("\\$libraryLink\\(relativePath='([^']*)'\\)\\$");
-      } 
-    
-    @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
-      {
-        final String relativePath = matcher.group(1);
-        return siteProvider.get().getSite().createLink(relativePath);
+        final List<String> match = new ArrayList<String>();
+        
+        for (int i = 1; i <= matcher.groupCount(); i++)
+          {
+            match.add(matcher.group(i));
+          }
+        
+        matches.add(match);
+        
+        return "";
       }
   }

@@ -51,6 +51,6 @@
 
     <bean id="parameterLanguageOverrideLinkPostProcessor" class="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor" />
 
-    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.model.NodeLinkWithContentMacroExpander" />
+    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.model.filter.NodeLinkWithContentMacroExpander" />
 
 </beans>

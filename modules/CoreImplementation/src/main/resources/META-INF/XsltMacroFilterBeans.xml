@@ -43,6 +43,6 @@
        default-autowire="byType">
     
     <bean id="xsltMacroFilter" 
-          class="it.tidalwave.northernwind.core.impl.model.XsltMacroFilter"/>
+          class="it.tidalwave.northernwind.core.impl.model.filter.XsltMacroFilter"/>
               
 </beans>

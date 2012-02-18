@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -35,6 +35,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
+import it.tidalwave.northernwind.core.impl.model.RegexTreeMap;
 import it.tidalwave.util.test.FileComparisonUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;

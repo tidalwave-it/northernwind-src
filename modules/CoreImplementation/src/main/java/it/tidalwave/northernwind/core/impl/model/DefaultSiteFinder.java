@@ -41,7 +41,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString(callSuper=true, exclude="mapByRelativePath")
-/* package */ class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
+public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
   {
     @Nonnull
     private final Map<String, Type> mapByRelativePath;

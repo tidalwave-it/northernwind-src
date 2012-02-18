@@ -20,13 +20,13 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.regex.Matcher;
-import lombok.Getter;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 
 /***********************************************************************************************************************
  *
@@ -34,23 +34,20 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroExpanderTestHelper
+public class MediaLinkMacroExpander extends MacroExpander
   {
-    @Getter
-    private List<List<String>> matches = new ArrayList<List<String>>();
+    @Inject @Nonnull
+    private Provider<SiteProvider> siteProvider;
     
-    @Nonnull
-    public String filter (final @Nonnull Matcher matcher) 
+    public MediaLinkMacroExpander()
       {
-        final List<String> match = new ArrayList<String>();
-        
-        for (int i = 1; i <= matcher.groupCount(); i++)
-          {
-            match.add(matcher.group(i));
-          }
-        
-        matches.add(match);
-        
-        return "";
+        super("\\$mediaLink\\(relativePath='([^']*)'\\)\\$");
+      } 
+    
+    @Override @Nonnull
+    protected String filter (final @Nonnull Matcher matcher)
+      {
+        final String relativePath = matcher.group(1);
+        return siteProvider.get().getSite().createLink("/media" + relativePath);
       }
   }

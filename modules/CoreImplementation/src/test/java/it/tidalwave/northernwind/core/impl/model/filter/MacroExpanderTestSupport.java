@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +29,8 @@ import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.core.impl.model.MockContentSiteFinder;
+import it.tidalwave.northernwind.core.impl.model.MockSiteNodeSiteFinder;
 import org.testng.annotations.BeforeClass;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;

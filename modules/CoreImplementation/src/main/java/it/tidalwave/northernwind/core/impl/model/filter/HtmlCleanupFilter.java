@@ -20,15 +20,16 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import it.tidalwave.northernwind.core.impl.model.Filter;
+import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************

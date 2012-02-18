@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.filter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,20 +34,20 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MediaLinkMacroExpander extends MacroExpander
+public class LibraryLinkMacroExpander extends MacroExpander
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    public MediaLinkMacroExpander()
+    public LibraryLinkMacroExpander()
       {
-        super("\\$mediaLink\\(relativePath='([^']*)'\\)\\$");
+        super("\\$libraryLink\\(relativePath='([^']*)'\\)\\$");
       } 
     
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
         final String relativePath = matcher.group(1);
-        return siteProvider.get().getSite().createLink("/media" + relativePath);
+        return siteProvider.get().getSite().createLink(relativePath);
       }
   }
