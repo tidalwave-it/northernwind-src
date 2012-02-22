@@ -32,7 +32,8 @@ import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
-class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroFilter
+
+class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilter
   {
     @Delegate(types=MacroFilterTestHelper.class) @Getter
     private final MacroFilterTestHelper helper = new MacroFilterTestHelper();
@@ -44,9 +45,9 @@ class NodeLinkWithContentMacroExpanderFixture extends NodeLinkWithContentMacroFi
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NodeLinkWithContentMacroExpanderTest extends MacroFilterTestSupport
+public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
   {
-    public NodeLinkWithContentMacroExpanderTest()
+    public NodeLinkWithContentMacroFilterTest()
       {
         super("NodeLinkWithContentMacroFilterTestBeans.xml");
       }
@@ -54,7 +55,7 @@ public class NodeLinkWithContentMacroExpanderTest extends MacroFilterTestSupport
     @Test
     public void must_find_the_correct_matches() 
       {
-        final NodeLinkWithContentMacroExpanderFixture fixture = new NodeLinkWithContentMacroExpanderFixture();
+        final NodeLinkWithContentMacroFilterFixture fixture = new NodeLinkWithContentMacroFilterFixture();
         final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
         fixture.filter(text, "text/html");
         final List<List<String>> matches = fixture.getHelper().getMatches();
