@@ -108,17 +108,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         final ResourceProperties viewProperties = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
         
-        try
-          {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
-            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("Cannot find custom template, using default ({})", e.toString());
-          }
-           
+        setCustomTemplate(viewProperties);           
         view.addAttribute("language", requestLocaleManager.getLocales().get(0).getLanguage());
         view.addAttribute("titlePrefix", viewProperties.getProperty(PROPERTY_TITLE_PREFIX, ""));
         view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION, ""));
@@ -215,6 +205,26 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         return builder.toString();
       }
     
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    private void setCustomTemplate (final @Nonnull ResourceProperties viewProperties) 
+      throws IOException 
+      {
+        try
+          {
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
+            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
+          }
+        catch (NotFoundException e)
+          {
+            log.warn("Cannot find custom template, using default ({})", e.toString());
+          }
+      }
+
     /*******************************************************************************************************************
      *
      * .
