@@ -67,62 +67,25 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
+            int titleLevel = 2; // TODO: read override from properties
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             final StringBuilder htmlBuilder = new StringBuilder();
-            String titleMarkup = "h2";
-            
-            String template = "$content$";
-            
-            try
-              {
-                final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
-                final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
-                final ResourceProperties templateProperties = content.getProperties();
-                template = templateProperties.getProperty(PROPERTY_TEMPLATE, "$content$");
-              }
-            catch (NotFoundException e)
-              {
-                // ok, default template
-              }
+            final String template = getTemplate(viewProperties);
             
             log.debug(">>>> template: {}", template);
             
             for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS))
               {
-                final StringBuilder htmlBuilder2 = new StringBuilder();
+                final StringBuilder htmlFragmentBuilder = new StringBuilder();
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
                 final ResourceProperties contentProperties = content.getProperties();
-                
-                try
-                  {
-                    final String title = contentProperties.getProperty(PROPERTY_TITLE);
-                    htmlBuilder2.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
-                  }
-                catch (NotFoundException e)
-                  {
-                    // ok, no title
-                  }
-
-                String s = "";
-                try
-                  {
-                    s = contentProperties.getProperty(PROPERTY_FULL_TEXT) + "\n";
-                  }
-                catch (NotFoundException e)
-                  {
-                    log.warn("", e);
-                    s = e.toString();
-                  }
-                
-                htmlBuilder2.append(s);
-                final ST t = new ST(template, '$', '$').add("content", htmlBuilder2.toString());
+                appendTitle(contentProperties, htmlFragmentBuilder, "h" + titleLevel++);                
+                appendText(contentProperties, htmlFragmentBuilder);
+                final ST t = new ST(template, '$', '$').add("content", htmlFragmentBuilder.toString());
                 htmlBuilder.append(t.render());
-                
-                titleMarkup = "h3";
               }
             
-            view.setText(htmlBuilder.toString());
-            
+            view.setText(htmlBuilder.toString());            
             view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (NotFoundException e)
@@ -134,6 +97,69 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
           {
             view.setText(e.toString());
             log.error("", e);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Appends the title.
+     *
+     ******************************************************************************************************************/
+    private void appendTitle (final @Nonnull ResourceProperties contentProperties,
+                              final @Nonnull StringBuilder htmlBuilder, 
+                              final @Nonnull String titleMarkup) 
+      throws IOException 
+      {
+        try
+          {
+            final String title = contentProperties.getProperty(PROPERTY_TITLE);
+            htmlBuilder.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no title
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Appends the text.
+     *
+     ******************************************************************************************************************/
+    private void appendText (final @Nonnull ResourceProperties contentProperties,
+                             final @Nonnull StringBuilder htmlBuilder) 
+      throws IOException 
+      {
+        try
+          {
+            htmlBuilder.append(contentProperties.getProperty(PROPERTY_FULL_TEXT)).append("\n");
+          }
+        catch (NotFoundException e)
+          {
+            log.warn("", e);
+            htmlBuilder.append(e.toString());
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns the template.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String getTemplate (final @Nonnull ResourceProperties viewProperties) 
+      throws IOException 
+      {
+        try
+          {
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
+            final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
+            final ResourceProperties templateProperties = content.getProperties();
+            return templateProperties.getProperty(PROPERTY_TEMPLATE, "$content$");
+          }
+        catch (NotFoundException e)
+          {
+            return "$content$";
           }
       }
   }
