@@ -106,7 +106,7 @@ public class XsltMacroFilter implements Filter
             xsltBuffer.append(file.asText("UTF-8")); 
           }
         
-        final ST t = new ST(template, '#', '#').add("content", xsltBuffer.toString());
+        final ST t = new ST(template, '%', '%').add("content", xsltBuffer.toString());
         xslt = t.render();
       }
             

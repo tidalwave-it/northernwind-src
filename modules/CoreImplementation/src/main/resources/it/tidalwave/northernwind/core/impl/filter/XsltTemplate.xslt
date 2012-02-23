@@ -22,27 +22,30 @@
     
     <!-- ***************************************************************************************************************
     *
-    * Ensures that contents of <pre> sections are always properly escaped.
+    * Ensures that text sections are always properly escaped.
     *
     **************************************************************************************************************** -->
-    <xsl:template match="pre">
-        <xsl:copy>
-            <xsl:apply-templates select="@* | node()" mode="id" />
-        </xsl:copy>
-    </xsl:template>
-    
-    <xsl:template match="@* | node()" mode="id" >
-        <xsl:copy>
-            <xsl:apply-templates select="@* | node()" mode="id" />
-        </xsl:copy>
-    </xsl:template>    
-    
-    <xsl:template match="text()" mode="id" >
+    <xsl:template match="text()" >
         <xsl:call-template name="escape">
             <xsl:with-param name="string" select="."/>
         </xsl:call-template>
     </xsl:template>    
     
+    <!-- ***************************************************************************************************************
+    *
+    * Ensures that script sections are not escaped and wrapped by a CDATA.
+    *
+    **************************************************************************************************************** -->
+    <xsl:template match="script"> 
+        <xsl:copy> 
+            <xsl:apply-templates select="@*"/> 
+            <xsl:copy-of select="*"/>
+            <xsl:value-of select="'&#10;//&lt;![CDATA['"/>
+            <xsl:value-of select="."/> 
+            <xsl:value-of select="'//]]&gt;&#10;'"/>
+        </xsl:copy> 
+     </xsl:template>
+     
     <!-- ***************************************************************************************************************
     *
     *
@@ -96,6 +99,6 @@
         </xsl:choose>
     </xsl:template>
     
-    #content#
+    %content%
 
 </xsl:stylesheet>

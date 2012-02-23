@@ -110,7 +110,7 @@ public class XsltMacroFilterTest
       {
         return new Object[][] 
           {
-            { "file1" }, { "file2" }, { "issue-NW-96-a" }, { "issue-NW-96-b" }, { "issue-NW-97-a" }, { "issue-NW-100" },
+            { "file1" }, { "file2" }, { "issue-NW-96-a-NW-106-a" }, { "issue-NW-96-b" }, { "issue-NW-97-a" }, { "issue-NW-100" },
             { "issue-NW-102-a" }, { "issue-NW-104-a" }
           };
       }
