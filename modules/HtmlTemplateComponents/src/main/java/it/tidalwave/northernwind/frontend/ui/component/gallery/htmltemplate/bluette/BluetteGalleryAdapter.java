@@ -85,7 +85,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
             final SiteNode siteNode = context.getSiteNode();
             final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri() + "/images.xml");
 
-            builder.append("<script type=\"text/javascript\">\n");
+            builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
             builder.append(String.format("var catalogUrl = \"%s\";\n", link));
             
             final ResourceProperties bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
@@ -97,7 +97,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                 builder.append(String.format("var %s = %s;\n", key.stringValue(), value));
               }
 
-            builder.append("</script>\n");
+            builder.append("//]]>\n</script>\n");
           } 
         catch (NotFoundException e) 
           {
