@@ -71,21 +71,21 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
             final StringBuilder htmlBuilder = new StringBuilder();
             String titleMarkup = "h2";
             
-            String wrapperTemplate = "$content$";
+            String template = "$content$";
             
             try
               {
-                final String wrapperTemplateResourceRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
-                final Content content = site.find(Content).withRelativePath(wrapperTemplateResourceRelativePath).result();
-                final ResourceProperties wrapperTemplateResourceProperties = content.getProperties();
-                wrapperTemplate = wrapperTemplateResourceProperties.getProperty(PROPERTY_TEMPLATE, "$content$");
+                final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
+                final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
+                final ResourceProperties templateProperties = content.getProperties();
+                template = templateProperties.getProperty(PROPERTY_TEMPLATE, "$content$");
               }
             catch (NotFoundException e)
               {
-                
+                // ok, default template
               }
             
-            log.debug(">>>> wrapperTemplate: {}", wrapperTemplate);
+            log.debug(">>>> template: {}", template);
             
             for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS))
               {
@@ -115,7 +115,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
                   }
                 
                 htmlBuilder2.append(s);
-                final ST t = new ST(wrapperTemplate, '$', '$').add("content", htmlBuilder2.toString());
+                final ST t = new ST(template, '$', '$').add("content", htmlBuilder2.toString());
                 htmlBuilder.append(t.render());
                 
                 titleMarkup = "h3";
