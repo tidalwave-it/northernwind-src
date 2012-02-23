@@ -201,7 +201,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS, Collections.<String>emptyList()))
               {
-                // Always use </script> to close, as some browsers get broken without
+                // Always use </script> to close, as some browsers break without
                 builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>\n", site.createLink(relativeUri)));
               }
           }
