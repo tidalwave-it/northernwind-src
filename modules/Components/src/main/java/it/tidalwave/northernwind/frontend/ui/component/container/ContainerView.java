@@ -35,8 +35,6 @@ import it.tidalwave.role.Identifiable;
  **********************************************************************************************************************/
 public interface ContainerView extends Identifiable
   {
-    public void setClearFix (boolean clearFix);
-
     public void setTemplate (@Nonnull String property);
 
     public void setClassName (@Nonnull String property);

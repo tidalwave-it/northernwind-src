@@ -32,6 +32,4 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface ContainerViewController 
   {  
-    // FIXME: must be boolean
-    public static final Key<String> PROPERTY_CLEARFIX = new Key<String>("clearFix");
   }
