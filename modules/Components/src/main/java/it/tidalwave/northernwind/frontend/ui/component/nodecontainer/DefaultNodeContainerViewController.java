@@ -36,6 +36,8 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -109,7 +111,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         try
           {
             final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
-            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
+            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }
         catch (NotFoundException e)
@@ -176,7 +178,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS, Collections.<String>emptyList()))
               {
-                site.find(SiteNode.class).withRelativePath(relativePath).doWithResults(createRssLink);
+                site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink);
               }
           }
         catch (IOException e)
@@ -229,7 +231,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
               {
                 try
                   {
-                    final Content script = site.find(Content.class).withRelativePath(relativePath).result();
+                    final Content script = site.find(Content).withRelativePath(relativePath).result();
                     builder.append(script.getProperties().getProperty(PROPERTY_TEMPLATE));  
                   }        
                 catch (NotFoundException e)
