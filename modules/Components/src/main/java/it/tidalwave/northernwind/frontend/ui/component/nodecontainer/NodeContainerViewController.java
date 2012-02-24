@@ -37,6 +37,8 @@ public interface NodeContainerViewController
     
     public static final Key<List<String>> PROPERTY_SCREEN_STYLE_SHEETS = new Key<List<String>>("screenStyleSheets");
     
+    public static final Key<List<String>> PROPERTY_PRINT_STYLE_SHEETS = new Key<List<String>>("printStyleSheets");
+    
     public static final Key<List<String>> PROPERTY_RSS_FEEDS = new Key<List<String>>("rssFeeds");
     
     public static final Key<List<String>> PROPERTY_SCRIPTS = new Key<List<String>>("scripts");

@@ -6,6 +6,7 @@
         <meta http-equiv="Content-type" content="text/html;charset=$charset$">       
         <meta http-equiv="Content-Language" content="$language$"/>
         $screenCssSection$
+        $printCssSection$
         <style type="text/css" media="print">
             div#header { display: none }
             div#sub { display: none }

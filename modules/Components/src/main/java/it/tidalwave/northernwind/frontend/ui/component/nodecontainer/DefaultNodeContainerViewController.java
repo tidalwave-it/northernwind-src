@@ -114,6 +114,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION, ""));
         view.addAttribute("title", siteNodeProperties.getProperty(PROPERTY_TITLE, ""));
         view.addAttribute("screenCssSection", computeScreenCssSection());
+        view.addAttribute("printCssSection", computePrintCssSection());
         view.addAttribute("rssFeeds", computeRssFeedsSection());
         view.addAttribute("scripts", computeScriptsSection());
         view.addAttribute("inlinedScripts", computeInlinedScriptsSection());
@@ -146,6 +147,32 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
                 builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />\n", link));
+              }
+          }
+        catch (IOException e)
+          {
+            log.error("", e);
+          }        
+        
+        return builder.toString();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computePrintCssSection() 
+      {
+        final StringBuilder builder = new StringBuilder();
+    
+        try
+          {
+            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_PRINT_STYLE_SHEETS, Collections.<String>emptyList()))
+              {
+                final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
+                builder.append(String.format("<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n", link));
               }
           }
         catch (IOException e)
