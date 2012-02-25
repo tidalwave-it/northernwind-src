@@ -37,6 +37,10 @@
             <groupId>org.antlr</groupId>
             <artifactId>stringtemplate</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
     </dependencies>
     <description>The definitions of page components.</description>
 </project>
