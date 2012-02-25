@@ -60,6 +60,13 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Nonnull
     private final RequestHolder requestHolder;
     
+    private GalleryAdapter galleryAdapter;
+
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     private final GalleryAdapterContext context = new GalleryAdapterContext()
       {
         @Override
@@ -75,8 +82,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
           }
       };
     
-    private GalleryAdapter galleryAdapter;
-
     /*******************************************************************************************************************
      *
      *
@@ -153,6 +158,11 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         return super.getViewProperties().merged(getGalleryAdapter().getExtraViewProperties(view.getId()));
       } 
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private GalleryAdapter getGalleryAdapter()
       {
