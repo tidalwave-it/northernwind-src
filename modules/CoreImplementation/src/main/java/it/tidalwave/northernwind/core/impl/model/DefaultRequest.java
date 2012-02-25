@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.SiteNode;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.util.Arrays;
@@ -35,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -127,7 +127,7 @@ import lombok.ToString;
     public String getPathParams (final @Nonnull SiteNode siteNode) 
       {
         final String siteNodeRelativeUri = siteNode.getRelativeUri();
-        return relativeUri.substring(siteNodeRelativeUri.length());
+        return (relativeUri.length() <= siteNodeRelativeUri.length()) ? "" : relativeUri.substring(siteNodeRelativeUri.length());
       }
     
     /*******************************************************************************************************************
