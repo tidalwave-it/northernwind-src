@@ -67,15 +67,15 @@ public class DefaultViewFactory implements ViewFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Object createView (final @Nonnull String viewTypeUri, 
-                              final @Nonnull Id viewId, 
-                              final @Nonnull SiteNode siteNode)
+    public ViewAndController createViewAndController (final @Nonnull String viewTypeUri, 
+                                                      final @Nonnull Id viewId, 
+                                                      final @Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException
       {        
         final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
                                                       String.format("Cannot find %s: available: %s", 
                                                                     viewTypeUri, viewBuilderMapByTypeUri.keySet()));
-        return viewBuilder.createView(viewId, siteNode);
+        return viewBuilder.createViewAndController(viewId, siteNode);
       }
      
     /*******************************************************************************************************************

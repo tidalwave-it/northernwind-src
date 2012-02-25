@@ -90,7 +90,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
       {
         try 
           {
-            return (ComponentType)layout.createView(siteNode);
+            return (ComponentType)layout.createViewAndController(siteNode).getView();
           }
         catch (NotFoundException e) 
           {

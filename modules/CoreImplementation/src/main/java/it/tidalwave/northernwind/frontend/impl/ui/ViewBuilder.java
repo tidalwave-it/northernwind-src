@@ -37,6 +37,7 @@ import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,19 +85,16 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (final @Nonnull Id id, final @Nonnull SiteNode siteNode) 
+    public ViewAndController createViewAndController (final @Nonnull Id id, final @Nonnull SiteNode siteNode) 
       throws HttpStatusException
       {
-        log.debug("createView({}, {})", id, siteNode);
+        log.debug("createViewAndController({}, {})", id, siteNode);
         
         try
           { 
-            // Note that the viewController is not assigned to any object. Indeed, it might be GCed sooner or later.
-            // But it's not a problem: if it's not referenced, it will be no more useful (in contrast, e.g. a view
-            // would bind itself to a controller listener or action in cases when the controller plays a later role). 
             final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
-            viewControllerConstructor.newInstance(computeConstructorArguments(viewControllerConstructor, id, siteNode, view));  
-            return view;
+            final Object controller = viewControllerConstructor.newInstance(computeConstructorArguments(viewControllerConstructor, id, siteNode, view));  
+            return new ViewAndController(view, controller);
           }
         catch (InvocationTargetException e)
           {

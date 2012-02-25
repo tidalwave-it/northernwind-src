@@ -27,6 +27,9 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -40,9 +43,16 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  **********************************************************************************************************************/
 public interface ViewFactory 
   {
+    @RequiredArgsConstructor @Getter @ToString
+    public static class ViewAndController
+      {
+        private final Object view;
+        private final Object controller;
+      }
+            
     /*******************************************************************************************************************
      *
-     * Creates a new instance of a View.
+     * Creates a new pair of View and Controller.
      *
      * @param   viewTypeUri         the view type URI
      * @param   viewId              the view id
@@ -53,6 +63,6 @@ public interface ViewFactory
      * 
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (@Nonnull String viewTypeUri, @Nonnull Id viewId, @Nonnull SiteNode siteNode) 
+    public ViewAndController createViewAndController (@Nonnull String viewTypeUri, @Nonnull Id viewId, @Nonnull SiteNode siteNode) 
       throws NotFoundException, HttpStatusException; 
   }

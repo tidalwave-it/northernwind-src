@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui;
 
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import javax.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.util.As;
@@ -30,7 +29,9 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.role.Identifiable;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 
 /***********************************************************************************************************************
  *
@@ -53,7 +54,7 @@ public interface Layout extends As, Identifiable
      * 
      ******************************************************************************************************************/
     @Nonnull
-    public Object createView (@Nonnull SiteNode siteNode)
+    public ViewAndController createViewAndController (@Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException;
     
     @Nonnull // TODO: refactor with Composite

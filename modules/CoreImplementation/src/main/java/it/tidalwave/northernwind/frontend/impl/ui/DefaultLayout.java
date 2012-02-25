@@ -38,6 +38,7 @@ import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import it.tidalwave.role.spring.SpringAsSupport;
 import lombok.Getter;
 
@@ -207,10 +208,10 @@ public class DefaultLayout extends SpringAsSupport implements Layout
       }
 
     @Override @Nonnull
-    public Object createView (final @Nonnull SiteNode siteNode) 
+    public ViewAndController createViewAndController (final @Nonnull SiteNode siteNode) 
       throws NotFoundException, HttpStatusException
       {
-        return viewFactory.createView(typeUri, id, siteNode);
+        return viewFactory.createViewAndController(typeUri, id, siteNode);
       }
     
     @Override @Nonnull // TODO: refactor with Composite
