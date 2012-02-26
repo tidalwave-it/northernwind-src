@@ -32,7 +32,6 @@ import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
-
 class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilter
   {
     @Delegate(types=MacroFilterTestHelper.class) @Getter
