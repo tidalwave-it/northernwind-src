@@ -52,15 +52,15 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
         super("NodeLinkWithContentMacroFilterTestBeans.xml");
       }
     
-    @Test
-    public void must_find_the_correct_matches() 
+    @Test(dataProvider="matchesDataProvider")
+    public void must_find_the_correct_matches (final @Nonnull String text, 
+                                               final @Nonnull List<String> expectedMatches) 
       {
         final NodeLinkWithContentMacroFilterFixture fixture = new NodeLinkWithContentMacroFilterFixture();
-        final String text = "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>";
         fixture.filter(text, "text/html");
         final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
-        assertThat(matches.get(0), is(Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null)));
+        assertThat(matches.get(0), equalTo(expectedMatches));
       }
     
     @Test(dataProvider="textProvider")
@@ -70,6 +70,26 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
         final String filtered = fixture.filter(text, "text/html");
         
         assertThat(filtered, is(expected));
+      }
+    
+    @DataProvider(name="matchesDataProvider")
+    public Object[][] matchesDataProvider()
+      {
+        return new Object[][]
+          {
+            {
+              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
+              Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null)
+            },
+//            {
+//              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
+//              Arrays.asList("/Blog", "/Blog/Equipment/The title", null, "it")
+//            },
+            {
+              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
+              Arrays.asList("/Blog", "/Blog/Equipment/The title", "", "language='it'", "it")
+            }
+          };        
       }
     
     @DataProvider(name="textProvider")

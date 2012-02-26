@@ -22,13 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.filter;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
 import java.io.IOException;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
@@ -49,10 +53,14 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
+    // FIXME: what about @AutoWired(required=false)?
     @Inject @Nonnull
+    private ApplicationContext context;
+    
+    @CheckForNull
     private ParameterLanguageOverrideLinkPostProcessor postProcessor;
     
-    // FIXME: merge with NodeLinkMacroExpander, using an optional block for contentRelativePath
+    // FIXME: merge with NodeLinkMacroFilter, using an optional block for contentRelativePath
     public NodeLinkWithContentMacroFilter()
       {
         super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
@@ -70,6 +78,19 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
         final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();
         
-        return site.createLink((language == null) ? link : postProcessor.postProcess(link, language));
+        return site.createLink(((language == null) || (postProcessor == null)) ? link : postProcessor.postProcess(link, language));
+      }
+    
+    @PostConstruct
+    private void initialize()
+      {
+        try
+          {
+            postProcessor = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class); 
+          }
+        catch (NoSuchBeanDefinitionException e)
+          {
+            // ok, it's optional
+          }
       }
   }
