@@ -27,11 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Key;
@@ -43,7 +39,6 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
-import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
