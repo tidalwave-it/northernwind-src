@@ -47,23 +47,43 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
     @Inject @Nonnull
     protected ModelFactory modelFactory;
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId) 
       {
         return modelFactory.createProperties(viewId);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void initialize (final @Nonnull GalleryAdapterContext context)
       {
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String getInlinedScript() 
       {
         return "";
       }
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Nonnull
     protected String loadTemplate (final @Nonnull String templateName) 
       throws IOException

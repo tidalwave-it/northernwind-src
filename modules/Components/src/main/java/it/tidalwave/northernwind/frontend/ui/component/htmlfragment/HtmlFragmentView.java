@@ -39,10 +39,17 @@ public interface HtmlFragmentView extends Identifiable
      *
      * Sets the text content.
      * 
-     * @param  text  the text
+     * @param  content  the content
      *
      ******************************************************************************************************************/
-    public void setContent (@Nonnull String html);
+    public void setContent (@Nonnull String content);
 
-    public void setClassName (@Nonnull String property);
+    /*******************************************************************************************************************
+     *
+     * Sets the CSS class name.
+     * 
+     * @param  className  the class name
+     *
+     ******************************************************************************************************************/
+    public void setClassName (@Nonnull String className);
   }

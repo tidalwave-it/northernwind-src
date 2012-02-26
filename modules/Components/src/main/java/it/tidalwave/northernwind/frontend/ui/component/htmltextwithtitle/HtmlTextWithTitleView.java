@@ -42,7 +42,14 @@ public interface HtmlTextWithTitleView extends Identifiable
      * @param  text  the text
      *
      ******************************************************************************************************************/
-    public void setText (@Nonnull String string);
+    public void setText (@Nonnull String text);
 
-    public void setClassName (@Nonnull String property);
+    /*******************************************************************************************************************
+     *
+     * Sets the CSS class name.
+     * 
+     * @param  className  the class name
+     *
+     ******************************************************************************************************************/
+    public void setClassName (@Nonnull String className);
   }

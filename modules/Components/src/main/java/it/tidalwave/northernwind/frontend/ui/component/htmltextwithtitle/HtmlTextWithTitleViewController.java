@@ -27,7 +27,7 @@ import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link ArticleView}.
+ * The controller of {@link HtmlTextWithTitleView}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$

@@ -73,7 +73,10 @@ public interface GalleryAdapter
     
     /*******************************************************************************************************************
      *
-     *
+     * Creates a catalog of media items to be consumed by the gallery software.
+     * 
+     * @param  view   the view component
+     * @param  items  the gallery items
      *
      ******************************************************************************************************************/
     public void createItemCatalog (@Nonnull GalleryView view, @Nonnull List<Item> items)
@@ -81,7 +84,11 @@ public interface GalleryAdapter
     
     /*******************************************************************************************************************
      *
+     * Creates a fallback page for a single gallery item for when JavaScript is not available.
      *
+     * @param  view   the view component
+     * @param  key    the image key
+     * @param  item   the gallery item
      *
      ******************************************************************************************************************/
     public void createFallback (@Nonnull GalleryView view, @Nonnull String key, @Nonnull Item item);
