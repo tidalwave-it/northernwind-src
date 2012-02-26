@@ -59,7 +59,7 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
         fixture.filter(text, "text/html");
         final List<List<String>> matches = fixture.getHelper().getMatches();
         assertThat(matches.size(), is(1));
-        assertThat(matches.get(0), equalTo(expectedMatches));
+        assertThat(matches.get(0), is(expectedMatches));
       }
     
     @Test(dataProvider="textProvider")
@@ -80,13 +80,9 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
               "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
               Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null)
             },
-//            {
-//              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
-//              Arrays.asList("/Blog", "/Blog/Equipment/The title", null, "it")
-//            },
             {
               "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
-              Arrays.asList("/Blog", "/Blog/Equipment/The title", "", "language='it'", "it")
+              Arrays.asList("/Blog", "/Blog/Equipment/The title", ", language='it'", "it")
             }
           };        
       }
