@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$language$" lang="$language$">
+  <!-- @nw.HtmlCleanupFilter.enabled=false -->
+  <head>
+    <title>$titlePrefix$$title$</title>
+    <meta charset="$charset$" />
+    <meta name="description" content="$caption$" />
+    <meta name="generator" content="NorthernWind" />
+    <script type="text/javascript">
+//<![CDATA[
+window.location.replace('$redirectUrl$');
+//]]>
+    </script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="content">
+        <div id="slideshow">
+          <div id="imageRenderer">
+            <div id="divimage1"><img id="image1" src="/media/stillimages/1280/$key$.jpg" /></div>
+          </div>
+          <div id="title1"><p>$caption$</p></div>
+          <div id="copyright">&copy; Copyright by Fabrizio Giudici. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

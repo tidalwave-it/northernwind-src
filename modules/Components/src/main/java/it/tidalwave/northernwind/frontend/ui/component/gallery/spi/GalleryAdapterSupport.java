@@ -24,10 +24,16 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Cleanup;
 
 /***********************************************************************************************************************
  *
@@ -56,5 +62,16 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
     public String getInlinedScript() 
       {
         return "";
+      }
+    
+    @Nonnull
+    protected String loadTemplate (final @Nonnull String templateName) 
+      throws IOException
+      {
+        final Resource resource = new ClassPathResource("/" + getClass().getPackage().getName().replace('.', '/') + "/" + templateName);
+        final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
+        final char[] buffer = new char[(int)resource.contentLength()]; 
+        r.read(buffer);
+        return new String(buffer);        
       }
   }

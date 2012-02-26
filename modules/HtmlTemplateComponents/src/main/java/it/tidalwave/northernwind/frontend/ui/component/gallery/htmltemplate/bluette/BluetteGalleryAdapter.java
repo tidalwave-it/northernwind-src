@@ -60,7 +60,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    private final String content;
+    private final String galleryContent;
+    
+    private final String fallbackContent;
     
     /*******************************************************************************************************************
      *
@@ -70,11 +72,8 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     public BluetteGalleryAdapter() 
       throws IOException
       {
-        final Resource resource = new ClassPathResource("/" + getClass().getPackage().getName().replace('.', '/') + "/Bluette.txt");
-        final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
-        final char[] buffer = new char[(int)resource.contentLength()]; 
-        r.read(buffer);
-        content = new String(buffer);        
+        galleryContent = loadTemplate("Bluette.txt");    
+        fallbackContent = loadTemplate("BluetteFallback.txt");    
       }
     
     /*******************************************************************************************************************
@@ -86,7 +85,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     public void initialize (final @Nonnull GalleryAdapterContext context) 
       {
         this.context = context;
-        context.addAttribute("content", content);        
+        context.addAttribute("content", galleryContent);        
       }
     
     /*******************************************************************************************************************
@@ -168,21 +167,12 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                                 final @Nonnull Item item) 
       {
         final TextHolder textHolder = (TextHolder)view;
-        final String redirectUrl = context.getSiteNode().getRelativeUri() + "/#!/" + key;
-
-        final StringBuilder builder = new StringBuilder();
-        builder.append("<!DOCTYPE html>\n");
-        builder.append("<html>\n");
-        builder.append("<head>\n");
-        builder.append("<script type=\"text/javascript\">\n");
-        builder.append("//<![CDATA[\n");
-        builder.append("window.location.replace('").append(redirectUrl).append("');\n");
-        builder.append("//]]>\n");
-        builder.append("</script>");
-        builder.append("</head>\n");
-        builder.append("</html>\n");
-
-        textHolder.setTemplate("$content$\n");
-        textHolder.setContent(builder.toString());
+        final String redirectUrl = siteProvider.get().getSite().getContextPath() + context.getSiteNode().getRelativeUri() + "/#!/" + key;
+        textHolder.setTemplate(fallbackContent);
+        textHolder.addAttribute("redirectUrl", redirectUrl);
+        textHolder.addAttribute("caption", item.getDescription());
+//        textHolder.addAttribute("charset", "UTF-8");
+        textHolder.addAttribute("language", "en");
+        textHolder.addAttribute("key", "key");
       }
   }
