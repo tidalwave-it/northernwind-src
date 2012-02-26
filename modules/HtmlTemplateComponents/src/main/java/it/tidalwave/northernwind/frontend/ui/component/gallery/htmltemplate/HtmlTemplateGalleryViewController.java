@@ -38,8 +38,8 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapter;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class HtmlTemplateGalleryViewController extends DefaultGalleryViewController 
+public class HtmlTemplateGalleryViewController extends DefaultGalleryViewController
   {
     @Nonnull
     private final GalleryView view;
@@ -60,8 +60,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Nonnull
     private final RequestHolder requestHolder;
     
-    private GalleryAdapter galleryAdapter;
-
     /*******************************************************************************************************************
      *
      * 

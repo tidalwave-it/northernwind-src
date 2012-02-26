@@ -20,10 +20,13 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi;
+package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
@@ -32,13 +35,26 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryAdapter 
+@Configurable
+public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
-    public void initialize (@Nonnull GalleryAdapterContext context);
-
-    @Nonnull
-    public ResourceProperties getExtraViewProperties (@Nonnull Id viewId);
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
     
-    @Nonnull
-    public String getInlinedScript();
+    @Override @Nonnull
+    public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId) 
+      {
+        return modelFactory.createProperties(viewId);
+      }
+
+    @Override
+    public void initialize (final @Nonnull GalleryAdapterContext context)
+      {
+      }
+
+    @Override @Nonnull
+    public String getInlinedScript() 
+      {
+        return "";
+      }
   }

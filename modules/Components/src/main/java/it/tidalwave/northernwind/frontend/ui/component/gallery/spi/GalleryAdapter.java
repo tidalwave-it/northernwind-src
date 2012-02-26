@@ -20,10 +20,15 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi;
+package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
-import it.tidalwave.northernwind.core.model.SiteNode;
 import javax.annotation.Nonnull;
+import java.util.List;
+import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -31,10 +36,13 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryAdapterContext 
+public interface GalleryAdapter 
   {
-    public void addAttribute (@Nonnull String name, @Nonnull String value);
+    public void initialize (@Nonnull GalleryAdapterContext context);
 
     @Nonnull
-    public SiteNode getSiteNode();
-  } 
+    public ResourceProperties getExtraViewProperties (@Nonnull Id viewId);
+    
+    @Nonnull
+    public String getInlinedScript();
+  }

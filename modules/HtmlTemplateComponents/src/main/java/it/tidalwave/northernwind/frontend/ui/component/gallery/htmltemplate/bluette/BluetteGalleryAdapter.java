@@ -37,8 +37,8 @@ import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterContext;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.spi.GalleryAdapterSupport;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
