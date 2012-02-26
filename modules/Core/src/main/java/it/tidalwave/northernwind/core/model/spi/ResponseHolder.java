@@ -133,7 +133,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e) 
           {
-            log.error("", e);
+            log.info("NOT FOUND: {}", e.toString());
             return forException(new HttpStatusException(404));
           }
 
