@@ -52,6 +52,7 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import javax.annotation.Nonnegative;
 
 /***********************************************************************************************************************
  *
@@ -82,16 +83,7 @@ public class DefaultCalendarViewController implements CalendarViewController
       throws NotFoundException, IOException, ParserConfigurationException, SAXException, XPathExpressionException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode);
-        int currentYear = new DateTime().getYear();
-        
-        try
-          {
-            currentYear = Integer.parseInt(pathParams.replaceAll("/", ""));
-          }
-        catch (NumberFormatException e)
-          {
-            // ok, keep the default value
-          }
+        final int currentYear = getCurrentYear(pathParams);
 
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
@@ -186,5 +178,23 @@ public class DefaultCalendarViewController implements CalendarViewController
         
         builder.append("</div>\n</div>\n");
         view.setContent(builder.toString());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns the current year reading it from the path params, or by default from the calendar.
+     *
+     ******************************************************************************************************************/
+    @Nonnegative
+    private int getCurrentYear (final @Nonnull String pathParams)
+      {
+        try
+          {
+            return Integer.parseInt(pathParams.replaceAll("/", ""));
+          }
+        catch (NumberFormatException e)
+          {
+            return new DateTime().getYear();
+          }
       }
   }
