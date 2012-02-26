@@ -78,7 +78,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
                 + "<body>\n"
                 + "<div style=\"padding: 5%% 0pt;\">\n"
                 + "<div style=\"padding: 10%% 0pt; text-align: center\">"
-                + "<p style=\"font-family: sans-serif; font-size: 24px\">Site under maintenance, please retry in a short time.<br/>"
+                + "<p style=\"font-family: sans-serif; font-size: 24px\">Site under maintenance, please retry later.<br/>"
                 + "This page will reload automatically.</p>"
                 + "</div>\n"
                 + "</div>\n"
