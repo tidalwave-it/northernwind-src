@@ -172,6 +172,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final ST t = new ST(fallbackContent, '$', '$').add("caption", item.getDescription())
                                                       .add("imageUrl", "/media/stillimages/1280/" + key + ".jpg");
         textHolder.addAttribute("content", t.render());
+        // FIXME: it would be better to change the properties rather than directly touch the template attributes
         textHolder.addAttribute("description", item.getDescription());
         textHolder.addAttribute("inlinedScripts", redirectScript);
         textHolder.addAttribute("scripts", "");
