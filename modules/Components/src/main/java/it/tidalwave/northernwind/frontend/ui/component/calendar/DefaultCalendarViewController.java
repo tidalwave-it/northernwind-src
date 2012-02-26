@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.Locale;
@@ -44,6 +45,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -52,7 +54,6 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import javax.annotation.Nonnegative;
 
 /***********************************************************************************************************************
  *
@@ -61,7 +62,7 @@ import javax.annotation.Nonnegative;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
-public class DefaultCalendarViewController implements CalendarViewController
+public class DefaultCalendarViewController implements CalendarViewController  
   {
     @Nonnull
     private final CalendarView view;
@@ -78,15 +79,29 @@ public class DefaultCalendarViewController implements CalendarViewController
     @Nonnull
     private final RequestHolder requestHolder;
 
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize()
-      throws NotFoundException, IOException, ParserConfigurationException, SAXException, XPathExpressionException
+      throws NotFoundException, IOException, ParserConfigurationException, SAXException, XPathExpressionException, HttpStatusException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode);
         final int currentYear = getCurrentYear(pathParams);
 
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        
+//        try
+//          {
+//            siteNodeProperties.getProperty(PROPERTY_ENTRIES);  
+//          }
+//        catch (NotFoundException e)
+//          {
+//            throw new HttpStatusException(404);  
+//          }
         
         final String entries = siteNodeProperties.getProperty(PROPERTY_ENTRIES);
         final StringBuilder builder = new StringBuilder();
@@ -211,15 +226,17 @@ public class DefaultCalendarViewController implements CalendarViewController
      *
      ******************************************************************************************************************/
     @Nonnegative
-    private int getCurrentYear (final @Nonnull String pathParams)
+    private int getCurrentYear (final @Nonnull String pathParams) 
+      throws HttpStatusException
       {
         try
           {
-            return Integer.parseInt(pathParams.replaceAll("/", ""));
+            return "".equals(pathParams) ? new DateTime().getYear() : Integer.parseInt(pathParams.replaceAll("/$", "").replaceAll("^/", ""));
+//            return "".equals(pathParams) ? new DateTime().getYear() : Integer.parseInt(pathParams.replaceAll("/", ""));
           }
         catch (NumberFormatException e)
           {
-            return new DateTime().getYear();
+            throw new HttpStatusException(404);  
           }
       }
   }
