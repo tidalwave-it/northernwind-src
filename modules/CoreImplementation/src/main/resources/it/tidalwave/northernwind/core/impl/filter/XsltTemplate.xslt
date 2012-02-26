@@ -43,7 +43,7 @@
             <xsl:if test='string-length(.) &gt; 0'>
                 <xsl:value-of select="'&#10;//&lt;![CDATA['"/>
                 <xsl:value-of select="."/> 
-                <xsl:value-of select="'//]]&gt;&#10;'"/>
+                <xsl:value-of select="'&#10;//]]&gt;&#10;'"/>
             </xsl:if>
         </xsl:copy> 
      </xsl:template>
