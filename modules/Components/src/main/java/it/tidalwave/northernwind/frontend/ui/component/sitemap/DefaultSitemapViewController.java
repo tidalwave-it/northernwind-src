@@ -22,8 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -31,15 +31,16 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.VisitorSupport;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
-import it.tidalwave.util.Key;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,7 +85,7 @@ public class DefaultSitemapViewController implements SitemapViewController
                     if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
                       {
                         log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
-                        appendUrl(builder, siteNode, "");
+                        appendUrl(builder, siteNode, null);
 
                         layout.accept(new VisitorSupport<Layout, Void>()
                           {
@@ -95,11 +96,11 @@ public class DefaultSitemapViewController implements SitemapViewController
                                   {
                                     final Object controller = childLayout.createViewAndController(siteNode).getController();
 
-                                    if (controller instanceof CompositeContentsController)
+                                    if (controller instanceof CompositeSiteNodeController)
                                       {
-                                        for (final String childItemRelativePath : ((CompositeContentsController)controller).getRelativePaths())
+                                        for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findChildrenSiteNodes().results())
                                           {
-                                            appendUrl(builder, siteNode, childItemRelativePath);
+                                            appendUrl(builder, siteNode, childSiteNode);
                                           }
                                       }
                                   }
@@ -144,20 +145,23 @@ public class DefaultSitemapViewController implements SitemapViewController
      ******************************************************************************************************************/
     private void appendUrl (final @Nonnull StringBuilder builder, 
                             final @Nonnull SiteNode siteNode,
-                            final @Nonnull String childItemRelativePath)
+                            final @Nullable SiteNode childSiteNode)
       throws IOException
       {
+        final SiteNode n = (childSiteNode != null) ? childSiteNode : siteNode;
         final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        final ResourceProperties properties = siteNode.getProperties();
-        
-        final Key<String> priorityKey = childItemRelativePath.equals("") ? PROPERTY_SITEMAP_PRIORITY
-                                                                         : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
-        final float sitemapPriority = Float.parseFloat(properties.getProperty(priorityKey, "0.5"));
+        final ResourceProperties properties = n.getProperties();
+        //
+        // FIXME: if you put the sitemap property straightly into the child site node, you can simplify a lot,
+        // just using a single property and only peeking into a single node
+        final Key<String> priorityKey = (childSiteNode == null) ? PROPERTY_SITEMAP_PRIORITY
+                                                                : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
+        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty(priorityKey, "0.5"));
         
         if (sitemapPriority > 0)
           {
             builder.append("  <url>\n");
-            builder.append(String.format("    <loc>%s</loc>\n", site.createLink(siteNode.getRelativeUri() + childItemRelativePath)));
+            builder.append(String.format("    <loc>%s</loc>\n", site.createLink(n.getRelativeUri())));
             builder.append(String.format("    <lastmod>%s</lastmod>\n", dateTimeFormatter.print(getSiteNodeDateTime(properties))));
             builder.append(String.format("    <changefreq>%s</changefreq>\n", properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
             builder.append(String.format("    <priority>%s</priority>\n", Float.toString(sitemapPriority)));

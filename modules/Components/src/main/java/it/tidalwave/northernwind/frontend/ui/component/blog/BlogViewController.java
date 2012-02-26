@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import java.util.List;
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 
 /***********************************************************************************************************************
  *
@@ -31,7 +32,7 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface BlogViewController 
+public interface BlogViewController extends CompositeSiteNodeController
   {    
     public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents"); 
     

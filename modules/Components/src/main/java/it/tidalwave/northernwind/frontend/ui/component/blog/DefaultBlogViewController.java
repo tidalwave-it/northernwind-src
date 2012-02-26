@@ -34,8 +34,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -83,6 +85,59 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
+     *
+     ******************************************************************************************************************/
+    // FIXME: add eventual localized versions
+    @Override @Nonnull
+    public Finder<SiteNode> findChildrenSiteNodes()
+      {
+        return new SimpleFinderSupport<SiteNode>() 
+          {
+            @Override
+            protected List<? extends SiteNode> computeResults()
+              {
+                log.info("findCompositeContents()");
+                final List<SiteNode> results = new ArrayList<SiteNode>();
+
+                try
+                  {
+                    final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
+
+                    for (final Content post : findAllPosts(componentProperties))
+                      {
+                        try
+                          {
+                            final String relativeUri = siteNode.getRelativeUri() + "/" + getExposedUri(post) + "/";
+                            results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
+                          }
+                        catch (NotFoundException e)
+                          {
+                            log.warn("", e); 
+                          }
+                        catch (IOException e)
+                          {
+                            log.warn("", e); 
+                          }
+                      } 
+                  }
+                catch (NotFoundException e)
+                  {
+                    log.warn("", e); 
+                  }
+                catch (IOException e)
+                  {
+                    log.warn("", e); 
+                  }
+
+                log.info(">>>> returning: {}", results);
+
+                return results;
+              }
+          };
+      } 
+     
+    /*******************************************************************************************************************
+     *
      * Initializes this controller.
      *
      ******************************************************************************************************************/
@@ -90,6 +145,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
     protected void initialize()
       throws Exception
       {
+        // FIXME: ugly workaround for a design limitation. See NW-110.
+        if (isCalledBySitemapController())
+          {
+            return;  
+          }
+
         try 
           {
             final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
@@ -148,6 +209,28 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
+     * Finds all the posts.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<Content> findAllPosts (final @Nonnull ResourceProperties siteNodeProperties) 
+      throws NotFoundException, IOException
+      {
+        final List<Content> allPosts = new ArrayList<Content>();
+
+        for (final String relativePath : siteNodeProperties.getProperty(PROPERTY_CONTENTS))
+          {  
+            final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
+            allPosts.addAll(postsFolder.findChildren().results());
+          }
+        
+        log.debug(">>>> all posts: {}", allPosts.size());
+
+        return allPosts;
+      }
+    
+    /*******************************************************************************************************************
+     *
      * FIXME: works, but it's really cumbersome
      *
      ******************************************************************************************************************/
@@ -159,18 +242,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
         String pathParams = requestHolder.get().getPathParams(siteNode);
         pathParams = pathParams.replace("/", "");
         log.debug(">>>> pathParams: {}", pathParams);
+        
         final boolean index = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_INDEX, "false"));
-
-        final List<Content> allPosts = new ArrayList<Content>();
-
-        for (final String relativePath : siteNodeProperties.getProperty(PROPERTY_CONTENTS))
-          {  
-            final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
-            allPosts.addAll(postsFolder.findChildren().results());
-          }
-        
-        log.debug(">>>> all posts: {}", allPosts.size());
-        
+        final List<Content> allPosts = findAllPosts(siteNodeProperties);
         final List<Content> posts = new ArrayList<Content>();
         
         try
@@ -212,6 +286,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
           }
         
+        // If not index mode, nothing found and searched for something in path params, return 404
         if (!index && !"".equals(pathParams) && posts.isEmpty())
           {
             throw new HttpStatusException(404);
@@ -326,5 +401,22 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
    
         return new DateTime(0);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private static boolean isCalledBySitemapController()
+      {
+        for (final StackTraceElement element : Thread.currentThread().getStackTrace())
+          {
+            if (element.getClassName().contains("SitemapViewController"))
+              {  
+                return true;  
+              }
+          }
+        
+        return false;
       }
   }
