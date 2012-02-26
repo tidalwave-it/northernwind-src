@@ -33,4 +33,6 @@ import javax.annotation.Nonnull;
 public interface SitemapView 
   {
     public void setContent (@Nonnull String content);
+
+    public void setMimeType (@Nonnull String applicationrssxml);
   }

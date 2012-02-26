@@ -137,6 +137,7 @@ public class DefaultSitemapViewController implements SitemapViewController
         
         builder.append("</urlset>\n");
         view.setContent(builder.toString());
+        view.setMimeType("application/xml");        
       }
     
     /*******************************************************************************************************************
