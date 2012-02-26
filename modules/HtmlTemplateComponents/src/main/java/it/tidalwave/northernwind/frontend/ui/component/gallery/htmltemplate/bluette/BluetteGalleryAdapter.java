@@ -137,9 +137,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         try 
           {
             final TextHolder textHolder = (TextHolder)view;
+            // FIXME: regenerate the XML from items
             textHolder.setTemplate("$content$\n");
             textHolder.setContent(context.getSiteNode().getProperties().getProperty(new Key<String>("images.xml")));
-//            textHolder.setContent(context.getSiteNode().getProperties().getProperty(new Key<String>(pathParams)));
             textHolder.setMimeType("text/xml");
           }
         catch (NotFoundException e) 
