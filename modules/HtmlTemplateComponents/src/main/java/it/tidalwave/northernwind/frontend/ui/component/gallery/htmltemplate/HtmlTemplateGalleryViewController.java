@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryVie
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter.Item;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -106,32 +107,29 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     /* package */ void initializeHtmlTemplateGalleryViewController() 
       throws HttpStatusException, IOException
       {
-        String pathParams = requestHolder.get().getPathParams(siteNode);
-        pathParams = pathParams.replace("/", "");
+        final String pathParams = requestHolder.get().getPathParams(siteNode).replace("/", "");
         log.debug(">>>> pathParams: {}", pathParams);
         final TextHolder textHolder = (TextHolder)view;
         
-        if (!"".equals(pathParams))
+        if ("images.xml".equals(pathParams))
           {
-            try 
+            getGalleryAdapter().createItemCatalog(view, items);
+          }
+        else if (!"".equals(pathParams))
+          {
+            final String key = pathParams.replaceAll("^/", "").replaceAll("/$", "");
+            final Item item = itemMapByKey.get(key);
+            
+            if (item == null)
               {
-                String images = siteNode.getProperties().getProperty(new Key<String>(pathParams));
-                textHolder.setTemplate("$content$\n");
-                textHolder.setContent(images);
-                textHolder.setMimeType("text/xml");
-                return;
+                log.warn("Gallery item not found: {}, available: {}", key, itemMapByKey.keySet());
+                throw new HttpStatusException(404);  
               }
-            catch (NotFoundException e) 
-              {
-                throw new HttpStatusException(404);
-              }
-            catch (IOException e) 
-              {
-                throw new HttpStatusException(404);
-              }
+            
+            getGalleryAdapter().createFallback(view, key, item);
           }
         
-        textHolder.addAttribute("title", "StoppingDown");
+        textHolder.addAttribute("title", "StoppingDown"); // FIXME
       }
 
     /*******************************************************************************************************************
@@ -162,7 +160,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      ******************************************************************************************************************/
     @Nonnull
-    private GalleryAdapter getGalleryAdapter()
+    private synchronized GalleryAdapter getGalleryAdapter()
       {
         if (galleryAdapter == null)
           {

@@ -25,7 +25,9 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 import javax.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -38,11 +40,49 @@ import lombok.ToString;
  **********************************************************************************************************************/
 public interface GalleryAdapter 
   {
+    @RequiredArgsConstructor @Getter @ToString
+    public static class Item
+      {
+        private final String relativePath;
+        
+        private final String description;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public void initialize (@Nonnull GalleryAdapterContext context);
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getExtraViewProperties (@Nonnull Id viewId);
     
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getInlinedScript();
+    
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public void createItemCatalog (@Nonnull GalleryView view, @Nonnull List<Item> items)
+      throws HttpStatusException;
+    
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public void createFallback (@Nonnull GalleryView view, @Nonnull String key, @Nonnull Item item);
   }

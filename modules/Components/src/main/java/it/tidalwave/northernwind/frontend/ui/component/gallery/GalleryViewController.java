@@ -22,12 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
+import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryViewController 
+public interface GalleryViewController extends CompositeSiteNodeController // TODO: use as(CompositeContentsController) instead
   {
   }

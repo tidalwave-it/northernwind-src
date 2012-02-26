@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.blu
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.List;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -34,11 +35,14 @@ import org.springframework.core.io.Resource;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,6 +62,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     
     private final String content;
     
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public BluetteGalleryAdapter() 
       throws IOException
       {
@@ -68,6 +77,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         content = new String(buffer);        
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override // FIXME: what about @PostConstruct and injecting the context?
     public void initialize (final @Nonnull GalleryAdapterContext context) 
       {
@@ -75,6 +89,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         context.addAttribute("content", content);        
       }
     
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String getInlinedScript()
       {
@@ -109,5 +128,61 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
           }
         
         return builder.toString();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void createItemCatalog (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
+      throws HttpStatusException
+      {
+        try 
+          {
+            final TextHolder textHolder = (TextHolder)view;
+            textHolder.setTemplate("$content$\n");
+            textHolder.setContent(context.getSiteNode().getProperties().getProperty(new Key<String>("images.xml")));
+//            textHolder.setContent(context.getSiteNode().getProperties().getProperty(new Key<String>(pathParams)));
+            textHolder.setMimeType("text/xml");
+          }
+        catch (NotFoundException e) 
+          {
+            throw new HttpStatusException(404);
+          }
+        catch (IOException e) 
+          {
+            throw new HttpStatusException(404);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void createFallback (final @Nonnull GalleryView view,
+                                final @Nonnull String key, 
+                                final @Nonnull Item item) 
+      {
+        final TextHolder textHolder = (TextHolder)view;
+        final String redirectUrl = context.getSiteNode().getRelativeUri() + "/#!/" + key;
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("<!DOCTYPE html>\n");
+        builder.append("<html>\n");
+        builder.append("<head>\n");
+        builder.append("<script type=\"text/javascript\">\n");
+        builder.append("//<![CDATA[\n");
+        builder.append("window.location.replace('").append(redirectUrl).append("');\n");
+        builder.append("//]]>\n");
+        builder.append("</script>");
+        builder.append("</head>\n");
+        builder.append("</html>\n");
+
+        textHolder.setTemplate("$content$\n");
+        textHolder.setContent(builder.toString());
       }
   }
