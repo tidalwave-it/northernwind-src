@@ -96,15 +96,7 @@ public class DefaultCalendarViewController implements CalendarViewController
         final int columns = 4;
 
         builder.append("<div class='nw-calendar'>\n");
-        
-        try
-          {
-            builder.append(String.format("<h2>%s</h2>\n", siteNodeProperties.getProperty(PROPERTY_TITLE)));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no title  
-          }
+        appendTitle(builder, siteNodeProperties);
                 
         builder.append("<table class='nw-calendar-table'>\n")
                .append("<tbody>\n");
@@ -157,6 +149,40 @@ public class DefaultCalendarViewController implements CalendarViewController
 
         builder.append("</tbody>\n</table>\n");
         
+        appendYearSelector(builder, firstYear, lastYear, selectedYear);
+        builder.append("</div>\n");
+        view.setContent(builder.toString());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    private void appendTitle (final @Nonnull StringBuilder builder, 
+                              final @Nonnull ResourceProperties siteNodeProperties) 
+      throws IOException 
+      {
+        try
+          {
+            builder.append(String.format("<h2>%s</h2>\n", siteNodeProperties.getProperty(PROPERTY_TITLE)));
+          }
+        catch (NotFoundException e)
+          {
+            // ok, no title  
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    private void appendYearSelector (final @Nonnull StringBuilder builder, 
+                                     final @Nonnegative int firstYear, 
+                                     final @Nonnegative int lastYear, 
+                                     final @Nonnegative int selectedYear) 
+      {
         builder.append("<div class='nw-calendar-yearselector'>\n");
         String separator = "";
         
@@ -176,8 +202,7 @@ public class DefaultCalendarViewController implements CalendarViewController
               }
           }
         
-        builder.append("</div>\n</div>\n");
-        view.setContent(builder.toString());
+        builder.append("</div>\n");
       }
 
     /*******************************************************************************************************************
