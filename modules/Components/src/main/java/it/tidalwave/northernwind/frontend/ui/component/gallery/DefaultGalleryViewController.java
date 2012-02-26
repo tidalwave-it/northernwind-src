@@ -113,12 +113,10 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
                 log.info("findChildrenSiteNodes()");
                 final List<SiteNode> results = new ArrayList<SiteNode>();
 
-                final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
-
                 for (final Item item : itemMapByKey.values())
                   {
                     final String relativeUri = siteNode.getRelativeUri() + "/"  + item.getRelativePath() + "/";
-                    results.add(new ChildSiteNode(siteNode, relativeUri, componentProperties));
+                    results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
                   }
 
                 log.info(">>>> returning: {}", results);
