@@ -40,6 +40,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapte
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.stringtemplate.v4.ST;
 
 /***********************************************************************************************************************
  *
@@ -163,11 +164,16 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
       {
         final TextHolder textHolder = (TextHolder)view;
         final String redirectUrl = siteProvider.get().getSite().getContextPath() + context.getSiteNode().getRelativeUri() + "/#!/" + key;
-        textHolder.setTemplate(fallbackContent);
-        textHolder.addAttribute("redirectUrl", redirectUrl);
-        textHolder.addAttribute("caption", item.getDescription());
-//        textHolder.addAttribute("charset", "UTF-8");
-        textHolder.addAttribute("language", "en");
-        textHolder.addAttribute("key", "key");
+        final String redirectScript = "<script type=\"text/javascript\">\n"
+                                    + "//<![CDATA[\n"
+                                    + "window.location.replace('" + redirectUrl + "');\n"
+                                    + "//]]>\n"
+                                    + "</script>\n";
+        final ST t = new ST(fallbackContent, '$', '$').add("caption", item.getDescription())
+                                                      .add("imageUrl", "/media/stillimages/1280/" + key + ".jpg");
+        textHolder.addAttribute("content", t.render());
+        textHolder.addAttribute("description", item.getDescription());
+        textHolder.addAttribute("inlinedScripts", redirectScript);
+        textHolder.addAttribute("scripts", "");
       }
   }

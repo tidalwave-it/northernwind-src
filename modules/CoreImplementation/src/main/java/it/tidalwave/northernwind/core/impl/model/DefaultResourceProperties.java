@@ -230,7 +230,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultResourceProperties withProperty (final @Nonnull Key<Object> key, final @Nonnull Object value)
+    public <T> DefaultResourceProperties withProperty (final @Nonnull Key<T> key, final @Nonnull T value)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
         result.propertyMap.put(key, value); // FIXME: clone property

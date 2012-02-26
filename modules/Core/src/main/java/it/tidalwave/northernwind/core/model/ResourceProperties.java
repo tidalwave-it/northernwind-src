@@ -104,7 +104,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties withProperty (@Nonnull Key<Object> key, @Nonnull Object value);
+    public <T> ResourceProperties withProperty (@Nonnull Key<T> key, @Nonnull T value);
     
     /*******************************************************************************************************************
      *

@@ -45,7 +45,7 @@ import lombok.Cleanup;
 public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
     @Inject @Nonnull
-    private ModelFactory modelFactory;
+    protected ModelFactory modelFactory;
     
     @Override @Nonnull
     public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId) 

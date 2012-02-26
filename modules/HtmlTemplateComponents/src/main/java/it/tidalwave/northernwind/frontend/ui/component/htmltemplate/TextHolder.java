@@ -45,6 +45,7 @@ import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -55,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Configurable @Slf4j @ToString(exclude="siteProvider")
 public class TextHolder 
   {
     private final Map<String, String> attributeMap = new HashMap<String, String>();
