@@ -77,9 +77,9 @@ public interface GalleryAdapter
      * Creates a fallback page for a single gallery item for when JavaScript is not available.
      *
      * @param  view   the view component
-     * @param  key    the image key
+     * @param  id     the image id
      * @param  item   the gallery item
      *
      ******************************************************************************************************************/
-    public void createFallback (@Nonnull GalleryView view, @Nonnull String key, @Nonnull Item item);
+    public void createFallback (@Nonnull GalleryView view, @Nonnull Id id, @Nonnull Item item);
   }

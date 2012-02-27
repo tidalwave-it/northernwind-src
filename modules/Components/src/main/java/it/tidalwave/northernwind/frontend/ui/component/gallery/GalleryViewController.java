@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 
 /***********************************************************************************************************************
@@ -38,7 +39,7 @@ public interface GalleryViewController extends CompositeSiteNodeController // TO
     @RequiredArgsConstructor @Getter @ToString
     public static class Item
       {
-        private final String relativePath; // FIXME: rename to Id id
+        private final Id id; 
         
         private final String description;
       }

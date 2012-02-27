@@ -25,11 +25,12 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
@@ -60,7 +61,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     
     protected final List<Item> items = new ArrayList<Item>();
    
-    protected final SortedMap<String, Item> itemMapByKey = new TreeMap<String, Item>();
+    protected final Map<Id, Item> itemMapById = new HashMap<Id, Item>();
 
     /*******************************************************************************************************************
      *
@@ -101,9 +102,9 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
                 log.info("findChildrenSiteNodes()");
                 final List<SiteNode> results = new ArrayList<SiteNode>();
 
-                for (final Item item : itemMapByKey.values())
+                for (final Item item : itemMapById.values())
                   {
-                    final String relativeUri = siteNode.getRelativeUri() + "/"  + item.getRelativePath() + "/";
+                    final String relativeUri = siteNode.getRelativeUri() + "/"  + item.getId().stringValue() + "/";
                     results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
                   }
 
@@ -122,13 +123,13 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     private void loadItems()
       {
         items.clear();
-        itemMapByKey.clear();
+        itemMapById.clear();
         final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
         
         for (final Item item : items)
           {
-            itemMapByKey.put(item.getRelativePath(), item);   
+            itemMapById.put(item.getId(), item);   
           }
       }
   }

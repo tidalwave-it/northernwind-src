@@ -22,9 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader;
 
-import java.util.List;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
@@ -78,7 +79,7 @@ public class SlideShowProPlayerGalleryLoader implements GalleryLoader
                 final String src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("\\.jpg$", "");
                 final String title = node.getAttributes().getNamedItem("title").getNodeValue();
 //                final String caption = node.getAttributes().getNamedItem("caption").getNodeValue();
-                items.add(new Item(src, title));
+                items.add(new Item(new Id(src), title));
               }
           }
         catch (Exception e)

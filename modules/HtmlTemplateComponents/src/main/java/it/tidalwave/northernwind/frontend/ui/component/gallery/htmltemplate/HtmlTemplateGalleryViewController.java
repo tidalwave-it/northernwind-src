@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -114,16 +115,16 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
           }
         else if (!"".equals(pathParams))
           {
-            final String key = pathParams.replaceAll("^/", "").replaceAll("/$", "");
-            final Item item = itemMapByKey.get(key);
+            final Id id = new Id(pathParams.replaceAll("^/", "").replaceAll("/$", ""));
+            final Item item = itemMapById.get(id);
             
             if (item == null)
               {
-                log.warn("Gallery item not found: {}, available: {}", key, itemMapByKey.keySet());
+                log.warn("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
                 throw new HttpStatusException(404);  
               }
             
-            getGalleryAdapter().createFallback(view, key, item);
+            getGalleryAdapter().createFallback(view, id, item);
           }
         
         textHolder.addAttribute("title", "StoppingDown"); // FIXME

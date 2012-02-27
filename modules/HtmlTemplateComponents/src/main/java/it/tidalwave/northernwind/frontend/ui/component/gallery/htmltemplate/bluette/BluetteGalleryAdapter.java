@@ -160,18 +160,18 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      ******************************************************************************************************************/
     @Override
     public void createFallback (final @Nonnull GalleryView view,
-                                final @Nonnull String key, 
+                                final @Nonnull Id id, 
                                 final @Nonnull Item item) 
       {
         final TextHolder textHolder = (TextHolder)view;
-        final String redirectUrl = siteProvider.get().getSite().getContextPath() + context.getSiteNode().getRelativeUri() + "/#!/" + key;
+        final String redirectUrl = siteProvider.get().getSite().getContextPath() + context.getSiteNode().getRelativeUri() + "/#!/" + id.stringValue();
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
                                     + "//]]>\n"
                                     + "</script>\n";
         final ST t = new ST(fallbackContent, '$', '$').add("caption", item.getDescription())
-                                                      .add("imageUrl", "/media/stillimages/1280/" + key + ".jpg");
+                                                      .add("imageUrl", "/media/stillimages/1280/" + id + ".jpg");
         textHolder.addAttribute("content", t.render());
         // FIXME: it would be better to change the properties rather than directly touch the template attributes
         textHolder.addAttribute("description", item.getDescription());
