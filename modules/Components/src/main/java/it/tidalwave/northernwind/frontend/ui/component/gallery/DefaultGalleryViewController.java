@@ -54,9 +54,6 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     @Nonnull
     private final SiteNode siteNode;
     
-//    @Nonnull
-//    private final NodeContainerView view;
-//    
     protected GalleryAdapter galleryAdapter;
     
     protected final List<Item> items = new ArrayList<Item>();
@@ -74,7 +71,6 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
       {
         super(view, siteNode, site, requestLocaleManager);
         this.siteNode = siteNode;
-//        this.view = view;
       }
     
     /*******************************************************************************************************************
