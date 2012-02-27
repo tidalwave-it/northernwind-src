@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -20,26 +20,31 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.gallery;
+package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
+import javax.annotation.Nonnull;
+import java.util.List;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController;
 
 /***********************************************************************************************************************
  *
+ * Implementations of this interface are capable to load the list of items of the gallery from different formats.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryViewController extends CompositeSiteNodeController // TODO: use as(CompositeContentsController) instead
+public interface GalleryLoader 
   {
-    @RequiredArgsConstructor @Getter @ToString
-    public static class Item
-      {
-        private final String relativePath; // FIXME: rename to Id id
-        
-        private final String description;
-      }
+    /*******************************************************************************************************************
+     *
+     * Loads the items in the gallery.
+     * 
+     * @param  siteNode   the {@link SiteNode} of the gallery
+     * @return            the list of gallery items
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<GalleryViewController.Item> loadGallery (@Nonnull SiteNode siteNode);
   }

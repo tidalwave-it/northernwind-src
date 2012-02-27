@@ -28,25 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.io.StringReader;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryLoader;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader.SlideShowProPlayerGalleryLoader;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 import lombok.extern.slf4j.Slf4j;
@@ -63,9 +53,9 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     @Nonnull
     private final SiteNode siteNode;
     
-    @Nonnull
-    private final NodeContainerView view;
-    
+//    @Nonnull
+//    private final NodeContainerView view;
+//    
     protected GalleryAdapter galleryAdapter;
     
     protected final List<Item> items = new ArrayList<Item>();
@@ -83,7 +73,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
       {
         super(view, siteNode, site, requestLocaleManager);
         this.siteNode = siteNode;
-        this.view = view;
+//        this.view = view;
       }
     
     /*******************************************************************************************************************
@@ -126,38 +116,19 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     
     /*******************************************************************************************************************
      *
-     * FIXME: specific for the format of SlideShowPro Player for Lightroom 1.9.8.5
+     * Loads the items in the gallery.
      *
      ******************************************************************************************************************/
     private void loadItems()
       {
-        try 
+        items.clear();
+        itemMapByKey.clear();
+        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(); // FIXME: make it configurable
+        items.addAll(loader.loadGallery(siteNode));
+        
+        for (final Item item : items)
           {
-            final String s = siteNode.getProperties().getProperty(new Key<String>("images.xml"));
-            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder db = dbf.newDocumentBuilder();
-            final Document document = db.parse(new InputSource(new StringReader(s)));
-            final XPathFactory xPathFactory = XPathFactory.newInstance();
-            final XPath xPath = xPathFactory.newXPath();
-
-            final String jq1 = "/gallery/album/img";
-            final XPathExpression jx1 = xPath.compile(jq1);            
-            final NodeList nodes = (NodeList)jx1.evaluate(document, XPathConstants.NODESET);
-            
-            for (int i = 0; i < nodes.getLength(); i++)
-              {
-                final Node node = nodes.item(i);
-                final String src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("\\.jpg$", "");
-                final String title = node.getAttributes().getNamedItem("title").getNodeValue();
-//                final String caption = node.getAttributes().getNamedItem("caption").getNodeValue();
-                final Item item = new Item(src, title);
-                items.add(item);
-                itemMapByKey.put(src, item);
-              }
-          }
-        catch (Exception e)
-          {
-            log.warn("", e);
+            itemMapByKey.put(item.getRelativePath(), item);   
           }
       }
   }
