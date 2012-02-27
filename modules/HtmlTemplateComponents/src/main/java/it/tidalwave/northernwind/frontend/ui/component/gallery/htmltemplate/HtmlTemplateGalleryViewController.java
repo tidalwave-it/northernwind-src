@@ -33,11 +33,11 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,11 +89,13 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                                               final @Nonnull Site site, 
                                               final @Nonnull RequestHolder requestHolder, 
                                               final @Nonnull RequestLocaleManager requestLocaleManager)
+      throws IOException
       {
         super(view, siteNode, site, requestLocaleManager);
         this.view = view;
         this.siteNode = siteNode;
         this.requestHolder = requestHolder;
+        galleryAdapter = new BluetteGalleryAdapter(context); // FIXME: get from configuration
       }
     
     /*******************************************************************************************************************
@@ -105,17 +107,28 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     /* package */ void initializeHtmlTemplateGalleryViewController() 
       throws HttpStatusException, IOException
       {
-        final String pathParams = requestHolder.get().getPathParams(siteNode).replace("/", "");
-        log.debug(">>>> pathParams: {}", pathParams);
+        final String pathParams = requestHolder.get().getPathParams(siteNode).replaceAll("^/", "").replaceAll("/$", "");
+        log.info(">>>> pathParams: *{}*", pathParams);
         final TextHolder textHolder = (TextHolder)view;
+        final String siteNodeTitle = siteNode.getProperties().getProperty(Properties.PROPERTY_TITLE, "");
         
-        if ("images.xml".equals(pathParams))
+        if ("".equals(pathParams))
           {
-            getGalleryAdapter().createItemCatalog(view, items);
+            galleryAdapter.renderGallery(view, items);
+            textHolder.addAttribute("title", siteNodeTitle);
           }
-        else if (!"".equals(pathParams))
+        else if ("images.xml".equals(pathParams))
           {
-            final Id id = new Id(pathParams.replaceAll("^/", "").replaceAll("/$", ""));
+            galleryAdapter.renderCatalog(view, items);
+          }
+        else if ("lightbox".equals(pathParams))
+          {
+            galleryAdapter.renderLightboxFallback(view, items);
+            textHolder.addAttribute("title", siteNodeTitle);
+          }
+        else 
+          {
+            final Id id = new Id(pathParams);
             final Item item = itemMapById.get(id);
             
             if (item == null)
@@ -124,10 +137,9 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                 throw new HttpStatusException(404);  
               }
             
-            getGalleryAdapter().createFallback(view, id, item);
+            galleryAdapter.renderFallback(view, item, items);
+            textHolder.addAttribute("title", item.getDescription());
           }
-        
-        textHolder.addAttribute("title", "StoppingDown"); // FIXME
       }
 
     /*******************************************************************************************************************
@@ -138,7 +150,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Override @Nonnull
     protected String computeInlinedScriptsSection() 
       {
-        return super.computeInlinedScriptsSection() + "\n" + getGalleryAdapter().getInlinedScript();
+        return super.computeInlinedScriptsSection() + "\n" + galleryAdapter.getInlinedScript();
       }
     
     /*******************************************************************************************************************
@@ -149,30 +161,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Override @Nonnull
     protected ResourceProperties getViewProperties() 
       {
-        return super.getViewProperties().merged(getGalleryAdapter().getExtraViewProperties(view.getId()));
+        return super.getViewProperties().merged(galleryAdapter.getExtraViewProperties(view.getId()));
       } 
-    
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private synchronized GalleryAdapter getGalleryAdapter()
-      {
-        if (galleryAdapter == null)
-          {
-            try 
-              {
-                galleryAdapter = new BluetteGalleryAdapter();
-                galleryAdapter.initialize(context);        
-              } 
-            catch (IOException e) 
-              {
-                throw new RuntimeException(e);
-              }
-          }
-        
-        return galleryAdapter;  
-      }
   }

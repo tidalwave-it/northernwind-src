@@ -1,11 +1,17 @@
-    <div id="page">
-      <div id="content">
-        <div id="slideshow">
-          <div id="imageRenderer">
-            <div id="divimage1"><img id="image1" src="$imageUrl$" /></div>
+    <div id="pageFB">
+      <div id="contentFB">
+        <div id="slideshowFB">
+          <div id="navigationWidgetsFB">
+            <a id="navigationPreviousWidget" href="$previous$"></a>
+            <a id="navigationLightBoxWidget" href="$lightbox$"></a>
+            <a id="navigationHomeWidget" href="$home$"></a>
+            <a id="navigationNextWidget" href="$next$"></a>
           </div>
-          <div id="title1"><p>$caption$</p></div>
-          <div id="copyright">&copy; Copyright by Fabrizio Giudici. All rights reserved.</div>
+          <div id="imageRendererFB">
+            <div id="divimageFB"><img id="imageFB" src="$imageUrl$" /></div>
+          </div>
+          <div id="title1">$caption$</div>
+          <div id="copyright">$copyright$</div>
         </div>
       </div>
     </div>

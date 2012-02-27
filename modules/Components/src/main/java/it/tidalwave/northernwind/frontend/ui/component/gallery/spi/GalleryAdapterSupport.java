@@ -63,16 +63,6 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public void initialize (final @Nonnull GalleryAdapterContext context)
-      {
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     @Override @Nonnull
     public String getInlinedScript() 
       {

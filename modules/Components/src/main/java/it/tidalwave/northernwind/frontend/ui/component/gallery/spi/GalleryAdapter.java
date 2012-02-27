@@ -43,13 +43,6 @@ public interface GalleryAdapter
      *
      *
      ******************************************************************************************************************/
-    public void initialize (@Nonnull GalleryAdapterContext context);
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getExtraViewProperties (@Nonnull Id viewId);
     
@@ -63,23 +56,43 @@ public interface GalleryAdapter
     
     /*******************************************************************************************************************
      *
-     * Creates a catalog of media items to be consumed by the gallery software.
+     * Renders a catalog of media items to be consumed by the gallery software.
      * 
      * @param  view   the view component
      * @param  items  the gallery items
      *
      ******************************************************************************************************************/
-    public void createItemCatalog (@Nonnull GalleryView view, @Nonnull List<Item> items)
+    public void renderCatalog (@Nonnull GalleryView view, @Nonnull List<Item> items)
       throws HttpStatusException;
     
     /*******************************************************************************************************************
      *
-     * Creates a fallback page for a single gallery item for when JavaScript is not available.
+     * Renders the gallery page.
      *
      * @param  view   the view component
-     * @param  id     the image id
-     * @param  item   the gallery item
+     * @param  items  the list of gallery items
      *
      ******************************************************************************************************************/
-    public void createFallback (@Nonnull GalleryView view, @Nonnull Id id, @Nonnull Item item);
+    public void renderGallery (@Nonnull GalleryView view, @Nonnull List<Item> items);
+    
+    /*******************************************************************************************************************
+     *
+     * Renders a fallback page for a single gallery item for when JavaScript is not available.
+     *
+     * @param  view   the view component
+     * @param  item   the gallery item
+     * @param  items  the list of gallery items
+     *
+     ******************************************************************************************************************/
+    public void renderFallback (@Nonnull GalleryView view, @Nonnull Item item, @Nonnull List<Item> items);
+
+    /*******************************************************************************************************************
+     *
+     * Renders the fallback lightbox for when JavaScript is not available.
+     *
+     * @param  view   the view component
+     * @param  items  the list of gallery items
+     *
+     ******************************************************************************************************************/
+    public void renderLightboxFallback (@Nonnull GalleryView view, @Nonnull List<Item> items);
   }

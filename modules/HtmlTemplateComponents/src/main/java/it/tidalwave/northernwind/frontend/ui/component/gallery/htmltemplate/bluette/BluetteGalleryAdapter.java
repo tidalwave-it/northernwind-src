@@ -34,6 +34,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
@@ -52,25 +53,36 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
-    private GalleryAdapterContext context;
+    private static final Key<String> PROPERTY_COPYRIGHT = new Key<String>("copyright");
+    
+    @Nonnull
+    private final GalleryAdapterContext context;
     
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    private final String galleryContent;
+    private final String galleryTemplate;
     
-    private final String fallbackContent;
+    private final String fallbackTemplate;
+    
+    private final String lightboxFallbackTemplate;
+    
+    private String copyright = "";
     
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public BluetteGalleryAdapter() 
+    public BluetteGalleryAdapter (final @Nonnull GalleryAdapterContext context) 
       throws IOException
       {
-        galleryContent = loadTemplate("Bluette.txt");    
-        fallbackContent = loadTemplate("BluetteFallback.txt");    
+        this.context = context;
+        galleryTemplate = loadTemplate("Bluette.txt");    
+        fallbackTemplate = loadTemplate("BluetteFallback.txt");    
+        lightboxFallbackTemplate = loadTemplate("BluetteLightboxFallback.txt");    
+        final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
+        copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT, "");
       }
     
     /*******************************************************************************************************************
@@ -78,11 +90,24 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override // FIXME: what about @PostConstruct and injecting the context?
-    public void initialize (final @Nonnull GalleryAdapterContext context) 
+    @Override 
+    public void renderGallery (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
       {
-        this.context = context;
-        context.addAttribute("content", galleryContent);        
+        final Item item = items.get(0);
+        final int itemCount = items.size();
+        final int index = items.indexOf(item);
+        final Site site = siteProvider.get().getSite();
+        final String baseUrl     = site.getContextPath() + context.getSiteNode().getRelativeUri();
+        final String previousUrl = site.createLink(baseUrl + "/" + items.get((index - 1 + itemCount) % itemCount).getId().stringValue());
+        final String nextUrl     = site.createLink(baseUrl + "/" + items.get((index + 1) % itemCount).getId().stringValue());
+        final String lightboxUrl = site.createLink(baseUrl + "/lightbox");
+        final ST t = new ST(galleryTemplate, '$', '$').add("caption", item.getDescription())
+                                                      .add("previous", previousUrl)
+                                                      .add("next", nextUrl)
+                                                      .add("lightbox", lightboxUrl)
+                                                      .add("home", "/blog") // FIXME
+                                                      .add("copyright", copyright);
+        context.addAttribute("content", t.render());
       }
     
     /*******************************************************************************************************************
@@ -101,15 +126,18 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
             final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri() + "/images.xml");
 
             builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
-            builder.append(String.format("var catalogUrl = \"%s\";\n", link));
+            builder.append(String.format("var bluetteCatalogUrl = \"%s\";\n", link));
             
             final ResourceProperties bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
             
             // FIXME: since key doesn't have dynamic type, we can't properly escape strings.
             for (final Key<?> key : bluetteConfiguration.getKeys())
               {
-                final Object value = bluetteConfiguration.getProperty(key);
-                builder.append(String.format("var %s = %s;\n", key.stringValue(), value));
+                if (key.stringValue().startsWith("bluette") || key.stringValue().equals("logging"))
+                  {
+                    final Object value = bluetteConfiguration.getProperty(key);
+                    builder.append(String.format("var %s = %s;\n", key.stringValue(), value));
+                  }
               }
 
             builder.append("//]]>\n</script>\n");
@@ -132,25 +160,24 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void createItemCatalog (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
+    public void renderCatalog (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
       throws HttpStatusException
       {
-        try 
+        final StringBuilder builder = new StringBuilder();
+        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        builder.append("<gallery>\n");
+
+        for (final Item item : items)
           {
-            final TextHolder textHolder = (TextHolder)view;
-            // FIXME: regenerate the XML from items
-            textHolder.setTemplate("$content$\n");
-            textHolder.setContent(context.getSiteNode().getProperties().getProperty(new Key<String>("images.xml")));
-            textHolder.setMimeType("text/xml");
+            builder.append(String.format("    <stillImage id=\"%s\" title=\"%s\" />\n", item.getId(), item.getDescription()));   
           }
-        catch (NotFoundException e) 
-          {
-            throw new HttpStatusException(404);
-          }
-        catch (IOException e) 
-          {
-            throw new HttpStatusException(404);
-          }
+
+        builder.append("</gallery>\n");
+
+        final TextHolder textHolder = (TextHolder)view;
+        textHolder.setTemplate("$content$\n");
+        textHolder.setContent(builder.toString());
+        textHolder.setMimeType("text/xml");
       }
 
     /*******************************************************************************************************************
@@ -159,22 +186,67 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void createFallback (final @Nonnull GalleryView view,
-                                final @Nonnull Id id, 
-                                final @Nonnull Item item) 
+    public void renderFallback (final @Nonnull GalleryView view,
+                                final @Nonnull Item item,
+                                final @Nonnull List<Item> items) 
       {
         final TextHolder textHolder = (TextHolder)view;
-        final String redirectUrl = siteProvider.get().getSite().getContextPath() + context.getSiteNode().getRelativeUri() + "/#!/" + id.stringValue();
+        final int itemCount = items.size();
+        final int index = items.indexOf(item);
+        final Site site = siteProvider.get().getSite();
+        final String baseUrl     = site.getContextPath() + context.getSiteNode().getRelativeUri();
+        final String redirectUrl = site.createLink(baseUrl + "/#!/" + item.getId().stringValue());
+        final String previousUrl = site.createLink(baseUrl + "/" + items.get((index - 1 + itemCount) % itemCount).getId().stringValue());
+        final String nextUrl     = site.createLink(baseUrl + "/" + items.get((index + 1) % itemCount).getId().stringValue());
+        final String lightboxUrl = site.createLink(baseUrl + "/lightbox");
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
                                     + "//]]>\n"
                                     + "</script>\n";
-        final ST t = new ST(fallbackContent, '$', '$').add("caption", item.getDescription())
-                                                      .add("imageUrl", "/media/stillimages/1280/" + id + ".jpg");
+        final ST t = new ST(fallbackTemplate, '$', '$').add("caption", item.getDescription())
+                                                       .add("previous", previousUrl)
+                                                       .add("next", nextUrl)
+                                                       .add("lightbox", lightboxUrl)
+                                                       .add("home", "/blog") // FIXME
+                                                       .add("imageUrl", "/media/stillimages/800/" + item.getId().stringValue() + ".jpg")
+                                                       .add("copyright", copyright);
         textHolder.addAttribute("content", t.render());
         // FIXME: it would be better to change the properties rather than directly touch the template attributes
         textHolder.addAttribute("description", item.getDescription());
+        textHolder.addAttribute("inlinedScripts", redirectScript);
+        textHolder.addAttribute("scripts", "");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void renderLightboxFallback (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
+      {
+        final Site site = siteProvider.get().getSite();
+        final String baseUrl = site.getContextPath() + context.getSiteNode().getRelativeUri();
+        final StringBuilder builder = new StringBuilder();
+
+        for (final Item item : items)
+          {
+            final String id = item.getId().stringValue();
+            final String link = site.createLink(baseUrl + "/" + id);
+            builder.append(String.format("<a href=\"%s\"><img src=\"/media/stillimages/100/%s.jpg\"/></a>\n", link, id));   
+          }
+
+        final String redirectUrl = site.createLink(baseUrl + "/#!/lightbox").replaceAll("/$", "");
+        final String redirectScript = "<script type=\"text/javascript\">\n"
+                                    + "//<![CDATA[\n"
+                                    + "window.location.replace('" + redirectUrl + "');\n"
+                                    + "//]]>\n"
+                                    + "</script>\n";
+        final TextHolder textHolder = (TextHolder)view;
+        final ST t = new ST(lightboxFallbackTemplate, '$', '$').add("content", builder.toString())
+                                                               .add("copyright", copyright);
+        textHolder.addAttribute("content", t.render());
         textHolder.addAttribute("inlinedScripts", redirectScript);
         textHolder.addAttribute("scripts", "");
       }
