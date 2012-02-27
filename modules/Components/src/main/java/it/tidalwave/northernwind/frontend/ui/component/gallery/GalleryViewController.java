@@ -22,6 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 
 /***********************************************************************************************************************
@@ -32,4 +35,11 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
  **********************************************************************************************************************/
 public interface GalleryViewController extends CompositeSiteNodeController // TODO: use as(CompositeContentsController) instead
   {
+    @RequiredArgsConstructor @Getter @ToString
+    public static class Item
+      {
+        private final String relativePath;
+        
+        private final String description;
+      }
   }

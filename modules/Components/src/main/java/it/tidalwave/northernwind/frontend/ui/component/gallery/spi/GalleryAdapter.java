@@ -28,9 +28,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
 
 /***********************************************************************************************************************
  *
@@ -40,14 +38,6 @@ import lombok.ToString;
  **********************************************************************************************************************/
 public interface GalleryAdapter 
   {
-    @RequiredArgsConstructor @Getter @ToString
-    public static class Item
-      {
-        private final String relativePath;
-        
-        private final String description;
-      }
-
     /*******************************************************************************************************************
      *
      *

@@ -23,35 +23,33 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Finder;
-import it.tidalwave.util.spi.SimpleFinderSupport;
-import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter.Item;
-import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
-import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
-import it.tidalwave.util.Key;
-import java.io.StringReader;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import javax.annotation.PostConstruct;
+import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Finder;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
+import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
