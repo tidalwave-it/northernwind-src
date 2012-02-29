@@ -94,6 +94,7 @@
     <modules>
         <module>JerseyWebApp</module>
         <module>SpringMvcWebApp</module>
+        <module>SpringMvcMediaWebApp</module>
         <module>VaadinWebApp</module>
     </modules>
     <description>The parent POM for all webapps.</description>

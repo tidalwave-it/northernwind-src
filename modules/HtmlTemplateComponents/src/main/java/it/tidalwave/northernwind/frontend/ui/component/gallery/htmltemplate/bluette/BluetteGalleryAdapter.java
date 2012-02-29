@@ -195,7 +195,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final int index = items.indexOf(item);
         final Site site = siteProvider.get().getSite();
         final String baseUrl     = site.getContextPath() + context.getSiteNode().getRelativeUri();
-        final String redirectUrl = site.createLink(baseUrl + "/#!/" + item.getId().stringValue());
+        final String redirectUrl = site.createLink(baseUrl + "/#!/" + item.getId().stringValue()).replaceAll("/$", "");
         final String previousUrl = site.createLink(baseUrl + "/" + items.get((index - 1 + itemCount) % itemCount).getId().stringValue());
         final String nextUrl     = site.createLink(baseUrl + "/" + items.get((index + 1) % itemCount).getId().stringValue());
         final String lightboxUrl = site.createLink(baseUrl + "/lightbox");

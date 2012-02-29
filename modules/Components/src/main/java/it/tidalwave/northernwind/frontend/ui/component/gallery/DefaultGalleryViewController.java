@@ -33,6 +33,7 @@ import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
@@ -80,7 +81,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     @PostConstruct
     private void initialize()
       {
-        loadItems();  
+        loadItems(siteNode.getProperties());  
       }
     
     /*******************************************************************************************************************
@@ -117,16 +118,19 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      * Loads the items in the gallery.
      *
      ******************************************************************************************************************/
-    private void loadItems()
+    private void loadItems (final @Nonnull ResourceProperties properties)
       {
+        final long time = System.currentTimeMillis();
         items.clear();
         itemMapById.clear();
-        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(); // FIXME: make it configurable
+        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(properties); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
         
         for (final Item item : items)
           {
             itemMapById.put(item.getId(), item);   
           }
+        
+        log.info("gallery items loaded in {} msec", System.currentTimeMillis() - time);
       }
   }

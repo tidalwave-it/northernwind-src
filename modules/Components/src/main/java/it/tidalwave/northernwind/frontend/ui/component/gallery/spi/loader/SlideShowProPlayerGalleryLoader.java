@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader;
 
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryLoader;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -52,9 +52,14 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class SlideShowProPlayerGalleryLoader implements GalleryLoader
+public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
   {
     private static final String XPATH_IMG = "/gallery/album/img";
+
+    public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties) 
+      {
+        super(properties);
+      }  
     
     @Override @Nonnull
     public List<Item> loadGallery (final @Nonnull SiteNode siteNode) 
@@ -76,10 +81,10 @@ public class SlideShowProPlayerGalleryLoader implements GalleryLoader
             for (int i = 0; i < nodes.getLength(); i++)
               {
                 final Node node = nodes.item(i);
-                final String src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("\\.jpg$", "");
-                final String title = node.getAttributes().getNamedItem("title").getNodeValue();
+                final String src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("_", "-").replaceAll("\\.jpg$", "");
+//                final String title = node.getAttributes().getNamedItem("title").getNodeValue();
 //                final String caption = node.getAttributes().getNamedItem("caption").getNodeValue();
-                items.add(new Item(new Id(src), title));
+                items.add(createItem(new Id(src)));
               }
           }
         catch (Exception e)

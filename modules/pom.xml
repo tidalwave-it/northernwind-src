@@ -110,7 +110,13 @@
                 <artifactId>spring-webmvc</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
-                    
+
+            <dependency>
+                <groupId>org.imajine.image</groupId>
+                <artifactId>org-imajine-image-core</artifactId>
+                <version>${mistral.version}</version>
+            </dependency>
+            
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
