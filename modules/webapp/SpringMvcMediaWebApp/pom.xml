@@ -22,5 +22,15 @@
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-frontend-media-springmvc</artifactId>
         </dependency>
+        <dependency>
+            <artifactId>it-tidalwave-northernwind-core</artifactId>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>org-slf4j-jdk14</artifactId>
+                    <groupId>com.kenai.nbpwr</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>
