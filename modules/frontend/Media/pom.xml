@@ -17,6 +17,11 @@
     <name>NorthernWind - Frontend Media Extensions</name>
     <description>Media Extensions.</description>
     
+    <properties>
+        <!-- Otherwise can't be released because of missing javadocs -->
+        <tft.javadoc.excludePackageNames />
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
