@@ -110,8 +110,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
               }
             catch (IOException e)
               {
-                log(e.toString());
-                e.printStackTrace(); // FIXME  
+                log(e);
               }
           }
         else
@@ -167,7 +166,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           }
         catch (Exception e) 
           {
-            BootLogger.log(e.toString());
+            BootLogger.log(e);
 //            e.printStackTrace(); // FIXME  
           }
           

@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import javax.annotation.Nonnull;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -43,6 +45,15 @@ public final class BootLogger
     public static synchronized void log (final @Nonnull String string)
       {
         BUILDER.append(string).append("\n");
+      }
+    
+    public static void log (final @Nonnull Throwable t)
+      {
+        final StringWriter sw = new StringWriter(); 
+        final PrintWriter pw = new PrintWriter(sw);
+        t.printStackTrace(pw);
+        pw.flush();
+        log(t.toString() + "\n" + sw.toString());
       }
     
     @Nonnull
