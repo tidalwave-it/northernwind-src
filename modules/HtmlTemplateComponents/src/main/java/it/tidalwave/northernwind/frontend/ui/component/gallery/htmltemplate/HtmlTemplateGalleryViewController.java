@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -107,28 +108,28 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     /* package */ void initializeHtmlTemplateGalleryViewController() 
       throws HttpStatusException, IOException
       {
-        final String pathParams = requestHolder.get().getPathParams(siteNode).replaceAll("^/", "").replaceAll("/$", "");
-        log.info(">>>> pathParams: *{}*", pathParams);
+        final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
+        log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
         final String siteNodeTitle = siteNode.getProperties().getProperty(Properties.PROPERTY_TITLE, "");
         
-        if ("".equals(pathParams))
+        if ("".equals(param))
           {
             galleryAdapter.renderGallery(view, items);
             textHolder.addAttribute("title", siteNodeTitle);
           }
-        else if ("images.xml".equals(pathParams))
+        else if ("images.xml".equals(param))
           {
             galleryAdapter.renderCatalog(view, items);
           }
-        else if ("lightbox".equals(pathParams))
+        else if ("lightbox".equals(param))
           {
             galleryAdapter.renderLightboxFallback(view, items);
             textHolder.addAttribute("title", siteNodeTitle);
           }
         else 
           {
-            final Id id = new Id(pathParams);
+            final Id id = new Id(param);
             final Item item = itemMapById.get(id);
             
             if (item == null)
@@ -139,6 +140,19 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
             
             galleryAdapter.renderFallback(view, item, items);
             textHolder.addAttribute("title", item.getDescription());
+          }
+      }
+    
+    @Nonnull
+    private String getParam()
+      { 
+        try 
+          {
+            return requestHolder.get().getParameter("_escaped_fragment_");
+          } 
+        catch (NotFoundException ex) 
+          {
+            return requestHolder.get().getPathParams(siteNode);
           }
       }
 
