@@ -25,8 +25,10 @@ package it.tidalwave.northernwind.frontend.media.impl;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 import org.imajine.image.EditableImage;
@@ -44,6 +46,9 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import static org.imajine.image.op.ReadOp.Type.*;
 import static it.tidalwave.northernwind.core.model.Media.Media;
 
@@ -58,17 +63,33 @@ import static it.tidalwave.northernwind.core.model.Media.Media;
 @Slf4j
 public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
   {
+    @RequiredArgsConstructor @Getter @ToString
+    static class MetadataBag
+      {
+        @Nonnull
+        private final EXIF exif;
+        
+        @Nonnull
+        private final IPTC iptc;
+        
+        @Nonnull
+        private final XMP xmp;
+      }
+    
     private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<List<String>>("mediaPaths");
     private final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
     
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
+    private final Map<Id, MetadataBag> metadataMapById = new HashMap<Id, MetadataBag>();
+            
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    // FIXME: should use the Metadata API of blueMarine, but we have first to make it work with Spring and its DI.
     @Override @Nonnull
     public String getMetadataString (final @Nonnull Id id, 
                                      final @Nonnull String format,
@@ -79,13 +100,8 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             log.info("getMetadataString({}, {})", id, format);
             
             final long time = System.currentTimeMillis();
-            final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-            final Media media = findMedia(id, properties);
-            final File file = FileUtil.toFile(media.getFile());
-            final EditableImage image = EditableImage.create(new ReadOp(file, METADATA));
-            final EXIF exif = image.getMetadata(EXIF.class);
-            final IPTC iptc = image.getMetadata(IPTC.class);
-            final XMP xmp = image.getMetadata(XMP.class);
+            final MetadataBag metadataBag = findMetadataById(id, siteNodeProperties);
+            final XMP xmp = metadataBag.getXmp();
             // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
 //            final String string = formatted(iptc.getObject(517, String.class));
             final String string = formatted(xmp.getXmpProperties().get("dc:title[1]"));
@@ -105,6 +121,40 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             return "";
           }
       }   
+    
+    /*******************************************************************************************************************
+     *
+     * Finds metadata for the given id.
+     * 
+     * @param  mediaId            the media id
+     * @param  properties         the configuration properties
+     * @return                    the {@code Media} 
+     * @throws NotFoundException  if no {@code Media} is found 
+     *
+     ******************************************************************************************************************/
+    // FIXME: shouldn't synchronize the whole method, only map manipulation
+    @Nonnull
+    private synchronized MetadataBag findMetadataById (final @Nonnull Id mediaId,
+                                                       final @Nonnull ResourceProperties siteNodeProperties)
+      throws NotFoundException, IOException
+      {
+        MetadataBag metadataBag = metadataMapById.get(mediaId);
+        
+        if (metadataBag == null)
+          {
+            final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+            final Media media = findMedia(mediaId, properties);
+            final File file = FileUtil.toFile(media.getFile());
+            final EditableImage image = EditableImage.create(new ReadOp(file, METADATA));
+            final EXIF exif = image.getMetadata(EXIF.class);
+            final IPTC iptc = image.getMetadata(IPTC.class);
+            final XMP xmp = image.getMetadata(XMP.class);
+            metadataBag = new MetadataBag(exif, iptc, xmp);
+            metadataMapById.put(mediaId, metadataBag);
+          }
+        
+        return metadataBag;
+      }
     
     /*******************************************************************************************************************
      *
