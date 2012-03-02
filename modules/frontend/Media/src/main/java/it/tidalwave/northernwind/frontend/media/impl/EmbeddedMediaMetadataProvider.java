@@ -32,6 +32,7 @@ import java.io.IOException;
 import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
+import org.imajine.image.metadata.XMP;
 import org.imajine.image.op.ReadOp;
 import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.Id;
@@ -84,8 +85,10 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             final EditableImage image = EditableImage.create(new ReadOp(file, METADATA));
             final EXIF exif = image.getMetadata(EXIF.class);
             final IPTC iptc = image.getMetadata(IPTC.class);
+            final XMP xmp = image.getMetadata(XMP.class);
             // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
-            final String string = formatted(iptc.getObject(517, String.class));
+//            final String string = formatted(iptc.getObject(517, String.class));
+            final String string = formatted(xmp.getXmpProperties().get("dc:title[1]"));
            
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
                     

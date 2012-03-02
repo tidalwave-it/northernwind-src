@@ -19,6 +19,8 @@
     <inceptionYear>2011</inceptionYear>
 
     <properties>
+<!--        <tft.findbugs-maven-plugin.version>2.4.0</tft.findbugs-maven-plugin.version> -->
+
         <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
@@ -28,10 +30,10 @@
         <vaadin.version>6.6.1</vaadin.version>
         <javax.servlet-api.version>2.5</javax.servlet-api.version>
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
-        <mistral.version>1.0-ALPHA-1</mistral.version>
+        <mistral.version>1.0-ALPHA-2-SNAPSHOT</mistral.version>
         <org.springframework.version>3.0.7.RELEASE</org.springframework.version>
         <openbluesky.version>0.15</openbluesky.version>
-        <thesefoolishthings.version>1.22</thesefoolishthings.version>
+        <thesefoolishthings.version>1.23</thesefoolishthings.version>
         <netbeans.version>RELEASE71</netbeans.version>
         <slf4j.version>1.6.1</slf4j.version>
         <logback.version>0.9.28</logback.version>
@@ -239,19 +241,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-
- <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-changelog-plugin</artifactId>
-        <version>2.2</version>
-        <configuration>
-<type>range</type>
-          <range>9999</range>
-          <dateFormat>EEE MMM dd HH:mm:ss yyyy zzzz</dateFormat>
-        </configuration>
-      </plugin>
-
-
         </plugins>
     </build>
 
