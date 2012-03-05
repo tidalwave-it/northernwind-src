@@ -19,7 +19,7 @@
     <inceptionYear>2011</inceptionYear>
 
     <properties>
-<!--        <tft.findbugs-maven-plugin.version>2.4.0</tft.findbugs-maven-plugin.version> -->
+       <tft.findbugs-maven-plugin.version>2.4.0</tft.findbugs-maven-plugin.version> 
 
         <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
