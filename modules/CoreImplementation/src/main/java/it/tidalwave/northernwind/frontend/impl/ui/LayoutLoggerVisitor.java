@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @RequiredArgsConstructor @Slf4j
-public class LayoutLoggerVisitor implements Visitor<Layout, Void>
+public class LayoutLoggerVisitor implements Visitor<Layout, Object>
   {
     public static enum Level
       {
@@ -96,9 +96,9 @@ public class LayoutLoggerVisitor implements Visitor<Layout, Void>
       }
 
     @Override
-    public Void getValue() 
+    public Object getValue() 
       throws NotFoundException 
       {
-        return null;
+        return new Object();
       }
   }
