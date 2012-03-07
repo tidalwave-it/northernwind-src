@@ -87,11 +87,12 @@ public class XsltMacroFilter implements Filter
     
     private String xslt = "";
     
-    private boolean initialized = false;
+    private volatile boolean initialized = false;
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    // FIXME: this should be shared between instances
     private void initialize()
       throws IOException, NotFoundException
       {
@@ -128,8 +129,11 @@ public class XsltMacroFilter implements Filter
               {
                 synchronized (this)
                   {
-                    initialize();
-                    initialized = true;
+                    if (!initialized)
+                      {
+                        initialize();
+                        initialized = true;
+                      }
                   }
               }
             catch (IOException e)
