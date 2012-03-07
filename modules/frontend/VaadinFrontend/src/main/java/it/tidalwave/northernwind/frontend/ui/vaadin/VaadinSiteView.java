@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class VaadinSiteView extends Window implements SiteView
   {
     @Inject @Nonnull
-    private Provider<SiteProvider> siteProvider;
+    private transient Provider<SiteProvider> siteProvider;
             
     /*******************************************************************************************************************
      *
