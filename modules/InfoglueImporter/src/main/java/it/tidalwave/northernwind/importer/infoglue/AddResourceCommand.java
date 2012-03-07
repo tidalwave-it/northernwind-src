@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.importer.infoglue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +64,7 @@ public class AddResourceCommand
         final File file = new File(ResourceManager.hgFolder, fixedPath);
         file.getParentFile().mkdirs();
         log.info("Adding and committing {} {} ...", dateTime, file.getAbsolutePath());
-        final OutputStream os = new FileOutputStream(file);
+        final @Cleanup OutputStream os = new FileOutputStream(file);
         os.write(contents);
         os.close();
         Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg add \"" + fixedPath + "\"");
