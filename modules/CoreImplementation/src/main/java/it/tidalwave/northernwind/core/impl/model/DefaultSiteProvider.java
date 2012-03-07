@@ -103,6 +103,11 @@ public class DefaultSiteProvider implements SiteProvider
     @Override @Nonnull
     public Site getSite() 
       {
+        if (site == null) // FIXME: rather create a NullObject site
+          {
+            throw new IllegalStateException("site not created yet");   
+          }
+        
         return site;
       }
 
