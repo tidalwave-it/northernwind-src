@@ -147,7 +147,7 @@ public class DefaultModelFactory implements ModelFactory
     @Override @Nonnull
     public ResourceProperties createProperties (final @Nonnull Id id) 
       {
-        return new DefaultResourceProperties(id, null);
+        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
       }
 
     /*******************************************************************************************************************

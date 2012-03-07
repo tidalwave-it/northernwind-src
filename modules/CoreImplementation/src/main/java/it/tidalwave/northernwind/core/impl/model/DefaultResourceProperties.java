@@ -51,6 +51,16 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
   {
     public static interface PropertyResolver // FIXME: drop this
       {
+        public static PropertyResolver DEFAULT = new PropertyResolver() 
+          {
+            @Override
+            public <Type> Type resolveProperty(Id propertyGroupId, Key<Type> key) 
+              throws NotFoundException, IOException 
+              {
+                throw new NotFoundException();
+              }
+          };
+        
         @Nonnull
         public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
           throws NotFoundException, IOException;
