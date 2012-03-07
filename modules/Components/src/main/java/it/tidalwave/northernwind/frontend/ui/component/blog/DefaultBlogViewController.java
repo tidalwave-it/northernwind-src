@@ -65,7 +65,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             final DateTime dateTime1 = getBlogDateTime(post1);
             final DateTime dateTime2 = getBlogDateTime(post2);
-            return -dateTime1.compareTo(dateTime2);
+            return dateTime2.compareTo(dateTime1);
           }
       };
     
