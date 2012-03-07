@@ -56,7 +56,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      ******************************************************************************************************************/
     private final Predicate<SiteNode> createRssLink = new Predicate<SiteNode>() 
       {
-        private final String mimeType = "application/rss+xml";
+        private final static String RSS_MIME_TYPE = "application/rss+xml";
     
         private final StringBuilder builder = new StringBuilder();
         
@@ -67,7 +67,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
               {
                 final String title = rssSiteNode.getProperties().getProperty(PROPERTY_TITLE, "RSS");
                 builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />\n", 
-                                             mimeType, title, site.createLink(rssSiteNode.getRelativeUri())));
+                                             RSS_MIME_TYPE, title, site.createLink(rssSiteNode.getRelativeUri())));
               }
             catch (IOException e)
               {
