@@ -59,7 +59,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private final FileObject file;
     
     @Inject @Nonnull
-    private Provider<SiteProvider> siteProvider;
+    private transient Provider<SiteProvider> siteProvider;
     
     private final String uriPrefix;
     
