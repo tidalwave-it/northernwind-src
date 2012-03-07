@@ -168,8 +168,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         final DateTime blogDateTime = getBlogDateTime(post);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
-        htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>\n", idPrefix));
-        htmlBuilder.append(String.format("<h3>%s</h3>\n", properties.getProperty(PROPERTY_TITLE)));
+        htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
+        htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty(PROPERTY_TITLE)));
         
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         renderDate(htmlBuilder, blogDateTime);
@@ -179,7 +179,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         if (addBody)
           {
-            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>\n", properties.getProperty(PROPERTY_FULL_TEXT)));
+            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty(PROPERTY_FULL_TEXT)));
           }
 
         htmlBuilder.append(String.format("</div>\n"));
@@ -199,7 +199,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             
             if (!title.trim().equals(""))
               {
-                htmlBuilder.append(String.format("<h2>%s</h2>\n", title));
+                htmlBuilder.append(String.format("<h2>%s</h2>%n", title));
               }
           } 
         catch (NotFoundException e) 
@@ -218,7 +218,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull DateTime blogDateTime) 
       {
-        htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>\n", 
+        htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>%n", 
                            getDateTimeFormatter().print(blogDateTime)));
       }
     
@@ -233,7 +233,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         try
           {
            final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
-           htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>\n", link));
+           htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>%n", link));
           }
         catch (NotFoundException e)
           {
@@ -256,7 +256,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           {
             final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
             final String title = post.getProperties().getProperty(PROPERTY_TITLE);
-            htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>\n", link, title));
+            htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>%n", link, title));
           }
         catch (NotFoundException e)
           {
