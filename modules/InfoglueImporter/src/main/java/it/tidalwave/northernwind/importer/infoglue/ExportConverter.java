@@ -100,7 +100,7 @@ public class ExportConverter extends Converter
     protected void addLibraries (final @Nonnull String zippedLibraryPath, final @Nonnull DateTime dateTime)
       throws IOException
       {
-        final ZipFile zipFile = new ZipFile(zippedLibraryPath);
+        final @Cleanup ZipFile zipFile = new ZipFile(zippedLibraryPath);
         final Enumeration enumeration = zipFile.entries();
 
         while (enumeration.hasMoreElements())
