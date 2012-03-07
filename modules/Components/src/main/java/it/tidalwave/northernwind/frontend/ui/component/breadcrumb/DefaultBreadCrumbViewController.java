@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.breadcrumb;
 
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.addthis.AddThisView;
 import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
