@@ -142,7 +142,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         log.debug("addReference()");
         
-        final DateTime blogDateTime = getBlogDateTime(post);
+//        final DateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
         
         if (!referencesRendered)
