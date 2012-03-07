@@ -456,8 +456,8 @@ public class LayoutConverter extends Parser
                     final byte[] nonOverrideComponents  = ResourceManager.findRecentContents(nonOverridePath);
                     log.info("Patching {} with {} ...", nonOverridePath, path);
                     final @Cleanup InputStream is = new ByteArrayInputStream(nonOverrideComponents);
-                    Layout nonOverrideLayout = new DefaultLayout(new Id(""), "").as(Unmarshallable.class).unmarshal(is);
-                    nonOverrideLayout = (DefaultLayout)nonOverrideLayout.withOverride(rootComponent);
+//                    Layout nonOverrideLayout = new DefaultLayout(new Id(""), "").as(Unmarshallable.class).unmarshal(is);
+//                    nonOverrideLayout = (DefaultLayout)nonOverrideLayout.withOverride(rootComponent);
                     final ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
                     rootComponent.as(Marshallable.class).marshal(baos2);
                     baos2.close();
