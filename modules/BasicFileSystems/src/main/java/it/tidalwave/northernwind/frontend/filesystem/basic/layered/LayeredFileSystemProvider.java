@@ -32,6 +32,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
+import javax.annotation.CheckForNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -96,7 +97,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          * {@inheritDoc}
          *
          **************************************************************************************************************/
-        @Override @Nonnull
+        @Override @CheckForNull
         public FileObject findResource (final @Nonnull String name) 
           {
             log.trace("findResource({})", name);
