@@ -49,7 +49,7 @@ import lombok.Getter;
  *
  **********************************************************************************************************************/
 @Configurable @Getter
-public class DefaultLayout extends SpringAsSupport implements Layout
+public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
   {
     @Nonnull
     private final Id id;
