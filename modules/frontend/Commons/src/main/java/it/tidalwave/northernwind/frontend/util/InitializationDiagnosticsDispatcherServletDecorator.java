@@ -122,7 +122,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
       {
         response.setStatus(500);
         response.setContentType("text/html");
-        final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream()));                
+        final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, "UTF-8"));                
         pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n"); 
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");                
         pw.print(t.toString());          
