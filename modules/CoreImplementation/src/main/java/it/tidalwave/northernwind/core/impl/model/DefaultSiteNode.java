@@ -149,10 +149,12 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             catch (IOException e) 
               {
                 log.error("", e); // should never occur
+                throw new RuntimeException(e);
               }
             catch (NotFoundException e) 
               {
                 log.error("", e); // should never occur
+                throw new RuntimeException(e);
               }
           }
         
