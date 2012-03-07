@@ -50,6 +50,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 @Configurable @Slf4j @ToString
 public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
   {
+    private static final long serialVersionUID = 2345536092354546452L;
+    
     @Nonnull
     private final Class<Type> typeClass;
     
