@@ -156,6 +156,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   break;
                     
                 case 500:
+                default:
                   message = "<h1>Internal error</h1>";
                   break;
               }
