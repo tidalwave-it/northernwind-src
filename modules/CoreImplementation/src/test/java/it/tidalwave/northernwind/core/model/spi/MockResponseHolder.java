@@ -56,7 +56,7 @@ public class MockResponseHolder extends ResponseHolder<String>
             
             for (final Entry<String, String> entry : headerMap.entrySet())
               {
-                builder.append(String.format("%s: %s\n", entry.getKey(), entry.getValue()));
+                builder.append(String.format("%s: %s%n", entry.getKey(), entry.getValue()));
               }
             
             builder.append("\n").append(body);

@@ -64,7 +64,7 @@ public class MacroFilter implements Filter
               }
             catch (IllegalArgumentException e) // better diagnostics
               {
-                throw new IllegalArgumentException(String.format("Pattern error: %s regexp: %s\n**** filtered: %s\n**** buffer: %s", 
+                throw new IllegalArgumentException(String.format("Pattern error: %s regexp: %s%n**** filtered: %s%n**** buffer: %s", 
                                                    e.getMessage(), pattern.pattern(), filtered, buffer));
               }
           }   

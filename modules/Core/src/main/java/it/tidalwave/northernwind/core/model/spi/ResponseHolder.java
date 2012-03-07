@@ -147,7 +147,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e) 
           {
-            String message = String.format("<h1>HTTP Status: %d</h1>\n", e.getHttpStatus());
+            String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
             
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {

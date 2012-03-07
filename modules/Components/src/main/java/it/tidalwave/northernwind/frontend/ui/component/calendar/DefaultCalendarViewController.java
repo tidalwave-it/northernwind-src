@@ -116,7 +116,7 @@ public class DefaultCalendarViewController implements CalendarViewController
         builder.append("<table class='nw-calendar-table'>\n")
                .append("<tbody>\n");
 
-        builder.append(String.format("<tr>\n<th colspan='%d' class='nw-calendar-title'>%d</th>\n</tr>\n", columns, selectedYear));
+        builder.append(String.format("<tr>%n<th colspan='%d' class='nw-calendar-title'>%d</th>%n</tr>%n", columns, selectedYear));
 
         final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
         final String[] shortMonthNames = DateFormatSymbols.getInstance(Locale.ENGLISH).getShortMonths();
@@ -151,7 +151,7 @@ public class DefaultCalendarViewController implements CalendarViewController
                 final Node node = nodes.item(i);
                 final String link = site.createLink(node.getAttributes().getNamedItem("link").getNodeValue());
                 final String name = node.getAttributes().getNamedItem("name").getNodeValue();
-                builder.append(String.format("<li><a href='%s'/>%s</a></li>\n", link, name));
+                builder.append(String.format("<li><a href='%s'/>%s</a></li>%n", link, name));
               }
             
             builder.append("</ul>\n</td>\n");
@@ -180,7 +180,7 @@ public class DefaultCalendarViewController implements CalendarViewController
       {
         try
           {
-            builder.append(String.format("<h2>%s</h2>\n", siteNodeProperties.getProperty(PROPERTY_TITLE)));
+            builder.append(String.format("<h2>%s</h2>%n", siteNodeProperties.getProperty(PROPERTY_TITLE)));
           }
         catch (NotFoundException e)
           {
@@ -209,7 +209,7 @@ public class DefaultCalendarViewController implements CalendarViewController
             if (year != selectedYear)
               {
                 final String url = site.createLink(siteNode.getRelativeUri() + "/" + year);
-                builder.append(String.format("<a href='%s'>%d</a>\n", url, year));
+                builder.append(String.format("<a href='%s'>%d</a>%n", url, year));
               }
             else
               {
