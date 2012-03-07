@@ -81,33 +81,40 @@ public class ZipFileSystemProvider implements FileSystemProvider
         @Override
         public void run() 
           {
-            final File zipFile = fileSystem.getJarFile();
-            final DateTime timestamp = new DateTime(zipFile.lastModified());
-//            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
-            
-            if (!changeWasDetected)
+            try
               {
-                if (timestamp.isAfter(latestModified))
+                final File zipFile = getFileSystem().getJarFile();
+                final DateTime timestamp = new DateTime(zipFile.lastModified());
+    //            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
+
+                if (!changeWasDetected)
                   {
-                    latestModified = timestamp;  
-                    changeWasDetected = true;
-                    log.info("Detected change of {}: last modified time: {} - waiting for it to become stable", zipFile, latestModified);
-                  }
-              }
-            else
-              {
-                if (timestamp.isAfter(latestModified))
-                  {
-                    latestModified = timestamp;  
-                    log.info("Detected unstable change of {}: last modified time: {} - waiting for it to become stable", zipFile, latestModified);
+                    if (timestamp.isAfter(latestModified))
+                      {
+                        latestModified = timestamp;  
+                        changeWasDetected = true;
+                        log.info("Detected change of {}: last modified time: {} - waiting for it to become stable", zipFile, latestModified);
+                      }
                   }
                 else
                   {
-                    latestModified = timestamp;  
-                    changeWasDetected = false;
-                    log.info("Detected stable change of {}: last modified time: {}", zipFile, latestModified);
-                    messageBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+                    if (timestamp.isAfter(latestModified))
+                      {
+                        latestModified = timestamp;  
+                        log.info("Detected unstable change of {}: last modified time: {} - waiting for it to become stable", zipFile, latestModified);
+                      }
+                    else
+                      {
+                        latestModified = timestamp;  
+                        changeWasDetected = false;
+                        log.info("Detected stable change of {}: last modified time: {}", zipFile, latestModified);
+                        messageBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+                      }
                   }
+              }
+            catch (IOException e)
+              {
+                log.error("Cannot check changes on zip file system", e); 
               }
           }
       };
@@ -118,7 +125,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized FileSystem getFileSystem() 
+    public synchronized JarFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
