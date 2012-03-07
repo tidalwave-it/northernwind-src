@@ -122,7 +122,12 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
       throws IOException
       {
         log.info("generateLocalFileSystem()");
-        new File(rootPath).mkdirs(); // TODO: use FileSystem API
+        
+        if (!new File(rootPath).mkdirs()) // TODO: use FileSystem API
+          {
+            throw new IOException("Cannot create dirs for " + rootPath);
+          }
+        
         // FIXME: shouldn't be needed, but otherwise after a second call to this method won't find files
         targetProvider = new LocalFileSystemProvider(); 
         targetProvider.setRootPath(rootPath);
