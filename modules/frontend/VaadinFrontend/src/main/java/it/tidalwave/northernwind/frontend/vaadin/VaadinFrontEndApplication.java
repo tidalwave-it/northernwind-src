@@ -42,6 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value="session") @Slf4j
 public class VaadinFrontEndApplication extends Application
   {          
+    private static final long serialVersionUID = 5346346324236215L;
+    
     @Inject @Nonnull
     private SiteView siteView;
     
