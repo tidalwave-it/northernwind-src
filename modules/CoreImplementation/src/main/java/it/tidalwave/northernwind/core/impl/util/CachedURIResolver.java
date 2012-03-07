@@ -66,17 +66,17 @@ public class CachedURIResolver implements URIResolver
     public Source resolve (final String href, final String base) 
       throws TransformerException 
       {
-        log.info("resolve({}, {})", href, base);
-        
-        final File cacheFolder = new File(cacheFolderPath);
-        
-        if (!cacheFolder.exists())
-          {
-            cacheFolder.mkdirs();  
-          }
-        
         try
           {
+            log.info("resolve({}, {})", href, base);
+        
+            final File cacheFolder = new File(cacheFolderPath);
+
+            if (!cacheFolder.exists())
+              {
+                mkdirs(cacheFolder);  
+              }
+
             final String mangledName = URLEncoder.encode(href, "UTF-8");
             final File cachedFile = new File(cacheFolder, mangledName);
             final long elapsed = System.currentTimeMillis() - cachedFile.lastModified();
@@ -110,7 +110,7 @@ public class CachedURIResolver implements URIResolver
         try
           {
             FileUtils.copyURLToFile(new URL(href), tempFile, connectionTimeout, readTimeout);   
-            tempFile.renameTo(cachedFile);
+            rename(tempFile, cachedFile);
           }
         catch (IOException e)
           { 
@@ -125,5 +125,23 @@ public class CachedURIResolver implements URIResolver
           }
         
         log.debug(">>>> done");
+      }
+
+    private static void mkdirs (final @Nonnull File folder)
+      throws IOException 
+      {
+        if (!folder.mkdirs())
+          {
+            throw new IOException("Cannot mkdirs for " + folder);    
+          }
+      }
+    
+    private static void rename (final @Nonnull File from, final @Nonnull File to)
+      throws IOException 
+      { 
+        if (!from.renameTo(to))
+          {
+            throw new IOException("Cannot rename " + from + " to " + to);
+          }
       }
   }
