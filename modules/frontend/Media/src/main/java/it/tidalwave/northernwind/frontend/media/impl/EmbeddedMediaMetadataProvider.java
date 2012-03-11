@@ -51,6 +51,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.imajine.image.op.ReadOp.Type.*;
 import static it.tidalwave.northernwind.core.model.Media.Media;
+import org.imajine.image.Rational;
+import org.imajine.image.metadata.TIFF;
 
 /***********************************************************************************************************************
  *
@@ -67,6 +69,9 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
     static class MetadataBag
       {
         @Nonnull
+        private final TIFF tiff;
+        
+        @Nonnull
         private final EXIF exif;
         
         @Nonnull
@@ -77,13 +82,16 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       }
     
     private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<List<String>>("mediaPaths");
+    
+    private final static Key<List<String>> PROPERTY_LENS_IDS = new Key<List<String>>("lensIds");
+    
     private final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
     
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
     private final Map<Id, MetadataBag> metadataMapById = new HashMap<Id, MetadataBag>();
-            
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -102,9 +110,78 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             final long time = System.currentTimeMillis();
             final MetadataBag metadataBag = findMetadataById(id, siteNodeProperties);
             final XMP xmp = metadataBag.getXmp();
+            final TIFF tiff = metadataBag.getTiff();
+            final EXIF exif = metadataBag.getExif();
+            final Map<String, String> xmpProperties = xmp.getXmpProperties();
             // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
 //            final String string = formatted(iptc.getObject(517, String.class));
-            final String string = formatted(xmp.getXmpProperties().get("dc:title[1]"));
+            
+            final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+            final Map<String, String> lensMap = new HashMap<String, String>();
+            
+            try
+              {
+                for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
+                {
+                    final String[] split = s.split(":");
+                    lensMap.put(split[0].trim(), split[1].trim());
+                }
+              }
+            catch (NotFoundException e)
+              {
+                log.warn("", e);
+              }
+            
+            if (log.isDebugEnabled())
+              {
+                log.debug("XMP({}): {}", id, xmpProperties);
+
+                for (final int tagCode : exif.getTagCodes())
+                  {
+                    log.debug("EXIF({}).{}: {}", new Object[] { id, exif.getTagName(tagCode), exif.getObject(tagCode) });  
+                  }
+
+                for (final int tagCode : tiff.getTagCodes())
+                  {
+                    log.debug("TIFF({}).{}: {}", new Object[] { id, tiff.getTagName(tagCode), tiff.getObject(tagCode) });  
+                  }
+              }
+            
+            String string = format;
+            
+            if (format.contains("$XMP.dc.title$"))
+              {
+                string = string.replace("$XMP.dc.title$", formatted(xmpProperties.get("dc:title[1]")));
+              }
+           
+            if (format.contains("$shootingData$"))
+              {
+                final StringBuilder builder = new StringBuilder();
+                builder.append(formatted(exif.getModel()));
+                builder.append(" + ");
+                builder.append(formatted(lensMap.get(xmpProperties.get("aux:LensID"))));
+                builder.append(" @ ");
+                builder.append(exif.getFocalLength().intValue());
+                // FIXME: eventually teleconverter
+                builder.append(" mm, ");
+                builder.append(exif.getExposureTime().toString());
+                builder.append(" sec @ f/");
+                builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
+               
+                final Rational exposureBiasValue = exif.getExposureBiasValue();
+                
+                if (exposureBiasValue.getNumerator() != 0)
+                  {
+                    builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
+                  }
+                
+                builder.append(", ISO ");
+                builder.append(exif.getISOSpeedRatings().intValue());
+                
+                string = string.replace("$shootingData$", builder.toString());
+                
+                // Nikon D200 + AF-S 300 f/4D + TC 17E, 1/250 sec @ f/9, ISO 100
+              }
            
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
                     
@@ -112,7 +189,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
         catch (NotFoundException e)
           {
-            log.warn("Cannot find media", e);
+            log.warn("Cannot find media " + id, e);
             return "";
           }
         catch (IOException e)
@@ -146,10 +223,11 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             final Media media = findMedia(mediaId, properties);
             final File file = FileUtil.toFile(media.getFile());
             final EditableImage image = EditableImage.create(new ReadOp(file, METADATA));
+            final TIFF tiff = image.getMetadata(TIFF.class);
             final EXIF exif = image.getMetadata(EXIF.class);
             final IPTC iptc = image.getMetadata(IPTC.class);
             final XMP xmp = image.getMetadata(XMP.class);
-            metadataBag = new MetadataBag(exif, iptc, xmp);
+            metadataBag = new MetadataBag(tiff, exif, iptc, xmp);
             metadataMapById.put(mediaId, metadataBag);
           }
         
