@@ -48,7 +48,7 @@ public interface MediaMetadataProvider
                                          final @Nonnull String format,
                                          final @Nonnull ResourceProperties properties) 
           {
-            return "";
+            return format;
           }
       };
     
