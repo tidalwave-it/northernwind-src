@@ -168,7 +168,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 try
                   {
                     log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-                    post.getProperties().getProperty(PROPERTY_FULL_TEXT); // Probe existence of fullText
+//                    post.getProperties().getProperty(PROPERTY_FULL_TEXT); // Probe existence of fullText
 
                     if (currentItem < maxFullItems)
                       {
