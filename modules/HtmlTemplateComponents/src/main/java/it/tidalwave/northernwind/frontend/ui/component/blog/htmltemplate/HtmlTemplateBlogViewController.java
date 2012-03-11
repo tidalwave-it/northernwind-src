@@ -163,6 +163,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private void addPost (final @Nonnull Content post, final boolean addBody)
       throws IOException, NotFoundException 
       {
+        log.debug("addPost({}, {})", post, addBody);
         final ResourceProperties properties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
         
