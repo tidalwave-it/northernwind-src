@@ -30,7 +30,7 @@
         <vaadin.version>6.6.1</vaadin.version>
         <javax.servlet-api.version>2.5</javax.servlet-api.version>
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
-        <mistral.version>1.0-ALPHA-2-SNAPSHOT</mistral.version>
+        <mistral.version>1.0-ALPHA-2</mistral.version>
         <org.springframework.version>3.0.7.RELEASE</org.springframework.version>
         <openbluesky.version>0.15</openbluesky.version>
         <thesefoolishthings.version>1.23</thesefoolishthings.version>
