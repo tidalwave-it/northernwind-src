@@ -38,15 +38,14 @@ import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate
               controlledBy=HtmlTemplateBlogViewController.class)
 public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implements BlogView
   {
-    /*******************************************************************************************************************
-     *
-     * Creates an instance with the given id.
-     * 
-     * @param  id  the id
-     *
-     ******************************************************************************************************************/
     public HtmlTemplateBlogView (final @Nonnull Id id) 
       {
         super(id);
+      }
+
+    @Override
+    public void setTitle (final @Nonnull String title) 
+      {
+        addAttribute("title", title);
       }
   }

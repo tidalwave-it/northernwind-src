@@ -169,8 +169,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         final DateTime blogDateTime = getBlogDateTime(post);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
+        final String title = properties.getProperty(PROPERTY_TITLE);
+        view.setTitle(title);
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
-        htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty(PROPERTY_TITLE)));
+        htmlBuilder.append(String.format("<h3>%s</h3>%n", title));
         
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         renderDate(htmlBuilder, blogDateTime);
@@ -201,6 +203,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             if (!title.trim().equals(""))
               {
                 htmlBuilder.append(String.format("<h2>%s</h2>%n", title));
+                view.setTitle(title);
               }
           } 
         catch (NotFoundException e) 

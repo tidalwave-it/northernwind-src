@@ -59,6 +59,10 @@ public class VaadinBlogView extends VerticalLayout implements BlogView
         setStyleName(NW + id.stringValue());
       }
 
+    @Override
+    public void setTitle (final @Nonnull String title) 
+      {
+      }
 //    @Override FIXME
 //    public void addPost (final @Nonnull BlogPost blogPost) 
 //      {

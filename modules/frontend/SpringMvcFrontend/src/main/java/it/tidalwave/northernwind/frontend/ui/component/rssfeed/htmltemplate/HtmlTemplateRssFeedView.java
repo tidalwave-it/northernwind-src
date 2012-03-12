@@ -49,4 +49,9 @@ public class HtmlTemplateRssFeedView extends TextHolder implements RssFeedView
         setMimeType("application/rss+xml");
         this.id = id;
       }
+    
+    @Override
+    public void setTitle (final @Nonnull String title) 
+      {
+      }
   }

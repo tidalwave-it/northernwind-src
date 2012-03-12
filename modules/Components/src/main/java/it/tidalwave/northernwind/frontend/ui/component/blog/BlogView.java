@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
+import javax.annotation.Nonnull;
 import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
@@ -32,4 +33,5 @@ import it.tidalwave.role.Identifiable;
  **********************************************************************************************************************/
 public interface BlogView extends Identifiable
   {
+    public void setTitle (@Nonnull String title);
   }
