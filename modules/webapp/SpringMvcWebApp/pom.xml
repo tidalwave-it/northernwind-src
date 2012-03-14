@@ -15,6 +15,7 @@
     <version>1.1-ALPHA-13-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>NorthernWind - Frontend Webapp (Spring MVC)</name>
+    <description>A webapp containing the Spring MVC front end implementation.</description>
     
     <dependencies>
         <dependency>
@@ -22,5 +23,4 @@
             <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
         </dependency>
     </dependencies>
-    <description>A webapp containing the Spring MVC front end implementation.</description>
 </project>
