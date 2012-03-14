@@ -8,7 +8,7 @@
         <xsl:for-each select="web:fragment">
             <xsl:variable name="fragment" select="."/>
             <xsl:variable name="path">
-                <xsl:text>../webapp-fragments/</xsl:text>
+                <xsl:text>../../../target/webapp-fragments/</xsl:text>
                 <xsl:value-of select="$fragment"/>
                 <xsl:text>.xml</xsl:text>
             </xsl:variable>
