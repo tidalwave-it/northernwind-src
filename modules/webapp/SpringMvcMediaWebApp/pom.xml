@@ -54,7 +54,7 @@
                                     <artifactId>it-tidalwave-northernwind-frontend-webapp-commons</artifactId>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${project.basedir}/target/webapp-fragments</outputDirectory>
+                                    <outputDirectory>${project.basedir}/target/commons</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -77,7 +77,7 @@
                     <transformationSets>
                         <transformationSet>
                             <dir>src/main/webapp-resources</dir>
-                            <stylesheet>src/main/xslt/ExpandFragments.xslt</stylesheet>
+                            <stylesheet>target/commons/xslt/ExpandFragments.xslt</stylesheet>
                         </transformationSet>
                     </transformationSets>
                 </configuration>
