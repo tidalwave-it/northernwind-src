@@ -50,7 +50,7 @@
         <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
         <!-- See http://www.oracle.com/technetwork/java/javase/downloads/adoptionguide-137484.html
              4.1.1 JSR 202 Classfile Changes - due to the fact that we use AspectJ static weaving -->
-        <!-- tft.test.vmOptions>-XX:-UseSplitVerifier</tft.test.vmOptions -->
+        <tft.test.vmOptions>-XX:-UseSplitVerifier</tft.test.vmOptions>
 
         <tft.UmlGraphDoc.version>5.4</tft.UmlGraphDoc.version>
         <tft.UmlGraphDoc.additionalParam>-views -attributes -operations -types -postfixpackage -nodefontpackagesize 6 -nodefontclasssize 8 -nodefontsize 7 -edgefontsize 7 -nodesep 0.05 -ranksep 0.1 -visibility -inferdep -inferrel -inferdepinpackage -hide java.*|javax.*|android.*</tft.UmlGraphDoc.additionalParam>
