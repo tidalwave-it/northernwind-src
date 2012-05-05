@@ -20,6 +20,7 @@
 
     <properties>
         <tft.maven.requiredVersion>3.0.4</tft.maven.requiredVersion>
+        <tft.maven.requiredJdk>[1.7.0,)</tft.maven.requiredJdk>
         <tft.javac.source>1.7</tft.javac.source>
         <tft.javac.target>1.7</tft.javac.target>
 
