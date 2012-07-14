@@ -23,9 +23,22 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import javax.annotation.Nonnull;
+import java.beans.PropertyVetoException;
+import java.util.Collections;
+import java.util.List;
 import java.io.IOException;
-import org.openide.filesystems.FileSystem;
+import java.io.File;
+import java.nio.file.Path;
+import java.net.URI;
+import org.openide.filesystems.LocalFileSystem;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
+import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
+import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -33,12 +46,144 @@ import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class MercurialFileSystemProvider implements FileSystemProvider
   {
-    @Override @Nonnull
-    public FileSystem getFileSystem() 
-      throws IOException
+    @Getter @Setter
+    private URI remoteRepositoryUri;
+    
+    @Getter
+    private final LocalFileSystem fileSystem = new LocalFileSystem();
+   
+    private Path workArea;
+        
+    private final MercurialRepository[] repositories = new MercurialRepository[2];
+    
+    private MercurialRepository exposedRepository;
+    
+    private MercurialRepository alternateRepository;
+    
+    private int repositorySelector;
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    public void init() 
+      throws IOException, PropertyVetoException
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        workArea = new File("target/workarea").toPath();
+        
+        for (int i = 0; i < 2; i++)
+          {
+            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));  
+            
+            if (repositories[i].isEmpty())
+              {
+                // FIXME: this is inefficient, clones both from the remote repo
+                repositories[i].clone(remoteRepositoryUri);  
+              }
+          }
+        
+        swapRepositories(); // initialization
+        checkForUpdates();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    public void checkForUpdates()
+      {
+        try
+          {
+            final Tag newTag = findNewTag();
+            log.info(">>>> new tag seen: {}", newTag);
+            alternateRepository.updateTo(newTag);
+            swapRepositories();
+            // TODO: send message
+            alternateRepository.updateTo(newTag);
+          }
+        catch (NotFoundException e)
+          {
+            log.info(">>>> no changes");
+          }
+        catch (IOException | PropertyVetoException e)
+          {
+            log.warn(">>>> error when checking for updates", e);
+          }
+      }        
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    private void swapRepositories()
+      throws IOException, PropertyVetoException
+      {
+        exposedRepository = repositories[repositorySelector];  
+        alternateRepository = repositories[(repositorySelector + 1) % 2]; 
+        repositorySelector = (repositorySelector + 1) % 2;
+        fileSystem.setRootDirectory(exposedRepository.getWorkArea().toFile());
+        
+        log.info("New exposed repository:   {}", exposedRepository.getWorkArea());
+        log.info("New alternate repository: {}", alternateRepository.getWorkArea());
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Tag findNewTag() 
+      throws NotFoundException, IOException
+      {
+        log.info("Checking for updates...");
+        
+        alternateRepository.pull();
+        // would throw NotFoundException if no publishing tag
+        final Tag latestTag = getLatestPublishingTag(alternateRepository);
+        
+        try
+          {
+            if (!latestTag.equals(exposedRepository.getCurrentTag()))
+              {
+                return latestTag;
+              } 
+          }
+        catch (NotFoundException e) 
+          {
+            log.info(">>>> repo must be initialized");
+            return latestTag;
+          }
+
+        throw new NotFoundException();  
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository repository)
+      throws IOException, NotFoundException            
+      {
+        final List<Tag> tags = repository.getTags();
+        Collections.reverse(tags);
+        
+        for (final Tag tag : tags)
+          {
+            if (tag.getName().startsWith("published-"))
+              {
+                return tag;
+              } 
+          }
+        
+        throw new NotFoundException();
       }
   }
