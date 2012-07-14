@@ -24,12 +24,8 @@ package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
