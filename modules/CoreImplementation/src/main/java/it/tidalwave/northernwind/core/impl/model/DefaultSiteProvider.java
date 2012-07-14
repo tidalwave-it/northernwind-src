@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -37,6 +36,7 @@ import org.openide.util.NbBundle;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.Getter;
@@ -85,9 +85,9 @@ public class DefaultSiteProvider implements SiteProvider
     @Getter @Setter @Nonnull
     private String ignoredFoldersAsString = "";
     
-    private final List<String> ignoredFolders = new ArrayList<String>();
+    private final List<String> ignoredFolders = new ArrayList<>();
     
-    private final List<Locale> configuredLocales = new ArrayList<Locale>();
+    private final List<Locale> configuredLocales = new ArrayList<>();
     
     @CheckForNull
     private DefaultSite site;
