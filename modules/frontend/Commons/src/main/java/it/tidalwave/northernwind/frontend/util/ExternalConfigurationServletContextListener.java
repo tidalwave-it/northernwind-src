@@ -119,6 +119,10 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           }
       }
     
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     protected void loadProperties (final @Nonnull ServletContext servletContext, final @Nonnull Properties properties)
       {
         copyPropertiesToServletContextAttributes(properties, servletContext);                
@@ -207,7 +211,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
 
     /*******************************************************************************************************************
      *
-     *
+     * Computes the Spring bean files path.
+     * 
      ******************************************************************************************************************/
     @Nonnull
     private String computeConfigLocation (final Properties properties) 
