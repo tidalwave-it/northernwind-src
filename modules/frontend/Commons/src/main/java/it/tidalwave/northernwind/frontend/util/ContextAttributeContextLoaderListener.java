@@ -22,14 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.util;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextException;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.context.ConfigurableWebApplicationContext;
+import javax.servlet.ServletContextEvent;
 import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
+import lombok.Delegate;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -40,50 +38,42 @@ import org.springframework.web.context.WebApplicationContext;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ContextAttributeContextLoaderListener extends ContextLoaderListener
+@RequiredArgsConstructor
+class DynamicConfigLocationServletContext implements ServletContext 
+  {
+    public static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
+
+    interface Exclusions 
+      {
+        public String getInitParameter (String string);
+      }
+
+    @Nonnull @Delegate(excludes=Exclusions.class)
+    private final ServletContext delegate;
+
+    @Nonnull
+    private final String contextConfigLocation;
+
+    @Override
+    public String getInitParameter (final @Nonnull String name) 
+      {
+        final String value = name.equals(CONTEXT_CONFIG_LOCATION) ? contextConfigLocation
+                                                                  : delegate.getInitParameter(name);
+        delegate.log("ServletContext parameter " + name + " = " + value);
+        return value;
+      }
+  }
+
+public class ContextAttributeContextLoaderListener extends ContextLoaderListener 
   {
     @Override
-    protected WebApplicationContext createWebApplicationContext(ServletContext sc, ApplicationContext parent)
+    public void contextInitialized (final @Nonnull ServletContextEvent event) 
       {
-        Class<?> contextClass = determineContextClass(sc);
-        
-        if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) 
-          {
-            throw new ApplicationContextException("Custom context class [" + contextClass.getName() +
-                                "] is not of type [" + ConfigurableWebApplicationContext.class.getName() + "]");
-          }
-          
-    ConfigurableWebApplicationContext wac = (ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
+        final ServletContext servletContext = event.getServletContext();
+        final String contextConfigLocation = (String)servletContext.getAttribute("nwcontextConfigLocation");
+        final ServletContext servletContextDelegate = new DynamicConfigLocationServletContext(servletContext, contextConfigLocation);
+        servletContext.log("contextConfigLocation: " + contextConfigLocation);
 
-    // Assign the best possible id value.
-    if (sc.getMajorVersion() == 2 && sc.getMinorVersion() < 5) 
-      {
-        // Servlet <= 2.4: resort to name specified in web.xml, if any.
-        String servletContextName = sc.getServletContextName();
-        wac.setId(ConfigurableWebApplicationContext.APPLICATION_CONTEXT_ID_PREFIX
-                + ObjectUtils.getDisplayString(servletContextName));
+        super.contextInitialized(new ServletContextEvent(servletContextDelegate));
       }
-    else 
-      {
-        // Servlet 2.5's getContextPath available!
-        try 
-          {
-            String contextPath = (String)ServletContext.class.getMethod("getContextPath").invoke(sc);
-            wac.setId(ConfigurableWebApplicationContext.APPLICATION_CONTEXT_ID_PREFIX
-                    + ObjectUtils.getDisplayString(contextPath));
-          }
-        catch (Exception ex) 
-          {
-            throw new IllegalStateException("Failed to invoke Servlet 2.5 getContextPath method", ex);
-          }
-      }
-
-    wac.setParent(parent);
-    wac.setServletContext(sc);
-    wac.setConfigLocation((String)sc.getAttribute("nwcontextConfigLocation"));
-//		wac.setConfigLocation(sc.getInitParameter(CONFIG_LOCATION_PARAM));
-    customizeContext(sc, wac);
-    wac.refresh();
-    return wac;
   }
-}
