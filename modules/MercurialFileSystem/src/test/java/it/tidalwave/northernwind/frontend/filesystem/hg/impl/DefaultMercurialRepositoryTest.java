@@ -140,7 +140,8 @@ public class DefaultMercurialRepositoryTest
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
         
-        assertThat(fixture.getLatestTag(), is(new Tag("published-0.8")));
+        assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));        
+        // TODO: assert contents
       }
     
     @Test(dependsOnMethods="must_properly_clone_a_repository",
@@ -179,7 +180,6 @@ public class DefaultMercurialRepositoryTest
         
         fixture.pull();
         
-        assertThat(fixture.getLatestTag(), is(new Tag("published-0.9")));
         assertThat(fixture.getTags(), is(EXPECTED_TAGS_2));        
       }
     

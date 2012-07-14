@@ -149,29 +149,6 @@ public class DefaultMercurialRepository implements MercurialRepository
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public Tag getLatestTag()
-      throws IOException, NotFoundException
-      {
-        final List<Tag> tags = getTags();
-        Collections.reverse(tags);
-        
-        for (final Tag tag : tags)
-          {
-            if (!tag.isTip())
-              {
-                return tag;  
-              }
-          }
-        
-        throw new NotFoundException();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     @Override
     public void updateTo (final @Nonnull Tag tag) 
       throws IOException
