@@ -137,7 +137,24 @@ public class ExternalConfigurationServletContextListener implements ServletConte
 
     /*******************************************************************************************************************
      *
+     * Returns the path of the directory containing the configuration file. It tries in order:
      * 
+     * 1. A path specified by the system property it.tidalwave.northernwind.configurationPath
+     * 2. A jetty initialization parameter specified as:
+     * 
+     * <Configure class="org.mortbay.jetty.webapp.WebAppContext">
+     *       ....
+     *       <Set name="initParams">
+     *          <Map>
+     *            <Entry>
+     *             <Item>it.tidalwave.northernwind.configurationPath</Item>
+     *             <Item>/some/path</Item>
+     *            </Entry>
+     *          </Map>
+     *       </Set>
+     * </Configure>
+     * 
+     * 3. The .nw directory under the user home
      *
      ******************************************************************************************************************/
     @Nonnull
