@@ -29,6 +29,8 @@
                            http://www.springframework.org/schema/task
                            http://www.springframework.org/schema/task/spring-task-3.0.xsd" >
 
+<!-- FIXME this hardwires the composition with the delegateZipFileSystemsDiscoverer - should be possible to configure the composition -->
+
 <!--    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >-->
     <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
         <property name="remoteRepositoryUrl" value="${nw.remoteRepositoryUrl}" />
