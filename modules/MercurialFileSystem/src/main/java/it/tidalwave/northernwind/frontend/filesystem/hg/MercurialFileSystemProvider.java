@@ -55,6 +55,9 @@ public class MercurialFileSystemProvider implements FileSystemProvider
     @Getter @Setter
     private String remoteRepositoryUrl;
     
+    @Getter @Setter
+    private String workAreaFolder;
+    
     @Getter
     private final LocalFileSystem fileSystem = new LocalFileSystem();
    
@@ -79,7 +82,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
     public void initialize() 
       throws IOException, PropertyVetoException, URISyntaxException
       {
-        workArea = new File("target/workarea").toPath();
+        workArea = new File(workAreaFolder).toPath();
         
         for (int i = 0; i < 2; i++)
           {

@@ -22,6 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.StandardEnvironment;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.*;
@@ -38,14 +47,23 @@ public class MercurialFileSystemProviderTest
   {
     private MercurialFileSystemProvider fixture;
     
+    private GenericXmlApplicationContext context;
+            
     @BeforeMethod
     public void setupFixture()
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
-        fixture = new MercurialFileSystemProvider();
-        fixture.setRemoteRepositoryUrl(sourceRepository.toUri().toASCIIString());
-        fixture.initialize();
+        final Map<String, Object> properties = new HashMap<>();
+        properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
+        properties.put("test.workAreaFolder", "target/workarea");
+        final StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
+        context = new GenericXmlApplicationContext();
+        context.setEnvironment(environment);
+        context.load("/MercurialFileSystemTestBeans.xml");
+        context.refresh();
+        fixture = context.getBean(MercurialFileSystemProvider.class);
       }
     
     @Test
