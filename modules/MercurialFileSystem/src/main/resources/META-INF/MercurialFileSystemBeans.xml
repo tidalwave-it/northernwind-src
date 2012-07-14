@@ -26,8 +26,28 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans  
                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
 
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
+<!--    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >-->
+    <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
         <property name="remoteRepositoryUrl" value="${nw.remoteRepositoryUrl}" />
+        <property name="workAreaFolder" value="${nw.workAreaFolder}" />
     </bean>
+    
+
+    
+    
+    <bean id="delegateZipFileSystemsDiscoverer" class="it.tidalwave.northernwind.frontend.filesystem.basic.layered.DelegateZipFileSystemsDiscoverer" >
+        <property name="localFileSystemProvider" ref="localFileSystemProvider" />
+        <property name="fileSystemsFolder" value="${nw.fileSystemsPath}" />
+    </bean>
+
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.basic.layered.LayeredFileSystemProvider">
+        <property name="fileSystemProvidersProvider" ref="delegateZipFileSystemsDiscoverer"/>
+<!--        <property name="delegates">
+            <list>
+                <ref bean="#{@delegateZipFileSystemsDiscoverer.fileSystemProviders}" />
+            </list>
+        </property>-->
+    </bean>
+    
     
 </beans>
