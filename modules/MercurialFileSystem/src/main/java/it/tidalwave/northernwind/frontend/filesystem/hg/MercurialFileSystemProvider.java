@@ -70,7 +70,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
     @Inject
     private BeanFactory beanFactory;
     
-//    @Inject @Named("applicationMessageBus") FIXME
+//    @Inject @Named("applicationMessageBus") FIXME doesn't work in the test
     private MessageBus messageBus;
     
     private Path workArea;
@@ -134,7 +134,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
           {
             log.info(">>>> no changes");
           }
-        catch (IOException | PropertyVetoException e)
+        catch (Exception e)
           {
             log.warn(">>>> error when checking for updates", e);
           }
