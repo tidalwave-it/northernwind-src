@@ -56,7 +56,16 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
         @Override
         public void notify (final @Nonnull FileSystemChangedEvent event) 
           {
-            if (event.getFileSystemProvider() == siteProvider.get().getSite().getFileSystemProvider())
+            // FIXME: the originator of the event could be a child filesystem in case of composite filesystems.
+            // Either the event is listened by the parent and reposted, or we must be able to find whether a 
+            // given filesystem is the parent of another
+            //
+            // e.g. if (siteProvider.get().getSite().getFileSystemProvider().contains(event.getFileSystemProvider()))
+            //
+//            log.info("event fileSystemProvider {}", event.getFileSystemProvider());
+//            log.info("site fileSystemProvider {}", siteProvider.get().getSite().getFileSystemProvider());
+            
+//            if (event.getFileSystemProvider() == siteProvider.get().getSite().getFileSystemProvider())
               {
                 log.info("Detected file change, resetting site...");
                 siteProvider.get().reload();
@@ -67,7 +76,7 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
     @PostConstruct
     /* package */ void initialize() // FIXME: unsubscribe on @PreDestroy
       {
-        log.info("SiteResetterOnFileSystemChange installed");
         messageBus.subscribe(FileSystemChangedEvent.class, listener);            
+        log.info("SiteResetterOnFileSystemChange installed");
       }
   }
