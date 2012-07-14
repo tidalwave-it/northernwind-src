@@ -23,7 +23,6 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +67,8 @@ public class Executor
         @Getter
         private final List<String> content = Collections.synchronizedList(new ArrayList<String>());
         
+        private boolean completed;
+        
         /***************************************************************************************************************
          * 
          *
@@ -96,8 +97,27 @@ public class Executor
                   {
                     log.warn("while reading from process console", e); 
                   }
+                
+                completed = true;
+                
+                synchronized (ConsoleOutput.this)
+                  {
+                    ConsoleOutput.this.notifyAll();  
+                  }                
               }
           };
+        
+        @Nonnull
+        public synchronized ConsoleOutput waitForCompleted() 
+          throws InterruptedException
+          {
+            while (!completed)
+              {
+                wait();  
+              }
+            
+            return this;
+          }
         
         /***************************************************************************************************************
          * 

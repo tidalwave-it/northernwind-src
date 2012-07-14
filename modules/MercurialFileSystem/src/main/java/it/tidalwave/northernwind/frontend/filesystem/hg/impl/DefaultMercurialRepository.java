@@ -106,7 +106,7 @@ public class DefaultMercurialRepository implements MercurialRepository
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
-            final Scanner scanner = executor.getStdout().filteredAndSplitBy("(.*)", " ");
+            final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
             scanner.next();
             return new Tag(scanner.next());
           }
@@ -135,7 +135,7 @@ public class DefaultMercurialRepository implements MercurialRepository
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
-            final List<String> filteredBy = executor.getStdout().filteredBy("([^ ]*) *.*$");
+            final List<String> filteredBy = executor.getStdout().waitForCompleted().filteredBy("([^ ]*) *.*$");
             Collections.reverse(filteredBy);
             return toTagList(filteredBy);
           }
