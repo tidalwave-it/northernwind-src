@@ -362,6 +362,7 @@
         <module>Core</module>
         <module>CoreImplementation</module>
         <module>BasicFileSystems</module>
+        <module>MercurialFileSystem</module>
         <module>Components</module>
         <module>InfoglueImporter</module>
 
