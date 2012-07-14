@@ -96,7 +96,7 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Tag getId() 
+    public Tag getCurrentTag() 
       throws IOException, NotFoundException
       {
         try

@@ -114,12 +114,13 @@ public class DefaultMercurialRepositoryTest
     
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           expectedExceptions=NotFoundException.class)
-    public void must_throw_NotFoundException_when_the_workarea_is_empty()
+    public void must_throw_NotFoundException_when_asking_for_the_current_tag_for_an_empty_workarea()
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
-        fixture.getId();
+        
+        fixture.getCurrentTag();
       }
     
     @Test(dependsOnMethods="must_properly_clone_a_repository")
@@ -151,7 +152,7 @@ public class DefaultMercurialRepositoryTest
         fixture.clone(sourceRepository.toUri());
         
         fixture.updateTo(tag);
-        assertThat(fixture.getId(), is(tag));
+        assertThat(fixture.getCurrentTag(), is(tag));
         // TODO: assert contents
       }
     
