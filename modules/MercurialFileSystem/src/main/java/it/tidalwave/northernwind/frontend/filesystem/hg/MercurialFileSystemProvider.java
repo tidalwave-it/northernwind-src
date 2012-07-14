@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.beans.PropertyVetoException;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@NotThreadSafe @Slf4j
 public class MercurialFileSystemProvider implements FileSystemProvider
   {
     @Getter @Setter
@@ -64,6 +65,8 @@ public class MercurialFileSystemProvider implements FileSystemProvider
     private MercurialRepository alternateRepository;
     
     private int repositorySelector;
+    
+    /* package */ int swapCounter;
     
     /*******************************************************************************************************************
      *
@@ -87,6 +90,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
           }
         
         swapRepositories(); // initialization
+        swapCounter = 0;
         checkForUpdates();
       }
     
@@ -104,6 +108,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
             alternateRepository.updateTo(newTag);
             swapRepositories();
             // TODO: send message
+            alternateRepository.pull();
             alternateRepository.updateTo(newTag);
           }
         catch (NotFoundException e)
@@ -121,6 +126,18 @@ public class MercurialFileSystemProvider implements FileSystemProvider
      * 
      *
      ******************************************************************************************************************/
+    @Nonnull
+    /* package */ Tag getCurrentTag() 
+      throws IOException, NotFoundException
+      {
+        return exposedRepository.getCurrentTag();  
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     private void swapRepositories()
       throws IOException, PropertyVetoException
       {
@@ -128,6 +145,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
         alternateRepository = repositories[(repositorySelector + 1) % 2]; 
         repositorySelector = (repositorySelector + 1) % 2;
         fileSystem.setRootDirectory(exposedRepository.getWorkArea().toFile());
+        swapCounter++;
         
         log.info("New exposed repository:   {}", exposedRepository.getWorkArea());
         log.info("New alternate repository: {}", alternateRepository.getWorkArea());

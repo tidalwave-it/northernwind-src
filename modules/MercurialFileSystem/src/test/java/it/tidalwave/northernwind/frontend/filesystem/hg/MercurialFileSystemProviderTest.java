@@ -26,10 +26,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
@@ -42,13 +45,47 @@ public class MercurialFileSystemProviderTest
       throws URISyntaxException
       {
         fixture = new MercurialFileSystemProvider();
-        fixture.setRemoteRepositoryUri(new URI("http://bitbucket.org/tidalwave/northernwind-website-src"));
+        fixture.setRemoteRepositoryUri(sourceRepository.toUri());
       }
     
     @Test
-    public void test1()
+    public void must_properly_initialize()
       throws Exception
       {
+        prepareSourceRepository(Option.STRIP);
+        
         fixture.init();
+        
+        assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
+        assertThat(fixture.swapCounter, is(1));
+      }
+    
+    @Test(dependsOnMethods="must_properly_initialize")
+    public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
+      throws Exception
+      {
+        prepareSourceRepository(Option.STRIP);
+        fixture.init();
+        fixture.swapCounter = 0;
+        
+        fixture.checkForUpdates();
+        
+        assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
+        assertThat(fixture.swapCounter, is(0));
+      }
+    
+    @Test(dependsOnMethods="must_properly_initialize")
+    public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
+      throws Exception
+      {
+        prepareSourceRepository(Option.STRIP);
+        fixture.init();
+        prepareSourceRepository(Option.DONT_STRIP);
+        fixture.swapCounter = 0;
+        
+        fixture.checkForUpdates();
+        
+        assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
+        assertThat(fixture.swapCounter, is(1));
       }
   }
