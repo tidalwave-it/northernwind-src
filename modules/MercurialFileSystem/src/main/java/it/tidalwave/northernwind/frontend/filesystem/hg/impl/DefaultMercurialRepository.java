@@ -24,7 +24,6 @@ package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -42,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultHgFacade implements HgFacade
+public class DefaultMercurialRepository implements MercurialRepository
   {
     @Nonnull
     private final Path workArea;

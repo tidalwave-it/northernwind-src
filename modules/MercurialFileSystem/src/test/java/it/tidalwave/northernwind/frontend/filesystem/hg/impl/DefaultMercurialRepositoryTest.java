@@ -44,7 +44,7 @@ import static org.hamcrest.CoreMatchers.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultHgFacadeTest
+public class DefaultMercurialRepositoryTest
   {
     enum Option { STRIP, DONT_STRIP }
     
@@ -52,7 +52,7 @@ public class DefaultHgFacadeTest
     
     private static final List<Tag> EXPECTED_TAGS_2 = new ArrayList<>();
     
-    private HgFacade fixture;
+    private MercurialRepository fixture;
     
     private Path sourceBundle;
     
@@ -99,7 +99,7 @@ public class DefaultHgFacadeTest
       {
         FileUtils.deleteDirectory(sourceRepository.toFile());
         FileUtils.deleteDirectory(workArea.toFile());
-        fixture = new DefaultHgFacade(workArea);
+        fixture = new DefaultMercurialRepository(workArea);
       }
     
     @Test
