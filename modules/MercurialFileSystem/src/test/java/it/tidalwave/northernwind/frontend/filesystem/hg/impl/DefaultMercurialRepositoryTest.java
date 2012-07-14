@@ -22,21 +22,22 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
-import it.tidalwave.util.NotFoundException;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nonnull;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import it.tidalwave.util.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
 
 /***********************************************************************************************************************
  *
@@ -47,50 +48,14 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class DefaultMercurialRepositoryTest
   {
-    enum Option { STRIP, DONT_STRIP }
-    
-    private static final List<Tag> EXPECTED_TAGS_1 = new ArrayList<>();
-    
-    private static final List<Tag> EXPECTED_TAGS_2 = new ArrayList<>();
-    
     private MercurialRepository fixture;
-    
-    private Path sourceBundle;
-    
-    private Path sourceRepository;
     
     private Path workArea;
 
-    static
-      {
-        EXPECTED_TAGS_1.add(new Tag("published-0.1"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.2"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.3"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.4"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.5"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.6"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.7"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_1.add(new Tag("tip"));  
-        
-        EXPECTED_TAGS_2.add(new Tag("published-0.1"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.2"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.3"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.4"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.5"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.6"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.7"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.9"));
-        EXPECTED_TAGS_2.add(new Tag("tip"));       
-      }
-    
     @BeforeClass
     public void createSourceRepository()
       throws Exception
       {
-        sourceBundle = new File("./src/test/resources/hg.bundle").toPath();
-        sourceRepository = new File("target/source-repository").toPath();
         workArea = new File("target/workarea").toPath();        
       }
     
@@ -220,38 +185,4 @@ public class DefaultMercurialRepositoryTest
             { new Tag("tag4") }  
           };
       }    
-    
-    private void prepareSourceRepository (final @Nonnull Option option)
-      throws Exception
-      {
-        log.info("======== Preparing source repository at {}", sourceRepository.toFile().getCanonicalPath());
-        
-        if (sourceRepository.toFile().exists())
-          {
-            FileUtils.deleteDirectory(sourceRepository.toFile());  
-          }
-        
-        assertThat(sourceRepository.toFile().mkdirs(), is(true));
-        
-        Executor.forExecutable("hg")
-                .withArgument("clone")
-                .withArgument("--noupdate")
-                .withArgument(sourceBundle.toFile().getCanonicalPath())
-                .withArgument(".")
-                .withWorkingDirectory(sourceRepository)
-                .start()
-                .waitForCompletion();
-        
-        if (option == Option.STRIP)
-          {
-            Executor.forExecutable("hg")
-                    .withArgument("strip")
-                    .withArgument("published-0.9")
-                    .withWorkingDirectory(sourceRepository)
-                    .start()
-                    .waitForCompletion();
-          }
-        
-        log.info("======== Source repository prepared ========");
-      }
   }
