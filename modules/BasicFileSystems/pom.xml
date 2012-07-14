@@ -14,7 +14,8 @@
     <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
     <version>1.0.29-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Basic Filesystems</name>
+    <name>NorthernWind - Filesystems, Basic</name>
+    <description>The implementation of some basic filesystems.</description>
    
     <dependencies>
         <dependency>
@@ -47,5 +48,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <description>The implementation of some basic filesystems.</description>
 </project>
