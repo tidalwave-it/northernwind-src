@@ -54,9 +54,14 @@ public interface MercurialRepository
     public void pull()
       throws IOException;
     
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public Tag getId() // FIXME: perhaps this is useless
-      throws IOException;
+    public Tag getId() 
+      throws IOException, NotFoundException;
     
     /*******************************************************************************************************************
      *

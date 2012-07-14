@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
+import it.tidalwave.util.NotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -109,6 +110,16 @@ public class DefaultMercurialRepositoryTest
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
         // TODO: assert contents
+      }
+    
+    @Test(dependsOnMethods="must_properly_clone_a_repository",
+          expectedExceptions=NotFoundException.class)
+    public void must_throw_NotFoundException_when_the_workarea_is_empty()
+      throws Exception
+      {
+        prepareSourceRepository(Option.STRIP);
+        fixture.clone(sourceRepository.toUri());
+        fixture.getId();
       }
     
     @Test(dependsOnMethods="must_properly_clone_a_repository")

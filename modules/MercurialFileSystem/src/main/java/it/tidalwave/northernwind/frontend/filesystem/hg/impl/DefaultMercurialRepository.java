@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
 import it.tidalwave.util.NotFoundException;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,7 +97,7 @@ public class DefaultMercurialRepository implements MercurialRepository
      ******************************************************************************************************************/
     @Override @Nonnull
     public Tag getId() 
-      throws IOException
+      throws IOException, NotFoundException
       {
         try
           {
@@ -107,6 +108,10 @@ public class DefaultMercurialRepository implements MercurialRepository
             final Scanner scanner = executor.getStdout().filteredAndSplitBy("(.*)", " ");
             scanner.next();
             return new Tag(scanner.next());
+          }
+        catch (NoSuchElementException e)
+          {
+            throw new NotFoundException();  
           }
         catch (InterruptedException e)
           {
