@@ -26,12 +26,13 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
 import it.tidalwave.util.NotFoundException;
-import java.util.NoSuchElementException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public class DefaultMercurialRepository implements MercurialRepository
   {
-    @Nonnull
+    @Getter @Nonnull
     private final Path workArea;
     
     /*******************************************************************************************************************

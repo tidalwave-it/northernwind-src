@@ -27,6 +27,7 @@ import java.util.List;
 import java.io.IOException;
 import java.net.URI;
 import it.tidalwave.util.NotFoundException;
+import java.nio.file.Path;
 
 /***********************************************************************************************************************
  *
@@ -79,4 +80,7 @@ public interface MercurialRepository
      ******************************************************************************************************************/
     public void updateTo (@Nonnull Tag tag)
       throws IOException;
+    
+    @Nonnull
+    public Path getWorkArea();
   }
