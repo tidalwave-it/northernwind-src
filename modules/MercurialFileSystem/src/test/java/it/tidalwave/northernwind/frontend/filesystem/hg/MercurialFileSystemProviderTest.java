@@ -22,13 +22,22 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
+import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
+import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
+import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
+import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
@@ -45,6 +54,8 @@ public class MercurialFileSystemProviderTest
     
     private GenericXmlApplicationContext context;
             
+    private MessageBus messageBus;
+    
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -60,26 +71,33 @@ public class MercurialFileSystemProviderTest
         context.load("/MercurialFileSystemTestBeans.xml");
         context.refresh();
         fixture = context.getBean(MercurialFileSystemProvider.class);
+        messageBus = context.getBean(MessageBus.class);
       }
     
     @Test
     public void must_properly_initialize()
       throws Exception
       {
-        assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
-        assertThat(fixture.swapCounter, is(1));
+//        assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
+        assertThat(fixture.swapCounter, is(0));
+        verifyZeroInteractions(messageBus);
       }
     
     @Test(dependsOnMethods="must_properly_initialize")
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
       {
+        // Simulate a previous update
+        final MercurialRepository mercurialRepository = new DefaultMercurialRepository(fixture.getCurrentWorkArea());
+        mercurialRepository.pull();
+        mercurialRepository.updateTo(new Tag("published-0.8"));
         fixture.swapCounter = 0;
         
         fixture.checkForUpdates();
         
         assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
         assertThat(fixture.swapCounter, is(0));
+        verifyZeroInteractions(messageBus);
       }
     
     @Test(dependsOnMethods="must_properly_initialize")
@@ -93,5 +111,25 @@ public class MercurialFileSystemProviderTest
         
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
         assertThat(fixture.swapCounter, is(1));
+        
+        verify(messageBus).publish(is(argThat(new BaseMatcher<FileSystemChangedEvent>() 
+          {
+            @Override
+            public boolean matches (final @Nonnull Object item) 
+              {
+                if (! (item instanceof FileSystemChangedEvent))
+                  {
+                    return false;  
+                  }
+                
+                return true;
+              }
+
+            @Override
+            public void describeTo(Description description) 
+              {
+                
+              }
+          })));
       }
   }

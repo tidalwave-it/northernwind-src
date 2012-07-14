@@ -39,4 +39,8 @@
         <property name="workAreaFolder" value="${test.workAreaFolder}" />
     </bean>
     
+    <bean id="applicationMessageBus" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="it.tidalwave.messagebus.MessageBus"/>
+    </bean>
+    
 </beans>

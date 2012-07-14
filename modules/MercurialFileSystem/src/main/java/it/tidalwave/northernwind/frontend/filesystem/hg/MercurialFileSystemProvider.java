@@ -23,7 +23,10 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.beans.PropertyVetoException;
 import java.util.Collections;
 import java.util.List;
@@ -32,16 +35,19 @@ import java.io.File;
 import java.nio.file.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.joda.time.DateTime;
 import org.openide.filesystems.LocalFileSystem;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
-import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanFactory;
 
 /***********************************************************************************************************************
  *
@@ -61,6 +67,12 @@ public class MercurialFileSystemProvider implements FileSystemProvider
     @Getter
     private final LocalFileSystem fileSystem = new LocalFileSystem();
    
+    @Inject
+    private BeanFactory beanFactory;
+    
+//    @Inject @Named("applicationMessageBus") FIXME
+    private MessageBus messageBus;
+    
     private Path workArea;
         
     private final MercurialRepository[] repositories = new MercurialRepository[2];
@@ -95,9 +107,10 @@ public class MercurialFileSystemProvider implements FileSystemProvider
               }
           }
         
+        messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class);
+        
         swapRepositories(); // initialization
         swapCounter = 0;
-        checkForUpdates();
       }
     
     /*******************************************************************************************************************
@@ -113,7 +126,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
             log.info(">>>> new tag seen: {}", newTag);
             alternateRepository.updateTo(newTag);
             swapRepositories();
-            // TODO: send message
+            messageBus.publish(new FileSystemChangedEvent(this, new DateTime()));
             alternateRepository.pull();
             alternateRepository.updateTo(newTag);
           }
@@ -137,6 +150,12 @@ public class MercurialFileSystemProvider implements FileSystemProvider
       throws IOException, NotFoundException
       {
         return exposedRepository.getCurrentTag();  
+      }
+    
+    @Nonnull
+    /* package */ Path getCurrentWorkArea() 
+      {
+        return exposedRepository.getWorkArea();  
       }
     
     /*******************************************************************************************************************
