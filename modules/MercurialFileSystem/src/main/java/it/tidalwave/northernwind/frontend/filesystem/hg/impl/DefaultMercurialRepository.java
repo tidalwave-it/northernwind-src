@@ -134,7 +134,9 @@ public class DefaultMercurialRepository implements MercurialRepository
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
-            return toTagList(executor.getStdout().filteredBy("(.*)"));
+            final List<String> filteredBy = executor.getStdout().filteredBy("([^ ]*) *.*$");
+            Collections.reverse(filteredBy);
+            return toTagList(filteredBy);
           }
         catch (InterruptedException e)
           {
@@ -223,10 +225,9 @@ public class DefaultMercurialRepository implements MercurialRepository
         
         for (final String string : strings)
           {
-            tags.add(new Tag(string.replaceAll(" .*$", "")));
+            tags.add(new Tag(string));
           }
         
-        Collections.reverse(tags);
         return tags;
       }
   }
