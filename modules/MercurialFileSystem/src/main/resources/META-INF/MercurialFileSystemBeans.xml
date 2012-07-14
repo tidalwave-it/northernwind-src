@@ -23,8 +23,11 @@
  ********************************************************************************************************************-->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans  
-                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task-3.0.xsd" >
 
 <!--    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >-->
     <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
@@ -32,9 +35,10 @@
         <property name="workAreaFolder" value="${nw.workAreaFolder}" />
     </bean>
     
+    <task:scheduled-tasks scheduler="scheduler">
+        <task:scheduled ref="localFileSystemProvider" method="checkForUpdates" fixed-delay="${nw.updateCheckInterval}"/>
+    </task:scheduled-tasks>
 
-    
-    
     <bean id="delegateZipFileSystemsDiscoverer" class="it.tidalwave.northernwind.frontend.filesystem.basic.layered.DelegateZipFileSystemsDiscoverer" >
         <property name="localFileSystemProvider" ref="localFileSystemProvider" />
         <property name="fileSystemsFolder" value="${nw.fileSystemsPath}" />
