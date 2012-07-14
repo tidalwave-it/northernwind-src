@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import javax.annotation.concurrent.NotThreadSafe;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -242,33 +242,12 @@ public class Executor
      ******************************************************************************************************************/
     @Nonnull
     public static Executor forExecutable (final @Nonnull String executable)
+      throws IOException
       {
         final Executor executor = new Executor();
-        final String path = "/usr/local/bin/";
-        executor.arguments.add(new File(path + executable).getAbsolutePath());
+        executor.arguments.add(findPathFor(executable));
         return executor;
       }
-    
-//    /*******************************************************************************************************************
-//     * 
-//     *
-//     ******************************************************************************************************************/
-//    @Nonnull
-//    private static String findPath (final @Nonnull String executable)
-//      throws NotFoundException
-//      {
-//        for (final String path : System.getenv("PATH").split(File.pathSeparator))            
-//          {
-//            final File file = new File(new File(path), executable);
-//            
-//            if (file.canExecute())
-//              {
-//                return file.getAbsolutePath(); 
-//              }
-//          }
-//        
-//        throw new NotFoundException("Can't find " + executable + " in PATH");
-//      }
     
     /*******************************************************************************************************************
      * 
@@ -349,6 +328,27 @@ public class Executor
         log.info(">>>> sending '{}'...", string);
         stdin.println(string);
         return this;
+      }
+    
+    /*******************************************************************************************************************
+     * 
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String findPathFor (final @Nonnull String executable)
+      throws IOException
+      {
+        for (final String path : System.getenv("PATH").split(File.pathSeparator))            
+          {
+            final File file = new File(new File(path), executable);
+            
+            if (file.canExecute())
+              {
+                return file.getAbsolutePath(); 
+              }
+          }
+        
+        throw new IOException("Can't find " + executable + " in PATH");
       }
   }
 
