@@ -31,12 +31,14 @@ import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.openide.filesystems.LocalFileSystem;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
+import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MercurialFileSystemProvider implements FileSystemProvider
   {
     @Getter @Setter
-    private URI remoteRepositoryUri;
+    private String remoteRepositoryUrl;
     
     @Getter
     private final LocalFileSystem fileSystem = new LocalFileSystem();
@@ -73,8 +75,9 @@ public class MercurialFileSystemProvider implements FileSystemProvider
      * 
      *
      ******************************************************************************************************************/
-    public void init() 
-      throws IOException, PropertyVetoException
+    @PostConstruct
+    public void initialize() 
+      throws IOException, PropertyVetoException, URISyntaxException
       {
         workArea = new File("target/workarea").toPath();
         
@@ -85,7 +88,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
             if (repositories[i].isEmpty())
               {
                 // FIXME: this is inefficient, clones both from the remote repo
-                repositories[i].clone(remoteRepositoryUri);  
+                repositories[i].clone(new URI(remoteRepositoryUrl));  
               }
           }
         

@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -42,10 +41,10 @@ public class MercurialFileSystemProviderTest
     
     @BeforeMethod
     public void setupFixture()
-      throws URISyntaxException
+      throws Exception
       {
         fixture = new MercurialFileSystemProvider();
-        fixture.setRemoteRepositoryUri(sourceRepository.toUri());
+        fixture.setRemoteRepositoryUrl(sourceRepository.toUri().toASCIIString());
       }
     
     @Test
@@ -53,8 +52,7 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
-        
-        fixture.init();
+        fixture.initialize();
         
         assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
         assertThat(fixture.swapCounter, is(1));
@@ -65,7 +63,7 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
-        fixture.init();
+        fixture.initialize();
         fixture.swapCounter = 0;
         
         fixture.checkForUpdates();
@@ -79,9 +77,9 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
-        fixture.init();
-        prepareSourceRepository(Option.DONT_STRIP);
+        fixture.initialize();        
         fixture.swapCounter = 0;
+        prepareSourceRepository(Option.DONT_STRIP);
         
         fixture.checkForUpdates();
         
