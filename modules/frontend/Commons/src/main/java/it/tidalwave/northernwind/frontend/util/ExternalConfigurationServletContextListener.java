@@ -42,7 +42,7 @@ import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
 
 /***********************************************************************************************************************
  *
- * A {@link ServletContextListener} that reads a configuration from $HOME/.nw/configuration.properties
+ * A {@link ServletContextListener} that reads a configuration from a number of external sources.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
