@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
-import java.net.URISyntaxException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.*;
@@ -43,17 +42,16 @@ public class MercurialFileSystemProviderTest
     public void setupFixture()
       throws Exception
       {
+        prepareSourceRepository(Option.STRIP);
         fixture = new MercurialFileSystemProvider();
         fixture.setRemoteRepositoryUrl(sourceRepository.toUri().toASCIIString());
+        fixture.initialize();
       }
     
     @Test
     public void must_properly_initialize()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
-        fixture.initialize();
-        
         assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
         assertThat(fixture.swapCounter, is(1));
       }
@@ -62,8 +60,6 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
-        fixture.initialize();
         fixture.swapCounter = 0;
         
         fixture.checkForUpdates();
@@ -76,8 +72,6 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
-        fixture.initialize();        
         fixture.swapCounter = 0;
         prepareSourceRepository(Option.DONT_STRIP);
         
