@@ -21,7 +21,6 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  ********************************************************************************************************************-->
-<!-- LogBack status viewer -->
 <fragment>
     <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.ExternalConfigurationServletContextListener</listener-class>
