@@ -52,12 +52,25 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override
+    public boolean isEmpty()
+      {
+        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);  
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void clone (final @Nonnull URI uri) 
       throws IOException
       {
         try
           {
-            if (!workArea.toFile().mkdirs())
+            workArea.toFile().mkdirs();
+
+            if (!workArea.toFile().exists())
               {
                 throw new IOException("Cannot mkdirs " + workArea);  
               }
