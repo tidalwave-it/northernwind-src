@@ -33,12 +33,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import lombok.Cleanup;
 import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
-import javax.naming.NameNotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -88,7 +88,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
             
             final Properties properties = new Properties();
             
-            for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(System.getProperties()).entrySet())
+            for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
               {
                 final Object propertyName = entry.getKey();
                 final Object propertyValue = entry.getValue();
@@ -103,6 +103,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           }
         else if (file.exists())
           {
+            log("Loading properties from " + file.getAbsolutePath());
+            
             try
               {                
                 final Properties properties = loadProperties(configurationFile);
@@ -188,7 +190,6 @@ public class ExternalConfigurationServletContextListener implements ServletConte
         catch (Exception e) 
           {
             BootLogger.log(e);
-//            e.printStackTrace(); // FIXME  
           }
           
         return System.getProperty("user.home") + "/.nw";
@@ -217,14 +218,16 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Nonnull
     private String computeConfigLocation (final Properties properties) 
       {
+        final String nwBeans = properties.getProperty("nw.beans", "");
+        log(">>>> nw.beans: " + nwBeans);
         final StringBuilder builder = new StringBuilder();
         String separator = "";
       
-        for (final String nwBeans : properties.getProperty("nw.beans", "").split(","))
+        for (final String nwBean : nwBeans.split(","))
           {
-            if (!nwBeans.trim().equals(""))
+            if (!nwBean.trim().equals(""))
               {
-                builder.append(separator).append(String.format("classpath:/META-INF/%sBeans.xml", nwBeans.trim()));
+                builder.append(separator).append(String.format("classpath:/META-INF/%sBeans.xml", nwBean.trim()));
                 separator = ",";
               }
           }
@@ -242,7 +245,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     private void copyPropertiesToServletContextAttributes (final @Nonnull Properties properties,
                                                            final @Nonnull ServletContext servletContext)
       {
-        for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(properties).entrySet())
+        for (final Entry<Object, Object> entry : new TreeMap<>(properties).entrySet())
           {
             log(">>>> " + entry.getKey() + " = " + entry.getValue());
             servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());                       
