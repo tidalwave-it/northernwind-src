@@ -1,6 +1,6 @@
 /***********************************************************************************************************************
  *
- * blueShades - a Java UI for Argyll
+ * NorthernWind - lightweight CMS
  * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
  *
  ***********************************************************************************************************************
@@ -16,8 +16,8 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://blueshades.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/blueshades-src
+ * WWW: http://northernwind.tidalwave.it
+ * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
