@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.role.annotation.RoleImplementation;
@@ -81,7 +82,7 @@ public class LayoutJaxbMarshallable implements Marshallable
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createComponents(componentsJaxb), os);
           }
-        catch (Exception e) 
+        catch (IOException | JAXBException e) 
           {
             throw new IOException("", e);
           }
