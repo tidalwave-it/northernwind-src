@@ -36,6 +36,7 @@ import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
+import javax.xml.bind.JAXBException;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,7 +83,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
             
             return unmarshal(componentsJaxb.getComponent());
           }
-        catch (Exception e)
+        catch (JAXBException | IOException e)
           {
             throw new IOException("", e);
           }         
