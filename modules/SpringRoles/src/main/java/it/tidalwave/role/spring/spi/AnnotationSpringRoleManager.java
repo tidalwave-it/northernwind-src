@@ -66,7 +66,7 @@ public class AnnotationSpringRoleManager implements RoleManager
         @Nonnull
         public List<ClassAndRole> getSuper()
           {
-            final List<ClassAndRole> result = new ArrayList<ClassAndRole>();
+            final List<ClassAndRole> result = new ArrayList<>();
             result.add(this);
             
             if (ownerClass.getSuperclass() != null)
@@ -83,7 +83,7 @@ public class AnnotationSpringRoleManager implements RoleManager
           }
       }
     
-    private MultiValueMap<ClassAndRole, Class<?>> roleMapByOwnerClass = new LinkedMultiValueMap<ClassAndRole, Class<?>>();
+    private MultiValueMap<ClassAndRole, Class<?>> roleMapByOwnerClass = new LinkedMultiValueMap<>();
    
     /*******************************************************************************************************************
      *
@@ -96,7 +96,7 @@ public class AnnotationSpringRoleManager implements RoleManager
         log.trace("findRoles({}, {})", owner, roleClass);
         
         final Class<?> ownerClass = owner.getClass();
-        final List<RoleType> roles = new ArrayList<RoleType>();
+        final List<RoleType> roles = new ArrayList<>();
         
         for (final Class<? extends RoleType> roleImplementationClass : findRoleImplementationsFor(ownerClass, roleClass))
           {
