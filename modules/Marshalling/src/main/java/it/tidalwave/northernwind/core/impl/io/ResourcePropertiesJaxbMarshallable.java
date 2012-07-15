@@ -40,6 +40,7 @@ import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
+import javax.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -83,7 +84,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
-        catch (Exception e) 
+        catch (IOException | JAXBException e) 
           {
             throw new IOException("", e);
           }
@@ -109,7 +110,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
             propertiesJaxb.setId(id.stringValue());
           }
         
-        for (final Key<?> key : new TreeSet<Key<?>>(properties.getKeys()))
+        for (final Key<?> key : new TreeSet<>(properties.getKeys()))
           {
             try
               {
@@ -141,7 +142,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
               }
           }
         
-        for (final Id groupId : new TreeSet<Id>(properties.getGroupIds()))
+        for (final Id groupId : new TreeSet<>(properties.getGroupIds()))
           {
             propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
           }
