@@ -43,6 +43,8 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 @Configurable
 public class NorthernWindResponseHeaderFilter extends FilterSupport
   {
+    private static final String HEADER_NORTHERNWIND_VERSION = "X-NorthernWind-Version";
+    
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
@@ -57,7 +59,7 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
                           final @Nonnull FilterChain chain)
       throws IOException, ServletException
       {
-        doBeforeProcessing(request, response);
+        addNorthernWindHeader(request, response);
         chain.doFilter(request, response);
       }
 
@@ -66,12 +68,12 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
      *
      *
      ******************************************************************************************************************/
-    private void doBeforeProcessing (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
+    private void addNorthernWindHeader (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
       throws IOException, ServletException 
       {
         if (bootThrowable == null)
           {
-            ((HttpServletResponse)response).addHeader("X-NorthernWind-Version", siteProvider.get().getVersionString());
+            ((HttpServletResponse)response).addHeader(HEADER_NORTHERNWIND_VERSION, siteProvider.get().getVersionString());
           }
       }
   }
