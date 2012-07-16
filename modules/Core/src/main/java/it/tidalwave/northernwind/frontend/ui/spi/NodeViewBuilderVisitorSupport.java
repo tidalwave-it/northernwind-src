@@ -49,7 +49,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
     
     private ComponentType rootComponent;
     
-    private Stack<ComponentType> components = new Stack<ComponentType>();
+    private Stack<ComponentType> components = new Stack<>();
 
     @Override
     public void preVisit (final @Nonnull Layout layout)
