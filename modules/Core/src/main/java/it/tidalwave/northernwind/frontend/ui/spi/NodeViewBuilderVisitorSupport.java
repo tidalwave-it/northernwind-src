@@ -110,6 +110,11 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
             
             return createPlaceHolderComponent(layout, message);
           }
+        catch (Throwable e) 
+          {
+            log.warn("Internal error", e);
+            return createPlaceHolderComponent(layout, "Error");
+          }
       }
     
     @Nonnull
