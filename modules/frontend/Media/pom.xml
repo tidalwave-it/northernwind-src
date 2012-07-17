@@ -39,7 +39,18 @@
                     <groupId>com.kenai.nbpwr</groupId>
                     <artifactId>org-slf4j-jdk14</artifactId>
                 </exclusion>
+                <!-- Fix for NW-130 -->
+                <exclusion>
+                    <artifactId>xmpcore</artifactId>
+                    <groupId>com.adobe.xmp</groupId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <!-- Fix for NW-130 -->
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>xmpcore-patched</artifactId>
+            <version>5.1.0</version>
         </dependency>
     </dependencies>
 </project>
