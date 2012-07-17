@@ -22,21 +22,22 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.io;
 
-import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.annotation.RoleImplementation;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.role.Unmarshallable;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
+import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
 
 /***********************************************************************************************************************
  *
@@ -82,7 +83,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
             
             return unmarshal(propertiesJaxb);
           }
-        catch (Exception e)
+        catch (JAXBException e)
           {
             throw new IOException("", e);
           }         
@@ -101,7 +102,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
         for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
           {
             final ValuesJaxb values = propertyJaxb.getValues();
-            properties = properties.withProperty(new Key<Object>(propertyJaxb.getName()), 
+            properties = properties.withProperty(new Key<>(propertyJaxb.getName()), 
                                                 (values != null) ? values.getValue() : propertyJaxb.getValue());
           }
         
