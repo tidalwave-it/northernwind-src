@@ -114,6 +114,7 @@ public class DefaultSiteViewController implements SiteViewController
     
     /*******************************************************************************************************************
      *
+     * Resets all {@link Resettable}s.
      *
      ******************************************************************************************************************/
     private void resetRequestResettables()
@@ -127,6 +128,7 @@ public class DefaultSiteViewController implements SiteViewController
     
     /*******************************************************************************************************************
      *
+     * Logs the {@link RequestProcessor}s.
      *
      ******************************************************************************************************************/
     @PostConstruct
