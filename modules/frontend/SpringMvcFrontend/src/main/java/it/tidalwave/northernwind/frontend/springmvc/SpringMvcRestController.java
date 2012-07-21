@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.springmvc;
 
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +29,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
