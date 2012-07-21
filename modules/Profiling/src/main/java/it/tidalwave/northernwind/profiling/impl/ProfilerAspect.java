@@ -37,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Aspect @Slf4j
+//@Aspect FIXME: it's not working
+@Slf4j
 public class ProfilerAspect 
   {
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController.processRequest(..))")
