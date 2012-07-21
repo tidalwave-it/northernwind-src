@@ -34,8 +34,8 @@
         <commons-io.version>2.0.1</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
         <javax-persistence.version>1.0</javax-persistence.version>
-        <javax.servlet-api.version>2.5</javax.servlet-api.version>
-        <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
+        <javax-servlet-api.version>2.5</javax-servlet-api.version>
+        <javax-validation-api.version>1.0.0.GA</javax-validation-api.version>
         <javax-ws-rs.version>1.1.1</javax-ws-rs.version>
         <jersey.version>1.8</jersey.version>
         <jetty.version>6.1.26</jetty.version>
@@ -44,7 +44,7 @@
         <mistral.version>1.0-ALPHA-2</mistral.version>
         <netbeans.version>RELEASE712</netbeans.version>
         <openbluesky.version>0.16</openbluesky.version>
-        <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
         <slf4j.version>1.6.1</slf4j.version>
         <stringtemplate.version>4.0.2</stringtemplate.version>
         <thesefoolishthings.version>1.23</thesefoolishthings.version>
