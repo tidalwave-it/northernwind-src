@@ -131,7 +131,7 @@ public interface ModelFactory
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Nonnull // FIXME: use a SiteCreationParameters bean instead of so many arguments
     public Site createSite (@Nonnull String contextPath, 
                             @Nonnull String documentPath, 
                             @Nonnull String mediaPath, 
