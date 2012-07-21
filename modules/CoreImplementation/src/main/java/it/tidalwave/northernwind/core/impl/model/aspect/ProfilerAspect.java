@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import it.tidalwave.northernwind.core.model.Request;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -42,8 +43,9 @@ public class ProfilerAspect
       throws Throwable
       {
         final long time = System.currentTimeMillis();
+        final Request request = (Request)pjp.getArgs()[0];
         final Object result = pjp.proceed();
-        log.info(">>>> {} completed in {} msec", pjp.getArgs()[0], System.currentTimeMillis() - time);
+        log.info(">>>> {} completed in {} msec", request, System.currentTimeMillis() - time);
         
         return result;
       }
