@@ -46,6 +46,7 @@ public class ProfilerAspect
         final Request request = (Request)pjp.getArgs()[0];
         final Object result = pjp.proceed();
         log.info(">>>> {} completed in {} msec", request, System.currentTimeMillis() - time);
+        // FIXME: retrieve the mime type, create statistics (global and by mime type)
         
         return result;
       }
