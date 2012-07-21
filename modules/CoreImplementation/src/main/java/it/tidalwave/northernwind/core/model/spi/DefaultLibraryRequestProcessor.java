@@ -87,11 +87,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
                                      .put();  
             return BREAK;
           }
-        catch (IOException e)
-          {
-            log.info("Cannot find {}, continuing...", relativePath);  
-          }
-        catch (NotFoundException e)
+        catch (IOException | NotFoundException e)
           {
             log.info("Cannot find {}, continuing...", relativePath);  
           }
