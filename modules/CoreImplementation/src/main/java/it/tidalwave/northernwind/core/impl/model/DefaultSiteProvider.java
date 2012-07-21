@@ -26,11 +26,13 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.io.File;
+import java.io.IOException;
 import javax.servlet.ServletContext;
 import org.openide.util.NbBundle;
 import org.springframework.core.task.TaskExecutor;
@@ -39,6 +41,7 @@ import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.util.NotFoundException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -145,7 +148,7 @@ public class DefaultSiteProvider implements SiteProvider
                     log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
                     log.info("****************************************");
                   }
-                catch (Exception e)
+                catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
                   {
                     log.error("While initializing site", e);
                   } 
