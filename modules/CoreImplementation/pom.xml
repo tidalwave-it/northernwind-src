@@ -15,6 +15,7 @@
     <version>1.0.32-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Core Default Implementation</name>
+    <description>A default implementation of the Core.</description>
 
     <properties>
          <NorthernWind.version>${project.parent.parent.version}</NorthernWind.version>
@@ -80,5 +81,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <description>A default implementation of the Core.</description>
 </project>
