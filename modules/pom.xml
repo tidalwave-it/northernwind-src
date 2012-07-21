@@ -364,6 +364,7 @@
         <module>CoreImplementation</module>
         <module>Components</module>
         <module>HtmlTemplateComponents</module>
+        <module>Profiling</module>
         <module>VaadinComponents</module>
         <module>InfoglueImporter</module>
 

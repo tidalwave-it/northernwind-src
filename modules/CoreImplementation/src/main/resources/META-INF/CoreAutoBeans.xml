@@ -51,6 +51,8 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
+    <aop:aspectj-autoproxy/>
+
     <!-- DCI role injector -->
     <bean id="roleManager"
           class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />

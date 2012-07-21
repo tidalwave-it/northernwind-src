@@ -44,6 +44,10 @@
             <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
+        </dependency>
+        <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-messagebus-spring</artifactId>
         </dependency>

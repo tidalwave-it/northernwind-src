@@ -23,21 +23,47 @@
 package it.tidalwave.northernwind.core.impl.model.aspect;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Request;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * FIXME: move to the Profiling module
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Aspect @Slf4j
+@Configurable @Aspect @Slf4j
 public class ProfilerAspect 
   {
+    @Inject 
+    private BeanFactory factory;
+    
+    private StatisticsCollector statisticsCollector;
+    
+    @PostConstruct
+    public void initialize()
+      {
+        // FIXME: workaround as the aspect doesn't work in a separate module. When it works, you can use plain @Inject
+        try
+          {
+            statisticsCollector = factory.getBean(StatisticsCollector.class);  
+          } 
+        catch (NoSuchBeanDefinitionException e)
+          {
+            
+          }
+      }
+    
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController.processRequest(..))")
     public Object advice (final @Nonnull ProceedingJoinPoint pjp) 
       throws Throwable
@@ -45,7 +71,12 @@ public class ProfilerAspect
         final long time = System.currentTimeMillis();
         final Request request = (Request)pjp.getArgs()[0];
         final Object result = pjp.proceed();
-        log.info(">>>> {} completed in {} msec", request, System.currentTimeMillis() - time);
+        final long elapsedTime = System.currentTimeMillis() - time;
+        
+        if (statisticsCollector != null)
+          {
+            statisticsCollector.registerRequest(request, elapsedTime);  
+          }
         // FIXME: retrieve the mime type, create statistics (global and by mime type)
         
         return result;
