@@ -41,9 +41,17 @@ import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
  **********************************************************************************************************************/
 public interface Layout extends As, Identifiable
   {
+    /*******************************************************************************************************************
+     *
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public Layout withLayout (@Nonnull Layout layout);
     
+    /*******************************************************************************************************************
+     *
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public Layout withOverride (@Nonnull Layout override);
 
@@ -57,16 +65,35 @@ public interface Layout extends As, Identifiable
     public ViewAndController createViewAndController (@Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException;
     
+    /*******************************************************************************************************************
+     *
+     * 
+     ******************************************************************************************************************/
+    @Nonnull // TODO: refactor with Composite
+    public List<Layout> getChildren();
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     ******************************************************************************************************************/
     @Nonnull // TODO: refactor with Composite
     public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor) 
       throws NotFoundException;
     
+    /*******************************************************************************************************************
+     *
+     * Returns the type URI for this layout.
+     * 
+     * @return  the type URI
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public String getTypeUri();
     
-    @Nonnull
-    public List<Layout> getChildren();
-    
+    /*******************************************************************************************************************
+     *
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public Layout findSubComponentById (@Nonnull Id id)
       throws NotFoundException;
