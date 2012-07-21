@@ -52,7 +52,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     protected static final String HEADER_EXPIRES = "Expires";
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
-    private final ThreadLocal<Object> threadLocal = new ThreadLocal<Object>();
+    private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
     
     @NotThreadSafe
