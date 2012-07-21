@@ -40,7 +40,7 @@ public interface Resource
   {
     /** This property, controls whether this resource is a placeholder. A placeholder resource is not mapped to any
         relative URI, but can be found by relative path. */
-    public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<String>("placeHolder");
+    public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<>("placeHolder");
     
     public static final Class<Resource> Resource = Resource.class;
      
