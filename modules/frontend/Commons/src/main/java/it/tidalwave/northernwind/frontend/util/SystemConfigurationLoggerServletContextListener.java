@@ -52,28 +52,28 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
     @Override
     public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
-        log.info("System properties:");
+        log.info("**************** System properties:");
         
         for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
           {
-            log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
+            log.info("{} = {}", entry.getKey(), entry.getValue());
           }
 
         try
           {
             final InitialContext context = new InitialContext();
-            log.info("JNDI Environment:");
+            log.info("**************** JNDI Environment:");
 
             for (final Entry<Object, Object> entry : new TreeMap<>(context.getEnvironment()).entrySet())
               {
-                log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
+                log.info("{} = {}", entry.getKey(), entry.getValue());
               }
             
-            log.info("JNDI Bindings:");
+            log.info("**************** JNDI Bindings:");
             
             for (final Binding binding : Collections.list(context.listBindings("")))
               {
-                log.info(">>>> {} = {}", binding.getNameInNamespace(), binding.getObject());
+                log.info("{} = {}", binding.getNameInNamespace(), binding.getObject());
               }
           }
         catch (NamingException e)
