@@ -54,7 +54,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
       {
         log.info("System properties:");
         
-        for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(System.getProperties()).entrySet())
+        for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
           {
             log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
           }
@@ -64,7 +64,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
             final InitialContext context = new InitialContext();
             log.info("JNDI Environment:");
 
-            for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(context.getEnvironment()).entrySet())
+            for (final Entry<Object, Object> entry : new TreeMap<>(context.getEnvironment()).entrySet())
               {
                 log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
               }
