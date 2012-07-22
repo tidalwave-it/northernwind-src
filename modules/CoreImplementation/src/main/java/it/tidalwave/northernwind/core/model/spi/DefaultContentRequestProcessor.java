@@ -91,7 +91,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
         
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
           {
-            final Map<String, String> headers = new HashMap<String, String>();
+            final Map<String, String> headers = new HashMap<>();
             headers.put("Location", site.createLink(relativeUri + "/"));
             throw new HttpStatusException(302, headers);
           }
