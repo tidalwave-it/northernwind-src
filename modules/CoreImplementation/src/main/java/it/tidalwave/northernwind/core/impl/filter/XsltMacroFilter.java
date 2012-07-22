@@ -136,11 +136,7 @@ public class XsltMacroFilter implements Filter
                       }
                   }
               }
-            catch (IOException e)
-              {
-                throw new RuntimeException(e);
-              }
-            catch (NotFoundException e)
+            catch (IOException | NotFoundException e)
               {
                 throw new RuntimeException(e);
               }
@@ -171,22 +167,14 @@ public class XsltMacroFilter implements Filter
             log.error(text);
             throw new RuntimeException(e);
           }
-        catch (IOException e)
-          {
-            throw new RuntimeException(e);
-          }
-        catch (SAXException e)
-          {
-            throw new RuntimeException(e);
-          }
-        catch (ParserConfigurationException e)
-          {
-            throw new RuntimeException(e);
-          }
         catch (TransformerException e)
           {
             log.error("XSL error: {} at {}", e.toString(), e.getLocationAsString());
             log.error(xslt);
+            throw new RuntimeException(e);
+          }
+        catch (IOException | SAXException | ParserConfigurationException e)
+          {
             throw new RuntimeException(e);
           }
       }
