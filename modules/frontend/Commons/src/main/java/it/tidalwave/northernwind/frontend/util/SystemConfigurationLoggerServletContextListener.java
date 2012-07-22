@@ -78,7 +78,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
           }
         catch (NamingException e)
           { 
-            log.warn("", e);               
+            log.warn("No JNDI: {}", e.toString());               
           }
       }
 
