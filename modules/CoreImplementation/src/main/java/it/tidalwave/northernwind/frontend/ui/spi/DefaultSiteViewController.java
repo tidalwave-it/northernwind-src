@@ -103,7 +103,11 @@ public class DefaultSiteViewController implements SiteViewController
           }
         catch (HttpStatusException e) 
           {
-            log.warn("processing: " + request, e);
+            if (e.getHttpStatus() != 302) // 
+              {
+                log.warn("processing: " + request, e);
+              }
+            
             return (ResponseType)responseHolder.response().forException(e).build();
           }
         finally

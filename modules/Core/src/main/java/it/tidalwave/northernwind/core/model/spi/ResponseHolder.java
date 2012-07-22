@@ -151,12 +151,15 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {
+                case 302:
+                  break;
+                    
                 case 404:
                   message = "<h1>Not found</h1>";
                   break;
                     
                 case 500:
-                default:
+                default: // FIXME: why?
                   message = "<h1>Internal error</h1>";
                   break;
               }

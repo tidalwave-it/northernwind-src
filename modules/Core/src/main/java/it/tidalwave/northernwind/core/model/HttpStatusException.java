@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.ToString;
@@ -48,9 +49,17 @@ public class HttpStatusException extends Exception
         this(httpStatus, Collections.<String, String>emptyMap());
       }
 
-    public HttpStatusException (final int httpStatus, final @Nonnull Map<String, String> headers)
+    private HttpStatusException (final int httpStatus, final @Nonnull Map<String, String> headers)
       {
         this.httpStatus = httpStatus;
         this.headers = headers;
+      }
+    
+    @Nonnull
+    public HttpStatusException withHeader (final @Nonnull String name, final @Nonnull String value)
+      {
+        final Map<String, String> newHeaders = new HashMap<>(headers);
+        newHeaders.put(name, value);
+        return new HttpStatusException(httpStatus, newHeaders);
       }
   }

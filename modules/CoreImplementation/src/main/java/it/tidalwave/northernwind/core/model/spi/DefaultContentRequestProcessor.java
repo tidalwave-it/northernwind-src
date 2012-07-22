@@ -25,8 +25,6 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
@@ -91,9 +89,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
         
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
           {
-            final Map<String, String> headers = new HashMap<>();
-            headers.put("Location", site.createLink(relativeUri + "/"));
-            throw new HttpStatusException(302, headers);
+            throw new HttpStatusException(302).withHeader("Location", site.createLink(relativeUri + "/"));
           }
       }
   }
