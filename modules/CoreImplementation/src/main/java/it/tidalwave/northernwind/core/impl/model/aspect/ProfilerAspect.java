@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -60,7 +60,6 @@ public class ProfilerAspect
           } 
         catch (NoSuchBeanDefinitionException e)
           {
-            
           }
       }
     
@@ -68,16 +67,19 @@ public class ProfilerAspect
     public Object advice (final @Nonnull ProceedingJoinPoint pjp) 
       throws Throwable
       {
-        final long time = System.currentTimeMillis();
         final Request request = (Request)pjp.getArgs()[0];
-        final Object result = pjp.proceed();
-        final long elapsedTime = System.currentTimeMillis() - time;
         
         if (statisticsCollector != null)
           {
-            statisticsCollector.registerRequest(request, elapsedTime);  
+            statisticsCollector.onRequestBegin(request);  
           }
-        // FIXME: retrieve the mime type, create statistics (global and by mime type)
+        
+        final Object result = pjp.proceed();
+        
+        if (statisticsCollector != null)
+          {
+            statisticsCollector.onRequestEnd(request);  
+          }
         
         return result;
       }

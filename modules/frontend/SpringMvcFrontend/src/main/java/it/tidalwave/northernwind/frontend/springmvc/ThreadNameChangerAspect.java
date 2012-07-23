@@ -20,15 +20,13 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.ui.component.menu.vaadin;
+package it.tidalwave.northernwind.frontend.springmvc;
 
 import javax.annotation.Nonnull;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.AbstractOrderedLayout;
-import com.vaadin.ui.Link;
-import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 
 /***********************************************************************************************************************
  *
@@ -36,24 +34,27 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor
- /* package */ class VaadinMenuViewHelper 
+@Aspect
+public class ThreadNameChangerAspect
   {
-    @Nonnull
-    private final MenuView view;
+    private int counter;
     
-    public void setTitle (final @Nonnull String title)
+    @Around("execution(* it.tidalwave.northernwind.frontend.springmvc.SpringMvcRestController.get(..))")
+    public Object advice (final @Nonnull ProceedingJoinPoint pjp) 
+      throws Throwable
       {
-        // TODO   
-      }
-    
-    public void setTemplate (final @Nonnull String template)
-      {
-        // TODO   
-      }
-    
-    public void addLink (final @Nonnull String navigationTitle, final @Nonnull String link)
-      {
-        ((AbstractOrderedLayout)view).addComponent(new Link(navigationTitle, new ExternalResource(link)));                        
+        final Thread thread = Thread.currentThread();
+        final String saveName = thread.getName();
+        
+        try
+          {
+            final HttpServletRequest request = (HttpServletRequest)pjp.getArgs()[0];
+            thread.setName(String.format("%s-%d", request.getRemoteAddr(), counter++));
+            return pjp.proceed();
+          }
+        finally
+          {
+            thread.setName(saveName);  
+          }
       }
   }

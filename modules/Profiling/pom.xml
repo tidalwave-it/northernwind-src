@@ -15,7 +15,7 @@
     <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Profiling</name>
-    <description>This module collects elapsed times for processing requests and build up some statistics.</description>
+    <description>This module collects elapsed times for processing requests and builds up some statistics.</description>
 
     <properties>
         <tft.javadoc.excludePackageNames />

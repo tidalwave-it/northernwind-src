@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -81,16 +81,16 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
         private final XMP xmp;
       }
     
-    private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<List<String>>("mediaPaths");
+    private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
     
-    private final static Key<List<String>> PROPERTY_LENS_IDS = new Key<List<String>>("lensIds");
+    private final static Key<List<String>> PROPERTY_LENS_IDS = new Key<>("lensIds");
     
     private final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
     
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
-    private final Map<Id, MetadataBag> metadataMapById = new HashMap<Id, MetadataBag>();
+    private final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
     
     /*******************************************************************************************************************
      *
@@ -117,7 +117,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 //            final String string = formatted(iptc.getObject(517, String.class));
             
             final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-            final Map<String, String> lensMap = new HashMap<String, String>();
+            final Map<String, String> lensMap = new HashMap<>();
             
             try
               {

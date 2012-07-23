@@ -20,12 +20,11 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
+package it.tidalwave.northernwind.profiling.impl;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -35,39 +34,54 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-abstract class FileObjectDelegateSupport extends FileObject 
+public class Stats 
   {
+    private static final String PATTERN = "%s %s count: %6d min: %7.2f avg: %7.2f max: %7.2f dev: %7.2f";
+    
     @Nonnull
-    protected final LayeredFileSystemProvider fileSystemProvider;
+    private final String name;
+    
+    @Nonnegative
+    private final double scale;
+    
+    private final SummaryStatistics globalStats = new SummaryStatistics();
+    
+    private final SummaryStatistics recentStats = new SummaryStatistics();
 
-    @Override
-    public FileObject copy (FileObject target, String name, String ext)
-      throws IOException
+    public synchronized void addValue (final long elapsedTime)
       {
-        return fileSystemProvider.createDecoratorFileObject(super.copy(target, name, ext));
+        globalStats.addValue(elapsedTime);
+        recentStats.addValue(elapsedTime);
+      }
+
+    public synchronized void clearRecent() 
+      {
+        recentStats.clear();
       }
     
-    @Override @Nonnull
-    public FileSystem getFileSystem()
+    @Nonnull
+    public synchronized String globalAsString()
       {
-        return fileSystemProvider.getFileSystem();  
+        return String.format(PATTERN, 
+                             "TOTAL ",
+                             name,
+                             globalStats.getN(),
+                             globalStats.getMin() * scale,
+                             globalStats.getMean() * scale,
+                             globalStats.getMax() * scale,
+                             globalStats.getStandardDeviation() * scale);
       }
 
-    @Override
-    public boolean equals (final Object object)
+    @Nonnull
+    public synchronized String recentAsString()
       {
-        if ((object == null) || (getClass() != object.getClass()))
-          {
-            return false;
-          }
-
-        final FileObjectDelegateSupport other = (FileObjectDelegateSupport)object;
-        return (this.getFileSystem() == other.getFileSystem()) && this.getPath().equals(other.getPath());
-      }
-
-    @Override
-    public int hashCode()
-      {
-        return getFileSystem().hashCode() ^ getPath().hashCode();
+        return String.format(PATTERN, 
+                             "RECENT",
+                             name,
+                             recentStats.getN(),
+                             recentStats.getMin() * scale,
+                             recentStats.getMean() * scale,
+                             recentStats.getMax() * scale,
+                             recentStats.getStandardDeviation() * scale);
       }
   }

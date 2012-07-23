@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -78,7 +78,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
           }
         catch (NamingException e)
           { 
-            log.warn("", e);               
+            log.warn("No JNDI: {}", e.toString());               
           }
       }
 

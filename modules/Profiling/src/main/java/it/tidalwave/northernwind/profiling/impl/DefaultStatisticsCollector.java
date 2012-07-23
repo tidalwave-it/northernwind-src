@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
+ * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -22,13 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.profiling.impl;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import org.apache.commons.math3.stat.descriptive.AggregateSummaryStatistics;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.impl.model.aspect.StatisticsCollector;
 import it.tidalwave.northernwind.core.model.Request;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -40,23 +40,60 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultStatisticsCollector implements StatisticsCollector
   {
-    private final AggregateSummaryStatistics globalStatistics = new AggregateSummaryStatistics();
+    class Sample
+      {
+        private final long elapsedBaseTime = System.nanoTime();  
+        
+        private final long cpuBaseTime = threadMxBean.getCurrentThreadCpuTime();
+        
+        private final long userBaseTime = threadMxBean.getCurrentThreadUserTime();
+        
+        @Getter
+        private long elapsedTime;
+        
+        @Getter
+        private long cpuTime;
+        
+        @Getter
+        private long userTime;
+        
+        public void stop()
+          {
+            elapsedTime = System.nanoTime() - elapsedBaseTime;
+            cpuTime = threadMxBean.getCurrentThreadCpuTime() - cpuBaseTime;
+            userTime = threadMxBean.getCurrentThreadUserTime() - userBaseTime;
+          }
+      }
     
-    private final AggregateSummaryStatistics recentStatistics = new AggregateSummaryStatistics();
+    private final Stats elapsedTimeStats = new Stats("REQUEST ELAPSED TIME", 1E-6);
     
-    private final SummaryStatistics globalRequestStatistics = globalStatistics.createContributingStatistics();
+    private final Stats cpuTimeStats = new Stats("REQUEST CPU TIME    ", 1E-6);
     
-    private final SummaryStatistics recentRequestStatistics = recentStatistics.createContributingStatistics();
+    private final Stats userTimeStats = new Stats("REQUEST USER TIME   ", 1E-6);
+    
+    private final ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean( );
+    
+    private final ThreadLocal<Sample> sampleHolder = new ThreadLocal<>();
     
     @Override
-    public void registerRequest (final @Nonnull Request request, final @Nonnegative long elapsedTime) 
+    public void onRequestBegin (final @Nonnull Request request) 
       {
-        log.info(">>>> {} completed in {} msec", request, elapsedTime);
+        sampleHolder.set(new Sample());
+      }
+    
+    @Override
+    public void onRequestEnd (final @Nonnull Request request) 
+      {
+        final Sample sample = sampleHolder.get();
+        sample.stop();
+        sampleHolder.remove();
+        log.info(">>>> {} completed in {} msec", request, sample.getElapsedTime() * 1E-6);
         
         synchronized (this) 
           {
-            globalRequestStatistics.addValue(elapsedTime);
-            recentRequestStatistics.addValue(elapsedTime);
+            elapsedTimeStats.addValue(sample.getElapsedTime());
+            cpuTimeStats.addValue(sample.getCpuTime());
+            userTimeStats.addValue(sample.getUserTime());
           }
       }
     
@@ -64,22 +101,15 @@ public class DefaultStatisticsCollector implements StatisticsCollector
       {
         synchronized (this) 
           {
-            dump("OVERALL", globalRequestStatistics);
-            dump("RECENT ", recentRequestStatistics);
-            recentRequestStatistics.clear();
+            log.info("STATS {}", elapsedTimeStats.globalAsString());
+            log.info("STATS {}", elapsedTimeStats.recentAsString());
+            log.info("STATS {}", cpuTimeStats.globalAsString());
+            log.info("STATS {}", cpuTimeStats.recentAsString());
+            log.info("STATS {}", userTimeStats.globalAsString());
+            log.info("STATS {}", userTimeStats.recentAsString());
+            elapsedTimeStats.clearRecent();
+            cpuTimeStats.clearRecent();
+            userTimeStats.clearRecent();
           }
-      }
-    
-    private void dump (final @Nonnull String name, final @Nonnull SummaryStatistics statistics)
-      {
-        log.info("STATS: {} request count: {} completion time min: {} avg: {} max: {} dev: {}", new Object[]
-                {
-                  name,
-                  statistics.getN(),
-                  statistics.getMin(),
-                  statistics.getMean(),
-                  statistics.getMax(),
-                  statistics.getStandardDeviation()
-                });
       }
   }
