@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-17</version>
+        <version>1.1-ALPHA-18-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-    <version>1.0.34</version>
+    <version>1.0.35-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Components (HTML Template)</name>
     
