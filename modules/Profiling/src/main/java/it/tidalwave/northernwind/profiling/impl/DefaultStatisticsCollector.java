@@ -24,8 +24,6 @@ package it.tidalwave.northernwind.profiling.impl;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import org.apache.commons.math3.stat.descriptive.AggregateSummaryStatistics;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.impl.model.aspect.StatisticsCollector;
 import it.tidalwave.northernwind.core.model.Request;
@@ -40,13 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultStatisticsCollector implements StatisticsCollector
   {
-    private final AggregateSummaryStatistics globalStatistics = new AggregateSummaryStatistics();
-    
-    private final AggregateSummaryStatistics recentStatistics = new AggregateSummaryStatistics();
-    
-    private final SummaryStatistics globalRequestStatistics = globalStatistics.createContributingStatistics();
-    
-    private final SummaryStatistics recentRequestStatistics = recentStatistics.createContributingStatistics();
+    private final Stats requestStats = new Stats("REQUEST");
     
     @Override
     public void registerRequest (final @Nonnull Request request, final @Nonnegative long elapsedTime) 
@@ -55,8 +47,7 @@ public class DefaultStatisticsCollector implements StatisticsCollector
         
         synchronized (this) 
           {
-            globalRequestStatistics.addValue(elapsedTime);
-            recentRequestStatistics.addValue(elapsedTime);
+            requestStats.addValue(elapsedTime);
           }
       }
     
@@ -64,22 +55,9 @@ public class DefaultStatisticsCollector implements StatisticsCollector
       {
         synchronized (this) 
           {
-            dump("OVERALL", globalRequestStatistics);
-            dump("RECENT ", recentRequestStatistics);
-            recentRequestStatistics.clear();
+            log.info("STATS {}", requestStats.globalAsString());
+            log.info("STATS {}", requestStats.recentAsString());
+            requestStats.clearRecent();
           }
-      }
-    
-    private void dump (final @Nonnull String name, final @Nonnull SummaryStatistics statistics)
-      {
-        log.info("STATS: {} request count: {} completion time min: {} avg: {} max: {} dev: {}", new Object[]
-                {
-                  name,
-                  statistics.getN(),
-                  statistics.getMin(),
-                  statistics.getMean(),
-                  statistics.getMax(),
-                  statistics.getStandardDeviation()
-                });
       }
   }
