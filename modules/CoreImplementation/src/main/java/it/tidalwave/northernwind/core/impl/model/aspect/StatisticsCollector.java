@@ -22,9 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model.aspect;
 
-import it.tidalwave.northernwind.core.model.Request;
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.Request;
 
 /***********************************************************************************************************************
  *
@@ -36,5 +35,7 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface StatisticsCollector 
   {
-    public void registerRequest (@Nonnull Request request, @Nonnegative long elapsedTime);
+    public void onRequestBegin (@Nonnull Request request);
+    
+    public void onRequestEnd (@Nonnull Request request);
   }

@@ -40,9 +40,19 @@ public class DefaultStatisticsCollector implements StatisticsCollector
   {
     private final Stats requestStats = new Stats("REQUEST");
     
+    private final ThreadLocal<Long> baseTime = new ThreadLocal<>();
+    
     @Override
-    public void registerRequest (final @Nonnull Request request, final @Nonnegative long elapsedTime) 
+    public void onRequestBegin (final @Nonnull Request request) 
       {
+        baseTime.set(System.currentTimeMillis());
+      }
+    
+    @Override
+    public void onRequestEnd (final @Nonnull Request request) 
+      {
+        final long elapsedTime = System.currentTimeMillis() - baseTime.get();
+        baseTime.remove();
         log.info(">>>> {} completed in {} msec", request, elapsedTime);
         
         synchronized (this) 
