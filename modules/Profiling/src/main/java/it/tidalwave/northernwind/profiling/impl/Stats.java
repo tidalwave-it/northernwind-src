@@ -22,9 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.profiling.impl;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -35,10 +36,13 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 @RequiredArgsConstructor
 public class Stats 
   {
-    private static final String PATTERN = "%s %s count: %6d completion time min: %6.0f avg: %6.0f max: %6.0f dev: %6.0f";
+    private static final String PATTERN = "%s %s count: %6d min: %7.2f avg: %7.2f max: %7.2f dev: %7.2f";
     
     @Nonnull
     private final String name;
+    
+    @Nonnegative
+    private final double scale;
     
     private final SummaryStatistics globalStats = new SummaryStatistics();
     
@@ -62,10 +66,10 @@ public class Stats
                              "TOTAL ",
                              name,
                              globalStats.getN(),
-                             globalStats.getMin(),
-                             globalStats.getMean(),
-                             globalStats.getMax(),
-                             globalStats.getStandardDeviation());
+                             globalStats.getMin() * scale,
+                             globalStats.getMean() * scale,
+                             globalStats.getMax() * scale,
+                             globalStats.getStandardDeviation() * scale);
       }
 
     @Nonnull
@@ -75,9 +79,9 @@ public class Stats
                              "RECENT",
                              name,
                              recentStats.getN(),
-                             recentStats.getMin(),
-                             recentStats.getMean(),
-                             recentStats.getMax(),
-                             recentStats.getStandardDeviation());
+                             recentStats.getMin() * scale,
+                             recentStats.getMean() * scale,
+                             recentStats.getMax() * scale,
+                             recentStats.getStandardDeviation() * scale);
       }
   }
