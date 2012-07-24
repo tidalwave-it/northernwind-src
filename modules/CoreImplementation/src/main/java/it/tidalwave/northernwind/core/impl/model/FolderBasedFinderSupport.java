@@ -28,10 +28,10 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.UnsupportedEncodingException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
@@ -81,7 +81,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     @Override @Nonnull
     protected List<? extends Type> computeResults() 
       {
-        final List<Type> result = new ArrayList<Type>();
+        final List<Type> result = new ArrayList<>();
 
         for (final ResourceFile childFile : file.getChildren(true))
           {
@@ -92,11 +92,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
                     final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
-                catch (UnsupportedEncodingException e) 
-                  {
-                    log.error("", e);
-                  }
-                catch (NotFoundException e) 
+                catch (UnsupportedEncodingException | NotFoundException e) 
                   {
                     log.error("", e);
                   }
