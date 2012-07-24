@@ -69,7 +69,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
         @Override @Nonnull
         public ResourceFile getRoot() 
           {
-            return findResource("");
+            return findFileByPath("");
           }
 
         /***************************************************************************************************************
@@ -78,7 +78,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @CheckForNull
-        public ResourceFile findResource (final @Nonnull String name) 
+        public ResourceFile findFileByPath (final @Nonnull String name) 
           {
             log.trace("findResource({})", name);
             ResourceFile result = null;
@@ -96,7 +96,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
                 try 
                   {
                     final ResourceFileSystem fileSystem = i.previous().getFileSystem();
-                    final ResourceFile fileObject = fileSystem.findResource(name);
+                    final ResourceFile fileObject = fileSystem.findFileByPath(name);
 
                     if (fileObject != null)
                       {

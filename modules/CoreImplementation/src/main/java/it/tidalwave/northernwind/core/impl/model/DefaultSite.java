@@ -399,7 +399,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private static ResourceFile findMandatoryFolder (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull String path) 
       throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(fileSystem.findResource(path), "Cannot find folder: " + path);
+        return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
         // don't log fileSystem.getRoot() since if fileSystem is broken it can trigger secondary errors
                             // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);  
       }

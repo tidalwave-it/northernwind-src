@@ -56,7 +56,7 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
         
         try
           { 
-            final ResourceFile zipFolder = localFileSystemProvider.getFileSystem().findResource(fileSystemsFolder);
+            final ResourceFile zipFolder = localFileSystemProvider.getFileSystem().findFileByPath(fileSystemsFolder);
 
             if (zipFolder != null)
               {

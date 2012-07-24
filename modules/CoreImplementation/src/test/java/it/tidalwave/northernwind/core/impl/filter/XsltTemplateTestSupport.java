@@ -105,7 +105,7 @@ public class XsltTemplateTestSupport
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
         final FileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
-        final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findResource(root.getAbsolutePath());
+        final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<Resource>();
         
         for (final ResourceFile xsltFileObject : fileObject.getChildren())

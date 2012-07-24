@@ -33,8 +33,8 @@ import javax.annotation.Nonnull;
 public interface ResourceFileSystem 
   {
     @Nonnull
-    public ResourceFile findResource (@Nonnull String name); // TODO: rename to findFile()
+    public ResourceFile getRoot();
 
     @Nonnull
-    public ResourceFile getRoot();
+    public ResourceFile findFileByPath (@Nonnull String path);
   }

@@ -50,9 +50,9 @@ public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
       }
     
     @Override @Nonnull
-    public ResourceFile findResource (final @Nonnull String name) 
+    public ResourceFile findFileByPath (final @Nonnull String path) 
       {
-        return createNwFileObject(fileSystem.findResource(name));
+        return createNwFileObject(fileSystem.findResource(path));
       }
     
     /* package */ synchronized ResourceFile createNwFileObject (final @Nonnull FileObject fileObject)

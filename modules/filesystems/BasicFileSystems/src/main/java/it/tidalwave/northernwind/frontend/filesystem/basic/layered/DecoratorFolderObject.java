@@ -128,7 +128,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
                 try
                   {
                     final ResourceFileSystem fileSystem = i.previous().getFileSystem();
-                    final ResourceFile delegateDirectory = fileSystem.findResource(path);
+                    final ResourceFile delegateDirectory = fileSystem.findFileByPath(path);
 
                     if (delegateDirectory != null)
                       {
