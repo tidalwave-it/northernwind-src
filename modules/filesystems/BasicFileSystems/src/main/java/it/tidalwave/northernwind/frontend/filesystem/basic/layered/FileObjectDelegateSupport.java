@@ -23,9 +23,9 @@
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -40,13 +40,6 @@ abstract class FileObjectDelegateSupport implements ResourceFile
     @Nonnull
     protected final LayeredFileSystemProvider fileSystemProvider;
 
-//    @Override
-//    public NwFileObject copy (NwFileObject target, String name, String ext)
-//      throws IOException
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(super.copy(target, name, ext));
-//      }
-    
     @Override @Nonnull
     public ResourceFileSystem getFileSystem()
       {
