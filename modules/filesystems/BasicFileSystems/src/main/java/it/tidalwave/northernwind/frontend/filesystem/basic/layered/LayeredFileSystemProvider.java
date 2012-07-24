@@ -22,17 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.io.IOException;
-import org.openide.util.actions.SystemAction;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
-import javax.annotation.CheckForNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -52,12 +52,14 @@ public class LayeredFileSystemProvider implements FileSystemProvider
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
      
+    private final IdentityHashMap<ResourceFile, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
+    
     /*******************************************************************************************************************
      *
      * 
      *
      ******************************************************************************************************************/
-    private final FileSystem fileSystem = new FileSystem() 
+    private final ResourceFileSystem fileSystem = new ResourceFileSystem() 
       {
         /***************************************************************************************************************
          *
@@ -65,29 +67,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @Nonnull
-        public String getDisplayName() 
-          {
-            return "LayeredFileSystem";
-          }
-
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override
-        public boolean isReadOnly()
-          {
-            return true;
-          }
-
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override @Nonnull
-        public FileObject getRoot() 
+        public ResourceFile getRoot() 
           {
             return findResource("");
           }
@@ -98,10 +78,10 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @CheckForNull
-        public FileObject findResource (final @Nonnull String name) 
+        public ResourceFile findResource (final @Nonnull String name) 
           {
             log.trace("findResource({})", name);
-            FileObject result = null;
+            ResourceFile result = null;
             
               // FIXME: move to init!
             if (fileSystemProvidersProvider != null)
@@ -115,8 +95,8 @@ public class LayeredFileSystemProvider implements FileSystemProvider
               {
                 try 
                   {
-                    final FileSystem fileSystem = i.previous().getFileSystem();
-                    final FileObject fileObject = fileSystem.findResource(name);
+                    final ResourceFileSystem fileSystem = i.previous().getFileSystem();
+                    final ResourceFile fileObject = fileSystem.findResource(name);
 
                     if (fileObject != null)
                       {
@@ -135,24 +115,6 @@ public class LayeredFileSystemProvider implements FileSystemProvider
             
             return result;
           }
-        
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override @Nonnull
-        public SystemAction[] getActions()
-          {
-            try 
-              {
-                return delegates.get(delegates.size() - 1).getFileSystem().getActions();
-              } 
-            catch (IOException e)
-              {
-                throw new RuntimeException(e);
-              }
-          }
       };
     
     /*******************************************************************************************************************
@@ -161,7 +123,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public FileSystem getFileSystem()  
+    public ResourceFileSystem getFileSystem()  
       {
         return fileSystem;
       }
@@ -172,10 +134,22 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    public FileObject createDecoratorFileObject (final @Nonnull FileObject delegate)
+    public ResourceFile createDecoratorFileObject (final @Nonnull ResourceFile delegate)
       {
-        return (delegate == null) ? null
-                                  : (delegate.isData() ? new DecoratorFileObject(this, delegate) 
-                                                       : new DecoratorFolderObject(this, delegate.getPath(), delegate));  
+        if (delegate == null) 
+          {
+            return null;  
+          }
+        
+        ResourceFile decorator = delegateLightWeightMap.get(delegate);
+        
+        if (decorator == null)
+          {
+            decorator = (delegate.isData() ? new DecoratorFileObject(this, delegate) 
+                                           : new DecoratorFolderObject(this, delegate.getPath(), delegate));  
+            delegateLightWeightMap.put(delegate, decorator);
+          }
+                                  
+        return decorator;
       }
   }

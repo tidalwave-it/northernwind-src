@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Delegate;
 
 /***********************************************************************************************************************
@@ -35,31 +35,31 @@ import lombok.Delegate;
  **********************************************************************************************************************/
 class DecoratorFileObject extends FileObjectDelegateSupport
   {
-    @Delegate(types=FileObject.class, excludes=FileDelegateExclusions.class) @Nonnull
-    private final FileObject delegate;
+    @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
+    private final ResourceFile delegate;
 
     public DecoratorFileObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider, 
-                                final @Nonnull FileObject delegate) 
+                                final @Nonnull ResourceFile delegate) 
       {
         super(fileSystemProvider);
         this.delegate = delegate;
       }
 
     @Override
-    public FileObject getParent()
+    public ResourceFile getParent()
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
 
-    @Override
-    public FileObject createData (final String name, final String ext)
-        throws IOException
-      {
-        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-      }
+//    @Override
+//    public NwFileObject createData (final String name, final String ext)
+//        throws IOException
+//      {
+//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
+//      }
 
     @Override
-    public FileObject createFolder (final String name)
+    public ResourceFile createFolder (final String name)
         throws IOException
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));

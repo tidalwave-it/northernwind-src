@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -20,39 +20,58 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import lombok.extern.slf4j.Slf4j;
+import java.util.IdentityHashMap;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.MIMEResolver;
-import org.openide.util.lookup.ServiceProvider;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
- * A {@link MIMEResolver} which resolves MIME types against the {@link ServletContext}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @ServiceProvider(service=MIMEResolver.class) @Slf4j
-public class ServletContextMimeResolver extends MIMEResolver
+@RequiredArgsConstructor
+public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
   {
-    @Inject 
-    private ApplicationContext applicationContext;
+    private final IdentityHashMap<FileObject, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
     
-    @Override @Nullable
-    public String findMIMEType (final @Nonnull FileObject fileObject) 
+    @Nonnull
+    private final org.openide.filesystems.FileSystem fileSystem;
+
+    @Override @Nonnull
+    public ResourceFile getRoot() 
       {
-        final String fileName = fileObject.getNameExt();
-        final String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);
-        log.trace(">>>> MIME type for {} is {}", fileObject, mimeType);
-        return mimeType;
+        return createNwFileObject(fileSystem.getRoot());
       }
+    
+    @Override @Nonnull
+    public ResourceFile findResource (final @Nonnull String name) 
+      {
+        return createNwFileObject(fileSystem.findResource(name));
+      }
+    
+    /* package */ synchronized ResourceFile createNwFileObject (final @Nonnull FileObject fileObject)
+      {
+        if (fileObject == null)
+          {
+            return null;  
+          }
+        
+        ResourceFile decorator = delegateLightWeightMap.get(fileObject);
+        
+        if (decorator == null)
+          {
+            decorator = new ResourceFileNetBeansPlatform(this, fileObject);
+            delegateLightWeightMap.put(fileObject, decorator);
+          }
+        
+        return decorator;
+      }
+    
+    // TODO: equals and hashcode
   }

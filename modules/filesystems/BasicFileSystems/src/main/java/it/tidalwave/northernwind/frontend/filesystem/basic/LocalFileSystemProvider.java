@@ -22,7 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.beans.PropertyVetoException;
@@ -30,15 +29,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.LocalFileSystem;
+import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 /***********************************************************************************************************************
  *
- * A provider for a local {@link FileSystem}.
+ * A provider for a local {@link NwFileSystem}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -51,7 +52,10 @@ public class LocalFileSystemProvider implements FileSystemProvider
     private String rootPath = "";
     
     @CheckForNull
-    private LocalFileSystem fileSystem;
+    private ResourceFileSystem fileSystem;
+
+    @CheckForNull
+    private LocalFileSystem fileSystemDelegate;
 
     /*******************************************************************************************************************
      *
@@ -59,22 +63,24 @@ public class LocalFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized FileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
           {
             try
               {
-                fileSystem = new LocalFileSystem();
-                fileSystem.setRootDirectory(new File(rootPath));
+                fileSystemDelegate = new LocalFileSystem();
+                fileSystemDelegate.setRootDirectory(new File(rootPath));
 
-                final FileObject rootFolder = fileSystem.getRoot();
+                final FileObject rootFolder = fileSystemDelegate.getRoot();
 
                 if (rootFolder == null)
                   {
                     throw new FileNotFoundException(rootPath);  
                   } 
+                
+                fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
               }
             catch (PropertyVetoException e)
               {

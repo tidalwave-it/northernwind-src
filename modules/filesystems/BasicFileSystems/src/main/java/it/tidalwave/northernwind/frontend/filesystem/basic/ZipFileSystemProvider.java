@@ -34,10 +34,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import org.openide.filesystems.JarFileSystem;
+import org.openide.filesystems.FileObject;
 import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -45,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A provider for a local {@link FileSystem}.
+ * A provider for a local {@link NwFileSystem}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -61,7 +62,10 @@ public class ZipFileSystemProvider implements FileSystemProvider
     private long modificationCheckInterval = 5000;
     
     @CheckForNull
-    private JarFileSystem fileSystem;
+    private ResourceFileSystem fileSystem;
+
+    @CheckForNull
+    private JarFileSystem fileSystemDelegate;
     
     private DateTime latestModified;
     
@@ -83,7 +87,8 @@ public class ZipFileSystemProvider implements FileSystemProvider
           {
             try
               {
-                final File zipFile = getFileSystem().getJarFile();
+                getFileSystem(); // force initialization
+                final File zipFile = fileSystemDelegate.getJarFile();
                 final DateTime timestamp = new DateTime(zipFile.lastModified());
     //            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
 
@@ -125,23 +130,24 @@ public class ZipFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized JarFileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
           {
             final File zipFile = new File(zipFilePath);
-            fileSystem = new JarFileSystem(zipFile);
-            final FileObject rootFolder = fileSystem.getRoot();
+            fileSystemDelegate = new JarFileSystem(zipFile);
+            final FileObject rootFolder = fileSystemDelegate.getRoot();
 
             if (rootFolder == null)
               {
                 throw new FileNotFoundException(zipFilePath);  
               } 
 
-            log.info(">>>> fileSystem: {}", fileSystem);
+            log.info(">>>> fileSystem: {}", fileSystemDelegate);
             latestModified = new DateTime(zipFile.lastModified());
             timer.scheduleAtFixedRate(zipFileModificationTracker, modificationCheckInterval, modificationCheckInterval);
+            fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
           }
               
         return fileSystem;  

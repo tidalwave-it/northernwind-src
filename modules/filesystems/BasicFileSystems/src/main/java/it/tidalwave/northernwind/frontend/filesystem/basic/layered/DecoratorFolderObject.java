@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +46,14 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
     @Nonnull
     private final String path;
 
-    @Delegate(types=FileObject.class, excludes=FolderDelegateExclusions.class) @Nonnull
-    private final FileObject delegate;
+    @Delegate(types=ResourceFile.class, excludes=FolderDelegateExclusions.class) @Nonnull
+    private final ResourceFile delegate;
+
+    private SortedMap<String, ResourceFile> childrenMap;
 
     public DecoratorFolderObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
                                   final @Nonnull String path, 
-                                  final @Nonnull FileObject delegate)
+                                  final @Nonnull ResourceFile delegate)
       {
         super(fileSystemProvider);
         this.path = path;
@@ -59,14 +61,14 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
     
     @Override @Nonnull
-    public FileObject[] getChildren() 
+    public ResourceFile[] getChildren() 
       {
         log.trace("getChildren() - {}", this);
-        return getChildrenMap().values().toArray(new FileObject[0]);
+        return getChildrenMap().values().toArray(new ResourceFile[0]);
       }
 
     @Override
-    public FileObject getFileObject (final String relativePath)
+    public ResourceFile getFileObject (final String relativePath)
       {
         log.trace("getFileObject({})", relativePath);
 
@@ -78,30 +80,30 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
         return getChildrenMap().get(relativePath);
       }
 
-    @Override
-    public FileObject getFileObject (final String name, final String ext)
-      {
-        log.trace("getFileObject({}, {})", name, ext);
-        return getFileObject(name + "." + ext);
-//            return createDecoratorFileObject(delegate.getFileObject(name, ext)); 
-      }
+//    @Override
+//    public NwFileObject getFileObject (final String name, final String ext)
+//      {
+//        log.trace("getFileObject({}, {})", name, ext);
+//        return getFileObject(name + "." + ext);
+////            return createDecoratorFileObject(delegate.getFileObject(name, ext)); 
+//      }
 
     @Override
-    public FileObject getParent()
+    public ResourceFile getParent()
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
 
-    @Override
-    public FileObject createData (final String name, final String ext)
-      throws IOException
-      {
-        log.trace("createData({}, {})", name, ext);
-        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-      }
+//    @Override
+//    public NwFileObject createData (final String name, final String ext)
+//      throws IOException
+//      {
+//        log.trace("createData({}, {})", name, ext);
+//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
+//      }
 
     @Override
-    public FileObject createFolder (final String name)
+    public ResourceFile createFolder (final String name)
       throws IOException
       {
         log.trace("createFolder({})", name);
@@ -115,35 +117,39 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Nonnull
-    private Map<String, FileObject> getChildrenMap()
+    private synchronized Map<String, ResourceFile> getChildrenMap()
       {
-        final SortedMap<String, FileObject> childrenMap = new TreeMap<String, FileObject>();
-
-        for (final ListIterator<? extends FileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
+        if (childrenMap == null)
           {
-            try
+            childrenMap = new TreeMap<>();
+            
+            for (final ListIterator<? extends FileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
               {
-                final FileSystem fileSystem = i.previous().getFileSystem();
-                final FileObject delegateDirectory = fileSystem.findResource(path);
-
-                if (delegateDirectory != null)
+                try
                   {
-                    for (final FileObject fileObject : delegateDirectory.getChildren())
+                    final ResourceFileSystem fileSystem = i.previous().getFileSystem();
+                    final ResourceFile delegateDirectory = fileSystem.findResource(path);
+
+                    if (delegateDirectory != null)
                       {
-                        if (!childrenMap.containsKey(fileObject.getNameExt()))
+                        for (final ResourceFile fileObject : delegateDirectory.getChildren())
                           {
-                            childrenMap.put(fileObject.getNameExt(), fileSystemProvider.createDecoratorFileObject(fileObject));
+                            if (!childrenMap.containsKey(fileObject.getNameExt()))
+                              {
+                                childrenMap.put(fileObject.getNameExt(), fileSystemProvider.createDecoratorFileObject(fileObject));
+                              }
                           }
                       }
+                  } 
+                catch (IOException e)
+                  {
+                    log.warn("", e);
                   }
-              } 
-            catch (IOException e)
-              {
-                log.warn("", e);
               }
-          }
 
-        log.trace(">>>> childrenMap: {}", childrenMap);
+            log.trace(">>>> childrenMap: {}", childrenMap);
+          }
+    
         return childrenMap;
       }
   }

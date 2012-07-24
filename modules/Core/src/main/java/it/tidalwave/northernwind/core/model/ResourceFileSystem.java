@@ -20,14 +20,9 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
+package it.tidalwave.northernwind.core.model;
 
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URL;
-import org.openide.filesystems.FileLock;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -35,22 +30,11 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
  * @version $Id$
  *
  **********************************************************************************************************************/
-interface FileDelegateExclusions 
+public interface ResourceFileSystem 
   {
-    public void delete();
+    @Nonnull
+    public ResourceFile findResource (@Nonnull String name); // TODO: rename to findFile()
 
-//    public boolean hasExt(String ext);
-
-    public ResourceFileSystem getFileSystem();
-
-    public ResourceFile getParent();
-
-//    public NwFileObject move(FileLock lock, NwFileObject target, String name, String ext);
-//
-//    public NwFileObject copy(NwFileObject target, String name, String ext);
-//
-//    public NwFileObject createData(String name, String ext);
-
-    public ResourceFile createFolder(String name);
-    //        public Enumeration<? extends NwFileObject> getData (boolean rec); calls getChildren()
+    @Nonnull
+    public ResourceFile getRoot();
   }

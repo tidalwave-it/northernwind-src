@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.beans.PropertyVetoException;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +40,8 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
@@ -64,9 +65,11 @@ public class MercurialFileSystemProvider implements FileSystemProvider
     @Getter @Setter
     private String workAreaFolder;
     
-    @Getter
-    private final LocalFileSystem fileSystem = new LocalFileSystem();
+    private final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
    
+    @Getter
+    private final ResourceFileSystem fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
+    
     @Inject
     private BeanFactory beanFactory;
     
@@ -169,7 +172,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
         exposedRepository = repositories[repositorySelector];  
         alternateRepository = repositories[(repositorySelector + 1) % 2]; 
         repositorySelector = (repositorySelector + 1) % 2;
-        fileSystem.setRootDirectory(exposedRepository.getWorkArea().toFile());
+        fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
         swapCounter++;
         
         log.info("New exposed repository:   {}", exposedRepository.getWorkArea());

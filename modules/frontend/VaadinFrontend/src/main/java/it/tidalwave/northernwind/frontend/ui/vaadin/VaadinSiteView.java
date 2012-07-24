@@ -80,7 +80,7 @@ public class VaadinSiteView extends Window implements SiteView
         try // FIXME to be moved to CSS
           {
 //            final Media media = site.find(Media).withRelativePath("/blueBill_Mobile-Banner.png").result();
-//            final FileObject file = media.getFile();
+//            final NwFileObject file = media.getFile();
 //            final InputStream is = file.getInputStream();
 //            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
 //              {

@@ -29,9 +29,8 @@ import javax.inject.Named;
 import java.io.IOException;
 import java.io.File;
 import org.joda.time.DateTime;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.FileUtil;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
@@ -43,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A provider for the {@link FileSystem} that clones a source provider into a local FileSystem for performance 
+ * A provider for the {@link NwFileSystem} that clones a source provider into a local NwFileSystem for performance 
  * purposes...
  * 
  * @author  Fabrizio Giudici
@@ -95,7 +94,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized FileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
         return targetProvider.getFileSystem();      
@@ -123,7 +122,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
       {
         log.info("generateLocalFileSystem()");
         
-        if (!new File(rootPath).mkdirs()) // TODO: use FileSystem API
+        if (!new File(rootPath).mkdirs()) // TODO: use NwFileSystem API
           {
             throw new IOException("Cannot create dirs for " + rootPath);
           }
@@ -131,8 +130,8 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
         // FIXME: shouldn't be needed, but otherwise after a second call to this method won't find files
         targetProvider = new LocalFileSystemProvider(); 
         targetProvider.setRootPath(rootPath);
-        final FileObject targetRoot = targetProvider.getFileSystem().getRoot();
-        final String path = FileUtil.toFile(targetRoot).getAbsolutePath();
+        final ResourceFile targetRoot = targetProvider.getFileSystem().getRoot();
+        final String path = targetRoot.toFile().getAbsolutePath();
         log.info(">>>> scratching {} ...", path);
         emptyFolder(targetRoot);
         log.info(">>>> copying files to {} ...", path);
@@ -144,12 +143,12 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private void emptyFolder (final @Nonnull FileObject folder) 
+    private void emptyFolder (final @Nonnull ResourceFile folder) 
       throws IOException
       {
         log.trace("emptyFolder({}, {}", folder);
         
-        for (final FileObject child : folder.getChildren())
+        for (final ResourceFile child : folder.getChildren())
           {
             child.delete();
           }
@@ -159,21 +158,21 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private void copyFolder (final @Nonnull FileObject sourceFolder, final @Nonnull FileObject targetFolder)
+    private void copyFolder (final @Nonnull ResourceFile sourceFolder, final @Nonnull ResourceFile targetFolder)
       throws IOException
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
         
-        for (final FileObject sourceChild : sourceFolder.getChildren())
+        for (final ResourceFile sourceChild : sourceFolder.getChildren())
           {
             if (!sourceChild.isFolder())
               { 
                 log.trace(">>>> copying {} into {} ...", sourceChild, targetFolder);
-                FileUtil.copyFile(sourceChild, targetFolder, sourceChild.getName());
+                sourceChild.copyTo(targetFolder);
               }
           }
         
-        for (final FileObject sourceChild : sourceFolder.getChildren())
+        for (final ResourceFile sourceChild : sourceFolder.getChildren())
           {
             if (sourceChild.isFolder())
               { 

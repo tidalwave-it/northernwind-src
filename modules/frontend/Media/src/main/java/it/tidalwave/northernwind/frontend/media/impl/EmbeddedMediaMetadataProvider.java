@@ -36,7 +36,6 @@ import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.XMP;
 import org.imajine.image.op.ReadOp;
-import org.openide.filesystems.FileUtil;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -221,7 +220,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           {
             final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
             final Media media = findMedia(mediaId, properties);
-            final File file = FileUtil.toFile(media.getFile());
+            final File file = media.getFile().toFile();
             final EditableImage image = EditableImage.create(new ReadOp(file, METADATA));
             final TIFF tiff = image.getMetadata(TIFF.class);
             final EXIF exif = image.getMetadata(EXIF.class);

@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import org.openide.filesystems.FileObject;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -51,7 +50,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Resource createResource (@Nonnull FileObject file);
+    public Resource createResource (@Nonnull ResourceFile file);
 
     /*******************************************************************************************************************
      *
@@ -62,7 +61,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Content createContent (@Nonnull FileObject folder);
+    public Content createContent (@Nonnull ResourceFile folder);
 
     /*******************************************************************************************************************
      *
@@ -73,7 +72,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Media createMedia (@Nonnull FileObject file);
+    public Media createMedia (@Nonnull ResourceFile file);
 
     /*******************************************************************************************************************
      *
@@ -84,7 +83,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public SiteNode createSiteNode (@Nonnull Site site, @Nonnull FileObject folder)
+    public SiteNode createSiteNode (@Nonnull Site site, @Nonnull ResourceFile folder)
       throws IOException, NotFoundException;
 
     /*******************************************************************************************************************
