@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LayeredFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
-    List<? extends ResourceFileSystemProvider> delegates = new ArrayList<ResourceFileSystemProvider>();
+    List<? extends ResourceFileSystemProvider> delegates = new ArrayList<>();
     
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
