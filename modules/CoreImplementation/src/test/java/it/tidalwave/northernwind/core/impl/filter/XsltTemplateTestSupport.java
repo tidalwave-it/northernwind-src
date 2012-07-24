@@ -28,7 +28,6 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.NwFileObject;
-import org.openide.filesystems.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
@@ -39,6 +38,7 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
 import static org.mockito.Mockito.*;
 
@@ -104,7 +104,8 @@ public class XsltTemplateTestSupport
         when(site.getFileSystemProvider()).thenReturn(fileSystemProvider);
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
-        final NwFileObject fileObject = FileUtil.toFileObject(root);
+        final FileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
+        final NwFileObject fileObject = localFileSystemProvider.getFileSystem().findResource(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<Resource>();
         
         for (final NwFileObject xsltFileObject : fileObject.getChildren())
