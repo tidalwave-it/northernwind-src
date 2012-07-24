@@ -59,7 +59,7 @@ public interface ResourceFile
       throws FileNotFoundException;
     
     @Nonnull
-    public String asText (String encoding)
+    public String asText (@Nonnull String encoding)
       throws IOException;
     
     @Nonnull
@@ -69,12 +69,14 @@ public interface ResourceFile
     @Nonnull
     public DateTime getLatestModificationTime(); 
 
-    public ResourceFile getParent();
+    public ResourceFile getParent(); // FIXME: make @Nonnull, throws NotFoundException
 
-    public ResourceFile getChildByName (@Nonnull String fileName); 
+    public ResourceFile getChildByName (@Nonnull String fileName); // FIXME: make @Nonnull, throws NotFoundException
 
+    @Nonnull
     public Collection<ResourceFile> getChildren(); 
 
+    @Nonnull
     public Collection<ResourceFile> getChildren (boolean recursive); // TODO: replace boolean with enum, perhaps use a Finder
 
     @Nonnull
