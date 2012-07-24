@@ -117,7 +117,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           {
             final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
 
-            return withContentType(file.getMIMEType())
+            return withContentType(file.getMimeType())
                   .withContentLength(bytes.length)
                   .withLastModified(file.lastModified())
                   .withBody(bytes);

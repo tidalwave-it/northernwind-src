@@ -119,7 +119,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
     
     @Override @Nonnull
-    public String getMIMEType()
+    public String getMimeType()
       {
         final String fileName = delegate.getNameExt();
         final String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);

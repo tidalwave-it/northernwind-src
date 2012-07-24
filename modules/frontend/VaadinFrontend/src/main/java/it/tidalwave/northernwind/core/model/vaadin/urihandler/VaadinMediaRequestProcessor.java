@@ -46,6 +46,6 @@ public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<Do
       throws FileNotFoundException
       {
         //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
-        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMIMEType()).put();
+        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMimeType()).put();
       }
   }

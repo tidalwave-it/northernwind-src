@@ -52,7 +52,7 @@ public interface ResourceFile
     public boolean isData();
     
     @Nonnull
-    public String getMIMEType(); // TODO: rename to getMimeType()
+    public String getMimeType();
 
     @Nonnull
     public InputStream getInputStream()

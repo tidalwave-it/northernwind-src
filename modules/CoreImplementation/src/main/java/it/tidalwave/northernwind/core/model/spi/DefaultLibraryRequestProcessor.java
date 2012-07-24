@@ -77,7 +77,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
           {
             final Resource resource = siteProvider.get().getSite().find(Resource.class).withRelativePath(relativePath).result();
             final ResourceFile file = resource.getFile();
-            final String mimeType = file.getMIMEType();
+            final String mimeType = file.getMimeType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText("UTF-8"), mimeType)
                                                                 : file.asBytes();
             responseHolder.response().withContentType(mimeType)

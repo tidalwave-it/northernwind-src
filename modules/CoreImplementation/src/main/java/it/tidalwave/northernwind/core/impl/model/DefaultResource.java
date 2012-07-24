@@ -115,11 +115,11 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         
         final ResourceFile propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
-        final String charset = propertyFile.getMIMEType().equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
+        final String charset = propertyFile.getMimeType().equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
         
         try
           {
-            return macroExpander.get().filter(propertyFile.asText(charset), propertyFile.getMIMEType());
+            return macroExpander.get().filter(propertyFile.asText(charset), propertyFile.getMimeType());
           }
         catch (RuntimeException e) // FIXME: introduce a FilterException
           {
