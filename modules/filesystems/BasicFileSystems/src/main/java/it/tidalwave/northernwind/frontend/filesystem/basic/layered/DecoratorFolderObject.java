@@ -68,9 +68,9 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Override
-    public ResourceFile getFileObject (final String relativePath)
+    public ResourceFile getChildByName (final String relativePath)
       {
-        log.trace("getFileObject({})", relativePath);
+        log.trace("getChildByName({})", relativePath);
 
         if (relativePath.contains("/"))
           {

@@ -58,7 +58,7 @@ public final class Utilities
         for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
           {            
             log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
-            final ResourceFile propertyFile = parent.getFileObject(propertyFileName);
+            final ResourceFile propertyFile = parent.getChildByName(propertyFileName);
             
             if (propertyFile != null)
               {  
@@ -68,7 +68,7 @@ public final class Utilities
         
         Collections.reverse(files);
 
-        final ResourceFile propertyFile = folder.getFileObject("Override" + propertyFileName);
+        final ResourceFile propertyFile = folder.getChildByName("Override" + propertyFileName);
 
         if (propertyFile != null)
           {  

@@ -78,7 +78,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Override
-    public ResourceFile getFileObject (final @Nonnull String fileName) 
+    public ResourceFile getChildByName (final @Nonnull String fileName) 
       {
         return fileSystem.createNwFileObject(delegate.getFileObject(fileName));
       }

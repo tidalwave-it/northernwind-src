@@ -175,11 +175,11 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         for (final Locale locale : localeRequestManager.getLocales())
           {
             final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
-            localizedFile = file.getFileObject(localizedFileName);
+            localizedFile = file.getChildByName(localizedFileName);
             
             if ((localizedFile == null) && localizedFileName.endsWith(".xhtml"))
               {
-                localizedFile = file.getFileObject(localizedFileName.replaceAll("\\.xhtml$", ".html"));
+                localizedFile = file.getChildByName(localizedFileName.replaceAll("\\.xhtml$", ".html"));
               }
             
             if (localizedFile != null)

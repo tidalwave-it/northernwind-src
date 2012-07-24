@@ -71,7 +71,7 @@ public interface ResourceFile
 
     public ResourceFile getParent();
 
-    public ResourceFile getFileObject (@Nonnull String fileName); // TODO: rename to getChild()
+    public ResourceFile getChildByName (@Nonnull String fileName); 
 
     public ResourceFile[] getChildren(); // TODO: return Collection<>
 

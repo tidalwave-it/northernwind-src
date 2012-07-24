@@ -34,7 +34,7 @@ public interface FolderDelegateExclusions extends FileDelegateExclusions
   {
     public ResourceFile[] getChildren();
 
-    public ResourceFile getFileObject (String relativePath);
+    public ResourceFile getChildByName (String relativePath);
 
     public ResourceFile getFileObject (String name, String ext);
 
