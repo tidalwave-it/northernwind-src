@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.Enumeration;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,4 +76,7 @@ public interface NwFileObject
     public NwFileObject[] getChildren(); // TODO: return Collection<>
 
     public Enumeration<? extends NwFileObject> getChildren (boolean recursive); // TODO: return Collection, replace boolean with enum
+
+    @Nonnull
+    public File toFile();
   }

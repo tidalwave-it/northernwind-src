@@ -30,9 +30,11 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.NwFileObject;
+import java.io.File;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.filesystems.FileUtil;
 
 /***********************************************************************************************************************
  *
@@ -50,6 +52,7 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
         public NwFileObject[] getChildren();
         public Enumeration<? extends NwFileObject> getChildren (boolean b);
         public String getMIMEType();
+        public File toFile();
       }
     
     @Inject 
@@ -89,6 +92,12 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
         final String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);
         log.trace(">>>> MIME type for {} is {}", delegate, mimeType);
         return mimeType;
+      }
+    
+    @Override @Nonnull
+    public File toFile()
+      {  
+        return FileUtil.toFile(delegate);
       }
     
     // TODO: equals and hashcode
