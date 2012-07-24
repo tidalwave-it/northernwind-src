@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
@@ -80,7 +80,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultSiteNode (final @Nonnull DefaultSite site, final @Nonnull FileObject file)
+    public DefaultSiteNode (final @Nonnull DefaultSite site, final @Nonnull NwFileObject file)
       throws IOException, NotFoundException
       {
         this.site = site;
@@ -107,8 +107,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             try 
               {
                 // FIXME: this works, but it's messy code!!!
-                final FileObject file = resource.getFile();
-                final FileObject parentFile = file.getParent();
+                final NwFileObject file = resource.getFile();
+                final NwFileObject parentFile = file.getParent();
                 log.debug("Compute relativeUri for {}: parentFile: {}", file, parentFile);
                 String parentRelativePath = UriUtilities.urlDecodedPath(parentFile.getPath());
                 
@@ -175,7 +175,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         Layout layout = null;
         
         // FIXME: Components must be localized
-        for (final FileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml"))
+        for (final NwFileObject layoutFile : Utilities.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml"))
           {
             log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
             final @Cleanup InputStream is = layoutFile.getInputStream();

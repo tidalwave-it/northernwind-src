@@ -26,8 +26,8 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import org.openide.filesystems.FileLock;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 
 /***********************************************************************************************************************
  *
@@ -53,16 +53,16 @@ interface FileDelegateExclusions
 
     public URI toURI();
 
-    public FileSystem getFileSystem();
+    public NwFileSystem getFileSystem();
 
-    public FileObject getParent();
+    public NwFileObject getParent();
 
-    public FileObject move(FileLock lock, FileObject target, String name, String ext);
+    public NwFileObject move(FileLock lock, NwFileObject target, String name, String ext);
 
-    public FileObject copy(FileObject target, String name, String ext);
+    public NwFileObject copy(NwFileObject target, String name, String ext);
 
-    public FileObject createData(String name, String ext);
+    public NwFileObject createData(String name, String ext);
 
-    public FileObject createFolder(String name);
-    //        public Enumeration<? extends FileObject> getData (boolean rec); calls getChildren()
+    public NwFileObject createFolder(String name);
+    //        public Enumeration<? extends NwFileObject> getData (boolean rec); calls getChildren()
   }

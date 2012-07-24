@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import org.joda.time.Duration;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -76,7 +76,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
         try
           {
             final Resource resource = siteProvider.get().getSite().find(Resource.class).withRelativePath(relativePath).result();
-            final FileObject file = resource.getFile();
+            final NwFileObject file = resource.getFile();
             final String mimeType = file.getMIMEType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText(), mimeType)
                                                                 : file.asBytes();

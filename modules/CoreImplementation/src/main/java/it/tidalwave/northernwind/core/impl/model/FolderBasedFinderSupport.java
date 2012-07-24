@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.io.UnsupportedEncodingException;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
@@ -56,7 +56,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private final Class<Type> typeClass;
     
     @Nonnull
-    private final FileObject file;
+    private final NwFileObject file;
     
     @Inject @Nonnull
     private transient Provider<SiteProvider> siteProvider;
@@ -84,7 +84,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
       {
         final List<Type> result = new ArrayList<Type>();
 
-        for (final FileObject childFile : Collections.list(file.getChildren(true)))
+        for (final NwFileObject childFile : Collections.list(file.getChildren(true)))
           {
             if (childFile.isFolder())
               {

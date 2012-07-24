@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import org.openide.filesystems.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -104,10 +104,10 @@ public class XsltTemplateTestSupport
         when(site.getFileSystemProvider()).thenReturn(fileSystemProvider);
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
-        final FileObject fileObject = FileUtil.toFileObject(root);
+        final NwFileObject fileObject = FileUtil.toFileObject(root);
         final List<Resource> resources = new ArrayList<Resource>();
         
-        for (final FileObject xsltFileObject : fileObject.getChildren())
+        for (final NwFileObject xsltFileObject : fileObject.getChildren())
           {
             final Resource resource = mock(Resource.class);
             when(resource.getFile()).thenReturn(xsltFileObject);

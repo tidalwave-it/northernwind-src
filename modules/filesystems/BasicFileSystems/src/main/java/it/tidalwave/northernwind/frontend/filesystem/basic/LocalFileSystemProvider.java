@@ -29,8 +29,8 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import org.openide.filesystems.LocalFileSystem;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +38,7 @@ import lombok.ToString;
 
 /***********************************************************************************************************************
  *
- * A provider for a local {@link FileSystem}.
+ * A provider for a local {@link NwFileSystem}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -59,7 +59,7 @@ public class LocalFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized FileSystem getFileSystem() 
+    public synchronized NwFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
@@ -69,7 +69,7 @@ public class LocalFileSystemProvider implements FileSystemProvider
                 fileSystem = new LocalFileSystem();
                 fileSystem.setRootDirectory(new File(rootPath));
 
-                final FileObject rootFolder = fileSystem.getRoot();
+                final NwFileObject rootFolder = fileSystem.getRoot();
 
                 if (rootFolder == null)
                   {

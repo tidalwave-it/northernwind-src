@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +46,12 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
     @Nonnull
     private final String path;
 
-    @Delegate(types=FileObject.class, excludes=FolderDelegateExclusions.class) @Nonnull
-    private final FileObject delegate;
+    @Delegate(types=NwFileObject.class, excludes=FolderDelegateExclusions.class) @Nonnull
+    private final NwFileObject delegate;
 
     public DecoratorFolderObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
                                   final @Nonnull String path, 
-                                  final @Nonnull FileObject delegate)
+                                  final @Nonnull NwFileObject delegate)
       {
         super(fileSystemProvider);
         this.path = path;
@@ -59,14 +59,14 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
     
     @Override @Nonnull
-    public FileObject[] getChildren() 
+    public NwFileObject[] getChildren() 
       {
         log.trace("getChildren() - {}", this);
-        return getChildrenMap().values().toArray(new FileObject[0]);
+        return getChildrenMap().values().toArray(new NwFileObject[0]);
       }
 
     @Override
-    public FileObject getFileObject (final String relativePath)
+    public NwFileObject getFileObject (final String relativePath)
       {
         log.trace("getFileObject({})", relativePath);
 
@@ -79,7 +79,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Override
-    public FileObject getFileObject (final String name, final String ext)
+    public NwFileObject getFileObject (final String name, final String ext)
       {
         log.trace("getFileObject({}, {})", name, ext);
         return getFileObject(name + "." + ext);
@@ -87,13 +87,13 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Override
-    public FileObject getParent()
+    public NwFileObject getParent()
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
 
     @Override
-    public FileObject createData (final String name, final String ext)
+    public NwFileObject createData (final String name, final String ext)
       throws IOException
       {
         log.trace("createData({}, {})", name, ext);
@@ -101,7 +101,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Override
-    public FileObject createFolder (final String name)
+    public NwFileObject createFolder (final String name)
       throws IOException
       {
         log.trace("createFolder({})", name);
@@ -115,20 +115,20 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Nonnull
-    private Map<String, FileObject> getChildrenMap()
+    private Map<String, NwFileObject> getChildrenMap()
       {
-        final SortedMap<String, FileObject> childrenMap = new TreeMap<String, FileObject>();
+        final SortedMap<String, NwFileObject> childrenMap = new TreeMap<String, NwFileObject>();
 
         for (final ListIterator<? extends FileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
           {
             try
               {
-                final FileSystem fileSystem = i.previous().getFileSystem();
-                final FileObject delegateDirectory = fileSystem.findResource(path);
+                final NwFileSystem fileSystem = i.previous().getFileSystem();
+                final NwFileObject delegateDirectory = fileSystem.findResource(path);
 
                 if (delegateDirectory != null)
                   {
-                    for (final FileObject fileObject : delegateDirectory.getChildren())
+                    for (final NwFileObject fileObject : delegateDirectory.getChildren())
                       {
                         if (!childrenMap.containsKey(fileObject.getNameExt()))
                           {

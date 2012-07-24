@@ -24,8 +24,8 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -35,20 +35,20 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-abstract class FileObjectDelegateSupport extends FileObject 
+abstract class FileObjectDelegateSupport extends NwFileObject 
   {
     @Nonnull
     protected final LayeredFileSystemProvider fileSystemProvider;
 
     @Override
-    public FileObject copy (FileObject target, String name, String ext)
+    public NwFileObject copy (NwFileObject target, String name, String ext)
       throws IOException
       {
         return fileSystemProvider.createDecoratorFileObject(super.copy(target, name, ext));
       }
     
     @Override @Nonnull
-    public FileSystem getFileSystem()
+    public NwFileSystem getFileSystem()
       {
         return fileSystemProvider.getFileSystem();  
       }

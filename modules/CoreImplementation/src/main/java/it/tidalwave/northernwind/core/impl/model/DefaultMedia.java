@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    public DefaultMedia (final @Nonnull FileObject file)
+    public DefaultMedia (final @Nonnull NwFileObject file)
       {
         resource = modelFactory.createResource(file);  
       }

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.*;
@@ -49,16 +49,16 @@ public final class Utilities
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static List<FileObject> getInheritedPropertyFiles (final @Nonnull FileObject folder, final @Nonnull String propertyFileName)
+    public static List<NwFileObject> getInheritedPropertyFiles (final @Nonnull NwFileObject folder, final @Nonnull String propertyFileName)
       {
         log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
         
-        final List<FileObject> files = new ArrayList<FileObject>();
+        final List<NwFileObject> files = new ArrayList<NwFileObject>();
         
-        for (FileObject parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
+        for (NwFileObject parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
           {            
             log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
-            final FileObject propertyFile = parent.getFileObject(propertyFileName);
+            final NwFileObject propertyFile = parent.getFileObject(propertyFileName);
             
             if (propertyFile != null)
               {  
@@ -68,7 +68,7 @@ public final class Utilities
         
         Collections.reverse(files);
 
-        final FileObject propertyFile = folder.getFileObject("Override" + propertyFileName);
+        final NwFileObject propertyFile = folder.getFileObject("Override" + propertyFileName);
 
         if (propertyFile != null)
           {  

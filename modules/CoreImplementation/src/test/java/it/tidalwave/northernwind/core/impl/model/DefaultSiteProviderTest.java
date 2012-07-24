@@ -30,7 +30,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
@@ -71,25 +71,25 @@ class MockModelFactory implements ModelFactory
       }
 
     @Override
-    public Resource createResource(FileObject file) 
+    public Resource createResource(NwFileObject file) 
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Content createContent(FileObject folder) 
+    public Content createContent(NwFileObject folder) 
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Media createMedia(FileObject file) 
+    public Media createMedia(NwFileObject file) 
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public SiteNode createSiteNode(Site site, FileObject folder)
+    public SiteNode createSiteNode(Site site, NwFileObject folder)
       throws IOException, NotFoundException 
       {
         throw new UnsupportedOperationException("Not supported.");

@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.io.IOException;
 import org.openide.util.actions.SystemAction;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import javax.annotation.CheckForNull;
@@ -57,7 +57,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      * 
      *
      ******************************************************************************************************************/
-    private final FileSystem fileSystem = new FileSystem() 
+    private final NwFileSystem fileSystem = new NwFileSystem() 
       {
         /***************************************************************************************************************
          *
@@ -87,7 +87,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @Nonnull
-        public FileObject getRoot() 
+        public NwFileObject getRoot() 
           {
             return findResource("");
           }
@@ -98,10 +98,10 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @CheckForNull
-        public FileObject findResource (final @Nonnull String name) 
+        public NwFileObject findResource (final @Nonnull String name) 
           {
             log.trace("findResource({})", name);
-            FileObject result = null;
+            NwFileObject result = null;
             
               // FIXME: move to init!
             if (fileSystemProvidersProvider != null)
@@ -115,8 +115,8 @@ public class LayeredFileSystemProvider implements FileSystemProvider
               {
                 try 
                   {
-                    final FileSystem fileSystem = i.previous().getFileSystem();
-                    final FileObject fileObject = fileSystem.findResource(name);
+                    final NwFileSystem fileSystem = i.previous().getFileSystem();
+                    final NwFileObject fileObject = fileSystem.findResource(name);
 
                     if (fileObject != null)
                       {
@@ -161,7 +161,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public FileSystem getFileSystem()  
+    public NwFileSystem getFileSystem()  
       {
         return fileSystem;
       }
@@ -172,7 +172,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    public FileObject createDecoratorFileObject (final @Nonnull FileObject delegate)
+    public NwFileObject createDecoratorFileObject (final @Nonnull NwFileObject delegate)
       {
         return (delegate == null) ? null
                                   : (delegate.isData() ? new DecoratorFileObject(this, delegate) 

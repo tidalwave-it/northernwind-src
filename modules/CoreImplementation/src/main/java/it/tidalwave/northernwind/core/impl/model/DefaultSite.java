@@ -37,8 +37,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -68,18 +68,18 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
   {
     static interface FileVisitor 
       {
-        public void visit (@Nonnull FileObject file, @Nonnull String relativeUri);   
+        public void visit (@Nonnull NwFileObject file, @Nonnull String relativeUri);   
       }
     
     static interface FileFilter
       {
-        public boolean accept (@Nonnull FileObject file);  
+        public boolean accept (@Nonnull NwFileObject file);  
       }
     
     private final FileFilter DIRECTORY_FILTER = new FileFilter()
       {
         @Override
-        public boolean accept (final @Nonnull FileObject file) 
+        public boolean accept (final @Nonnull NwFileObject file) 
           {
             return file.isFolder() && !ignoredFolders.contains(file.getNameExt());
           }
@@ -88,7 +88,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private final FileFilter ALL_FILTER = new FileFilter()
       {
         @Override
-        public boolean accept (final @Nonnull FileObject file) 
+        public boolean accept (final @Nonnull NwFileObject file) 
           {
             return !ignoredFolders.contains(file.getNameExt());
           }
@@ -126,13 +126,13 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     
     private final List<String> ignoredFolders = new ArrayList<String>();
         
-    private FileObject documentFolder;
+    private NwFileObject documentFolder;
     
-    private FileObject libraryFolder;
+    private NwFileObject libraryFolder;
     
-    private FileObject mediaFolder;
+    private NwFileObject mediaFolder;
     
-    private FileObject nodeFolder; 
+    private NwFileObject nodeFolder; 
     
     private final Map<String, Content> documentMapByRelativePath = new TreeMap<String, Content>();
     
@@ -250,7 +250,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         relativeUriMapsByType.put(SiteNode.class, nodeMapByRelativeUri);
                 
         log.info(">>>> fileSystemProvider: {}", fileSystemProvider);
-        final FileSystem fileSystem = fileSystemProvider.getFileSystem();
+        final NwFileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = findMandatoryFolder(fileSystem, documentPath);
         libraryFolder  = findMandatoryFolder(fileSystem, libraryPath);
         mediaFolder    = findMandatoryFolder(fileSystem, mediaPath);
@@ -274,7 +274,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull NwFileObject folder, final @Nonnull String relativePath) 
               {
                 documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
               }
@@ -283,7 +283,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(libraryFolder, ALL_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject file, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull NwFileObject file, final @Nonnull String relativePath) 
               {
                 if (file.isData())
                   {
@@ -295,7 +295,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(mediaFolder, ALL_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject file, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull NwFileObject file, final @Nonnull String relativePath) 
               {
                 if (file.isData())
                   {
@@ -307,7 +307,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor() 
           {
             @Override
-            public void visit (final @Nonnull FileObject folder, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull NwFileObject folder, final @Nonnull String relativePath) 
               {
                 try 
                   {
@@ -358,7 +358,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      * @param  visitor     the visitor
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull FileObject file, 
+    private void traverse (final @Nonnull NwFileObject file, 
                            final @Nonnull FileFilter fileFilter, 
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
@@ -367,7 +367,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 
-        for (final FileObject child : file.getChildren())
+        for (final NwFileObject child : file.getChildren())
           {
             if (fileFilter.accept(child))
               {
@@ -396,7 +396,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static FileObject findMandatoryFolder (final @Nonnull FileSystem fileSystem, final @Nonnull String path) 
+    private static NwFileObject findMandatoryFolder (final @Nonnull NwFileSystem fileSystem, final @Nonnull String path) 
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(fileSystem.findResource(path), "Cannot find folder: " + path);

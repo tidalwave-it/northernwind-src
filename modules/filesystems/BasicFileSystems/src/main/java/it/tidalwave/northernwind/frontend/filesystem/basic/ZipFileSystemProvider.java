@@ -34,8 +34,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import org.openide.filesystems.JarFileSystem;
 import it.tidalwave.messagebus.MessageBus;
 import lombok.Getter;
@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A provider for a local {@link FileSystem}.
+ * A provider for a local {@link NwFileSystem}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -132,7 +132,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
           {
             final File zipFile = new File(zipFilePath);
             fileSystem = new JarFileSystem(zipFile);
-            final FileObject rootFolder = fileSystem.getRoot();
+            final NwFileObject rootFolder = fileSystem.getRoot();
 
             if (rootFolder == null)
               {

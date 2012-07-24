@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import org.openide.filesystems.FileObject;
+import it.tidalwave.northernwind.core.model.NwFileObject;
 
 /***********************************************************************************************************************
  *
@@ -52,7 +52,7 @@ public interface Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public FileObject getFile();
+    public NwFileObject getFile();
     
     /*******************************************************************************************************************
      *

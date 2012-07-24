@@ -24,11 +24,11 @@ package it.tidalwave.northernwind.core.filesystem;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import org.openide.filesystems.FileSystem;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 
 /***********************************************************************************************************************
  *
- * A provider for the {@link FileSystem}.
+ * A provider for the {@link NwFileSystem}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -38,12 +38,12 @@ public interface FileSystemProvider
   {
     /*******************************************************************************************************************
      *
-     * Returns the {@link FileSystem}.
+     * Returns the {@link NwFileSystem}.
      * 
-     * @return  the {@code FileSystem}
+     * @return  the {@code NwFileSystem}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public FileSystem getFileSystem()
+    public NwFileSystem getFileSystem()
       throws IOException;
   }

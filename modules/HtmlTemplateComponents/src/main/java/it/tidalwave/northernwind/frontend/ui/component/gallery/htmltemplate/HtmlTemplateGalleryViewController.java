@@ -108,7 +108,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     /* package */ void initializeHtmlTemplateGalleryViewController() 
       throws HttpStatusException, IOException
       {
-        final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
+        final String param = getParam().replaceAll("^/", "").replaceAll("/$", "").replaceAll("/\\?.*$", ""); // FIXME: check escaping of ?
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
         final String siteNodeTitle = siteNode.getProperties().getProperty(Properties.PROPERTY_TITLE, "");

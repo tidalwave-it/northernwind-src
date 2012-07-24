@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.openide.filesystems.FileObject;
+import org.openide.filesystems.NwFileObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -67,7 +67,7 @@ public class XsltMacroFilterTest
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
         
-        final FileObject fileObject = mock(FileObject.class);
+        final NwFileObject fileObject = mock(NwFileObject.class);
         final String xslt = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/model/Photo.xslt"));
         when(fileObject.asText(anyString())).thenReturn(xslt);
         
