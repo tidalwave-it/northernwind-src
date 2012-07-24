@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -16,48 +16,24 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.spi.ResourceFileSupport;
-import lombok.Delegate;
-import lombok.ToString;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author  fritz
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(of="delegate")
-class DecoratorResourceFile extends ResourceFileSupport<LayeredFileSystemProvider>
+public interface ResourceFileSystemSpi extends ResourceFileSystem
   {
-    @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
-    private final ResourceFile delegate;
-
-    public DecoratorResourceFile (final @Nonnull LayeredFileSystemProvider fileSystemProvider, 
-                                  final @Nonnull ResourceFile delegate) 
-      {
-        super(fileSystemProvider, delegate);
-        this.delegate = delegate;
-      }
-
-//    @Override
-//    public ResourceFile getParent()
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
-//      }
-//
-//    @Override
-//    public ResourceFile createFolder (final String name)
-//        throws IOException
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));
-//      }
-  }    
-
+    @Nonnull
+    public ResourceFile createDecoratorFile (@Nonnull ResourceFile delegate);
+  }

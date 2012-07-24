@@ -32,6 +32,7 @@ import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileSupport;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvi
                                     final @Nonnull String path, 
                                     final @Nonnull ResourceFile delegate)
       {
-        super(fileSystemProvider);
+        super(fileSystemProvider, delegate);
         this.path = path;
         this.delegate = delegate;
       }
@@ -82,20 +83,6 @@ class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvi
         return getChildrenMap().get(relativePath);
       }
 
-    @Override
-    public ResourceFile getParent()
-      {
-        return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
-      }
-
-    @Override
-    public ResourceFile createFolder (final String name)
-      throws IOException
-      {
-        log.trace("createFolder({})", name);
-        return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));
-      }
-
     @Nonnull
     private synchronized Map<String, ResourceFile> getChildrenMap()
       {
@@ -116,7 +103,7 @@ class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvi
                           {
                             if (!childrenMap.containsKey(fileObject.getName()))
                               {
-                                childrenMap.put(fileObject.getName(), fileSystemProvider.createDecoratorFileObject(fileObject));
+                                childrenMap.put(fileObject.getName(), getFileSystem().createDecoratorFile(fileObject));
                               }
                           }
                       }

@@ -20,12 +20,11 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import lombok.RequiredArgsConstructor;
 
@@ -36,17 +35,20 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-abstract class ResourceFileSupport<FSP extends ResourceFileSystemProvider> implements ResourceFile 
+public abstract class ResourceFileSupport<RFSP extends ResourceFileSystemProvider> implements ResourceFile 
   {
     @Nonnull
-    protected final FSP fileSystemProvider;
+    protected final RFSP fileSystemProvider;
+    
+    @Nonnull
+    private final ResourceFile delegate;
 
     @Override @Nonnull
-    public ResourceFileSystem getFileSystem()
+    public ResourceFileSystemSpi getFileSystem()
       {
         try
           {
-            return fileSystemProvider.getFileSystem();  
+            return (ResourceFileSystemSpi)fileSystemProvider.getFileSystem();  
           }
         catch (IOException e) 
           {
@@ -59,6 +61,20 @@ abstract class ResourceFileSupport<FSP extends ResourceFileSystemProvider> imple
       throws IOException 
       {
         throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    @Override
+    public ResourceFile getParent()
+      {
+        return getFileSystem().createDecoratorFile(delegate.getParent());
+      }
+
+    @Override
+    public ResourceFile createFolder (final String name)
+      throws IOException
+      {
+//        log.trace("createFolder({})", name);
+        return getFileSystem().createDecoratorFile(delegate.createFolder(name));
       }
 
     @Override

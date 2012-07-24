@@ -32,6 +32,7 @@ import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileSystemSpi;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,7 +60,7 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
      * 
      *
      ******************************************************************************************************************/
-    private final ResourceFileSystem fileSystem = new ResourceFileSystem() 
+    private final ResourceFileSystemSpi fileSystem = new ResourceFileSystemSpi() 
       {
         /***************************************************************************************************************
          *
@@ -101,7 +102,7 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
                     if (fileObject != null)
                       {
                         log.trace(">>>> fileSystem: {}, fileObject: {}", fileSystem, fileObject.getPath());
-                        result = createDecoratorFileObject(fileObject);
+                        result = createDecoratorFile(fileObject);
                         break;
                       }
                   } 
@@ -115,6 +116,31 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
             
             return result;
           }
+        
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
+        @Override @Nonnull        
+        public synchronized ResourceFile createDecoratorFile (final @Nonnull ResourceFile delegate)
+          {
+            if (delegate == null) 
+              {
+                return null;  
+              }
+
+            ResourceFile decorator = delegateLightWeightMap.get(delegate);
+
+            if (decorator == null)
+              {
+                decorator = (delegate.isData() ? new DecoratorResourceFile(LayeredFileSystemProvider.this, delegate) 
+                                               : new DecoratorResourceFolder(LayeredFileSystemProvider.this, delegate.getPath(), delegate));  
+                delegateLightWeightMap.put(delegate, decorator);
+              }
+
+            return decorator;
+          }
       };
     
     /*******************************************************************************************************************
@@ -126,30 +152,5 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
     public ResourceFileSystem getFileSystem()  
       {
         return fileSystem;
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public ResourceFile createDecoratorFileObject (final @Nonnull ResourceFile delegate)
-      {
-        if (delegate == null) 
-          {
-            return null;  
-          }
-        
-        ResourceFile decorator = delegateLightWeightMap.get(delegate);
-        
-        if (decorator == null)
-          {
-            decorator = (delegate.isData() ? new DecoratorResourceFile(this, delegate) 
-                                           : new DecoratorResourceFolder(this, delegate.getPath(), delegate));  
-            delegateLightWeightMap.put(delegate, decorator);
-          }
-                                  
-        return decorator;
       }
   }
