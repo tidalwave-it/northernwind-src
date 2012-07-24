@@ -38,7 +38,7 @@ import it.tidalwave.northernwind.core.model.NwFileSystem;
 import org.openide.filesystems.JarFileSystem;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.northernwind.core.impl.model.NwFileSystemNetBeansPlatform;
+import it.tidalwave.northernwind.frontend.filesystem.impl.NwFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -21,7 +21,7 @@
  *
  **********************************************************************************************************************/
 
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

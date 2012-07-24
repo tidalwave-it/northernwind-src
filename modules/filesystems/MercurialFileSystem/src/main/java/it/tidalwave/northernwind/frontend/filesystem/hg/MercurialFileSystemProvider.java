@@ -41,7 +41,7 @@ import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
-import it.tidalwave.northernwind.core.impl.model.NwFileSystemNetBeansPlatform;
+import it.tidalwave.northernwind.frontend.filesystem.impl.NwFileSystemNetBeansPlatform;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;

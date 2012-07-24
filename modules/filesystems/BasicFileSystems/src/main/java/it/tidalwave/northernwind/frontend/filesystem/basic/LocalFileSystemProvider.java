@@ -32,7 +32,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.LocalFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
-import it.tidalwave.northernwind.core.impl.model.NwFileSystemNetBeansPlatform;
+import it.tidalwave.northernwind.frontend.filesystem.impl.NwFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
