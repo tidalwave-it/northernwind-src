@@ -145,8 +145,8 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
         
         if (decorator == null)
           {
-            decorator = (delegate.isData() ? new DecoratorFileObject(this, delegate) 
-                                           : new DecoratorFolderObject(this, delegate.getPath(), delegate));  
+            decorator = (delegate.isData() ? new DecoratorResourceFile(this, delegate) 
+                                           : new DecoratorResourceFolder(this, delegate.getPath(), delegate));  
             delegateLightWeightMap.put(delegate, decorator);
           }
                                   

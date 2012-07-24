@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-class DecoratorFolderObject extends FileObjectDelegateSupport
+class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvider>
   {
     @Nonnull
     private final String path;
@@ -52,9 +52,9 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
 
     private SortedMap<String, ResourceFile> childrenMap;
 
-    public DecoratorFolderObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
-                                  final @Nonnull String path, 
-                                  final @Nonnull ResourceFile delegate)
+    public DecoratorResourceFolder (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
+                                    final @Nonnull String path, 
+                                    final @Nonnull ResourceFile delegate)
       {
         super(fileSystemProvider);
         this.path = path;

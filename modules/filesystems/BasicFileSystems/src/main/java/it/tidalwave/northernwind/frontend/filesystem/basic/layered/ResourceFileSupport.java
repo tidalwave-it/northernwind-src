@@ -25,7 +25,9 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import lombok.Delegate;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -33,42 +35,47 @@ import lombok.Delegate;
  * @version $Id$
  *
  **********************************************************************************************************************/
-class DecoratorFileObject extends FileObjectDelegateSupport
+@RequiredArgsConstructor
+abstract class ResourceFileSupport<FSP extends ResourceFileSystemProvider> implements ResourceFile 
   {
-    @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
-    private final ResourceFile delegate;
-
-    public DecoratorFileObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider, 
-                                final @Nonnull ResourceFile delegate) 
-      {
-        super(fileSystemProvider);
-        this.delegate = delegate;
-      }
-
-    @Override
-    public ResourceFile getParent()
-      {
-        return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
-      }
-
-//    @Override
-//    public NwFileObject createData (final String name, final String ext)
-//        throws IOException
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-//      }
-
-    @Override
-    public ResourceFile createFolder (final String name)
-        throws IOException
-      {
-        return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));
-      }
+    @Nonnull
+    protected final FSP fileSystemProvider;
 
     @Override @Nonnull
-    public String toString() 
+    public ResourceFileSystem getFileSystem()
       {
-        return String.format("DecoratorFileObject(%s)", delegate);
+        try
+          {
+            return fileSystemProvider.getFileSystem();  
+          }
+        catch (IOException e) 
+          {
+            throw new RuntimeException(e);
+          }
       }
-  }    
 
+    @Override
+    public void delete()
+      throws IOException 
+      {
+        throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    @Override
+    public boolean equals (final Object object)
+      {
+        if ((object == null) || (getClass() != object.getClass()))
+          {
+            return false;
+          }
+
+        final ResourceFile other = (ResourceFile)object;
+        return (this.getFileSystem() == other.getFileSystem()) && this.getPath().equals(other.getPath());
+      }
+
+    @Override
+    public int hashCode()
+      {
+        return getFileSystem().hashCode() ^ getPath().hashCode();
+      }
+  }
