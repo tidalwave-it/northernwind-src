@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
+import org.openide.filesystems.FileObject;
 import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,8 @@ public class NwFileSystemNetBeansPlatform implements NwFileSystem
     @Override @Nonnull
     public NwFileObject findResource (final @Nonnull String name) 
       {
-        return new NwFileObjectNetBeansPlatform(this, fileSystem.findResource(name));
+        final FileObject fileObject = fileSystem.findResource(name);
+        return (fileObject == null) ? null : new NwFileObjectNetBeansPlatform(this, fileObject);
       }
     
     // TODO: equals and hashcode
