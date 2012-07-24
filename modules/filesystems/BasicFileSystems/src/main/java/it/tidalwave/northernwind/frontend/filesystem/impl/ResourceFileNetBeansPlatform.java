@@ -24,26 +24,30 @@ package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.io.File;
+import java.io.IOException;
 import javax.servlet.ServletContext;
+import org.joda.time.DateTime;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import java.util.Date;
-import java.io.File;
-import java.io.IOException;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /***********************************************************************************************************************
- *
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -55,8 +59,8 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       {
         public ResourceFile getParent();
         public ResourceFile getFileObject (String fileName);
-        public ResourceFile[] getChildren();
-        public Enumeration<? extends ResourceFile> getChildren (boolean b);
+        public Collection<ResourceFile> getChildren();
+        public Collection<ResourceFile> getChildren (boolean b);
         public String getMIMEType();
         public File toFile();
         public ResourceFile createFolder (String name);
@@ -87,7 +91,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Override
-    public ResourceFile[] getChildren() 
+    public Collection<ResourceFile> getChildren() 
       {
         final FileObject[] delegateChildren = delegate.getChildren();
         final ResourceFile[] children = new ResourceFile[delegateChildren.length];
@@ -97,28 +101,20 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
             children[i] = fileSystem.createNwFileObject(delegateChildren[i]);
           }
         
-        return children;
+        return Arrays.asList(children);
       }
 
     @Override
-    public Enumeration<? extends ResourceFile> getChildren (final boolean recursive) 
+    public Collection<ResourceFile> getChildren (final boolean recursive) 
       {
-        final Enumeration<? extends FileObject> children = delegate.getChildren(recursive);
+        final List<ResourceFile> result = new ArrayList<>();
         
-        return new Enumeration<ResourceFile>()
+        for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
           {
-            @Override
-            public boolean hasMoreElements() 
-              {
-                return children.hasMoreElements();
-              }
+            result.add(fileSystem.createNwFileObject(child));  
+          }
 
-            @Override @Nonnull
-            public ResourceFile nextElement() 
-              {
-                return fileSystem.createNwFileObject(children.nextElement());
-              }
-        };
+        return result;
       }
     
     @Override @Nonnull

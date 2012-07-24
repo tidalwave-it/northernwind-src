@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.io.UnsupportedEncodingException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -84,7 +83,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
       {
         final List<Type> result = new ArrayList<Type>();
 
-        for (final ResourceFile childFile : Collections.list(file.getChildren(true)))
+        for (final ResourceFile childFile : file.getChildren(true))
           {
             if (childFile.isFolder())
               {

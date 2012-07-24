@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
+import java.util.Collection;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 
 /***********************************************************************************************************************
@@ -32,7 +33,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
  **********************************************************************************************************************/
 public interface FolderDelegateExclusions extends FileDelegateExclusions
   {
-    public ResourceFile[] getChildren();
+    public Collection<ResourceFile> getChildren();
 
     public ResourceFile getChildByName (String relativePath);
 

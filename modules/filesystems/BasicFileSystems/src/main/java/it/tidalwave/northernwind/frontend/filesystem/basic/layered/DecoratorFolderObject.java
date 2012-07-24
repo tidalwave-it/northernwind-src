@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -61,10 +62,10 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
     
     @Override @Nonnull
-    public ResourceFile[] getChildren() 
+    public Collection<ResourceFile> getChildren() 
       {
         log.trace("getChildren() - {}", this);
-        return getChildrenMap().values().toArray(new ResourceFile[0]);
+        return getChildrenMap().values();
       }
 
     @Override

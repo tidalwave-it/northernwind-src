@@ -23,7 +23,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Enumeration;
+import java.util.Collection;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -73,9 +73,9 @@ public interface ResourceFile
 
     public ResourceFile getChildByName (@Nonnull String fileName); 
 
-    public ResourceFile[] getChildren(); // TODO: return Collection<>
+    public Collection<ResourceFile> getChildren(); 
 
-    public Enumeration<? extends ResourceFile> getChildren (boolean recursive); // TODO: return Collection, replace boolean with enum
+    public Collection<ResourceFile> getChildren (boolean recursive); // TODO: replace boolean with enum, perhaps use a Finder
 
     @Nonnull
     public File toFile();
