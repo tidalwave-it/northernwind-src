@@ -37,6 +37,7 @@ import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /***********************************************************************************************************************
@@ -67,31 +68,56 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
     @Getter @Nonnull
     private final NwFileSystem fileSystem;
 
-    @Delegate(excludes=Exclusions.class)
+    @Delegate(excludes=Exclusions.class) @Nonnull
     private final org.openide.filesystems.FileObject delegate;
     
     @Override
     public NwFileObject getParent() 
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final org.openide.filesystems.FileObject parentDelegate = delegate.getParent();
+        return (parentDelegate == null) ? null : new NwFileObjectNetBeansPlatform(fileSystem, parentDelegate);
       }
 
     @Override
-    public NwFileObject getFileObject(String fileName) 
+    public NwFileObject getFileObject (final @Nonnull String fileName) 
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final org.openide.filesystems.FileObject childDelegate = delegate.getFileObject(fileName);
+        return (childDelegate == null) ? null : new NwFileObjectNetBeansPlatform(fileSystem, childDelegate);
       }
 
     @Override
     public NwFileObject[] getChildren() 
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final FileObject[] delegateChildren = delegate.getChildren();
+        final NwFileObject[] children = new NwFileObject[delegateChildren.length];
+        
+        for (int i = 0; i < delegateChildren.length; i++)
+          {
+            children[i] = new NwFileObjectNetBeansPlatform(fileSystem, delegateChildren[i]);
+          }
+        
+        return children;
       }
 
     @Override
-    public Enumeration<? extends NwFileObject> getChildren(boolean b) 
+    public Enumeration<? extends NwFileObject> getChildren (final boolean recursive) 
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final Enumeration<? extends FileObject> children = delegate.getChildren(recursive);
+        
+        return new Enumeration<NwFileObject>()
+          {
+            @Override
+            public boolean hasMoreElements() 
+              {
+                return children.hasMoreElements();
+              }
+
+            @Override @Nonnull
+            public NwFileObject nextElement() 
+              {
+                return new NwFileObjectNetBeansPlatform(fileSystem, children.nextElement());
+              }
+        };
       }
     
     @Override @Nonnull
