@@ -23,12 +23,12 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Date;
 import java.util.Enumeration;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -67,7 +67,7 @@ public interface ResourceFile
       throws IOException;
 
     @Nonnull
-    public Date lastModified(); // TODO: rename to getLastModifiedDateTime(), return JodaTime DateTime
+    public DateTime getLatestModificationTime(); 
 
     public ResourceFile getParent();
 

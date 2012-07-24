@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import java.util.Date;
 import java.io.File;
 import java.io.IOException;
 import lombok.Delegate;
@@ -37,6 +38,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -60,6 +62,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         public ResourceFile createFolder (String name);
         public void copyTo (ResourceFile targetFolder);
         public ResourceFileSystem getFileSystem();
+        public Date lastModified();
       }
     
     @Inject 
@@ -125,6 +128,12 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         final String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);
         log.trace(">>>> MIME type for {} is {}", delegate, mimeType);
         return mimeType;
+      }
+    
+    @Override @Nonnull
+    public DateTime getLatestModificationTime() 
+      {
+        return new DateTime(delegate.lastModified());
       }
     
     @Override @Nonnull

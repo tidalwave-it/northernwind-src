@@ -81,7 +81,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText("UTF-8"), mimeType)
                                                                 : file.asBytes();
             responseHolder.response().withContentType(mimeType)
-                                     .withLastModified(file.lastModified())
+                                     .withLatestModifiedTime(file.getLatestModificationTime())
                                      .withExpirationTime(duration)
                                      .withBody(content)
                                      .put();  

@@ -98,10 +98,10 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           }
         
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withLastModified (final @Nonnull Date lastModified)
+        public ResponseBuilderSupport<ResponseType> withLatestModifiedTime (final @Nonnull DateTime time)
           {
-            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(lastModified))
-                  .withHeader(HEADER_ETAG, String.format("\"%d\"", lastModified.getTime()));
+            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(time.toDate()))
+                  .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
           }
         
         @Nonnull
@@ -119,7 +119,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
 
             return withContentType(file.getMimeType())
                   .withContentLength(bytes.length)
-                  .withLastModified(file.lastModified())
+                  .withLatestModifiedTime(file.getLatestModificationTime())
                   .withBody(bytes);
           }
         
