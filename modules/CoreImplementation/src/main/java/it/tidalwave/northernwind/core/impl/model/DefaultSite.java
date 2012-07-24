@@ -124,7 +124,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Getter @Nonnull
     private final String contextPath;
     
-    private final List<String> ignoredFolders = new ArrayList<String>();
+    private final List<String> ignoredFolders = new ArrayList<>();
         
     private ResourceFile documentFolder;
     
@@ -134,21 +134,21 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     
     private ResourceFile nodeFolder; 
     
-    private final Map<String, Content> documentMapByRelativePath = new TreeMap<String, Content>();
+    private final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
     
-    private final Map<String, Resource> libraryMapByRelativePath = new TreeMap<String, Resource>();
+    private final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
     
-    private final Map<String, Media> mediaMapByRelativePath = new TreeMap<String, Media>();
+    private final Map<String, Media> mediaMapByRelativePath = new TreeMap<>();
     
-    private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<String, SiteNode>();
+    private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<>();
     
-    private final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<SiteNode>();
+    private final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<>();
     
-    private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<Class<?>, Map<String, ?>>();
+    private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<>();
     
-    private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<Class<?>, RegexTreeMap<?>>();
+    private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
     
-    private final List<Locale> configuredLocales = new ArrayList<Locale>();
+    private final List<Locale> configuredLocales = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
@@ -184,7 +184,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
         final RegexTreeMap<Type> relativeUriMap = (RegexTreeMap<Type>)relativeUriMapsByType.get(type);
-        return new DefaultSiteFinder<Type>(type.getSimpleName(), relativePathMap, relativeUriMap);
+        return new DefaultSiteFinder<>(type.getSimpleName(), relativePathMap, relativeUriMap);
       }
     
     /*******************************************************************************************************************
@@ -219,7 +219,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Override @Nonnull
     public List<Locale> getConfiguredLocales()
       {
-        return new CopyOnWriteArrayList<Locale>(configuredLocales);
+        return new CopyOnWriteArrayList<>(configuredLocales);
       }
     
     /*******************************************************************************************************************
@@ -328,11 +328,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                           }
                       }
                   }
-                catch (IOException e) 
-                  {
-                    throw new RuntimeException(e);
-                  } 
-                catch (NotFoundException e) 
+                catch (IOException | NotFoundException e) 
                   {
                     throw new RuntimeException(e);
                   }
