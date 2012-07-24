@@ -49,7 +49,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -104,7 +104,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private ModelFactory modelFactory;
     
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
-    private FileSystemProvider fileSystemProvider;
+    private ResourceFileSystemProvider fileSystemProvider;
     
     @Nonnull
     private final String documentPath;

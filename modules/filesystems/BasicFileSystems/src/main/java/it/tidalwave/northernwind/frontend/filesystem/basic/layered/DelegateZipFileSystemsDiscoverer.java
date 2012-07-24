@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.ZipFileSystemProvider;
 import lombok.Getter;
@@ -47,12 +47,12 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
     private String fileSystemsFolder = "filesystems";
     
     @Getter @Setter
-    private FileSystemProvider localFileSystemProvider;
+    private ResourceFileSystemProvider localFileSystemProvider;
     
     @Override @Nonnull
-    public List<? extends FileSystemProvider> getFileSystemProviders() 
+    public List<? extends ResourceFileSystemProvider> getFileSystemProviders() 
       {
-        final List<FileSystemProvider> fileSystemProviders = new ArrayList<>();
+        final List<ResourceFileSystemProvider> fileSystemProviders = new ArrayList<>();
         
         try
           { 

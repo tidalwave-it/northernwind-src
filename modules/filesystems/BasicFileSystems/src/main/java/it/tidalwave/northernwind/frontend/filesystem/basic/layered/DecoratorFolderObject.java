@@ -31,7 +31,7 @@ import java.util.TreeMap;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -124,7 +124,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
           {
             childrenMap = new TreeMap<>();
             
-            for (final ListIterator<? extends FileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
+            for (final ListIterator<? extends ResourceFileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
               {
                 try
                   {

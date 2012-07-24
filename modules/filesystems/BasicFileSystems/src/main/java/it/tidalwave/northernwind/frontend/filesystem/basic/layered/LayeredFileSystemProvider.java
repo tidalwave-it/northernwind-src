@@ -31,7 +31,7 @@ import java.util.ListIterator;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,10 +44,10 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class LayeredFileSystemProvider implements FileSystemProvider
+public class LayeredFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
-    List<? extends FileSystemProvider> delegates = new ArrayList<FileSystemProvider>();
+    List<? extends ResourceFileSystemProvider> delegates = new ArrayList<ResourceFileSystemProvider>();
     
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
@@ -91,7 +91,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
                 delegates.addAll(fileSystemProviders);
               }
             
-            for (final ListIterator<? extends FileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
+            for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
               {
                 try 
                   {

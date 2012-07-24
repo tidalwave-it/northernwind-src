@@ -31,10 +31,10 @@ import java.io.File;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
-import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -50,10 +50,10 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString(of={"rootPath"})
-public class LocalCopyFileSystemProvider implements FileSystemProvider
+public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
-    private FileSystemProvider sourceProvider;
+    private ResourceFileSystemProvider sourceProvider;
     
     @Getter @Setter @Nonnull
     private String rootPath = "";
@@ -67,10 +67,10 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private final Listener<FileSystemChangedEvent> sourceProviderChangeListener = new Listener<FileSystemChangedEvent>() 
+    private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener = new Listener<ResourceFileSystemChangedEvent>() 
       {
         @Override
-        public void notify (final @Nonnull FileSystemChangedEvent event) 
+        public void notify (final @Nonnull ResourceFileSystemChangedEvent event) 
           {
             if (event.getFileSystemProvider() == sourceProvider)
               {
@@ -78,7 +78,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
                   {
                     log.info("Detected file change, regenerating local file system...");
                     generateLocalFileSystem();
-                    messageBus.publish(new FileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
+                    messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
                   }
                 catch (IOException e) 
                   {
@@ -110,7 +110,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
       {
         log.info("initialize()");
         generateLocalFileSystem();
-        messageBus.subscribe(FileSystemChangedEvent.class, sourceProviderChangeListener);            
+        messageBus.subscribe(ResourceFileSystemChangedEvent.class, sourceProviderChangeListener);            
       }
     
     /*******************************************************************************************************************

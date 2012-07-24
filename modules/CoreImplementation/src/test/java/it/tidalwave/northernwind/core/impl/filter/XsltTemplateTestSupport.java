@@ -32,7 +32,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
@@ -100,11 +100,11 @@ public class XsltTemplateTestSupport
         final Site site = mock(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
         
-        final FileSystemProvider fileSystemProvider = mock(FileSystemProvider.class);
+        final ResourceFileSystemProvider fileSystemProvider = mock(ResourceFileSystemProvider.class);
         when(site.getFileSystemProvider()).thenReturn(fileSystemProvider);
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
-        final FileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
+        final ResourceFileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
         final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<Resource>();
         

@@ -30,7 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.LocalFileSystem;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import lombok.Getter;
@@ -46,7 +46,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString(of={"rootPath"})
-public class LocalFileSystemProvider implements FileSystemProvider
+public class LocalFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
     private String rootPath = "";

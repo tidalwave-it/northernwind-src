@@ -38,8 +38,8 @@ import org.joda.time.DateTime;
 import org.openide.filesystems.LocalFileSystem;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
@@ -57,7 +57,7 @@ import org.springframework.beans.factory.BeanFactory;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class MercurialFileSystemProvider implements FileSystemProvider
+public class MercurialFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter
     private String remoteRepositoryUrl;
@@ -129,7 +129,7 @@ public class MercurialFileSystemProvider implements FileSystemProvider
             log.info(">>>> new tag seen: {}", newTag);
             alternateRepository.updateTo(newTag);
             swapRepositories();
-            messageBus.publish(new FileSystemChangedEvent(this, new DateTime()));
+            messageBus.publish(new ResourceFileSystemChangedEvent(this, new DateTime()));
             alternateRepository.pull();
             alternateRepository.updateTo(newTag);
           }

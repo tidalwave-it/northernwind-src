@@ -20,30 +20,26 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.filesystem;
+package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import org.joda.time.DateTime;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
- * A provider for the {@link NwFileSystem}.
- * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface FileSystemProvider
+@RequiredArgsConstructor @ToString
+public class ResourceFileSystemChangedEvent 
   {
-    /*******************************************************************************************************************
-     *
-     * Returns the {@link NwFileSystem}.
-     * 
-     * @return  the {@code NwFileSystem}
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public ResourceFileSystem getFileSystem()
-      throws IOException;
+    @Getter @Nonnull
+    private final ResourceFileSystemProvider fileSystemProvider;  
+    
+    @Getter @Nonnull
+    private final DateTime latestModificationTime;
   }

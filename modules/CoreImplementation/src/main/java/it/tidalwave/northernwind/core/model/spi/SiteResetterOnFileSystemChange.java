@@ -29,7 +29,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
-import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -51,10 +51,10 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
     @Inject @Named("applicationMessageBus") @Nonnull
     private MessageBus messageBus;
     
-    private final Listener<FileSystemChangedEvent> listener = new Listener<FileSystemChangedEvent>() 
+    private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<ResourceFileSystemChangedEvent>() 
       {
         @Override
-        public void notify (final @Nonnull FileSystemChangedEvent event) 
+        public void notify (final @Nonnull ResourceFileSystemChangedEvent event) 
           {
             // FIXME: the originator of the event could be a child filesystem in case of composite filesystems.
             // Either the event is listened by the parent and reposted, or we must be able to find whether a 
@@ -76,7 +76,7 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
     @PostConstruct
     /* package */ void initialize() // FIXME: unsubscribe on @PreDestroy
       {
-        messageBus.subscribe(FileSystemChangedEvent.class, listener);            
+        messageBus.subscribe(ResourceFileSystemChangedEvent.class, listener);            
         log.info("SiteResetterOnFileSystemChange installed");
       }
   }

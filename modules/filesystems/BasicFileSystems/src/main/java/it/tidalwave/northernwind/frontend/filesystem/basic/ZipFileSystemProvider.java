@@ -22,8 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
-import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,6 +33,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import org.openide.filesystems.JarFileSystem;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.messagebus.MessageBus;
@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString(of={"zipFilePath", "latestModified", "changeWasDetected"})
-public class ZipFileSystemProvider implements FileSystemProvider
+public class ZipFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
     private String zipFilePath = "";
@@ -113,7 +113,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
                         latestModified = timestamp;  
                         changeWasDetected = false;
                         log.info("Detected stable change of {}: last modified time: {}", zipFile, latestModified);
-                        messageBus.publish(new FileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
+                        messageBus.publish(new ResourceFileSystemChangedEvent(ZipFileSystemProvider.this, latestModified));
                       }
                   }
               }

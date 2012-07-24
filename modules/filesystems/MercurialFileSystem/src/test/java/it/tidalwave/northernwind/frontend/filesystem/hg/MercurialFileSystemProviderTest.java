@@ -29,7 +29,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
@@ -112,12 +112,12 @@ public class MercurialFileSystemProviderTest
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
         assertThat(fixture.swapCounter, is(1));
         
-        verify(messageBus).publish(is(argThat(new BaseMatcher<FileSystemChangedEvent>() 
+        verify(messageBus).publish(is(argThat(new BaseMatcher<ResourceFileSystemChangedEvent>() 
           {
             @Override
             public boolean matches (final @Nonnull Object item) 
               {
-                if (! (item instanceof FileSystemChangedEvent))
+                if (! (item instanceof ResourceFileSystemChangedEvent))
                   {
                     return false;  
                   }

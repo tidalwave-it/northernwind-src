@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.filesystem.basic;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 
 /***********************************************************************************************************************
  *
@@ -35,5 +35,5 @@ import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 public interface FileSystemProvidersProvider 
   {
     @Nonnull
-    public List<? extends FileSystemProvider> getFileSystemProviders();
+    public List<? extends ResourceFileSystemProvider> getFileSystemProviders();
   }
