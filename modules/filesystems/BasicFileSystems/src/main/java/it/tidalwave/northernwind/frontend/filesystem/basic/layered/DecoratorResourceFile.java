@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Delegate;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -33,6 +34,7 @@ import lombok.Delegate;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@ToString(of="delegate")
 class DecoratorResourceFile extends ResourceFileSupport<LayeredFileSystemProvider>
   {
     @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
@@ -51,24 +53,11 @@ class DecoratorResourceFile extends ResourceFileSupport<LayeredFileSystemProvide
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
 
-//    @Override
-//    public NwFileObject createData (final String name, final String ext)
-//        throws IOException
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-//      }
-
     @Override
     public ResourceFile createFolder (final String name)
         throws IOException
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));
-      }
-
-    @Override @Nonnull
-    public String toString() 
-      {
-        return String.format("DecoratorFileObject(%s)", delegate);
       }
   }    
 
