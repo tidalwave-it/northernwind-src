@@ -59,9 +59,6 @@ public interface ResourceFile
       throws FileNotFoundException;
     
     @Nonnull
-    public String asText()
-      throws IOException;
-    
     public String asText (String encoding)
       throws IOException;
     
