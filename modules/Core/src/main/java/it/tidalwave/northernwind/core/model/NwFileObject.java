@@ -39,6 +39,9 @@ import java.io.InputStream;
 public interface NwFileObject 
   {
     @Nonnull
+    public NwFileSystem getFileSystem();
+    
+    @Nonnull
     public String getNameExt(); // TODO: rename to getName()
 
     @Nonnull
@@ -80,6 +83,7 @@ public interface NwFileObject
     @Nonnull
     public File toFile();
 
+    // TODO: methods below probably can be dropped, are only used in filesystem implementations
     public void delete()
       throws IOException;
 
@@ -89,7 +93,4 @@ public interface NwFileObject
 
     public void copyTo (@Nonnull NwFileObject targetFolder)
       throws IOException;
-    
-    @Nonnull
-    public NwFileSystem getFileSystem();
   }
