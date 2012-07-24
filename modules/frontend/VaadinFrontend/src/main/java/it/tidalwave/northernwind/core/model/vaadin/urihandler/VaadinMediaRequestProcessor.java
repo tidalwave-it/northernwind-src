@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.core.model.vaadin.urihandler;
 
 import javax.annotation.Nonnull;
 import java.io.FileNotFoundException;
-import org.openide.filesystems.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import org.springframework.context.annotation.Scope;

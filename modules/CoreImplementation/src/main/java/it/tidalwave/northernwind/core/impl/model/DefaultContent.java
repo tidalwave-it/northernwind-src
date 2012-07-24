@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
 import java.io.IOException;
-import org.openide.filesystems.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;

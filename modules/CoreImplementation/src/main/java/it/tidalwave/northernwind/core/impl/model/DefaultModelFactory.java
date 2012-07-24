@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import org.openide.filesystems.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;

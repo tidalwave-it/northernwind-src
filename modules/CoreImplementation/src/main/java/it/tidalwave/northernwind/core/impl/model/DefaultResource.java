@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.io.InputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import org.openide.filesystems.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
