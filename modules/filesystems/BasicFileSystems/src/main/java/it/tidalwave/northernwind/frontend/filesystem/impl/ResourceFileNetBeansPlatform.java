@@ -88,13 +88,20 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override
     public ResourceFile getParent() 
       {
-        return fileSystem.createNwFileObject(delegate.getParent());
+        return fileSystem.createResourceFile(delegate.getParent());
       }
 
     @Override
     public ResourceFile getChildByName (final @Nonnull String fileName) 
       {
-        return fileSystem.createNwFileObject(delegate.getFileObject(fileName));
+        return fileSystem.createResourceFile(delegate.getFileObject(fileName));
+      }
+    
+    @Override @Nonnull
+    public ResourceFile createFolder (@Nonnull String name)
+      throws IOException
+      {
+        return fileSystem.createResourceFile(delegate.createFolder(name));  
       }
 
     @Override
@@ -105,7 +112,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         
         for (int i = 0; i < delegateChildren.length; i++)
           {
-            children[i] = fileSystem.createNwFileObject(delegateChildren[i]);
+            children[i] = fileSystem.createResourceFile(delegateChildren[i]);
           }
         
         return Arrays.asList(children);
@@ -118,7 +125,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         
         for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
           {
-            result.add(fileSystem.createNwFileObject(child));  
+            result.add(fileSystem.createResourceFile(child));  
           }
 
         return result;
@@ -143,13 +150,6 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     public File toFile()
       {  
         return FileUtil.toFile(delegate);
-      }
-    
-    @Override @Nonnull
-    public ResourceFile createFolder (@Nonnull String name)
-      throws IOException
-      {
-        return fileSystem.createNwFileObject(delegate.createFolder(name));  
       }
     
     @Override
