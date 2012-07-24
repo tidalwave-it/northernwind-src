@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.io.IOException;
-import org.openide.util.actions.SystemAction;
 import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
@@ -59,28 +58,6 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      ******************************************************************************************************************/
     private final NwFileSystem fileSystem = new NwFileSystem() 
       {
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override @Nonnull
-        public String getDisplayName() 
-          {
-            return "LayeredFileSystem";
-          }
-
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override
-        public boolean isReadOnly()
-          {
-            return true;
-          }
-
         /***************************************************************************************************************
          *
          * {@inheritDoc}
@@ -134,24 +111,6 @@ public class LayeredFileSystemProvider implements FileSystemProvider
             log.trace(">>>> returning {}", result);
             
             return result;
-          }
-        
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override @Nonnull
-        public SystemAction[] getActions()
-          {
-            try 
-              {
-                return delegates.get(delegates.size() - 1).getFileSystem().getActions();
-              } 
-            catch (IOException e)
-              {
-                throw new RuntimeException(e);
-              }
           }
       };
     

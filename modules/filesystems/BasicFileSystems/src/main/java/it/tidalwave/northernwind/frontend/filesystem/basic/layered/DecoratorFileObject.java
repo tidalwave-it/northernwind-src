@@ -51,12 +51,12 @@ class DecoratorFileObject extends FileObjectDelegateSupport
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
 
-    @Override
-    public NwFileObject createData (final String name, final String ext)
-        throws IOException
-      {
-        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-      }
+//    @Override
+//    public NwFileObject createData (final String name, final String ext)
+//        throws IOException
+//      {
+//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
+//      }
 
     @Override
     public NwFileObject createFolder (final String name)

@@ -33,5 +33,8 @@ import javax.annotation.Nonnull;
 public interface NwFileSystem 
   {
     @Nonnull
-    public NwFileObject findResource (@Nonnull String name);
+    public NwFileObject findResource (@Nonnull String name); // TODO: rename to findFile()
+
+    @Nonnull
+    public NwFileObject getRoot();
   }

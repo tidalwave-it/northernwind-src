@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.NwFileObject;
-import org.openide.filesystems.FileUtil;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.ZipFileSystemProvider;
@@ -63,10 +62,12 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
               {
                 for (final NwFileObject fo : zipFolder.getChildren())
                   {
-                    if (fo.hasExt("zip") || fo.hasExt("jar"))
+//                    if (fo.hasExt("zip") || fo.hasExt("jar"))
+                    final String name = fo.getNameExt();
+                    if (name.endsWith(".zip") || name.endsWith(".jar"))
                       {
                         final ZipFileSystemProvider zipFileSystemProvider = new ZipFileSystemProvider();
-                        zipFileSystemProvider.setZipFilePath(FileUtil.toFile(fo).getAbsolutePath());
+                        zipFileSystemProvider.setZipFilePath(fo.toFile().getAbsolutePath());
                         fileSystemProviders.add(zipFileSystemProvider);
                       }
                   }

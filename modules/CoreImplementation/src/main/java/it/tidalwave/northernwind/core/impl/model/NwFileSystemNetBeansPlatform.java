@@ -38,11 +38,17 @@ public class NwFileSystemNetBeansPlatform implements NwFileSystem
   {
     @Nonnull
     private final org.openide.filesystems.FileSystem fileSystem;
+
+    @Override @Nonnull
+    public NwFileObject getRoot() 
+      {
+        return new NwFileObjectNetBeansPlatform(this, fileSystem.getRoot());
+      }
     
     @Override @Nonnull
     public NwFileObject findResource (final @Nonnull String name) 
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new NwFileObjectNetBeansPlatform(this, fileSystem.findResource(name));
       }
     
     // TODO: equals and hashcode

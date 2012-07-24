@@ -79,4 +79,17 @@ public interface NwFileObject
 
     @Nonnull
     public File toFile();
+
+    public void delete()
+      throws IOException;
+
+    @Nonnull
+    public NwFileObject createFolder (@Nonnull String name)
+      throws IOException;
+
+    public void copyTo (@Nonnull NwFileObject targetFolder)
+      throws IOException;
+    
+    @Nonnull
+    public NwFileSystem getFileSystem();
   }

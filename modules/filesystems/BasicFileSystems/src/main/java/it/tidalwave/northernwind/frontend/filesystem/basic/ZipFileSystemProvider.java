@@ -34,10 +34,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
 import org.openide.filesystems.JarFileSystem;
+import org.openide.filesystems.FileObject;
 import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.northernwind.core.impl.model.NwFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -61,7 +62,10 @@ public class ZipFileSystemProvider implements FileSystemProvider
     private long modificationCheckInterval = 5000;
     
     @CheckForNull
-    private JarFileSystem fileSystem;
+    private NwFileSystem fileSystem;
+
+    @CheckForNull
+    private JarFileSystem fileSystemDelegate;
     
     private DateTime latestModified;
     
@@ -83,7 +87,8 @@ public class ZipFileSystemProvider implements FileSystemProvider
           {
             try
               {
-                final File zipFile = getFileSystem().getJarFile();
+                getFileSystem(); // force initialization
+                final File zipFile = fileSystemDelegate.getJarFile();
                 final DateTime timestamp = new DateTime(zipFile.lastModified());
     //            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
 
@@ -125,23 +130,24 @@ public class ZipFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized JarFileSystem getFileSystem() 
+    public synchronized NwFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
           {
             final File zipFile = new File(zipFilePath);
-            fileSystem = new JarFileSystem(zipFile);
-            final NwFileObject rootFolder = fileSystem.getRoot();
+            fileSystemDelegate = new JarFileSystem(zipFile);
+            final FileObject rootFolder = fileSystemDelegate.getRoot();
 
             if (rootFolder == null)
               {
                 throw new FileNotFoundException(zipFilePath);  
               } 
 
-            log.info(">>>> fileSystem: {}", fileSystem);
+            log.info(">>>> fileSystem: {}", fileSystemDelegate);
             latestModified = new DateTime(zipFile.lastModified());
             timer.scheduleAtFixedRate(zipFileModificationTracker, modificationCheckInterval, modificationCheckInterval);
+            fileSystem = new NwFileSystemNetBeansPlatform(fileSystemDelegate);
           }
               
         return fileSystem;  

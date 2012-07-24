@@ -31,7 +31,6 @@ import java.io.File;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
-import org.openide.filesystems.FileUtil;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
@@ -132,7 +131,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
         targetProvider = new LocalFileSystemProvider(); 
         targetProvider.setRootPath(rootPath);
         final NwFileObject targetRoot = targetProvider.getFileSystem().getRoot();
-        final String path = FileUtil.toFile(targetRoot).getAbsolutePath();
+        final String path = targetRoot.toFile().getAbsolutePath();
         log.info(">>>> scratching {} ...", path);
         emptyFolder(targetRoot);
         log.info(">>>> copying files to {} ...", path);
@@ -169,7 +168,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
             if (!sourceChild.isFolder())
               { 
                 log.trace(">>>> copying {} into {} ...", sourceChild, targetFolder);
-                FileUtil.copyFile(sourceChild, targetFolder, sourceChild.getName());
+                sourceChild.copyTo(targetFolder);
               }
           }
         

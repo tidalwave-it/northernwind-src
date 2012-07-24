@@ -39,29 +39,17 @@ interface FileDelegateExclusions
   {
     public void delete();
 
-    public boolean hasExt(String ext);
-
-    public OutputStream getOutputStream();
-
-    public boolean canRevert();
-
-    public void revert();
-
-    public URL getURL();
-
-    public URL toURL();
-
-    public URI toURI();
+//    public boolean hasExt(String ext);
 
     public NwFileSystem getFileSystem();
 
     public NwFileObject getParent();
 
-    public NwFileObject move(FileLock lock, NwFileObject target, String name, String ext);
-
-    public NwFileObject copy(NwFileObject target, String name, String ext);
-
-    public NwFileObject createData(String name, String ext);
+//    public NwFileObject move(FileLock lock, NwFileObject target, String name, String ext);
+//
+//    public NwFileObject copy(NwFileObject target, String name, String ext);
+//
+//    public NwFileObject createData(String name, String ext);
 
     public NwFileObject createFolder(String name);
     //        public Enumeration<? extends NwFileObject> getData (boolean rec); calls getChildren()

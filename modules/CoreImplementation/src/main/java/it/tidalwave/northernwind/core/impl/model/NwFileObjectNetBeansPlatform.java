@@ -30,8 +30,11 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
 import java.io.File;
+import java.io.IOException;
 import lombok.Delegate;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.filesystems.FileUtil;
@@ -53,14 +56,20 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
         public Enumeration<? extends NwFileObject> getChildren (boolean b);
         public String getMIMEType();
         public File toFile();
+        public NwFileObject createFolder (String name);
+        public void copyTo (NwFileObject targetFolder);
+        public NwFileSystem getFileSystem();
       }
     
     @Inject 
     private ApplicationContext applicationContext;
     
+    @Getter @Nonnull
+    private final NwFileSystem fileSystem;
+
     @Delegate(excludes=Exclusions.class)
     private final org.openide.filesystems.FileObject delegate;
-
+    
     @Override
     public NwFileObject getParent() 
       {
@@ -100,5 +109,18 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
         return FileUtil.toFile(delegate);
       }
     
+    @Override @Nonnull
+    public NwFileObject createFolder (@Nonnull String name)
+      throws IOException
+      {
+        return new NwFileObjectNetBeansPlatform(fileSystem, delegate.createFolder(name));  
+      }
+    
+    @Override
+    public void copyTo (final @Nonnull NwFileObject targetFolder)
+      throws IOException 
+      {
+        FileUtil.copyFile(delegate, ((NwFileObjectNetBeansPlatform)targetFolder).delegate, delegate.getName());
+      }
     // TODO: equals and hashcode
   }

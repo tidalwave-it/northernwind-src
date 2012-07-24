@@ -22,16 +22,17 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.LocalFileSystem;
+import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.impl.model.NwFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -51,7 +52,10 @@ public class LocalFileSystemProvider implements FileSystemProvider
     private String rootPath = "";
     
     @CheckForNull
-    private LocalFileSystem fileSystem;
+    private NwFileSystem fileSystem;
+
+    @CheckForNull
+    private LocalFileSystem fileSystemDelegate;
 
     /*******************************************************************************************************************
      *
@@ -66,15 +70,17 @@ public class LocalFileSystemProvider implements FileSystemProvider
           {
             try
               {
-                fileSystem = new LocalFileSystem();
-                fileSystem.setRootDirectory(new File(rootPath));
+                fileSystemDelegate = new LocalFileSystem();
+                fileSystemDelegate.setRootDirectory(new File(rootPath));
 
-                final NwFileObject rootFolder = fileSystem.getRoot();
+                final FileObject rootFolder = fileSystemDelegate.getRoot();
 
                 if (rootFolder == null)
                   {
                     throw new FileNotFoundException(rootPath);  
                   } 
+                
+                fileSystem = new NwFileSystemNetBeansPlatform(fileSystemDelegate);
               }
             catch (PropertyVetoException e)
               {

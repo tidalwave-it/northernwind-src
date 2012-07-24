@@ -78,13 +78,13 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
         return getChildrenMap().get(relativePath);
       }
 
-    @Override
-    public NwFileObject getFileObject (final String name, final String ext)
-      {
-        log.trace("getFileObject({}, {})", name, ext);
-        return getFileObject(name + "." + ext);
-//            return createDecoratorFileObject(delegate.getFileObject(name, ext)); 
-      }
+//    @Override
+//    public NwFileObject getFileObject (final String name, final String ext)
+//      {
+//        log.trace("getFileObject({}, {})", name, ext);
+//        return getFileObject(name + "." + ext);
+////            return createDecoratorFileObject(delegate.getFileObject(name, ext)); 
+//      }
 
     @Override
     public NwFileObject getParent()
@@ -92,13 +92,13 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
 
-    @Override
-    public NwFileObject createData (final String name, final String ext)
-      throws IOException
-      {
-        log.trace("createData({}, {})", name, ext);
-        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-      }
+//    @Override
+//    public NwFileObject createData (final String name, final String ext)
+//      throws IOException
+//      {
+//        log.trace("createData({}, {})", name, ext);
+//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
+//      }
 
     @Override
     public NwFileObject createFolder (final String name)

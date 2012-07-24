@@ -23,9 +23,9 @@
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -35,22 +35,29 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-abstract class FileObjectDelegateSupport extends NwFileObject 
+abstract class FileObjectDelegateSupport implements NwFileObject 
   {
     @Nonnull
     protected final LayeredFileSystemProvider fileSystemProvider;
 
-    @Override
-    public NwFileObject copy (NwFileObject target, String name, String ext)
-      throws IOException
-      {
-        return fileSystemProvider.createDecoratorFileObject(super.copy(target, name, ext));
-      }
+//    @Override
+//    public NwFileObject copy (NwFileObject target, String name, String ext)
+//      throws IOException
+//      {
+//        return fileSystemProvider.createDecoratorFileObject(super.copy(target, name, ext));
+//      }
     
     @Override @Nonnull
     public NwFileSystem getFileSystem()
       {
         return fileSystemProvider.getFileSystem();  
+      }
+
+    @Override
+    public void delete()
+      throws IOException 
+      {
+        throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
