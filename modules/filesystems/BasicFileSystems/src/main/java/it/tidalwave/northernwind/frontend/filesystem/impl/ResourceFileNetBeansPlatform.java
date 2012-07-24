@@ -57,6 +57,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
   {
     interface Exclusions
       {
+        public String getName();
         public ResourceFile getParent();
         public ResourceFile getFileObject (String fileName);
         public Collection<ResourceFile> getChildren();
@@ -77,6 +78,12 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
 
     @Delegate(excludes=Exclusions.class) @Nonnull
     private final org.openide.filesystems.FileObject delegate;
+    
+    @Override @Nonnull
+    public String getName()
+      {
+        return delegate.getNameExt();
+      }
     
     @Override
     public ResourceFile getParent() 

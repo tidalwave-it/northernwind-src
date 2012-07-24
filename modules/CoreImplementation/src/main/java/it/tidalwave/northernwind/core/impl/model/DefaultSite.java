@@ -81,7 +81,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         @Override
         public boolean accept (final @Nonnull ResourceFile file) 
           {
-            return file.isFolder() && !ignoredFolders.contains(file.getNameExt());
+            return file.isFolder() && !ignoredFolders.contains(file.getName());
           }
       };
     
@@ -90,7 +90,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         @Override
         public boolean accept (final @Nonnull ResourceFile file) 
           {
-            return !ignoredFolders.contains(file.getNameExt());
+            return !ignoredFolders.contains(file.getName());
           }
       };
     

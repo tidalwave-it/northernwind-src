@@ -42,7 +42,7 @@ public interface ResourceFile
     public ResourceFileSystem getFileSystem();
     
     @Nonnull
-    public String getNameExt(); // TODO: rename to getName()
+    public String getName(); 
 
     @Nonnull
     public String getPath();

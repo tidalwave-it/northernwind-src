@@ -135,9 +135,9 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
                       {
                         for (final ResourceFile fileObject : delegateDirectory.getChildren())
                           {
-                            if (!childrenMap.containsKey(fileObject.getNameExt()))
+                            if (!childrenMap.containsKey(fileObject.getName()))
                               {
-                                childrenMap.put(fileObject.getNameExt(), fileSystemProvider.createDecoratorFileObject(fileObject));
+                                childrenMap.put(fileObject.getName(), fileSystemProvider.createDecoratorFileObject(fileObject));
                               }
                           }
                       }

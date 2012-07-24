@@ -63,7 +63,7 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
                 for (final ResourceFile fo : zipFolder.getChildren())
                   {
 //                    if (fo.hasExt("zip") || fo.hasExt("jar"))
-                    final String name = fo.getNameExt();
+                    final String name = fo.getName();
                     if (name.endsWith(".zip") || name.endsWith(".jar"))
                       {
                         final ZipFileSystemProvider zipFileSystemProvider = new ZipFileSystemProvider();
