@@ -22,10 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URL;
-import org.openide.filesystems.FileLock;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 
@@ -39,18 +35,9 @@ interface FileDelegateExclusions
   {
     public void delete();
 
-//    public boolean hasExt(String ext);
-
     public ResourceFileSystem getFileSystem();
 
     public ResourceFile getParent();
 
-//    public NwFileObject move(FileLock lock, NwFileObject target, String name, String ext);
-//
-//    public NwFileObject copy(NwFileObject target, String name, String ext);
-//
-//    public NwFileObject createData(String name, String ext);
-
     public ResourceFile createFolder(String name);
-    //        public Enumeration<? extends NwFileObject> getData (boolean rec); calls getChildren()
   }
