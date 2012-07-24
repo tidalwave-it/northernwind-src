@@ -23,6 +23,7 @@
 package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
+import java.util.IdentityHashMap;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
@@ -37,20 +38,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NwFileSystemNetBeansPlatform implements NwFileSystem
   {
+    private final IdentityHashMap<FileObject, NwFileObject> delegateLightWeightMap = new IdentityHashMap<>();
+    
     @Nonnull
     private final org.openide.filesystems.FileSystem fileSystem;
 
     @Override @Nonnull
     public NwFileObject getRoot() 
       {
-        return new NwFileObjectNetBeansPlatform(this, fileSystem.getRoot());
+        return createNwFileObject(fileSystem.getRoot());
       }
     
     @Override @Nonnull
     public NwFileObject findResource (final @Nonnull String name) 
       {
-        final FileObject fileObject = fileSystem.findResource(name);
-        return (fileObject == null) ? null : new NwFileObjectNetBeansPlatform(this, fileObject);
+        return createNwFileObject(fileSystem.findResource(name));
+      }
+    
+    /* package */ synchronized NwFileObject createNwFileObject (final @Nonnull FileObject fileObject)
+      {
+        if (fileObject == null)
+          {
+            return null;  
+          }
+        
+        NwFileObject decorator = delegateLightWeightMap.get(fileObject);
+        
+        if (decorator == null)
+          {
+            decorator = new NwFileObjectNetBeansPlatform(this, fileObject);
+            delegateLightWeightMap.put(fileObject, decorator);
+          }
+        
+        return decorator;
       }
     
     // TODO: equals and hashcode

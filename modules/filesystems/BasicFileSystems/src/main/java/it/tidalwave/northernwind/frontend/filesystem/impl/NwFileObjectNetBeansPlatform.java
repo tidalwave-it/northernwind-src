@@ -67,7 +67,7 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
     private ApplicationContext applicationContext;
     
     @Getter @Nonnull
-    private final NwFileSystem fileSystem;
+    private final NwFileSystemNetBeansPlatform fileSystem;
 
     @Delegate(excludes=Exclusions.class) @Nonnull
     private final org.openide.filesystems.FileObject delegate;
@@ -75,15 +75,13 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
     @Override
     public NwFileObject getParent() 
       {
-        final org.openide.filesystems.FileObject parentDelegate = delegate.getParent();
-        return (parentDelegate == null) ? null : new NwFileObjectNetBeansPlatform(fileSystem, parentDelegate);
+        return fileSystem.createNwFileObject(delegate.getParent());
       }
 
     @Override
     public NwFileObject getFileObject (final @Nonnull String fileName) 
       {
-        final org.openide.filesystems.FileObject childDelegate = delegate.getFileObject(fileName);
-        return (childDelegate == null) ? null : new NwFileObjectNetBeansPlatform(fileSystem, childDelegate);
+        return fileSystem.createNwFileObject(delegate.getFileObject(fileName));
       }
 
     @Override
@@ -94,7 +92,7 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
         
         for (int i = 0; i < delegateChildren.length; i++)
           {
-            children[i] = new NwFileObjectNetBeansPlatform(fileSystem, delegateChildren[i]);
+            children[i] = fileSystem.createNwFileObject(delegateChildren[i]);
           }
         
         return children;
@@ -116,7 +114,7 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
             @Override @Nonnull
             public NwFileObject nextElement() 
               {
-                return new NwFileObjectNetBeansPlatform(fileSystem, children.nextElement());
+                return fileSystem.createNwFileObject(children.nextElement());
               }
         };
       }
@@ -140,7 +138,7 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
     public NwFileObject createFolder (@Nonnull String name)
       throws IOException
       {
-        return new NwFileObjectNetBeansPlatform(fileSystem, delegate.createFolder(name));  
+        return fileSystem.createNwFileObject(delegate.createFolder(name));  
       }
     
     @Override

@@ -49,6 +49,8 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
     @Delegate(types=NwFileObject.class, excludes=FolderDelegateExclusions.class) @Nonnull
     private final NwFileObject delegate;
 
+    private SortedMap<String, NwFileObject> childrenMap;
+
     public DecoratorFolderObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
                                   final @Nonnull String path, 
                                   final @Nonnull NwFileObject delegate)
@@ -115,35 +117,39 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Nonnull
-    private Map<String, NwFileObject> getChildrenMap()
+    private synchronized Map<String, NwFileObject> getChildrenMap()
       {
-        final SortedMap<String, NwFileObject> childrenMap = new TreeMap<String, NwFileObject>();
-
-        for (final ListIterator<? extends FileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
+        if (childrenMap == null)
           {
-            try
+            childrenMap = new TreeMap<>();
+            
+            for (final ListIterator<? extends FileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
               {
-                final NwFileSystem fileSystem = i.previous().getFileSystem();
-                final NwFileObject delegateDirectory = fileSystem.findResource(path);
-
-                if (delegateDirectory != null)
+                try
                   {
-                    for (final NwFileObject fileObject : delegateDirectory.getChildren())
+                    final NwFileSystem fileSystem = i.previous().getFileSystem();
+                    final NwFileObject delegateDirectory = fileSystem.findResource(path);
+
+                    if (delegateDirectory != null)
                       {
-                        if (!childrenMap.containsKey(fileObject.getNameExt()))
+                        for (final NwFileObject fileObject : delegateDirectory.getChildren())
                           {
-                            childrenMap.put(fileObject.getNameExt(), fileSystemProvider.createDecoratorFileObject(fileObject));
+                            if (!childrenMap.containsKey(fileObject.getNameExt()))
+                              {
+                                childrenMap.put(fileObject.getNameExt(), fileSystemProvider.createDecoratorFileObject(fileObject));
+                              }
                           }
                       }
+                  } 
+                catch (IOException e)
+                  {
+                    log.warn("", e);
                   }
-              } 
-            catch (IOException e)
-              {
-                log.warn("", e);
               }
-          }
 
-        log.trace(">>>> childrenMap: {}", childrenMap);
+            log.trace(">>>> childrenMap: {}", childrenMap);
+          }
+    
         return childrenMap;
       }
   }

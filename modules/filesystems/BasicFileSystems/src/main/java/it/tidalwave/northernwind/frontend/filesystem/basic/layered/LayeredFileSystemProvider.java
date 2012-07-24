@@ -22,8 +22,10 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.io.IOException;
@@ -31,7 +33,6 @@ import it.tidalwave.northernwind.core.model.NwFileObject;
 import it.tidalwave.northernwind.core.model.NwFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
-import javax.annotation.CheckForNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,8 @@ public class LayeredFileSystemProvider implements FileSystemProvider
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
      
+    private final IdentityHashMap<NwFileObject, NwFileObject> delegateLightWeightMap = new IdentityHashMap<>();
+    
     /*******************************************************************************************************************
      *
      * 
@@ -133,8 +136,20 @@ public class LayeredFileSystemProvider implements FileSystemProvider
     @Nonnull
     public NwFileObject createDecoratorFileObject (final @Nonnull NwFileObject delegate)
       {
-        return (delegate == null) ? null
-                                  : (delegate.isData() ? new DecoratorFileObject(this, delegate) 
-                                                       : new DecoratorFolderObject(this, delegate.getPath(), delegate));  
+        if (delegate == null) 
+          {
+            return null;  
+          }
+        
+        NwFileObject decorator = delegateLightWeightMap.get(delegate);
+        
+        if (decorator == null)
+          {
+            decorator = (delegate.isData() ? new DecoratorFileObject(this, delegate) 
+                                           : new DecoratorFolderObject(this, delegate.getPath(), delegate));  
+            delegateLightWeightMap.put(delegate, decorator);
+          }
+                                  
+        return decorator;
       }
   }
