@@ -24,11 +24,10 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 
 /***********************************************************************************************************************
  *
- * A provider for the {@link NwFileSystem}.
+ * A provider for the {@link ResourceFileSystem}.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -38,9 +37,9 @@ public interface ResourceFileSystemProvider
   {
     /*******************************************************************************************************************
      *
-     * Returns the {@link NwFileSystem}.
+     * Returns the {@link ResourceFileSystem}.
      * 
-     * @return  the {@code NwFileSystem}
+     * @return  the {@code ResourceFileSystem}
      *
      ******************************************************************************************************************/
     @Nonnull
