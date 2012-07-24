@@ -30,6 +30,8 @@ import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * FIXME: this could probably be merged to the superclass.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -46,18 +48,5 @@ class DecoratorResourceFile extends DecoratedResourceFileSupport<LayeredFileSyst
         super(fileSystemProvider, delegate);
         this.delegate = delegate;
       }
-
-//    @Override
-//    public ResourceFile getParent()
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
-//      }
-//
-//    @Override
-//    public ResourceFile createFolder (final String name)
-//        throws IOException
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));
-//      }
   }    
 
