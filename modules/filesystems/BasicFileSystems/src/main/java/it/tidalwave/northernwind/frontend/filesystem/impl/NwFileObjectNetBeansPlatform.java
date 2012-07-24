@@ -36,6 +36,7 @@ import java.io.IOException;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -46,7 +47,7 @@ import org.openide.filesystems.FileUtil;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor @Slf4j
+@Configurable @RequiredArgsConstructor @Slf4j @ToString(of="delegate")
 public class NwFileObjectNetBeansPlatform implements NwFileObject 
   {
     interface Exclusions
