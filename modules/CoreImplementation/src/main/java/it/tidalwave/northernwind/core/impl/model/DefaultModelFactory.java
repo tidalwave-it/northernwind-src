@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
@@ -62,7 +62,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource createResource (final @Nonnull NwFileObject file)
+    public Resource createResource (final @Nonnull ResourceFile file)
       {
         return new DefaultResource(file);
       }
@@ -73,7 +73,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content createContent (final @Nonnull NwFileObject folder) 
+    public Content createContent (final @Nonnull ResourceFile folder) 
       {
         return new DefaultContent(folder);
       }
@@ -84,7 +84,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media createMedia (final @Nonnull NwFileObject file) 
+    public Media createMedia (final @Nonnull ResourceFile file) 
       {
         return new DefaultMedia(file);
       }
@@ -95,7 +95,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull NwFileObject folder) 
+    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder) 
       throws IOException, NotFoundException
       {
         return new DefaultSiteNode((DefaultSite)site, folder);

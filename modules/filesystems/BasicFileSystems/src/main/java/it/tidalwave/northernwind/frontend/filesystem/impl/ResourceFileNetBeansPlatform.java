@@ -20,7 +20,6 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-
 package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
@@ -29,8 +28,8 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import java.io.File;
 import java.io.IOException;
 import lombok.Delegate;
@@ -48,47 +47,47 @@ import org.openide.filesystems.FileUtil;
  *
  **********************************************************************************************************************/
 @Configurable @RequiredArgsConstructor @Slf4j @ToString(of="delegate")
-public class NwFileObjectNetBeansPlatform implements NwFileObject 
+public class ResourceFileNetBeansPlatform implements ResourceFile
   {
     interface Exclusions
       {
-        public NwFileObject getParent();
-        public NwFileObject getFileObject (String fileName);
-        public NwFileObject[] getChildren();
-        public Enumeration<? extends NwFileObject> getChildren (boolean b);
+        public ResourceFile getParent();
+        public ResourceFile getFileObject (String fileName);
+        public ResourceFile[] getChildren();
+        public Enumeration<? extends ResourceFile> getChildren (boolean b);
         public String getMIMEType();
         public File toFile();
-        public NwFileObject createFolder (String name);
-        public void copyTo (NwFileObject targetFolder);
-        public NwFileSystem getFileSystem();
+        public ResourceFile createFolder (String name);
+        public void copyTo (ResourceFile targetFolder);
+        public ResourceFileSystem getFileSystem();
       }
     
     @Inject 
     private ApplicationContext applicationContext;
     
     @Getter @Nonnull
-    private final NwFileSystemNetBeansPlatform fileSystem;
+    private final ResourceFileSystemNetBeansPlatform fileSystem;
 
     @Delegate(excludes=Exclusions.class) @Nonnull
     private final org.openide.filesystems.FileObject delegate;
     
     @Override
-    public NwFileObject getParent() 
+    public ResourceFile getParent() 
       {
         return fileSystem.createNwFileObject(delegate.getParent());
       }
 
     @Override
-    public NwFileObject getFileObject (final @Nonnull String fileName) 
+    public ResourceFile getFileObject (final @Nonnull String fileName) 
       {
         return fileSystem.createNwFileObject(delegate.getFileObject(fileName));
       }
 
     @Override
-    public NwFileObject[] getChildren() 
+    public ResourceFile[] getChildren() 
       {
         final FileObject[] delegateChildren = delegate.getChildren();
-        final NwFileObject[] children = new NwFileObject[delegateChildren.length];
+        final ResourceFile[] children = new ResourceFile[delegateChildren.length];
         
         for (int i = 0; i < delegateChildren.length; i++)
           {
@@ -99,11 +98,11 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
       }
 
     @Override
-    public Enumeration<? extends NwFileObject> getChildren (final boolean recursive) 
+    public Enumeration<? extends ResourceFile> getChildren (final boolean recursive) 
       {
         final Enumeration<? extends FileObject> children = delegate.getChildren(recursive);
         
-        return new Enumeration<NwFileObject>()
+        return new Enumeration<ResourceFile>()
           {
             @Override
             public boolean hasMoreElements() 
@@ -112,7 +111,7 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
               }
 
             @Override @Nonnull
-            public NwFileObject nextElement() 
+            public ResourceFile nextElement() 
               {
                 return fileSystem.createNwFileObject(children.nextElement());
               }
@@ -135,17 +134,17 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
       }
     
     @Override @Nonnull
-    public NwFileObject createFolder (@Nonnull String name)
+    public ResourceFile createFolder (@Nonnull String name)
       throws IOException
       {
         return fileSystem.createNwFileObject(delegate.createFolder(name));  
       }
     
     @Override
-    public void copyTo (final @Nonnull NwFileObject targetFolder)
+    public void copyTo (final @Nonnull ResourceFile targetFolder)
       throws IOException 
       {
-        FileUtil.copyFile(delegate, ((NwFileObjectNetBeansPlatform)targetFolder).delegate, delegate.getName());
+        FileUtil.copyFile(delegate, ((ResourceFileNetBeansPlatform)targetFolder).delegate, delegate.getName());
       }
     // TODO: equals and hashcode
   }

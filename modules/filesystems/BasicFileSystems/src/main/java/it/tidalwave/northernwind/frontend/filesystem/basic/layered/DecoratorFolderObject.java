@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
@@ -46,14 +46,14 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
     @Nonnull
     private final String path;
 
-    @Delegate(types=NwFileObject.class, excludes=FolderDelegateExclusions.class) @Nonnull
-    private final NwFileObject delegate;
+    @Delegate(types=ResourceFile.class, excludes=FolderDelegateExclusions.class) @Nonnull
+    private final ResourceFile delegate;
 
-    private SortedMap<String, NwFileObject> childrenMap;
+    private SortedMap<String, ResourceFile> childrenMap;
 
     public DecoratorFolderObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
                                   final @Nonnull String path, 
-                                  final @Nonnull NwFileObject delegate)
+                                  final @Nonnull ResourceFile delegate)
       {
         super(fileSystemProvider);
         this.path = path;
@@ -61,14 +61,14 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
     
     @Override @Nonnull
-    public NwFileObject[] getChildren() 
+    public ResourceFile[] getChildren() 
       {
         log.trace("getChildren() - {}", this);
-        return getChildrenMap().values().toArray(new NwFileObject[0]);
+        return getChildrenMap().values().toArray(new ResourceFile[0]);
       }
 
     @Override
-    public NwFileObject getFileObject (final String relativePath)
+    public ResourceFile getFileObject (final String relativePath)
       {
         log.trace("getFileObject({})", relativePath);
 
@@ -89,7 +89,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
 //      }
 
     @Override
-    public NwFileObject getParent()
+    public ResourceFile getParent()
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
@@ -103,7 +103,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
 //      }
 
     @Override
-    public NwFileObject createFolder (final String name)
+    public ResourceFile createFolder (final String name)
       throws IOException
       {
         log.trace("createFolder({})", name);
@@ -117,7 +117,7 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
       }
 
     @Nonnull
-    private synchronized Map<String, NwFileObject> getChildrenMap()
+    private synchronized Map<String, ResourceFile> getChildrenMap()
       {
         if (childrenMap == null)
           {
@@ -127,12 +127,12 @@ class DecoratorFolderObject extends FileObjectDelegateSupport
               {
                 try
                   {
-                    final NwFileSystem fileSystem = i.previous().getFileSystem();
-                    final NwFileObject delegateDirectory = fileSystem.findResource(path);
+                    final ResourceFileSystem fileSystem = i.previous().getFileSystem();
+                    final ResourceFile delegateDirectory = fileSystem.findResource(path);
 
                     if (delegateDirectory != null)
                       {
-                        for (final NwFileObject fileObject : delegateDirectory.getChildren())
+                        for (final ResourceFile fileObject : delegateDirectory.getChildren())
                           {
                             if (!childrenMap.containsKey(fileObject.getNameExt()))
                               {

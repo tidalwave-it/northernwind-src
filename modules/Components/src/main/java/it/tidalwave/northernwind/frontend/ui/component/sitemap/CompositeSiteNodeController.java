@@ -31,7 +31,7 @@ import it.tidalwave.util.Id;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 
 /***********************************************************************************************************************
  *
@@ -64,7 +64,7 @@ public interface CompositeSiteNodeController
           }
 
         @Override
-        public NwFileObject getFile() 
+        public ResourceFile getFile() 
           {
             throw new UnsupportedOperationException("Not supported.");
           }

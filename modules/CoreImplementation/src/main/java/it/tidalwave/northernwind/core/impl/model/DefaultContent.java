@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
@@ -64,7 +64,7 @@ import lombok.extern.slf4j.Slf4j;
      * @param   file   the configuration file
      *
      ******************************************************************************************************************/
-    public DefaultContent (final @Nonnull NwFileObject file)
+    public DefaultContent (final @Nonnull ResourceFile file)
       {
         resource = modelFactory.createResource(file);  
       }

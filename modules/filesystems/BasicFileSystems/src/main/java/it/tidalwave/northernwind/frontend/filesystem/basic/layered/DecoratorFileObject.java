@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Delegate;
 
 /***********************************************************************************************************************
@@ -35,18 +35,18 @@ import lombok.Delegate;
  **********************************************************************************************************************/
 class DecoratorFileObject extends FileObjectDelegateSupport
   {
-    @Delegate(types=NwFileObject.class, excludes=FileDelegateExclusions.class) @Nonnull
-    private final NwFileObject delegate;
+    @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
+    private final ResourceFile delegate;
 
     public DecoratorFileObject (final @Nonnull LayeredFileSystemProvider fileSystemProvider, 
-                                final @Nonnull NwFileObject delegate) 
+                                final @Nonnull ResourceFile delegate) 
       {
         super(fileSystemProvider);
         this.delegate = delegate;
       }
 
     @Override
-    public NwFileObject getParent()
+    public ResourceFile getParent()
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
@@ -59,7 +59,7 @@ class DecoratorFileObject extends FileObjectDelegateSupport
 //      }
 
     @Override
-    public NwFileObject createFolder (final String name)
+    public ResourceFile createFolder (final String name)
         throws IOException
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));

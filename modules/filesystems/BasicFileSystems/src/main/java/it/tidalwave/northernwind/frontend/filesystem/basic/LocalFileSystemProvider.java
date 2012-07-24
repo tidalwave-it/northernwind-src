@@ -31,8 +31,8 @@ import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.LocalFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
-import it.tidalwave.northernwind.frontend.filesystem.impl.NwFileSystemNetBeansPlatform;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -52,7 +52,7 @@ public class LocalFileSystemProvider implements FileSystemProvider
     private String rootPath = "";
     
     @CheckForNull
-    private NwFileSystem fileSystem;
+    private ResourceFileSystem fileSystem;
 
     @CheckForNull
     private LocalFileSystem fileSystemDelegate;
@@ -63,7 +63,7 @@ public class LocalFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized NwFileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
@@ -80,7 +80,7 @@ public class LocalFileSystemProvider implements FileSystemProvider
                     throw new FileNotFoundException(rootPath);  
                   } 
                 
-                fileSystem = new NwFileSystemNetBeansPlatform(fileSystemDelegate);
+                fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
               }
             catch (PropertyVetoException e)
               {

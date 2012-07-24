@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 
 /***********************************************************************************************************************
  *
@@ -32,11 +32,11 @@ import it.tidalwave.northernwind.core.model.NwFileObject;
  **********************************************************************************************************************/
 public interface FolderDelegateExclusions extends FileDelegateExclusions
   {
-    public NwFileObject[] getChildren();
+    public ResourceFile[] getChildren();
 
-    public NwFileObject getFileObject (String relativePath);
+    public ResourceFile getFileObject (String relativePath);
 
-    public NwFileObject getFileObject (String name, String ext);
+    public ResourceFile getFileObject (String name, String ext);
 
 //        public Enumeration<? extends NwFileObject> getFolders (boolean rec); calls getChildren()
   }

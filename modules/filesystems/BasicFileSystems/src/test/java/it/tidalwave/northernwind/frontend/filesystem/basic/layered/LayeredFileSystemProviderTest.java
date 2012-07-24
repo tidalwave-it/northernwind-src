@@ -29,8 +29,8 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import it.tidalwave.util.test.FileComparisonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -150,7 +150,7 @@ public class LayeredFileSystemProviderTest
      * 
      *
      ******************************************************************************************************************/
-    private void dump (final @Nonnull File file, final @Nonnull NwFileSystem fileSystem)
+    private void dump (final @Nonnull File file, final @Nonnull ResourceFileSystem fileSystem)
       throws IOException
       {
         final List<String> lines = new ArrayList<String>();
@@ -165,7 +165,7 @@ public class LayeredFileSystemProviderTest
      * 
      *
      ******************************************************************************************************************/
-    private static void dump (final @Nonnull List<String> lines, final @Nonnull NwFileObject fileObject)
+    private static void dump (final @Nonnull List<String> lines, final @Nonnull ResourceFile fileObject)
       throws IOException
       {
         if (fileObject.isData())
@@ -174,7 +174,7 @@ public class LayeredFileSystemProviderTest
           }
         else
           {
-            for (final NwFileObject child : fileObject.getChildren())
+            for (final ResourceFile child : fileObject.getChildren())
               {
                 dump(lines, child);  
               }

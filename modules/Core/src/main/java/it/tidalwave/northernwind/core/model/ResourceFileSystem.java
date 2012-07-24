@@ -23,12 +23,6 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Date;
-import java.util.Enumeration;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 /***********************************************************************************************************************
  *
@@ -36,61 +30,11 @@ import java.io.InputStream;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface NwFileObject 
+public interface ResourceFileSystem 
   {
     @Nonnull
-    public NwFileSystem getFileSystem();
-    
-    @Nonnull
-    public String getNameExt(); // TODO: rename to getName()
+    public ResourceFile findResource (@Nonnull String name); // TODO: rename to findFile()
 
     @Nonnull
-    public String getPath();
-    
-    public boolean isFolder();
-
-    public boolean isData();
-    
-    @Nonnull
-    public String getMIMEType(); // TODO: rename to getMimeType()
-
-    @Nonnull
-    public InputStream getInputStream()
-      throws FileNotFoundException;
-    
-    @Nonnull
-    public String asText()
-      throws IOException;
-    
-    public String asText (String encoding)
-      throws IOException;
-    
-    @Nonnull
-    public byte[] asBytes()
-      throws IOException;
-
-    @Nonnull
-    public Date lastModified(); // TODO: rename to getLastModifiedDateTime(), return JodaTime DateTime
-
-    public NwFileObject getParent();
-
-    public NwFileObject getFileObject (@Nonnull String fileName); // TODO: rename to getChild()
-
-    public NwFileObject[] getChildren(); // TODO: return Collection<>
-
-    public Enumeration<? extends NwFileObject> getChildren (boolean recursive); // TODO: return Collection, replace boolean with enum
-
-    @Nonnull
-    public File toFile();
-
-    // TODO: methods below probably can be dropped, are only used in filesystem implementations
-    public void delete()
-      throws IOException;
-
-    @Nonnull
-    public NwFileObject createFolder (@Nonnull String name)
-      throws IOException;
-
-    public void copyTo (@Nonnull NwFileObject targetFolder)
-      throws IOException;
+    public ResourceFile getRoot();
   }

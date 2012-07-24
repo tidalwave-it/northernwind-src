@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import lombok.extern.slf4j.Slf4j;
@@ -112,7 +112,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           }
         
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull NwFileObject file)
+        public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull ResourceFile file)
           throws IOException
           {
             final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed

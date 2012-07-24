@@ -34,11 +34,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import org.openide.filesystems.JarFileSystem;
 import org.openide.filesystems.FileObject;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.northernwind.frontend.filesystem.impl.NwFileSystemNetBeansPlatform;
+import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -62,7 +62,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
     private long modificationCheckInterval = 5000;
     
     @CheckForNull
-    private NwFileSystem fileSystem;
+    private ResourceFileSystem fileSystem;
 
     @CheckForNull
     private JarFileSystem fileSystemDelegate;
@@ -130,7 +130,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized NwFileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
         if (fileSystem == null)
@@ -147,7 +147,7 @@ public class ZipFileSystemProvider implements FileSystemProvider
             log.info(">>>> fileSystem: {}", fileSystemDelegate);
             latestModified = new DateTime(zipFile.lastModified());
             timer.scheduleAtFixedRate(zipFileModificationTracker, modificationCheckInterval, modificationCheckInterval);
-            fileSystem = new NwFileSystemNetBeansPlatform(fileSystemDelegate);
+            fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
           }
               
         return fileSystem;  

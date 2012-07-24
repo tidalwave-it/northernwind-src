@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.io.InputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -60,7 +60,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     private Provider<FilterSetExpander> macroExpander;
     
     @Nonnull @Getter
-    private final NwFileObject file;    
+    private final ResourceFile file;    
     
     @Nonnull @Getter
     private ResourceProperties properties;
@@ -86,7 +86,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      *
      *
      ******************************************************************************************************************/
-    public DefaultResource (final @Nonnull NwFileObject file) 
+    public DefaultResource (final @Nonnull ResourceFile file) 
       {
         this.file = file;
       }
@@ -113,7 +113,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
       {
         log.trace("getFileBasedProperty({})", propertyName);
         
-        final NwFileObject propertyFile = findLocalizedFile(propertyName);
+        final ResourceFile propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
         final String charset = propertyFile.getMIMEType().equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
         
@@ -140,7 +140,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                 
         properties = new DefaultResourceProperties(new Id(""), propertyResolver);
 
-        for (final NwFileObject propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.xml"))
+        for (final ResourceFile propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.xml"))
           {
             log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
             @Cleanup final InputStream is = propertyFile.getInputStream();
@@ -164,11 +164,11 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private NwFileObject findLocalizedFile (final @Nonnull String fileName)
+    private ResourceFile findLocalizedFile (final @Nonnull String fileName)
       throws NotFoundException
       {
         log.trace("findLocalizedFile({})", fileName);
-        NwFileObject localizedFile = null;
+        ResourceFile localizedFile = null;
         final StringBuilder fileNamesNotFound = new StringBuilder();
         String separator = "";
         

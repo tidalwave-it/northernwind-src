@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
  *
  ***********************************************************************************************************************
  *
@@ -20,9 +20,14 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.model;
+package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
+import java.util.IdentityHashMap;
+import org.openide.filesystems.FileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -30,11 +35,43 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface NwFileSystem 
+@RequiredArgsConstructor
+public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
   {
+    private final IdentityHashMap<FileObject, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
+    
     @Nonnull
-    public NwFileObject findResource (@Nonnull String name); // TODO: rename to findFile()
+    private final org.openide.filesystems.FileSystem fileSystem;
 
-    @Nonnull
-    public NwFileObject getRoot();
+    @Override @Nonnull
+    public ResourceFile getRoot() 
+      {
+        return createNwFileObject(fileSystem.getRoot());
+      }
+    
+    @Override @Nonnull
+    public ResourceFile findResource (final @Nonnull String name) 
+      {
+        return createNwFileObject(fileSystem.findResource(name));
+      }
+    
+    /* package */ synchronized ResourceFile createNwFileObject (final @Nonnull FileObject fileObject)
+      {
+        if (fileObject == null)
+          {
+            return null;  
+          }
+        
+        ResourceFile decorator = delegateLightWeightMap.get(fileObject);
+        
+        if (decorator == null)
+          {
+            decorator = new ResourceFileNetBeansPlatform(this, fileObject);
+            delegateLightWeightMap.put(fileObject, decorator);
+          }
+        
+        return decorator;
+      }
+    
+    // TODO: equals and hashcode
   }

@@ -20,13 +20,15 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
+package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import java.util.Date;
+import java.util.Enumeration;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
+import java.io.InputStream;
 
 /***********************************************************************************************************************
  *
@@ -34,47 +36,61 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
-abstract class FileObjectDelegateSupport implements ResourceFile 
+public interface ResourceFile 
   {
     @Nonnull
-    protected final LayeredFileSystemProvider fileSystemProvider;
-
-//    @Override
-//    public NwFileObject copy (NwFileObject target, String name, String ext)
-//      throws IOException
-//      {
-//        return fileSystemProvider.createDecoratorFileObject(super.copy(target, name, ext));
-//      }
+    public ResourceFileSystem getFileSystem();
     
-    @Override @Nonnull
-    public ResourceFileSystem getFileSystem()
-      {
-        return fileSystemProvider.getFileSystem();  
-      }
+    @Nonnull
+    public String getNameExt(); // TODO: rename to getName()
 
-    @Override
+    @Nonnull
+    public String getPath();
+    
+    public boolean isFolder();
+
+    public boolean isData();
+    
+    @Nonnull
+    public String getMIMEType(); // TODO: rename to getMimeType()
+
+    @Nonnull
+    public InputStream getInputStream()
+      throws FileNotFoundException;
+    
+    @Nonnull
+    public String asText()
+      throws IOException;
+    
+    public String asText (String encoding)
+      throws IOException;
+    
+    @Nonnull
+    public byte[] asBytes()
+      throws IOException;
+
+    @Nonnull
+    public Date lastModified(); // TODO: rename to getLastModifiedDateTime(), return JodaTime DateTime
+
+    public ResourceFile getParent();
+
+    public ResourceFile getFileObject (@Nonnull String fileName); // TODO: rename to getChild()
+
+    public ResourceFile[] getChildren(); // TODO: return Collection<>
+
+    public Enumeration<? extends ResourceFile> getChildren (boolean recursive); // TODO: return Collection, replace boolean with enum
+
+    @Nonnull
+    public File toFile();
+
+    // TODO: methods below probably can be dropped, are only used in filesystem implementations
     public void delete()
-      throws IOException 
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
+      throws IOException;
 
-    @Override
-    public boolean equals (final Object object)
-      {
-        if ((object == null) || (getClass() != object.getClass()))
-          {
-            return false;
-          }
+    @Nonnull
+    public ResourceFile createFolder (@Nonnull String name)
+      throws IOException;
 
-        final FileObjectDelegateSupport other = (FileObjectDelegateSupport)object;
-        return (this.getFileSystem() == other.getFileSystem()) && this.getPath().equals(other.getPath());
-      }
-
-    @Override
-    public int hashCode()
-      {
-        return getFileSystem().hashCode() ^ getPath().hashCode();
-      }
+    public void copyTo (@Nonnull ResourceFile targetFolder)
+      throws IOException;
   }

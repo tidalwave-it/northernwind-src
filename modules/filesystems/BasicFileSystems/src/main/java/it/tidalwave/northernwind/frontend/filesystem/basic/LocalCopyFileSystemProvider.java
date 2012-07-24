@@ -29,8 +29,8 @@ import javax.inject.Named;
 import java.io.IOException;
 import java.io.File;
 import org.joda.time.DateTime;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.filesystem.FileSystemChangedEvent;
@@ -94,7 +94,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized NwFileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
         return targetProvider.getFileSystem();      
@@ -130,7 +130,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
         // FIXME: shouldn't be needed, but otherwise after a second call to this method won't find files
         targetProvider = new LocalFileSystemProvider(); 
         targetProvider.setRootPath(rootPath);
-        final NwFileObject targetRoot = targetProvider.getFileSystem().getRoot();
+        final ResourceFile targetRoot = targetProvider.getFileSystem().getRoot();
         final String path = targetRoot.toFile().getAbsolutePath();
         log.info(">>>> scratching {} ...", path);
         emptyFolder(targetRoot);
@@ -143,12 +143,12 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private void emptyFolder (final @Nonnull NwFileObject folder) 
+    private void emptyFolder (final @Nonnull ResourceFile folder) 
       throws IOException
       {
         log.trace("emptyFolder({}, {}", folder);
         
-        for (final NwFileObject child : folder.getChildren())
+        for (final ResourceFile child : folder.getChildren())
           {
             child.delete();
           }
@@ -158,12 +158,12 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private void copyFolder (final @Nonnull NwFileObject sourceFolder, final @Nonnull NwFileObject targetFolder)
+    private void copyFolder (final @Nonnull ResourceFile sourceFolder, final @Nonnull ResourceFile targetFolder)
       throws IOException
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
         
-        for (final NwFileObject sourceChild : sourceFolder.getChildren())
+        for (final ResourceFile sourceChild : sourceFolder.getChildren())
           {
             if (!sourceChild.isFolder())
               { 
@@ -172,7 +172,7 @@ public class LocalCopyFileSystemProvider implements FileSystemProvider
               }
           }
         
-        for (final NwFileObject sourceChild : sourceFolder.getChildren())
+        for (final ResourceFile sourceChild : sourceFolder.getChildren())
           {
             if (sourceChild.isFolder())
               { 

@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import org.joda.time.Duration;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
@@ -73,7 +73,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         if (relativeUri.startsWith("/media"))
           {
             final Media media = siteProvider.get().getSite().find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
-            final NwFileObject file = media.getFile();
+            final ResourceFile file = media.getFile();
             createResponse(file);
             return BREAK;
           }
@@ -85,7 +85,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
      *
      *
      ******************************************************************************************************************/
-    protected void createResponse (final @Nonnull NwFileObject file)
+    protected void createResponse (final @Nonnull ResourceFile file)
       throws IOException
       {
         log.info(">>>> serving contents of /{} ...", file.getPath());

@@ -29,8 +29,8 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import lombok.Getter;
@@ -52,14 +52,14 @@ public class LayeredFileSystemProvider implements FileSystemProvider
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
      
-    private final IdentityHashMap<NwFileObject, NwFileObject> delegateLightWeightMap = new IdentityHashMap<>();
+    private final IdentityHashMap<ResourceFile, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
     
     /*******************************************************************************************************************
      *
      * 
      *
      ******************************************************************************************************************/
-    private final NwFileSystem fileSystem = new NwFileSystem() 
+    private final ResourceFileSystem fileSystem = new ResourceFileSystem() 
       {
         /***************************************************************************************************************
          *
@@ -67,7 +67,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @Nonnull
-        public NwFileObject getRoot() 
+        public ResourceFile getRoot() 
           {
             return findResource("");
           }
@@ -78,10 +78,10 @@ public class LayeredFileSystemProvider implements FileSystemProvider
          *
          **************************************************************************************************************/
         @Override @CheckForNull
-        public NwFileObject findResource (final @Nonnull String name) 
+        public ResourceFile findResource (final @Nonnull String name) 
           {
             log.trace("findResource({})", name);
-            NwFileObject result = null;
+            ResourceFile result = null;
             
               // FIXME: move to init!
             if (fileSystemProvidersProvider != null)
@@ -95,8 +95,8 @@ public class LayeredFileSystemProvider implements FileSystemProvider
               {
                 try 
                   {
-                    final NwFileSystem fileSystem = i.previous().getFileSystem();
-                    final NwFileObject fileObject = fileSystem.findResource(name);
+                    final ResourceFileSystem fileSystem = i.previous().getFileSystem();
+                    final ResourceFile fileObject = fileSystem.findResource(name);
 
                     if (fileObject != null)
                       {
@@ -123,7 +123,7 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public NwFileSystem getFileSystem()  
+    public ResourceFileSystem getFileSystem()  
       {
         return fileSystem;
       }
@@ -134,14 +134,14 @@ public class LayeredFileSystemProvider implements FileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    public NwFileObject createDecoratorFileObject (final @Nonnull NwFileObject delegate)
+    public ResourceFile createDecoratorFileObject (final @Nonnull ResourceFile delegate)
       {
         if (delegate == null) 
           {
             return null;  
           }
         
-        NwFileObject decorator = delegateLightWeightMap.get(delegate);
+        ResourceFile decorator = delegateLightWeightMap.get(delegate);
         
         if (decorator == null)
           {

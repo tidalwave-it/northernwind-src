@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.core.filesystem;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 
 /***********************************************************************************************************************
  *
@@ -44,6 +44,6 @@ public interface FileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    public NwFileSystem getFileSystem()
+    public ResourceFileSystem getFileSystem()
       throws IOException;
   }

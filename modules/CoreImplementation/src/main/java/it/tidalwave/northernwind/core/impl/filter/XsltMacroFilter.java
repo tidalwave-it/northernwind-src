@@ -51,7 +51,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -102,7 +102,7 @@ public class XsltMacroFilter implements Filter
         
         for (final Resource resource : siteProvider.get().getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
           {
-            final NwFileObject file = resource.getFile();
+            final ResourceFile file = resource.getFile();
             log.info(">>>> /{}", file.getPath());
             xsltBuffer.append(file.asText("UTF-8")); 
           }

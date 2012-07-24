@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.*;
@@ -49,16 +49,16 @@ public final class Utilities
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static List<NwFileObject> getInheritedPropertyFiles (final @Nonnull NwFileObject folder, final @Nonnull String propertyFileName)
+    public static List<ResourceFile> getInheritedPropertyFiles (final @Nonnull ResourceFile folder, final @Nonnull String propertyFileName)
       {
         log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
         
-        final List<NwFileObject> files = new ArrayList<NwFileObject>();
+        final List<ResourceFile> files = new ArrayList<ResourceFile>();
         
-        for (NwFileObject parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
+        for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
           {            
             log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
-            final NwFileObject propertyFile = parent.getFileObject(propertyFileName);
+            final ResourceFile propertyFile = parent.getFileObject(propertyFileName);
             
             if (propertyFile != null)
               {  
@@ -68,7 +68,7 @@ public final class Utilities
         
         Collections.reverse(files);
 
-        final NwFileObject propertyFile = folder.getFileObject("Override" + propertyFileName);
+        final ResourceFile propertyFile = folder.getFileObject("Override" + propertyFileName);
 
         if (propertyFile != null)
           {  

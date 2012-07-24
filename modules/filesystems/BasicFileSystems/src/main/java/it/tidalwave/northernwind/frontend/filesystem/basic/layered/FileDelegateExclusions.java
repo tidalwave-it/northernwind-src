@@ -26,8 +26,8 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import org.openide.filesystems.FileLock;
-import it.tidalwave.northernwind.core.model.NwFileObject;
-import it.tidalwave.northernwind.core.model.NwFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 
 /***********************************************************************************************************************
  *
@@ -41,9 +41,9 @@ interface FileDelegateExclusions
 
 //    public boolean hasExt(String ext);
 
-    public NwFileSystem getFileSystem();
+    public ResourceFileSystem getFileSystem();
 
-    public NwFileObject getParent();
+    public ResourceFile getParent();
 
 //    public NwFileObject move(FileLock lock, NwFileObject target, String name, String ext);
 //
@@ -51,6 +51,6 @@ interface FileDelegateExclusions
 //
 //    public NwFileObject createData(String name, String ext);
 
-    public NwFileObject createFolder(String name);
+    public ResourceFile createFolder(String name);
     //        public Enumeration<? extends NwFileObject> getData (boolean rec); calls getChildren()
   }

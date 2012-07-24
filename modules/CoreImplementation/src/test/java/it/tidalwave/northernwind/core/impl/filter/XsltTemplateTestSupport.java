@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.NwFileObject;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
@@ -105,10 +105,10 @@ public class XsltTemplateTestSupport
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
         final FileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
-        final NwFileObject fileObject = localFileSystemProvider.getFileSystem().findResource(root.getAbsolutePath());
+        final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findResource(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<Resource>();
         
-        for (final NwFileObject xsltFileObject : fileObject.getChildren())
+        for (final ResourceFile xsltFileObject : fileObject.getChildren())
           {
             final Resource resource = mock(Resource.class);
             when(resource.getFile()).thenReturn(xsltFileObject);
