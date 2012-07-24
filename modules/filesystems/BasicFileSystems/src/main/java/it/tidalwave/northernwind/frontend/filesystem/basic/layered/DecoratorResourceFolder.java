@@ -33,6 +33,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import lombok.Delegate;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -41,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j @ToString(of="delegate")
 class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvider>
   {
     @Nonnull
@@ -81,27 +82,11 @@ class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvi
         return getChildrenMap().get(relativePath);
       }
 
-//    @Override
-//    public NwFileObject getFileObject (final String name, final String ext)
-//      {
-//        log.trace("getFileObject({}, {})", name, ext);
-//        return getFileObject(name + "." + ext);
-////            return createDecoratorFileObject(delegate.getFileObject(name, ext)); 
-//      }
-
     @Override
     public ResourceFile getParent()
       {
         return fileSystemProvider.createDecoratorFileObject(delegate.getParent());
       }
-
-//    @Override
-//    public NwFileObject createData (final String name, final String ext)
-//      throws IOException
-//      {
-//        log.trace("createData({}, {})", name, ext);
-//        return fileSystemProvider.createDecoratorFileObject(delegate.createData(name, ext)); 
-//      }
 
     @Override
     public ResourceFile createFolder (final String name)
@@ -109,12 +94,6 @@ class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvi
       {
         log.trace("createFolder({})", name);
         return fileSystemProvider.createDecoratorFileObject(delegate.createFolder(name));
-      }
-
-    @Override @Nonnull
-    public String toString() 
-      {
-        return String.format("DecoratorFolderObject(%s)", delegate);
       }
 
     @Nonnull
