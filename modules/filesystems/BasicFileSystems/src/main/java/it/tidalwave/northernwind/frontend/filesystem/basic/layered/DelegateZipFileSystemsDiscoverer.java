@@ -52,7 +52,7 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
     @Override @Nonnull
     public List<? extends FileSystemProvider> getFileSystemProviders() 
       {
-        final List<FileSystemProvider> fileSystemProviders = new ArrayList<FileSystemProvider>();
+        final List<FileSystemProvider> fileSystemProviders = new ArrayList<>();
         
         try
           { 
