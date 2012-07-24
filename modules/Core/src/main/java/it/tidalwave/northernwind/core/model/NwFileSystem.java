@@ -22,6 +22,8 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model;
 
+import javax.annotation.Nonnull;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -30,4 +32,6 @@ package it.tidalwave.northernwind.core.model;
  **********************************************************************************************************************/
 public interface NwFileSystem 
   {
+    @Nonnull
+    public NwFileObject findResource (@Nonnull String name);
   }
