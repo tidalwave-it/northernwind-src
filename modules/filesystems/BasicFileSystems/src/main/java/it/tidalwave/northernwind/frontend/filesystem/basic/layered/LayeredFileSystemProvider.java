@@ -32,7 +32,7 @@ import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.northernwind.core.model.spi.ResourceFileSystemSpi;
+import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,7 +60,7 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
      * 
      *
      ******************************************************************************************************************/
-    private final ResourceFileSystemSpi fileSystem = new ResourceFileSystemSpi() 
+    private final DecoratedResourceFileSystem fileSystem = new DecoratedResourceFileSystem() 
       {
         /***************************************************************************************************************
          *

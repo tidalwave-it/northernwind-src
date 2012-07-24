@@ -24,7 +24,7 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.spi.ResourceFileSupport;
+import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
 import lombok.Delegate;
 import lombok.ToString;
 
@@ -35,7 +35,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString(of="delegate")
-class DecoratorResourceFile extends ResourceFileSupport<LayeredFileSystemProvider>
+class DecoratorResourceFile extends DecoratedResourceFileSupport<LayeredFileSystemProvider>
   {
     @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;

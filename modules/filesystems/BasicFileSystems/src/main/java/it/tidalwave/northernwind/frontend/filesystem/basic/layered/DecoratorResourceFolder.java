@@ -32,7 +32,7 @@ import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.northernwind.core.model.spi.ResourceFileSupport;
+import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString(of="delegate")
-class DecoratorResourceFolder extends ResourceFileSupport<LayeredFileSystemProvider>
+class DecoratorResourceFolder extends DecoratedResourceFileSupport<LayeredFileSystemProvider>
   {
     @Nonnull
     private final String path;

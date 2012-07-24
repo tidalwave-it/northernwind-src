@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public abstract class ResourceFileSupport<RFSP extends ResourceFileSystemProvider> implements ResourceFile 
+public abstract class DecoratedResourceFileSupport<RFSP extends ResourceFileSystemProvider> implements ResourceFile 
   {
     @Nonnull
     protected final RFSP fileSystemProvider;
@@ -44,11 +44,11 @@ public abstract class ResourceFileSupport<RFSP extends ResourceFileSystemProvide
     private final ResourceFile delegate;
 
     @Override @Nonnull
-    public ResourceFileSystemSpi getFileSystem()
+    public DecoratedResourceFileSystem getFileSystem()
       {
         try
           {
-            return (ResourceFileSystemSpi)fileSystemProvider.getFileSystem();  
+            return (DecoratedResourceFileSystem)fileSystemProvider.getFileSystem();  
           }
         catch (IOException e) 
           {

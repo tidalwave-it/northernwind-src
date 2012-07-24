@@ -32,7 +32,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceFileSystemSpi extends ResourceFileSystem
+public interface DecoratedResourceFileSystem extends ResourceFileSystem
   {
     @Nonnull
     public ResourceFile createDecoratorFile (@Nonnull ResourceFile delegate);
