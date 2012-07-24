@@ -23,10 +23,16 @@
 
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Enumeration;
+import javax.servlet.ServletContext;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.NwFileObject;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -34,7 +40,7 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@Configurable @RequiredArgsConstructor @Slf4j
 public class NwFileObjectNetBeansPlatform implements NwFileObject 
   {
     interface Exclusions
@@ -43,7 +49,11 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
         public NwFileObject getFileObject (String fileName);
         public NwFileObject[] getChildren();
         public Enumeration<? extends NwFileObject> getChildren (boolean b);
+        public String getMIMEType();
       }
+    
+    @Inject 
+    private ApplicationContext applicationContext;
     
     @Delegate(excludes=Exclusions.class)
     private final org.openide.filesystems.FileObject delegate;
@@ -70,6 +80,15 @@ public class NwFileObjectNetBeansPlatform implements NwFileObject
     public Enumeration<? extends NwFileObject> getChildren(boolean b) 
       {
         throw new UnsupportedOperationException("Not supported yet.");
+      }
+    
+    @Override @Nonnull
+    public String getMIMEType()
+      {
+        final String fileName = delegate.getNameExt();
+        final String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);
+        log.trace(">>>> MIME type for {} is {}", delegate, mimeType);
+        return mimeType;
       }
     
     // TODO: equals and hashcode
