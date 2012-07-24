@@ -97,7 +97,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
     public synchronized ResourceFileSystem getFileSystem() 
       throws IOException
       {
-        return targetProvider.getFileSystem();      
+        return targetProvider.getFileSystem();
       }
     
     /*******************************************************************************************************************
