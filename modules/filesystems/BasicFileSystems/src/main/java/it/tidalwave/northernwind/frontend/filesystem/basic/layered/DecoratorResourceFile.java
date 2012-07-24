@@ -37,15 +37,15 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString(of="delegate")
-class DecoratorResourceFile extends DecoratedResourceFileSupport<LayeredFileSystemProvider>
+class DecoratorResourceFile extends DecoratedResourceFileSupport
   {
     @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
-    public DecoratorResourceFile (final @Nonnull LayeredFileSystemProvider fileSystemProvider, 
+    public DecoratorResourceFile (final @Nonnull LayeredResourceFileSystem fileSystem, 
                                   final @Nonnull ResourceFile delegate) 
       {
-        super(fileSystemProvider, delegate);
+        super(fileSystem, delegate);
         this.delegate = delegate;
       }
   }    

@@ -22,17 +22,11 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.io.IOException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,105 +46,17 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
     
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
-     
-    private final IdentityHashMap<ResourceFile, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
     
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    private final DecoratedResourceFileSystem fileSystem = new DecoratedResourceFileSystem() 
+    private ResourceFileSystem fileSystem;
+    
+    @Override @Nonnull
+    public ResourceFileSystem getFileSystem()
       {
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override @Nonnull
-        public ResourceFile getRoot() 
+        if (fileSystem == null)
           {
-            return findFileByPath("");
-          }
-
-        /***************************************************************************************************************
-         *
-         * {@inheritDoc}
-         *
-         **************************************************************************************************************/
-        @Override @CheckForNull
-        public ResourceFile findFileByPath (final @Nonnull String name) 
-          {
-            log.trace("findResource({})", name);
-            ResourceFile result = null;
-            
-              // FIXME: move to init!
-            if (fileSystemProvidersProvider != null)
-              {
-                delegates.clear();
-                final List fileSystemProviders = fileSystemProvidersProvider.getFileSystemProviders();
-                delegates.addAll(fileSystemProviders);
-              }
-            
-            for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
-              {
-                try 
-                  {
-                    final ResourceFileSystem fileSystem = i.previous().getFileSystem();
-                    final ResourceFile fileObject = fileSystem.findFileByPath(name);
-
-                    if (fileObject != null)
-                      {
-                        log.trace(">>>> fileSystem: {}, fileObject: {}", fileSystem, fileObject.getPath());
-                        result = createDecoratorFile(fileObject);
-                        break;
-                      }
-                  } 
-                catch (IOException e)
-                  {
-                    log.warn("", e);
-                  }
-              }
-
-            log.trace(">>>> returning {}", result);
-            
-            return result;
+            fileSystem = new LayeredResourceFileSystem(delegates, fileSystemProvidersProvider);
           }
         
-        /***************************************************************************************************************
-         *
-         * 
-         *
-         **************************************************************************************************************/
-        @Override @Nonnull        
-        public synchronized ResourceFile createDecoratorFile (final @Nonnull ResourceFile delegate)
-          {
-            if (delegate == null) 
-              {
-                return null;  
-              }
-
-            ResourceFile decorator = delegateLightWeightMap.get(delegate);
-
-            if (decorator == null)
-              {
-                decorator = (delegate.isData() ? new DecoratorResourceFile(LayeredFileSystemProvider.this, delegate) 
-                                               : new DecoratorResourceFolder(LayeredFileSystemProvider.this, delegate.getPath(), delegate));  
-                delegateLightWeightMap.put(delegate, decorator);
-              }
-
-            return decorator;
-          }
-      };
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public ResourceFileSystem getFileSystem()  
-      {
         return fileSystem;
       }
   }

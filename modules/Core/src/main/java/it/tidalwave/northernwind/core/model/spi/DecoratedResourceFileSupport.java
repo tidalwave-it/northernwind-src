@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -35,38 +35,25 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public abstract class DecoratedResourceFileSupport<RFSP extends ResourceFileSystemProvider> implements ResourceFile 
+public abstract class DecoratedResourceFileSupport implements ResourceFile 
   {
-    @Nonnull
-    protected final RFSP fileSystemProvider;
+    @Getter @Nonnull
+    protected final DecoratedResourceFileSystem fileSystem;
     
     @Nonnull
     private final ResourceFile delegate;
-
-    @Override @Nonnull
-    public DecoratedResourceFileSystem getFileSystem()
-      {
-        try
-          {
-            return (DecoratedResourceFileSystem)fileSystemProvider.getFileSystem();  
-          }
-        catch (IOException e) 
-          {
-            throw new RuntimeException(e);
-          }
-      }
 
     @Override
     public void delete()
       throws IOException 
       {
-        throw new UnsupportedOperationException("Not supported yet.");
+        delegate.delete();
       }
 
     @Override
     public ResourceFile getParent()
       {
-        return getFileSystem().createDecoratorFile(delegate.getParent());
+        return fileSystem.createDecoratorFile(delegate.getParent());
       }
 
     @Override
@@ -74,7 +61,7 @@ public abstract class DecoratedResourceFileSupport<RFSP extends ResourceFileSyst
       throws IOException
       {
 //        log.trace("createFolder({})", name);
-        return getFileSystem().createDecoratorFile(delegate.createFolder(name));
+        return fileSystem.createDecoratorFile(delegate.createFolder(name));
       }
 
     @Override

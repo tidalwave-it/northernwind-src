@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -44,23 +45,28 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j @ToString(of="delegate")
-class DecoratorResourceFolder extends DecoratedResourceFileSupport<LayeredFileSystemProvider>
+class DecoratorResourceFolder extends DecoratedResourceFileSupport
   {
     @Nonnull
     private final String path;
 
+    @Nonnull
+    private final List<? extends ResourceFileSystemProvider> delegates;
+    
     @Delegate(types=ResourceFile.class, excludes=FolderDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
     private SortedMap<String, ResourceFile> childrenMap;
 
-    public DecoratorResourceFolder (final @Nonnull LayeredFileSystemProvider fileSystemProvider,
+    public DecoratorResourceFolder (final @Nonnull LayeredResourceFileSystem fileSystem,
+                                    final @Nonnull List<? extends ResourceFileSystemProvider> delegates,
                                     final @Nonnull String path, 
                                     final @Nonnull ResourceFile delegate)
       {
-        super(fileSystemProvider, delegate);
+        super(fileSystem, delegate);
         this.path = path;
         this.delegate = delegate;
+        this.delegates = delegates;
       }
     
     @Override @Nonnull
@@ -90,7 +96,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport<LayeredFileSy
           {
             childrenMap = new TreeMap<>();
             
-            for (final ListIterator<? extends ResourceFileSystemProvider> i = fileSystemProvider.delegates.listIterator(fileSystemProvider.delegates.size()); i.hasPrevious(); )
+            for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
               {
                 try
                   {
