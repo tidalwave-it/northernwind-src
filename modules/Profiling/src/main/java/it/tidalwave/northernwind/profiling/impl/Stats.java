@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Stats 
   {
-    private static final String PATTERN = "%s %s | count: %6d | min: %7.2f | avg: %7.2f | max: %7.2f | dev: %7.2f";
+    private static final String PATTERN = "%s %s | count: %6d | min: %7.2f | avg: %7.2f | max: %9.2f | dev: %7.2f";
     
     @Nonnull
     private final String name;
