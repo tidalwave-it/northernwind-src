@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LayoutJaxbMarshallable implements Marshallable 
   {
     @Nonnull
-    private final Layout layout;
+    private final Layout ownerLayout;
     
     @Inject @Nonnull
     private ObjectFactory objectFactory;
@@ -60,9 +60,9 @@ public class LayoutJaxbMarshallable implements Marshallable
      * 
      *
      ******************************************************************************************************************/
-    public LayoutJaxbMarshallable (final @Nonnull Layout layout) 
+    public LayoutJaxbMarshallable (final @Nonnull Layout ownerLayout) 
       {
-        this.layout = layout;
+        this.ownerLayout = ownerLayout;
       }
     
     /*******************************************************************************************************************
@@ -78,7 +78,7 @@ public class LayoutJaxbMarshallable implements Marshallable
           {
             final ComponentsJaxb componentsJaxb = objectFactory.createComponentsJaxb();        
             componentsJaxb.setVersion("1.0");            
-            componentsJaxb.setComponent(marshal(layout));
+            componentsJaxb.setComponent(marshal(ownerLayout));
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createComponents(componentsJaxb), os);
           }
