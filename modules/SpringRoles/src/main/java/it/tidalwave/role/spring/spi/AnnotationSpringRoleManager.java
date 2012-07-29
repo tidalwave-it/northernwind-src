@@ -32,7 +32,6 @@ import java.util.Map.Entry;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.spring.ClassScanner;
 import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.role.spi.RoleManager;
@@ -164,8 +163,7 @@ public class AnnotationSpringRoleManager implements RoleManager
     @PostConstruct
     /* package */ void initialize()
       {
-        final ClassScanner classScanner = new ClassScanner();
-        classScanner.addIncludeFilter(new AnnotationTypeFilter(RoleImplementation.class));
+        final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(RoleImplementation.class);
         
         for (final Class<?> roleImplementationClass : classScanner.findClasses())
           {

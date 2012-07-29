@@ -22,12 +22,14 @@
  **********************************************************************************************************************/
 package it.tidalwave.util.spring;
 
+import java.lang.annotation.Annotation;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.ClassUtils;
 
@@ -75,8 +77,23 @@ public class ClassScanner
      * @param  filter  the filter
      *
      ******************************************************************************************************************/
-    public void addIncludeFilter (final @Nonnull TypeFilter filter)
+    @Nonnull
+    public ClassScanner withIncludeFilter (final @Nonnull TypeFilter filter)
       {
         scanner.addIncludeFilter(filter);
+        return this;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Adds a filter for an annotation.
+     * 
+     * @param  annotationClass  the annotation class
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ClassScanner withAnnotationFilter (final @Nonnull Class<? extends Annotation> annotationClass)
+      {
+        return withIncludeFilter(new AnnotationTypeFilter(annotationClass));
       }
   }

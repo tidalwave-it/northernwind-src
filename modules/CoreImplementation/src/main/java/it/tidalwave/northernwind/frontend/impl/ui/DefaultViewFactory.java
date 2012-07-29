@@ -88,8 +88,7 @@ public class DefaultViewFactory implements ViewFactory
              NoSuchMethodException, InvocationTargetException, InstantiationException, 
              IllegalArgumentException, IllegalAccessException, SecurityException 
       {
-        final ClassScanner classScanner = new ClassScanner();
-        classScanner.addIncludeFilter(new AnnotationTypeFilter(ViewMetadata.class));
+        final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
         
         for (final Class<?> viewClass : classScanner.findClasses())
           {
