@@ -41,7 +41,7 @@ import org.springframework.util.ClassUtils;
  **********************************************************************************************************************/
 public class ClassScanner 
   {
-    private final String basePackage = "it"; // FIME
+    private final String basePackages = System.getProperty(ClassScanner.class.getCanonicalName() + ".basePackages", "com:org:it"); // FIME
     
     private final ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 
@@ -57,9 +57,12 @@ public class ClassScanner
       {
         final List<Class<?>> classes = new ArrayList<Class<?>>();
       
-        for (final BeanDefinition candidate : scanner.findCandidateComponents(basePackage)) 
+        for (final String basePackage : basePackages.split(":"))
           {
-            classes.add(ClassUtils.resolveClassName(candidate.getBeanClassName(), ClassUtils.getDefaultClassLoader()));
+            for (final BeanDefinition candidate : scanner.findCandidateComponents(basePackage)) 
+              {
+                classes.add(ClassUtils.resolveClassName(candidate.getBeanClassName(), ClassUtils.getDefaultClassLoader()));
+              }
           }
         
         return classes;
