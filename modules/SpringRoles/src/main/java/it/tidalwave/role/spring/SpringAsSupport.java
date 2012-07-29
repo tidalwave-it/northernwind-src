@@ -25,10 +25,10 @@ package it.tidalwave.role.spring;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.role.spi.RoleManager;
 import it.tidalwave.util.As;
-import it.tidalwave.util.AsException;
-import it.tidalwave.role.spring.spi.RoleManager;
+import it.tidalwave.util.NotFoundException;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -50,16 +50,9 @@ public class SpringAsSupport implements As
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> roleClass) 
+    public <T> T as (final @Nonnull Class<T> roleType) 
       {
-        final List<? extends T> roles = roleManager.findRoles(this, roleClass);
-        
-        if (roles.isEmpty())
-          {
-            throw new AsException(roleClass);  
-          }
-        
-        return roles.get(0);
+        return as(roleType, As.Defaults.throwAsException(roleType));
       }
 
     /*******************************************************************************************************************
@@ -68,8 +61,15 @@ public class SpringAsSupport implements As
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> clazz, final @Nonnull NotFoundBehaviour<T> notFoundBehaviour)
+    public <T> T as (final @Nonnull Class<T> roleType, final @Nonnull NotFoundBehaviour<T> notFoundBehaviour)
       {
-        throw new UnsupportedOperationException("Not supported yet."); // FIXME
+        final List<? extends T> roles = roleManager.findRoles(this, roleType);
+        
+        if (roles.isEmpty())
+          {
+            return notFoundBehaviour.run(new NotFoundException("No " + roleType.getName() + " in " + this)); 
+          }
+        
+        return roles.get(0);
       }    
   }

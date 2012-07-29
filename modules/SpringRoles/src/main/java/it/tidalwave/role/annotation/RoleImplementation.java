@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 
 /***********************************************************************************************************************
  *
- * Designates a role implementation for a given owner.
+ * Designates a role implementation for a given owner object.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$

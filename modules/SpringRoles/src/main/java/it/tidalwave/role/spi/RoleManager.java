@@ -20,19 +20,30 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.role.spring.spi;
+package it.tidalwave.role.spi;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 /***********************************************************************************************************************
  *
+ * A service which retrieves DCI Roles for a given object.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface RoleManager 
   {
+    /*******************************************************************************************************************
+     *
+     * Retrieves the roles of the given class for the given owner object.
+     * 
+     * @param   owner      the owner object
+     * @param   roleType   the role type
+     * @return             a list of roles
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public <RoleType> List<? extends RoleType> findRoles (@Nonnull Object owner, @Nonnull Class<RoleType> roleClass);
+    public <RoleType> List<? extends RoleType> findRoles (@Nonnull Object owner, @Nonnull Class<RoleType> roleType);
   }
