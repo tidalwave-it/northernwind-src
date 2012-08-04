@@ -66,11 +66,7 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
             final String propertyName = matcher.group(1);
             return rootSiteNode.getProperties().getProperty(new Key<String>(propertyName), "");
           }
-        catch (NotFoundException e) 
-          {
-            return "ERR";
-          }
-        catch (IOException e) 
+        catch (NotFoundException | IOException e) 
           {
             return "ERR";
           }
