@@ -69,9 +69,9 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Nonnull @Getter
     private final Id id;
     
-    private final Map<Key<?>, Object> propertyMap = new HashMap<Key<?>, Object>();
+    private final Map<Key<?>, Object> propertyMap = new HashMap<>();
 
-    private final Map<Id, DefaultResourceProperties> groupMap = new HashMap<Id, DefaultResourceProperties>();
+    private final Map<Id, DefaultResourceProperties> groupMap = new HashMap<>();
     
     @Nonnull
     private final PropertyResolver propertyResolver;
@@ -134,7 +134,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
         this.id = id;
         this.propertyResolver = propertyResolver;
         
-        final Map<Id, Map<Key<?>, Object>> othersMap = new HashMap<Id, Map<Key<?>, Object>>();
+        final Map<Id, Map<Key<?>, Object>> othersMap = new HashMap<>();
         
         for (final Entry<Key<?>, Object> entry : map.entrySet())
           {
@@ -143,7 +143,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
             
             if (!s.contains("."))
               {
-                propertyMap.put(new Key<Object>(s), value);  
+                propertyMap.put(new Key<>(s), value);  
               }
             else
               {
@@ -154,11 +154,11 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
                 
                 if (otherMap == null)
                   {
-                    otherMap = new HashMap<Key<?>, Object>();
+                    otherMap = new HashMap<>();
                     othersMap.put(groupId, otherMap);  
                   }
                 
-                otherMap.put(new Key<Object>(x[1]), value);
+                otherMap.put(new Key<>(x[1]), value);
               }
           }
         
@@ -220,7 +220,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Override @Nonnull
     public Collection<Key<?>> getKeys() 
       {
-        return new CopyOnWriteArrayList<Key<?>>(propertyMap.keySet());
+        return new CopyOnWriteArrayList<>(propertyMap.keySet());
       }
     
     /*******************************************************************************************************************
@@ -231,7 +231,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Override @Nonnull
     public Collection<Id> getGroupIds() 
       {
-        return new CopyOnWriteArrayList<Id>(groupMap.keySet());
+        return new CopyOnWriteArrayList<>(groupMap.keySet());
       }
     
     /*******************************************************************************************************************
