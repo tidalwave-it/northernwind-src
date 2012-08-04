@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -36,7 +37,7 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @Slf4j
 public class FilterSetExpander implements Filter
   {
     @Inject @Nonnull 
@@ -60,6 +61,7 @@ public class FilterSetExpander implements Filter
         
         for (final Filter filter : filters)
           {
+            log.debug(">>>> filtering with {}", filter);
             result = filter.filter(result, mimeType);
           }
         
