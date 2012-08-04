@@ -209,11 +209,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
               {
                 log.debug("{}>>>> {} = {}", new Object[] { indent, key, properties.getProperty(key) });
               }
-            catch (NotFoundException e) 
-              {
-                log.error("", e);
-              }
-            catch (IOException e) 
+            catch (NotFoundException | IOException e) 
               {
                 log.error("", e);
               }
