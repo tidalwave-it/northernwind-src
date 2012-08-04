@@ -82,7 +82,7 @@ import lombok.extern.slf4j.Slf4j;
 
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or this the next
     // method can't stay here.
-    public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
+    public static final Key<String> PROPERTY_TITLE = new Key<>("title");
     
     /*******************************************************************************************************************
      *
