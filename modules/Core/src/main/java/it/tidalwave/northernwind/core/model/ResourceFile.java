@@ -45,7 +45,7 @@ public interface ResourceFile
     public String getName(); 
 
     @Nonnull
-    public String getPath();
+    public String getPath(); // FIXME: inherits from FileObject the fact that root is "" and not "/"
     
     public boolean isFolder();
 
