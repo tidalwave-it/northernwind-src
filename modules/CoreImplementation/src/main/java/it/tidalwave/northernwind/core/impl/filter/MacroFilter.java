@@ -88,12 +88,7 @@ public class MacroFilter implements Filter
           {
             return filter(matcher);
           }
-        catch (NotFoundException e) 
-          {
-            log.error("", e);
-            return "";
-          }
-        catch (IOException e) 
+        catch (NotFoundException | IOException e) 
           {
             log.error("", e);
             return "";
