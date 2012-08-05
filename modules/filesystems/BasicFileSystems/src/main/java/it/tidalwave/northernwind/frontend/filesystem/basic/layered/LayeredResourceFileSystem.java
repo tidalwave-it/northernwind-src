@@ -1,7 +1,7 @@
 /***********************************************************************************************************************
  *
- * PROJECT NAME
- * PROJECT COPYRIGHT
+ * NorthernWind - lightweight CMS
+ * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
  *
  ***********************************************************************************************************************
  *
@@ -16,11 +16,10 @@
  *
  ***********************************************************************************************************************
  *
- * WWW: PROJECT URL
- * SCM: PROJECT SCM
+ * WWW: http://northernwind.tidalwave.it
+ * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import it.tidalwave.northernwind.core.model.ResourceFile;
