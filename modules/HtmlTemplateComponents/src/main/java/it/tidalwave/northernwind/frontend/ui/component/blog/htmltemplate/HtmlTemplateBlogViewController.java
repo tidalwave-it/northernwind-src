@@ -30,6 +30,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -43,7 +44,6 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
@@ -189,14 +189,51 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         if (addBody)
           {
             htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty(PROPERTY_FULL_TEXT)));
-            requestContext.setDynamicNodeProperty(PROP_ADD_ID, properties.getProperty(PROPERTY_ID));
-            final String title = properties.getProperty(PROPERTY_TITLE);
-//            final String title = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
-            requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, title); // FIXME: the post index overrides
+            
+            try
+              {
+                requestContext.setDynamicNodeProperty(PROP_ADD_ID, properties.getProperty(PROPERTY_ID));
+              }
+            catch (NotFoundException | IOException e)
+              {
+                log.debug("Can't set dynamic property " + PROP_ADD_ID, e); // ok, no id
+              }
+            
+            requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, computeTitle(post)); 
           }
 
         htmlBuilder.append(String.format("</div>\n"));
         htmlParts.add(htmlBuilder.toString());
+      }
+    
+    @Nonnull
+    private String computeTitle (final @Nonnull Content post)
+      {
+        final ResourceProperties properties = post.getProperties();
+        final StringBuilder buffer = new StringBuilder();
+        String separator = "";
+        
+        try
+          {
+            buffer.append(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE));
+            separator = " - ";
+          }
+        catch (NotFoundException | IOException e)
+          {
+            // ok, no title
+          }
+        
+        try
+          {
+            final String t = properties.getProperty(PROPERTY_TITLE); // before append separator
+            buffer.append(separator).append(t);
+          }
+        catch (NotFoundException | IOException e)
+          {
+            // ok, no title
+          }
+        
+        return buffer.toString();
       }
 
     /*******************************************************************************************************************
