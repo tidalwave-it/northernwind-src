@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -59,9 +58,6 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     
     @Inject @Nonnull
     private Provider<FilterSetExpander> macroExpander;
-    
-    @Inject @Nonnull
-    private RequestContext requestContext;
     
     @Nonnull @Getter
     private final ResourceFile file;    
@@ -123,16 +119,11 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         
         try
           {
-//            filterContext.setContent(this);
             return macroExpander.get().filter(propertyFile.asText(charset), propertyFile.getMimeType());
           }
         catch (RuntimeException e) // FIXME: introduce a FilterException
           {
             throw new IOException(e); 
-          }
-        finally
-          {
-//            filterContext.clearContent();
           }
       }  
     
