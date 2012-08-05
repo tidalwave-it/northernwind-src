@@ -32,8 +32,10 @@ import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import static org.springframework.core.Ordered.*;
@@ -58,6 +60,9 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     @Inject @Nonnull
     private RequestHolder requestHolder;
     
+    @Inject @Nonnull
+    private RequestContext requestContext;
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -67,14 +72,23 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException, HttpStatusException 
       {
-        final String relativeUri = request.getRelativeUri();
-        final Site site = siteProvider.get().getSite();
-        siteView.renderSiteNode(site.find(SiteNode).withRelativeUri(relativeUri).result());
-        //
-        // Check *after* finding the SiteNode, since a "not found" must have been already handled here.
-        //
-        enforceTrailingSlash(relativeUri, site);
-        return BREAK;
+        try
+          {
+            final String relativeUri = request.getRelativeUri();
+            final Site site = siteProvider.get().getSite();
+            final SiteNode node = site.find(SiteNode).withRelativeUri(relativeUri).result();
+            requestContext.setNode(node);
+            siteView.renderSiteNode(node);
+            //
+            // Check *after* finding the SiteNode, since a "not found" must have been already handled here.
+            //
+            enforceTrailingSlash(relativeUri, site);
+            return BREAK;
+          }
+        finally
+          {
+            requestContext.clearNode();  
+          }
       }
 
     /*******************************************************************************************************************
