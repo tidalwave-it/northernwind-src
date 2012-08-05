@@ -27,12 +27,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import org.joda.time.Duration;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,13 +57,8 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     protected ResponseHolder<ResponseType> responseHolder;
 
     @Getter @Setter
-    private Duration duration = Duration.standardDays(7);
+    private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationTime
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     @Override @Nonnull
     public Status process (final @Nonnull Request request) 
       throws NotFoundException, IOException
@@ -74,23 +69,13 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
           {
             final Media media = siteProvider.get().getSite().find(Media).withRelativePath(relativeUri.replaceAll("^/media", "")).result();
             final ResourceFile file = media.getFile();
-            createResponse(file);
+            log.info(">>>> serving contents of /{} ...", file.getPath());
+            responseHolder.response().fromFile(file)
+                                     .withExpirationTime(duration)
+                                     .put();
             return BREAK;
           }
         
         return CONTINUE;
-      }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    protected void createResponse (final @Nonnull ResourceFile file)
-      throws IOException
-      {
-        log.info(">>>> serving contents of /{} ...", file.getPath());
-        responseHolder.response().fromFile(file)
-                                 .withExpirationTime(duration)
-                                 .put();
       }
   }
