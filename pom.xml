@@ -11,7 +11,7 @@
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind</artifactId>
-    <version>1.1-ALPHA-18-SNAPSHOT</version>
+    <version>1.1-ALPHA-18</version>
     <packaging>pom</packaging>
     <name>NorthernWind (master)</name>
     <description>NorthernWind - lightweight CMS</description>
@@ -114,114 +114,114 @@
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-role-spring</artifactId>
-                <version>1.0.34-SNAPSHOT</version>
+                <version>1.0.34</version>
             </dependency>
 
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core</artifactId>
-                <version>1.0.35-SNAPSHOT</version>
+                <version>1.0.35</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-                <version>1.0.35-SNAPSHOT</version>
+                <version>1.0.35</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-default</artifactId> 
                 <classifier>tests</classifier>
-                <version>1.0.35-SNAPSHOT</version>
+                <version>1.0.35</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
-                <version>1.0.34-SNAPSHOT</version>
+                <version>1.0.34</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
-                <version>1.0.34-SNAPSHOT</version>
+                <version>1.0.34</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-filesystem-hg</artifactId>
-                <version>1.0.5-SNAPSHOT</version>
+                <version>1.0.5</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.3</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
-                <version>1.0.35-SNAPSHOT</version>
+                <version>1.0.35</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-                <version>1.0.35-SNAPSHOT</version>
+                <version>1.0.35</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-vaadin</artifactId>
-                <version>1.0.35-SNAPSHOT</version>
+                <version>1.0.35</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-commons</artifactId>
-                <version>1.0.34-SNAPSHOT</version>
+                <version>1.0.34</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-                <version>1.0.8-SNAPSHOT</version>
+                <version>1.0.8</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-vaadin</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-commons</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-vaadin-webapp</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media-springmvc</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc-webapp</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media-springmvc-webapp</artifactId>
-                <version>1.1-ALPHA-18-SNAPSHOT</version>
+                <version>1.1-ALPHA-18</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
