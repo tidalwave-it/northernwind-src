@@ -240,6 +240,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      * Renders the general title of the blog.
      *
+     * FIXME: should use computeTitle(), but we don't have the post.
+     * 
      ******************************************************************************************************************/
     /* package */ void renderMainTitle (final @Nonnull StringBuilder htmlBuilder)
       {

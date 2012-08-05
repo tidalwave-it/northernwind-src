@@ -35,7 +35,7 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface RequestContext extends RequestResettable // FIXME: rename to RequestContext?
+public interface RequestContext extends RequestResettable 
   {
     /*******************************************************************************************************************
      *
