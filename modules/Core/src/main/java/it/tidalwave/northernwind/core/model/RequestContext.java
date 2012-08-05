@@ -24,11 +24,12 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.spi.RequestResettable;
+import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
- * The context for a {@link Filter} provides access to the current {@link Resource} and {@link SiteNode} being 
- * processed.
+ * The context for a {@link Request} provides access to some items that are only available during the processing of
+ * the request.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -47,21 +48,14 @@ public interface RequestContext extends RequestResettable // FIXME: rename to Re
     
     /*******************************************************************************************************************
      *
+     * Returns the current {@link Content} properties.
+     * 
+     * @return  the properties
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getContentProperties();
 
-//    /*******************************************************************************************************************
-//     *
-//     * Returns the current {@link Content} being processed.
-//     * 
-//     * @return  the current {@code Content}
-//     *
-//     ******************************************************************************************************************/
-//    @Nonnull
-//    public Content getContent(); // FIXME: throws NotFoundException
-    
     /*******************************************************************************************************************
      *
      * Clears the current {@link Resource}.
@@ -80,20 +74,13 @@ public interface RequestContext extends RequestResettable // FIXME: rename to Re
     
     /*******************************************************************************************************************
      *
+     * Returns the current {@link SiteNode} properties.
+     * 
+     * @return  the properties
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getNodeProperties();
-
-//    /*******************************************************************************************************************
-//     *
-//     * Returns the current {@link SiteNode} being processed.
-//     * 
-//     * @return  the current {@code SiteNode}
-//     *
-//     ******************************************************************************************************************/
-//    @Nonnull
-//    public SiteNode getNode();// FIXME: throws NotFoundException
     
     /*******************************************************************************************************************
      *
@@ -101,4 +88,15 @@ public interface RequestContext extends RequestResettable // FIXME: rename to Re
      *
      ******************************************************************************************************************/
     public void clearNode();
+
+    /*******************************************************************************************************************
+     *
+     * Sets a dynamic node property. These properties can be associated to the current {@link SiteNode}, created in
+     * a dynamic fashion while processing the {@link Request} and available only in the {@link RequestContext}.
+     * 
+     * @param  key    the property key
+     * @param  value  the property value
+     *
+     ******************************************************************************************************************/
+    public <Type> void setDynamicNodeProperty (@Nonnull Key<Type> key, @Nonnull Type value);
   }

@@ -32,6 +32,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -63,6 +64,8 @@ public class HtmlTemplateBlogViewControllerTest
     
     private RequestHolder requestHolder;
     
+    private RequestContext requestContext;
+    
     private RequestLocaleManager requestLocaleManager;
     
     /*******************************************************************************************************************
@@ -75,8 +78,9 @@ public class HtmlTemplateBlogViewControllerTest
         node = mock(SiteNode.class);
         site = mock(Site.class);
         requestHolder = mock(RequestHolder.class);
+        requestContext = mock(RequestContext.class);
         requestLocaleManager = mock(RequestLocaleManager.class);
-        fixture = new HtmlTemplateBlogViewController(view, node, site, requestHolder, requestLocaleManager);  
+        fixture = new HtmlTemplateBlogViewController(view, node, site, requestHolder, requestContext, requestLocaleManager);  
       }
     
     /*******************************************************************************************************************

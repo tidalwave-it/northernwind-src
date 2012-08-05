@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -36,6 +37,7 @@ import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -44,7 +46,6 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
-import javax.inject.Provider;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -80,10 +81,11 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
                                          final @Nonnull SiteNode siteNode, 
                                          final @Nonnull Site site, 
                                          final @Nonnull RequestLocaleManager requestLocaleManager, 
-                                         final @Nonnull RequestHolder requestHolder)
+                                         final @Nonnull RequestHolder requestHolder,
+                                         final @Nonnull RequestContext requestContext)
       throws NotFoundException, IOException 
       {
-        super(view, siteNode, site, requestHolder);
+        super(view, siteNode, site, requestHolder, requestContext);
         this.view = view;
         this.siteNode = siteNode;
         this.site = site;

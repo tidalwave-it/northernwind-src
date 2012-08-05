@@ -32,6 +32,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -42,6 +43,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import it.tidalwave.util.Key;
 
 /***********************************************************************************************************************
  *
@@ -52,6 +54,11 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
+    // FIXME: find a proper name space, possibly merging with other - or defining @ as dynamic properties
+    private final static Key<String> PROP_ADD_TITLE = new Key<>("@title");
+    private final static Key<String> PROP_ADD_URL = new Key<>("@url");
+    private final static Key<String> PROP_ADD_ID = new Key<>("@id");
+    
     @Nonnull
     private final SiteNode siteNode;
     
@@ -73,9 +80,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                                            final @Nonnull SiteNode siteNode,
                                            final @Nonnull Site site, 
                                            final @Nonnull RequestHolder requestHolder,
+                                           final @Nonnull RequestContext requestContext,
                                            final @Nonnull RequestLocaleManager requestLocaleManager) 
       {
-        super(view, siteNode, site, requestHolder);
+        super(view, siteNode, site, requestHolder, requestContext);
         this.siteNode = siteNode;
         this.site = site;
         this.requestLocaleManager = requestLocaleManager;
@@ -181,6 +189,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         if (addBody)
           {
             htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty(PROPERTY_FULL_TEXT)));
+            requestContext.setDynamicNodeProperty(PROP_ADD_ID, properties.getProperty(PROPERTY_ID));
+            final String title = properties.getProperty(PROPERTY_TITLE);
+//            final String title = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
+            requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, title); // FIXME: the post index overrides
           }
 
         htmlBuilder.append(String.format("</div>\n"));
@@ -233,8 +245,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         try
           {
-           final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
-           htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>%n", link));
+            final String link = site.createLink(siteNode.getRelativeUri() + "/" + getExposedUri(post));
+            htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>%n", link));
+            requestContext.setDynamicNodeProperty(PROP_ADD_URL, link);
           }
         catch (NotFoundException e)
           {

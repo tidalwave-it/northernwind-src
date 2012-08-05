@@ -22,9 +22,9 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties.PropertyResolver;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -46,14 +46,16 @@ public class DefaultRequestContext implements RequestContext
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();
     
     private final ThreadLocal<SiteNode> nodeHolder = new ThreadLocal<>();
+    
+    private final ThreadLocal<ResourceProperties> dynamicNodePropertiesHolder = new ThreadLocal<>();
 
     @Override @Nonnull
     public ResourceProperties getContentProperties() 
       {
-        if (contentHolder.get() == null)
+        if (contentHolder.get() == null) // FIXME: should never occur
           {
-            log.info("NO CONTENT IN CONTEXT");
-            Thread.dumpStack(); // FIXME
+            log.warn("NO CONTENT IN CONTEXT");
+//            Thread.dumpStack(); // FIXME
             return DefaultResourceProperties.DEFAULT;
           }
 
@@ -63,7 +65,14 @@ public class DefaultRequestContext implements RequestContext
     @Override @Nonnull
     public ResourceProperties getNodeProperties() 
       {
-        return nodeHolder.get().getProperties();
+        if (contentHolder.get() == null) // FIXME: should never occur
+          {
+            log.warn("NO CONTENT IN CONTEXT");
+//            Thread.dumpStack(); // FIXME
+            return dynamicNodePropertiesHolder.get();
+          }
+
+        return nodeHolder.get().getProperties().merged(dynamicNodePropertiesHolder.get());
       }
 
     @Override
@@ -76,6 +85,7 @@ public class DefaultRequestContext implements RequestContext
     public void setNode (final @Nonnull SiteNode node) 
       {
         nodeHolder.set(node);
+        dynamicNodePropertiesHolder.set(DefaultResourceProperties.DEFAULT); // FIXME: use ModelFactory
       }
 
     @Override
@@ -88,6 +98,7 @@ public class DefaultRequestContext implements RequestContext
     public void clearNode() 
       {
         nodeHolder.remove();
+        dynamicNodePropertiesHolder.remove();
       }
     
     @Override
@@ -95,6 +106,13 @@ public class DefaultRequestContext implements RequestContext
       {
         clearNode();
         clearContent();
+      }
+
+    @Override
+    public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value) 
+      {
+        ResourceProperties properties = dynamicNodePropertiesHolder.get();
+        dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
       }
     
     @Override @Nonnull

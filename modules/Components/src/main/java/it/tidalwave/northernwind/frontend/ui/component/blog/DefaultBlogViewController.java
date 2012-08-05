@@ -47,6 +47,7 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -82,6 +83,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
     
     @Nonnull
     private final RequestHolder requestHolder;
+    
+    @Nonnull
+    protected final RequestContext requestContext;
 
     /*******************************************************************************************************************
      *
