@@ -58,15 +58,8 @@ public class ContentPropertyResolverMacroFilter extends MacroFilter
           {
             final String propertyName = matcher.group(1);
             
-            if (requestContext.get().getContent() == null)
-              {
-                log.info("NO CONTENT IN CONTEXT");
-                Thread.dumpStack();
-                return "NO CONTENT";  
-              }
-            
-            log.info("YYY prop {} - props {}", new Object[]{ propertyName, requestContext.get().getContent(), requestContext.get().getContent().getProperties() });
-            return requestContext.get().getContent().getProperties().getProperty(new Key<String>(propertyName), "");
+            log.info("YYY property {} - available properties {}", propertyName, requestContext.get().getContentProperties());
+            return requestContext.get().getContentProperties().getProperty(new Key<String>(propertyName), "");
           }
         catch (IOException e) 
           {

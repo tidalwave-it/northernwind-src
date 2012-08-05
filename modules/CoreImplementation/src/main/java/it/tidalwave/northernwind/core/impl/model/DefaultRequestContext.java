@@ -22,12 +22,15 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties.PropertyResolver;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -37,11 +40,31 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultRequestContext implements RequestContext
   {
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();
     
     private final ThreadLocal<SiteNode> nodeHolder = new ThreadLocal<>();
+
+    @Override @Nonnull
+    public ResourceProperties getContentProperties() 
+      {
+        if (contentHolder.get() == null)
+          {
+            log.info("NO CONTENT IN CONTEXT");
+            Thread.dumpStack(); // FIXME
+            return DefaultResourceProperties.DEFAULT;
+          }
+
+        return contentHolder.get().getProperties();
+      }
+
+    @Override @Nonnull
+    public ResourceProperties getNodeProperties() 
+      {
+        return nodeHolder.get().getProperties();
+      }
 
     @Override
     public void setContent (final @Nonnull Content content) 
@@ -49,22 +72,10 @@ public class DefaultRequestContext implements RequestContext
         contentHolder.set(content);
       }
 
-    @Override @Nonnull
-    public Content getContent() 
-      {
-        return contentHolder.get();
-      }
-
     @Override
     public void setNode (final @Nonnull SiteNode node) 
       {
         nodeHolder.set(node);
-      }
-
-    @Override @Nonnull
-    public SiteNode getNode() 
-      {
-        return nodeHolder.get();
       }
 
     @Override
@@ -89,7 +100,7 @@ public class DefaultRequestContext implements RequestContext
     @Override @Nonnull
     public String toString()
       {
-        return String.format("RequestContext[content: %s, node: %s]", toString(getContent()), toString(getNode()));  
+        return String.format("RequestContext[content: %s, node: %s]", toString(contentHolder.get()), toString(nodeHolder.get()));  
       }
     
     @Nonnull

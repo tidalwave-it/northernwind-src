@@ -66,6 +66,8 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
           throws NotFoundException, IOException;
       }
     
+    public static ResourceProperties DEFAULT = new DefaultResourceProperties(PropertyResolver.DEFAULT);
+    
     @Nonnull @Getter
     private final Id id;
     

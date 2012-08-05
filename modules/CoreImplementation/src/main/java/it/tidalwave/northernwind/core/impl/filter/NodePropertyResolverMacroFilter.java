@@ -56,7 +56,7 @@ public class NodePropertyResolverMacroFilter extends MacroFilter
         try 
           {
             final String propertyName = matcher.group(1);
-            return context.get().getNode().getProperties().getProperty(new Key<String>(propertyName), "");
+            return context.get().getNodeProperties().getProperty(new Key<String>(propertyName), "");
           }
         catch (IOException e) 
           {

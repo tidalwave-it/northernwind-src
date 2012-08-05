@@ -47,13 +47,20 @@ public interface RequestContext extends RequestResettable // FIXME: rename to Re
     
     /*******************************************************************************************************************
      *
-     * Returns the current {@link Content} being processed.
-     * 
-     * @return  the current {@code Content}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Content getContent(); // FIXME: throws NotFoundException
+    public ResourceProperties getContentProperties();
+
+//    /*******************************************************************************************************************
+//     *
+//     * Returns the current {@link Content} being processed.
+//     * 
+//     * @return  the current {@code Content}
+//     *
+//     ******************************************************************************************************************/
+//    @Nonnull
+//    public Content getContent(); // FIXME: throws NotFoundException
     
     /*******************************************************************************************************************
      *
@@ -73,13 +80,20 @@ public interface RequestContext extends RequestResettable // FIXME: rename to Re
     
     /*******************************************************************************************************************
      *
-     * Returns the current {@link SiteNode} being processed.
-     * 
-     * @return  the current {@code SiteNode}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public SiteNode getNode();// FIXME: throws NotFoundException
+    public ResourceProperties getNodeProperties();
+
+//    /*******************************************************************************************************************
+//     *
+//     * Returns the current {@link SiteNode} being processed.
+//     * 
+//     * @return  the current {@code SiteNode}
+//     *
+//     ******************************************************************************************************************/
+//    @Nonnull
+//    public SiteNode getNode();// FIXME: throws NotFoundException
     
     /*******************************************************************************************************************
      *
