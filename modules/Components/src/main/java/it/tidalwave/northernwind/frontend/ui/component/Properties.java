@@ -38,6 +38,8 @@ public final class Properties
   {
     public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
     
+    public static final Key<String> PROPERTY_ID = new Key<String>("id");
+    
     public static final Key<String> PROPERTY_DESCRIPTION = new Key<String>("description");
     
     public static final Key<String> PROPERTY_FULL_TEXT = new Key<String>("fullText.xhtml");
