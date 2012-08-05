@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
@@ -36,7 +37,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultFilterContext implements FilterContext
+public class DefaultRequestContext implements RequestContext
   {
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();
     
@@ -88,7 +89,7 @@ public class DefaultFilterContext implements FilterContext
     @Override @Nonnull
     public String toString()
       {
-        return String.format("FilterContext[content: %s, node: %s]", toString(getContent()), toString(getNode()));  
+        return String.format("RequestContext[content: %s, node: %s]", toString(getContent()), toString(getNode()));  
       }
     
     @Nonnull

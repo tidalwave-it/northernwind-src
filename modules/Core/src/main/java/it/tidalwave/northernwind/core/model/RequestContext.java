@@ -20,11 +20,9 @@
  * SCM: PROJECT SCM
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 
 /***********************************************************************************************************************
@@ -36,10 +34,8 @@ import it.tidalwave.northernwind.core.model.spi.RequestResettable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface FilterContext extends RequestResettable // FIXME: rename to RequestContext?
+public interface RequestContext extends RequestResettable // FIXME: rename to RequestContext?
   {
-    public static final Class<FilterContext> FilterContext = FilterContext.class;
-    
     /*******************************************************************************************************************
      *
      * Sets the current {@link Content}.

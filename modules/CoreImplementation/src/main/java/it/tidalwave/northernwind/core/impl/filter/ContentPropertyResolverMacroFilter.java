@@ -22,7 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.impl.filter;
 
-import it.tidalwave.northernwind.core.impl.model.FilterContext;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -44,7 +44,7 @@ import static org.springframework.core.Ordered.*;
 public class ContentPropertyResolverMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
-    private Provider<FilterContext> context;
+    private Provider<RequestContext> requestContext;
     
     public ContentPropertyResolverMacroFilter()
       {
@@ -58,15 +58,15 @@ public class ContentPropertyResolverMacroFilter extends MacroFilter
           {
             final String propertyName = matcher.group(1);
             
-            if (context.get().getContent() == null)
+            if (requestContext.get().getContent() == null)
               {
                 log.info("NO CONTENT IN CONTEXT");
                 Thread.dumpStack();
                 return "NO CONTENT";  
               }
             
-            log.info("YYY prop {} - props {}", new Object[]{ propertyName, context.get().getContent(), context.get().getContent().getProperties() });
-            return context.get().getContent().getProperties().getProperty(new Key<String>(propertyName), "");
+            log.info("YYY prop {} - props {}", new Object[]{ propertyName, requestContext.get().getContent(), requestContext.get().getContent().getProperties() });
+            return requestContext.get().getContent().getProperties().getProperty(new Key<String>(propertyName), "");
           }
         catch (IOException e) 
           {

@@ -104,8 +104,8 @@
     <bean id="modelFactory"
           class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
           
-    <bean id="filterContext"
-          class="it.tidalwave.northernwind.core.impl.model.DefaultFilterContext" />
+    <bean id="requestContext"
+          class="it.tidalwave.northernwind.core.impl.model.DefaultRequestContext" />
     
     <bean id="filterSetExpander"
           class="it.tidalwave.northernwind.core.impl.model.FilterSetExpander" />

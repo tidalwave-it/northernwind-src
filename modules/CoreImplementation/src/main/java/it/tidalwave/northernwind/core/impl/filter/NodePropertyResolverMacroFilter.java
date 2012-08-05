@@ -30,7 +30,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
-import it.tidalwave.northernwind.core.impl.model.FilterContext;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import static org.springframework.core.Ordered.*;
 
 /***********************************************************************************************************************
@@ -43,7 +43,7 @@ import static org.springframework.core.Ordered.*;
 public class NodePropertyResolverMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
-    private Provider<FilterContext> context;
+    private Provider<RequestContext> context;
     
     public NodePropertyResolverMacroFilter()
       {

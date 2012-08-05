@@ -34,6 +34,7 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Delegate;
@@ -47,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 class ResourcePropertiesDelegate implements ResourceProperties
   {
     @Nonnull
-    private final FilterContext filterContext;
+    private final RequestContext requestContext;
     
     @Nonnull
     private final Content content;
@@ -67,12 +68,12 @@ class ResourcePropertiesDelegate implements ResourceProperties
       {
         try
           {  
-            filterContext.setContent(content);
+            requestContext.setContent(content);
             return delegate.getProperty(key);
           }
         finally
           {
-            filterContext.clearContent(); 
+            requestContext.clearContent(); 
           }
       }
 
@@ -82,12 +83,12 @@ class ResourcePropertiesDelegate implements ResourceProperties
       {
         try
           {  
-            filterContext.setContent(content);
+            requestContext.setContent(content);
             return delegate.getProperty(key, defaultValue);
           }
         finally
           {
-            filterContext.clearContent(); 
+            requestContext.clearContent(); 
           }
       }
   }
@@ -100,7 +101,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString(exclude="filterContext")
+@Configurable(preConstruction=true) @Slf4j @ToString(exclude="requestContext")
 /* package */ class DefaultContent implements Content
   {
     interface Exclusions
@@ -112,7 +113,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     private ModelFactory modelFactory;
     
     @Inject @Nonnull
-    private FilterContext filterContext;
+    private RequestContext requestContext;
     
     @Nonnull @Delegate(types=Resource.class, excludes=Exclusions.class)
     private final Resource resource;
@@ -183,6 +184,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public ResourceProperties getProperties() 
       {
-        return new ResourcePropertiesDelegate(filterContext, this, resource.getProperties());
+        return new ResourcePropertiesDelegate(requestContext, this, resource.getProperties());
       }
   }

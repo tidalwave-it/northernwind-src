@@ -30,13 +30,14 @@ import java.util.Locale;
 import java.io.InputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -50,7 +51,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude={"localeRequestManager", "macroExpander", "properties", "propertyResolver", "filterContext"})
+@Configurable @Slf4j @ToString(exclude={"localeRequestManager", "macroExpander", "properties", "propertyResolver", "requestContext"})
 /* package */ class DefaultResource implements Resource
   {
     @Inject @Nonnull
@@ -60,7 +61,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     private Provider<FilterSetExpander> macroExpander;
     
     @Inject @Nonnull
-    private FilterContext filterContext;
+    private RequestContext requestContext;
     
     @Nonnull @Getter
     private final ResourceFile file;    
@@ -81,7 +82,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key) 
           throws NotFoundException, IOException
           {
-            log.info("ZZZ resolving property {} - filterContext: {}", propertyGroupId + "." + key.stringValue(), filterContext);
+            log.info("ZZZ resolving property {} - filterContext: {}", propertyGroupId + "." + key.stringValue(), requestContext);
             return (Type)getFileBasedProperty(key.stringValue()); // FIXME: use also Id for SiteNode?
           }
       };
