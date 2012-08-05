@@ -45,11 +45,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class ResponseHolder<ResponseType> implements RequestResettable
   { 
+    protected static final int STATUS_PERMANENT_REDIRECT = 301;
+    
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
     protected static final String HEADER_ETAG = "ETag";
     protected static final String HEADER_CONTENT_TYPE = "Content-Type";
+    protected static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
     protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
     protected static final String HEADER_EXPIRES = "Expires";
+    protected static final String HEADER_LOCATION = "Location";
+        
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
@@ -91,6 +96,12 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           }
         
         @Nonnull
+        public ResponseBuilderSupport<ResponseType> withContentDisposition (final @Nonnull String contentDisposition)
+          {
+            return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
+          }
+        
+        @Nonnull
         public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
           {
             final Date expirationTime = getTime().plus(duration).toDate();
@@ -128,6 +139,13 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           {
             this.httpStatus = httpStatus;
             return this;
+          }
+
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String redirect) 
+          {
+            return withHeader(HEADER_LOCATION, redirect)
+                  .withStatus(STATUS_PERMANENT_REDIRECT);
           }
 
         @Nonnull
