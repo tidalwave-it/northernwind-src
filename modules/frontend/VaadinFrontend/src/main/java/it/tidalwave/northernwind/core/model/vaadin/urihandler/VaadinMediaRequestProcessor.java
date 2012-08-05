@@ -41,11 +41,11 @@ import static org.springframework.core.Ordered.*;
 @Configurable @Scope(value="session") @Order(HIGHEST_PRECEDENCE)
 public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<DownloadStream>
   {
-    @Override @Nonnull
-    protected void createResponse (final @Nonnull ResourceFile file) 
-      throws FileNotFoundException
-      {
-        //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
-        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMimeType()).put();
-      }
+//    @Override @Nonnull
+//    protected void createResponse (final @Nonnull ResourceFile file) 
+//      throws FileNotFoundException
+//      {
+//        //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
+//        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMimeType()).put();
+//      }
   }
