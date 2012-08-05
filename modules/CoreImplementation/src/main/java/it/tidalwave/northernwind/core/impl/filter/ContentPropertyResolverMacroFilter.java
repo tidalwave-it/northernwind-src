@@ -58,7 +58,7 @@ public class ContentPropertyResolverMacroFilter extends MacroFilter
           {
             final String propertyName = matcher.group(1);
             
-            log.info("YYY property {} - available properties {}", propertyName, requestContext.get().getContentProperties());
+//            log.info("YYY property {} - available properties {}", propertyName, requestContext.get().getContentProperties());
             return requestContext.get().getContentProperties().getProperty(new Key<String>(propertyName), "");
           }
         catch (IOException e) 
