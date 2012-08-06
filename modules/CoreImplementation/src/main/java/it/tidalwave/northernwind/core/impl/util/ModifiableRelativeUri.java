@@ -67,10 +67,21 @@ public class ModifiableRelativeUri
         return parts.get(0).equals(string);  
       }
     
+    @Nonnull
+    public String getExtension()
+      {   
+        return parts.get(parts.size() - 1).replaceAll("^.*\\.", "");
+      }
+    
     @Nonnegative
     public int getPartsCount()
       {
         return parts.size();  
+      }
+    
+    public void prepend (final @Nonnull String ... strings)
+      {
+        parts.addAll(0, Arrays.asList(strings));  
       }
     
     public void append (final @Nonnull String ... strings)

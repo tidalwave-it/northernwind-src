@@ -58,7 +58,10 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     protected ResponseHolder<ResponseType> responseHolder;
 
     @Getter @Setter
-    private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationTime
+    private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationDuration
+    
+    @Getter @Setter
+    private String uriPrefix = "media";
 
     @Override @Nonnull
     public Status process (final @Nonnull Request request) 
@@ -66,12 +69,18 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
       {
         final ModifiableRelativeUri mediaUri = new ModifiableRelativeUri(request.getRelativeUri());
         
-        if (!mediaUri.popLeading().equals("media"))
+        if (!mediaUri.popLeading().equals(uriPrefix))
           {
             return CONTINUE;
           }
-
-        // E.g. http://stoppingdown.net/media/stillimages/20120802-0010/1920/image.jpg
+        //
+        // Media that can be served at different sizes are mapped to URLs such as:
+        //
+        //     /media/stillimages/<media-id>/<size>/image.jpg
+        //
+        // TODO: perhaps this logic should be moved to the media finder? Such as:
+        //     find(Media).withSize(1920).withRelativePath(uri).result()
+        //
         if (mediaUri.startsWith("stillimages") || mediaUri.startsWith("movies"))
           {
             // 
@@ -81,19 +90,23 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             //
             if (mediaUri.getPartsCount() == 3)
               {
+                final String extension = mediaUri.getExtension();
                 final String fileName = mediaUri.popTrailing(); // 20120802-0010.jpg
                 final String size = mediaUri.popTrailing();     // 1920
-                mediaUri.append(fileName.replaceAll("\\..*$", ""), size, "image.jpg"); // FIXME: take extension from fileName
-                final String redirect = "/media" + mediaUri.asString();
+                mediaUri.append(fileName.replaceAll("\\..*$", ""), size, "image." + extension);
+                mediaUri.prepend(uriPrefix);
+                final String redirect = mediaUri.asString();
                 log.info(">>>> permanently redirecting to {}", redirect);
                 responseHolder.response().permanentRedirect(redirect).put();
                 return BREAK;
               }
+            // END TODO
 
+            final String extension = mediaUri.getExtension();
             final String fileName = mediaUri.popTrailing(); // image.jpg
             final String size = mediaUri.popTrailing();     // 1920
             final String mediaId = mediaUri.popTrailing();  // 20120802-0010
-            mediaUri.append(size, mediaId + ".jpg"); // FIXME: take extension from fileName
+            mediaUri.append(size, mediaId + "." + extension);
           }
 
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
