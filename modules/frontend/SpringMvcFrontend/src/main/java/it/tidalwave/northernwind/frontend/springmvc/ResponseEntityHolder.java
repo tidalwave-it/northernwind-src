@@ -68,7 +68,7 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
         @Override @Nonnull
         public ResponseEntity<?> build()
           {
-            return new ResponseEntity<Object>(body, headers, HttpStatus.valueOf(httpStatus));
+            return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
           }
       }
     
