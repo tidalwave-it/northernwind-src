@@ -188,7 +188,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         
         if (addBody)
           {
-            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty(PROPERTY_FULL_TEXT)));
+            // FIXME: only when editing
+            final String editClasses = "nw-editable-section";
+            final String extraAttributes = "id='/" + post.getFile().getPath() + "'";
+            // END FIXME
+            htmlBuilder.append(String.format("<div class='nw-blog-post-content %s' %s>%s</div>%n", 
+                                             editClasses,
+                                             extraAttributes,
+                                             properties.getProperty(PROPERTY_FULL_TEXT)));
             
             try
               {

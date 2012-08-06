@@ -59,10 +59,11 @@ public class EditorAspect
     // FIXME: shoulnd't depend on Aloha - 
     // use a fixed path /editor.css and use an @include inside it
     @Getter @Setter
-    private String cssRelativeUri = "/alohaeditor/0.21.0/aloha/css/aloha.css";
+    private String cssRelativeUri = "/css/InlineEditor.css";
+//    private String cssRelativeUri = "/alohaeditor/0.21.0/aloha/css/aloha.css";
     
     @Getter @Setter
-    private String scriptRelativeUri = "/Fragments/Editor";
+    private String scriptRelativeUri = "/Fragments/InlineEditor";
     
     @Getter @Setter
     private String editParameterName = "edit";

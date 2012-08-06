@@ -31,7 +31,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import java.io.IOException;
+import java.net.URLDecoder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /***********************************************************************************************************************
  *
@@ -39,7 +44,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Controller
+@Configurable @Controller @Slf4j
 public class SpringMvcRestController 
   {
     @Inject @Nonnull
@@ -52,5 +57,17 @@ public class SpringMvcRestController
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
       {
         return siteViewController.processRequest(modelFactory.createRequestFrom(request));
+      }
+    
+    // FIXME: move to a separated bean
+    @RequestMapping(value="/editor/**", method=POST) @Nonnull
+    public ResponseEntity<?> post (final @Nonnull HttpServletRequest request) 
+      throws IOException
+      {
+        final String contentRelativeUri = request.getRequestURI().replaceAll("^/editor", "");
+        final String content = URLDecoder.decode(IOUtils.toString(request.getReader()), "UTF-8");
+        log.info("EDITOR UPDATE {}", contentRelativeUri);
+        log.info("EDITOR UPDATE {}", content);
+        return new ResponseEntity<>("Done!", HttpStatus.OK); // FIXME: is it the correct return code?
       }
   }
