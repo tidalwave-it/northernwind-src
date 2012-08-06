@@ -65,16 +65,13 @@ public class EditorAspect
     @Getter @Setter
     private String scriptRelativeUri = "/Fragments/InlineEditor";
     
-    @Getter @Setter
-    private String editParameterName = "edit";
-    
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController.computeScreenCssSection(..))")
     public Object injectEditorCss (final @Nonnull ProceedingJoinPoint pjp) 
       throws Throwable
       {
         String result = (String)pjp.proceed();
         
-        if (isEditing())
+        if (requestHolder.isEditMode())
           {
             result += String.format(DefaultNodeContainerViewController.LINK_RELSTYLESHEET_MEDIASCREEN_HREF, cssRelativeUri); 
           }
@@ -88,7 +85,7 @@ public class EditorAspect
       {
         String result = (String)pjp.proceed();
         
-        if (isEditing())
+        if (requestHolder.isEditMode())
           {
             try
               {
@@ -102,18 +99,5 @@ public class EditorAspect
           }
         
         return result;
-      }
-    
-    private boolean isEditing()
-      {
-        try 
-          {  
-            requestHolder.get().getParameter(editParameterName);
-            return true;
-          } 
-        catch (NotFoundException e) 
-          {
-            return false;
-          }
       }
   }

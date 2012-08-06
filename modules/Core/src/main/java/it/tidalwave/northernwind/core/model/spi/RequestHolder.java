@@ -24,6 +24,9 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.util.NotFoundException;
+import lombok.Getter;
+import lombok.Setter;
 
 /***********************************************************************************************************************
  *
@@ -33,6 +36,9 @@ import it.tidalwave.northernwind.core.model.Request;
  **********************************************************************************************************************/
 public class RequestHolder implements RequestResettable // FIXME: consider merging with RequestContext
   {
+    @Getter @Setter
+    private String editParameterName = "edit";
+    
     private final ThreadLocal<Request> requestHolder = new ThreadLocal<Request>();
     
     @Override
@@ -50,5 +56,18 @@ public class RequestHolder implements RequestResettable // FIXME: consider mergi
     public Request get()
       {
         return requestHolder.get();  
+      }
+    
+    public boolean isEditMode()
+      {
+        try 
+          {  
+            get().getParameter(editParameterName);
+            return true;
+          } 
+        catch (NotFoundException e) 
+          {
+            return false;
+          }
       }
   }
