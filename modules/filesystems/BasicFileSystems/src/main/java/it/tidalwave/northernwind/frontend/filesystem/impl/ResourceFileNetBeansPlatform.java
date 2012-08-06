@@ -24,6 +24,7 @@ package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor @Slf4j @ToString(of="delegate")
+@Configurable  @Slf4j @ToString(of="delegate")
 public class ResourceFileNetBeansPlatform implements ResourceFile
   {
     interface Exclusions
@@ -70,14 +71,21 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         public Date lastModified();
       }
     
-    @Inject 
-    private ApplicationContext applicationContext;
+    @Inject @Nonnull 
+    private Provider<ServletContext> servletContext;
     
     @Getter @Nonnull
     private final ResourceFileSystemNetBeansPlatform fileSystem;
 
     @Delegate(excludes=Exclusions.class) @Nonnull
-    private final org.openide.filesystems.FileObject delegate;
+    private final FileObject delegate;
+
+    public ResourceFileNetBeansPlatform (final @Nonnull ResourceFileSystemNetBeansPlatform fileSystem, 
+                                         final @Nonnull FileObject delegate) 
+      {
+        this.fileSystem = fileSystem;
+        this.delegate = delegate;
+      }
     
     @Override @Nonnull
     public String getName()
@@ -135,7 +143,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     public String getMimeType()
       {
         final String fileName = delegate.getNameExt();
-        String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);        
+        String mimeType = servletContext.get().getMimeType(fileName);        
         mimeType = (mimeType != null) ? mimeType : "content/unknown";  
         log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
         return mimeType;
