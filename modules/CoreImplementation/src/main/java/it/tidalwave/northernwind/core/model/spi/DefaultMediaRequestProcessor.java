@@ -25,9 +25,6 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.io.IOException;
 import org.joda.time.Duration;
 import org.springframework.core.annotation.Order;
@@ -37,6 +34,7 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.core.impl.util.ModifiableRelativeUri;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -66,60 +64,44 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     public Status process (final @Nonnull Request request) 
       throws NotFoundException, IOException
       {
-        final String relativeUri = request.getRelativeUri();
+        final ModifiableRelativeUri mediaUri = new ModifiableRelativeUri(request.getRelativeUri());
         
-        if (!relativeUri.startsWith("/media"))
+        if (!mediaUri.popLeading().equals("media"))
           {
             return CONTINUE;
           }
 
-        String mediaUri = relativeUri.replaceAll("^/media", "");
-
         // E.g. http://stoppingdown.net/media/stillimages/20120802-0010/1920/image.jpg
-        if (mediaUri.startsWith("/stillimages/") || mediaUri.startsWith("/movies/"))
+        if (mediaUri.startsWith("stillimages") || mediaUri.startsWith("movies"))
           {
-            final List<String> parts = new ArrayList<>(Arrays.asList(mediaUri.substring(1).split("/")));
             // 
             // TODO: retrocompatibility with StoppingDown and Bluette
             // http://stoppingdown.net/media/stillimages/1920/20120802-0010.jpg
             // Should be dealt with a specific redirector in the website and removed from here.
             //
-            if (parts.size() == 3)
+            if (mediaUri.getPartsCount() == 3)
               {
-                final String fileName = parts.remove(parts.size() - 1); // 20120802-0010.jpg
-                final String size = parts.remove(parts.size() - 1);     // 1920
-                final String redirect = "/media" + joined(parts) + "/" + fileName.replaceAll("\\..*$", "") + "/" + size + "/" + fileName;
+                final String fileName = mediaUri.popTrailing(); // 20120802-0010.jpg
+                final String size = mediaUri.popTrailing();     // 1920
+                mediaUri.append(fileName.replaceAll("\\..*$", ""), size, "image.jpg"); // FIXME: take extension from fileName
+                final String redirect = "/media" + mediaUri.asString();
                 log.info(">>>> permanently redirecting to {}", redirect);
                 responseHolder.response().permanentRedirect(redirect).put();
                 return BREAK;
               }
 
-            final String fileName = parts.remove(parts.size() - 1); // image.jpg
-            final String size = parts.remove(parts.size() - 1);     // 1920
-            final String mediaId = parts.remove(parts.size() - 1);  // 20120802-0010
-            final String base = joined(parts);                      
-            mediaUri = base + "/" + size + "/" + mediaId + ".jpg"; // FIXME: take extension from fileName
+            final String fileName = mediaUri.popTrailing(); // image.jpg
+            final String size = mediaUri.popTrailing();     // 1920
+            final String mediaId = mediaUri.popTrailing();  // 20120802-0010
+            mediaUri.append(size, mediaId + ".jpg"); // FIXME: take extension from fileName
           }
 
-        final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri).result();
+        final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of /{} ...", file.getPath());
         responseHolder.response().fromFile(file)
                                  .withExpirationTime(duration)
                                  .put();
         return BREAK;        
-      }
-    
-    @Nonnull
-    private static String joined (final @Nonnull List<String> list)
-      {
-        final StringBuilder buffer = new StringBuilder();
-        
-        for (final String s : list)
-          {
-            buffer.append("/").append(s);
-          }
-        
-        return buffer.toString();
       }
   }
