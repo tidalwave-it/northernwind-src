@@ -25,6 +25,7 @@ package it.tidalwave.northernwind.frontend.filesystem.impl;
 import javax.annotation.Nonnull;
 import java.util.IdentityHashMap;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
     private final IdentityHashMap<FileObject, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
     
     @Nonnull
-    private final org.openide.filesystems.FileSystem fileSystem;
+    private final FileSystem fileSystem;
 
     @Override @Nonnull
     public ResourceFile getRoot() 
