@@ -84,6 +84,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           }
       };
     
+    protected static final String LINK_RELSTYLESHEET_MEDIASCREEN_HREF = "<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />\n";
+    
     @Nonnull
     private final NodeContainerView view;
     
@@ -146,7 +148,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS, Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
-                builder.append(String.format("<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />\n", link));
+                builder.append(String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link));
               }
           }
         catch (IOException e)
@@ -280,7 +282,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         catch (IOException e)
           {
             log.error("", e);
-          }        
+          }       
         
         return builder.toString();
       }
