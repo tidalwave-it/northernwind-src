@@ -68,7 +68,7 @@ public class EditorAspect
     private String editParameterName = "edit";
     
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController.computeScreenCssSection(..))")
-    public Object advice1 (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object injectEditorCss (final @Nonnull ProceedingJoinPoint pjp) 
       throws Throwable
       {
         String result = (String)pjp.proceed();
@@ -82,7 +82,7 @@ public class EditorAspect
       }
     
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController.computeInlinedScriptsSection(..))")
-    public Object advice2 (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object injectEditorScript (final @Nonnull ProceedingJoinPoint pjp) 
       throws Throwable
       {
         String result = (String)pjp.proceed();
