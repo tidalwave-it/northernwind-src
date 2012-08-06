@@ -135,13 +135,8 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     public String getMimeType()
       {
         final String fileName = delegate.getNameExt();
-        String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);
-        
-        if (mimeType == null)
-          {
-            mimeType = "content/unknown";  
-          }
-        
+        String mimeType = applicationContext.getBean(ServletContext.class).getMimeType(fileName);        
+        mimeType = (mimeType != null) ? mimeType : "content/unknown";  
         log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
         return mimeType;
       }
