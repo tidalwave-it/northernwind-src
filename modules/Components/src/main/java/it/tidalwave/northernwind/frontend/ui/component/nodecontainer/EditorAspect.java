@@ -32,10 +32,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.Content.Content;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -54,7 +56,16 @@ public class EditorAspect
     @Inject @Nonnull
     private RequestHolder requestHolder;
     
-    private boolean edit = true;
+    // FIXME: shoulnd't depend on Aloha - 
+    // use a fixed path /editor.css and use an @include inside it
+    @Getter @Setter
+    private String cssRelativeUri = "/alohaeditor/0.21.0/aloha/css/aloha.css";
+    
+    @Getter @Setter
+    private String scriptRelativeUri = "/Fragments/Editor";
+    
+    @Getter @Setter
+    private String editParameterName = "edit";
     
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController.computeScreenCssSection(..))")
     public Object advice1 (final @Nonnull ProceedingJoinPoint pjp) 
@@ -64,9 +75,7 @@ public class EditorAspect
         
         if (isEditing())
           {
-            result += String.format(DefaultNodeContainerViewController.LINK_RELSTYLESHEET_MEDIASCREEN_HREF,
-                                    "/alohaeditor/0.21.0/aloha/css/aloha.css"); // FIXME: shoulnd't depend on Aloha - 
-            // use a fixed path /editor.css and use an @include inside it
+            result += String.format(DefaultNodeContainerViewController.LINK_RELSTYLESHEET_MEDIASCREEN_HREF, cssRelativeUri); 
           }
         
         return result;
@@ -82,7 +91,7 @@ public class EditorAspect
           {
             try
               {
-                final Content script = siteProvider.getSite().find(Content).withRelativePath("/Fragments/Editor").result();
+                final Content script = siteProvider.getSite().find(Content).withRelativePath(scriptRelativeUri).result();
                 result += script.getProperties().getProperty(PROPERTY_TEMPLATE);  
               }        
             catch (NotFoundException | IOException e)
@@ -98,7 +107,7 @@ public class EditorAspect
       {
         try 
           {  
-            requestHolder.get().getParameter("edit");
+            requestHolder.get().getParameter(editParameterName);
             return true;
           } 
         catch (NotFoundException e) 
