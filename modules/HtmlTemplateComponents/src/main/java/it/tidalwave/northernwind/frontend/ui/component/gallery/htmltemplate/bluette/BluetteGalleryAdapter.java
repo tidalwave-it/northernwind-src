@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
-    private static final Key<String> PROPERTY_COPYRIGHT = new Key<String>("copyright");
+    private static final Key<String> PROPERTY_COPYRIGHT = new Key<>("copyright");
     
     @Nonnull
     private final GalleryAdapterContext context;
@@ -142,11 +142,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
 
             builder.append("//]]>\n</script>\n");
           } 
-        catch (NotFoundException e) 
-          {
-            // ok, no configuration
-          }
-        catch (IOException e) 
+        catch (NotFoundException | IOException e) 
           {
             // ok, no configuration
           }
