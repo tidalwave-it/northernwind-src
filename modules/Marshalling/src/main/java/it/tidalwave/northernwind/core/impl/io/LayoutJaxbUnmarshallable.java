@@ -83,7 +83,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
             
             return unmarshal(componentsJaxb.getComponent());
           }
-        catch (JAXBException | IOException e)
+        catch (JAXBException e)
           {
             throw new IOException("", e);
           }         

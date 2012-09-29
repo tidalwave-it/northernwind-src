@@ -82,7 +82,7 @@ public class LayoutJaxbMarshallable implements Marshallable
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createComponents(componentsJaxb), os);
           }
-        catch (IOException | JAXBException e) 
+        catch (JAXBException e) 
           {
             throw new IOException("", e);
           }
