@@ -27,7 +27,7 @@
             <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>it.tidalwave.northernwind</groupId>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role-spring</artifactId>
         </dependency>
         <dependency>

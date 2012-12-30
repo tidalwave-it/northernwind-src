@@ -38,7 +38,7 @@
         <tft.jsr305.version>2.0.1</tft.jsr305.version>
         <tft.lombok.version>0.11.4</tft.lombok.version>
         <tft.mockito.version>1.8.5</tft.mockito.version>
-        <thesefoolishthings.version>1.23</thesefoolishthings.version>
+        <thesefoolishthings.version>1.28-SNAPSHOT</thesefoolishthings.version>
         <vaadin.version>6.6.1</vaadin.version>
     </properties>
 
@@ -399,7 +399,6 @@
 
     <modules>
         <module>Marshalling</module>
-        <module>SpringRoles</module>
 
         <module>Core</module>
         <module>CoreImplementation</module>

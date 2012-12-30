@@ -91,12 +91,6 @@
         <dependencies>            
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-role-spring</artifactId>
-                <version>1.0.36-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core</artifactId>
                 <version>1.0.37-SNAPSHOT</version>
             </dependency>
