@@ -30,30 +30,8 @@
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
         <tidalwave.issues>NW</tidalwave.issues>
-
-        <cglib.version>2.2.2</cglib.version>
-        <commons-io.version>2.0.1</commons-io.version>
-        <commons-math.version>3.0</commons-math.version>
-        <javax-persistence.version>1.0</javax-persistence.version>
-        <javax-servlet-api.version>2.5</javax-servlet-api.version>
-        <javax-validation-api.version>1.0.0.GA</javax-validation-api.version>
-        <javax-ws-rs.version>1.1.1</javax-ws-rs.version>
-        <jersey.version>1.8</jersey.version>
-        <jetty.version>6.1.26</jetty.version>
-        <joda-time.version>1.6.2</joda-time.version>
-        <logback.version>1.0.6</logback.version>
-        <mistral.version>1.0-ALPHA-2</mistral.version>
-        <netbeans.version>RELEASE712</netbeans.version>
-        <openbluesky.version>0.16</openbluesky.version>
-        <spring.version>3.1.0.RELEASE</spring.version>
-        <slf4j.version>1.6.1</slf4j.version>
-        <stringtemplate.version>4.0.2</stringtemplate.version>
-        <thesefoolishthings.version>1.23</thesefoolishthings.version>
-        <vaadin.version>6.6.1</vaadin.version>
         
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
-        <tft.lombok.version>0.11.4</tft.lombok.version>
-        <tft.mockito.version>1.8.5</tft.mockito.version>
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
         <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
         <!-- See http://www.oracle.com/technetwork/java/javase/downloads/adoptionguide-137484.html
