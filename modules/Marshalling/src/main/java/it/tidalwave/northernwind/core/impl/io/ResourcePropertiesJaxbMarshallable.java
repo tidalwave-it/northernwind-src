@@ -123,7 +123,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
                     final ValuesJaxb valuesJaxb = objectFactory.createValuesJaxb();
                     propertyJaxb.setValues(valuesJaxb);
                     
-                    for (final Object valueItem : (Collection<Object>)value)
+                    for (final Object valueItem : (Collection<?>)value)
                       {
                         valuesJaxb.getValue().add(valueItem.toString());
                       }
