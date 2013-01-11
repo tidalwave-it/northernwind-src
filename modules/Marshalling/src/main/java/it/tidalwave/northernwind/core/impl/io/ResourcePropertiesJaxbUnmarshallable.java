@@ -32,7 +32,7 @@ import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.role.annotation.RoleImplementation;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
@@ -45,7 +45,7 @@ import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=ResourceProperties.class) @Configurable
+@DciRole(datum = ResourceProperties.class) @Configurable
 public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
   {
     @Nonnull

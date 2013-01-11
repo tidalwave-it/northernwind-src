@@ -29,8 +29,8 @@ import java.io.OutputStream;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.role.Marshallable;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=Layout.class) @Configurable @Slf4j
+@DciRole(datum = Layout.class) @Configurable @Slf4j
 public class LayoutJaxbMarshallable implements Marshallable 
   {
     @Nonnull

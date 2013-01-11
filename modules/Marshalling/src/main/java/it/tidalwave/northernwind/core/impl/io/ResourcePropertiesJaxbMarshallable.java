@@ -33,8 +33,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.Marshallable;
-import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=ResourceProperties.class) @Configurable @Slf4j
+@DciRole(datum = ResourceProperties.class) @Configurable @Slf4j
 public class ResourcePropertiesJaxbMarshallable implements Marshallable
   {
     @Nonnull

@@ -30,9 +30,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.role.annotation.RoleImplementation;
-import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.Unmarshallable;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RoleImplementation(ownerClass=Layout.class) @ToString @Slf4j
+@Configurable @DciRole(datum = Layout.class) @ToString @Slf4j
 public class LayoutJaxbUnmarshallable implements Unmarshallable 
   {
     @Inject @Nonnull
