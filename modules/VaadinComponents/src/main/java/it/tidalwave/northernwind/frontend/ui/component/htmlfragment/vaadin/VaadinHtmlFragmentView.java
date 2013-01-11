@@ -34,32 +34,32 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 /***********************************************************************************************************************
  *
  * The Vaadin implementation of {@link ArticleView}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0", 
-              controlledBy=DefaultHtmlFragmentViewController.class)
+@ViewMetadata(typeUri = "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0",
+              controlledBy = DefaultHtmlFragmentViewController.class)
 public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
   {
     @Nonnull @Getter
     private final Id id;
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
-     * 
+     *
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinHtmlFragmentView (final @Nonnull Id id) 
+    public VaadinHtmlFragmentView (final @Nonnull Id id)
       {
         this.id = id;
         setStyleName(NW + id.stringValue());
         setContentMode(Label.CONTENT_XHTML);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -77,7 +77,7 @@ public class VaadinHtmlFragmentView extends Label implements HtmlFragmentView
      *
      ******************************************************************************************************************/
     @Override
-    public void setClassName (final @Nonnull String className) 
+    public void setClassName (final @Nonnull String className)
       {
         setStyleName(className);
       }

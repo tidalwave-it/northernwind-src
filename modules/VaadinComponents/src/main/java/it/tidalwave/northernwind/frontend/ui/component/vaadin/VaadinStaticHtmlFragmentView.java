@@ -39,24 +39,24 @@ public class VaadinStaticHtmlFragmentView extends Label implements StaticHtmlFra
   {
     @Getter @Nonnull
     private final Id id;
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance with the given name.
-     * 
+     *
      * @param  id  the component name
      *
      ******************************************************************************************************************/
-    public VaadinStaticHtmlFragmentView (final @Nonnull Id id) 
+    public VaadinStaticHtmlFragmentView (final @Nonnull Id id)
       {
         this.id = id;
         setStyleName(NW + id.stringValue());
         setContentMode(Label.CONTENT_RAW);
       }
-    
+
     @Override
-    public void setContent (final @Nonnull String html) 
+    public void setContent (final @Nonnull String html)
       {
         setValue(html);
-      }    
+      }
   }

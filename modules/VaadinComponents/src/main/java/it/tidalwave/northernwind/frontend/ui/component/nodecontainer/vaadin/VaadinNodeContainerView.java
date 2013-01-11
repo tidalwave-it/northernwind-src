@@ -37,21 +37,22 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/NodeContainer/#v1.0", 
-              controlledBy=DefaultNodeContainerViewController.class)
-public class VaadinNodeContainerView extends VerticalLayout implements NodeContainerView // FIXME: probably it should be a Window
-  {// TODO: not VerticalLayout, but something without Layout
+@ViewMetadata(typeUri = "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0",
+              controlledBy = DefaultNodeContainerViewController.class)
+public class VaadinNodeContainerView extends VerticalLayout
+                                     implements NodeContainerView // FIXME: probably it should be a Window
+  { // TODO: not VerticalLayout, but something without Layout
     @Nonnull @Getter
     private final Id id;
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
-     * 
+     *
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinNodeContainerView (final @Nonnull Id id) 
+    public VaadinNodeContainerView (final @Nonnull Id id)
       {
         this.id = id;
         setMargin(false);
@@ -65,8 +66,8 @@ public class VaadinNodeContainerView extends VerticalLayout implements NodeConta
       }
 
     @Override
-    public void setTemplate (final @Nonnull String template) 
+    public void setTemplate (final @Nonnull String template)
       {
         // TODO
       }
-  }  
+  }

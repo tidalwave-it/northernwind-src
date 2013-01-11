@@ -35,29 +35,29 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
 /***********************************************************************************************************************
  *
  * A Vaadin implementation of {@link MenuView}, using an horizontal layout.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/VerticalMenu/#v1.0", 
-              controlledBy=DefaultMenuViewController.class)
+@ViewMetadata(typeUri = "http://northernwind.tidalwave.it/component/VerticalMenu/#v1.0",
+              controlledBy = DefaultMenuViewController.class)
 public class VaadinVerticalMenuView extends VerticalLayout implements MenuView
   {
     @Delegate
     private final VaadinMenuViewHelper helper = new VaadinMenuViewHelper(this);
-    
+
     @Getter @Nonnull
     private final Id id;
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
-     * 
+     *
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinVerticalMenuView (final @Nonnull Id id) 
+    public VaadinVerticalMenuView (final @Nonnull Id id)
       {
         this.id = id;
         setMargin(false);

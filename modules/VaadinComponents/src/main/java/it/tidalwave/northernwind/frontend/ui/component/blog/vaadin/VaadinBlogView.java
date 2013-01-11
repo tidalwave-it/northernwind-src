@@ -38,29 +38,29 @@ import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Blog/#v1.0", 
-              controlledBy=DefaultBlogViewController.class)
+@ViewMetadata(typeUri = "http://northernwind.tidalwave.it/component/Blog/#v1.0",
+              controlledBy = DefaultBlogViewController.class)
 @Slf4j
 public class VaadinBlogView extends VerticalLayout implements BlogView
   {
     @Nonnull @Getter
     private final Id id;
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance with the given id.
-     * 
+     *
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public VaadinBlogView (final @Nonnull Id id) 
+    public VaadinBlogView (final @Nonnull Id id)
       {
         this.id = id;
         setStyleName(NW + id.stringValue());
       }
 
 //    @Override FIXME
-//    public void addPost (final @Nonnull BlogPost blogPost) 
+//    public void addPost (final @Nonnull BlogPost blogPost)
 //      {
 //        final Label label = new Label();
 //        label.setContentMode(Label.CONTENT_XHTML);
