@@ -41,15 +41,15 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(callSuper=true, exclude="mapByRelativePath")
-public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
+@ToString(callSuper = true, exclude = "mapByRelativePath")
+public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>
   {
     @Nonnull
     private final Map<String, Type> mapByRelativePath;
-    
+
     @Nonnull
     private final RegexTreeMap<Type> mapByRelativeUri;
-    
+
     @CheckForNull
     private String relativePath;
 
@@ -60,22 +60,22 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      *
      ******************************************************************************************************************/
-    public DefaultSiteFinder (final @Nonnull String name, 
-                              final @Nonnull Map<String, Type> mapByRelativePath, 
-                              final @Nonnull RegexTreeMap<Type> mapByRelativeUri) 
+    public DefaultSiteFinder (final @Nonnull String name,
+                              final @Nonnull Map<String, Type> mapByRelativePath,
+                              final @Nonnull RegexTreeMap<Type> mapByRelativeUri)
       {
         super(name);
         this.mapByRelativePath = mapByRelativePath;
         this.mapByRelativeUri = mapByRelativeUri;
-      }    
-    
+      }
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteFinder<Type> withRelativePath (final @Nonnull String relativePath) 
+    public SiteFinder<Type> withRelativePath (final @Nonnull String relativePath)
       {
         final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
         clone.relativePath = relativePath;
@@ -88,7 +88,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri) 
+    public SiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri)
       {
         final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
         clone.relativeUri = relativeUri;
@@ -101,8 +101,8 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Type result() 
-      throws NotFoundException 
+    public Type result()
+      throws NotFoundException
       {
         try
           {
@@ -111,20 +111,20 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
         catch (NotFoundException e)
           {
             String message = "????";
-            
+
             if (relativePath != null)
               {
-                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet()); 
+                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet());
               }
             else if (relativeUri != null)
               {
-                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet()); 
+                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet());
               }
-            
+
             throw new NotFoundException(message);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -139,30 +139,30 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
           {
             if (mapByRelativePath == null)
               {
-                throw new IllegalArgumentException("Illegal type: ");  
+                throw new IllegalArgumentException("Illegal type: ");
               }
-        
+
             addResults(results, mapByRelativePath, relativePath);
           }
-        
+
         else if (relativeUri != null)
           {
             if (mapByRelativeUri == null)
               {
-                throw new IllegalArgumentException("Illegal type");  
+                throw new IllegalArgumentException("Illegal type");
               }
-        
+
             addResults(results, mapByRelativeUri, relativeUri);
           }
-        
+
         else
           {
-            results.addAll(mapByRelativePath.values());  
+            results.addAll(mapByRelativePath.values());
           }
-        
+
         return results;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -173,17 +173,17 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
       {
         for (final Type object : results())
           {
-            predicate.apply(object);    
+            predicate.apply(object);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static <Type> void addResults (final @Nonnull List<Type> results, 
+    private static <Type> void addResults (final @Nonnull List<Type> results,
                                            final @Nonnull Map<String, Type> map,
                                            final @Nonnull String string)
       {
@@ -193,10 +193,10 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
 
             if (result != null)
               {
-                results.add(result);  
+                results.add(result);
               }
           }
-        
+
         else
           {
             final Pattern pattern = Pattern.compile(string);
@@ -205,9 +205,9 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
               {
                 if (pattern.matcher(entry.getKey()).matches())
                   {
-                    results.add(entry.getValue());  
+                    results.add(entry.getValue());
                   }
-              }   
+              }
           }
       }
   }

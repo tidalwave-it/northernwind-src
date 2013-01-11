@@ -49,10 +49,10 @@ class ResourcePropertiesDelegate implements ResourceProperties
   {
     @Nonnull
     private final RequestContext requestContext;
-    
+
     @Nonnull
     private final Content content;
-    
+
     interface Exclusions
       {
         public <Type> Type getProperty(Key<Type> key) throws NotFoundException, IOException;
@@ -67,28 +67,28 @@ class ResourcePropertiesDelegate implements ResourceProperties
       throws NotFoundException, IOException
       {
         try
-          {  
+          {
             requestContext.setContent(content);
             return delegate.getProperty(key);
           }
         finally
           {
-            requestContext.clearContent(); 
+            requestContext.clearContent();
           }
       }
 
     @Override
     public <Type> Type getProperty (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
-      throws IOException 
+      throws IOException
       {
         try
-          {  
+          {
             requestContext.setContent(content);
             return delegate.getProperty(key, defaultValue);
           }
         finally
           {
-            requestContext.clearContent(); 
+            requestContext.clearContent();
           }
       }
   }
@@ -96,7 +96,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 /***********************************************************************************************************************
  *
  * A piece of content to be composed into a {@code Node}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -106,28 +106,28 @@ class ResourcePropertiesDelegate implements ResourceProperties
   {
     interface Exclusions
       {
-        public ResourceProperties getProperties();    
+        public ResourceProperties getProperties();
       }
-    
+
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     @Inject @Nonnull
     private RequestContext requestContext;
-    
+
     @Nonnull @Delegate(types=Resource.class, excludes=Exclusions.class)
     private final Resource resource;
 
     /*******************************************************************************************************************
      *
      * Creates a new {@code DefaultContent} with the given configuration file.
-     * 
+     *
      * @param   file   the configuration file
      *
      ******************************************************************************************************************/
     public DefaultContent (final @Nonnull ResourceFile file)
       {
-        resource = modelFactory.createResource(file);  
+        resource = modelFactory.createResource(file);
       }
 
     /*******************************************************************************************************************
@@ -136,7 +136,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder<Content> findChildren() 
+    public Finder<Content> findChildren()
       {
         return new FolderBasedFinderSupport(this);
       }
@@ -144,7 +144,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or this the next
     // method can't stay here.
     public static final Key<String> PROPERTY_TITLE = new Key<>("title");
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -152,7 +152,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      ******************************************************************************************************************/
     @Override @Nonnull
     public String getExposedUri() // TODO: rename to getDefaultExposedUri
-      throws NotFoundException, IOException 
+      throws NotFoundException, IOException
       {
         String title = resource.getProperties().getProperty(PROPERTY_TITLE);
         title = deAccent(title);
@@ -164,25 +164,25 @@ class ResourcePropertiesDelegate implements ResourceProperties
                      .replaceAll("!", "")
                      .replaceAll("\\?", "")
                      .replaceAll(":", "")
-                     .replaceAll("[^\\w-]*", ""); 
+                     .replaceAll("[^\\w-]*", "");
         return title.toLowerCase();
       }
-    
+
     /*******************************************************************************************************************
      *
      * See http://stackoverflow.com/questions/1008802/converting-symbols-accent-letters-to-english-alphabet
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String deAccent (final @Nonnull String string) 
+    public String deAccent (final @Nonnull String string)
       {
-        final String nfdNormalizedString = Normalizer.normalize(string, Normalizer.Form.NFD); 
+        final String nfdNormalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
         final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(nfdNormalizedString).replaceAll("");
       }
-    
+
     @Override @Nonnull
-    public ResourceProperties getProperties() 
+    public ResourceProperties getProperties()
       {
         return new ResourcePropertiesDelegate(requestContext, this, resource.getProperties());
       }

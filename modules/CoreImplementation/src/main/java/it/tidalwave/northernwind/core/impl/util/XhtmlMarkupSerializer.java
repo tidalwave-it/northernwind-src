@@ -39,23 +39,23 @@ import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 public class XhtmlMarkupSerializer extends XHTMLSerializer
   {
     private static final OutputFormat outputFormat = new OutputFormat("xhtml", "UTF-8", false);
-    
+
     static
       {
         outputFormat.setPreserveSpace(true);
         outputFormat.setOmitXMLDeclaration(true);
       }
-    
-    public XhtmlMarkupSerializer (final Writer writer) 
+
+    public XhtmlMarkupSerializer (final Writer writer)
       {
         super(writer, outputFormat);
       }
 
     @Override
-    public void characters( char[] chars, int start, int length )
+    public void characters (final char[] chars, final int start, final int length)
       throws SAXException
       {
-        try 
+        try
           {
             if (shouldOmitCDATA())
               {
@@ -64,7 +64,7 @@ public class XhtmlMarkupSerializer extends XHTMLSerializer
               }
             else
               {
-                super.characters(chars, start, length);   
+                super.characters(chars, start, length);
               }
           }
         catch (IOException e)
@@ -72,11 +72,11 @@ public class XhtmlMarkupSerializer extends XHTMLSerializer
             throw new SAXException(e);
           }
       }
-    
+
     @Override
-    protected void characters (String text)
+    protected void characters (final String text)
       {
-        try 
+        try
           {
             if (shouldOmitCDATA())
               {
@@ -85,7 +85,7 @@ public class XhtmlMarkupSerializer extends XHTMLSerializer
               }
             else
               {
-                super.characters(text);   
+                super.characters(text);
               }
           }
         catch (IOException e)
@@ -94,11 +94,11 @@ public class XhtmlMarkupSerializer extends XHTMLSerializer
           }
       }
 
-    private boolean shouldOmitCDATA() 
+    private boolean shouldOmitCDATA()
       {
         return Arrays.asList("script", "style").contains(getElementState().rawName);
       }
-    
+
     @Override
     protected String getEntityRef (final int ch)
       {

@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * A default implementation of {@link FilterContext}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -44,13 +44,13 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultRequestContext implements RequestContext
   {
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();
-    
+
     private final ThreadLocal<SiteNode> nodeHolder = new ThreadLocal<>();
-    
+
     private final ThreadLocal<ResourceProperties> dynamicNodePropertiesHolder = new ThreadLocal<>();
 
     @Override @Nonnull
-    public ResourceProperties getContentProperties() 
+    public ResourceProperties getContentProperties()
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
@@ -63,7 +63,7 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override @Nonnull
-    public ResourceProperties getNodeProperties() 
+    public ResourceProperties getNodeProperties()
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
@@ -76,13 +76,13 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override
-    public void setContent (final @Nonnull Content content) 
+    public void setContent (final @Nonnull Content content)
       {
         contentHolder.set(content);
       }
 
     @Override
-    public void setNode (final @Nonnull SiteNode node) 
+    public void setNode (final @Nonnull SiteNode node)
       {
         nodeHolder.set(node);
         dynamicNodePropertiesHolder.set(DefaultResourceProperties.DEFAULT); // FIXME: use ModelFactory
@@ -95,32 +95,32 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override
-    public void clearNode() 
+    public void clearNode()
       {
         nodeHolder.remove();
         dynamicNodePropertiesHolder.remove();
       }
-    
+
     @Override
-    public void requestReset() 
+    public void requestReset()
       {
         clearNode();
         clearContent();
       }
 
     @Override
-    public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value) 
+    public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value)
       {
         ResourceProperties properties = dynamicNodePropertiesHolder.get();
         dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
       }
-    
+
     @Override @Nonnull
     public String toString()
       {
-        return String.format("RequestContext[content: %s, node: %s]", toString(contentHolder.get()), toString(nodeHolder.get()));  
+        return String.format("RequestContext[content: %s, node: %s]", toString(contentHolder.get()), toString(nodeHolder.get()));
       }
-    
+
     @Nonnull
     private static String toString (final @CheckForNull Resource resource)
       {

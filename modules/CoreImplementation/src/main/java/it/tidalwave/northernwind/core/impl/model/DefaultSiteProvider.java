@@ -58,15 +58,15 @@ public class DefaultSiteProvider implements SiteProvider
   {
     @Inject @Nonnull
     private ApplicationContext applicationContext;
-    
-    @Getter @Setter 
+
+    @Getter @Setter
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
 //    @Inject @Named("taskExecutor") @Nonnull
     @Getter @Setter @Nonnull
     private TaskExecutor executor;
-    
+
     @Getter @Setter @Nonnull
     private String documentPath = "content/document";
 
@@ -81,36 +81,36 @@ public class DefaultSiteProvider implements SiteProvider
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
-    
+
     @Getter @Setter @Nonnull
     private String localesAsString;
-            
+
     @Getter @Setter @Nonnull
     private String ignoredFoldersAsString = "";
-    
+
     private final List<String> ignoredFolders = new ArrayList<>();
-    
+
     private final List<Locale> configuredLocales = new ArrayList<>();
-    
+
     @CheckForNull
     private DefaultSite site;
-    
+
     @Getter
     private boolean siteAvailable = false;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Site getSite() 
+    public Site getSite()
       {
         if (site == null) // FIXME: rather create a NullObject site
           {
-            throw new IllegalStateException("site not created yet");   
+            throw new IllegalStateException("site not created yet");
           }
-        
+
         return site;
       }
 
@@ -124,22 +124,22 @@ public class DefaultSiteProvider implements SiteProvider
       {
         log.info("reload()");
         siteAvailable = false;
-        
-        site = (DefaultSite)modelFactory.createSite(getContextPath(), 
+
+        site = (DefaultSite)modelFactory.createSite(getContextPath(),
                                                     documentPath,
-                                                    mediaPath, 
+                                                    mediaPath,
                                                     libraryPath,
                                                     nodePath,
-                                                    logConfigurationEnabled, 
-                                                    configuredLocales, 
+                                                    logConfigurationEnabled,
+                                                    configuredLocales,
                                                     ignoredFolders);
-        
-        executor.execute(new Runnable() 
+
+        executor.execute(new Runnable()
           {
             @Override
-            public void run() 
+            public void run()
               {
-                try 
+                try
                   {
                     final long time = System.currentTimeMillis();
                     site.initialize();
@@ -151,7 +151,7 @@ public class DefaultSiteProvider implements SiteProvider
                 catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
                   {
                     log.error("While initializing site", e);
-                  } 
+                  }
               }
           });
       }
@@ -166,10 +166,10 @@ public class DefaultSiteProvider implements SiteProvider
       {
         return NbBundle.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @PostConstruct
@@ -177,22 +177,22 @@ public class DefaultSiteProvider implements SiteProvider
       {
         log.info("initialize()");
         ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
-        
+
         for (final String localeAsString : localesAsString.split(","))
           {
-            configuredLocales.add(new Locale(localeAsString.trim()));  
+            configuredLocales.add(new Locale(localeAsString.trim()));
           }
-        
+
         reload();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ String getContextPath() 
+    /* package */ String getContextPath()
       {
         try
           {

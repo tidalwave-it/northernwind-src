@@ -45,23 +45,21 @@ public class ContentPropertyResolverMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<RequestContext> requestContext;
-    
+
     public ContentPropertyResolverMacroFilter()
       {
         super("\\$contentProperty\\(name='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        try 
+        try
           {
             final String propertyName = matcher.group(1);
-            
-//            log.info("YYY property {} - available properties {}", propertyName, requestContext.get().getContentProperties());
             return requestContext.get().getContentProperties().getProperty(new Key<String>(propertyName), "");
           }
-        catch (IOException e) 
+        catch (IOException e)
           {
             return "ERR";
           }

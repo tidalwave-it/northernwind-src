@@ -44,9 +44,9 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * A builder which creates a View - ViewController pair.
- * 
+ *
  * @stereotype  Factory
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -56,10 +56,10 @@ import lombok.extern.slf4j.Slf4j;
   {
     @Nonnull
     private final Constructor<?> viewConstructor;
-    
+
     @Nonnull
     private final Constructor<?> viewControllerConstructor;
-    
+
     @Inject @Nonnull
     private BeanFactory beanFactory;
 
@@ -68,13 +68,13 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     public ViewBuilder (final @Nonnull Class<?> viewClass, final @Nonnull Class<?> viewControllerClass)
-      throws NoSuchMethodException, InvocationTargetException, InstantiationException, 
-             IllegalArgumentException, IllegalAccessException, SecurityException 
+      throws NoSuchMethodException, InvocationTargetException, InstantiationException,
+             IllegalArgumentException, IllegalAccessException, SecurityException
       {
         viewConstructor = viewClass.getConstructors()[0];
         viewControllerConstructor = viewControllerClass.getConstructors()[0];
       }
-    
+
     /*******************************************************************************************************************
      *
      * Creates a new View - ViewController pair.
@@ -85,15 +85,16 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull Id id, final @Nonnull SiteNode siteNode) 
+    public ViewAndController createViewAndController (final @Nonnull Id id, final @Nonnull SiteNode siteNode)
       throws HttpStatusException
       {
         log.debug("createViewAndController({}, {})", id, siteNode);
-        
+
         try
-          { 
+          {
             final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
-            final Object controller = viewControllerConstructor.newInstance(computeConstructorArguments(viewControllerConstructor, id, siteNode, view));  
+            final Object controller = viewControllerConstructor.newInstance(
+                    computeConstructorArguments(viewControllerConstructor, id, siteNode, view));
             return new ViewAndController(view, controller);
           }
         catch (InvocationTargetException e)
@@ -105,7 +106,7 @@ import lombok.extern.slf4j.Slf4j;
                     throw (HttpStatusException)e.getCause().getCause();
                   }
               }
-            
+
             throw new RuntimeException(e);
           }
         catch (Exception e)
@@ -113,12 +114,12 @@ import lombok.extern.slf4j.Slf4j;
             throw new RuntimeException(e);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
-     * Computes the argument values for calling the given constructor. They are taken from the current 
+     * Computes the argument values for calling the given constructor. They are taken from the current
      * {@link BeanFactory}, with {@code instanceArgs} eventually overriding them.
-     * 
+     *
      * @param  constructor      the constructor
      * @param  overridingArgs   the overriding arguments
      * @return                  the arguments to pass to the constructor
@@ -127,31 +128,31 @@ import lombok.extern.slf4j.Slf4j;
     @Nonnull
     private Object[] computeConstructorArguments (final @Nonnull Constructor<?> constructor,
                                                   final @Nonnull Object ... overridingArgs)
-      throws NotFoundException 
+      throws NotFoundException
       {
         final List<Object> result = new ArrayList<Object>();
-        
+
         x: for (final Class<?> argumentType : constructor.getParameterTypes())
           {
             for (final Object overridingArg : overridingArgs)
               {
                 if (argumentType.isAssignableFrom(overridingArg.getClass()))
-                  {  
+                  {
                     result.add(overridingArg);
                     continue x;
                   }
               }
-            
+
             if (Site.class.isAssignableFrom(argumentType))
               {
-                result.add(beanFactory.getBean(SiteProvider.class).getSite());  
+                result.add(beanFactory.getBean(SiteProvider.class).getSite());
               }
             else
               {
                 result.add(beanFactory.getBean(argumentType));
               }
           }
-        
+
         return result.toArray();
       }
   }

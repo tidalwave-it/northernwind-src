@@ -34,7 +34,7 @@ import static org.hamcrest.MatcherAssert.*;
 
 class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilter
   {
-    @Delegate(types=MacroFilterTestHelper.class) @Getter
+    @Delegate(types = MacroFilterTestHelper.class) @Getter
     private final MacroFilterTestHelper helper = new MacroFilterTestHelper();
   }
 
@@ -50,10 +50,10 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
       {
         super("NodeLinkWithContentMacroFilterTestBeans.xml");
       }
-    
-    @Test(dataProvider="matchesDataProvider")
-    public void must_find_the_correct_matches (final @Nonnull String text, 
-                                               final @Nonnull List<String> expectedMatches) 
+
+    @Test(dataProvider = "matchesDataProvider")
+    public void must_find_the_correct_matches (final @Nonnull String text,
+                                               final @Nonnull List<String> expectedMatches)
       {
         final NodeLinkWithContentMacroFilterFixture fixture = new NodeLinkWithContentMacroFilterFixture();
         fixture.filter(text, "text/html");
@@ -61,17 +61,17 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(expectedMatches));
       }
-    
-    @Test(dataProvider="textProvider")
-    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected) 
+
+    @Test(dataProvider = "textProvider")
+    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
       {
         final NodeLinkWithContentMacroFilter fixture = context.getBean(NodeLinkWithContentMacroFilter.class);
         final String filtered = fixture.filter(text, "text/html");
-        
+
         assertThat(filtered, is(expected));
       }
-    
-    @DataProvider(name="matchesDataProvider")
+
+    @DataProvider(name = "matchesDataProvider")
     public Object[][] matchesDataProvider()
       {
         return new Object[][]
@@ -84,10 +84,10 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
               "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
               Arrays.asList("/Blog", "/Blog/Equipment/The title", ", language='it'", "it")
             }
-          };        
+          };
       }
-    
-    @DataProvider(name="textProvider")
+
+    @DataProvider(name = "textProvider")
     public Object[][] textProvider()
       {
         return new Object[][]
@@ -108,6 +108,6 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
               "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='fr')$\">1</a>",
               "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=fr\">1</a>"
             }
-          };        
+          };
       }
   }

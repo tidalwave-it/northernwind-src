@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.model.spi; 
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,21 +48,21 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Order(LOWEST_PRECEDENCE)
-public class DefaultContentRequestProcessor implements RequestProcessor 
+@Configurable @Scope(value = "session") @Order(LOWEST_PRECEDENCE)
+public class DefaultContentRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Inject @Nonnull
     private SiteView siteView;
-    
+
     @Inject @Nonnull
     private RequestHolder requestHolder;
-    
+
     @Inject @Nonnull
     private RequestContext requestContext;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -70,7 +70,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      ******************************************************************************************************************/
     @Override @Nonnull
     public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException 
+      throws NotFoundException, IOException, HttpStatusException
       {
         try
           {
@@ -87,7 +87,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
           }
         finally
           {
-            requestContext.clearNode();  
+            requestContext.clearNode();
           }
       }
 
@@ -96,11 +96,11 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      * If relativeUri doesn't end with a trailing slash, send a redirect to the proper Uri.
      *
      ******************************************************************************************************************/
-    private void enforceTrailingSlash (final @Nonnull String relativeUri, final @Nonnull Site site) 
+    private void enforceTrailingSlash (final @Nonnull String relativeUri, final @Nonnull Site site)
       throws HttpStatusException
       {
         final String originalRelativeUri = requestHolder.get().getOriginalRelativeUri();
-        
+
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
           {
             throw new HttpStatusException(302).withHeader("Location", site.createLink(relativeUri + "/"));

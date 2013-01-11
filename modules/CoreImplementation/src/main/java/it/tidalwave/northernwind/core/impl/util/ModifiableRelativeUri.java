@@ -36,69 +36,69 @@ import java.util.List;
  *
  **********************************************************************************************************************/
 @NotThreadSafe
-public class ModifiableRelativeUri 
+public class ModifiableRelativeUri
   {
     private final List<String> parts;
-    
-    public ModifiableRelativeUri (final @Nonnull String relativeUri) 
+
+    public ModifiableRelativeUri (final @Nonnull String relativeUri)
       {
         if (!relativeUri.startsWith("/"))
           {
             throw new IllegalArgumentException("Relative URI must start with /: was " + relativeUri);
           }
-        
+
         parts = new ArrayList<>(Arrays.asList(relativeUri.substring(1).split("/")));
-      } 
-    
+      }
+
     @Nonnull
     public String popLeading()
       {
-        return parts.remove(0);  
+        return parts.remove(0);
       }
-    
+
     @Nonnull
     public String popTrailing()
       {
-        return parts.remove(parts.size() - 1);  
+        return parts.remove(parts.size() - 1);
       }
-    
+
     public boolean startsWith (final @Nonnull String string)
       {
-        return parts.get(0).equals(string);  
+        return parts.get(0).equals(string);
       }
-    
+
     @Nonnull
     public String getExtension()
-      {   
+      {
         return parts.get(parts.size() - 1).replaceAll("^.*\\.", "");
       }
-    
+
     @Nonnegative
     public int getPartsCount()
       {
-        return parts.size();  
+        return parts.size();
       }
-    
+
     public void prepend (final @Nonnull String ... strings)
       {
-        parts.addAll(0, Arrays.asList(strings));  
+        parts.addAll(0, Arrays.asList(strings));
       }
-    
+
     public void append (final @Nonnull String ... strings)
       {
-        parts.addAll(Arrays.asList(strings));  
+        parts.addAll(Arrays.asList(strings));
       }
-    
+
     @Nonnull
     public String asString()
       {
         final StringBuilder buffer = new StringBuilder();
-        
+
         for (final String s : parts)
           {
             buffer.append("/").append(s);
           }
-        
+
         return buffer.toString();
       }
   }

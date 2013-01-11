@@ -35,13 +35,13 @@ import static lombok.AccessLevel.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NoArgsConstructor(access=PRIVATE)
-public final class UriUtilities   
+@NoArgsConstructor(access = PRIVATE)
+public final class UriUtilities
   {
     /*******************************************************************************************************************
      *
      * Decodes an URL-encoded URI
-     * 
+     *
      * @param   uri   the URL-encoded URI
      * @return        the plain text URI
      *
@@ -51,21 +51,21 @@ public final class UriUtilities
       throws UnsupportedEncodingException
       {
         final StringBuilder builder = new StringBuilder();
-        
+
         for (final String part : uri.split("/"))
           {
             builder.append("/").append(URLDecoder.decode(part, "UTF-8"));
           }
-        
+
         final String s = builder.toString();
-        
+
         return "".equals(s) ? "/" : s.replace("//", "/");
-      }    
-    
+      }
+
     /*******************************************************************************************************************
      *
      * Encodes an URL-encoded URI
-     * 
+     *
      * @param   uri   the plain text URI
      * @return        the URL-encoded URI
      *
@@ -75,12 +75,12 @@ public final class UriUtilities
       throws UnsupportedEncodingException
       {
         final StringBuilder builder = new StringBuilder();
-        
+
         for (final String part : uri.split("/"))
           {
             builder.append("/").append(URLEncoder.encode(part, "UTF-8"));
           }
-        
+
         return builder.toString();
-      }    
+      }
   }

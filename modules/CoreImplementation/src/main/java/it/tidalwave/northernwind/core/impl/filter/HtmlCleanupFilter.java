@@ -45,7 +45,7 @@ public class HtmlCleanupFilter implements Filter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType) 
+    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
         try
           {
@@ -56,11 +56,11 @@ public class HtmlCleanupFilter implements Filter
             throw new RuntimeException(e);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static String formatHtml (final @Nonnull String text) 
+    public static String formatHtml (final @Nonnull String text)
       throws IOException
       {
         final StringWriter sw = new StringWriter();
@@ -74,33 +74,33 @@ public class HtmlCleanupFilter implements Filter
 
             if (s == null)
               {
-                break;  
+                break;
               }
-            
+
             if (s.contains("<!-- @nw.HtmlCleanupFilter.enabled=false"))
               {
-                return text;  
+                return text;
               }
 
             if ("</body>".equals(s.trim()))
               {
-                break;  
+                break;
               }
 
             if (inBody)
               {
-                sw.write(s + "\n");  
+                sw.write(s + "\n");
               }
 
             if ("<body>".equals(s.trim()))
               {
-                inBody = true;  
+                inBody = true;
               }
           }
 
         sw.close();
         br.close();
-       
+
         return inBody ? sw.getBuffer().toString() : text;
       }
   }

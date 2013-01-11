@@ -30,14 +30,14 @@ import javax.inject.Provider;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A simple utility that forces a reset of the {@link Site} when a change in the underlying file system is detected.
- * 
+ * A simple utility that forces a reset of the {@link it.tidalwave.northernwind.core.model.Site} when a change in the
+ * underlying file system is detected.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -46,37 +46,37 @@ import lombok.extern.slf4j.Slf4j;
 public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFileSystemChange
   {
     @Inject @Nonnull
-    private Provider<SiteProvider> siteProvider;  
-    
+    private Provider<SiteProvider> siteProvider;
+
     @Inject @Named("applicationMessageBus") @Nonnull
     private MessageBus messageBus;
-    
-    private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<ResourceFileSystemChangedEvent>() 
+
+    private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<ResourceFileSystemChangedEvent>()
       {
         @Override
-        public void notify (final @Nonnull ResourceFileSystemChangedEvent event) 
+        public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
           {
             // FIXME: the originator of the event could be a child filesystem in case of composite filesystems.
-            // Either the event is listened by the parent and reposted, or we must be able to find whether a 
+            // Either the event is listened by the parent and reposted, or we must be able to find whether a
             // given filesystem is the parent of another
             //
             // e.g. if (siteProvider.get().getSite().getFileSystemProvider().contains(event.getFileSystemProvider()))
             //
 //            log.info("event fileSystemProvider {}", event.getFileSystemProvider());
 //            log.info("site fileSystemProvider {}", siteProvider.get().getSite().getFileSystemProvider());
-            
+
 //            if (event.getFileSystemProvider() == siteProvider.get().getSite().getFileSystemProvider())
-              {
+//              {
                 log.info("Detected file change, resetting site...");
                 siteProvider.get().reload();
-              }
+//              }
           }
       };
-    
+
     @PostConstruct
     /* package */ void initialize() // FIXME: unsubscribe on @PreDestroy
       {
-        messageBus.subscribe(ResourceFileSystemChangedEvent.class, listener);            
+        messageBus.subscribe(ResourceFileSystemChangedEvent.class, listener);
         log.info("SiteResetterOnFileSystemChange installed");
       }
   }

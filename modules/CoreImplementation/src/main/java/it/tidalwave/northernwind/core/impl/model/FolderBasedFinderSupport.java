@@ -41,7 +41,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 /***********************************************************************************************************************
  *
  * A piece of content to be composed into a page.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -50,36 +50,36 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
   {
     private static final long serialVersionUID = 2345536092354546452L;
-    
+
     @Nonnull
     private final Class<Type> typeClass;
-    
+
     @Nonnull
     private final ResourceFile file;
-    
+
     @Inject @Nonnull
     private transient Provider<SiteProvider> siteProvider;
-    
+
     private final String uriPrefix;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public FolderBasedFinderSupport (final @Nonnull Type owner) 
+    public FolderBasedFinderSupport (final @Nonnull Type owner)
       {
         this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME assumes the interesting interface is [0]
         this.file = owner.getFile();
         this.uriPrefix = "/content/document"; // FIXME: site.getRelativeUriPrefix(typeClass);
       }
-        
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected List<? extends Type> computeResults() 
+    protected List<? extends Type> computeResults()
       {
         final List<Type> result = new ArrayList<>();
 
@@ -87,12 +87,12 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
           {
             if (childFile.isFolder())
               {
-                try 
+                try
                   {
                     final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
-                catch (UnsupportedEncodingException | NotFoundException e) 
+                catch (UnsupportedEncodingException | NotFoundException e)
                   {
                     log.error("", e);
                   }

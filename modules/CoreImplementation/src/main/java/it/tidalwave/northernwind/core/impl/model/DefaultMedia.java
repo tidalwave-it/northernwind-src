@@ -36,27 +36,28 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or such.
- * 
+ * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or
+ * such.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString
+@Configurable(preConstruction = true) @Slf4j @ToString
 /* package */ class DefaultMedia implements Media
   {
-    @Nonnull @Getter @Delegate(types=Resource.class)
+    @Nonnull @Getter @Delegate(types = Resource.class)
     private final Resource resource;
 
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
     public DefaultMedia (final @Nonnull ResourceFile file)
       {
-        resource = modelFactory.createResource(file);  
+        resource = modelFactory.createResource(file);
       }
   }

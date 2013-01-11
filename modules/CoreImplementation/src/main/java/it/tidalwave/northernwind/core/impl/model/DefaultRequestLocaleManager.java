@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link RequestLocaleManager}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -49,16 +49,16 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     private final ThreadLocal<Locale> localeHolder = new ThreadLocal<Locale>();
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<Locale> getLocales() 
+    public List<Locale> getLocales()
       {
         final Locale requestLocale = localeHolder.get();
         final List<Locale> locales = new ArrayList<Locale>(siteProvider.get().getSite().getConfiguredLocales());
@@ -73,7 +73,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
 
         return locales;
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -81,9 +81,9 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     public void setRequestLocale (final @Nonnull Locale locale)
       {
         log.debug("setRequestLocale({})", locale);
-        localeHolder.set(locale);            
+        localeHolder.set(locale);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -92,7 +92,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override
     public void requestReset()
       {
-        localeHolder.remove();  
+        localeHolder.remove();
       }
 
     /*******************************************************************************************************************
@@ -101,7 +101,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DateTimeFormatter getDateTimeFormatter() 
+    public DateTimeFormatter getDateTimeFormatter()
       {
         return DateTimeFormat.fullDateTime().withLocale(getLocales().get(0));
       }

@@ -55,19 +55,19 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
   {
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
-    
+
     @Inject @Nonnull
     private Provider<FilterSetExpander> macroExpander;
-    
+
     @Nonnull @Getter
-    private final ResourceFile file;    
-    
+    private final ResourceFile file;
+
     @Nonnull @Getter
     private ResourceProperties properties;
-    
+
     @Getter
     private boolean placeHolder;
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -75,22 +75,22 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     private DefaultResourceProperties.PropertyResolver propertyResolver = new DefaultResourceProperties.PropertyResolver()
       {
         @Override
-        public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key) 
+        public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key)
           throws NotFoundException, IOException
           {
             return (Type)getFileBasedProperty(key.stringValue()); // FIXME: use also Id for SiteNode?
           }
       };
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public DefaultResource (final @Nonnull ResourceFile file) 
+    public DefaultResource (final @Nonnull ResourceFile file)
       {
         this.file = file;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -99,12 +99,12 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     @Override @Nonnull
     public ResourceProperties getPropertyGroup (final @Nonnull Id id)
       {
-        return properties.getGroup(id);   
+        return properties.getGroup(id);
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -112,21 +112,21 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
       throws NotFoundException, IOException
       {
         log.trace("getFileBasedProperty({})", propertyName);
-        
+
         final ResourceFile propertyFile = findLocalizedFile(propertyName);
         log.trace(">>>> reading from {}", propertyFile.getPath());
         final String charset = propertyFile.getMimeType().equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
-        
+
         try
           {
             return macroExpander.get().filter(propertyFile.asText(charset), propertyFile.getMimeType());
           }
         catch (RuntimeException e) // FIXME: introduce a FilterException
           {
-            throw new IOException(e); 
+            throw new IOException(e);
           }
-      }  
-    
+      }
+
     /*******************************************************************************************************************
      *
      *
@@ -137,7 +137,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
       {
         log.trace("loadProperties() for /{}", file.getPath());
         boolean tmpPlaceHolder = true;
-                
+
         properties = new DefaultResourceProperties(new Id(""), propertyResolver);
 
         for (final ResourceFile propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.xml"))
@@ -149,7 +149,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             properties = properties.merged(tempProperties);
             tmpPlaceHolder &= !propertyFile.getParent().equals(file);
           }
-        
+
         placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
 
         if (log.isDebugEnabled())
@@ -158,7 +158,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             logProperties(">>>>>>>>", properties);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -171,30 +171,30 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         ResourceFile localizedFile = null;
         final StringBuilder fileNamesNotFound = new StringBuilder();
         String separator = "";
-        
+
         for (final Locale locale : localeRequestManager.getLocales())
           {
             final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
             localizedFile = file.getChildByName(localizedFileName);
-            
+
             if ((localizedFile == null) && localizedFileName.endsWith(".xhtml"))
               {
                 localizedFile = file.getChildByName(localizedFileName.replaceAll("\\.xhtml$", ".html"));
               }
-            
+
             if (localizedFile != null)
               {
-                break;  
+                break;
               }
-            
+
             fileNamesNotFound.append(separator);
             fileNamesNotFound.append(localizedFileName);
             separator = ",";
           }
 
-        return NotFoundException.throwWhenNull(localizedFile, String.format("%s/{%s}", file.getPath(), fileNamesNotFound));  
+        return NotFoundException.throwWhenNull(localizedFile, String.format("%s/{%s}", file.getPath(), fileNamesNotFound));
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -202,21 +202,21 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     private void logProperties (final @Nonnull String indent ,final @Nonnull ResourceProperties properties)
       {
         log.debug("{} simple property items:", indent);
-        
+
         for (final Key<?> key : properties.getKeys())
           {
-            try 
+            try
               {
                 log.debug("{}>>>> {} = {}", new Object[] { indent, key, properties.getProperty(key) });
               }
-            catch (NotFoundException | IOException e) 
+            catch (NotFoundException | IOException e)
               {
                 log.error("", e);
               }
           }
-        
+
         log.debug("{} property groups: {}", indent, properties.getGroupIds());
-        
+
         for (final Id groupId : properties.getGroupIds())
           {
             log.debug("{}>>>> group: {}", indent, groupId);

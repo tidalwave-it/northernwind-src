@@ -52,43 +52,43 @@ public class CachedURIResolver implements URIResolver
   {
     @Getter @Setter
     private String cacheFolderPath = System.getProperty("java.io.tmpdir") + "/CachedURIResolver";
-    
+
     @Getter @Setter
     private long expirationTime = 60 * 60 * 1000L; // 1 hour
-    
+
     @Getter @Setter
     private int connectionTimeout = 10 * 1000; // 10 secs
-    
+
     @Getter @Setter
     private int readTimeout = 10 * 1000; // 10 secs
-        
+
     @Override
-    public Source resolve (final String href, final String base) 
-      throws TransformerException 
+    public Source resolve (final String href, final String base)
+      throws TransformerException
       {
         try
           {
             log.info("resolve({}, {})", href, base);
-        
+
             final File cacheFolder = new File(cacheFolderPath);
 
             if (!cacheFolder.exists())
               {
-                mkdirs(cacheFolder);  
+                mkdirs(cacheFolder);
               }
 
             final String mangledName = URLEncoder.encode(href, "UTF-8");
             final File cachedFile = new File(cacheFolder, mangledName);
             final long elapsed = System.currentTimeMillis() - cachedFile.lastModified();
-            
+
             log.debug(">>>> cached file is {} elapsed time is {} msec", cachedFile, elapsed);
 
             if (!cachedFile.exists() || (elapsed > expirationTime))
               {
                 cacheDocument(cachedFile, href);
               }
-    
-            return new StreamSource(new FileInputStream(cachedFile));  
+
+            return new StreamSource(new FileInputStream(cachedFile));
           }
         catch (IOException e)
           {
@@ -97,48 +97,49 @@ public class CachedURIResolver implements URIResolver
       }
 
     private void cacheDocument (final @Nonnull File cachedFile, final @Nonnull String href)
-      throws IOException 
+      throws IOException
       {
         log.debug(">>>> caching external document to {}", cachedFile);
         final File tempFile = File.createTempFile("temp", ".txt", new File(cacheFolderPath));
         tempFile.deleteOnExit();
         final FileChannel channel = new RandomAccessFile(tempFile, "rw").getChannel();
         log.debug(">>>> waiting for lock...");
-        @Cleanup(value="release") final FileLock lock = channel.lock();
+        @Cleanup(value = "release") final FileLock lock = channel.lock();
         log.debug(">>>> got lock...");
-        
+
         try
           {
-            FileUtils.copyURLToFile(new URL(href), tempFile, connectionTimeout, readTimeout);   
+            FileUtils.copyURLToFile(new URL(href), tempFile, connectionTimeout, readTimeout);
             rename(tempFile, cachedFile);
           }
         catch (IOException e)
-          { 
+          {
             if (cachedFile.exists())
               {
-                log.warn("Error while retrieving document from {}: {} - using previously cached file", href, e.toString());
+                log.warn("Error while retrieving document from {}: {} - using previously cached file",
+                         href, e.toString());
               }
             else
               {
-                throw e;   
+                throw e;
               }
           }
-        
+
         log.debug(">>>> done");
       }
 
     private static void mkdirs (final @Nonnull File folder)
-      throws IOException 
+      throws IOException
       {
         if (!folder.mkdirs())
           {
-            throw new IOException("Cannot mkdirs for " + folder);    
+            throw new IOException("Cannot mkdirs for " + folder);
           }
       }
-    
+
     private static void rename (final @Nonnull File from, final @Nonnull File to)
-      throws IOException 
-      { 
+      throws IOException
+      {
         if (!from.renameTo(to))
           {
             throw new IOException("Cannot rename " + from + " to " + to);

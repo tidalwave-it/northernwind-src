@@ -48,7 +48,7 @@ import lombok.ToString;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link ModelFactory}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -73,7 +73,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content createContent (final @Nonnull ResourceFile folder) 
+    public Content createContent (final @Nonnull ResourceFile folder)
       {
         return new DefaultContent(folder);
       }
@@ -84,7 +84,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media createMedia (final @Nonnull ResourceFile file) 
+    public Media createMedia (final @Nonnull ResourceFile file)
       {
         return new DefaultMedia(file);
       }
@@ -95,7 +95,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder) 
+    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
       throws IOException, NotFoundException
       {
         return new DefaultSiteNode((DefaultSite)site, folder);
@@ -107,11 +107,11 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout createLayout (final @Nonnull Id id, final @Nonnull String type) 
+    public Layout createLayout (final @Nonnull Id id, final @Nonnull String type)
       {
         return new DefaultLayout(id, type);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -120,9 +120,9 @@ public class DefaultModelFactory implements ModelFactory
     @Override @Nonnull
     public DefaultRequest createRequest()
       {
-        return new DefaultRequest("", "", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());  
+        return new DefaultRequest("", "", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -136,7 +136,7 @@ public class DefaultModelFactory implements ModelFactory
         return createRequest().withBaseUrl(getBaseUrl(httpServletRequest))
                               .withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())
-                              .withPreferredLocales(Collections.list(httpServletRequest.getLocales())); 
+                              .withPreferredLocales(Collections.list(httpServletRequest.getLocales()));
       }
 
     /*******************************************************************************************************************
@@ -145,7 +145,7 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties createProperties (final @Nonnull Id id) 
+    public ResourceProperties createProperties (final @Nonnull Id id)
       {
         return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
       }
@@ -156,25 +156,25 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultSite createSite (final @Nonnull String contextPath, 
-                                   final @Nonnull String documentPath, 
-                                   final @Nonnull String mediaPath, 
+    public DefaultSite createSite (final @Nonnull String contextPath,
+                                   final @Nonnull String documentPath,
+                                   final @Nonnull String mediaPath,
                                    final @Nonnull String libraryPath,
-                                   final @Nonnull String nodePath, 
+                                   final @Nonnull String nodePath,
                                    final boolean logConfigurationEnabled,
-                                   final @Nonnull List<Locale> configuredLocales, 
-                                   final @Nonnull List<String> ignoredFolders) 
+                                   final @Nonnull List<Locale> configuredLocales,
+                                   final @Nonnull List<String> ignoredFolders)
       {
-        return new DefaultSite(contextPath, 
-                               documentPath, 
-                               mediaPath, 
-                               libraryPath, 
-                               nodePath, 
+        return new DefaultSite(contextPath,
+                               documentPath,
+                               mediaPath,
+                               libraryPath,
+                               nodePath,
                                logConfigurationEnabled,
-                               configuredLocales, 
+                               configuredLocales,
                                ignoredFolders);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -182,6 +182,7 @@ public class DefaultModelFactory implements ModelFactory
     @Nonnull
     private static String getBaseUrl (final @Nonnull HttpServletRequest httpServletRequest)
       {
-        return httpServletRequest.getRequestURL().toString().replaceAll(":.*", "") + "://" + httpServletRequest.getHeader("Host");
+        return httpServletRequest.getRequestURL().toString().replaceAll(":.*", "")
+                + "://" + httpServletRequest.getHeader("Host");
       }
   }

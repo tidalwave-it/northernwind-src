@@ -38,19 +38,19 @@ public class MacroFilterTestHelper
   {
     @Getter
     private List<List<String>> matches = new ArrayList<List<String>>();
-    
+
     @Nonnull
-    public String filter (final @Nonnull Matcher matcher) 
+    public String filter (final @Nonnull Matcher matcher)
       {
         final List<String> match = new ArrayList<String>();
-        
+
         for (int i = 1; i <= matcher.groupCount(); i++)
           {
             match.add(matcher.group(i));
           }
-        
+
         matches.add(match);
-        
+
         return "";
       }
   }

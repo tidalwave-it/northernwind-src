@@ -27,9 +27,9 @@ import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 
 /***********************************************************************************************************************
  *
- * Since for some unexplainable reason @Inject doesn't allow an optional attribute, we must have at least one 
+ * Since for some unexplainable reason @Inject doesn't allow an optional attribute, we must have at least one
  * {@code LinkPostProcessor} or {@code DefaultSite} fails injection.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -37,7 +37,7 @@ import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 public class VoidLinkPostProcessor implements LinkPostProcessor
   {
     @Override @Nonnull
-    public String postProcess (final @Nonnull String link) 
+    public String postProcess (final @Nonnull String link)
       {
         return link;
       }

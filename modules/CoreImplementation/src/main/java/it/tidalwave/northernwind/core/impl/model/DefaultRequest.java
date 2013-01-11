@@ -42,7 +42,7 @@ import lombok.ToString;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link Request}
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -52,19 +52,19 @@ import lombok.ToString;
   {
     @Nonnull
     private final String baseUrl;
-    
+
     @Nonnull
     private final String relativeUri;
-    
+
     @Nonnull
     private final String originalRelativeUri;
-    
+
     @Nonnull
     private final Map<String, List<String>> parametersMap;
-        
+
     @Nonnull
     private final List<Locale> preferredLocales;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -76,7 +76,7 @@ import lombok.ToString;
       {
         return getMultiValuedParameter(parameterName).get(0);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -88,7 +88,7 @@ import lombok.ToString;
       {
         return NotFoundException.throwWhenNull(parametersMap.get(parameterName), parameterName);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -97,16 +97,20 @@ import lombok.ToString;
     @Override @Nonnull
     public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
       {
-        try 
+        try
           {
-            return new DefaultRequest(baseUrl, UriUtilities.urlDecodedPath(relativeUri), relativeUri, parametersMap, preferredLocales);
+            return new DefaultRequest(baseUrl,
+                                      UriUtilities.urlDecodedPath(relativeUri),
+                                      relativeUri,
+                                      parametersMap,
+                                      preferredLocales);
           }
         catch (UnsupportedEncodingException e)
           {
             throw new RuntimeException(e);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -117,19 +121,21 @@ import lombok.ToString;
       {
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getPathParams (final @Nonnull SiteNode siteNode) 
+    public String getPathParams (final @Nonnull SiteNode siteNode)
       {
         final String siteNodeRelativeUri = siteNode.getRelativeUri();
-        return (relativeUri.length() <= siteNodeRelativeUri.length()) ? "" : relativeUri.substring(siteNodeRelativeUri.length());
+        return (relativeUri.length() <= siteNodeRelativeUri.length())
+                ? ""
+                : relativeUri.substring(siteNodeRelativeUri.length());
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -138,15 +144,15 @@ import lombok.ToString;
     public DefaultRequest withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
       {
         final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
-        
+
         for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
           {
             parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
           }
-        
+
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parameterMap, preferredLocales);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -154,6 +160,6 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
       {
-        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);  
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);
       }
   }

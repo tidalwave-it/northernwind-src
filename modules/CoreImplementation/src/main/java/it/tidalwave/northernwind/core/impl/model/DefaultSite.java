@@ -58,7 +58,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link Site}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -66,46 +66,46 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 @Configurable @Slf4j
 /* package */ class DefaultSite implements Site
   {
-    static interface FileVisitor 
+    static interface FileVisitor
       {
-        public void visit (@Nonnull ResourceFile file, @Nonnull String relativeUri);   
+        public void visit (@Nonnull ResourceFile file, @Nonnull String relativeUri);
       }
-    
+
     static interface FileFilter
       {
-        public boolean accept (@Nonnull ResourceFile file);  
+        public boolean accept (@Nonnull ResourceFile file);
       }
-    
+
     private final FileFilter DIRECTORY_FILTER = new FileFilter()
       {
         @Override
-        public boolean accept (final @Nonnull ResourceFile file) 
+        public boolean accept (final @Nonnull ResourceFile file)
           {
             return file.isFolder() && !ignoredFolders.contains(file.getName());
           }
       };
-    
+
     private final FileFilter ALL_FILTER = new FileFilter()
       {
         @Override
-        public boolean accept (final @Nonnull ResourceFile file) 
+        public boolean accept (final @Nonnull ResourceFile file)
           {
             return !ignoredFolders.contains(file.getName());
           }
       };
-    
+
     @Inject @Nonnull
     private List<LinkPostProcessor> linkPostProcessors;
-    
+
     @Inject @Nonnull
     private RequestHolder requestHolder;
-    
+
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private ResourceFileSystemProvider fileSystemProvider;
-    
+
     @Nonnull
     private final String documentPath;
 
@@ -117,52 +117,52 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     @Nonnull
     private final String nodePath;
-    
+
     @Getter
     private final boolean logConfigurationEnabled;
-    
+
     @Getter @Nonnull
     private final String contextPath;
-    
+
     private final List<String> ignoredFolders = new ArrayList<>();
-        
+
     private ResourceFile documentFolder;
-    
+
     private ResourceFile libraryFolder;
-    
+
     private ResourceFile mediaFolder;
-    
-    private ResourceFile nodeFolder; 
-    
+
+    private ResourceFile nodeFolder;
+
     private final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
-    
+
     private final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
-    
+
     private final Map<String, Media> mediaMapByRelativePath = new TreeMap<>();
-    
+
     private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<>();
-    
+
     private final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<>();
-    
+
     private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<>();
-    
+
     private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
-    
+
     private final List<Locale> configuredLocales = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    public DefaultSite (final @Nonnull String contextPath, 
-                        final @Nonnull String documentPath, 
-                        final @Nonnull String mediaPath, 
-                        final @Nonnull String libraryPath, 
-                        final @Nonnull String nodePath, 
-                        final boolean logConfigurationEnabled, 
+    public DefaultSite (final @Nonnull String contextPath,
+                        final @Nonnull String documentPath,
+                        final @Nonnull String mediaPath,
+                        final @Nonnull String libraryPath,
+                        final @Nonnull String nodePath,
+                        final boolean logConfigurationEnabled,
                         final @Nonnull List<Locale> configuredLocales,
-                        final @Nonnull List<String> ignoredFolders) 
+                        final @Nonnull List<String> ignoredFolders)
       {
         this.contextPath = contextPath;
         this.documentPath = documentPath;
@@ -173,7 +173,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         this.configuredLocales.addAll(configuredLocales);
         this.ignoredFolders.addAll(ignoredFolders);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -186,31 +186,31 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         final RegexTreeMap<Type> relativeUriMap = (RegexTreeMap<Type>)relativeUriMapsByType.get(type);
         return new DefaultSiteFinder<>(type.getSimpleName(), relativePathMap, relativeUriMap);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String createLink (final @Nonnull String relativeUri) 
+    public String createLink (final @Nonnull String relativeUri)
       {
         String link = requestHolder.get().getBaseUrl() + contextPath + relativeUri;
-        
+
         // FIXME: this should go to a ListPostProcessor
         if (!relativeUri.contains(".") && !relativeUri.contains("?") && !relativeUri.endsWith("/"))
           {
             link += "/";
           }
-        
+
         for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)
           {
             link = linkPostProcessor.postProcess(link);
           }
-        
+
         return link;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -221,18 +221,18 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         return new CopyOnWriteArrayList<>(configuredLocales);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String toString() 
+    public String toString()
       {
         return String.format("DefaultSite(@%x)", System.identityHashCode(this));
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -241,21 +241,21 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       throws IOException, NotFoundException, PropertyVetoException
       {
         log.info("initialize()");
-        
+
         relativePathMapsByType.put(Content.class, documentMapByRelativePath);
         relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
         relativePathMapsByType.put(Resource.class, libraryMapByRelativePath);
         relativePathMapsByType.put(SiteNode.class, nodeMapByRelativePath);
-        
+
         relativeUriMapsByType.put(SiteNode.class, nodeMapByRelativeUri);
-                
+
         log.info(">>>> fileSystemProvider: {}", fileSystemProvider);
         final ResourceFileSystem fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = findMandatoryFolder(fileSystem, documentPath);
         libraryFolder  = findMandatoryFolder(fileSystem, libraryPath);
         mediaFolder    = findMandatoryFolder(fileSystem, mediaPath);
         nodeFolder     = findMandatoryFolder(fileSystem, nodePath);
-        
+
         log.info(">>>> contextPath:        {}", contextPath);
         log.info(">>>> ignoredFolders:     {}", ignoredFolders);
         log.info(">>>> fileSystem:         {}", fileSystem);
@@ -264,26 +264,26 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         log.info(">>>> mediaPath:          {}", mediaFolder.getPath());
         log.info(">>>> nodePath:           {}", nodeFolder.getPath());
         log.info(">>>> locales:            {}", configuredLocales);
-        
+
         documentMapByRelativePath.clear();
         libraryMapByRelativePath.clear();
         mediaMapByRelativePath.clear();
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
-        
-        traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor() 
+
+        traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
               {
                 documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
               }
           });
-        
-        traverse(libraryFolder, ALL_FILTER, new FileVisitor() 
+
+        traverse(libraryFolder, ALL_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath)
               {
                 if (file.isData())
                   {
@@ -291,11 +291,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   }
               }
           });
-        
-        traverse(mediaFolder, ALL_FILTER, new FileVisitor() 
+
+        traverse(mediaFolder, ALL_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath)
               {
                 if (file.isData())
                   {
@@ -303,17 +303,17 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   }
               }
           });
-        
-        traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor() 
+
+        traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath) 
+            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
               {
-                try 
+                try
                   {
                     final SiteNode siteNode = modelFactory.createSiteNode(DefaultSite.this, folder);
                     nodeMapByRelativePath.put(r(relativePath.substring(nodePath.length() + 1)), siteNode);
-                    
+
                     if (!siteNode.isPlaceHolder())
                       {
                         final String relativeUri = siteNode.getRelativeUri();
@@ -328,13 +328,13 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                           }
                       }
                   }
-                catch (IOException | NotFoundException e) 
+                catch (IOException | NotFoundException e)
                   {
                     throw new RuntimeException(e);
                   }
               }
           });
-        
+
         if (logConfigurationEnabled)
           {
             logConfiguration("Documents by relative path:", documentMapByRelativePath);
@@ -348,14 +348,14 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     /*******************************************************************************************************************
      *
      * Accepts a {@link FileVisitor} to visit a file or folder.
-     * 
+     *
      * @param  file        the file to visit
      * @param  fileFilter  the filter for directory contents
      * @param  visitor     the visitor
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull ResourceFile file, 
-                           final @Nonnull FileFilter fileFilter, 
+    private void traverse (final @Nonnull ResourceFile file,
+                           final @Nonnull FileFilter fileFilter,
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
@@ -367,11 +367,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
           {
             if (fileFilter.accept(child))
               {
-                traverse(child, fileFilter, visitor);                    
+                traverse(child, fileFilter, visitor);
               }
-          } 
-      }  
-    
+          }
+      }
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -380,26 +380,26 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private static void logConfiguration (final @Nonnull String name, Map<String, ?> map)
       {
         log.info(name);
-        
+
         for (final Entry<String, ?> entry : map.entrySet())
           {
-            log.info(">>>> {}: {}", entry.getKey(), entry.getValue());  
+            log.info(">>>> {}: {}", entry.getKey(), entry.getValue());
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static ResourceFile findMandatoryFolder (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull String path) 
+    private static ResourceFile findMandatoryFolder (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull String path)
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
         // don't log fileSystem.getRoot() since if fileSystem is broken it can trigger secondary errors
-                            // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);  
+                            // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -407,6 +407,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Nonnull
     private static String r (final @Nonnull String s)
       {
-        return "".equals(s) ? "/" : s;  
+        return "".equals(s) ? "/" : s;
       }
   }

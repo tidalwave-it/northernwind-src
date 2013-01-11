@@ -38,12 +38,12 @@ public class MediaLinkMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     public MediaLinkMacroFilter()
       {
         super("\\$mediaLink\\(relativePath='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {

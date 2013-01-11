@@ -39,26 +39,26 @@ public class MockResponseHolder extends ResponseHolder<String>
     class MockResponseBuilder extends ResponseBuilderSupport<String>
       {
         private final Map<String, String> headerMap = new TreeMap<String, String>();
-        
+
         @Override
-        public ResponseBuilderSupport<String> withHeader (String name, String value) 
+        public ResponseBuilderSupport<String> withHeader (String name, String value)
           {
             headerMap.put(name, value);
             return this;
           }
 
         @Override
-        public String build() 
+        public String build()
           {
             final StringBuilder builder = new StringBuilder();
-            
+
             builder.append("HTTP/1.1 ").append(httpStatus).append("\n");
-            
+
             for (final Entry<String, String> entry : headerMap.entrySet())
               {
                 builder.append(String.format("%s: %s%n", entry.getKey(), entry.getValue()));
               }
-            
+
             builder.append("\n").append(body);
             return builder.toString();
           }

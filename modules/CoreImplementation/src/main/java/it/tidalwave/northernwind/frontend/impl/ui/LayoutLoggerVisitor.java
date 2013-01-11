@@ -46,58 +46,58 @@ public class LayoutLoggerVisitor implements Visitor<Layout, Object>
           {
             @Override
             protected void log (final @Nonnull Logger log,
-                                final @Nonnull String template, 
-                                final @Nonnull Object arg1, 
+                                final @Nonnull String template,
+                                final @Nonnull Object arg1,
                                 final @Nonnull Object arg2)
               {
-                log.debug(template, arg1, arg2);                    
+                log.debug(template, arg1, arg2);
               }
           },
         INFO
           {
             @Override
             protected void log (final @Nonnull Logger log,
-                                final @Nonnull String template, 
-                                final @Nonnull Object arg1, 
+                                final @Nonnull String template,
+                                final @Nonnull Object arg1,
                                 final @Nonnull Object arg2)
               {
-                log.info(template, arg1, arg2);                    
+                log.info(template, arg1, arg2);
               }
           };
-        
+
         protected abstract void log (@Nonnull Logger log,
-                                     @Nonnull String template, 
-                                     @Nonnull Object arg1, 
+                                     @Nonnull String template,
+                                     @Nonnull Object arg1,
                                      @Nonnull Object arg2);
       }
-    
+
     private static final String SPACES = "                                                               ";
-    
+
     private int indent = 0;
-    
+
     @Nonnull
     private final Level logLevel;
-    
+
     @Override
-    public void preVisit (final @Nonnull Layout layout) 
+    public void preVisit (final @Nonnull Layout layout)
       {
         logLevel.log(log, "{}{}", SPACES.substring(0, indent++ * 2), layout);
       }
 
     @Override
-    public void visit (final @Nonnull Layout layout) 
+    public void visit (final @Nonnull Layout layout)
       {
-      }  
+      }
 
     @Override
-    public void postVisit (final @Nonnull Layout layout) 
+    public void postVisit (final @Nonnull Layout layout)
       {
         indent--;
       }
 
     @Override
-    public Object getValue() 
-      throws NotFoundException 
+    public Object getValue()
+      throws NotFoundException
       {
         return new Object();
       }

@@ -37,46 +37,47 @@ import static lombok.AccessLevel.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NoArgsConstructor(access=PRIVATE) @Slf4j
-public final class Utilities 
+@NoArgsConstructor(access = PRIVATE) @Slf4j
+public final class Utilities
   {
     /*******************************************************************************************************************
      *
      * Computes a list of property files to implement inheritance. Property files are enumerated starting from the root
      * up to the current folder, plus an eventual local override.
-     * 
+     *
      * @return  a list of property files
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static List<ResourceFile> getInheritedPropertyFiles (final @Nonnull ResourceFile folder, final @Nonnull String propertyFileName)
+    public static List<ResourceFile> getInheritedPropertyFiles (final @Nonnull ResourceFile folder,
+                                                                final @Nonnull String propertyFileName)
       {
         log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
-        
+
         final List<ResourceFile> files = new ArrayList<ResourceFile>();
-        
+
         for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
-          {            
+          {
             log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
             final ResourceFile propertyFile = parent.getChildByName(propertyFileName);
-            
+
             if (propertyFile != null)
-              {  
-                files.add(propertyFile);                    
+              {
+                files.add(propertyFile);
               }
           }
-        
+
         Collections.reverse(files);
 
         final ResourceFile propertyFile = folder.getChildByName("Override" + propertyFileName);
 
         if (propertyFile != null)
-          {  
-            files.add(propertyFile);                    
+          {
+            files.add(propertyFile);
           }
-        
+
         log.trace(">>>> property file candidates: {}", files);
-        
+
         return files;
       }
    }

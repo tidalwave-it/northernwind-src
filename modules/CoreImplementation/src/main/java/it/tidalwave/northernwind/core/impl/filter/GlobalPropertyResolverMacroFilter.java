@@ -40,7 +40,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 /***********************************************************************************************************************
  *
  * TODO: is still needed now that we have SiteNodePropertyMacroFilter?
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -50,16 +50,16 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     public GlobalPropertyResolverMacroFilter()
       {
         super("\\$globalProperty\\(name='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        try 
+        try
           {
     //        final String relativeUri = request.getRelativeUri();
             final Site site = siteProvider.get().getSite();
@@ -68,7 +68,7 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
             final String propertyName = matcher.group(1);
             return rootSiteNode.getProperties().getProperty(new Key<String>(propertyName), "");
           }
-        catch (NotFoundException | IOException e) 
+        catch (NotFoundException | IOException e)
           {
             return "ERR";
           }

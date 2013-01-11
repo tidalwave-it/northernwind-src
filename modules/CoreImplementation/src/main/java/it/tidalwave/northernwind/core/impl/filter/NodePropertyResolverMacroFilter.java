@@ -44,21 +44,21 @@ public class NodePropertyResolverMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<RequestContext> context;
-    
+
     public NodePropertyResolverMacroFilter()
       {
         super("\\$nodeProperty\\(name='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        try 
+        try
           {
             final String propertyName = matcher.group(1);
             return context.get().getNodeProperties().getProperty(new Key<String>(propertyName), "");
           }
-        catch (IOException e) 
+        catch (IOException e)
           {
             return "ERR";
           }

@@ -34,7 +34,7 @@ import static org.hamcrest.MatcherAssert.*;
 
 class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
   {
-    @Delegate(types=MacroFilterTestHelper.class) @Getter
+    @Delegate(types = MacroFilterTestHelper.class) @Getter
     private final MacroFilterTestHelper helper = new MacroFilterTestHelper();
   }
 
@@ -50,9 +50,9 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
       {
         super("NodeLinkMacroFilterTestBeans.xml");
       }
-    
+
     @Test
-    public void must_find_the_correct_matches() 
+    public void must_find_the_correct_matches()
       {
         final NodeLinkMacroExpanderFixture fixture = new NodeLinkMacroExpanderFixture();
         final String text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
@@ -61,17 +61,17 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(Arrays.asList("/Blog")));
       }
-    
-    @Test(dataProvider="textProvider")
-    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected) 
+
+    @Test(dataProvider = "textProvider")
+    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
       {
         final NodeLinkMacroFilter fixture = context.getBean(NodeLinkMacroFilter.class);
         final String filtered = fixture.filter(text, "text/html");
-        
+
         assertThat(filtered, is(expected));
       }
-    
-    @DataProvider(name="textProvider")
+
+    @DataProvider(name = "textProvider")
     public Object[][] textProvider()
       {
         return new Object[][]
@@ -80,6 +80,6 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
               "href=\"$nodeLink(relativePath='/Blog')$\">1</a>",
               "href=\"/LINK/URI-Blog\">1</a>"
             }
-          };        
+          };
       }
   }

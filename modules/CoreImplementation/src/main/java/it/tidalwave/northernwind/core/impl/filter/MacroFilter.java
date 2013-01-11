@@ -43,18 +43,18 @@ public class MacroFilter implements Filter
   {
     @Nonnull
     private final Pattern pattern;
-    
+
     public MacroFilter (final @Nonnull String regexp)
       {
         pattern = Pattern.compile(regexp);
       }
-    
+
     @Override @Nonnull
     public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
         final Matcher matcher = pattern.matcher(text);
         final StringBuffer buffer = new StringBuffer();
-        
+
         while (matcher.find())
           {
             final String filtered = doFilter(matcher);
@@ -64,31 +64,31 @@ public class MacroFilter implements Filter
               }
             catch (IllegalArgumentException e) // better diagnostics
               {
-                throw new IllegalArgumentException(String.format("Pattern error: %s regexp: %s%n**** filtered: %s%n**** buffer: %s", 
+                throw new IllegalArgumentException(String.format("Pattern error: %s regexp: %s%n**** filtered: %s%n**** buffer: %s",
                                                    e.getMessage(), pattern.pattern(), filtered, buffer));
               }
-          }   
-        
+          }
+
         matcher.appendTail(buffer);
-        
+
         return buffer.toString();
       }
-    
+
     @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException, IOException
       {
-        return "";  
+        return "";
       }
-    
+
     @Nonnull
     private String doFilter (final @Nonnull Matcher matcher)
       {
-        try 
+        try
           {
             return filter(matcher);
           }
-        catch (NotFoundException | IOException e) 
+        catch (NotFoundException | IOException e)
           {
             log.error("", e);
             return "";

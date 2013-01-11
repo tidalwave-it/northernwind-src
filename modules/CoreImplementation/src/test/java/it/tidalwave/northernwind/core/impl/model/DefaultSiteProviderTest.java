@@ -56,65 +56,65 @@ class MockModelFactory implements ModelFactory
   {
     @Setter
     private DefaultSite site;
-    
+
     @Override
-    public Site createSite (String contextPath, 
-                            String documentPath, 
-                            String mediaPath,
-                            String libraryPath,
-                            String nodePath, 
-                            boolean logConfigurationEnabled,
-                            List<Locale> configuredLocales, 
-                            List<String> ignoredFolders)
+    public Site createSite (final String contextPath,
+                            final String documentPath,
+                            final String mediaPath,
+                            final String libraryPath,
+                            final String nodePath,
+                            final boolean logConfigurationEnabled,
+                            final List<Locale> configuredLocales,
+                            final List<String> ignoredFolders)
       {
         return site;
       }
 
     @Override
-    public Resource createResource(ResourceFile file) 
+    public Resource createResource (final ResourceFile file)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Content createContent(ResourceFile folder) 
+    public Content createContent (final ResourceFile folder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Media createMedia(ResourceFile file) 
+    public Media createMedia (final ResourceFile file)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public SiteNode createSiteNode(Site site, ResourceFile folder)
-      throws IOException, NotFoundException 
+    public SiteNode createSiteNode (final Site site, final ResourceFile folder)
+      throws IOException, NotFoundException
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Layout createLayout(Id id, String type) 
+    public Layout createLayout (final Id id, final String type)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Request createRequest() 
+    public Request createRequest()
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public Request createRequestFrom(HttpServletRequest httpServletRequest) 
+    public Request createRequestFrom(HttpServletRequest httpServletRequest)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
     @Override
-    public ResourceProperties createProperties(Id id) 
+    public ResourceProperties createProperties(Id id)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -126,20 +126,20 @@ class MockModelFactory implements ModelFactory
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultSiteProviderTest 
+public class DefaultSiteProviderTest
   {
     private ApplicationContext context;
-    
+
     private DefaultSiteProvider fixture;
 
     private MockModelFactory modelFactory;
-    
+
     private DefaultSite site;
-    
+
     private WaitingTaskExecutor executor;
-    
+
     private ServletContext servletContext;
-            
+
     @BeforeMethod
     public void setupFixture()
       {
@@ -152,48 +152,48 @@ public class DefaultSiteProviderTest
         when(servletContext.getContextPath()).thenReturn("thecontextpath");
         reset(modelFactory);
 //        when(modelFactory.createSite(anyString(), FIXME: throws NPE
-//                                     anyString(), 
-//                                     anyString(), 
-//                                     anyString(), 
-//                                     anyString(), 
-//                                     any(Boolean.class), 
-//                                     any(List.class), 
+//                                     anyString(),
+//                                     anyString(),
+//                                     anyString(),
+//                                     anyString(),
+//                                     any(Boolean.class),
+//                                     any(List.class),
 //                                     any(List.class)))
 //                         .thenReturn(site);
       }
-    
+
     @Test
     public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
       {
         fixture = context.getBean(DefaultSiteProvider.class);
-        verify(modelFactory).createSite(eq("thecontextpath"), 
-                                        eq("testDocumentPath"), 
-                                        eq("testMediaPath"), 
-                                        eq("testLibraryPath"), 
+        verify(modelFactory).createSite(eq("thecontextpath"),
+                                        eq("testDocumentPath"),
+                                        eq("testMediaPath"),
+                                        eq("testLibraryPath"),
                                         eq("testNodePath"),
-                                        eq(true), 
-                                        eq(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))), 
-                                        eq(Arrays.asList("ignored1", "ignored2"))); 
+                                        eq(true),
+                                        eq(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))),
+                                        eq(Arrays.asList("ignored1", "ignored2")));
         verify(executor).execute(any(Runnable.class));
-        
+
         assertThat(fixture.getSite(), sameInstance((Site)site));
         assertThat(fixture.isSiteAvailable(), is(false));
-        
+
         executor.doExecute();
-        
+
         verify(site).initialize();
         assertThat(fixture.getSite(), sameInstance((Site)site));
         assertThat(fixture.isSiteAvailable(), is(true));
       }
-    
+
     @Test
     public void must_return_the_correct_version_string()
       {
         fixture = context.getBean(DefaultSiteProvider.class);
-        assertThat(fixture.getVersionString(), is(notNullValue()));  
+        assertThat(fixture.getVersionString(), is(notNullValue()));
       }
-    
+
     @Test
     public void must_return_the_correct_context_path_in_a_web_environment()
       {

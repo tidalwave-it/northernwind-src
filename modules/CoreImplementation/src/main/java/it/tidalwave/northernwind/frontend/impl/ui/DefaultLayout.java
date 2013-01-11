@@ -53,28 +53,29 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
   {
     @Nonnull
     private final Id id;
-    
+
     @Nonnull
     private /* final FIXME */ String typeUri;
-    
+
     private final List<Layout> children = new ArrayList<Layout>();
-    
+
     private final Map<Id, Layout> childrenMapById = new HashMap<Id, Layout>();
-    
+
     static class CloneVisitor implements Visitor<Layout, DefaultLayout>
       {
         private DefaultLayout rootLayout;
-        
+
         private Stack<DefaultLayout> layouts = new Stack<DefaultLayout>();
 
         @Override
-        public void preVisit (final @Nonnull Layout layout) 
+        public void preVisit (final @Nonnull Layout layout)
           {
-            final DefaultLayout newLayout = new DefaultLayout(((DefaultLayout)layout).id, ((DefaultLayout)layout).typeUri);
+            final DefaultLayout newLayout = new DefaultLayout(((DefaultLayout)layout).id,
+                                                              ((DefaultLayout)layout).typeUri);
 
             if (rootLayout == null)
               {
-                rootLayout = newLayout;  
+                rootLayout = newLayout;
               }
             else
               {
@@ -85,23 +86,23 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
           }
 
         @Override
-        public void visit (final @Nonnull Layout layout) 
+        public void visit (final @Nonnull Layout layout)
           {
           }
 
         @Override
-        public void postVisit (final @Nonnull Layout layout) 
+        public void postVisit (final @Nonnull Layout layout)
           {
             layouts.pop();
           }
 
         @Override @Nonnull
-        public DefaultLayout getValue() 
+        public DefaultLayout getValue()
           {
             return rootLayout;
-          }    
+          }
       };
-    
+
     @Inject @Nonnull
     private ViewFactory viewFactory;
 
@@ -110,7 +111,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         this.id = new Id("");
         this.typeUri = "";
       }
-    
+
     public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
         Parameters.checkNonNull(id, "id");
@@ -118,35 +119,35 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         this.id = id;
         this.typeUri = typeUri;
       }
-    
+
     @Override @Nonnull
     public DefaultLayout clone()
       {
-        try 
+        try
           {
             return accept(new CloneVisitor());
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             throw new RuntimeException(e);
           }
-      }  
-    
+      }
+
     @Override @Nonnull
     public Layout withOverride (final @Nonnull Layout override)
-      { 
+      {
         final DefaultLayout result = clone();
         result.applyOverride(((DefaultLayout)override).clone());
         return result;
       }
-    
+
     // Here everything is already cloned
     private void applyOverride (final @Nonnull Layout override)
       {
         final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
         this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
 
-        // Complex rule, but it's Infoglue. 
+        // Complex rule, but it's Infoglue.
         if (sameType)
           {
             for (final Layout overridingChild : override.getChildren())
@@ -155,20 +156,20 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
 
                 if (overriddenChild == null)
                   {
-                    add(overridingChild);  
+                    add(overridingChild);
                   }
                 else
                   {
                     childrenMapById.put(overridingChild.getId(), overridingChild);
                     final int i = children.indexOf(overriddenChild);
-                    
+
                     if (i < 0)
                       {
-                        throw new IllegalArgumentException();  
+                        throw new IllegalArgumentException();
                       }
-                    
+
                     children.set(i, overridingChild);
-                    //                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);                    
+                    //                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);
                   }
               }
           }
@@ -179,27 +180,27 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
 
             for (final Layout overridingChild : override.getChildren())
               {
-                add(overridingChild);  
+                add(overridingChild);
               }
           }
       }
-      
+
     @Override @Nonnull
     public Layout withLayout (final @Nonnull Layout layout)
       {
         final DefaultLayout clone = clone();
         clone.children.add(layout);
         clone.childrenMapById.put(layout.getId(), layout);
-        
+
         return clone;
       }
-    
+
     public void add (final @Nonnull Layout layout) // FIXME: drop this
       {
         children.add(layout); // FIXME: clone
         childrenMapById.put(layout.getId(), layout);// FIXME: clone
       }
-    
+
     @Override @Nonnull
     public Layout findSubComponentById (final @Nonnull Id id)
       throws NotFoundException
@@ -208,32 +209,32 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
       }
 
     @Override @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull SiteNode siteNode) 
+    public ViewAndController createViewAndController (final @Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException
       {
         return viewFactory.createViewAndController(typeUri, id, siteNode);
       }
-    
+
     @Override @Nonnull // TODO: refactor with Composite
-    public <Type> Type accept (final @Nonnull Visitor<Layout, Type> visitor) 
+    public <Type> Type accept (final @Nonnull Visitor<Layout, Type> visitor)
       throws NotFoundException
       {
-        visitor.preVisit(this);    
-        visitor.visit(this);    
-        
+        visitor.preVisit(this);
+        visitor.visit(this);
+
         for (final Layout child : children)
           {
-            child.accept(visitor);   
+            child.accept(visitor);
           }
-        
+
         visitor.postVisit(this);
-        
+
         return visitor.getValue();
       }
-    
+
     @Override @Nonnull
     public String toString()
       {
-        return String.format("DefaultLayout(id=%s, typeUri=%s, children=%d)", id, typeUri, children.size());  
+        return String.format("DefaultLayout(id=%s, typeUri=%s, children=%d)", id, typeUri, children.size());
       }
   }

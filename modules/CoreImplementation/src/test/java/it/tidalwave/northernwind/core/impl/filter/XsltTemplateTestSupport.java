@@ -43,18 +43,18 @@ import org.testng.annotations.BeforeMethod;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor
-class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> implements SiteFinder<Resource> 
+class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> implements SiteFinder<Resource>
   {
     @Nonnull
     private final List<? extends Resource> results;
 
-    public MockResourceFinder(List<? extends Resource> results) 
+    public MockResourceFinder(List<? extends Resource> results)
       {
         this.results = results;
       }
-    
+
     @Override
-    public MockResourceFinder withRelativePath(String relativePath) 
+    public MockResourceFinder withRelativePath(String relativePath)
       {
         return this;
       }
@@ -66,12 +66,12 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
       }
 
     @Override
-    public void doWithResults(Predicate predicate) 
+    public void doWithResults(Predicate predicate)
       {
       }
 
     @Override
-    protected List<? extends Resource> computeResults() 
+    protected List<? extends Resource> computeResults()
       {
         return results;
       }
@@ -83,23 +83,24 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class XsltTemplateTestSupport 
+public class XsltTemplateTestSupport
   {
     private XsltMacroFilter filter;
-    
+
     @BeforeMethod
-    public void setup() 
+    public void setup()
       throws Exception
       {
-        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml", 
-                                                                                          "META-INF/XsltTemplateTestBeans.xml",
-                                                                                          "META-INF/CachedUriResolverBeans.xml");
+        final ClassPathXmlApplicationContext context =
+                new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
+                                                   "META-INF/XsltTemplateTestBeans.xml",
+                                                   "META-INF/CachedUriResolverBeans.xml");
         filter = context.getBean(XsltMacroFilter.class);
         context.getBean(CachedURIResolver.class).setCacheFolderPath("target/CachedUriResolver");
         final SiteProvider siteProvider = context.getBean(SiteProvider.class);
         final Site site = mock(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
-        
+
         final ResourceFileSystemProvider fileSystemProvider = mock(ResourceFileSystemProvider.class);
         when(site.getFileSystemProvider()).thenReturn(fileSystemProvider);
 
@@ -107,17 +108,17 @@ public class XsltTemplateTestSupport
         final ResourceFileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
         final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<Resource>();
-        
+
         for (final ResourceFile xsltFileObject : fileObject.getChildren())
           {
             final Resource resource = mock(Resource.class);
             when(resource.getFile()).thenReturn(xsltFileObject);
             resources.add(resource);
           }
-        
-        when(site.find(eq(Resource.class))).thenReturn(new MockResourceFinder(resources)); 
+
+        when(site.find(eq(Resource.class))).thenReturn(new MockResourceFinder(resources));
       }
-    
+
     protected void test (final @Nonnull String sourceFileName)
       throws IOException
       {

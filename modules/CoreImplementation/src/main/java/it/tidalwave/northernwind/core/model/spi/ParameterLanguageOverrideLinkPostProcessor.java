@@ -34,7 +34,7 @@ import it.tidalwave.util.NotFoundException;
  *
  **********************************************************************************************************************/
 @Configurable
-public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor 
+public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor
   {
     @Inject @Nonnull
     private ParameterLanguageOverrideRequestProcessor parameterLanguageOverrideRequestProcessor;
@@ -47,17 +47,17 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
     @Override @Nonnull
     public String postProcess (final @Nonnull String link)
       {
-        try 
+        try
           {
             final String parameterValue = parameterLanguageOverrideRequestProcessor.getParameterValue();
             return postProcess(link, parameterValue);
-          } 
-        catch (NotFoundException e) 
+          }
+        catch (NotFoundException e)
           {
             return link;
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -67,7 +67,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
       {
         final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
         final StringBuilder builder = new StringBuilder(link);
-        
+
         if (!link.matches(".*[\\?&]" + parameterName + "=.*")) // might have been previously explicitly set
           {
             if (link.contains("?"))
@@ -80,7 +80,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
                   {
                     builder.append("/");
                   }
-                
+
                 builder.append("?");
               }
 
@@ -89,4 +89,4 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
 
         return builder.toString();
       }
-  }    
+  }

@@ -57,7 +57,7 @@ public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request) 
+    public Status process (final @Nonnull Request request)
       {
         final Site site = siteProvider.get().getSite();
 

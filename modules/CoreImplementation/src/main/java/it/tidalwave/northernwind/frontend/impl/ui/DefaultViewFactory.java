@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
@@ -46,9 +45,9 @@ import static it.tidalwave.util.NotFoundException.*;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link ViewFactory}.
- * 
+ *
  * @stereotype  Factory
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -57,39 +56,39 @@ import static it.tidalwave.util.NotFoundException.*;
 public class DefaultViewFactory implements ViewFactory
   {
     private final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<String, ViewBuilder>();
-    
+
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull String viewTypeUri, 
-                                                      final @Nonnull Id viewId, 
+    public ViewAndController createViewAndController (final @Nonnull String viewTypeUri,
+                                                      final @Nonnull Id viewId,
                                                       final @Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException
-      {        
+      {
         final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
-                                                      String.format("Cannot find %s: available: %s", 
+                                                      String.format("Cannot find %s: available: %s",
                                                                     viewTypeUri, viewBuilderMapByTypeUri.keySet()));
         return viewBuilder.createViewAndController(viewId, siteNode);
       }
-     
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct 
+    @PostConstruct
     /* package */ void initialize() // FIXME: gets called twice
-      throws IOException, 
-             NoSuchMethodException, InvocationTargetException, InstantiationException, 
-             IllegalArgumentException, IllegalAccessException, SecurityException 
+      throws IOException,
+             NoSuchMethodException, InvocationTargetException, InstantiationException,
+             IllegalArgumentException, IllegalAccessException, SecurityException
       {
         final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
-        
+
         for (final Class<?> viewClass : classScanner.findClasses())
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
@@ -97,13 +96,13 @@ public class DefaultViewFactory implements ViewFactory
             final ViewBuilder viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
             viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
-        
+
         if (logConfigurationEnabled)
           {
             logConfiguration();
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -111,7 +110,7 @@ public class DefaultViewFactory implements ViewFactory
     private void logConfiguration()
       {
         log.info("View definitions:");
-        
+
         for (final ViewBuilder viewDefinition : viewBuilderMapByTypeUri.values())
           {
             log.info(">>>> {}", viewDefinition);

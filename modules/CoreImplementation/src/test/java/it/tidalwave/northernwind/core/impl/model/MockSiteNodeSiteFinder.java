@@ -37,14 +37,15 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>> implements SiteFinder<SiteNode>
+public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>>
+                                    implements SiteFinder<SiteNode>
   {
     private String relativePath;
-    
+
     private String relativeUri;
-    
+
     @Override @Nonnull
-    public SiteFinder<SiteNode> withRelativePath (final @Nonnull String relativePath) 
+    public SiteFinder<SiteNode> withRelativePath (final @Nonnull String relativePath)
       {
         this.relativePath = relativePath;
         return this;
@@ -58,7 +59,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteF
       }
 
     @Override @Nonnull
-    protected List<? extends SiteNode> computeResults() 
+    protected List<? extends SiteNode> computeResults()
       {
         final SiteNode content = mock(SiteNode.class);
         when(content.getRelativeUri()).thenReturn("URI-" + relativePath.substring(1));
@@ -66,7 +67,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteF
       }
 
     @Override
-    public void doWithResults (final @Nonnull Predicate<SiteNode> predicate) 
+    public void doWithResults (final @Nonnull Predicate<SiteNode> predicate)
       {
         throw new UnsupportedOperationException("Not supported.");
       }

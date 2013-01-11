@@ -44,7 +44,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  *
  * This {@link RequestProcessor} returns an HTTP 503 status code, with a proper readable message, when the site is not
  * available.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -54,20 +54,20 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Getter @Setter // TODO: required for test, try to drop
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
     @Override @Nonnull
     public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException 
+      throws NotFoundException, IOException, HttpStatusException
       {
         if (siteProvider.get().isSiteAvailable())
           {
             return CONTINUE;
           }
-        
+
         log.warn("Site unavailable, sending maintenance page");
         // TODO: use a resource
         final String page = String.format("<!DOCTYPE html>\n"
@@ -78,7 +78,8 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
                 + "<body>\n"
                 + "<div style=\"padding: 5%% 0pt;\">\n"
                 + "<div style=\"padding: 10%% 0pt; text-align: center\">"
-                + "<p style=\"font-family: sans-serif; font-size: 24px\">Site under maintenance, please retry later.<br/>"
+                + "<p style=\"font-family: sans-serif; font-size: 24px\">"
+                + "Site under maintenance, please retry later.<br/>"
                 + "This page will reload automatically.</p>"
                 + "</div>\n"
                 + "</div>\n"
@@ -88,7 +89,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
                                  .withStatus(503)
                                  .withExpirationTime(new Duration(0))
                                  .withBody(page)
-                                 .put();   
+                                 .put();
         return BREAK;
       }
   }

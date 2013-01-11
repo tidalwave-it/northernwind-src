@@ -34,15 +34,15 @@ import org.springframework.core.task.TaskExecutor;
 public class WaitingTaskExecutor implements TaskExecutor
   {
     private Runnable task;
-    
+
     @Override
-    public void execute (final @Nonnull Runnable task) 
+    public void execute (final @Nonnull Runnable task)
       {
         this.task = task;
       }
-    
+
     public void doExecute()
       {
-        task.run();  
+        task.run();
       }
   }

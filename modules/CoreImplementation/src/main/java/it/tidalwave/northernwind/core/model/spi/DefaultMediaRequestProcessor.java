@@ -20,7 +20,7 @@
  * SCM: https://bitbucket.org/tidalwave/northernwind-src
  *
  **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.model.spi; 
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -53,22 +53,22 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Inject @Nonnull
     protected ResponseHolder<ResponseType> responseHolder;
 
     @Getter @Setter
     private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationDuration
-    
+
     @Getter @Setter
     private String uriPrefix = "media";
 
     @Override @Nonnull
-    public Status process (final @Nonnull Request request) 
+    public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException
       {
         final ModifiableRelativeUri mediaUri = new ModifiableRelativeUri(request.getRelativeUri());
-        
+
         if (!mediaUri.popLeading().equals(uriPrefix))
           {
             return CONTINUE;
@@ -83,7 +83,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         //
         if (mediaUri.startsWith("stillimages") || mediaUri.startsWith("movies"))
           {
-            // 
+            //
             // TODO: retrocompatibility with StoppingDown and Bluette
             // http://stoppingdown.net/media/stillimages/1920/20120802-0010.jpg
             // Should be dealt with a specific redirector in the website and removed from here.
@@ -115,6 +115,6 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         responseHolder.response().fromFile(file)
                                  .withExpirationTime(duration)
                                  .put();
-        return BREAK;        
+        return BREAK;
       }
   }

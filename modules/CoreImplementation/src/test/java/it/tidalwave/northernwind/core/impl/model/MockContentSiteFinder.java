@@ -38,14 +38,15 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>> implements SiteFinder<Content>
+public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>>
+                                   implements SiteFinder<Content>
   {
     private String relativePath;
-    
+
     private String relativeUri;
-    
+
     @Override @Nonnull
-    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath) 
+    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath)
       {
         this.relativePath = relativePath;
         return this;
@@ -59,7 +60,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
       }
 
     @Override @Nonnull
-    protected List<? extends Content> computeResults() 
+    protected List<? extends Content> computeResults()
       {
         try
           {
@@ -71,23 +72,25 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
               }
             else
               {
-                when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
+                when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1)
+                                                                                  .replace('/', '-')
+                                                                                  .replace(' ', '-'));
               }
-            
+
             return Arrays.asList(content);
-          } 
-        catch (NotFoundException e) 
-          { 
-            throw new RuntimeException(e);  
           }
-        catch (IOException e) 
+        catch (NotFoundException e)
           {
-            throw new RuntimeException(e);  
+            throw new RuntimeException(e);
+          }
+        catch (IOException e)
+          {
+            throw new RuntimeException(e);
           }
       }
 
     @Override
-    public void doWithResults (final @Nonnull Predicate<Content> predicate) 
+    public void doWithResults (final @Nonnull Predicate<Content> predicate)
       {
         throw new UnsupportedOperationException("Not supported.");
       }

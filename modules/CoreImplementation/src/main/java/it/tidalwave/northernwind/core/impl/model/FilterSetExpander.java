@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class FilterSetExpander implements Filter
   {
-    @Inject @Nonnull 
+    @Inject @Nonnull
     private List<Filter> filters;
 
     @PostConstruct
@@ -48,9 +48,9 @@ public class FilterSetExpander implements Filter
       {
         Collections.sort(filters, new AnnotationAwareOrderComparator());
       }
-    
+
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType) 
+    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
 //        // FIXME: do this with StringTemplate - remember to escape $'s in the source
 //        final String c = site.getContextPath();
@@ -58,13 +58,13 @@ public class FilterSetExpander implements Filter
 //                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
 //                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
         String result = text;
-        
+
         for (final Filter filter : filters)
           {
             log.debug(">>>> filtering with {}", filter);
             result = filter.filter(result, mimeType);
           }
-        
+
         return result;
       }
   }

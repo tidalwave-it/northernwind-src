@@ -45,23 +45,23 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link SiteViewController}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
+@Configurable @Scope(value = "session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
     @Inject @Nonnull
     private List<RequestResettable> requestResettables;
-    
+
     @Inject @Nonnull
     private List<RequestProcessor> requestProcessors;
-    
+
     @Inject @Nonnull
     private RequestHolder requestHolder;
-    
+
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
@@ -71,43 +71,43 @@ public class DefaultSiteViewController implements SiteViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <ResponseType> ResponseType processRequest (final @Nonnull Request request) 
+    public <ResponseType> ResponseType processRequest (final @Nonnull Request request)
       {
         try
           {
             log.info("processRequest({})", request);
             resetRequestResettables();
             requestHolder.set(request);
-            
+
             for (final RequestProcessor requestProcessor : requestProcessors)
               {
                 log.debug(">>>> trying {} ...", requestProcessor);
-                
+
                 if (requestProcessor.process(request) == BREAK)
                   {
-                    break;  
+                    break;
                   }
               }
-            
+
             return (ResponseType)responseHolder.get();
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             log.warn("processing: {} - {}", request, e.toString());
             return (ResponseType)responseHolder.response().forException(e).build();
           }
-        catch (IOException e) 
+        catch (IOException e)
           {
             log.warn("processing: " + request, e);
             return (ResponseType)responseHolder.response().forException(e).build();
           }
-        catch (HttpStatusException e) 
+        catch (HttpStatusException e)
           {
-            if (e.getHttpStatus() != 302) // 
+            if (e.getHttpStatus() != 302) //
               {
                 log.warn("processing: " + request, e);
               }
-            
+
             return (ResponseType)responseHolder.response().forException(e).build();
           }
         finally
@@ -115,7 +115,7 @@ public class DefaultSiteViewController implements SiteViewController
             resetRequestResettables();
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * Resets all {@link Resettable}s.
@@ -126,10 +126,10 @@ public class DefaultSiteViewController implements SiteViewController
         for (final RequestResettable requestResettable : requestResettables)
           {
             log.debug(">>>> resetting {} ...", requestResettable);
-            requestResettable.requestReset();  
+            requestResettable.requestReset();
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * Logs the {@link RequestProcessor}s.
@@ -140,10 +140,10 @@ public class DefaultSiteViewController implements SiteViewController
       {
         Collections.sort(requestProcessors, new AnnotationAwareOrderComparator());
         log.info(">>>> requestProcessors:");
-        
+
         for (final RequestProcessor requestProcessor : requestProcessors)
           {
             log.info(">>>>>>>> {}", requestProcessor);
           }
       }
-  } 
+  }

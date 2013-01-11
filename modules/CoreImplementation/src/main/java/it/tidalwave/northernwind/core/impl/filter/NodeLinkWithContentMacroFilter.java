@@ -52,20 +52,20 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     // FIXME: what about @AutoWired(required=false)?
     @Inject @Nonnull
     private ApplicationContext context;
-    
+
     @CheckForNull
     private ParameterLanguageOverrideLinkPostProcessor postProcessor;
-    
+
     // FIXME: merge with NodeLinkMacroFilter, using an optional block for contentRelativePath
     public NodeLinkWithContentMacroFilter()
       {
         super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException, IOException
@@ -76,17 +76,21 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();
-        
-        return site.createLink(((language == null) || (postProcessor == null)) ? link : postProcessor.postProcess(link, language));
+        final String link = siteNode.getRelativeUri()
+                          + (content.getExposedUri().startsWith("/") ? "" : "/")
+                          + content.getExposedUri();
+
+        return site.createLink(((language == null) || (postProcessor == null))
+                ? link
+                : postProcessor.postProcess(link, language));
       }
-    
+
     @PostConstruct
     private void initialize()
       {
         try
           {
-            postProcessor = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class); 
+            postProcessor = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
           }
         catch (NoSuchBeanDefinitionException e)
           {

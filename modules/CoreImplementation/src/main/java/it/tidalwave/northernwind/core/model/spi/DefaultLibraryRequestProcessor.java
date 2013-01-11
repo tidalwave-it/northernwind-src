@@ -49,14 +49,14 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  *
  **********************************************************************************************************************/
 @Configurable @Order(HIGHEST_PRECEDENCE + 1) @Slf4j
-public class DefaultLibraryRequestProcessor implements RequestProcessor 
+public class DefaultLibraryRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Inject @Nonnull
     private Provider<FilterSetExpander> macroExpander;
-    
+
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
@@ -69,7 +69,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request) 
+    public Status process (final @Nonnull Request request)
       {
         final String relativePath = request.getRelativeUri();
 
@@ -84,14 +84,14 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
                                      .withLatestModifiedTime(file.getLatestModificationTime())
                                      .withExpirationTime(duration)
                                      .withBody(content)
-                                     .put();  
+                                     .put();
             return BREAK;
           }
         catch (IOException | NotFoundException e)
           {
-            log.info("Requested URI {} doesn't map to a library resource, continuing...", relativePath);  
+            log.info("Requested URI {} doesn't map to a library resource, continuing...", relativePath);
           }
-        
+
         return CONTINUE;
       }
   }

@@ -28,14 +28,14 @@ import it.tidalwave.northernwind.core.model.Request;
 /***********************************************************************************************************************
  *
  * FIXME: move to the Profiling module
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface StatisticsCollector 
+public interface StatisticsCollector
   {
     public void onRequestBegin (@Nonnull Request request);
-    
+
     public void onRequestEnd (@Nonnull Request request);
   }

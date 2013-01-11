@@ -47,10 +47,10 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
   {
     @Getter @Setter @Nonnull
     private String parameterName = "l";
-            
+
     @Inject @Nonnull
     private DefaultRequestLocaleManager requestLocaleManager;
-    
+
     private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<String>();
 
     /*******************************************************************************************************************
@@ -59,7 +59,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request) 
+    public Status process (final @Nonnull Request request)
       {
         try
           {
@@ -67,24 +67,24 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
             parameterValueHolder.set(parameterValue);
             requestLocaleManager.setRequestLocale(new Locale(parameterValue));
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             // ok, no override
           }
 
         return CONTINUE;
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
     public String getParameterValue()
       throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(parameterValueHolder.get(), "parameterValue");  
+        return NotFoundException.throwWhenNull(parameterValueHolder.get(), "parameterValue");
       }
 
     /*******************************************************************************************************************
@@ -93,7 +93,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
      *
      ******************************************************************************************************************/
     @Override
-    public void requestReset() 
+    public void requestReset()
       {
         parameterValueHolder.remove();
       }

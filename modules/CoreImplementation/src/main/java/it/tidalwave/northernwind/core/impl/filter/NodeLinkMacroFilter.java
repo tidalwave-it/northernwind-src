@@ -44,15 +44,15 @@ import lombok.extern.slf4j.Slf4j;
 public class NodeLinkMacroFilter extends MacroFilter
   {
     /* package */ static final int ORDER = 20;
-            
+
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     public NodeLinkMacroFilter()
       {
         super("\\$nodeLink\\(relativePath='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException

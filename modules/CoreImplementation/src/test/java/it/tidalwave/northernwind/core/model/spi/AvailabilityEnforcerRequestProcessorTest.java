@@ -43,52 +43,52 @@ import static org.mockito.Mockito.*;
 public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSupport
   {
     private AvailabilityEnforcerRequestProcessor fixture;
-    
+
     private Request request;
-    
+
     private MockResponseHolder responseHolder;
-    
+
     public AvailabilityEnforcerRequestProcessorTest()
       {
         super("AvailabilityEnforcerRequestProcessorTestBeans.xml");
       }
-    
+
     @BeforeMethod
     public void setupFixture()
       {
-        fixture = context.getBean(AvailabilityEnforcerRequestProcessor.class);  
+        fixture = context.getBean(AvailabilityEnforcerRequestProcessor.class);
         responseHolder = context.getBean(MockResponseHolder.class);
         request = mock(Request.class);
-        
+
         when(request.getBaseUrl()).thenReturn("http://acme.com");
         when(request.getOriginalRelativeUri()).thenReturn("/contextPath");
       }
-    
+
     @Test
-    public void must_do_nothing_when_site_is_available() 
+    public void must_do_nothing_when_site_is_available()
       throws Exception
-      {  
+      {
         when(siteProvider.isSiteAvailable()).thenReturn(true);
-        
+
         final Status result = fixture.process(request);
-        
+
         assertThat(result, is(Status.CONTINUE));
         verifyZeroInteractions(responseHolder);
       }
-    
+
     @Test
-    public void must_return_status_503_when_site_is_not_available() 
+    public void must_return_status_503_when_site_is_not_available()
       throws Exception
-      {  
+      {
         when(siteProvider.isSiteAvailable()).thenReturn(false);
-        
+
         final Status result = fixture.process(request);
         final File actualFile = new File("target/test-artifacts/response.txt");
         final File expectedFile = new File("src/test/resources/expected-results/response.txt");
         actualFile.getParentFile().mkdirs();
         FileUtils.write(actualFile, responseHolder.get());
-        
+
         assertThat(result, is(Status.BREAK));
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);        
+        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
   }

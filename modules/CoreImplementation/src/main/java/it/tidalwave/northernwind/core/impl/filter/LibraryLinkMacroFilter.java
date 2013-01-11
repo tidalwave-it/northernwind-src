@@ -38,12 +38,12 @@ public class LibraryLinkMacroFilter extends MacroFilter
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     public LibraryLinkMacroFilter()
       {
         super("\\$libraryLink\\(relativePath='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {

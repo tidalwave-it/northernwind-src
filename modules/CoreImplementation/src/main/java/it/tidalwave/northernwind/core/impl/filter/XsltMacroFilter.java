@@ -72,23 +72,23 @@ public class XsltMacroFilter implements Filter
     private static final String XSLT_TEMPLATES_PATH = "/XsltTemplates/.*";
 
     private static final String DOCTYPE_HTML = "<!DOCTYPE html>";
-    
+
     @Inject @Nonnull
     private ApplicationContext context;
-        
+
     @Inject @Nonnull
     private DocumentBuilderFactory factory;
-        
+
     @Inject @Nonnull
     private TransformerFactory transformerFactory;
-    
+
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     private String xslt = "";
-    
+
     private volatile boolean initialized = false;
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -99,30 +99,30 @@ public class XsltMacroFilter implements Filter
         log.info("Retrieving XSLT templates");
         final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/filter/XsltTemplate.xslt"));
         final StringBuilder xsltBuffer = new StringBuilder();
-        
+
         for (final Resource resource : siteProvider.get().getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
           {
             final ResourceFile file = resource.getFile();
             log.info(">>>> /{}", file.getPath());
-            xsltBuffer.append(file.asText("UTF-8")); 
+            xsltBuffer.append(file.asText("UTF-8"));
           }
-        
+
         final ST t = new ST(template, '%', '%').add("content", xsltBuffer.toString());
         xslt = t.render();
       }
-            
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType) 
+    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
         if (!mimeType.equals("application/xhtml+xml"))
           {
             log.warn("Cannot filter resources not in XHTML: {}", mimeType);
-            return text;  
+            return text;
           }
-           
+
         if (!initialized)
           {
             try
@@ -141,21 +141,21 @@ public class XsltMacroFilter implements Filter
                 throw new RuntimeException(e);
               }
           }
-        
+
         try
           {
             final DOMResult result = new DOMResult();
             final Transformer transformer = createTransformer();
             // Fix for NW-100
-            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), result); 
-            
+            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), result);
+
             final StringWriter stringWriter = new StringWriter();
-            
+
             if (text.startsWith(DOCTYPE_HTML))
               {
-                stringWriter.append(DOCTYPE_HTML).append("\n");  
+                stringWriter.append(DOCTYPE_HTML).append("\n");
               }
-            
+
             // Fix for NW-96
             final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
             xhtmlSerializer.serialize(result.getNode());
@@ -183,11 +183,11 @@ public class XsltMacroFilter implements Filter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Transformer createTransformer() 
+    private Transformer createTransformer()
       throws TransformerConfigurationException
-      {  
+      {
         final Source transformation = new StreamSource(new StringReader(xslt));
-        final Transformer transformer = transformerFactory.newTransformer(transformation); 
+        final Transformer transformer = transformerFactory.newTransformer(transformation);
 
         try
           {
@@ -197,18 +197,18 @@ public class XsltMacroFilter implements Filter
           }
         catch (NoSuchBeanDefinitionException e)
           {
-            // ok, not installed 
+            // ok, not installed
           }
 
         return transformer;
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Node stringToNode (final @Nonnull String string) 
-      throws IOException, SAXException, ParserConfigurationException 
+    private Node stringToNode (final @Nonnull String string)
+      throws IOException, SAXException, ParserConfigurationException
       {
         factory.setValidating(false);
         final DocumentBuilder builder = factory.newDocumentBuilder();

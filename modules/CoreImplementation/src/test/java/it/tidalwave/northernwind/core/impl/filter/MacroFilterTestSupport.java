@@ -44,31 +44,31 @@ import static org.mockito.Mockito.*;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class MacroFilterTestSupport 
+public class MacroFilterTestSupport
   {
     @Nonnull
     private final String contextName;
-    
+
     protected ApplicationContext context;
-    
+
     protected SiteProvider siteProvider;
-    
+
     protected Site site;
-    
+
     @BeforeClass // FIXME: should be BeforeMethod?
-    public void setUp() 
+    public void setUp()
       {
         context = new ClassPathXmlApplicationContext(contextName);
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
-        
+
         when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
         when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
         when(site.createLink(anyString())).thenAnswer(new Answer<String>()
           {
             @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation) 
+            public String answer (final @Nonnull InvocationOnMock invocation)
               {
                 return "/LINK/" + invocation.getArguments()[0];
               }

@@ -37,50 +37,50 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * FIXME: move to the Profiling module
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Aspect @Slf4j
-public class ProfilerAspect 
+public class ProfilerAspect
   {
-    @Inject 
+    @Inject
     private BeanFactory factory;
-    
+
     private StatisticsCollector statisticsCollector;
-    
+
     @PostConstruct
     public void initialize()
       {
         // FIXME: workaround as the aspect doesn't work in a separate module. When it works, you can use plain @Inject
         try
           {
-            statisticsCollector = factory.getBean(StatisticsCollector.class);  
-          } 
+            statisticsCollector = factory.getBean(StatisticsCollector.class);
+          }
         catch (NoSuchBeanDefinitionException e)
           {
           }
       }
-    
+
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController.processRequest(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
       throws Throwable
       {
         final Request request = (Request)pjp.getArgs()[0];
-        
+
         if (statisticsCollector != null)
           {
-            statisticsCollector.onRequestBegin(request);  
+            statisticsCollector.onRequestBegin(request);
           }
-        
+
         final Object result = pjp.proceed();
-        
+
         if (statisticsCollector != null)
           {
-            statisticsCollector.onRequestEnd(request);  
+            statisticsCollector.onRequestEnd(request);
           }
-        
+
         return result;
       }
   }
