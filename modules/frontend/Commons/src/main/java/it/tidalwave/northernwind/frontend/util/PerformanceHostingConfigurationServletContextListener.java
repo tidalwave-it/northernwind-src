@@ -28,13 +28,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
 
 /***********************************************************************************************************************
  *
- * A {@link ServletContextListener} for integrating with Tomcat hosting at PerformanceHosting.net
- * 
+ * A {@link javax.servlet.ServletContextListener} for integrating with Tomcat hosting at PerformanceHosting.net
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -56,7 +55,7 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
             final String realPath = servletContext.getRealPath("");
             log(">>>> contextPath: " + contextPath);
             log(">>>> realPath:    " + realPath);
-            
+
             final String x = realPath.replace(File.pathSeparator + "webapps" + contextPath + File.pathSeparator, "");
 
             final String[] x2 = x.split("/");
@@ -76,7 +75,7 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
             loadProperties(servletContext, configurationFile);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -84,13 +83,13 @@ public class PerformanceHostingConfigurationServletContextListener extends Exter
     @Nonnull
     private String getLocalHostName()
       {
-        try 
+        try
           {
             final String hostName = InetAddress.getLocalHost().getCanonicalHostName();
             log(">>>> host name: " + hostName);
             return hostName;
           }
-        catch (UnknownHostException e) 
+        catch (UnknownHostException e)
           {
             return "?";
           }

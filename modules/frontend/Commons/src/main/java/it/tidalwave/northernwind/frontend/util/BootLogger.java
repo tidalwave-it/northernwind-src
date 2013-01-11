@@ -32,33 +32,33 @@ import lombok.NoArgsConstructor;
  *
  * We can't log to the real thing, since we first need to compute the path of the logging file. Logging to the real
  * thing would instantiate the logging facility before we have a chance to configure it.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NoArgsConstructor(access=AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BootLogger
   {
     private static final StringBuilder BUILDER = new StringBuilder();
-    
+
     public static synchronized void log (final @Nonnull String string)
       {
         BUILDER.append(string).append("\n");
       }
-    
+
     public static void log (final @Nonnull Throwable t)
       {
-        final StringWriter sw = new StringWriter(); 
+        final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw);
         t.printStackTrace(pw);
         pw.flush();
         log(t.toString() + "\n" + sw.toString());
       }
-    
+
     @Nonnull
     public static String getLogContent()
       {
-        return BUILDER.toString();  
+        return BUILDER.toString();
       }
   }

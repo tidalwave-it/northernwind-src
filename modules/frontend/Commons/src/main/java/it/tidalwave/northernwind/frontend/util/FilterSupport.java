@@ -34,11 +34,11 @@ import static it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsS
  * @version $Id$
  *
  **********************************************************************************************************************/
-public abstract class FilterSupport implements Filter 
+public abstract class FilterSupport implements Filter
   {
     @CheckForNull
     protected Throwable bootThrowable;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -46,7 +46,7 @@ public abstract class FilterSupport implements Filter
      ******************************************************************************************************************/
     @Override
     public void init (final @Nonnull FilterConfig filterConfig)
-      {        
+      {
         bootThrowable = (Throwable)filterConfig.getServletContext().getAttribute(ATTRIBUTE_BOOT_THROWABLE);
       }
 
@@ -56,7 +56,7 @@ public abstract class FilterSupport implements Filter
      *
      ******************************************************************************************************************/
     @Override
-    public void destroy() 
-      {        
+    public void destroy()
+      {
       }
   }

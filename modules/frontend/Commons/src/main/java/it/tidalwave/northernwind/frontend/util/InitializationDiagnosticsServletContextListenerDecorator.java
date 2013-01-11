@@ -32,7 +32,7 @@ import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
  *
  * A decorator for the Spring {@code ContextLoaderListener} that catches any error occurring at Spring boot and makes
  * it available to the {@link InitializationDiagnosticsFilter}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -40,7 +40,7 @@ import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
 public class InitializationDiagnosticsServletContextListenerDecorator implements ServletContextListener
   {
     public static final String ATTRIBUTE_BOOT_THROWABLE = "it.tidalwave.northernwind.bootThrowable";
-    
+
     private final ContextLoaderListener delegate = new ContextAttributeContextLoaderListener();
 
     /*******************************************************************************************************************
@@ -69,7 +69,7 @@ public class InitializationDiagnosticsServletContextListenerDecorator implements
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event) 
+    public void contextDestroyed (final @Nonnull ServletContextEvent event)
       {
         delegate.contextDestroyed(event);
       }

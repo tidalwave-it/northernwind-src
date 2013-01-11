@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * Dumps system properties at startup.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -53,7 +53,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
     public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
         log.info("**************** System properties:");
-        
+
         for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
           {
             log.info("{} = {}", entry.getKey(), entry.getValue());
@@ -68,17 +68,17 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
               {
                 log.info("{} = {}", entry.getKey(), entry.getValue());
               }
-            
+
             log.info("**************** JNDI Bindings:");
-            
+
             for (final Binding binding : Collections.list(context.listBindings("")))
               {
                 log.info("{} = {}", binding.getNameInNamespace(), binding.getObject());
               }
           }
         catch (NamingException e)
-          { 
-            log.warn("No JNDI: {}", e.toString());               
+          {
+            log.warn("No JNDI: {}", e.toString());
           }
       }
 
@@ -88,7 +88,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event) 
+    public void contextDestroyed (final @Nonnull ServletContextEvent event)
       {
       }
   }

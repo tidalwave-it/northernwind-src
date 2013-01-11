@@ -33,29 +33,29 @@ import lombok.RequiredArgsConstructor;
  *
  * A specialization of {@link ContextLoaderListener} that uses the {@code ServletContext} attributes rather than
  * init parameters.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-class DynamicConfigLocationServletContext implements ServletContext 
+class DynamicConfigLocationServletContext implements ServletContext
   {
     public static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
 
-    interface Exclusions 
+    interface Exclusions
       {
         public String getInitParameter (String string);
       }
 
-    @Nonnull @Delegate(excludes=Exclusions.class)
+    @Nonnull @Delegate(excludes = Exclusions.class)
     private final ServletContext delegate;
 
     @Nonnull
     private final String contextConfigLocation;
 
     @Override
-    public String getInitParameter (final @Nonnull String name) 
+    public String getInitParameter (final @Nonnull String name)
       {
         final String value = name.equals(CONTEXT_CONFIG_LOCATION) ? contextConfigLocation
                                                                   : delegate.getInitParameter(name);
@@ -64,14 +64,15 @@ class DynamicConfigLocationServletContext implements ServletContext
       }
   }
 
-public class ContextAttributeContextLoaderListener extends ContextLoaderListener 
+public class ContextAttributeContextLoaderListener extends ContextLoaderListener
   {
     @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event) 
+    public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
         final ServletContext servletContext = event.getServletContext();
         final String contextConfigLocation = (String)servletContext.getAttribute("nwcontextConfigLocation");
-        final ServletContext servletContextDelegate = new DynamicConfigLocationServletContext(servletContext, contextConfigLocation);
+        final ServletContext servletContextDelegate =
+                new DynamicConfigLocationServletContext(servletContext, contextConfigLocation);
         servletContext.log("contextConfigLocation: " + contextConfigLocation);
 
         super.contextInitialized(new ServletContextEvent(servletContextDelegate));

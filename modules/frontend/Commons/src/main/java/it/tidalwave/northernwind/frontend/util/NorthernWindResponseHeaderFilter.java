@@ -44,10 +44,10 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 public class NorthernWindResponseHeaderFilter extends FilterSupport
   {
     private static final String HEADER_NORTHERNWIND_VERSION = "X-NorthernWind-Version";
-    
+
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -69,11 +69,12 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
      *
      ******************************************************************************************************************/
     private void addNorthernWindHeader (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
-      throws IOException, ServletException 
+      throws IOException, ServletException
       {
         if (bootThrowable == null)
           {
-            ((HttpServletResponse)response).addHeader(HEADER_NORTHERNWIND_VERSION, siteProvider.get().getVersionString());
+            ((HttpServletResponse)response).addHeader(HEADER_NORTHERNWIND_VERSION,
+                                                      siteProvider.get().getVersionString());
           }
       }
   }

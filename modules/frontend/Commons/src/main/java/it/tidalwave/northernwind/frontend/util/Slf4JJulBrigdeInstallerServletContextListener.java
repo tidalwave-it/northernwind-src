@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * Installs the Slf4J bridge for JUL. Needed only if a library using JUL is deployed into a webapp.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -52,12 +52,12 @@ public class Slf4JJulBrigdeInstallerServletContextListener implements ServletCon
       {
         final Logger rootLogger = LogManager.getLogManager().getLogger("");
         final Handler[] handlers = rootLogger.getHandlers();
-        
-        for (int i = 0; i < handlers.length; i++) 
+
+        for (int i = 0; i < handlers.length; i++)
           {
             rootLogger.removeHandler(handlers[i]);
           }
-        
+
         SLF4JBridgeHandler.install();
       }
 
@@ -67,7 +67,7 @@ public class Slf4JJulBrigdeInstallerServletContextListener implements ServletCon
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event) 
+    public void contextDestroyed (final @Nonnull ServletContextEvent event)
       {
       }
   }
