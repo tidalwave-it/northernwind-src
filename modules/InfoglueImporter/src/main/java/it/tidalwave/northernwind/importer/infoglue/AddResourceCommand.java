@@ -48,19 +48,19 @@ public class AddResourceCommand
 
     @Getter
     private final byte[] contents;
-    
+
     private final String comment;
 
-    public void addAndCommit() 
+    public void addAndCommit()
       throws Exception
       {
         String fixedPath = this.path;
-        
+
         if (fixedPath.startsWith("/"))
           {
             fixedPath = "." + fixedPath;
           }
-        
+
         final File file = new File(ResourceManager.hgFolder, fixedPath);
         file.getParentFile().mkdirs();
         log.info("Adding and committing {} {} ...", dateTime, file.getAbsolutePath());

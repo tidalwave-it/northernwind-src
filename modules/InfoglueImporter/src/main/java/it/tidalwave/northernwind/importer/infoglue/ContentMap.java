@@ -38,33 +38,37 @@ import org.joda.time.DateTime;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class ContentMap 
+public class ContentMap
   {
-    private Map<Integer, SortedMap<DateTime, Map<String, String>>> map = new HashMap<Integer, SortedMap<DateTime, Map<String, String>>>();
-    
-    public void put (final int id, final @Nonnull DateTime dateTime, final @Nonnull String language, final @Nonnull String content)
+    private Map<Integer, SortedMap<DateTime, Map<String, String>>> map =
+            new HashMap<Integer, SortedMap<DateTime, Map<String, String>>>();
+
+    public void put (final int id,
+                     final @Nonnull DateTime dateTime,
+                     final @Nonnull String language,
+                     final @Nonnull String content)
       {
         getLanguageMap(id, dateTime, true).put(language, content);
       }
-    
+
     @Nonnull
     public Map<String, String> get (final int id, final @Nonnull DateTime dateTime)
       {
         return getLanguageMap(id, dateTime, false);
       }
-    
+
     @Nonnull
     private Map<String, String> getLanguageMap (final int id, final @Nonnull DateTime dateTime, final boolean exactDateTime)
       {
         SortedMap<DateTime, Map<String, String>> dateTimeMap = map.get(id);
-        
+
         if (dateTimeMap == null)
-          { 
-            map.put(id, dateTimeMap = new TreeMap<DateTime, Map<String, String>>());  
+          {
+            map.put(id, dateTimeMap = new TreeMap<DateTime, Map<String, String>>());
           }
-        
+
         Map<String, String> languageMap = dateTimeMap.get(dateTime);
-        
+
         if (languageMap == null)
           {
             if (exactDateTime)
@@ -76,25 +80,25 @@ public class ContentMap
                 for (final Entry<DateTime, Map<String, String>> entry : dateTimeMap.entrySet())
                   {
                     if (entry.getKey().isAfter(dateTime))
-                      { 
-                        break;  
+                      {
+                        break;
                       }
-                    
+
                     languageMap = entry.getValue();
                   }
-                
+
                 if (languageMap == null)
                   {
                     throw new RuntimeException("Cannot find dateTime earlier than: " + dateTime + " - available: " + dateTimeMap.keySet());
                   }
               }
           }
-        
+
         if (languageMap.isEmpty() && !exactDateTime) // FIXME: drop this log, useless
           {
-            log.error("Empty language map for {}: {}", "" + id + " / " + dateTime, dateTimeMap.keySet());  
+            log.error("Empty language map for {}: {}", "" + id + " / " + dateTime, dateTimeMap.keySet());
           }
-        
+
         return languageMap;
       }
   }

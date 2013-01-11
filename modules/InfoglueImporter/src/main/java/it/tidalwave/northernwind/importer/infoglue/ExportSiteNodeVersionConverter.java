@@ -42,30 +42,30 @@ class ExportSiteNodeVersionConverter extends Converter
   {
     private int stateId;
 
-    @Getter 
+    @Getter
     private DateTime modifiedDateTime;
- 
-    @Getter 
+
+    @Getter
     private String versionComment;
-    
+
     private boolean checkedOut;
-    
+
     private boolean active;
-    
-    @Getter 
+
+    @Getter
     private String versionModifier;
-    
+
     private String contentType;
-    
+
     private final ExportSiteNodeConverter parent;
-    
+
     private int metaInfoContentId;
-    
+
     // TODO: bindingQualifyers.name & value (contentId) & sortOrder
-    
+
     public ExportSiteNodeVersionConverter (final @Nonnull ExportSiteNodeConverter parent)
       {
-        super(parent);        
+        super(parent);
         this.parent = parent;
       }
 
@@ -74,64 +74,64 @@ class ExportSiteNodeVersionConverter extends Converter
       throws Exception
       {
       }
-    
+
     @Override
     protected void processEndElement (final @Nonnull String elementName)
       throws Exception
       {
         if ("stateId".equals(elementName))
           {
-            stateId = contentAsInteger();  
+            stateId = contentAsInteger();
           }
         else if ("modifiedDateTime".equals(elementName))
           {
-            modifiedDateTime = contentAsDateTime();  
+            modifiedDateTime = contentAsDateTime();
           }
         else if ("versionComment".equals(elementName))
           {
-            versionComment = contentAsString();  
+            versionComment = contentAsString();
           }
         else if ("isCheckedOut".equals(elementName))
           {
-            checkedOut = contentAsBoolean();  
+            checkedOut = contentAsBoolean();
           }
         else if ("isActive".equals(elementName))
           {
-            active = contentAsBoolean();  
+            active = contentAsBoolean();
           }
         else if ("versionModifier".equals(elementName))
           {
-            versionModifier = contentAsString();  
+            versionModifier = contentAsString();
           }
         else if ("contentType".equals(elementName))
           {
-            contentType = contentAsString();  
+            contentType = contentAsString();
           }
         else if ("value".equals(elementName)) // FIXME: it's in a inner element
           {
-            metaInfoContentId = contentAsInteger();  
+            metaInfoContentId = contentAsInteger();
           }
       }
 
     @Override
     protected void finish()
-      throws Exception 
+      throws Exception
       {
         String path = parent.getPath();
-        log.trace("Now processing {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
+        log.trace("Now processing {} stateId: {}, checkedOut: {}, active: {}, {} {}",
                    new Object[] { path, stateId, checkedOut, active, modifiedDateTime, versionComment });
-        
+
         if (path.equals("/blueBill/RSS Feeds/Mobile News"))
           {
-            path = "/blueBill/Mobile/Blog RSS Feed";  
+            path = "/blueBill/Mobile/Blog RSS Feed";
           }
 //        else if (path.equals("/blueBill/RSS Feeds"))
 //          {
-//            path = "/blueBill/Mobile/RSS Feeds";  
+//            path = "/blueBill/Mobile/RSS Feeds";
 //          }
-      
+
 //        if (path.startsWith("/blueBill/Mobile"))
-        if (!path.matches(Main.siteNodePrefix + ".*") 
+        if (!path.matches(Main.siteNodePrefix + ".*")
                 || path.equals("/stoppingdown.net/_Standard Pages/Equipment")
                 || path.equals("/stoppingdown.net/_Standard Pages/Field notes")
                 || path.equals("/stoppingdown.net/_Standard Pages/Birds")
@@ -145,14 +145,16 @@ class ExportSiteNodeVersionConverter extends Converter
           {
             path = path.replaceAll(Main.siteNodePrefix, "");
             log.debug(">>>> replaced path: {}", path);
-            final String suffix = path.startsWith("/_Standard Pages") || path.startsWith("/Blog RSS Feed") ? "/" : "/Override";
+            final String suffix = path.startsWith("/_Standard Pages") || path.startsWith("/Blog RSS Feed")
+                                    ? "/"
+                                    : "/Override";
             path = path.replaceAll("^/_Standard\\ Pages", "");
             path = UriUtilities.urlEncodedPath("/structure" + path) + suffix;
             log.info("Processing {} -> {}", parent.getPath(), path);
 
             final Map<String, String> languageMap = Main.contentMap.get(metaInfoContentId, modifiedDateTime);
             log.debug("languageMap: {}", languageMap);
-            
+
             for (final Entry<String, String> entry : languageMap.entrySet())
               {
                 final String languageCode = entry.getKey();
@@ -160,18 +162,18 @@ class ExportSiteNodeVersionConverter extends Converter
 
                 if (content == null)
                   {
-                    log.error("No content for " + "" + metaInfoContentId + "/" + modifiedDateTime);  
+                    log.error("No content for " + "" + metaInfoContentId + "/" + modifiedDateTime);
                     continue;
                   }
 
                 // FIXME: creationDateTime, comment
-                new StructureParser(content, modifiedDateTime, parent.getPublishDateTime(), path, languageCode).process(); 
+                new StructureParser(content, modifiedDateTime, parent.getPublishDateTime(), path, languageCode).process();
               }
           }
       }
 
     @Override @Nonnull
-    public String toString() 
+    public String toString()
       {
         return String.format("ExportSiteNodeVersionConverter(%s)", parent.getPath());
       }

@@ -43,18 +43,18 @@ import sun.misc.BASE64Decoder;
  *
  **********************************************************************************************************************/
 @Slf4j
-public abstract class Converter 
+public abstract class Converter
   {
     private final BASE64Decoder decoder = new BASE64Decoder();
 
     protected final StringBuilder builder = new StringBuilder();
-    
+
     protected int indent;
-    
+
     protected int localLevel;
-    
+
     protected final XMLStreamReader reader;
-    
+
     private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendYear(4, 4)
                                                                                      .appendLiteral("-")
                                                                                      .appendMonthOfYear(2)
@@ -70,34 +70,34 @@ public abstract class Converter
                                                                                      .appendMillisOfSecond(3)
                                                                                      .appendTimeZoneOffset("", true, 2, 2)
                                                                                      .toFormatter();
-    
-    public Converter (final @Nonnull String contents) 
-      throws XMLStreamException 
+
+    public Converter (final @Nonnull String contents)
+      throws XMLStreamException
       {
         log.debug("Parsing {}", contents);
         reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(contents));
       }
-    
-    public Converter (final @Nonnull InputStream is) 
-      throws XMLStreamException 
+
+    public Converter (final @Nonnull InputStream is)
+      throws XMLStreamException
       {
         log.debug("Parsing {}", is);
         reader = XMLInputFactory.newInstance().createXMLStreamReader(is);
       }
-    
+
     public Converter (final @Nonnull Converter parent)
       {
         this.indent = parent.indent;
         this.reader = parent.reader;
       }
-    
-    public void process() 
+
+    public void process()
       throws Exception
       {
         log.trace("process() - {}", this);
         start();
-        
-        while (reader.hasNext()) 
+
+        while (reader.hasNext())
           {
             reader.next();
             final int eventType = reader.getEventType();
@@ -132,9 +132,9 @@ public abstract class Converter
                 case XMLEvent.END_ELEMENT:
                   log.trace("END ELEMENT   {} {} ({}): {}", new Object[] { eventType, reader.getName(), localLevel, builder.substring(0, Math.min(1000, builder.length())) });
                   --indent;
-                  
+
                   processEndElement(reader.getName().getLocalPart());
-                  
+
                   if (--localLevel < 0)
                     {
                       finish();
@@ -150,7 +150,7 @@ public abstract class Converter
 //                  else
 //                    {
 //                      processEndElement(reader.getName().getLocalPart());
-//                    } 
+//                    }
                   // FIXME: should reset the buffer
                   break;
 
@@ -163,17 +163,17 @@ public abstract class Converter
 
     protected void start()
       throws Exception
-      {           
+      {
       }
-    
+
     protected void processAttribute (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
       throws Exception
-      {           
+      {
       }
 
     protected void processStartElement (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
       throws Exception
-      {           
+      {
       }
 
     protected abstract void processEndElement (@Nonnull String name)
@@ -181,33 +181,33 @@ public abstract class Converter
 
     protected void finish()
       throws Exception
-      {           
+      {
       }
-    
+
     @Nonnull
     protected String contentAsString()
       {
-        return builder.toString();  
+        return builder.toString();
       }
-    
+
     @Nonnull
     protected int contentAsInteger()
       {
-        return Integer.parseInt(builder.toString());  
+        return Integer.parseInt(builder.toString());
       }
-    
+
     @Nonnull
     protected boolean contentAsBoolean()
       {
-        return Boolean.parseBoolean(builder.toString());  
+        return Boolean.parseBoolean(builder.toString());
       }
-    
+
     @Nonnull
     protected DateTime contentAsDateTime()
       {
-        return FORMATTER.parseDateTime(builder.toString());  
+        return FORMATTER.parseDateTime(builder.toString());
       }
-    
+
     @Nonnull
     protected byte[] contentAsBytes()
       throws IOException

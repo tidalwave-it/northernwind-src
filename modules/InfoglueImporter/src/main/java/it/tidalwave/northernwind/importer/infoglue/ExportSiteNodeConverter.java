@@ -42,17 +42,17 @@ class ExportSiteNodeConverter extends Converter
 
     @Getter
     private DateTime publishDateTime;
-    
+
     @Getter
     private DateTime expireDateTime;
 
     private final ExportSiteNodeConverter parent;
-    
+
     // metaInfoContentId?
-    
+
     public ExportSiteNodeConverter (final @Nonnull Converter parent)
       {
-        super(parent);        
+        super(parent);
         this.parent = (parent instanceof ExportSiteNodeConverter) ? ((ExportSiteNodeConverter)parent) : null;
       }
 
@@ -62,31 +62,31 @@ class ExportSiteNodeConverter extends Converter
       {
         if ("childSiteNodes".equals(elementName))
           {
-            new ExportSiteNodeConverter(this).process();  
+            new ExportSiteNodeConverter(this).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
         else if ("siteNodeVersions".equals(elementName))
           {
-            new ExportSiteNodeVersionConverter(this).process();  
+            new ExportSiteNodeVersionConverter(this).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
-    
+
     @Override
     protected void processEndElement (final @Nonnull String elementName)
       throws Exception
       {
         if ("name".equals(elementName))
           {
-            name = contentAsString();  
+            name = contentAsString();
           }
         else if ("publishDateTime".equals(elementName))
           {
-            publishDateTime = contentAsDateTime();  
+            publishDateTime = contentAsDateTime();
           }
         else if ("expireDateTime".equals(elementName))
           {
-            expireDateTime = contentAsDateTime();  
+            expireDateTime = contentAsDateTime();
           }
       }
 

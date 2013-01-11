@@ -41,12 +41,12 @@ import lombok.Cleanup;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ExportConverter extends Converter 
+public class ExportConverter extends Converter
   {
     private final boolean onlyMapAssets;
-    
+
     public ExportConverter (final @Nonnull InputStream is, final boolean onlyMapAssets)
-      throws XMLStreamException 
+      throws XMLStreamException
       {
         super(is);
         this.onlyMapAssets = onlyMapAssets;
@@ -57,13 +57,13 @@ public class ExportConverter extends Converter
       throws Exception
       {
         if ("root-content".equals(elementName))
-          {  
+          {
             new ExportContentConverter(this, onlyMapAssets).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
-        
+
         else if ("root-site-node".equals(elementName) && !onlyMapAssets)
-          {  
+          {
             new ExportSiteNodeConverter(this).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
@@ -77,15 +77,15 @@ public class ExportConverter extends Converter
             ResourceManager.initialize();
           }
       }
-    
+
     @Override
-    protected void processEndElement (final @Nonnull String elementName) 
+    protected void processEndElement (final @Nonnull String elementName)
       throws Exception
       {
       }
 
     @Override
-    protected void finish() throws Exception 
+    protected void finish() throws Exception
       {
         if (!onlyMapAssets)
           {
@@ -96,7 +96,7 @@ public class ExportConverter extends Converter
             ResourceManager.tagConversionCompleted();
           }
       }
-    
+
     protected void addLibraries (final @Nonnull String zippedLibraryPath, final @Nonnull DateTime dateTime)
       throws IOException
       {
@@ -106,16 +106,16 @@ public class ExportConverter extends Converter
         while (enumeration.hasMoreElements())
           {
             final ZipEntry zipEntry = (ZipEntry)enumeration.nextElement();
-            
+
             if (!zipEntry.isDirectory())
               {
     //                System.out.println("Unzipping: " + zipEntry.getName());
                 final @Cleanup InputStream is = new BufferedInputStream(zipFile.getInputStream(zipEntry));
                 ResourceManager.addCommand(new AddResourceCommand(dateTime,
-                                                                  zipEntry.getName(), 
-                                                                  IOUtils.toByteArray(is), 
+                                                                  zipEntry.getName(),
+                                                                  IOUtils.toByteArray(is),
                                                                   "Extracted from library"));
               }
           }
       }
-  } 
+  }

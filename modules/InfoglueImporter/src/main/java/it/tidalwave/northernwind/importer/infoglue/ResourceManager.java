@@ -37,49 +37,49 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResourceManager 
+public class ResourceManager
   {
-    public static final File hgFolder = new File("target/root");      
-    
+    public static final File hgFolder = new File("target/root");
+
     private static final SortedMap<DateTime, List<AddResourceCommand>> commandMapByDateTime = new TreeMap<DateTime, List<AddResourceCommand>>();
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void addAndCommitResources() 
+    public static void addAndCommitResources()
       throws Exception
-      {        
+      {
         for (final List<AddResourceCommand> resources : commandMapByDateTime.values())
           {
               // FIXME: first add all of them with the same timestamp, then commit all of them in a single round?
             for (final AddResourceCommand resource : resources)
               {
-                resource.addAndCommit();  
+                resource.addAndCommit();
               }
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     public static void addCommand (final AddResourceCommand command)
       {
         List<AddResourceCommand> commands = commandMapByDateTime.get(command.getDateTime());
-        
+
         if (commands == null)
           {
             commands = new ArrayList<AddResourceCommand>();
             commandMapByDateTime.put(command.getDateTime(), commands);
           }
-        
+
         commands.add(command);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void initialize() 
-      throws Exception 
+    public static void initialize()
+      throws Exception
       {
         hgFolder.mkdirs();
         Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg init");
@@ -88,8 +88,8 @@ public class ResourceManager
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void tagConversionCompleted() 
-      throws Exception 
+    public static void tagConversionCompleted()
+      throws Exception
       {
         Utilities.exec("/bin/sh", "-c", "cd " + hgFolder.getAbsolutePath() + " && /usr/bin/hg tag converted");
       }
@@ -102,27 +102,27 @@ public class ResourceManager
       {
         return commandMapByDateTime.firstKey();
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static byte[] findRecentContents (final @Nonnull String path) 
+    public static byte[] findRecentContents (final @Nonnull String path)
       throws NotFoundException
       {
         byte[] result = null;
-        
+
         for (final List<AddResourceCommand> resources : commandMapByDateTime.values())
           {
             for (final AddResourceCommand resource : resources)
               {
                 if (resource.getPath().equals(path))
                   {
-                    result = resource.getContents();  
+                    result = resource.getContents();
                   }
               }
           }
-        
+
         return NotFoundException.throwWhenNull(result, path);
       }
   }

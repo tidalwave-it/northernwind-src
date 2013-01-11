@@ -36,18 +36,18 @@ import lombok.extern.slf4j.Slf4j;
 public class ExportDigitalAssetsConverter extends Converter
   {
     private String assetFileName;
-    
+
     private String assetKey;
-    
+
     private byte[] assetBytes;
-    
+
     private final ExportContentsVersionConverter parent;
-    
+
     private final boolean onlyMapAssets;
-    
+
     public ExportDigitalAssetsConverter (final @Nonnull ExportContentsVersionConverter parent, final boolean onlyMapAssets)
       {
-        super(parent);        
+        super(parent);
         this.parent = parent;
         this.onlyMapAssets = onlyMapAssets;
       }
@@ -58,36 +58,36 @@ public class ExportDigitalAssetsConverter extends Converter
       {
         if ("assetFileName".equals(elementName))
           {
-            assetFileName = contentAsString();  
+            assetFileName = contentAsString();
           }
         else if ("assetKey".equals(elementName))
           {
-            assetKey = contentAsString();  
+            assetKey = contentAsString();
           }
         else if ("assetBytes".equals(elementName))
           {
-            assetBytes = contentAsBytes();  
+            assetBytes = contentAsBytes();
           }
       }
-    
+
     @Override
     public void finish()
       {
-        try 
+        try
           {
             final String fixedPath = "/content/media/" + assetFileName;
             Main.assetFileNameMapByKey.put(assetKey, assetFileName);
-            
+
             if (!onlyMapAssets)
               {
                 log.info("Converting {} ...", fixedPath);
-                ResourceManager.addCommand(new AddResourceCommand(parent.getModifiedDateTime(), 
-                                                                  fixedPath, 
+                ResourceManager.addCommand(new AddResourceCommand(parent.getModifiedDateTime(),
+                                                                  fixedPath,
                                                                   contentAsBytes(), // FIXME: assetBytes?
                                                                   parent.getVersionComment()));
               }
-          } 
-        catch (IOException e) 
+          }
+        catch (IOException e)
           {
           }
       }

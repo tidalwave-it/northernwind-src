@@ -42,56 +42,56 @@ class ExportContentConverter extends Converter
 
     @Getter
     private DateTime publishDateTime;
-    
+
     @Getter
     private DateTime expireDateTime;
-    
+
     @Getter
     private int id;
 
     private final ExportContentConverter parent;
-    
+
     private final boolean onlyMapAssets;
-    
+
     public ExportContentConverter (final @Nonnull Converter parent, final boolean onlyMapAssets)
       {
-        super(parent);        
+        super(parent);
         this.parent = (parent instanceof ExportContentConverter) ? ((ExportContentConverter)parent) : null;
         id = Integer.parseInt(parent.reader.getAttributeValue("", "content-id"));
         this.onlyMapAssets = onlyMapAssets;
       }
-    
+
     @Override
     protected void processStartElement (final @Nonnull String elementName, final @Nonnull XMLStreamReader reader)
       throws Exception
       {
         if ("children".equals(elementName))
           {
-            new ExportContentConverter(this, onlyMapAssets).process();  
+            new ExportContentConverter(this, onlyMapAssets).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
         else if ("contentVersions".equals(elementName))
           {
-            new ExportContentsVersionConverter(this, onlyMapAssets).process();  
+            new ExportContentsVersionConverter(this, onlyMapAssets).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
-    
+
     @Override
     protected void processEndElement (final @Nonnull String elementName)
       throws Exception
       {
         if ("name".equals(elementName))
           {
-            name = contentAsString();  
+            name = contentAsString();
           }
         else if ("publishDateTime".equals(elementName))
           {
-            publishDateTime = contentAsDateTime();  
+            publishDateTime = contentAsDateTime();
           }
         else if ("expireDateTime".equals(elementName))
           {
-            expireDateTime = contentAsDateTime();  
+            expireDateTime = contentAsDateTime();
           }
       }
 

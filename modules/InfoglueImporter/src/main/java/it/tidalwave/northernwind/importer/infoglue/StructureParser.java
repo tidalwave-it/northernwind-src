@@ -45,12 +45,12 @@ public class StructureParser extends Parser
 
     private final String language;
 
-    public StructureParser (String xml, 
-                            final @Nonnull DateTime modifiedDateTime, 
-                            final @Nonnull DateTime publishingDateTime, 
-                            String path, 
-                            String language) 
-      throws FileNotFoundException, XMLStreamException 
+    public StructureParser (String xml,
+                            final @Nonnull DateTime modifiedDateTime,
+                            final @Nonnull DateTime publishingDateTime,
+                            String path,
+                            String language)
+      throws FileNotFoundException, XMLStreamException
       {
         super(xml, path, modifiedDateTime, publishingDateTime);
         this.language = language;
@@ -61,9 +61,9 @@ public class StructureParser extends Parser
       throws Exception
       {
         log.trace("processEndElement({})", name);
-        
+
         final String s = builder.toString();
-        
+
         if ("ComponentStructure".equals(name))
           {
             if (!"".equals(s.trim()))
@@ -74,7 +74,7 @@ public class StructureParser extends Parser
                   }
                 catch (Exception e)
                   {
-                    log.error("ERROR ON " + builder, e);                        
+                    log.error("ERROR ON " + builder, e);
                   }
               }
           }
@@ -84,48 +84,48 @@ public class StructureParser extends Parser
               {
                 String propertyName = name;
                 String propertyValue = s;
-                
+
                 if ("NiceURIName".equals(propertyName))
                   {
                     propertyName = "exposedUri";
                     propertyValue = propertyValue.replace("Blog___News", "Blog").toLowerCase().replaceAll("_", "-");
-                  } 
-                
+                  }
+
                 else if ("NavigationTitle".equals(propertyName))
                   {
                     propertyName = "navigationLabel";
-                  } 
-                
+                  }
+
                 if (!IGNORED_PROPERTIES.contains(propertyName))
                   {
-                    properties.put(new Key<Object>(toLower(propertyName)), propertyValue); 
-                  } 
+                    properties.put(new Key<Object>(toLower(propertyName)), propertyValue);
+                  }
               }
           }
       }
 
     @Override
-    protected void finish() 
+    protected void finish()
       throws IOException
       {
         log.debug("properties: " + properties);
         final Key<Object> PROPERTY_EXPOSED_URI = new Key<Object>("exposedUri");
         final Key<Object> PROPERTY_NAVIGATION_LABEL = new Key<Object>("navigationLabel");
-        
+
         // FIXME: for StoppingDown
         if (path.equals("//structure/RSS+Feeds/Override"))
           {
-            properties.put(PROPERTY_EXPOSED_URI, "feeds");                    
+            properties.put(PROPERTY_EXPOSED_URI, "feeds");
           }
         if (path.equals("//structure/RSS+Feeds/Blog+RSS+Feed/Override"))
           {
-            properties.put(PROPERTY_EXPOSED_URI, "blog.rss");                    
+            properties.put(PROPERTY_EXPOSED_URI, "blog.rss");
           }
         if (path.equals("//structure/RSS+Feeds/News+RSS+Feed/Override"))
           {
-            properties.put(PROPERTY_EXPOSED_URI, "news.rss");                    
+            properties.put(PROPERTY_EXPOSED_URI, "news.rss");
           }
-        if (path.startsWith("//structure/Blog/") && !path.equals("//structure/Blog/"))  
+        if (path.startsWith("//structure/Blog/") && !path.equals("//structure/Blog/"))
           {
             properties.clear();
             final String category = path.replace("//structure/Blog/", "").replace('+', ' ').replaceAll("/$", "");
@@ -135,12 +135,12 @@ public class StructureParser extends Parser
           }
 
         // END FIXME: for StoppingDown
-        
+
         if (!properties.containsKey(PROPERTY_EXPOSED_URI) && properties.containsKey(PROPERTY_NAVIGATION_LABEL))
           {
-            properties.put(PROPERTY_EXPOSED_URI, properties.get(PROPERTY_NAVIGATION_LABEL).toString().toLowerCase());                    
+            properties.put(PROPERTY_EXPOSED_URI, properties.get(PROPERTY_NAVIGATION_LABEL).toString().toLowerCase());
           }
-        
+
         dumpProperties("Properties_" + language);
       }
   }
