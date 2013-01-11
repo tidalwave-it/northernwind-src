@@ -37,13 +37,13 @@ import lombok.ToString;
  **********************************************************************************************************************/
 @Immutable
 @RequiredArgsConstructor @Getter @EqualsAndHashCode @ToString
-public class Tag 
+public class Tag
   {
     @Nonnull
     private final String name;
-    
+
     public boolean isTip()
       {
-        return "tip".equals(name);  
+        return "tip".equals(name);
       }
   }

@@ -46,16 +46,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NotThreadSafe @NoArgsConstructor(access=AccessLevel.PRIVATE) @Slf4j
-public class Executor 
+public class Executor
   {
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor(access=AccessLevel.PACKAGE)
@@ -63,64 +63,64 @@ public class Executor
       {
         @Nonnull
         private final InputStream input;
-        
+
         @Getter
         private final List<String> content = Collections.synchronizedList(new ArrayList<String>());
-        
+
         private boolean completed;
-        
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
         @Nonnull
         public ConsoleOutput start()
           {
-            Executors.newSingleThreadExecutor().submit(runnable); 
+            Executors.newSingleThreadExecutor().submit(runnable);
             return this;
           }
-        
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
-        private final Runnable runnable = new Runnable() 
+        private final Runnable runnable = new Runnable()
           {
             @Override
-            public void run() 
+            public void run()
               {
                 try
                   {
-                    read();  
+                    read();
                   }
                 catch (IOException e)
                   {
-                    log.warn("while reading from process console", e); 
+                    log.warn("while reading from process console", e);
                   }
-                
+
                 completed = true;
-                
+
                 synchronized (ConsoleOutput.this)
                   {
-                    ConsoleOutput.this.notifyAll();  
-                  }                
+                    ConsoleOutput.this.notifyAll();
+                  }
               }
           };
-        
+
         @Nonnull
-        public synchronized ConsoleOutput waitForCompleted() 
+        public synchronized ConsoleOutput waitForCompleted()
           throws InterruptedException
           {
             while (!completed)
               {
-                wait();  
+                wait();
               }
-            
+
             return this;
           }
-        
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
         @Nonnull
@@ -129,9 +129,9 @@ public class Executor
             final String string = filteredBy(filterRegexp).get(0);
             return new Scanner(string).useDelimiter(Pattern.compile(delimiterRegexp));
           }
-        
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
         @Nonnull
@@ -143,18 +143,18 @@ public class Executor
             for (final String s : new ArrayList<>(content))
               {
                 final Matcher m = p.matcher(s);
-                
+
                 if (m.matches())
                   {
-                    result.add(m.group(1));  
+                    result.add(m.group(1));
                   }
               }
-            
+
             return result;
           }
-        
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
         @Nonnull
@@ -162,13 +162,13 @@ public class Executor
           throws InterruptedException, IOException
           {
             log.info("waitFor({})", regexp);
-            
+
             while (filteredBy(regexp).isEmpty())
               {
                 try
                   {
                     final int exitValue = process.exitValue();
-                    throw new IOException("Process exited with " + exitValue);  
+                    throw new IOException("Process exited with " + exitValue);
                   }
                 catch (IllegalThreadStateException e) // ok, process not terminated yet
                   {
@@ -178,21 +178,21 @@ public class Executor
                       }
                   }
               }
-            
+
             return this;
-          } 
-        
+          }
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
         public void clear()
           {
-            content.clear();  
+            content.clear();
           }
-    
+
         /***************************************************************************************************************
-         * 
+         *
          *
          ***************************************************************************************************************/
         private void read()
@@ -205,39 +205,39 @@ public class Executor
                 final String s = br.readLine();
 
                 if (s == null)
-                  { 
-                    break;   
-                  }  
+                  {
+                    break;
+                  }
 
                 log.info(">>>>>>>> {}", s);
-                content.add(s);  
-                
+                content.add(s);
+
                 synchronized (this)
                   {
-                    notifyAll();  
+                    notifyAll();
                   }
               }
 
             br.close();
           }
       }
-    
+
     private final List<String> arguments = new ArrayList<>();
 
     private Path workingDirectory = new File(".").toPath();
-    
+
     private Process process;
-    
+
     @Getter
     private ConsoleOutput stdout;
-    
+
     @Getter
     private ConsoleOutput stderr;
-    
+
     private PrintWriter stdin;
-    
+
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -248,9 +248,9 @@ public class Executor
         executor.arguments.add(findPathFor(executable));
         return executor;
       }
-    
+
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -259,9 +259,9 @@ public class Executor
         arguments.add(argument);
         return this;
       }
-    
+
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -270,9 +270,9 @@ public class Executor
         this.workingDirectory = workingDirectory;
         return this;
       }
-    
+
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -280,29 +280,29 @@ public class Executor
       throws IOException
       {
         log.info(">>>> executing {} ...", arguments);
-        
+
         final List<String> environment = new ArrayList<>();
-        
+
 //        for (final Entry<String, String> e : System.getenv().entrySet())
 //          {
-//            environment.add(String.format("%s=%s", e.getKey(), e.getValue()));  
+//            environment.add(String.format("%s=%s", e.getKey(), e.getValue()));
 //          }
-        
+
         log.info(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
         log.info(">>>> environment:       {}", environment);
         process = Runtime.getRuntime().exec(arguments.toArray(new String[0]),
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
-        
+
         stdout = new ConsoleOutput(process.getInputStream()).start();
         stderr = new ConsoleOutput(process.getErrorStream()).start();
         stdin  = new PrintWriter(process.getOutputStream(), true);
-        
+
         return this;
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -311,43 +311,43 @@ public class Executor
       {
         if (process.waitFor() != 0)
           {
-            throw new IOException("Process exited with " + process.exitValue());  
+            throw new IOException("Process exited with " + process.exitValue());
           }
-        
+
         return this;
       }
 
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor send (final @Nonnull String string) 
+    public Executor send (final @Nonnull String string)
       throws IOException
       {
         log.info(">>>> sending '{}'...", string);
         stdin.println(string);
         return this;
       }
-    
+
     /*******************************************************************************************************************
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
     private static String findPathFor (final @Nonnull String executable)
       throws IOException
       {
-        for (final String path : System.getenv("PATH").split(File.pathSeparator))            
+        for (final String path : System.getenv("PATH").split(File.pathSeparator))
           {
             final File file = new File(new File(path), executable);
-            
+
             if (file.canExecute())
               {
-                return file.getAbsolutePath(); 
+                return file.getAbsolutePath();
               }
           }
-        
+
         throw new IOException("Can't find " + executable + " in PATH");
       }
   }

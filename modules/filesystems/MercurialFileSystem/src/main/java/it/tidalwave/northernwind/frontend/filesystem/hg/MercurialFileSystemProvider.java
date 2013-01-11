@@ -61,64 +61,64 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter
     private String remoteRepositoryUrl;
-    
+
     @Getter @Setter
     private String workAreaFolder;
-    
+
     private final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
-   
+
     @Getter
     private final ResourceFileSystem fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
-    
+
     @Inject
     private BeanFactory beanFactory;
-    
+
 //    @Inject @Named("applicationMessageBus") FIXME doesn't work in the test
     private MessageBus messageBus;
-    
+
     private Path workArea;
-        
+
     private final MercurialRepository[] repositories = new MercurialRepository[2];
-    
+
     private MercurialRepository exposedRepository;
-    
+
     private MercurialRepository alternateRepository;
-    
+
     private int repositorySelector;
-    
+
     /* package */ int swapCounter;
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @PostConstruct
-    public void initialize() 
+    public void initialize()
       throws IOException, PropertyVetoException, URISyntaxException
       {
         workArea = new File(workAreaFolder).toPath();
-        
+
         for (int i = 0; i < 2; i++)
           {
-            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));  
-            
+            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));
+
             if (repositories[i].isEmpty())
               {
                 // FIXME: this is inefficient, clones both from the remote repo
-                repositories[i].clone(new URI(remoteRepositoryUrl));  
+                repositories[i].clone(new URI(remoteRepositoryUrl));
               }
           }
-        
+
         messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class);
-        
+
         swapRepositories(); // initialization
         swapCounter = 0;
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     public void checkForUpdates()
@@ -141,95 +141,95 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
           {
             log.warn(">>>> error when checking for updates", e);
           }
-      }        
-    
+      }
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ Tag getCurrentTag() 
+    /* package */ Tag getCurrentTag()
       throws IOException, NotFoundException
       {
-        return exposedRepository.getCurrentTag();  
+        return exposedRepository.getCurrentTag();
       }
-    
+
     @Nonnull
-    /* package */ Path getCurrentWorkArea() 
+    /* package */ Path getCurrentWorkArea()
       {
-        return exposedRepository.getWorkArea();  
+        return exposedRepository.getWorkArea();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     private void swapRepositories()
       throws IOException, PropertyVetoException
       {
-        exposedRepository = repositories[repositorySelector];  
-        alternateRepository = repositories[(repositorySelector + 1) % 2]; 
+        exposedRepository = repositories[repositorySelector];
+        alternateRepository = repositories[(repositorySelector + 1) % 2];
         repositorySelector = (repositorySelector + 1) % 2;
         fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
         swapCounter++;
-        
+
         log.info("New exposed repository:   {}", exposedRepository.getWorkArea());
         log.info("New alternate repository: {}", alternateRepository.getWorkArea());
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Tag findNewTag() 
+    private Tag findNewTag()
       throws NotFoundException, IOException
       {
         log.info("Checking for updates...");
-        
+
         alternateRepository.pull();
         // would throw NotFoundException if no publishing tag
         final Tag latestTag = getLatestPublishingTag(alternateRepository);
-        
+
         try
           {
             if (!latestTag.equals(exposedRepository.getCurrentTag()))
               {
                 return latestTag;
-              } 
+              }
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             log.info(">>>> repo must be initialized");
             return latestTag;
           }
 
-        throw new NotFoundException();  
+        throw new NotFoundException();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
     private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository repository)
-      throws IOException, NotFoundException            
+      throws IOException, NotFoundException
       {
         final List<Tag> tags = repository.getTags();
         Collections.reverse(tags);
-        
+
         for (final Tag tag : tags)
           {
             if (tag.getName().startsWith("published-"))
               {
                 return tag;
-              } 
+              }
           }
-        
+
         throw new NotFoundException();
       }
   }

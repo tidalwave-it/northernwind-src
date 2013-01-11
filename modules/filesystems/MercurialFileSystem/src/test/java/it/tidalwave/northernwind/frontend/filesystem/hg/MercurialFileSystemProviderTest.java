@@ -48,14 +48,14 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestReposito
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MercurialFileSystemProviderTest 
+public class MercurialFileSystemProviderTest
   {
     private MercurialFileSystemProvider fixture;
-    
+
     private GenericXmlApplicationContext context;
-            
+
     private MessageBus messageBus;
-    
+
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -73,7 +73,7 @@ public class MercurialFileSystemProviderTest
         fixture = context.getBean(MercurialFileSystemProvider.class);
         messageBus = context.getBean(MessageBus.class);
       }
-    
+
     @Test
     public void must_properly_initialize()
       throws Exception
@@ -82,7 +82,7 @@ public class MercurialFileSystemProviderTest
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
-    
+
     @Test(dependsOnMethods="must_properly_initialize")
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
@@ -92,43 +92,43 @@ public class MercurialFileSystemProviderTest
         mercurialRepository.pull();
         mercurialRepository.updateTo(new Tag("published-0.8"));
         fixture.swapCounter = 0;
-        
+
         fixture.checkForUpdates();
-        
+
         assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
-    
+
     @Test(dependsOnMethods="must_properly_initialize")
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
       throws Exception
       {
         fixture.swapCounter = 0;
         prepareSourceRepository(Option.DONT_STRIP);
-        
+
         fixture.checkForUpdates();
-        
+
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
         assertThat(fixture.swapCounter, is(1));
-        
-        verify(messageBus).publish(is(argThat(new BaseMatcher<ResourceFileSystemChangedEvent>() 
+
+        verify(messageBus).publish(is(argThat(new BaseMatcher<ResourceFileSystemChangedEvent>()
           {
             @Override
-            public boolean matches (final @Nonnull Object item) 
+            public boolean matches (final @Nonnull Object item)
               {
                 if (! (item instanceof ResourceFileSystemChangedEvent))
                   {
-                    return false;  
+                    return false;
                   }
-                
+
                 return true;
               }
 
             @Override
-            public void describeTo(Description description) 
+            public void describeTo(Description description)
               {
-                
+
               }
           })));
       }

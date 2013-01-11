@@ -35,10 +35,10 @@ import java.nio.file.Path;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MercurialRepository 
+public interface MercurialRepository
   {
     public boolean isEmpty();
-            
+
     /*******************************************************************************************************************
      *
      * Clones a mercurial repo.
@@ -46,7 +46,7 @@ public interface MercurialRepository
      ******************************************************************************************************************/
     public void clone (@Nonnull URI uri)
       throws IOException;
-    
+
     /*******************************************************************************************************************
      *
      * Pulls changes from the remote repository.
@@ -54,16 +54,16 @@ public interface MercurialRepository
      ******************************************************************************************************************/
     public void pull()
       throws IOException;
-    
+
     /*******************************************************************************************************************
      *
      * Returns the current tag of the workarea.
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Tag getCurrentTag() 
+    public Tag getCurrentTag()
       throws IOException, NotFoundException;
-    
+
     /*******************************************************************************************************************
      *
      * Returns the tags of the repository.
@@ -72,7 +72,7 @@ public interface MercurialRepository
     @Nonnull
     public List<Tag> getTags()
       throws IOException;
-    
+
     /*******************************************************************************************************************
      *
      * Updates the repository to the given tag.
@@ -80,7 +80,7 @@ public interface MercurialRepository
      ******************************************************************************************************************/
     public void updateTo (@Nonnull Tag tag)
       throws IOException;
-    
+
     @Nonnull
     public Path getWorkArea();
   }

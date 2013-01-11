@@ -47,7 +47,7 @@ public class DefaultMercurialRepository implements MercurialRepository
   {
     @Getter @Nonnull
     private final Path workArea;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -56,16 +56,16 @@ public class DefaultMercurialRepository implements MercurialRepository
     @Override
     public boolean isEmpty()
       {
-        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);  
+        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void clone (final @Nonnull URI uri) 
+    public void clone (final @Nonnull URI uri)
       throws IOException
       {
         try
@@ -74,9 +74,9 @@ public class DefaultMercurialRepository implements MercurialRepository
 
             if (!workArea.toFile().exists())
               {
-                throw new IOException("Cannot mkdirs " + workArea);  
+                throw new IOException("Cannot mkdirs " + workArea);
               }
-            
+
             final Executor executor = Executor.forExecutable("hg").withArgument("clone")
                                                                   .withArgument("--noupdate")
                                                                   .withArgument(uri.toASCIIString())
@@ -87,7 +87,7 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
 
@@ -97,7 +97,7 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Tag getCurrentTag() 
+    public Tag getCurrentTag()
       throws IOException, NotFoundException
       {
         try
@@ -112,11 +112,11 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (NoSuchElementException e)
           {
-            throw new NotFoundException();  
+            throw new NotFoundException();
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
 
@@ -141,17 +141,17 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void updateTo (final @Nonnull Tag tag) 
+    public void updateTo (final @Nonnull Tag tag)
       throws IOException
       {
         try
@@ -165,7 +165,7 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
 
@@ -175,7 +175,7 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override
-    public void pull() 
+    public void pull()
       throws IOException
       {
         try
@@ -187,25 +187,25 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<Tag> toTagList (final @Nonnull List<String> strings) 
+    private List<Tag> toTagList (final @Nonnull List<String> strings)
       {
         final List<Tag> tags = new ArrayList<>();
-        
+
         for (final String string : strings)
           {
             tags.add(new Tag(string));
           }
-        
+
         return tags;
       }
   }

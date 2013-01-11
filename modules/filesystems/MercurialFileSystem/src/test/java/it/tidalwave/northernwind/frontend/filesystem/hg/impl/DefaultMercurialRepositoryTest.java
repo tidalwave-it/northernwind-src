@@ -49,16 +49,16 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestReposito
 public class DefaultMercurialRepositoryTest
   {
     private MercurialRepository fixture;
-    
+
     private Path workArea;
 
     @BeforeClass
     public void createSourceRepository()
       throws Exception
       {
-        workArea = new File("target/workarea").toPath();        
+        workArea = new File("target/workarea").toPath();
       }
-    
+
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -67,16 +67,16 @@ public class DefaultMercurialRepositoryTest
         FileUtils.deleteDirectory(workArea.toFile());
         fixture = new DefaultMercurialRepository(workArea);
       }
-    
+
     @Test
-    public void must_properly_clone_a_repository() 
+    public void must_properly_clone_a_repository()
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
         // TODO: assert contents
       }
-    
+
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           expectedExceptions=NotFoundException.class)
     public void must_throw_NotFoundException_when_asking_for_the_current_tag_for_an_empty_workarea()
@@ -84,31 +84,31 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
-        
+
         fixture.getCurrentTag();
       }
-    
+
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_enumerate_tags()
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
-        
+
         assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));
       }
-    
+
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_return_the_latest_tag()
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
-        
-        assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));        
+
+        assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));
         // TODO: assert contents
       }
-    
+
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           dataProvider="validTags1")
     public void must_properly_update_to_a_tag (final @Nonnull Tag tag)
@@ -116,25 +116,25 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
-        
+
         fixture.updateTo(tag);
         assertThat(fixture.getCurrentTag(), is(tag));
         // TODO: assert contents
       }
-    
+
     @Test(dependsOnMethods="must_properly_clone_a_repository",
-          dataProvider="invalidTags", 
-          expectedExceptions=IOException.class, 
+          dataProvider="invalidTags",
+          expectedExceptions=IOException.class,
           expectedExceptionsMessageRegExp="Process exited with 255")
     public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
       throws Exception
       {
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
-        
+
         fixture.updateTo(tag);
       }
-    
+
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_pull_changesets()
       throws Exception
@@ -142,47 +142,47 @@ public class DefaultMercurialRepositoryTest
         prepareSourceRepository(Option.STRIP);
         fixture.clone(sourceRepository.toUri());
         prepareSourceRepository(Option.DONT_STRIP);
-        
+
         fixture.pull();
-        
-        assertThat(fixture.getTags(), is(EXPECTED_TAGS_2));        
+
+        assertThat(fixture.getTags(), is(EXPECTED_TAGS_2));
       }
-    
+
     @DataProvider(name="validTags1")
     public Object[][] getValidTags1()
       {
         final List<Object[]> validTags = new ArrayList<>();
-        
+
         for (final Tag tag : EXPECTED_TAGS_1)
           {
             validTags.add(new Object[] { tag });
           }
-        
+
         return validTags.toArray(new Object[0][0]);
-      }    
-    
+      }
+
     @DataProvider(name="validTags2")
     public Object[][] getValidTags2()
       {
         final List<Object[]> validTags = new ArrayList<>();
-        
+
         for (final Tag tag : EXPECTED_TAGS_2)
           {
             validTags.add(new Object[] { tag });
           }
-        
+
         return validTags.toArray(new Object[0][0]);
-      }    
-    
+      }
+
     @DataProvider(name="invalidTags")
     public Object[][] getInvalidTags()
       {
         return new Object[][]
           {
-            { new Tag("tag1") },  
-            { new Tag("tag2") },  
-            { new Tag("tag3") },  
-            { new Tag("tag4") }  
+            { new Tag("tag1") },
+            { new Tag("tag2") },
+            { new Tag("tag3") },
+            { new Tag("tag4") }
           };
-      }    
+      }
   }

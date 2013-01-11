@@ -39,23 +39,23 @@ import static org.hamcrest.CoreMatchers.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class TestRepositoryHelper 
+public class TestRepositoryHelper
   {
     public enum Option { STRIP, DONT_STRIP }
-    
+
     public static final List<Tag> EXPECTED_TAGS_1 = new ArrayList<>();
-    
+
     public static final List<Tag> EXPECTED_TAGS_2 = new ArrayList<>();
-    
+
     public static final Path sourceRepository;
-    
+
     private static final Path sourceBundle;
-    
+
     static
       {
         sourceRepository = new File("target/source-repository").toPath();
         sourceBundle = new File("./src/test/resources/hg.bundle").toPath();
-        
+
         EXPECTED_TAGS_1.add(new Tag("published-0.1"));
         EXPECTED_TAGS_1.add(new Tag("published-0.2"));
         EXPECTED_TAGS_1.add(new Tag("published-0.3"));
@@ -64,8 +64,8 @@ public class TestRepositoryHelper
         EXPECTED_TAGS_1.add(new Tag("published-0.6"));
         EXPECTED_TAGS_1.add(new Tag("published-0.7"));
         EXPECTED_TAGS_1.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_1.add(new Tag("tip"));  
-        
+        EXPECTED_TAGS_1.add(new Tag("tip"));
+
         EXPECTED_TAGS_2.add(new Tag("published-0.1"));
         EXPECTED_TAGS_2.add(new Tag("published-0.2"));
         EXPECTED_TAGS_2.add(new Tag("published-0.3"));
@@ -75,21 +75,21 @@ public class TestRepositoryHelper
         EXPECTED_TAGS_2.add(new Tag("published-0.7"));
         EXPECTED_TAGS_2.add(new Tag("published-0.8"));
         EXPECTED_TAGS_2.add(new Tag("published-0.9"));
-        EXPECTED_TAGS_2.add(new Tag("tip"));       
+        EXPECTED_TAGS_2.add(new Tag("tip"));
       }
-    
+
     public static void prepareSourceRepository (final @Nonnull Option option)
       throws Exception
       {
         log.info("======== Preparing source repository at {}", sourceRepository.toFile().getCanonicalPath());
-        
+
         if (sourceRepository.toFile().exists())
           {
-            FileUtils.deleteDirectory(sourceRepository.toFile());  
+            FileUtils.deleteDirectory(sourceRepository.toFile());
           }
-        
+
         assertThat(sourceRepository.toFile().mkdirs(), is(true));
-        
+
         Executor.forExecutable("hg")
                 .withArgument("clone")
                 .withArgument("--noupdate")
@@ -98,7 +98,7 @@ public class TestRepositoryHelper
                 .withWorkingDirectory(sourceRepository)
                 .start()
                 .waitForCompletion();
-        
+
         if (option == Option.STRIP)
           {
             Executor.forExecutable("hg")
@@ -108,7 +108,7 @@ public class TestRepositoryHelper
                     .start()
                     .waitForCompletion();
           }
-        
+
         log.info("======== Source repository prepared ========");
       }
   }
