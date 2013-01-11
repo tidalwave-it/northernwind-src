@@ -40,17 +40,17 @@ import lombok.ToString;
 /***********************************************************************************************************************
  *
  * A provider for a local {@link NwFileSystem}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(of={"rootPath"})
+@ToString(of = { "rootPath" })
 public class LocalFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
     private String rootPath = "";
-    
+
     @CheckForNull
     private ResourceFileSystem fileSystem;
 
@@ -63,7 +63,7 @@ public class LocalFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized ResourceFileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem()
       throws IOException
       {
         if (fileSystem == null)
@@ -77,9 +77,9 @@ public class LocalFileSystemProvider implements ResourceFileSystemProvider
 
                 if (rootFolder == null)
                   {
-                    throw new FileNotFoundException(rootPath);  
-                  } 
-                
+                    throw new FileNotFoundException(rootPath);
+                  }
+
                 fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
               }
             catch (PropertyVetoException e)
@@ -87,7 +87,7 @@ public class LocalFileSystemProvider implements ResourceFileSystemProvider
                 throw new FileNotFoundException(e.toString());
               }
           }
-              
-        return fileSystem;  
-      }    
+
+        return fileSystem;
+      }
   }

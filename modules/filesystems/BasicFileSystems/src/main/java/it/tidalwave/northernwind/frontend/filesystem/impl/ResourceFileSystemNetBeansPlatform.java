@@ -40,39 +40,39 @@ import lombok.RequiredArgsConstructor;
 public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
   {
     private final IdentityHashMap<FileObject, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
-    
+
     @Nonnull
     private final FileSystem fileSystem;
 
     @Override @Nonnull
-    public ResourceFile getRoot() 
+    public ResourceFile getRoot()
       {
         return createResourceFile(fileSystem.getRoot());
       }
-    
+
     @Override @Nonnull
-    public ResourceFile findFileByPath (final @Nonnull String path) 
+    public ResourceFile findFileByPath (final @Nonnull String path)
       {
         return createResourceFile(fileSystem.findResource(path));
       }
-    
+
     /* package */ synchronized ResourceFile createResourceFile (final @Nonnull FileObject fileObject)
       {
         if (fileObject == null)
           {
-            return null;  
+            return null;
           }
-        
+
         ResourceFile decorator = delegateLightWeightMap.get(fileObject);
-        
+
         if (decorator == null)
           {
             decorator = new ResourceFileNetBeansPlatform(this, fileObject);
             delegateLightWeightMap.put(fileObject, decorator);
           }
-        
+
         return decorator;
       }
-    
+
     // TODO: equals and hashcode
   }

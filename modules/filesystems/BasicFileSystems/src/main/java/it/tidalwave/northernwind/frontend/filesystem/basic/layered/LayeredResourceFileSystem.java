@@ -47,18 +47,18 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
   {
     @Nonnull
     private final List<? extends ResourceFileSystemProvider> delegates;
-    
+
     private final FileSystemProvidersProvider fileSystemProvidersProvider;
-     
+
     private final IdentityHashMap<ResourceFile, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceFile getRoot() 
+    public ResourceFile getRoot()
       {
         return findFileByPath("");
       }
@@ -69,7 +69,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
      *
      ******************************************************************************************************************/
     @Override @CheckForNull
-    public ResourceFile findFileByPath (final @Nonnull String name) 
+    public ResourceFile findFileByPath (final @Nonnull String name)
       {
         log.trace("findResource({})", name);
         ResourceFile result = null;
@@ -84,7 +84,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
 
         for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
           {
-            try 
+            try
               {
                 final ResourceFileSystem fileSystem = i.previous().getFileSystem();
                 final ResourceFile fileObject = fileSystem.findFileByPath(name);
@@ -95,7 +95,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
                     result = createDecoratorFile(fileObject);
                     break;
                   }
-              } 
+              }
             catch (IOException e)
               {
                 log.warn("", e);
@@ -112,20 +112,20 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull        
+    @Override @Nonnull
     public synchronized ResourceFile createDecoratorFile (final @Nonnull ResourceFile delegateFile)
       {
-        if (delegateFile == null) 
+        if (delegateFile == null)
           {
-            return null;  
+            return null;
           }
 
         ResourceFile decorator = delegateLightWeightMap.get(delegateFile);
 
         if (decorator == null)
           {
-            decorator = (delegateFile.isData() ? new DecoratorResourceFile(this, delegateFile) 
-                                               : new DecoratorResourceFolder(this, delegates, delegateFile.getPath(), delegateFile));  
+            decorator = (delegateFile.isData() ? new DecoratorResourceFile(this, delegateFile)
+                                               : new DecoratorResourceFolder(this, delegates, delegateFile.getPath(), delegateFile));
             delegateLightWeightMap.put(delegateFile, decorator);
           }
 

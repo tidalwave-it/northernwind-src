@@ -31,22 +31,22 @@ import lombok.ToString;
 /***********************************************************************************************************************
  *
  * FIXME: this could probably be merged to the superclass.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(of="delegate")
+@ToString(of = "delegate")
 class DecoratorResourceFile extends DecoratedResourceFileSupport
   {
-    @Delegate(types=ResourceFile.class, excludes=FileDelegateExclusions.class) @Nonnull
+    @Delegate(types = ResourceFile.class, excludes = FileDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
-    public DecoratorResourceFile (final @Nonnull LayeredResourceFileSystem fileSystem, 
-                                  final @Nonnull ResourceFile delegate) 
+    public DecoratorResourceFile (final @Nonnull LayeredResourceFileSystem fileSystem,
+                                  final @Nonnull ResourceFile delegate)
       {
         super(fileSystem, delegate);
         this.delegate = delegate;
       }
-  }    
+  }
 

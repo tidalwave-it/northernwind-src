@@ -48,12 +48,12 @@ import org.testng.annotations.Test;
 public class LayeredFileSystemProviderTest
   {
     private static final String FS_BASE = "target/filesystems/";
-    
+
     private LayeredFileSystemProvider fixture;
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @BeforeMethod
@@ -61,10 +61,10 @@ public class LayeredFileSystemProviderTest
       {
         fixture = new LayeredFileSystemProvider();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @BeforeMethod
@@ -77,21 +77,21 @@ public class LayeredFileSystemProviderTest
         createFile("TC1", "fs1", "/dir1/dir2/file3.txt");
         createFile("TC1", "fs1", "/dir1/dir2/file4.txt");
         createFile("TC1", "fs2", "/dir1/dir2/file3.txt");
-        
+
         // 2nd filesystem adds a new file in existing dir
         createFile("TC2", "fs1", "/dir1/dir2/file1.txt");
         createFile("TC2", "fs1", "/dir1/dir2/file2.txt");
         createFile("TC2", "fs1", "/dir1/dir2/file3.txt");
         createFile("TC2", "fs1", "/dir1/dir2/file4.txt");
         createFile("TC2", "fs2", "/dir1/dir2/file5.txt");
-        
+
         // 2nd filesystem adds a new file in a new dir
         createFile("TC3", "fs1", "/dir1/dir2/file1.txt");
         createFile("TC3", "fs1", "/dir1/dir2/file2.txt");
         createFile("TC3", "fs1", "/dir1/dir2/file3.txt");
         createFile("TC3", "fs1", "/dir1/dir2/file4.txt");
         createFile("TC3", "fs2", "/dir1/dir3/file5.txt");
-        
+
         // 2nd filesystem adds a new file in a new dir just under root
         createFile("TC4", "fs1", "/dir1/dir2/file1.txt");
         createFile("TC4", "fs1", "/dir1/dir2/file2.txt");
@@ -99,55 +99,56 @@ public class LayeredFileSystemProviderTest
         createFile("TC4", "fs1", "/dir1/dir2/file4.txt");
         createFile("TC4", "fs2", "/dir4/dir3/file5.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    @Test(dataProvider="testCases")
-    public void must_navigate_through_the_whole_filesystem (final @Nonnull String testCase, final @Nonnull String[] fileSystemNames)
+    @Test(dataProvider = "testCases")
+    public void must_navigate_through_the_whole_filesystem (final @Nonnull String testCase,
+                                                            final @Nonnull String[] fileSystemNames)
       throws IOException
       {
         final List<LocalFileSystemProvider> fileSystemProviders = new ArrayList<LocalFileSystemProvider>();
-        
+
         for (final String fileSystemName : fileSystemNames)
           {
             LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
             fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
           }
-        
+
         fixture.setDelegates(fileSystemProviders);
-               
+
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s.txt", testCase));
         final File actualFile = new File(String.format("target/test-artifacts/%s.txt", testCase));
         actualFile.getParentFile().mkdirs();
         dump(actualFile, fixture.getFileSystem());
-        
+
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
-      }  
-    
+      }
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    @DataProvider(name="testCases")
+    @DataProvider(name = "testCases")
     public Object[][] getTestCases()
       {
-        return new Object[][] 
+        return new Object[][]
           {
-            { "TC1", new String[] { "fs1", "fs2" } }, 
-            { "TC2", new String[] { "fs1", "fs2" } },  
-            { "TC3", new String[] { "fs1", "fs2" } }, 
-            { "TC4", new String[] { "fs1", "fs2" } }  
+            { "TC1", new String[] { "fs1", "fs2" } },
+            { "TC2", new String[] { "fs1", "fs2" } },
+            { "TC3", new String[] { "fs1", "fs2" } },
+            { "TC4", new String[] { "fs1", "fs2" } }
           };
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     private void dump (final @Nonnull File file, final @Nonnull ResourceFileSystem fileSystem)
@@ -156,13 +157,13 @@ public class LayeredFileSystemProviderTest
         final List<String> lines = new ArrayList<String>();
         dump(lines, fixture.getFileSystem().getRoot());
         Collections.sort(lines);
-        
+
         FileUtils.writeLines(file, lines, "\n");
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     private static void dump (final @Nonnull List<String> lines, final @Nonnull ResourceFile fileObject)
@@ -170,30 +171,30 @@ public class LayeredFileSystemProviderTest
       {
         if (fileObject.isData())
           {
-            lines.add(String.format("%s: %s", fileObject.getPath(), fileObject.asText("UTF-8")));  
+            lines.add(String.format("%s: %s", fileObject.getPath(), fileObject.asText("UTF-8")));
           }
         else
           {
             for (final ResourceFile child : fileObject.getChildren())
               {
-                dump(lines, child);  
+                dump(lines, child);
               }
           }
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    private static void createFile (final @Nonnull String testCase, 
-                                    final @Nonnull String fileSystemName, 
-                                    final @Nonnull String path) 
+    private static void createFile (final @Nonnull String testCase,
+                                    final @Nonnull String fileSystemName,
+                                    final @Nonnull String path)
       throws IOException
       {
         final File file = new File(FS_BASE + testCase + fileSystemName + path);
         file.getParentFile().mkdirs();
         FileUtils.write(file, fileSystemName + ": " + path);
         log.info("Created {} - {}:{}", new Object[] { testCase, fileSystemName, path });
-      }  
+      }
   }

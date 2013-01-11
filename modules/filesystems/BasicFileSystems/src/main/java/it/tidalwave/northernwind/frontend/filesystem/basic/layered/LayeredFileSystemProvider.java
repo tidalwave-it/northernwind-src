@@ -43,12 +43,12 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
     List<? extends ResourceFileSystemProvider> delegates = new ArrayList<>();
-    
+
     @Getter @Setter
     private FileSystemProvidersProvider fileSystemProvidersProvider;
-    
+
     private ResourceFileSystem fileSystem;
-    
+
     @Override @Nonnull
     public ResourceFileSystem getFileSystem()
       {
@@ -56,7 +56,7 @@ public class LayeredFileSystemProvider implements ResourceFileSystemProvider
           {
             fileSystem = new LayeredResourceFileSystem(delegates, fileSystemProvidersProvider);
           }
-        
+
         return fileSystem;
       }
   }

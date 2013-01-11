@@ -48,7 +48,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -70,100 +70,100 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         public ResourceFileSystem getFileSystem();
         public Date lastModified();
       }
-    
-    @Inject @Nonnull 
+
+    @Inject @Nonnull
     private Provider<ServletContext> servletContext;
-    
+
     @Getter @Nonnull
     private final ResourceFileSystemNetBeansPlatform fileSystem;
 
     @Delegate(excludes=Exclusions.class) @Nonnull
     private final FileObject delegate;
 
-    public ResourceFileNetBeansPlatform (final @Nonnull ResourceFileSystemNetBeansPlatform fileSystem, 
-                                         final @Nonnull FileObject delegate) 
+    public ResourceFileNetBeansPlatform (final @Nonnull ResourceFileSystemNetBeansPlatform fileSystem,
+                                         final @Nonnull FileObject delegate)
       {
         this.fileSystem = fileSystem;
         this.delegate = delegate;
       }
-    
+
     @Override @Nonnull
     public String getName()
       {
         return delegate.getNameExt();
       }
-    
+
     @Override
-    public ResourceFile getParent() 
+    public ResourceFile getParent()
       {
         return fileSystem.createResourceFile(delegate.getParent());
       }
 
     @Override
-    public ResourceFile getChildByName (final @Nonnull String fileName) 
+    public ResourceFile getChildByName (final @Nonnull String fileName)
       {
         return fileSystem.createResourceFile(delegate.getFileObject(fileName));
       }
-    
+
     @Override @Nonnull
     public ResourceFile createFolder (@Nonnull String name)
       throws IOException
       {
-        return fileSystem.createResourceFile(delegate.createFolder(name));  
+        return fileSystem.createResourceFile(delegate.createFolder(name));
       }
 
     @Override
-    public Collection<ResourceFile> getChildren() 
+    public Collection<ResourceFile> getChildren()
       {
         final FileObject[] delegateChildren = delegate.getChildren();
         final ResourceFile[] children = new ResourceFile[delegateChildren.length];
-        
+
         for (int i = 0; i < delegateChildren.length; i++)
           {
             children[i] = fileSystem.createResourceFile(delegateChildren[i]);
           }
-        
+
         return Arrays.asList(children);
       }
 
     @Override
-    public Collection<ResourceFile> getChildren (final boolean recursive) 
+    public Collection<ResourceFile> getChildren (final boolean recursive)
       {
         final List<ResourceFile> result = new ArrayList<>();
-        
+
         for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
           {
-            result.add(fileSystem.createResourceFile(child));  
+            result.add(fileSystem.createResourceFile(child));
           }
 
         return result;
       }
-    
+
     @Override @Nonnull
     public String getMimeType()
       {
         final String fileName = delegate.getNameExt();
-        String mimeType = servletContext.get().getMimeType(fileName);        
-        mimeType = (mimeType != null) ? mimeType : "content/unknown";  
+        String mimeType = servletContext.get().getMimeType(fileName);
+        mimeType = (mimeType != null) ? mimeType : "content/unknown";
         log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
         return mimeType;
       }
-    
+
     @Override @Nonnull
-    public DateTime getLatestModificationTime() 
+    public DateTime getLatestModificationTime()
       {
         return new DateTime(delegate.lastModified());
       }
-    
+
     @Override @Nonnull
     public File toFile()
-      {  
+      {
         return FileUtil.toFile(delegate);
       }
-    
+
     @Override
     public void copyTo (final @Nonnull ResourceFile targetFolder)
-      throws IOException 
+      throws IOException
       {
         FileUtil.copyFile(delegate, ((ResourceFileNetBeansPlatform)targetFolder).delegate, delegate.getName());
       }

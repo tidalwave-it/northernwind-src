@@ -31,7 +31,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
  * @version $Id$
  *
  **********************************************************************************************************************/
-interface FileDelegateExclusions 
+interface FileDelegateExclusions
   {
     public void delete();
 

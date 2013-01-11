@@ -52,7 +52,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
     @Nonnull
     private final List<? extends ResourceFileSystemProvider> delegates;
-    
+
     @Delegate(types=ResourceFile.class, excludes=FolderDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
@@ -60,7 +60,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
     public DecoratorResourceFolder (final @Nonnull LayeredResourceFileSystem fileSystem,
                                     final @Nonnull List<? extends ResourceFileSystemProvider> delegates,
-                                    final @Nonnull String path, 
+                                    final @Nonnull String path,
                                     final @Nonnull ResourceFile delegate)
       {
         super(fileSystem, delegate);
@@ -68,9 +68,9 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
         this.delegate = delegate;
         this.delegates = delegates;
       }
-    
+
     @Override @Nonnull
-    public Collection<ResourceFile> getChildren() 
+    public Collection<ResourceFile> getChildren()
       {
         log.trace("getChildren() - {}", this);
         return getChildrenMap().values();
@@ -83,7 +83,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
         if (relativePath.contains("/"))
           {
-            throw new IllegalArgumentException("relativePath: " + relativePath);  
+            throw new IllegalArgumentException("relativePath: " + relativePath);
           }
 
         return getChildrenMap().get(relativePath);
@@ -95,7 +95,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
         if (childrenMap == null)
           {
             childrenMap = new TreeMap<>();
-            
+
             for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
               {
                 try
@@ -113,7 +113,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
                               }
                           }
                       }
-                  } 
+                  }
                 catch (IOException e)
                   {
                     log.warn("", e);
@@ -122,7 +122,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
             log.trace(">>>> childrenMap: {}", childrenMap);
           }
-    
+
         return childrenMap;
       }
   }

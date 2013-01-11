@@ -45,17 +45,17 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
   {
     @Getter @Setter
     private String fileSystemsFolder = "filesystems";
-    
+
     @Getter @Setter
     private ResourceFileSystemProvider localFileSystemProvider;
-    
+
     @Override @Nonnull
-    public List<? extends ResourceFileSystemProvider> getFileSystemProviders() 
+    public List<? extends ResourceFileSystemProvider> getFileSystemProviders()
       {
         final List<ResourceFileSystemProvider> fileSystemProviders = new ArrayList<>();
-        
+
         try
-          { 
+          {
             final ResourceFile zipFolder = localFileSystemProvider.getFileSystem().findFileByPath(fileSystemsFolder);
 
             if (zipFolder != null)
@@ -74,13 +74,13 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
               }
           }
         catch (IOException e)
-          { 
+          {
             log.error("", e);
           }
-        
+
         fileSystemProviders.add(localFileSystemProvider);
         log.info("delegate filesystems: {}", fileSystemProviders);
-        
+
         return fileSystemProviders;
       }
   }

@@ -32,7 +32,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface FileSystemProvidersProvider 
+public interface FileSystemProvidersProvider
   {
     @Nonnull
     public List<? extends ResourceFileSystemProvider> getFileSystemProviders();
