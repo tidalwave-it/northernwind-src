@@ -34,18 +34,18 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class Stats 
+public class Stats
   {
     private static final String PATTERN = "%s %s | count: %6d | min: %7.2f | avg: %7.2f | max: %9.2f | dev: %7.2f";
-    
+
     @Nonnull
     private final String name;
-    
+
     @Nonnegative
     private final double scale;
-    
+
     private final SummaryStatistics globalStats = new SummaryStatistics();
-    
+
     private final SummaryStatistics recentStats = new SummaryStatistics();
 
     public synchronized void addValue (final long elapsedTime)
@@ -54,15 +54,15 @@ public class Stats
         recentStats.addValue(elapsedTime);
       }
 
-    public synchronized void clearRecent() 
+    public synchronized void clearRecent()
       {
         recentStats.clear();
       }
-    
+
     @Nonnull
     public synchronized String globalAsString()
       {
-        return String.format(PATTERN, 
+        return String.format(PATTERN,
                              "TOTAL ",
                              name,
                              globalStats.getN(),
@@ -75,7 +75,7 @@ public class Stats
     @Nonnull
     public synchronized String recentAsString()
       {
-        return String.format(PATTERN, 
+        return String.format(PATTERN,
                              "RECENT",
                              name,
                              recentStats.getN(),

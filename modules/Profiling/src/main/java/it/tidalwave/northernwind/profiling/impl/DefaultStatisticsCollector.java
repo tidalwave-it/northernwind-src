@@ -42,21 +42,21 @@ public class DefaultStatisticsCollector implements StatisticsCollector
   {
     class Sample
       {
-        private final long elapsedBaseTime = System.nanoTime();  
-        
+        private final long elapsedBaseTime = System.nanoTime();
+
         private final long cpuBaseTime = threadMxBean.getCurrentThreadCpuTime();
-        
+
         private final long userBaseTime = threadMxBean.getCurrentThreadUserTime();
-        
+
         @Getter
         private long elapsedTime;
-        
+
         @Getter
         private long cpuTime;
-        
+
         @Getter
         private long userTime;
-        
+
         public void stop()
           {
             elapsedTime = System.nanoTime() - elapsedBaseTime;
@@ -64,42 +64,42 @@ public class DefaultStatisticsCollector implements StatisticsCollector
             userTime = threadMxBean.getCurrentThreadUserTime() - userBaseTime;
           }
       }
-    
+
     private final Stats elapsedTimeStats = new Stats("REQUEST ELAPSED TIME", 1E-6);
-    
+
     private final Stats cpuTimeStats = new Stats("REQUEST CPU TIME    ", 1E-6);
-    
+
     private final Stats userTimeStats = new Stats("REQUEST USER TIME   ", 1E-6);
-    
+
     private final ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean( );
-    
+
     private final ThreadLocal<Sample> sampleHolder = new ThreadLocal<>();
-    
+
     @Override
-    public void onRequestBegin (final @Nonnull Request request) 
+    public void onRequestBegin (final @Nonnull Request request)
       {
         sampleHolder.set(new Sample());
       }
-    
+
     @Override
-    public void onRequestEnd (final @Nonnull Request request) 
+    public void onRequestEnd (final @Nonnull Request request)
       {
         final Sample sample = sampleHolder.get();
         sample.stop();
         sampleHolder.remove();
         log.info(">>>> {} completed in {} msec", request, sample.getElapsedTime() * 1E-6);
-        
-        synchronized (this) 
+
+        synchronized (this)
           {
             elapsedTimeStats.addValue(sample.getElapsedTime());
             cpuTimeStats.addValue(sample.getCpuTime());
             userTimeStats.addValue(sample.getUserTime());
           }
       }
-    
+
     public void dumpStatistics()
       {
-        synchronized (this) 
+        synchronized (this)
           {
             log.info("STATS {}", elapsedTimeStats.globalAsString());
             log.info("STATS {}", elapsedTimeStats.recentAsString());

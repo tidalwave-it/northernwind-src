@@ -25,24 +25,23 @@ package it.tidalwave.northernwind.profiling.impl;
 import javax.annotation.Nonnull;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import it.tidalwave.northernwind.core.model.Request;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
  * FIXME: move to the Profiling module
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 //@Aspect FIXME: it's not working
 @Slf4j
-public class ProfilerAspect 
+public class ProfilerAspect
   {
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController.processRequest(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
       throws Throwable
       {
         final long time = System.currentTimeMillis();
@@ -50,7 +49,7 @@ public class ProfilerAspect
         final Object result = pjp.proceed();
         log.info(">>>> {} completed in {} msec", request, System.currentTimeMillis() - time);
         // FIXME: retrieve the mime type, create statistics (global and by mime type)
-        
+
         return result;
       }
   }
