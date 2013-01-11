@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
  **********************************************************************************************************************/
 public class DefaultMetadataProviderTest
   {
-//    @Test
+    @Test(enabled=false)
     public void test1()
       throws Exception
       {
@@ -49,10 +49,10 @@ public class DefaultMetadataProviderTest
         final EXIF exif = image.getMetadata(EXIF.class);
           System.err.println("IPTC: " + iptc + " " + Arrays.toString(iptc.getTagCodes()) + " / " + iptc.getByline());
           System.err.println("EXIF: " + exif);
-          
+
         for (int iptcTag : iptc.getTagCodes())
           {
-            System.err.printf("[%d] %s: %s\n", iptcTag, iptc.getTagName(iptcTag), iptc.getObject(iptcTag));  
+            System.err.printf("[%d] %s: %s\n", iptcTag, iptc.getTagName(iptcTag), iptc.getObject(iptcTag));
           }
-      }  
+      }
   }

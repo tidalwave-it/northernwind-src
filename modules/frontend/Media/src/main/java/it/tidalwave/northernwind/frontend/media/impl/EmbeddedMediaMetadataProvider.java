@@ -56,7 +56,7 @@ import org.imajine.image.metadata.TIFF;
 /***********************************************************************************************************************
  *
  * An implementation of {@link MediaMetadataProvider} which retrieves metadata from embedded data inside media files.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -69,28 +69,28 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       {
         @Nonnull
         private final TIFF tiff;
-        
+
         @Nonnull
         private final EXIF exif;
-        
+
         @Nonnull
         private final IPTC iptc;
-        
+
         @Nonnull
         private final XMP xmp;
       }
-    
+
     private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
-    
+
     private final static Key<List<String>> PROPERTY_LENS_IDS = new Key<>("lensIds");
-    
+
     private final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
-    
+
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     private final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -98,14 +98,14 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      ******************************************************************************************************************/
     // FIXME: should use the Metadata API of blueMarine, but we have first to make it work with Spring and its DI.
     @Override @Nonnull
-    public String getMetadataString (final @Nonnull Id id, 
+    public String getMetadataString (final @Nonnull Id id,
                                      final @Nonnull String format,
-                                     final @Nonnull ResourceProperties siteNodeProperties) 
+                                     final @Nonnull ResourceProperties siteNodeProperties)
       {
         try
           {
             log.info("getMetadataString({}, {})", id, format);
-            
+
             final long time = System.currentTimeMillis();
             final MetadataBag metadataBag = findMetadataById(id, siteNodeProperties);
             final XMP xmp = metadataBag.getXmp();
@@ -114,10 +114,10 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             final Map<String, String> xmpProperties = xmp.getXmpProperties();
             // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
 //            final String string = formatted(iptc.getObject(517, String.class));
-            
+
             final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
             final Map<String, String> lensMap = new HashMap<>();
-            
+
             try
               {
                 for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
@@ -130,29 +130,29 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
               {
                 log.warn("", e);
               }
-            
+
             if (log.isDebugEnabled())
               {
                 log.debug("XMP({}): {}", id, xmpProperties);
 
                 for (final int tagCode : exif.getTagCodes())
                   {
-                    log.debug("EXIF({}).{}: {}", new Object[] { id, exif.getTagName(tagCode), exif.getObject(tagCode) });  
+                    log.debug("EXIF({}).{}: {}", new Object[] { id, exif.getTagName(tagCode), exif.getObject(tagCode) });
                   }
 
                 for (final int tagCode : tiff.getTagCodes())
                   {
-                    log.debug("TIFF({}).{}: {}", new Object[] { id, tiff.getTagName(tagCode), tiff.getObject(tagCode) });  
+                    log.debug("TIFF({}).{}: {}", new Object[] { id, tiff.getTagName(tagCode), tiff.getObject(tagCode) });
                   }
               }
-            
+
             String string = format;
-            
+
             if (format.contains("$XMP.dc.title$"))
               {
                 string = string.replace("$XMP.dc.title$", formatted(xmpProperties.get("dc:title[1]")));
               }
-           
+
             if (format.contains("$shootingData$"))
               {
                 final StringBuilder builder = new StringBuilder();
@@ -166,24 +166,24 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
                 builder.append(exif.getExposureTime().toString());
                 builder.append(" sec @ f/");
                 builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
-               
+
                 final Rational exposureBiasValue = exif.getExposureBiasValue();
-                
+
                 if (exposureBiasValue.getNumerator() != 0)
                   {
                     builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
                   }
-                
+
                 builder.append(", ISO ");
                 builder.append(exif.getISOSpeedRatings().intValue());
-                
+
                 string = string.replace("$shootingData$", builder.toString());
-                
+
                 // Nikon D200 + AF-S 300 f/4D + TC 17E, 1/250 sec @ f/9, ISO 100
               }
-           
+
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
-                    
+
             return string;
           }
         catch (NotFoundException e)
@@ -196,16 +196,16 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             log.warn("Cannot get metadata for " + id, e);
             return "";
           }
-      }   
-    
+      }
+
     /*******************************************************************************************************************
      *
      * Finds metadata for the given id.
-     * 
+     *
      * @param  mediaId            the media id
      * @param  properties         the configuration properties
-     * @return                    the {@code Media} 
-     * @throws NotFoundException  if no {@code Media} is found 
+     * @return                    the {@code Media}
+     * @throws NotFoundException  if no {@code Media} is found
      *
      ******************************************************************************************************************/
     // FIXME: shouldn't synchronize the whole method, only map manipulation
@@ -215,7 +215,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       throws NotFoundException, IOException
       {
         MetadataBag metadataBag = metadataMapById.get(mediaId);
-        
+
         if (metadataBag == null)
           {
             final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
@@ -229,18 +229,18 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             metadataBag = new MetadataBag(tiff, exif, iptc, xmp);
             metadataMapById.put(mediaId, metadataBag);
           }
-        
+
         return metadataBag;
       }
-    
+
     /*******************************************************************************************************************
      *
      * Finds a {@link Media} item for the given id.
-     * 
+     *
      * @param  mediaId            the media id
      * @param  properties         the configuration properties
-     * @return                    the {@code Media} 
-     * @throws NotFoundException  if no {@code Media} is found 
+     * @return                    the {@code Media}
+     * @throws NotFoundException  if no {@code Media} is found
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -248,12 +248,12 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       throws NotFoundException, IOException
       {
         final Site site = siteProvider.get().getSite();
-        
+
         for (final Iterator<String> i = properties.getProperty(PROPERTY_MEDIA_PATHS).iterator(); i.hasNext(); )
           {
             final String mediaPath = i.next();
             final String resourceRelativePath = String.format(mediaPath, mediaId.stringValue());
-            
+
             try
               {
                 return site.find(Media).withRelativePath(resourceRelativePath).result();
@@ -262,17 +262,17 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
               {
                 if (!i.hasNext())
                   {
-                    throw e;  
+                    throw e;
                   }
               }
           }
-        
+
         throw new RuntimeException("Shouldn't get here");
       }
-    
+
     @Nonnull
     private String formatted (final @Nonnull String string)
       {
-        return (string != null) ? string : "";  
+        return (string != null) ? string : "";
       }
   }

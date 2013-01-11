@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DummyTest 
+public class DummyTest
   {
     @Test
     public void dummy()
