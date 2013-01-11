@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface LinkPostProcessor 
+public interface LinkPostProcessor
   {
     public String postProcess (@Nonnull String link);
   }

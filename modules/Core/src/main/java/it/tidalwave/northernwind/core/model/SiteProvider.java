@@ -30,15 +30,15 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteProvider 
+public interface SiteProvider
   {
     public static final Class<SiteProvider> SiteProvider = SiteProvider.class;
-    
+
     /*******************************************************************************************************************
      *
      * Returns the {@link Site}. It always returns an object, even though it might be not initialized yet (in this case
      * {@link #isSiteAvailable()} returns {@code false}.
-     * 
+     *
      * @return   the site
      *
      ******************************************************************************************************************/
@@ -58,11 +58,11 @@ public interface SiteProvider
      *
      ******************************************************************************************************************/
     public boolean isSiteAvailable();
-    
+
     /*******************************************************************************************************************
      *
      * Returns the version string of NorthernWind.
-     * 
+     *
      * @return   the version
      *
      ******************************************************************************************************************/

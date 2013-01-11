@@ -44,9 +44,9 @@ import lombok.extern.slf4j.Slf4j;
  **********************************************************************************************************************/
 @Slf4j
 public abstract class ResponseHolder<ResponseType> implements RequestResettable
-  { 
+  {
     protected static final int STATUS_PERMANENT_REDIRECT = 301;
-    
+
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
     protected static final String HEADER_ETAG = "ETag";
     protected static final String HEADER_CONTENT_TYPE = "Content-Type";
@@ -54,74 +54,74 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
     protected static final String HEADER_EXPIRES = "Expires";
     protected static final String HEADER_LOCATION = "Location";
-        
+
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
-    
+
     @NotThreadSafe
     public abstract class ResponseBuilderSupport<ResponseType>
       {
         protected Object body = "";
-        
+
         protected int httpStatus = 200;
-        
+
         @Nonnull
         public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withHeaders (@Nonnull Map<String, String> headers)
           {
             ResponseBuilderSupport<ResponseType> result = this;
-            
+
             for (final Entry<String, String> entry : headers.entrySet())
               {
                 result = result.withHeader(entry.getKey(), entry.getValue());
               }
-            
+
             return result;
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
           {
             return withHeader(HEADER_CONTENT_TYPE, contentType);
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentLength (final @Nonnull long contentLength)
           {
             return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentDisposition (final @Nonnull String contentDisposition)
           {
             return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
           {
             final Date expirationTime = getTime().plus(duration).toDate();
             return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123).format(expirationTime));
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withLatestModifiedTime (final @Nonnull DateTime time)
           {
             return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(time.toDate()))
                   .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
           {
             this.body = body;
             return this;
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull ResourceFile file)
           throws IOException
@@ -133,7 +133,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withLatestModifiedTime(file.getLatestModificationTime())
                   .withBody(bytes);
           }
-        
+
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withStatus (final @Nonnull int httpStatus)
           {
@@ -142,70 +142,70 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           }
 
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String redirect) 
+        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String redirect)
           {
             return withHeader(HEADER_LOCATION, redirect)
                   .withStatus(STATUS_PERMANENT_REDIRECT);
           }
 
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e) 
+        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e)
           {
             log.info("NOT FOUND: {}", e.toString());
             return forException(new HttpStatusException(404));
           }
 
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e) 
+        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e)
           {
             log.error("", e);
             return forException(new HttpStatusException(500));
           }
-        
+
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e) 
+        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e)
           {
             String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
-            
+
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {
                 case 302:
                   break;
-                    
+
                 case 404:
                   message = "<h1>Not found</h1>";
                   break;
-                    
+
                 case 500:
                 default: // FIXME: why?
                   message = "<h1>Internal error</h1>";
                   break;
               }
-            
+
             return withContentType("text/html")
                   .withHeaders(e.getHeaders())
-                  .withBody(message) 
+                  .withBody(message)
                   .withStatus(e.getHttpStatus());
           }
-        
+
         @Nonnull
         public abstract ResponseType build();
-        
+
         public void put()
           {
-            threadLocal.set(build()); 
+            threadLocal.set(build());
           }
       }
-    
+
     @Nonnull
     public abstract ResponseBuilderSupport<ResponseType> response();
-    
+
     @Nonnull
     public ResponseType get()
-      {  
-        return (ResponseType)threadLocal.get();   
+      {
+        return (ResponseType)threadLocal.get();
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -214,17 +214,17 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     @Override
     public void requestReset()
       {
-        threadLocal.remove(); 
+        threadLocal.remove();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
     protected DateTime getTime()
       {
-        return new DateTime();  
+        return new DateTime();
       }
   }

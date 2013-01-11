@@ -35,27 +35,27 @@ import it.tidalwave.util.NotFoundException;
  *
  **********************************************************************************************************************/
 @Immutable
-public interface Request 
+public interface Request
   {
     @Nonnull
     public Request withRelativeUri (@Nonnull String relativeUri);
-    
+
     @Nonnull
     public String getBaseUrl();
-    
+
     @Nonnull
     public String getRelativeUri();
-    
+
     @Nonnull
     public String getOriginalRelativeUri();
-    
+
     @Nonnull
     public List<Locale> getPreferredLocales();
 
     @Nonnull
     public String getParameter (@Nonnull String parameterName)
       throws NotFoundException;
-    
+
     @Nonnull
     public List<String> getMultiValuedParameter (@Nonnull String parameterName)
       throws NotFoundException;

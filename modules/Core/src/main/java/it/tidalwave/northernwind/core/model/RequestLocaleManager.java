@@ -30,7 +30,7 @@ import org.joda.time.format.DateTimeFormatter;
 /***********************************************************************************************************************
  *
  * Manages the {@link Locale}s for elaborating the current request.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -40,13 +40,13 @@ public interface RequestLocaleManager
     /*******************************************************************************************************************
      *
      * Returns the {@link Locale}s for the current request. They are ordered by preference, descending.
-     * 
+     *
      * @return   the {@code Locale}s.
      *
      ******************************************************************************************************************/
     @Nonnull
     public List<Locale> getLocales();
-    
+
     @Nonnull
     public DateTimeFormatter getDateTimeFormatter();
   }

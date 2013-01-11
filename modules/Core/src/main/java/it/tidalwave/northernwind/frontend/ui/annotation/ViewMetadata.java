@@ -27,12 +27,11 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 
 /***********************************************************************************************************************
  *
  * An annotation to declare implementations of Views.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -40,15 +39,16 @@ import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ViewMetadata 
+public @interface ViewMetadata
   {
     /*******************************************************************************************************************
      *
-     * The type of the component, that will be registered into the {@link ViewFactory}.
+     * The type of the component, that will be registered into the 
+     * {@link it.tidalwave.northernwind.frontend.ui.ViewFactory}.
      *
      ******************************************************************************************************************/
     public String typeUri();
-    
+
     /*******************************************************************************************************************
      *
      * The class of the Controller for the view.

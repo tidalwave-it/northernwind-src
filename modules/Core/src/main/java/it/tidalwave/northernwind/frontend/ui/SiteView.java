@@ -28,21 +28,21 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *
- * This class models a site of the site. It is repopulated or reloaded (in function of the technology) every time in 
+ * This class models a site of the site. It is repopulated or reloaded (in function of the technology) every time in
  * function of the user navigation.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteView 
+public interface SiteView
   {
     public static final String NW = "nw-";
-    
+
     /*******************************************************************************************************************
      *
      * Sets the caption.
-     * 
+     *
      * @param  caption   the caption
      *
      ******************************************************************************************************************/
@@ -51,7 +51,7 @@ public interface SiteView
     /*******************************************************************************************************************
      *
      * Sets the layout.
-     * 
+     *
      * @param  layout  the layout
      *
      ******************************************************************************************************************/

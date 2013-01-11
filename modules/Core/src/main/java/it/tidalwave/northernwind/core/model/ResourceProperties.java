@@ -32,9 +32,9 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
 
 /***********************************************************************************************************************
- * 
+ *
  * A bag of properties for a {@link Resource}s.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -44,7 +44,7 @@ public interface ResourceProperties extends As, Identifiable
     /*******************************************************************************************************************
      *
      * Retrieves a property.
-     * 
+     *
      * @param   key                 the property key
      * @return                      the property value
      * @throws  NotFoundException   if the property doesn't exist
@@ -57,7 +57,7 @@ public interface ResourceProperties extends As, Identifiable
     /*******************************************************************************************************************
      *
      * Retrieves a property, eventually returning a default value.
-     * 
+     *
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
@@ -66,46 +66,46 @@ public interface ResourceProperties extends As, Identifiable
     @Nonnull
     public <Type> Type getProperty (@Nonnull Key<Type> key, @Nonnull Type defaultValue)
       throws IOException;
-    
+
     /*******************************************************************************************************************
      *
      * Retrieves a subgroup of properties.
-     * 
+     *
      * @param   id                  the id
      * @return                      the property group
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getGroup (@Nonnull Id id);
-    
+
     /*******************************************************************************************************************
      *
      * Retrieves the collection of property keys.
-     * 
+     *
      * @return                      the property keys
      *
      ******************************************************************************************************************/
     @Nonnull
     public Collection<Key<?>> getKeys();
-    
+
     /*******************************************************************************************************************
      *
      * Retrieves the collection of ids of groups.
-     * 
+     *
      * @return                      the group ids
      *
      ******************************************************************************************************************/
     @Nonnull
     public Collection<Id> getGroupIds();
-    
+
     /*******************************************************************************************************************
      *
-     * Returns a new instance with an additional property. 
+     * Returns a new instance with an additional property.
      *
      ******************************************************************************************************************/
     @Nonnull
     public <T> ResourceProperties withProperty (@Nonnull Key<T> key, @Nonnull T value);
-    
+
     /*******************************************************************************************************************
      *
      * Returns a new instance with an additional property group.
@@ -113,7 +113,7 @@ public interface ResourceProperties extends As, Identifiable
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties withProperties (@Nonnull ResourceProperties properties);
-    
+
     /*******************************************************************************************************************
      *
      * Returns a new instance which is the logical merge with other properties.

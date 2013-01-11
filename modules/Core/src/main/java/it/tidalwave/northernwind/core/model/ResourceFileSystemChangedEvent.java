@@ -35,11 +35,11 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @ToString
-public class ResourceFileSystemChangedEvent 
+public class ResourceFileSystemChangedEvent
   {
     @Getter @Nonnull
-    private final ResourceFileSystemProvider fileSystemProvider;  
-    
+    private final ResourceFileSystemProvider fileSystemProvider;
+
     @Getter @Nonnull
     private final DateTime latestModificationTime;
   }

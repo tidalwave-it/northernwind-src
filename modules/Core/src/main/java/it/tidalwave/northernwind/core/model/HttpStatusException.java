@@ -36,11 +36,11 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString
-public class HttpStatusException extends Exception 
+public class HttpStatusException extends Exception
   {
     @Getter
     private final int httpStatus;
-    
+
     @Getter
     private final Map<String, String> headers;
 
@@ -54,7 +54,7 @@ public class HttpStatusException extends Exception
         this.httpStatus = httpStatus;
         this.headers = headers;
       }
-    
+
     @Nonnull
     public HttpStatusException withHeader (final @Nonnull String name, final @Nonnull String value)
       {

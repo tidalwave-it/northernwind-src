@@ -34,17 +34,17 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 /***********************************************************************************************************************
  *
  * A factory for domain objects.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public interface ModelFactory 
+public interface ModelFactory
   {
     /*******************************************************************************************************************
      *
      * Creates a new {@link Resource}.
-     * 
+     *
      * @param  file  the file for the {@code Resource}
      * @return       the {@code Resource}
      *
@@ -55,7 +55,7 @@ public interface ModelFactory
     /*******************************************************************************************************************
      *
      * Creates a new {@link Content}.
-     * 
+     *
      * @param  file  the file for the {@code Content}
      * @return       the {@code Content}
      *
@@ -66,7 +66,7 @@ public interface ModelFactory
     /*******************************************************************************************************************
      *
      * Creates a new {@link Media}.
-     * 
+     *
      * @param  file  the file for the {@code Media}
      * @return       the {@code Media}
      *
@@ -77,7 +77,7 @@ public interface ModelFactory
     /*******************************************************************************************************************
      *
      * Creates a new {@link SiteNode}.
-     * 
+     *
      * @param  file  the file for the {@code SiteNode}
      * @return       the {@code SiteNode}
      *
@@ -89,7 +89,7 @@ public interface ModelFactory
     /*******************************************************************************************************************
      *
      * Creates a new {@link Layout}.
-     * 
+     *
      * @param  id    the id
      * @param  type  the type
      * @return       the {@code Layout}
@@ -97,28 +97,28 @@ public interface ModelFactory
      ******************************************************************************************************************/
     @Nonnull
     public Layout createLayout (@Nonnull Id id, @Nonnull String type);
-    
+
     /*******************************************************************************************************************
      *
      * Creates a new {@link Request}.
-     * 
+     *
      * @return       the {@code Request}
      *
      ******************************************************************************************************************/
     @Nonnull
     public Request createRequest();
-    
+
     /*******************************************************************************************************************
      *
      * Creates a new {@link Request} from a given {@link HttpServletRequest}.
-     * 
+     *
      * @param        httpServletRequest   the {@code HttpServletRequest}
      * @return                            the {@code Request}
      *
      ******************************************************************************************************************/
     @Nonnull
     public Request createRequestFrom (@Nonnull HttpServletRequest httpServletRequest);
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -131,12 +131,12 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: use a SiteCreationParameters bean instead of so many arguments
-    public Site createSite (@Nonnull String contextPath, 
-                            @Nonnull String documentPath, 
-                            @Nonnull String mediaPath, 
+    public Site createSite (@Nonnull String contextPath,
+                            @Nonnull String documentPath,
+                            @Nonnull String mediaPath,
                             @Nonnull String libraryPath,
                             @Nonnull String nodePath,
                             boolean logConfigurationEnabled,
-                            @Nonnull List<Locale> configuredLocales, 
+                            @Nonnull List<Locale> configuredLocales,
                             @Nonnull List<String> ignoredFolders);
   }

@@ -35,15 +35,15 @@ public interface SiteFinder<Type> extends ExtendedFinderSupport<Type, SiteFinder
   {
     public static interface Predicate<Type>
       {
-        public boolean apply (@Nonnull Type object);  
+        public boolean apply (@Nonnull Type object);
       }
-    
+
     @Nonnull
     public SiteFinder<Type> withRelativePath (@Nonnull String relativePath);
-    
+
     @Nonnull
     public SiteFinder<Type> withRelativeUri (@Nonnull String relativeUri);
-    
+
     // TODO: move to Finder?
     public void doWithResults (@Nonnull Predicate<Type> predicate);
   }

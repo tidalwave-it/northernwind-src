@@ -34,14 +34,14 @@ import lombok.ToString;
 /***********************************************************************************************************************
  *
  * A factory for Views.
- * 
+ *
  * @stereotype  Factory
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ViewFactory 
+public interface ViewFactory
   {
     @RequiredArgsConstructor @Getter @ToString
     public static class ViewAndController
@@ -49,20 +49,22 @@ public interface ViewFactory
         private final Object view;
         private final Object controller;
       }
-            
+
     /*******************************************************************************************************************
      *
      * Creates a new pair of View and Controller.
      *
      * @param   viewTypeUri         the view type URI
      * @param   viewId              the view id
-     * @param   siteNode            the node this view is created for 
-     * @return  
+     * @param   siteNode            the node this view is created for
+     * @return
      * @throws  NotFoundException   if no view component is found
      * @throws  HttpStatusException if a component asked to return a specific HTTP status
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
-    public ViewAndController createViewAndController (@Nonnull String viewTypeUri, @Nonnull Id viewId, @Nonnull SiteNode siteNode) 
-      throws NotFoundException, HttpStatusException; 
+    public ViewAndController createViewAndController (@Nonnull String viewTypeUri,
+                                                      @Nonnull Id viewId,
+                                                      @Nonnull SiteNode siteNode)
+      throws NotFoundException, HttpStatusException;
   }

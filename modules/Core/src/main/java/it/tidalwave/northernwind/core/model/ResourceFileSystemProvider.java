@@ -29,7 +29,7 @@ import java.io.IOException;
  *
  * A provider for the {@link ResourceFileSystem}.
  * FIXME: possibly drop the need for a Provider - instantiate filesystems directly.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -39,7 +39,7 @@ public interface ResourceFileSystemProvider
     /*******************************************************************************************************************
      *
      * Returns the {@link ResourceFileSystem}.
-     * 
+     *
      * @return  the {@code ResourceFileSystem}
      *
      ******************************************************************************************************************/

@@ -35,17 +35,17 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public abstract class DecoratedResourceFileSupport implements ResourceFile 
+public abstract class DecoratedResourceFileSupport implements ResourceFile
   {
     @Getter @Nonnull
     protected final DecoratedResourceFileSystem fileSystem;
-    
+
     @Nonnull
     private final ResourceFile delegate;
 
     @Override
     public void delete()
-      throws IOException 
+      throws IOException
       {
         delegate.delete();
       }

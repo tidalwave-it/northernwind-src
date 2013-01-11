@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceFileSystem 
+public interface ResourceFileSystem
   {
     @Nonnull
     public ResourceFile getRoot();

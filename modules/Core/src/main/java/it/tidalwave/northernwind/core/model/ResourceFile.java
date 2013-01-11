@@ -36,48 +36,48 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceFile 
+public interface ResourceFile
   {
     @Nonnull
     public ResourceFileSystem getFileSystem();
-    
+
     @Nonnull
-    public String getName(); 
+    public String getName();
 
     @Nonnull
     public String getPath(); // FIXME: inherits from FileObject the fact that root is "" and not "/"
-    
+
     public boolean isFolder();
 
     public boolean isData();
-    
+
     @Nonnull
     public String getMimeType();
 
     @Nonnull
     public InputStream getInputStream()
       throws FileNotFoundException;
-    
+
     @Nonnull
     public String asText (@Nonnull String encoding)
       throws IOException;
-    
+
     @Nonnull
     public byte[] asBytes()
       throws IOException;
 
     @Nonnull
-    public DateTime getLatestModificationTime(); 
+    public DateTime getLatestModificationTime();
 
     public ResourceFile getParent(); // FIXME: make @Nonnull, throws NotFoundException
 
     public ResourceFile getChildByName (@Nonnull String fileName); // FIXME: make @Nonnull, throws NotFoundException
 
     @Nonnull
-    public Collection<ResourceFile> getChildren(); 
+    public Collection<ResourceFile> getChildren();
 
-    @Nonnull
-    public Collection<ResourceFile> getChildren (boolean recursive); // TODO: replace boolean with enum, perhaps use a Finder
+    @Nonnull // TODO: replace boolean with enum, perhaps use a Finder
+    public Collection<ResourceFile> getChildren (boolean recursive);
 
     @Nonnull
     public File toFile();

@@ -29,9 +29,9 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 /***********************************************************************************************************************
  *
  * A node of the site, mapped to a given URL.
- * 
+ *
  * @stereotype  Model
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -39,23 +39,23 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 public interface SiteNode extends Resource
   {
     public static final Class<SiteNode> SiteNode = SiteNode.class;
-    
+
     /** The label used for creating navigation links to this {@code SiteNode}. */
     public static final Key<String> PROPERTY_NAVIGATION_LABEL = new Key<>("navigationLabel");
-    
-    /** The local portion of relativeUri by which this {@code SiteNode} is exposed to the web. If this property is not 
+
+    /** The local portion of relativeUri by which this {@code SiteNode} is exposed to the web. If this property is not
      *  defined, the local portion of the relative path is used. */
     public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
-    
+
     /** If sets to true, this property makes the {@code SiteNode} to match not only its {@code /relativeUri}, but also
      *  {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
     // FIXME: must be Boolean
     public static final Key<String> PROPERTY_MANAGES_PATH_PARAMS = new Key<>("managesPathParams");
-    
+
     /*******************************************************************************************************************
      *
      * Returns the {@link Layout} of this {@code SiteNode}.
-     * 
+     *
      * @return   the {@code Layout}
      *
      ******************************************************************************************************************/
@@ -67,7 +67,7 @@ public interface SiteNode extends Resource
      * Returns the relative URI of this {@code SiteNode}, which is the one exposed to the web. By default the relative
      * URI is the same as the relative path of the associated file, but each {@code SiteNode} can override it by setting
      * {@link #PROPERTY_EXPOSED_URI}.
-     * 
+     *
      * @return  the relative URI
      *
      ******************************************************************************************************************/

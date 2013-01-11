@@ -30,26 +30,26 @@ import it.tidalwave.util.Key;
  *
  * The context for a {@link Request} provides access to some items that are only available during the processing of
  * the request.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface RequestContext extends RequestResettable 
+public interface RequestContext extends RequestResettable
   {
     /*******************************************************************************************************************
      *
      * Sets the current {@link Content}.
-     * 
+     *
      * @param  content  the current {@code Content}
      *
      ******************************************************************************************************************/
     public void setContent (@Nonnull Content content);
-    
+
     /*******************************************************************************************************************
      *
      * Returns the current {@link Content} properties.
-     * 
+     *
      * @return  the properties
      *
      ******************************************************************************************************************/
@@ -62,26 +62,26 @@ public interface RequestContext extends RequestResettable
      *
      ******************************************************************************************************************/
     public void clearContent();
-    
+
     /*******************************************************************************************************************
      *
      * Sets the current {@link SiteNode}.
-     * 
+     *
      * @param  resource  the current {@code SiteNode}
      *
      ******************************************************************************************************************/
     public void setNode (@Nonnull SiteNode node);
-    
+
     /*******************************************************************************************************************
      *
      * Returns the current {@link SiteNode} properties.
-     * 
+     *
      * @return  the properties
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getNodeProperties();
-    
+
     /*******************************************************************************************************************
      *
      * Clears the current {@link SiteNode}.
@@ -93,7 +93,7 @@ public interface RequestContext extends RequestResettable
      *
      * Sets a dynamic node property. These properties can be associated to the current {@link SiteNode}, created in
      * a dynamic fashion while processing the {@link Request} and available only in the {@link RequestContext}.
-     * 
+     *
      * @param  key    the property key
      * @param  value  the property value
      *

@@ -26,17 +26,17 @@ package it.tidalwave.northernwind.core.model.spi;
  *
  * The behaviour of an object that is bound to the request life-cycle and that must be reset at the beginning and at
  * the end.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface RequestResettable 
+public interface RequestResettable
   {
     /*******************************************************************************************************************
      *
      * Resets this object.
      *
      ******************************************************************************************************************/
-    public void requestReset();  
+    public void requestReset();
   }

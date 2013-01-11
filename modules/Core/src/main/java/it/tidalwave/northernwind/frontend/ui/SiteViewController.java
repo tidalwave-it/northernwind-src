@@ -28,20 +28,20 @@ import it.tidalwave.northernwind.core.model.Request;
 /***********************************************************************************************************************
  *
  * The controller of {@link SiteView}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteViewController 
+public interface SiteViewController
   {
     /*******************************************************************************************************************
      *
      * Processes a {@link Request} and updates the view of the site. This can happen by producing a response that must
-     * be returned to the HTTP response (typical for HTML-based technologies or for straightly exposing resources such 
+     * be returned to the HTTP response (typical for HTML-based technologies or for straightly exposing resources such
      * as media or RSS feeds) or by side effect (typical for JavaScript-based technologies); in the latter case, the
      * returned value is meaningless.
-     * 
+     *
      * @param   request   the {@code Request}
      * @return            the response
      *

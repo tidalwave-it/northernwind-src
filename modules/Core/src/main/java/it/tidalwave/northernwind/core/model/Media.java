@@ -25,7 +25,7 @@ package it.tidalwave.northernwind.core.model;
 /***********************************************************************************************************************
  *
  * A {@code Media} item is a document that is served as-is, without any processing. It's typically an image or such.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *

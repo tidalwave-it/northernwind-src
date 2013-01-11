@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * A support class for creating visitors for {@link Layout} that builds a view implementation.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -46,9 +46,9 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
   {
     @Nonnull
     protected final SiteNode siteNode;
-    
+
     private ComponentType rootComponent;
-    
+
     private Stack<ComponentType> components = new Stack<>();
 
     @Override
@@ -58,67 +58,67 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
 
         if (rootComponent == null)
           {
-            rootComponent = component;  
+            rootComponent = component;
           }
         else
           {
-            attach((ComponentContainerType)components.peek(), component);  
+            attach((ComponentContainerType)components.peek(), component);
           }
 
         components.push(component);
       }
-    
+
     @Override
-    public void visit (final @Nonnull Layout layout) 
+    public void visit (final @Nonnull Layout layout)
       {
       }
 
     @Override
-    public void postVisit (final @Nonnull Layout layout) 
+    public void postVisit (final @Nonnull Layout layout)
       {
         components.pop();
       }
 
     @Override @Nonnull
-    public ComponentType getValue() 
+    public ComponentType getValue()
       {
         return rootComponent;
       }
-    
+
     @Nonnull
-    private ComponentType createComponent (@Nonnull Layout layout) 
+    private ComponentType createComponent (@Nonnull Layout layout)
       {
-        try 
+        try
           {
             return (ComponentType)layout.createViewAndController(siteNode).getView();
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             log.warn("Component not found", e);
             return createPlaceHolderComponent(layout, "Missing component: " + layout.getTypeUri());
           }
-        catch (HttpStatusException e) 
+        catch (HttpStatusException e)
           {
             // FIXME: should set the status in the response - unfortunately at this level the ResponseHolder is abstract
             log.warn("Returning HTTP status {}", e.getHttpStatus());
             String message = "<h1>Status " + e.getHttpStatus() + "</h1>"; // FIXME: use a resource bundle
-            
+
             if (e.getHttpStatus() == 404)
               {
                 message = "<h1>Not found</h1>";
               }
-            
+
             return createPlaceHolderComponent(layout, message);
           }
-        catch (Throwable e) 
+        catch (Throwable e)
           {
             log.warn("Internal error", e);
             return createPlaceHolderComponent(layout, "Error");
           }
       }
-    
+
     @Nonnull
     protected abstract ComponentType createPlaceHolderComponent (@Nonnull Layout layout, @Nonnull String message);
-    
+
     protected abstract void attach (@Nonnull ComponentContainerType parent, @Nonnull ComponentType child);
   }

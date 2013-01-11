@@ -31,12 +31,12 @@ import it.tidalwave.role.Composite;
 /***********************************************************************************************************************
  *
  * A piece of content to be composed into a page.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Content extends Resource, Composite<Content, Finder<Content>> 
+public interface Content extends Resource, Composite<Content, Finder<Content>>
   {
     public static final Class<Content> Content = Content.class;
 

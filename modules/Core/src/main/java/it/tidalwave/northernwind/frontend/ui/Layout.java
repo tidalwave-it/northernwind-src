@@ -43,14 +43,14 @@ public interface Layout extends As, Identifiable
   {
     /*******************************************************************************************************************
      *
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public Layout withLayout (@Nonnull Layout layout);
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public Layout withOverride (@Nonnull Layout override);
@@ -59,40 +59,40 @@ public interface Layout extends As, Identifiable
      *
      * @throws  NotFoundException   if no view component is found
      * @throws  HttpStatusException if a component asked to return a specific HTTP status
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public ViewAndController createViewAndController (@Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException;
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull // TODO: refactor with Composite
     public List<Layout> getChildren();
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull // TODO: refactor with Composite
-    public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor) 
+    public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor)
       throws NotFoundException;
-    
+
     /*******************************************************************************************************************
      *
      * Returns the type URI for this layout.
-     * 
+     *
      * @return  the type URI
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public String getTypeUri();
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public Layout findSubComponentById (@Nonnull Id id)

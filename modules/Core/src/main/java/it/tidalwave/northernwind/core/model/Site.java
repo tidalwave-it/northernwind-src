@@ -28,9 +28,9 @@ import java.util.Locale;
 
 /***********************************************************************************************************************
  *
- * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and 
+ * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and
  * {@link SiteNode}s.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -48,35 +48,35 @@ public interface Site
     /*******************************************************************************************************************
      *
      * Creates a link.
-     * 
+     *
      * @return   the link
      *
      ******************************************************************************************************************/
     @Nonnull
     public String createLink (@Nonnull String relativeUri);
-    
+
     /*******************************************************************************************************************
      *
      * Finds something.
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public <Type> SiteFinder<Type> find (@Nonnull Class<Type> type);
-    
+
     /*******************************************************************************************************************
      *
      * Returns the {@link FileSystemProvider} used by this {@code Site}.
-     * 
+     *
      * @return  the {@code FileSystemProvider}
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public ResourceFileSystemProvider getFileSystemProvider();
-    
+
     /*******************************************************************************************************************
      *
      * Returns the {@link Locale}s configured for this site.
-     * 
+     *
      * @return   the {@code Locale}s.
      *
      ******************************************************************************************************************/
