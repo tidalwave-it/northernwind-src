@@ -41,37 +41,37 @@ import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSu
 public class RestResponseHolder extends ResponseHolder<Response>
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<Response> 
+    public class ResponseBuilder extends ResponseBuilderSupport<Response>
       {
         private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-        
+
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
           {
-            headers.add(header, value);        
+            headers.add(header, value);
             return this;
           }
-        
+
         @Override @Nonnull
         public Response build()
           {
             Response.ResponseBuilder builder = Response.status(httpStatus).entity(body);
- 
+
             for (final Entry<String, List<String>> entry : headers.entrySet())
               {
                 for (final String value : entry.getValue())
                   {
-                    builder = builder.header(entry.getKey(), value);  
+                    builder = builder.header(entry.getKey(), value);
                   }
               }
 
-            return builder.build();  
+            return builder.build();
           }
       }
-    
+
     @Override @Nonnull
     public ResponseBuilder response()
       {
-        return new ResponseBuilder();  
+        return new ResponseBuilder();
       }
   }

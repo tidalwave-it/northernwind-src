@@ -40,24 +40,24 @@ import it.tidalwave.northernwind.frontend.ui.SiteViewController;
  *
  **********************************************************************************************************************/
 @Configurable @Path("/")
-public class RestResource 
+public class RestResource
   {
     @Inject @Nonnull
     private SiteViewController siteViewController;
-    
+
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     @Context
     private HttpServletRequest httpServletRequest;
-    
+
     @GET
     public Response getRoot()
       {
         return siteViewController.processRequest(modelFactory.createRequestFrom(httpServletRequest));
       }
-    
-    @GET @Path("{path: .*}") 
+
+    @GET @Path("{path: .*}")
     public Response get()
       {
         return siteViewController.processRequest(modelFactory.createRequestFrom(httpServletRequest));

@@ -34,24 +34,24 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * A visitor for {@link Layout} that builds a Jersey view.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class JerseyNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder> 
+public class JerseyNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder>
   {
-    public JerseyNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
+    public JerseyNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode)
       {
         super(siteNode);
       }
-    
+
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
     protected TextHolder createPlaceHolderComponent (final @Nonnull Layout layout, final @Nonnull String message)
       {
-        return new HtmlHolder("<div>" + message + "</div>"); 
+        return new HtmlHolder("<div>" + message + "</div>");
       }
 
     @Override
