@@ -177,7 +177,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                                                                             Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
-                builder.append(String.format("<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n", link));
+                final String template = "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n";
+                builder.append(String.format(template, link));
               }
           }
         catch (IOException e)
