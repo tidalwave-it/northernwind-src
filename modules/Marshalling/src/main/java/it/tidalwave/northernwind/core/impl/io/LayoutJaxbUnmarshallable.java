@@ -47,11 +47,11 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @DciRole(datum = Layout.class) @ToString @Slf4j
-public class LayoutJaxbUnmarshallable implements Unmarshallable 
+public class LayoutJaxbUnmarshallable implements Unmarshallable
   {
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     @Inject @Nonnull
     private Unmarshaller unmarshaller;
 
@@ -59,34 +59,34 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      *
      ******************************************************************************************************************/
-    public LayoutJaxbUnmarshallable (final @Nonnull Layout layout) 
+    public LayoutJaxbUnmarshallable (final @Nonnull Layout layout)
       {
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout unmarshal (final @Nonnull InputStream is) 
+    public Layout unmarshal (final @Nonnull InputStream is)
       throws IOException
       {
         try
           {
             final ComponentsJaxb componentsJaxb = ((JAXBElement<ComponentsJaxb>)unmarshaller.unmarshal(is)).getValue();
-            
+
             if (!"1.0".equals(componentsJaxb.getVersion()))
               {
-                throw new IOException("Unexpected version: " + componentsJaxb.getVersion());  
+                throw new IOException("Unexpected version: " + componentsJaxb.getVersion());
               }
-            
+
             return unmarshal(componentsJaxb.getComponent());
           }
         catch (JAXBException e)
           {
             throw new IOException("", e);
-          }         
+          }
       }
 
     /*******************************************************************************************************************
@@ -94,15 +94,15 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Layout unmarshal (final @Nonnull ComponentJaxb componentJaxb) 
+    private Layout unmarshal (final @Nonnull ComponentJaxb componentJaxb)
       {
         Layout layout = modelFactory.createLayout(new Id(componentJaxb.getId()), componentJaxb.getType());
-        
+
         for (final ComponentJaxb childComponentJaxb : componentJaxb.getComponent())
           {
             layout = layout.withLayout(unmarshal(childComponentJaxb));
           }
-        
+
         return layout;
-      }  
+      }
   }

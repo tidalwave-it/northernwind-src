@@ -54,37 +54,37 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
   {
     @Nonnull
     private final ResourceProperties resourceProperties;
-    
+
     @Inject @Nonnull
     private ObjectFactory objectFactory;
 
     @Inject @Nonnull
     private Marshaller marshaller;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties) 
+    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties)
       {
         this.resourceProperties = resourceProperties;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void marshal (final @Nonnull OutputStream os) 
+    public void marshal (final @Nonnull OutputStream os)
       throws IOException
       {
-        try 
+        try
           {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
-        catch (JAXBException e) 
+        catch (JAXBException e)
           {
             throw new IOException("", e);
           }
@@ -95,12 +95,12 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties) 
+    private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties)
       throws IOException
       {
-        final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();        
+        final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();
         final Id id = properties.getId();
-        
+
         if (id.stringValue().equals(""))
           {
             propertiesJaxb.setVersion("1.0");
@@ -109,7 +109,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
           {
             propertiesJaxb.setId(id.stringValue());
           }
-        
+
         for (final Key<?> key : new TreeSet<>(properties.getKeys()))
           {
             try
@@ -117,12 +117,12 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
                 final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
                 propertyJaxb.setName(key.stringValue());
                 final Object value = properties.getProperty(key);
-                
+
                 if (value instanceof Collection)
-                  { 
+                  {
                     final ValuesJaxb valuesJaxb = objectFactory.createValuesJaxb();
                     propertyJaxb.setValues(valuesJaxb);
-                    
+
                     for (final Object valueItem : (Collection<?>)value)
                       {
                         valuesJaxb.getValue().add(valueItem.toString());
@@ -132,21 +132,21 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
                   {
                     propertyJaxb.setValue(value.toString());
                   }
-                
+
                 propertiesJaxb.getProperty().add(propertyJaxb);
               }
             catch (NotFoundException e)
               {
-                // never occurs  
+                // never occurs
                 log.error("", e);
               }
           }
-        
+
         for (final Id groupId : new TreeSet<>(properties.getGroupIds()))
           {
             propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
           }
-        
+
         return propertiesJaxb;
      }
   }

@@ -50,43 +50,43 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
   {
     @Nonnull
     private final ResourceProperties resourceProperties;
-    
+
     @Inject @Nonnull
     private Unmarshaller unmarshaller;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public ResourcePropertiesJaxbUnmarshallable (final @Nonnull ResourceProperties resourceProperties) 
+    public ResourcePropertiesJaxbUnmarshallable (final @Nonnull ResourceProperties resourceProperties)
       {
         this.resourceProperties = resourceProperties;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties unmarshal (final @Nonnull InputStream is) 
+    public ResourceProperties unmarshal (final @Nonnull InputStream is)
       throws IOException
       {
         try
           {
             final PropertiesJaxb propertiesJaxb = ((JAXBElement<PropertiesJaxb>)unmarshaller.unmarshal(is)).getValue();
-            
+
             if (!"1.0".equals(propertiesJaxb.getVersion()))
               {
-                throw new IOException("Unexpected version: " + propertiesJaxb.getVersion());  
+                throw new IOException("Unexpected version: " + propertiesJaxb.getVersion());
               }
-            
+
             return unmarshal(propertiesJaxb);
           }
         catch (JAXBException e)
           {
             throw new IOException("", e);
-          }         
+          }
       }
 
     /*******************************************************************************************************************
@@ -94,23 +94,23 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties unmarshal (final @Nonnull PropertiesJaxb propertiesJaxb) 
+    private ResourceProperties unmarshal (final @Nonnull PropertiesJaxb propertiesJaxb)
       {
         final Id id = new Id((propertiesJaxb.getId() != null) ? propertiesJaxb.getId() : "");
         ResourceProperties properties = resourceProperties.withId(id); // FIXME: use ModelFactory
-       
+
         for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
           {
             final ValuesJaxb values = propertyJaxb.getValues();
-            properties = properties.withProperty(new Key<>(propertyJaxb.getName()), 
+            properties = properties.withProperty(new Key<>(propertyJaxb.getName()),
                                                 (values != null) ? values.getValue() : propertyJaxb.getValue());
           }
-        
+
         for (final PropertiesJaxb propertiesJaxb2 : propertiesJaxb.getProperties())
           {
             properties = properties.withProperties(unmarshal(propertiesJaxb2));
           }
-        
+
         return properties;
-      }  
+      }
   }

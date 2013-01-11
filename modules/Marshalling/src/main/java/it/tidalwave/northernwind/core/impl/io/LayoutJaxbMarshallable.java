@@ -44,11 +44,11 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @DciRole(datum = Layout.class) @Configurable @Slf4j
-public class LayoutJaxbMarshallable implements Marshallable 
+public class LayoutJaxbMarshallable implements Marshallable
   {
     @Nonnull
     private final Layout ownerLayout;
-    
+
     @Inject @Nonnull
     private ObjectFactory objectFactory;
 
@@ -57,32 +57,32 @@ public class LayoutJaxbMarshallable implements Marshallable
 
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    public LayoutJaxbMarshallable (final @Nonnull Layout ownerLayout) 
+    public LayoutJaxbMarshallable (final @Nonnull Layout ownerLayout)
       {
         this.ownerLayout = ownerLayout;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void marshal (final @Nonnull OutputStream os) 
+    public void marshal (final @Nonnull OutputStream os)
       throws IOException
       {
-        try 
+        try
           {
-            final ComponentsJaxb componentsJaxb = objectFactory.createComponentsJaxb();        
-            componentsJaxb.setVersion("1.0");            
+            final ComponentsJaxb componentsJaxb = objectFactory.createComponentsJaxb();
+            componentsJaxb.setVersion("1.0");
             componentsJaxb.setComponent(marshal(ownerLayout));
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createComponents(componentsJaxb), os);
           }
-        catch (JAXBException e) 
+        catch (JAXBException e)
           {
             throw new IOException("", e);
           }
@@ -93,10 +93,10 @@ public class LayoutJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ComponentJaxb marshal (final @Nonnull Layout layout) 
+    private ComponentJaxb marshal (final @Nonnull Layout layout)
       throws IOException
       {
-        final ComponentJaxb componentJaxb = objectFactory.createComponentJaxb();        
+        final ComponentJaxb componentJaxb = objectFactory.createComponentJaxb();
         componentJaxb.setId(layout.getId().stringValue());
         componentJaxb.setType(layout.getTypeUri());
 
@@ -104,7 +104,7 @@ public class LayoutJaxbMarshallable implements Marshallable
           {
             componentJaxb.getComponent().add(marshal(child));
           }
-        
+
         return componentJaxb;
       }
   }
