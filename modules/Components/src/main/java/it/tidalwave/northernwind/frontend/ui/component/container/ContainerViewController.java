@@ -22,14 +22,12 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
-import it.tidalwave.util.Key;
-
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ContainerViewController 
-  {  
+public interface ContainerViewController
+  {
   }

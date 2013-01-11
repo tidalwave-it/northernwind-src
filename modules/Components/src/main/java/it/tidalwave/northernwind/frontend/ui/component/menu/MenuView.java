@@ -28,7 +28,7 @@ import it.tidalwave.role.Identifiable;
 /***********************************************************************************************************************
  *
  * A menu component with clickable links.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *

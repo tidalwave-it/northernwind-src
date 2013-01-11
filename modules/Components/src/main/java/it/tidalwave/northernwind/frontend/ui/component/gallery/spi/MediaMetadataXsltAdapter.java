@@ -41,23 +41,23 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable(preConstruction = true) @Slf4j
 public class MediaMetadataXsltAdapter
-  { 
+  {
     private static MediaMetadataXsltAdapter instance;
-    
+
     @Inject @Nonnull
     private ApplicationContext context;
-    
+
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Nonnull
     private MediaMetadataProvider mediaMetadataProvider;
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -73,10 +73,10 @@ public class MediaMetadataXsltAdapter
             return "ERROR";
           }
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -84,36 +84,39 @@ public class MediaMetadataXsltAdapter
       {
         if (instance == null)
           {
-            instance = new MediaMetadataXsltAdapter();  
+            instance = new MediaMetadataXsltAdapter();
           }
-        
+
         return instance;
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     private MediaMetadataXsltAdapter()
       {
         mediaMetadataProvider = findMediaMetadataProvider();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getMetadataString (final @Nonnull Id id, final @Nonnull String format) 
+    private String getMetadataString (final @Nonnull Id id, final @Nonnull String format)
       throws NotFoundException
       {
         // FIXME: should use current SiteNode properties
-        final ResourceProperties properties = siteProvider.get().getSite().find(SiteNode.class).withRelativePath("/").result().getProperties();
+        final ResourceProperties properties = siteProvider.get().getSite().find(SiteNode.class)
+                                                                          .withRelativePath("/")
+                                                                          .result()
+                                                                          .getProperties();
         return mediaMetadataProvider.getMetadataString(id, format, properties);
       }
-    
+
     /*******************************************************************************************************************
      *
      * Finds the {@link MediaMetadataProvider}.
@@ -124,9 +127,9 @@ public class MediaMetadataXsltAdapter
       {
         // FIXME: should be read by Node properties
         String metadataProviderName = "EmbeddedMediaMetadataProvider";
-        
+
         try
-          { 
+          {
             return context.getBean(metadataProviderName, MediaMetadataProvider.class);
           }
         catch (NoSuchBeanDefinitionException e)

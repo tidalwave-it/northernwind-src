@@ -54,26 +54,26 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
   {
     @Nonnull
     private final SiteNode siteNode;
-    
+
     protected GalleryAdapter galleryAdapter;
-    
+
     protected final List<Item> items = new ArrayList<Item>();
-   
+
     protected final Map<Id, Item> itemMapById = new HashMap<Id, Item>();
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public DefaultGalleryViewController (final @Nonnull NodeContainerView view, 
+    public DefaultGalleryViewController (final @Nonnull NodeContainerView view,
                                          final @Nonnull SiteNode siteNode,
-                                         final @Nonnull Site site, 
+                                         final @Nonnull Site site,
                                          final @Nonnull RequestLocaleManager requestLocaleManager)
       {
         super(view, siteNode, site, requestLocaleManager);
         this.siteNode = siteNode;
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -81,9 +81,9 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     @PostConstruct
     private void initialize()
       {
-        loadItems(siteNode.getProperties());  
+        loadItems(siteNode.getProperties());
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -112,7 +112,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
               }
           };
       }
-    
+
     /*******************************************************************************************************************
      *
      * Loads the items in the gallery.
@@ -125,12 +125,12 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         itemMapById.clear();
         final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(properties); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
-        
+
         for (final Item item : items)
           {
-            itemMapById.put(item.getId(), item);   
+            itemMapById.put(item.getId(), item);
           }
-        
+
         log.info("gallery items loaded in {} msec", System.currentTimeMillis() - time);
       }
   }

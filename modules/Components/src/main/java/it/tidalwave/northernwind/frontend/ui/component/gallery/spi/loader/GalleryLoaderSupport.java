@@ -40,25 +40,25 @@ import lombok.extern.slf4j.Slf4j;
  *
  * A support implementation for {@link GalleryLoader}, provides a default factory method for creating gallery
  * {@link Item}s which delegates to a {@link MediaMetadataProvider}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j
+@Configurable(preConstruction = true) @Slf4j
 public abstract class GalleryLoaderSupport implements GalleryLoader
   {
     private static final Key<String> PROPERTY_MEDIA_METADATA_PROVIDER = new Key<String>("mediaMetadataProvider");
-    
+
     @Inject @Nonnull
     private ApplicationContext context;
-    
+
     @Nonnull
     private final MediaMetadataProvider mediaMetadataProvider;
-    
-    @Nonnull 
+
+    @Nonnull
     private final ResourceProperties properties;
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -68,20 +68,20 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
         this.properties = properties;
         mediaMetadataProvider = findMediaMetadataProvider();
       }
-    
+
     /*******************************************************************************************************************
      *
      * Creates a gallery {@link Item} for the given media id.
-     * 
+     *
      * @param  mediaId   the media id
      * @return           the gallery {@code Item}
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
     public Item createItem (final @Nonnull Id mediaId)
-      { 
-        return new Item(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$XMP.dc.title$", properties)); 
+      {
+        return new Item(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$XMP.dc.title$", properties));
       }
 
     /*******************************************************************************************************************
@@ -93,9 +93,9 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
     private MediaMetadataProvider findMediaMetadataProvider()
       {
         String metadataProviderName = "";
-        
+
         try
-          { 
+          {
             metadataProviderName = properties.getProperty(PROPERTY_MEDIA_METADATA_PROVIDER, "");
             return context.getBean(metadataProviderName, MediaMetadataProvider.class);
           }

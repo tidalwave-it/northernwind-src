@@ -40,7 +40,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * A default implementation of {@link HtmlTextWithTitleViewController}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -50,13 +50,13 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
   {
     @Nonnull
     private final HtmlTextWithTitleView view;
-    
+
     @Nonnull
     private final SiteNode siteNode;
-    
+
     @Nonnull
     private final Site site;
-    
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -71,21 +71,21 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             final StringBuilder htmlBuilder = new StringBuilder();
             final String template = getTemplate(viewProperties);
-            
+
             log.debug(">>>> template: {}", template);
-            
+
             for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS))
               {
                 final StringBuilder htmlFragmentBuilder = new StringBuilder();
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
                 final ResourceProperties contentProperties = content.getProperties();
-                appendTitle(contentProperties, htmlFragmentBuilder, "h" + titleLevel++);                
+                appendTitle(contentProperties, htmlFragmentBuilder, "h" + titleLevel++);
                 appendText(contentProperties, htmlFragmentBuilder);
                 final ST t = new ST(template, '$', '$').add("content", htmlFragmentBuilder.toString());
                 htmlBuilder.append(t.render());
               }
-            
-            view.setText(htmlBuilder.toString());            
+
+            view.setText(htmlBuilder.toString());
             view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (NotFoundException e)
@@ -106,9 +106,9 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     private void appendTitle (final @Nonnull ResourceProperties contentProperties,
-                              final @Nonnull StringBuilder htmlBuilder, 
-                              final @Nonnull String titleMarkup) 
-      throws IOException 
+                              final @Nonnull StringBuilder htmlBuilder,
+                              final @Nonnull String titleMarkup)
+      throws IOException
       {
         try
           {
@@ -127,8 +127,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     private void appendText (final @Nonnull ResourceProperties contentProperties,
-                             final @Nonnull StringBuilder htmlBuilder) 
-      throws IOException 
+                             final @Nonnull StringBuilder htmlBuilder)
+      throws IOException
       {
         try
           {
@@ -147,8 +147,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getTemplate (final @Nonnull ResourceProperties viewProperties) 
-      throws IOException 
+    private String getTemplate (final @Nonnull ResourceProperties viewProperties)
+      throws IOException
       {
         try
           {

@@ -46,38 +46,38 @@ public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragme
   {
     @Nonnull
     private final StaticHtmlFragmentView view;
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance for populating the given {@link StaticHtmlFragmentView} with the given {@link SiteNode}.
-     * 
+     *
      * @param  view              the related view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultStaticHtmlFragmentViewController (final @Nonnull StaticHtmlFragmentView view, 
-                                                    final @Nonnull SiteNode siteNode) 
+    public DefaultStaticHtmlFragmentViewController (final @Nonnull StaticHtmlFragmentView view,
+                                                    final @Nonnull SiteNode siteNode)
       {
-        this.view = view; 
+        this.view = view;
       }
-    
-    protected void populate (final @Nonnull String htmlResourceName, final @Nonnull Map<String, String> attributes) 
+
+    protected void populate (final @Nonnull String htmlResourceName, final @Nonnull Map<String, String> attributes)
       throws IOException
       {
-        final Resource htmlResource = new ClassPathResource(htmlResourceName, getClass());  
+        final Resource htmlResource = new ClassPathResource(htmlResourceName, getClass());
         final @Cleanup Reader r = new InputStreamReader(htmlResource.getInputStream());
         final CharBuffer charBuffer = CharBuffer.allocate((int)htmlResource.contentLength());
         final int length = r.read(charBuffer);
         r.close();
         final String html = new String(charBuffer.array(), 0, length);
-        
+
         ST template = new ST(html, '$', '$');
-        
+
         for (final Entry<String, String> entry : attributes.entrySet())
           {
-            template = template.add(entry.getKey(), entry.getValue());  
+            template = template.add(entry.getKey(), entry.getValue());
           }
-        
+
         view.setContent(template.render());
-      } 
+      }
   }

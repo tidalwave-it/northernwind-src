@@ -34,30 +34,30 @@ import static lombok.AccessLevel.*;
  *
  **********************************************************************************************************************/
 @NoArgsConstructor(access=PRIVATE)
-public final class Properties 
+public final class Properties
   {
     public static final Key<String> PROPERTY_TITLE = new Key<>("title");
-    
+
     public static final Key<String> PROPERTY_ID = new Key<>("id");
-    
+
     public static final Key<String> PROPERTY_DESCRIPTION = new Key<>("description");
-    
+
     public static final Key<String> PROPERTY_FULL_TEXT = new Key<>("fullText.xhtml");
-    
+
     public static final Key<String> PROPERTY_TEMPLATE = new Key<>("template.xhtml");
     // FIXME: those should be Key<DateTime>
-    public static final Key<String> PROPERTY_CREATION_DATE = new Key<>("creationDateTime"); 
-    
-    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<>("publishingDateTime");   
-    
-    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<>("latestModificationDateTime");    
-    
+    public static final Key<String> PROPERTY_CREATION_DATE = new Key<>("creationDateTime");
+
+    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<>("publishingDateTime");
+
+    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<>("latestModificationDateTime");
+
     public static final Key<String> PROPERTY_CLASS = new Key<>("class");
-    
+
     public static final Key<String> PROPERTY_TEMPLATE_RESOURCE = new Key<>("template");
-    
+
     public static final Key<String> PROPERTY_WRAPPER_TEMPLATE_RESOURCE = new Key<>("wrapperTemplate");
-    
+
     public static final Key<String> PROPERTY_DATE_FORMAT = new Key<>("dateFormat");
-    
+
   }

@@ -35,53 +35,53 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 
 /***********************************************************************************************************************
  *
- * Controllers which manage composite site nodes implement this interface. For instance, the controller of a gallery 
- * should implement this interface and return the relative paths of all the media pages in the gallery; the controller 
+ * Controllers which manage composite site nodes implement this interface. For instance, the controller of a gallery
+ * should implement this interface and return the relative paths of all the media pages in the gallery; the controller
  * of a blog should implement this interface and return the relative paths of all the posts.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CompositeSiteNodeController 
+public interface CompositeSiteNodeController
   {
     @RequiredArgsConstructor @ToString
     public static class ChildSiteNode implements SiteNode
       {
         @Nonnull
         private final SiteNode parentSiteNode;
-        
+
         @Getter @Nonnull
         private final String relativeUri;
-        
+
         @Getter @Nonnull
         private final ResourceProperties properties;
-        
+
         @Override
-        public Layout getLayout() 
+        public Layout getLayout()
           {
             throw new UnsupportedOperationException("Not supported.");
           }
 
         @Override
-        public ResourceFile getFile() 
+        public ResourceFile getFile()
           {
             throw new UnsupportedOperationException("Not supported.");
           }
 
         @Override
-        public ResourceProperties getPropertyGroup (final @Nonnull Id id) 
+        public ResourceProperties getPropertyGroup (final @Nonnull Id id)
           {
             throw new UnsupportedOperationException("Not supported.");
           }
 
         @Override
-        public boolean isPlaceHolder() 
+        public boolean isPlaceHolder()
           {
             throw new UnsupportedOperationException("Not supported.");
           }
       }
-    
+
     @Nonnull
     public Finder<SiteNode> findChildrenSiteNodes();
   }

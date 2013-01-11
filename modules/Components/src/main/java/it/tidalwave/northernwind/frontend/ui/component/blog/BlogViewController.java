@@ -33,18 +33,18 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
  *
  **********************************************************************************************************************/
 public interface BlogViewController extends CompositeSiteNodeController
-  {    
-    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents"); 
-    
+  {
+    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents");
+
     // FIXME: these should be Integer
-    public static final Key<String> PROPERTY_MAX_FULL_ITEMS = new Key<String>("maxFullItems"); 
-    
-    public static final Key<String> PROPERTY_MAX_ITEMS = new Key<String>("maxItems"); 
-    
-    public static final Key<String> PROPERTY_MAX_LEADIN_ITEMS = new Key<String>("maxLeadInItems"); 
-    
+    public static final Key<String> PROPERTY_MAX_FULL_ITEMS = new Key<String>("maxFullItems");
+
+    public static final Key<String> PROPERTY_MAX_ITEMS = new Key<String>("maxItems");
+
+    public static final Key<String> PROPERTY_MAX_LEADIN_ITEMS = new Key<String>("maxLeadInItems");
+
     // FIXME: this should be Boolean
-    public static final Key<String> PROPERTY_INDEX = new Key<String>("index"); 
-    
-    public static final Key<String> PROPERTY_CATEGORY = new Key<String>("category"); 
+    public static final Key<String> PROPERTY_INDEX = new Key<String>("index");
+
+    public static final Key<String> PROPERTY_CATEGORY = new Key<String>("category");
   }

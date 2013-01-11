@@ -30,11 +30,11 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SitemapViewController 
-  { 
-    public static final Key<String> PROPERTY_SITEMAP_PRIORITY = new Key<String>("siteMap.priority");    
-    
-    public static final Key<String> PROPERTY_SITEMAP_CHILDREN_PRIORITY = new Key<String>("siteMap.childrenPriority");    
-    
-    public static final Key<String> PROPERTY_SITEMAP_CHANGE_FREQUENCY = new Key<String>("siteMap.changeFrequency");       
+public interface SitemapViewController
+  {
+    public static final Key<String> PROPERTY_SITEMAP_PRIORITY = new Key<String>("siteMap.priority");
+
+    public static final Key<String> PROPERTY_SITEMAP_CHILDREN_PRIORITY = new Key<String>("siteMap.childrenPriority");
+
+    public static final Key<String> PROPERTY_SITEMAP_CHANGE_FREQUENCY = new Key<String>("siteMap.changeFrequency");
   }

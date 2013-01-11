@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * Specific for the format of SlideShowPro Player for Lightroom 1.9.8.5
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -56,28 +56,28 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
   {
     private static final String XPATH_IMG = "/gallery/album/img";
 
-    public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties) 
+    public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties)
       {
         super(properties);
-      }  
-    
+      }
+
     @Override @Nonnull
-    public List<Item> loadGallery (final @Nonnull SiteNode siteNode) 
+    public List<Item> loadGallery (final @Nonnull SiteNode siteNode)
       {
         final List<Item> items = new ArrayList<Item>();
-        
-        try 
+
+        try
           {
             final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); // FIXME: inject
             final DocumentBuilder db = dbf.newDocumentBuilder(); // FIXME: inject
             final XPathFactory xPathFactory = XPathFactory.newInstance(); // FIXME: inject
-            
+
             final String s = siteNode.getProperties().getProperty(new Key<String>("images.xml"));
             final Document document = db.parse(new InputSource(new StringReader(s)));
             final XPath xPath = xPathFactory.newXPath();
-            final XPathExpression jx1 = xPath.compile(XPATH_IMG);            
+            final XPathExpression jx1 = xPath.compile(XPATH_IMG);
             final NodeList nodes = (NodeList)jx1.evaluate(document, XPathConstants.NODESET);
-            
+
             for (int i = 0; i < nodes.getLength(); i++)
               {
                 final Node node = nodes.item(i);
@@ -91,7 +91,7 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
           {
             log.warn("", e);
           }
-            
+
         return items;
       }
   }

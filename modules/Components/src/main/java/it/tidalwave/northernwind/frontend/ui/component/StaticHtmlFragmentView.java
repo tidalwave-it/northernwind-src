@@ -33,5 +33,5 @@ import it.tidalwave.role.Identifiable;
  **********************************************************************************************************************/
 public interface StaticHtmlFragmentView extends Identifiable
   {
-    public void setContent (@Nonnull String html);  
+    public void setContent (@Nonnull String html);
   }

@@ -28,12 +28,12 @@ import it.tidalwave.util.Key;
 /***********************************************************************************************************************
  *
  * The controller of {@link HtmlTextWithTitleView}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface HtmlTextWithTitleViewController 
-  {    
+public interface HtmlTextWithTitleViewController
+  {
     public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents");
   }

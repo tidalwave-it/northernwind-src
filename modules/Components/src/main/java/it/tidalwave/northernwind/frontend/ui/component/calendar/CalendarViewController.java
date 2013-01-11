@@ -30,10 +30,10 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface CalendarViewController 
+public interface CalendarViewController
   {
     public static final Key<String> PROPERTY_ENTRIES = new Key<String>("entries.xml");
-    
+
     // FIXME: those should be Integer
     public static final Key<String> PROPERTY_SELECTED_YEAR = new Key<String>("selectedYear");
     public static final Key<String> PROPERTY_FIRST_YEAR = new Key<String>("firstYear");

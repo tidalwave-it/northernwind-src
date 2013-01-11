@@ -36,12 +36,12 @@ public class DefaultBreadCrumbViewController implements BreadCrumbViewController
     /*******************************************************************************************************************
      *
      * Creates an instance for populating the given {@link AddThisView} with the given {@link SiteNode}.
-     * 
+     *
      * @param  view              the related view
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultBreadCrumbViewController (final @Nonnull BreadCrumbView view, final @Nonnull SiteNode siteNode) 
+    public DefaultBreadCrumbViewController (final @Nonnull BreadCrumbView view, final @Nonnull SiteNode siteNode)
       {
 //        super(view, siteNode);
 //        this.view = view;

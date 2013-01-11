@@ -29,41 +29,41 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 /***********************************************************************************************************************
  *
  * Implementations of this interface provide metadata for media rendering.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MediaMetadataProvider 
+public interface MediaMetadataProvider
   {
     /*******************************************************************************************************************
      *
      * A default implementation that always returns an empty string.
      *
      ******************************************************************************************************************/
-    public static final MediaMetadataProvider VOID = new MediaMetadataProvider() 
+    public static final MediaMetadataProvider VOID = new MediaMetadataProvider()
       {
         @Override
-        public String getMetadataString (final @Nonnull Id id, 
+        public String getMetadataString (final @Nonnull Id id,
                                          final @Nonnull String format,
-                                         final @Nonnull ResourceProperties properties) 
+                                         final @Nonnull ResourceProperties properties)
           {
             return format;
           }
       };
-    
+
     /*******************************************************************************************************************
      *
      * Retrieves metadata items and formats them.
-     * 
+     *
      * @param  mediaId     the id of the media item to retrieve metadata from
      * @param  format      the format string for metadata
-     * @param  properties  some configuration properties 
-     * @return             the formatted metadata 
+     * @param  properties  some configuration properties
+     * @return             the formatted metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getMetadataString (@Nonnull Id mediaId, 
+    public String getMetadataString (@Nonnull Id mediaId,
                                      @Nonnull String format,
                                      @Nonnull ResourceProperties properties);
   }

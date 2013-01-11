@@ -46,14 +46,14 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
     @Inject @Nonnull
     protected ModelFactory modelFactory;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId) 
+    public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId)
       {
         return modelFactory.createProperties(viewId);
       }
@@ -64,24 +64,24 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getInlinedScript() 
+    public String getInlinedScript()
       {
         return "";
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected String loadTemplate (final @Nonnull String templateName) 
+    protected String loadTemplate (final @Nonnull String templateName)
       throws IOException
       {
         final Resource resource = new ClassPathResource("/" + getClass().getPackage().getName().replace('.', '/') + "/" + templateName);
         final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
-        final char[] buffer = new char[(int)resource.contentLength()]; 
+        final char[] buffer = new char[(int)resource.contentLength()];
         r.read(buffer);
-        return new String(buffer);        
+        return new String(buffer);
       }
   }

@@ -28,7 +28,7 @@ import it.tidalwave.role.Identifiable;
 /***********************************************************************************************************************
  *
  * A generic container of other views.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *

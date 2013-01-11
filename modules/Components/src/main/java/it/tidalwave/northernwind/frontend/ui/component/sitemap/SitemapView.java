@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SitemapView 
+public interface SitemapView
   {
     public void setContent (@Nonnull String content);
 

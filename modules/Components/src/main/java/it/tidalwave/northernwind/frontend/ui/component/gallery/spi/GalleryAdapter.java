@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewContro
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryAdapter 
+public interface GalleryAdapter
   {
     /*******************************************************************************************************************
      *
@@ -45,7 +45,7 @@ public interface GalleryAdapter
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getExtraViewProperties (@Nonnull Id viewId);
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -53,18 +53,18 @@ public interface GalleryAdapter
      ******************************************************************************************************************/
     @Nonnull
     public String getInlinedScript();
-    
+
     /*******************************************************************************************************************
      *
      * Renders a catalog of media items to be consumed by the gallery software.
-     * 
+     *
      * @param  view   the view component
      * @param  items  the gallery items
      *
      ******************************************************************************************************************/
     public void renderCatalog (@Nonnull GalleryView view, @Nonnull List<Item> items)
       throws HttpStatusException;
-    
+
     /*******************************************************************************************************************
      *
      * Renders the gallery page.
@@ -74,7 +74,7 @@ public interface GalleryAdapter
      *
      ******************************************************************************************************************/
     public void renderGallery (@Nonnull GalleryView view, @Nonnull List<Item> items);
-    
+
     /*******************************************************************************************************************
      *
      * Renders a fallback page for a single gallery item for when JavaScript is not available.

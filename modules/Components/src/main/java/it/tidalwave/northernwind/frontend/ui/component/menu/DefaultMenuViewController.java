@@ -40,23 +40,23 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link MenuViewController}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Scope("session") @Slf4j
 public class DefaultMenuViewController implements MenuViewController
-  {    
+  {
     @Nonnull
     protected final MenuView view;
-    
+
     @Nonnull
     protected final SiteNode siteNode;
 
     @Nonnull
     private final Site site;
-    
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -65,42 +65,43 @@ public class DefaultMenuViewController implements MenuViewController
    @PostConstruct
    /* package */ void initialize()
      {
-        try 
+        try
           {
             view.setTitle(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE));
-          } 
-        catch (NotFoundException e) 
+          }
+        catch (NotFoundException e)
           {
           }
-        catch (IOException e) 
+        catch (IOException e)
           {
           }
-        
+
         try
           {
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            
+
             final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }
         catch (NotFoundException e)
           {
-            // ok, use the default template  
+            // ok, use the default template
           }
-        catch (IOException e) 
+        catch (IOException e)
           {
           }
-        
-        try 
+
+        try
           {
             for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_LINKS))
-              {  
+              {
                 try
                   {
                     final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
-                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL, "no nav. label");
-                    view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));                
+                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL,
+                                                                                              "no nav. label");
+                    view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));
                   }
                 catch (IOException e)
                   {
@@ -116,7 +117,7 @@ public class DefaultMenuViewController implements MenuViewController
           {
             log.error("", e);
           }
-        catch (IOException e) 
+        catch (IOException e)
           {
             log.error("", e);
           }

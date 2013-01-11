@@ -28,6 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface StaticHtmlFragmentViewController 
-  {  
+public interface StaticHtmlFragmentViewController
+  {
   }

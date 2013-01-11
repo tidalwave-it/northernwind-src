@@ -28,6 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.breadcrumb;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface BreadCrumbViewController 
+public interface BreadCrumbViewController
   {
   }

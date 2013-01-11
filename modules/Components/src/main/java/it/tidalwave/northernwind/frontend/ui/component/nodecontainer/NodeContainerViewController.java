@@ -31,19 +31,19 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface NodeContainerViewController 
-  {  
+public interface NodeContainerViewController
+  {
     public static final Key<String> PROPERTY_TITLE_PREFIX = new Key<String>("titlePrefix");
-    
+
     public static final Key<List<String>> PROPERTY_SCREEN_STYLE_SHEETS = new Key<List<String>>("screenStyleSheets");
-    
+
     public static final Key<List<String>> PROPERTY_PRINT_STYLE_SHEETS = new Key<List<String>>("printStyleSheets");
-    
+
     public static final Key<List<String>> PROPERTY_RSS_FEEDS = new Key<List<String>>("rssFeeds");
-    
+
     public static final Key<List<String>> PROPERTY_SCRIPTS = new Key<List<String>>("scripts");
-    
+
     public static final Key<List<String>> PROPERTY_INLINED_SCRIPTS = new Key<List<String>>("inlinedScripts");
-    
+
     public static final Key<String> PROPERTY_TEMPLATE_RESOURCE = new Key<String>("template");
   }

@@ -29,7 +29,7 @@ import it.tidalwave.role.Identifiable;
  *
  * The container of a "screen" of the application, mapped to a SiteNode. This, for instance, is a page with a
  * HTML rendering technology.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *

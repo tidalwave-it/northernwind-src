@@ -28,7 +28,7 @@ import it.tidalwave.role.Identifiable;
 /***********************************************************************************************************************
  *
  * An {@code HtmlTextWithTitleView} is a simple text with an optional title.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -38,7 +38,7 @@ public interface HtmlTextWithTitleView extends Identifiable
     /*******************************************************************************************************************
      *
      * Sets the text content.
-     * 
+     *
      * @param  text  the text
      *
      ******************************************************************************************************************/
@@ -47,7 +47,7 @@ public interface HtmlTextWithTitleView extends Identifiable
     /*******************************************************************************************************************
      *
      * Sets the CSS class name.
-     * 
+     *
      * @param  className  the class name
      *
      ******************************************************************************************************************/

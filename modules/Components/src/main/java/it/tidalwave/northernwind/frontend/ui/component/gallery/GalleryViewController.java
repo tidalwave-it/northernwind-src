@@ -34,13 +34,14 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface GalleryViewController extends CompositeSiteNodeController // TODO: use as(CompositeContentsController) instead
+public interface GalleryViewController extends CompositeSiteNodeController
+// TODO: use as(CompositeContentsController) instead
   {
     @RequiredArgsConstructor @Getter @ToString
     public static class Item
       {
-        private final Id id; 
-        
+        private final Id id;
+
         private final String description;
       }
   }

@@ -28,12 +28,12 @@ import it.tidalwave.util.Key;
 /***********************************************************************************************************************
  *
  * The controller of {@link HtmlFragmentView}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface HtmlFragmentViewController 
-  {    
-    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents"); 
+public interface HtmlFragmentViewController
+  {
+    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<List<String>>("contents");
   }

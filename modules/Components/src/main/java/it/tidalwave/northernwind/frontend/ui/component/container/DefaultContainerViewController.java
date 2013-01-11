@@ -45,16 +45,16 @@ public class DefaultContainerViewController implements ContainerViewController
   {
     @Nonnull
     private final ContainerView view;
-    
+
     @Nonnull
     private final SiteNode siteNode;
-    
+
     @Nonnull
     private final Site site;
-    
+
     @PostConstruct
     /* package */ void initialize()
-      throws IOException 
+      throws IOException
       {
         try
           {
@@ -65,9 +65,9 @@ public class DefaultContainerViewController implements ContainerViewController
           }
         catch (NotFoundException e)
           {
-            // ok, use the default template  
+            // ok, use the default template
           }
-        
+
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
       }
