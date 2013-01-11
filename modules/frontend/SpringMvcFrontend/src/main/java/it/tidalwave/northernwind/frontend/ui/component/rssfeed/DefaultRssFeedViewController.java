@@ -59,31 +59,31 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Nonnull
     private final RssFeedView view;
 
     @Nonnull
     private final SiteNode siteNode;
-    
+
     @Nonnull
     private final Site site;
-    
+
     private final List<Item> items = new ArrayList<Item>();
 
     private final String linkBase;
-    
+
     private final Channel feed;
-    
+
     private final ResourceProperties properties;
 
-    public DefaultRssFeedViewController (final @Nonnull RssFeedView view, 
-                                         final @Nonnull SiteNode siteNode, 
-                                         final @Nonnull Site site, 
-                                         final @Nonnull RequestLocaleManager requestLocaleManager, 
+    public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
+                                         final @Nonnull SiteNode siteNode,
+                                         final @Nonnull Site site,
+                                         final @Nonnull RequestLocaleManager requestLocaleManager,
                                          final @Nonnull RequestHolder requestHolder,
                                          final @Nonnull RequestContext requestContext)
-      throws NotFoundException, IOException 
+      throws NotFoundException, IOException
       {
         super(view, siteNode, site, requestHolder, requestContext);
         this.view = view;
@@ -92,15 +92,15 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         feed = new Channel("rss_2.0");
         properties = siteNode.getPropertyGroup(view.getId());
         linkBase = properties.getProperty(PROPERTY_LINK, "");
-        feed.setTitle(properties.getProperty(PROPERTY_TITLE, ""));  
-        feed.setDescription(properties.getProperty(PROPERTY_DESCRIPTION, ""));  
-        feed.setLink(linkBase);  
-        feed.setCopyright(properties.getProperty(PROPERTY_CREATOR, ""));  
+        feed.setTitle(properties.getProperty(PROPERTY_TITLE, ""));
+        feed.setDescription(properties.getProperty(PROPERTY_DESCRIPTION, ""));
+        feed.setLink(linkBase);
+        feed.setCopyright(properties.getProperty(PROPERTY_CREATOR, ""));
       }
-    
+
     @Override
-    protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
-      throws IOException, NotFoundException 
+    protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+      throws IOException, NotFoundException
       {
         final DateTime blogDateTime = getBlogDateTime(post);
 
@@ -108,17 +108,17 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
           {
             feed.setLastBuildDate(blogDateTime.toDate());
           }
-        
+
         final ResourceProperties postProperties = post.getProperties();
-        final Item item = new Item();  
-        final Content content = new Content();  
-        content.setType("text/html");  
-        content.setValue(postProperties.getProperty(Properties.PROPERTY_FULL_TEXT));  
-        item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));  
+        final Item item = new Item();
+        final Content content = new Content();
+        content.setType("text/html");
+        content.setValue(postProperties.getProperty(Properties.PROPERTY_FULL_TEXT));
+        item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));
 //        item.setAuthor("author " + i); TODO
-        item.setPubDate(blogDateTime.toDate());  
-        item.setContent(content);  
-        
+        item.setPubDate(blogDateTime.toDate());
+        item.setContent(content);
+
         try
           {
             final String link = linkBase + getExposedUri(post) + "/";
@@ -126,40 +126,40 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
             guid.setPermaLink(true);
             guid.setValue(link);
             item.setGuid(guid);
-            item.setLink(link);  
+            item.setLink(link);
           }
         catch (NotFoundException e)
           {
-            // ok. no link 
+            // ok. no link
           }
-        
+
         items.add(item);
       }
-    
+
 
     @Override
-    protected void addLeadInPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
+    protected void addLeadInPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       {
       }
 
     @Override
-    protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post) 
+    protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       {
       }
 
     @Override
     protected void render()
-      throws IllegalArgumentException, FeedException, NotFoundException, IOException 
+      throws IllegalArgumentException, FeedException, NotFoundException, IOException
       {
         feed.setGenerator("NorthernWind v" + siteProvider.get().getVersionString());
         feed.setItems(items);
-        
-//        if (!StringUtils.hasText(feed.getEncoding())) 
+
+//        if (!StringUtils.hasText(feed.getEncoding()))
 //          {
 //            feed.setEncoding("UTF-8");
 //          }
 
         final WireFeedOutput feedOutput = new WireFeedOutput();
-        view.setContent(feedOutput.outputString(feed));      
+        view.setContent(feedOutput.outputString(feed));
       }
   }

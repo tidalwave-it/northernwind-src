@@ -30,16 +30,16 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface RssFeedViewController 
+public interface RssFeedViewController
   {
     public static final Key<String> PROPERTY_CREATOR = new Key<String>("creator");
-    
+
     public static final Key<String> PROPERTY_DESCRIPTION = new Key<String>("description");
-    
+
     public static final Key<String> PROPERTY_LINK = new Key<String>("link");
-    
+
     public static final Key<String> PROPERTY_TITLE = new Key<String>("title");
-    
+
 //    public static final Key<String> PROPERTY_X = new Key<String>("");
 //        <property name="contents"
 //            <values>
@@ -53,5 +53,5 @@ public interface RssFeedViewController
 //        <property name="">
 //        <property name="maxItems">
 //        <property name="">
-    
+
   }

@@ -37,44 +37,44 @@ import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSu
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>> 
+public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>> 
+    public class ResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>>
       {
         private final HttpHeaders headers = new HttpHeaders();
-        
+
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
           {
-            headers.add(header, value);        
+            headers.add(header, value);
             return this;
           }
-        
+
         @Override @Nonnull
         public ResponseBuilder withContentType (final @Nonnull String contentType)
           {
             headers.setContentType(MediaType.parseMediaType(contentType));
             return this;
           }
-        
+
         @Override @Nonnull
         public ResponseBuilder withContentLength (final @Nonnull long contentLenght)
           {
             headers.setContentLength(contentLenght);
             return this;
           }
-        
+
         @Override @Nonnull
         public ResponseEntity<?> build()
           {
             return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
           }
       }
-    
+
     @Override @Nonnull
     public ResponseBuilder response()
       {
-        return new ResponseBuilder();  
+        return new ResponseBuilder();
       }
   }

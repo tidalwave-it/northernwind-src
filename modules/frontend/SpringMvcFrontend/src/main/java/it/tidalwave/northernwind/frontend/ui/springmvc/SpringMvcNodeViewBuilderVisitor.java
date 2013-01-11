@@ -29,24 +29,24 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
-import lombok.extern.slf4j.Slf4j;   
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
  * A visitor for {@link Layout} that builds a Vaadin view.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder> 
+public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder>
   {
-    public SpringMvcNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
+    public SpringMvcNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode)
       {
         super(siteNode);
       }
-    
+
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
     protected TextHolder createPlaceHolderComponent (final @Nonnull Layout layout, final @Nonnull String message)

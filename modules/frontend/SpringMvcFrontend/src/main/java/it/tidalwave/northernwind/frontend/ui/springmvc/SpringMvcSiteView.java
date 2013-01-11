@@ -40,12 +40,12 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * The Vaadin implementation of {@link SiteView}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
+@Configurable @Scope(value = "session") @Slf4j
 public class SpringMvcSiteView implements SiteView
   {
     @Inject @Nonnull
@@ -57,23 +57,23 @@ public class SpringMvcSiteView implements SiteView
      *
      ******************************************************************************************************************/
     @Override
-    public void renderSiteNode (final @Nonnull SiteNode siteNode) 
+    public void renderSiteNode (final @Nonnull SiteNode siteNode)
       throws IOException
       {
         log.info("renderSiteNode({})", siteNode);
-        
+
         try
           {
             final Visitor<Layout, TextHolder> nodeViewBuilderVisitor = new SpringMvcNodeViewBuilderVisitor(siteNode);
-            final TextHolder textHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);    
+            final TextHolder textHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);
             responseHolder.response().withBody(textHolder.asBytes("UTF-8"))
                                      .withContentType(textHolder.getMimeType())
                                      .put();
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             log.error("", e);
-            responseHolder.response().withStatus(HttpStatus.NOT_FOUND.value()) 
+            responseHolder.response().withStatus(HttpStatus.NOT_FOUND.value())
                                      .withBody(e.toString())
                                      .withContentType("text/html")
                                      .put();
@@ -81,7 +81,7 @@ public class SpringMvcSiteView implements SiteView
       }
 
     @Override
-    public void setCaption(String string)
+    public void setCaption (final String string)
       {
 //        throw new UnsupportedOperationException("Not supported yet.");
       }

@@ -40,15 +40,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  *
  **********************************************************************************************************************/
 @Configurable @Controller
-public class SpringMvcRestController 
+public class SpringMvcRestController
   {
     @Inject @Nonnull
     private SiteViewController siteViewController;
-    
+
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
-    @RequestMapping(value="/**", method=GET) @Nonnull
+
+    @RequestMapping(value = "/**", method = GET) @Nonnull
     public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
       {
         return siteViewController.processRequest(modelFactory.createRequestFrom(request));

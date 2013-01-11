@@ -38,14 +38,14 @@ import org.aspectj.lang.annotation.Aspect;
 public class ThreadNameChangerAspect
   {
     private int counter;
-    
+
     @Around("execution(* it.tidalwave.northernwind.frontend.springmvc.SpringMvcRestController.get(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
       throws Throwable
       {
         final Thread thread = Thread.currentThread();
         final String saveName = thread.getName();
-        
+
         try
           {
             final HttpServletRequest request = (HttpServletRequest)pjp.getArgs()[0];
@@ -54,7 +54,7 @@ public class ThreadNameChangerAspect
           }
         finally
           {
-            thread.setName(saveName);  
+            thread.setName(saveName);
           }
       }
   }

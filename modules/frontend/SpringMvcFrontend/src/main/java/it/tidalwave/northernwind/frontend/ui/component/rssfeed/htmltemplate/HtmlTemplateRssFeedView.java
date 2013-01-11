@@ -36,14 +36,14 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/RssFeed/#v1.0",
-              controlledBy=DefaultRssFeedViewController.class)
+@ViewMetadata(typeUri = "http://northernwind.tidalwave.it/component/RssFeed/#v1.0",
+              controlledBy = DefaultRssFeedViewController.class)
 public class HtmlTemplateRssFeedView extends TextHolder implements RssFeedView
   {
     @Getter @Nonnull
     private final Id id;
 
-    public HtmlTemplateRssFeedView (final @Nonnull Id id) 
+    public HtmlTemplateRssFeedView (final @Nonnull Id id)
       {
         super(id);
         setMimeType("application/rss+xml");
