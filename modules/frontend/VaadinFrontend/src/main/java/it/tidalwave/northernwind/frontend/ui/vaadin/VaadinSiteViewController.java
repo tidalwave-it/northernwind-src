@@ -29,7 +29,6 @@ import java.net.URL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.URIHandler;
@@ -37,21 +36,21 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The Vaadin specialization of {@link SiteViewController}.
- * 
+ * The Vaadin specialization of {@link it.tidalwave.northernwind.frontend.ui.SiteViewController}.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
+@Configurable @Scope(value = "session") @Slf4j
 public class VaadinSiteViewController extends DefaultSiteViewController
   {
     @Inject @Nonnull
     private VaadinSiteView siteView;
-    
+
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     /*******************************************************************************************************************
      *
      * Tracks the incoming URI.
@@ -60,12 +59,12 @@ public class VaadinSiteViewController extends DefaultSiteViewController
     private final URIHandler uriHandler = new URIHandler()
       {
         @Override
-        public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri) 
+        public DownloadStream handleURI (final @Nonnull URL context, final @Nonnull String relativeUri)
           {
             return processRequest(modelFactory.createRequest().withRelativeUri("/" + relativeUri));
           }
       };
-    
+
     /*******************************************************************************************************************
      *
      *

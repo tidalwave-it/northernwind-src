@@ -27,7 +27,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
@@ -36,19 +35,19 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * A visitor for {@link Layout} that builds a Vaadin view.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class VaadinNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<Component, ComponentContainer> 
+public class VaadinNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<Component, ComponentContainer>
   {
-    public VaadinNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
+    public VaadinNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode)
       {
         super(siteNode);
       }
-    
+
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
     protected Component createPlaceHolderComponent (final @Nonnull Layout layout, final @Nonnull String message)

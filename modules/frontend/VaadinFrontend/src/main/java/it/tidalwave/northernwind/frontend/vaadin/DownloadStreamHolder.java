@@ -42,19 +42,19 @@ import com.vaadin.terminal.DownloadStream;
 public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream> 
+    public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream>
       {
         private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-        
+
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
           {
-            headers.add(header, value);        
+            headers.add(header, value);
             return this;
           }
-        
+
         @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull NotFoundException e) 
+        public ResponseBuilder forException (final @Nonnull NotFoundException e)
           {
             return (ResponseBuilder)withContentType("text/plain")
                   .withBody(e.getMessage())
@@ -62,23 +62,23 @@ public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
           }
 
         @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull IOException e) 
+        public ResponseBuilder forException (final @Nonnull IOException e)
           {
             return (ResponseBuilder)withContentType("text/plain")
                   .withBody(e.getMessage())
                   .withStatus(500);
           }
-        
+
         @Override @Nonnull
         public DownloadStream build()
           {
             return new DownloadStream((InputStream)body, null, headers.get("Content-Type").get(0)); // FIXME: set name?
           }
       }
-    
+
     @Override @Nonnull
     public ResponseBuilder response()
       {
-        return new ResponseBuilder();  
+        return new ResponseBuilder();
       }
   }

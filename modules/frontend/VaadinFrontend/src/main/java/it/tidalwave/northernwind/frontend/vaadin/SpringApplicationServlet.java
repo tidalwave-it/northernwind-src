@@ -34,17 +34,17 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 /***********************************************************************************************************************
  *
  * See http://vaadin.com/wiki/-/wiki/Main/Creating%20JEE6%20Vaadin%20Applications (option #3)
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class SpringApplicationServlet extends AbstractApplicationServlet 
+public class SpringApplicationServlet extends AbstractApplicationServlet
   {
     private WebApplicationContext applicationContext;
-    
+
     private Class<? extends Application> applicationClass;
-    
+
     private String applicationBean;
 
     @Override
@@ -53,19 +53,19 @@ public class SpringApplicationServlet extends AbstractApplicationServlet
       {
         super.init(servletConfig);
         applicationBean = servletConfig.getInitParameter("applicationBean");
-      
-        if (applicationBean == null) 
+
+        if (applicationBean == null)
           {
             throw new ServletException("ApplicationBean not specified in servlet parameters");
           }
-      
+
         applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletConfig.getServletContext());
         applicationClass = (Class<? extends Application>) applicationContext.getType(applicationBean);
       }
 
     @Override @Nonnull
     protected Class<? extends Application> getApplicationClass()
-      throws ClassNotFoundException 
+      throws ClassNotFoundException
       {
         return applicationClass;
       }
@@ -75,4 +75,4 @@ public class SpringApplicationServlet extends AbstractApplicationServlet
       {
         return (Application)applicationContext.getBean(applicationBean);
       }
-  } 
+  }

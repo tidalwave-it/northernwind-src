@@ -22,9 +22,6 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.core.model.vaadin.urihandler;
 
-import javax.annotation.Nonnull;
-import java.io.FileNotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import org.springframework.context.annotation.Scope;
@@ -38,11 +35,11 @@ import static org.springframework.core.Ordered.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Order(HIGHEST_PRECEDENCE)
+@Configurable @Scope(value = "session") @Order(HIGHEST_PRECEDENCE)
 public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<DownloadStream>
   {
 //    @Override @Nonnull
-//    protected void createResponse (final @Nonnull ResourceFile file) 
+//    protected void createResponse (final @Nonnull ResourceFile file)
 //      throws FileNotFoundException
 //      {
 //        //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?

@@ -43,22 +43,22 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * The Vaadin implementation of {@link SiteView}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
+@Configurable @Scope(value = "session") @Slf4j
 public class VaadinSiteView extends Window implements SiteView
   {
     @Inject @Nonnull
     private transient Provider<SiteProvider> siteProvider;
-            
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public VaadinSiteView() 
+    public VaadinSiteView()
       {
         setStyleName(NW + "page");
         ((AbstractLayout)getContent()).setMargin(false);
@@ -70,36 +70,36 @@ public class VaadinSiteView extends Window implements SiteView
      *
      ******************************************************************************************************************/
     @Override
-    public void renderSiteNode (final @Nonnull SiteNode siteNode) 
+    public void renderSiteNode (final @Nonnull SiteNode siteNode)
       throws IOException
       {
         log.info("renderSiteNode({})", siteNode);
-        
+
         removeAllComponents();
-        
+
         try // FIXME to be moved to CSS
           {
 //            final Media media = site.find(Media).withRelativePath("/blueBill_Mobile-Banner.png").result();
 //            final NwFileObject file = media.getFile();
 //            final InputStream is = file.getInputStream();
-//            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource() 
+//            addComponent(new Embedded("", new StreamResource(new StreamResource.StreamSource()
 //              {
 //                @Override @Nonnull
-//                public InputStream getStream() 
+//                public InputStream getStream()
 //                  {
 //                    return is;
 //                  }
 //              }, file.getNameExt(), getApplication())));
-           
+
             final String uri = siteProvider.get().getSite().getContextPath() + "/media/blueBill_Mobile-Banner.png";
             final Label label = new Label();
             label.setContentMode(Label.CONTENT_RAW);
             label.setValue("<img src='" + uri + "'/>");
             addComponent(label);
             final Visitor<Layout, Component> nodeViewBuilderVisitor = new VaadinNodeViewBuilderVisitor(siteNode);
-            addComponent(siteNode.getLayout().accept(nodeViewBuilderVisitor));        
+            addComponent(siteNode.getLayout().accept(nodeViewBuilderVisitor));
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e)
           {
             log.error("", e);
           }

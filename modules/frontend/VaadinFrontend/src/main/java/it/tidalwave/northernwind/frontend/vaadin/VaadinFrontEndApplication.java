@@ -34,36 +34,36 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * The Vaadin application for the NorthernWind front end.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Slf4j
+@Configurable @Scope(value = "session") @Slf4j
 public class VaadinFrontEndApplication extends Application
-  {          
+  {
     private static final long serialVersionUID = 5346346324236215L;
-    
+
     @Inject @Nonnull
     private SiteView siteView;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void init() 
+    public void init()
       {
         try
-          {  
-            log.info("Restarting...");    
+          {
+            log.info("Restarting...");
             setMainWindow((Window)siteView);
             setTheme("bluebill");
           }
         catch (Throwable e)
           {
-            log.error("", e);  
+            log.error("", e);
           }
       }
   }
