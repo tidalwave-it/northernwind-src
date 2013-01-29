@@ -103,10 +103,10 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
               }
             // END TODO
 
-            final String extension = mediaUri.getExtension();
-            final String fileName = mediaUri.popTrailing(); // image.jpg
-            final String size = mediaUri.popTrailing();     // 1920
-            final String mediaId = mediaUri.popTrailing();  // 20120802-0010
+            final String extension = mediaUri.getExtension(); // jpg
+            final String fileName = mediaUri.popTrailing();   // image.jpg
+            final String size = mediaUri.popTrailing();       // 1920
+            final String mediaId = mediaUri.popTrailing();    // 20120802-0010
             mediaUri.append(size, mediaId + "." + extension);
           }
 
