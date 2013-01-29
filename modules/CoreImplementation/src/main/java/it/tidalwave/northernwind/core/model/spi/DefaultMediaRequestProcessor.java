@@ -77,6 +77,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         // Media that can be served at different sizes are mapped to URLs such as:
         //
         //     /media/stillimages/<media-id>/<size>/image.jpg
+        //     /media/movies/<media-id>/<size>/movie.jpg
         //
         // TODO: perhaps this logic should be moved to the media finder? Such as:
         //     find(Media).withSize(1920).withRelativePath(uri).result()
