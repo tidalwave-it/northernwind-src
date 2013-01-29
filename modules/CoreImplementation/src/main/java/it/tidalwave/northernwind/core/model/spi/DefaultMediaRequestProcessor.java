@@ -61,7 +61,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationDuration
 
     @Getter @Setter
-    private String uriPrefix = "media";
+    private String uriPrefix = "media"; // FIXME
 
     @Override @Nonnull
     public Status process (final @Nonnull Request request)
