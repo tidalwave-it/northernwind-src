@@ -22,6 +22,7 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.springmvc;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import org.springframework.http.HttpHeaders;
@@ -59,7 +60,7 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
           }
 
         @Override @Nonnull
-        public ResponseBuilder withContentLength (final @Nonnull long contentLenght)
+        public ResponseBuilder withContentLength (final @Nonnegative long contentLenght)
           {
             headers.setContentLength(contentLenght);
             return this;
