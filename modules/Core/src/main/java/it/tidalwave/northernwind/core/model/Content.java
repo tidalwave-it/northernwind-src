@@ -40,6 +40,15 @@ public interface Content extends Resource, Composite<Content, Finder<Content>>
   {
     public static final Class<Content> Content = Content.class;
 
+    /*******************************************************************************************************************
+     *
+     * Returns the URI mapped to this resource.
+     *
+     * @return  the URI
+     * @throws  NotFoundException  if the resource can't be found
+     * @throws  IOException        if an I/O error occurs (??? FIXME)
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getExposedUri()
       throws NotFoundException, IOException;
