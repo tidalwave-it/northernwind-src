@@ -82,13 +82,13 @@ public class DefaultMercurialRepository implements MercurialRepository
                 throw new IOException("Cannot mkdirs " + workArea);
               }
 
-            final Executor executor = Executor.forExecutable("hg").withArgument("clone")
-                                                                  .withArgument("--noupdate")
-                                                                  .withArgument(uri.toASCIIString())
-                                                                  .withArgument(".")
-                                                                  .withWorkingDirectory(workArea)
-                                                                  .start()
-                                                                  .waitForCompletion();
+            Executor.forExecutable("hg").withArgument("clone")
+                                        .withArgument("--noupdate")
+                                        .withArgument(uri.toASCIIString())
+                                        .withArgument(".")
+                                        .withWorkingDirectory(workArea)
+                                        .start()
+                                        .waitForCompletion();
           }
         catch (InterruptedException e)
           {
