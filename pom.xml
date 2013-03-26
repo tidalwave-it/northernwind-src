@@ -215,6 +215,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!-- TODO: use a tft.test.args, see 'propertyName' property of jacoco -->
+                    <argLine>${argLine}</argLine>
                     <properties>
                         <property>
                             <name>listener</name>
@@ -238,6 +240,45 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>jacoco</id>
+            <properties>
+                <tft.test.reportsDirectory>${project.build.directory}/surefire-reports/jacoco</tft.test.reportsDirectory>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <!--<version>0.5.5.201112152213</version>-->
+                        <version>0.6.2.201302030002</version>
+                        <configuration>
+                            <skipTests>${tft.test.skip}</skipTests>
+                            <!--<destfile>${project.build.directory}/coverage-reports/jacoco-unit.exec</destfile>-->
+                            <!--<datafile>${project.build.directory}/target/coverage-reports/jacoco-unit.exec</datafile>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <!--<phase>prepare-package</phase>-->
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <modules>
         <module>modules</module>

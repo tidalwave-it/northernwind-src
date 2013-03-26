@@ -17,6 +17,10 @@
     <name>NorthernWind - Media Frontend (Spring MVC)</name>
     <description>An implementation of the front end based on Spring MVC including Media Extensions.</description>
     
+    <properties>
+        <tft.test.skip>true</tft.test.skip>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>

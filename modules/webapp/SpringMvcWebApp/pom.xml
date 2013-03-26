@@ -17,6 +17,10 @@
     <name>NorthernWind - Frontend Webapp (Spring MVC)</name>
     <description>A webapp containing the Spring MVC front end implementation.</description>
     
+    <properties>
+        <tft.test.skip>true</tft.test.skip>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
