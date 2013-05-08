@@ -200,6 +200,6 @@ public class LayeredFileSystemProviderTest
         final File file = new File(FS_BASE + testCase + fileSystemName + path);
         file.getParentFile().mkdirs();
         FileUtils.write(file, fileSystemName + ": " + path);
-        log.info("Created {} - {}:{}", new Object[] { testCase, fileSystemName, path });
+        log.info("Created {} - {}:{}", testCase, fileSystemName, path);
       }
   }

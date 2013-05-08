@@ -142,12 +142,12 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
                 for (final int tagCode : exif.getTagCodes())
                   {
-                    log.debug("EXIF({}).{}: {}", new Object[] { id, exif.getTagName(tagCode), exif.getObject(tagCode) });
+                    log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
                   }
 
                 for (final int tagCode : tiff.getTagCodes())
                   {
-                    log.debug("TIFF({}).{}: {}", new Object[] { id, tiff.getTagName(tagCode), tiff.getObject(tagCode) });
+                    log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
                   }
               }
 

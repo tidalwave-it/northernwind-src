@@ -122,12 +122,12 @@ public abstract class Converter
                   break;
 
                 case XMLEvent.ATTRIBUTE:
-                  log.trace("ATTRIBUTE     {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("ATTRIBUTE     {} {}: {}", eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())));
                   processAttribute(reader.getName().getLocalPart(), reader);
                   break;
 
                 case XMLEvent.START_ELEMENT:
-                  log.trace("START ELEMENT {} {} ({})", new Object[] { eventType, reader.getName(), localLevel });
+                  log.trace("START ELEMENT {} {} ({})", eventType, reader.getName(), localLevel);
                   builder.delete(0, builder.length());
                   processStartElement(reader.getName().getLocalPart(), reader);
                   indent++;
@@ -135,7 +135,7 @@ public abstract class Converter
                   break;
 
                 case XMLEvent.END_ELEMENT:
-                  log.trace("END ELEMENT   {} {} ({}): {}", new Object[] { eventType, reader.getName(), localLevel, builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("END ELEMENT   {} {} ({}): {}", eventType, reader.getName(), localLevel, builder.substring(0, Math.min(1000, builder.length())));
                   --indent;
 
                   processEndElement(reader.getName().getLocalPart());
@@ -160,7 +160,7 @@ public abstract class Converter
                   break;
 
                 default:
-                  log.trace("DEFAULT       {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("DEFAULT       {} {}: {}", eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())));
                   break;
               }
           }

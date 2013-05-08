@@ -168,7 +168,7 @@ public class XsltMacroFilter implements Filter
           }
         catch (SAXParseException e)
           {
-            log.error("XML parse error: {} at l{}:c{}", new Object[] { e.getMessage(), e.getLineNumber(), e.getColumnNumber() });
+            log.error("XML parse error: {} at l{}:c{}", e.getMessage(), e.getLineNumber(), e.getColumnNumber());
             log.error(text);
             throw new RuntimeException(e);
           }
