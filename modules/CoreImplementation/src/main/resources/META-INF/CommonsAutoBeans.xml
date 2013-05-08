@@ -23,9 +23,9 @@
   
   $Id$
   
-  *********************************************************************************************************************
-  #L%
-  -->
+*********************************************************************************************************************
+#L%
+-->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -55,5 +55,8 @@
     <bean id="transformerFactory" 
           class="javax.xml.transform.TransformerFactory"
           factory-method="newInstance" />
+
+    <bean id="contextManager"
+         class="it.tidalwave.role.spring.SpringContextManager" />
               
 </beans>
