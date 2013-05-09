@@ -245,7 +245,7 @@
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.0.0</version> <!-- FIXME -->
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
@@ -298,7 +298,7 @@
                                     <pluginExecutionFilter>
                                         <groupId>org.codehaus.mojo</groupId>
                                         <artifactId>xml-maven-plugin</artifactId>
-                                        <versionRange>[1.0,)</versionRange>
+                                        <versionRange>[1.0,)</versionRange> <!-- FIXME -->
                                         <goals>
                                             <goal>transform</goal>
                                         </goals>
