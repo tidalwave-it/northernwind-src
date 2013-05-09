@@ -137,7 +137,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>xml-maven-plugin</artifactId>
-                        <version>1.0</version>
+                        <version>1.0</version> <!-- FIXME -->
                         <executions>
                             <execution>
                                 <phase>generate-resources</phase>
