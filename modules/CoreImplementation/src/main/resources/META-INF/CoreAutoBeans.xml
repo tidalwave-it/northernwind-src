@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  *********************************************************************************************************************
+  
+  NorthernWind - lightweight CMS
+  http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+  %%
+  Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+  %%
+  *********************************************************************************************************************
+  
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+  the License. You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations under the License.
+  
+  *********************************************************************************************************************
+  
+  $Id$
+  
+  *********************************************************************************************************************
+  #L%
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" 
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                           http://www.springframework.org/schema/tx 
+                           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                           http://www.springframework.org/schema/lang 
+                           http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util-3.0.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+       default-autowire="byType">
+
+    <!-- Turns on @Autowired, @PostConstruct, etc. -->
+    <context:annotation-config />
+   
+    <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
+    <context:spring-configured />
+
+    <aop:aspectj-autoproxy/>
+
+    <!-- DCI role injector -->
+    <bean id="roleManager"
+          class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
+          
+    <!-- Generic task executor -->
+    <bean id="taskExecutor" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          autowire-candidate="false">
+        <property name="corePoolSize" value="${nw.task.corePoolSize}" />
+        <property name="maxPoolSize" value="${nw.task.maxPoolSize}" />
+        <property name="queueCapacity" value="${nw.task.queueCapacity}" />
+    </bean>
+
+    <!-- Generic scheduler -->
+    <task:scheduler id="scheduler" pool-size="10"/>
+
+    <!-- MessageBus stuff -->
+    <bean id="applicationMessageBusTaskExecutor" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          autowire-candidate="false">
+        <property name="corePoolSize" value="${nw.eventBus.context.corePoolSize}" />
+        <property name="maxPoolSize" value="${nw.eventBus.context.maxPoolSize}" />
+        <property name="queueCapacity" value="${nw.eventBus.context.queueCapacity}" />
+    </bean>
+
+    <bean id="sessionMessageBusTaskExecutor" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          autowire-candidate="false">
+        <property name="corePoolSize" value="${nw.eventBus.session.corePoolSize}" />
+        <property name="maxPoolSize" value="${nw.eventBus.session.maxPoolSize}" />
+        <property name="queueCapacity" value="${nw.eventBus.session.queueCapacity}" />
+    </bean>
+
+    <bean id="applicationMessageBus" 
+          class="it.tidalwave.messagebus.impl.spring.SpringMessageBus">
+        <property name="taskExecutor" ref="applicationMessageBusTaskExecutor"/>
+    </bean>
+
+    <bean id="sessionMessageBus" 
+          class="it.tidalwave.messagebus.impl.spring.SpringMessageBus"
+          scope="session">
+        <property name="taskExecutor" ref="sessionMessageBusTaskExecutor"/>
+    </bean>
+    
+    <!-- Core objects -->
+    <bean id="requestHolder"
+          class="it.tidalwave.northernwind.core.model.spi.RequestHolder"/>
+          
+    <bean id="modelFactory"
+          class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
+          
+    <bean id="requestContext"
+          class="it.tidalwave.northernwind.core.impl.model.DefaultRequestContext" />
+    
+    <bean id="filterSetExpander"
+          class="it.tidalwave.northernwind.core.impl.model.FilterSetExpander" />
+          
+    <bean id="mediaLinkMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.filter.MediaLinkMacroFilter" />
+          
+    <bean id="nodeLinkMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.filter.NodeLinkMacroFilter" />
+          
+    <bean id="nodeLinkWithContentMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.filter.NodeLinkWithContentMacroFilter" />
+          
+    <bean id="libraryLinkMacroExpander"
+          class="it.tidalwave.northernwind.core.impl.filter.LibraryLinkMacroFilter" />
+          
+    <bean id="globalPropertyResolverMacroFilter"
+          class="it.tidalwave.northernwind.core.impl.filter.GlobalPropertyResolverMacroFilter" />
+    
+    <bean id="contentPropertyResolverMacroFilter"
+          class="it.tidalwave.northernwind.core.impl.filter.ContentPropertyResolverMacroFilter" />
+    
+    <bean id="nodePropertyResolverMacroFilter"
+          class="it.tidalwave.northernwind.core.impl.filter.NodePropertyResolverMacroFilter" />
+    
+    <bean id="siteProvider"
+          class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider">
+        <property name="documentPath" value="${nw.documentPath}" />
+        <property name="mediaPath" value="${nw.mediaPath}" />
+        <property name="nodePath" value="${nw.nodePath}" />
+        <property name="libraryPath" value="${nw.libraryPath}" />
+        <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
+        <property name="localesAsString" value="${nw.site.locales}" />
+        <property name="ignoredFoldersAsString" value="${nw.ignoredFolders}" />
+        <property name="executor" ref="taskExecutor"/>
+    </bean>
+    
+    <bean id="voidLinkPostProcessor"
+          class="it.tidalwave.northernwind.core.impl.model.VoidLinkPostProcessor" />
+          
+    <bean id="requestLocaleManager"
+          class="it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager" >
+    </bean>
+                            
+    <bean id="viewFactory"
+          class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
+        <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
+    </bean>
+    
+</beans>

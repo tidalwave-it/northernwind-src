@@ -1,0 +1,4 @@
+dir1/dir2/file1.txt: fs1: /dir1/dir2/file1.txt
+dir1/dir2/file2.txt: fs1: /dir1/dir2/file2.txt
+dir1/dir2/file3.txt: fs2: /dir1/dir2/file3.txt
+dir1/dir2/file4.txt: fs1: /dir1/dir2/file4.txt
