@@ -28,6 +28,8 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,18 @@ public class TestRepositoryHelper
 
     static
       {
-        sourceRepository = new File("target/source-repository").toPath();
+        try 
+          {
+            // FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
+            // the project sources
+            // sourceRepository = new File("target/source-repository").toPath();
+            sourceRepository = Files.createTempDirectory("hg-source-repository");
+          } 
+        catch (IOException e)
+          {
+            throw new RuntimeException(e);
+          }
+        
         sourceBundle = new File("./src/test/resources/hg.bundle").toPath();
 
         EXPECTED_TAGS_1.add(new Tag("published-0.1"));

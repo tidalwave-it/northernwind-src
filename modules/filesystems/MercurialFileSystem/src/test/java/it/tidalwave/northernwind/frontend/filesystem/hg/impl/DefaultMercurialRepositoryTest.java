@@ -43,6 +43,8 @@ import org.testng.annotations.DataProvider;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /***********************************************************************************************************************
  *
@@ -61,7 +63,12 @@ public class DefaultMercurialRepositoryTest
     public void createSourceRepository()
       throws Exception
       {
-        workArea = new File("target/workarea").toPath();
+        // FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
+        // the project sources
+//        workArea = new File("target/workarea").toPath();
+        workArea = Files.createTempDirectory("hg-workarea");
+        workArea.toFile().delete();
+        workArea = Files.createTempDirectory("hg-workarea");
       }
 
     @BeforeMethod
