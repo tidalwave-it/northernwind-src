@@ -126,7 +126,8 @@ public class TestRepositoryHelper
     public static void prepareSourceRepository (final @Nonnull Option option)
       throws Exception
       {
-        log.info("======== Preparing source repository at {}", sourceRepository.toFile().getCanonicalPath());
+        log.info("======== Preparing source repository at {} with {}", 
+                sourceRepository.toFile().getCanonicalPath(), option);
 
         if (sourceRepository.toFile().exists())
           {

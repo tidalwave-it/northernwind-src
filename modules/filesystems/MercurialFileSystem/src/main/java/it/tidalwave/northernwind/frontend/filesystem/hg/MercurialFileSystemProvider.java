@@ -32,8 +32,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
-import java.util.Collections;
-import java.util.List;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
@@ -216,7 +214,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
         alternateRepository.pull();
 
-        final Tag latestTag = getLatestPublishingTag(alternateRepository); // NotFoundException if no publishing tag
+        final Tag latestTag = alternateRepository.getLatestPublishingTag(); // NotFoundException if no publishing tag
 
         try
           {
@@ -225,40 +223,10 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
                 return latestTag;
               }
           }
-        catch (NotFoundException e)
+        catch (NotFoundException e) // exposedRepository not initialized
           {
             log.info(">>>> repo must be initialized");
             return latestTag;
-          }
-
-        throw new NotFoundException();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Returns the latest publishing tag in the given repository.
-     *
-     * FIXME: move to MercurialRepository, passing a regexp to match
-     *
-     * @param repository  the repository
-     * @return the <code>Tag</code>
-     * @throws NotFoundException if no tag is found
-     * @throws IOException in case of error
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository repository)
-      throws IOException, NotFoundException
-      {
-        final List<Tag> tags = repository.getTags();
-        Collections.reverse(tags);
-
-        for (final Tag tag : tags)
-          {
-            if (tag.getName().startsWith("published-"))
-              {
-                return tag;
-              }
           }
 
         throw new NotFoundException();
