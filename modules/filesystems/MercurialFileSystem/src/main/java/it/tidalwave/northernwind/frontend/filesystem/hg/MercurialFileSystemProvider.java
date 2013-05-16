@@ -188,8 +188,8 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
       throws IOException, PropertyVetoException
       {
         exposedRepository = repositories[repositorySelector];
-        alternateRepository = repositories[(repositorySelector + 1) % 2];
         repositorySelector = (repositorySelector + 1) % 2;
+        alternateRepository = repositories[repositorySelector];
         fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
         swapCounter++;
 
