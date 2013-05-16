@@ -210,7 +210,7 @@ public class DefaultMercurialRepository implements MercurialRepository
 
         for (final Tag tag : tags)
           {
-            if (tag.getName().startsWith("published-"))
+            if (tag.getName().matches("^published-.*"))
               {
                 return tag;
               }
