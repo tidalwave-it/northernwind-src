@@ -80,17 +80,16 @@ public interface MercurialRepository
 
     /*******************************************************************************************************************
      *
-     * Returns the latest publishing tag.
+     * Returns the latest tag matching the given regular expression.
      *
-     * FIXME: move to MercurialRepository, passing a regexp to match
-     *
+     * @param   regexp              the regular expression
      * @return                      the <code>Tag</code>
-     * @throws NotFoundException    if no tag is found
-     * @throws IOException          in case of error
+     * @throws  NotFoundException   if no tag is found
+     * @throws  IOException         in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Tag getLatestPublishingTag ()
+    public Tag getLatestTagMatching (@Nonnull String regexp)
       throws IOException, NotFoundException;
     
     /*******************************************************************************************************************

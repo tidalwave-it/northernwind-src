@@ -202,7 +202,7 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Tag getLatestPublishingTag()
+    public Tag getLatestTagMatching (final @Nonnull String regexp)
       throws IOException, NotFoundException
       {
         final List<Tag> tags = getTags();
@@ -210,7 +210,7 @@ public class DefaultMercurialRepository implements MercurialRepository
 
         for (final Tag tag : tags)
           {
-            if (tag.getName().matches("^published-.*"))
+            if (tag.getName().matches(regexp))
               {
                 return tag;
               }

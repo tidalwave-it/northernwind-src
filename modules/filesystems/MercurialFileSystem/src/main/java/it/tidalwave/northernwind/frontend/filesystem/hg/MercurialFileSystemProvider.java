@@ -213,8 +213,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
         log.info("Checking for updates...");
 
         alternateRepository.pull();
-
-        final Tag latestTag = alternateRepository.getLatestPublishingTag(); // NotFoundException if no publishing tag
+        final Tag latestTag = alternateRepository.getLatestTagMatching("^published-.*"); // NotFoundException if no tag
 
         try
           {
