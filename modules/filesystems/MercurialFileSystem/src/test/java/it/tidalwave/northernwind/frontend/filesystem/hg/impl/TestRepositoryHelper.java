@@ -48,7 +48,34 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class TestRepositoryHelper
   {
-    public enum Option { STRIP, DONT_STRIP }
+    public enum Option
+      { 
+        VOID_OPTION
+          {
+            @Override
+            public void apply()
+              {
+              }
+          },
+        
+        STRIP_TO_PUBLISHED_0_9
+          {
+            @Override
+            public void apply()
+              throws Exception
+              {
+                Executor.forExecutable("hg")
+                        .withArgument("strip")
+                        .withArgument("published-0.9")
+                        .withWorkingDirectory(sourceRepository)
+                        .start()
+                        .waitForCompletion();
+              }
+          };
+        
+        public abstract void apply()
+          throws Exception;
+      }
 
     public static final List<Tag> EXPECTED_TAGS_1 = new ArrayList<>();
 
@@ -117,15 +144,7 @@ public class TestRepositoryHelper
                 .start()
                 .waitForCompletion();
 
-        if (option == Option.STRIP)
-          {
-            Executor.forExecutable("hg")
-                    .withArgument("strip")
-                    .withArgument("published-0.9")
-                    .withWorkingDirectory(sourceRepository)
-                    .start()
-                    .waitForCompletion();
-          }
+        option.apply();
 
         log.info("======== Source repository prepared ========");
       }
