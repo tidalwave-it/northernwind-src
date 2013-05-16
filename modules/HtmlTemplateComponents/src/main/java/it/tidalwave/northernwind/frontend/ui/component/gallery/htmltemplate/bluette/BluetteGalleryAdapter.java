@@ -131,7 +131,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
             final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri() + "/images.xml");
 
             builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
-            builder.append(String.format("var bluetteCatalogUrl = \"%s\";\n", link));
+            builder.append(String.format("var bluetteCatalogUrl = \"%s\";%n", link));
             
             final ResourceProperties bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
             
@@ -141,7 +141,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                 if (key.stringValue().startsWith("bluette") || key.stringValue().equals("logging"))
                   {
                     final Object value = bluetteConfiguration.getProperty(key);
-                    builder.append(String.format("var %s = %s;\n", key.stringValue(), value));
+                    builder.append(String.format("var %s = %s;%n", key.stringValue(), value));
                   }
               }
 
@@ -170,7 +170,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
 
         for (final Item item : items)
           {
-            builder.append(String.format("    <stillImage id=\"%s\" title=\"%s\" />\n", item.getId(), item.getDescription()));   
+            builder.append(String.format("    <stillImage id=\"%s\" title=\"%s\" />%n", item.getId(), item.getDescription()));   
           }
 
         builder.append("</gallery>\n");
@@ -235,7 +235,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
           {
             final String id = item.getId().stringValue();
             final String link = site.createLink(baseUrl + "/" + id);
-            builder.append(String.format("<a href=\"%s\"><img src=\"/media/stillimages/100/%s.jpg\"/></a>\n", link, id));   
+            builder.append(String.format("<a href=\"%s\"><img src=\"/media/stillimages/100/%s.jpg\"/></a>%n", link, id));   
           }
 
         final String redirectUrl = site.createLink(baseUrl + "/#!/lightbox").replaceAll("/$", "");

@@ -118,7 +118,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
         try
           {
             final String title = contentProperties.getProperty(PROPERTY_TITLE);
-            htmlBuilder.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
+            htmlBuilder.append(String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup));
           }
         catch (NotFoundException e)
           {

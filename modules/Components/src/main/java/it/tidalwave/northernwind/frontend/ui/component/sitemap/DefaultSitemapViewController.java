@@ -167,12 +167,12 @@ public class DefaultSitemapViewController implements SitemapViewController
         if (sitemapPriority > 0)
           {
             builder.append("  <url>\n");
-            builder.append(String.format("    <loc>%s</loc>\n", site.createLink(n.getRelativeUri())));
-            builder.append(String.format("    <lastmod>%s</lastmod>\n",
+            builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
+            builder.append(String.format("    <lastmod>%s</lastmod>%n",
                                          dateTimeFormatter.print(getSiteNodeDateTime(properties))));
-            builder.append(String.format("    <changefreq>%s</changefreq>\n",
+            builder.append(String.format("    <changefreq>%s</changefreq>%n",
                                          properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
-            builder.append(String.format("    <priority>%s</priority>\n", Float.toString(sitemapPriority)));
+            builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
             builder.append("  </url>\n");
           }
       }

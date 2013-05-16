@@ -71,7 +71,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             try
               {
                 final String title = rssSiteNode.getProperties().getProperty(PROPERTY_TITLE, "RSS");
-                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />\n",
+                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n",
                                              RSS_MIME_TYPE, title, site.createLink(rssSiteNode.getRelativeUri())));
               }
             catch (IOException e)
@@ -234,7 +234,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                                                                             Collections.<String>emptyList()))
               {
                 // Always use </script> to close, as some browsers break without
-                builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>\n",
+                builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>%n",
                                              site.createLink(relativeUri)));
               }
           }
