@@ -57,15 +57,15 @@ import org.springframework.beans.factory.BeanFactory;
 
 /***********************************************************************************************************************
  *
- * The implementation relies upon two alternate workareas to perform atomic changes:
+ * The implementation relies upon two alternate repositories to perform atomic changes:
  *
  * <ol>
- *     <li>the <code>exposedWorkArea</code> is the one whose contents are used for publishing, and it's never touched
+ *     <li>the <code>exposedRepository</code> is the one whose contents are used for publishing, and it's never touched
  *     </li>
- *     <li>the <code>alternateWorkArea</code> is kept behind the scenes and it's used for updates</li>
+ *     <li>the <code>alternateRepository</code> is kept behind the scenes and it's used for updates</li>
  * </ol>
  *
- * When there are changes in the <code>alternateWorkArea</code>, the two workAreas are swapped.
+ * When there are changes in the <code>alternateRepository</code>, the two repositories are swapped.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -93,11 +93,11 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     private Path workArea;
 
-    private final MercurialRepository[] workAreas = new MercurialRepository[2];
+    private final MercurialRepository[] repositories = new MercurialRepository[2];
 
-    private MercurialRepository exposedWorkArea;
+    private MercurialRepository exposedRepository;
 
-    private MercurialRepository alternateWorkArea;
+    private MercurialRepository alternateRepository;
 
     private int repositorySelector;
 
@@ -105,7 +105,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     /*******************************************************************************************************************
      *
-     * Makes sure both repository workAreas are populated and activates one of them.
+     * Makes sure both repository repositories are populated and activates one of them.
      *
      ******************************************************************************************************************/
     @PostConstruct
@@ -116,26 +116,26 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
         for (int i = 0; i < 2; i++)
           {
-            workAreas[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));
+            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));
 
-            if (workAreas[i].isEmpty())
+            if (repositories[i].isEmpty())
               {
-                // FIXME: this is inefficient, clones both from the remote repo
-                workAreas[i].clone(new URI(remoteRepositoryUrl));
+                // FIXME: this is inefficient, since it clones both from the remote repo
+                repositories[i].clone(new URI(remoteRepositoryUrl));
               }
           }
 
         messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class); // FIXME
 
-        swapWorkAreas(); // initialization
+        swapRepositories(); // initialization
         swapCounter = 0;
       }
 
     /*******************************************************************************************************************
      *
      * Checks whether there are incoming changes. Changes are detected when there's a new tag whose name follows the
-     * pattern 'published-<version>'. Changes are pulled in the alternate workArea, then workAreas are swapped, at last
-     * the alternateWorkArea is updated too.
+     * pattern 'published-<version>'. Changes are pulled in the alternate repository, then repositories are swapped, at
+     * last the alternateRepository is updated too.
      *
      ******************************************************************************************************************/
     public void checkForUpdates()
@@ -144,11 +144,11 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
           {
             final Tag newTag = findNewTag();
             log.info(">>>> new tag seen: {}", newTag);
-            alternateWorkArea.updateTo(newTag);
-            swapWorkAreas();
+            alternateRepository.updateTo(newTag);
+            swapRepositories();
             messageBus.publish(new ResourceFileSystemChangedEvent(this, new DateTime()));
-            alternateWorkArea.pull();
-            alternateWorkArea.updateTo(newTag);
+            alternateRepository.pull();
+            alternateRepository.updateTo(newTag);
           }
         catch (NotFoundException e)
           {
@@ -169,34 +169,34 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
     /* package */ Tag getCurrentTag()
       throws IOException, NotFoundException
       {
-        return exposedWorkArea.getCurrentTag();
+        return exposedRepository.getCurrentTag();
       }
 
     @Nonnull
     /* package */ Path getCurrentWorkArea()
       {
-        return exposedWorkArea.getWorkArea();
+        return exposedRepository.getWorkArea();
       }
 
     /*******************************************************************************************************************
      *
-     * Swaps the workAreas.
+     * Swaps the repositories.
      *
      * @throws IOException in case of error
      * @throws PropertyVetoException in case of error
      *
      ******************************************************************************************************************/
-    private void swapWorkAreas()
+    private void swapRepositories()
       throws IOException, PropertyVetoException
       {
-        exposedWorkArea = workAreas[repositorySelector];
-        alternateWorkArea = workAreas[(repositorySelector + 1) % 2];
+        exposedRepository = repositories[repositorySelector];
+        alternateRepository = repositories[(repositorySelector + 1) % 2];
         repositorySelector = (repositorySelector + 1) % 2;
-        fileSystemDelegate.setRootDirectory(exposedWorkArea.getWorkArea().toFile());
+        fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
         swapCounter++;
 
-        log.info("New exposed repository:   {}", exposedWorkArea.getWorkArea());
-        log.info("New alternate repository: {}", alternateWorkArea.getWorkArea());
+        log.info("New exposed repository:   {}", exposedRepository.getWorkArea());
+        log.info("New alternate repository: {}", alternateRepository.getWorkArea());
       }
 
     /*******************************************************************************************************************
@@ -214,13 +214,13 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
       {
         log.info("Checking for updates...");
 
-        alternateWorkArea.pull();
+        alternateRepository.pull();
 
-        final Tag latestTag = getLatestPublishingTag(alternateWorkArea); // NotFoundException if no publishing tag
+        final Tag latestTag = getLatestPublishingTag(alternateRepository); // NotFoundException if no publishing tag
 
         try
           {
-            if (!latestTag.equals(exposedWorkArea.getCurrentTag()))
+            if (!latestTag.equals(exposedRepository.getCurrentTag()))
               {
                 return latestTag;
               }
@@ -236,21 +236,21 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     /*******************************************************************************************************************
      *
-     * Returns the latest publishing tag in the given workArea.
+     * Returns the latest publishing tag in the given repository.
      *
      * FIXME: move to MercurialRepository, passing a regexp to match
      *
-     * @param workArea  the workArea
+     * @param repository  the repository
      * @return the <code>Tag</code>
      * @throws NotFoundException if no tag is found
      * @throws IOException in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository workArea)
+    private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository repository)
       throws IOException, NotFoundException
       {
-        final List<Tag> tags = workArea.getTags();
+        final List<Tag> tags = repository.getTags();
         Collections.reverse(tags);
 
         for (final Tag tag : tags)
