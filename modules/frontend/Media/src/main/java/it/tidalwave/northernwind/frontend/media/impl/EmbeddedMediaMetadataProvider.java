@@ -55,6 +55,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.imajine.image.op.ReadOp.Type.*;
 import static it.tidalwave.northernwind.core.model.Media.Media;
+import javax.annotation.CheckForNull;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.TIFF;
 
@@ -276,7 +277,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       }
 
     @Nonnull
-    private String formatted (final @Nonnull String string)
+    private static String formatted (final @CheckForNull String string)
       {
         return (string != null) ? string : "";
       }
