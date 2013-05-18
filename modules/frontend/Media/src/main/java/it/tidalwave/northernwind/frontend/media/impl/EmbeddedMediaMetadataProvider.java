@@ -126,10 +126,10 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             try
               {
                 for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
-                {
+                  {
                     final String[] split = s.split(":");
                     lensMap.put(split[0].trim(), split[1].trim());
-                }
+                  }
               }
             catch (NotFoundException e)
               {
