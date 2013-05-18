@@ -139,17 +139,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
             if (log.isDebugEnabled())
               {
-                log.debug("XMP({}): {}", id, xmpProperties);
-
-                for (final int tagCode : exif.getTagCodes())
-                  {
-                    log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
-                  }
-
-                for (final int tagCode : tiff.getTagCodes())
-                  {
-                    log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
-                  }
+                logMetadata(id, metadataBag);
               }
 
             String string = format;
@@ -276,6 +266,31 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
         throw new RuntimeException("Shouldn't get here");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private static void logMetadata (final @Nonnull Id id, final @Nonnull MetadataBag metadataBag)
+      {
+        final XMP xmp = metadataBag.getXmp();
+        final TIFF tiff = metadataBag.getTiff();
+        final EXIF exif = metadataBag.getExif();
+        final Map<String, String> xmpProperties = xmp.getXmpProperties();
+        log.debug("XMP({}): {}", id, xmpProperties);
+
+        for (final int tagCode : exif.getTagCodes())
+          {
+            log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
+          }
+
+        for (final int tagCode : tiff.getTagCodes())
+          {
+            log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
+          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private static String formatted (final @CheckForNull String string)
       {
