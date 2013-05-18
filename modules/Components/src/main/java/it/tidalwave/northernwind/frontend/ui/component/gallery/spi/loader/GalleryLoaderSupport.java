@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable(preConstruction = true) @Slf4j
 public abstract class GalleryLoaderSupport implements GalleryLoader
   {
-    private static final Key<String> PROPERTY_MEDIA_METADATA_PROVIDER = new Key<String>("mediaMetadataProvider");
+    private static final Key<String> PROPERTY_MEDIA_METADATA_PROVIDER = new Key<>("mediaMetadataProvider");
 
     @Inject @Nonnull
     private ApplicationContext context;
