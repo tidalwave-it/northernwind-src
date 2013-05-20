@@ -54,6 +54,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.any;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import org.joda.time.format.DateTimeParser;
         
 /***********************************************************************************************************************
  *
@@ -129,7 +130,8 @@ public class EmbeddedMediaMetadataProviderTest
         when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
         when(mediaLoader.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
         
-        baseTime = new DateTime();
+        assertThat(fixture.getMedatataExpirationTime(), is(600));
+        baseTime = new DateTime(1369080000000L);
         setTime(baseTime);
       }
     
@@ -166,6 +168,7 @@ public class EmbeddedMediaMetadataProviderTest
             setTime(time);
             final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             assertThat(metadataBag2, is(sameInstance(metadataBag)));
+            log.info(">>>> next expiration time: {}", metadataBag.getExpirationTime());
           }
         
         verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
@@ -215,7 +218,7 @@ public class EmbeddedMediaMetadataProviderTest
             latestExpirationTime = nextExpirationTime;
             
             final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
-            log.info(">>>> next expiration time: {}", metadataBag.getExpirationTime());
+            log.info(">>>> next expiration time: {}", metadataBag2.getExpirationTime());
             
             assertThat(metadataBag2, is(not(sameInstance(metadataBag))));
             assertThat(metadataBag2.getExpirationTime(), is(nextExpirationTime));
@@ -228,6 +231,6 @@ public class EmbeddedMediaMetadataProviderTest
     private static void setTime (final @Nonnull DateTime dateTime)
       {
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
-        log.info("==== Time set to {}", new DateTime());
+        log.info("==== Time set to           {}", new DateTime());
       }
   }
