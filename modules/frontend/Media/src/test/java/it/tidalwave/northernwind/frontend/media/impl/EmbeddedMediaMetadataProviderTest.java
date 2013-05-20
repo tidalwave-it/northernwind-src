@@ -115,6 +115,9 @@ public class EmbeddedMediaMetadataProviderTest
     
     private DateTime baseTime;
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -135,6 +138,9 @@ public class EmbeddedMediaMetadataProviderTest
         setTime(baseTime);
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_correctly_load_medatada_when_not_in_cache()
       throws Exception
@@ -154,6 +160,9 @@ public class EmbeddedMediaMetadataProviderTest
         verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_keep_the_same_instance_in_cache_for_a_few_time_without_checking_file_modification()
       throws Exception
@@ -175,6 +184,9 @@ public class EmbeddedMediaMetadataProviderTest
         verify(mediaFile,   times(0)).getLatestModificationTime();
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_check_file_modification_after_expiration_time_and_still_keep_in_cache_when_no_modifications()
       throws Exception
@@ -201,6 +213,9 @@ public class EmbeddedMediaMetadataProviderTest
           }
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_reload_after_expiration_time_when_file_has_been_changed()
       throws Exception
@@ -228,6 +243,9 @@ public class EmbeddedMediaMetadataProviderTest
           }
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private static void setTime (final @Nonnull DateTime dateTime)
       {
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
