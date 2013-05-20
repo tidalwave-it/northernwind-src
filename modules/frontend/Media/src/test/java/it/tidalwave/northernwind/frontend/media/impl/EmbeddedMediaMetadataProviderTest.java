@@ -174,18 +174,23 @@ public class EmbeddedMediaMetadataProviderTest
       throws Exception
       {
         final DateTime firstExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
+        DateTime latestExpirationTime = firstExpirationTime;
         when(mediaFile.getLatestModificationTime()).thenReturn(baseTime.minusMillis(1));
         
         final MetadataBag metadataBag = fixture.findMetadataById(mediaId, siteNodeProperties);
         
-        DateTimeUtils.setCurrentMillisFixed(firstExpirationTime.getMillis() + 1);
-        final DateTime secondExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
-        final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
-        
-        assertThat(metadataBag2, is(sameInstance(metadataBag)));
-        assertThat(metadataBag2.getExpirationTime(), is(secondExpirationTime));
-        
-        verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
-        verify(mediaFile,   times(1)).getLatestModificationTime();
+        for (int count = 1; count < 10; count++)
+          {
+            DateTimeUtils.setCurrentMillisFixed(latestExpirationTime.plusMillis(1).getMillis());
+            final DateTime nextExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
+            latestExpirationTime = nextExpirationTime;
+            final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+
+            assertThat(metadataBag2, is(sameInstance(metadataBag)));
+            assertThat(metadataBag2.getExpirationTime(), is(nextExpirationTime));
+
+            verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
+            verify(mediaFile,   times(count)).getLatestModificationTime();
+          }
       }
   }
