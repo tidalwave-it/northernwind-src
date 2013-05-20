@@ -57,7 +57,10 @@
     <!-- Name must be upper cased since it's part of a public API -->
     <bean id="EmbeddedMediaMetadataProvider" 
           class="it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider">
-        <property name="medatataExpirationTime">${nw.media.metadata.expirationTime}</property>
+        <property name="medatataExpirationTime" value="${nw.media.metadata.expirationTime}" />
     </bean>
+    
+    <bean id="mediaLoader"
+          class="it.tidalwave.northernwind.frontend.media.impl.DefaultMediaLoader"/>
     
 </beans>

@@ -31,16 +31,13 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.imajine.image.EditableImage;
 import org.imajine.image.Rational;
-import org.imajine.image.op.ReadOp;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
@@ -48,18 +45,13 @@ import org.imajine.image.metadata.XMP;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.Setter;
-import static org.imajine.image.op.ReadOp.Type.*;
-import static it.tidalwave.northernwind.core.model.Media.Media;
 
 /***********************************************************************************************************************
  *
@@ -100,7 +92,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           throws IOException 
           {
             log.debug(">>>> loading medatata...");
-            final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
+            final EditableImage image = mediaLoader.loadImage(file);
             tiff = image.getMetadata(TIFF.class);
             exif = image.getMetadata(EXIF.class);
             iptc = image.getMetadata(IPTC.class);
@@ -136,18 +128,16 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
       }
 
-    private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
-
     private final static Key<List<String>> PROPERTY_LENS_IDS = new Key<>("lensIds");
 
-    private final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
+    /* package */ final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 
     /** Expiration time for metadata in seconds; after this time, medatata are reloaded. */
     @Getter @Setter @Nonnegative
     private int medatataExpirationTime = 10 * 60;
     
     @Inject @Nonnull
-    private Provider<SiteProvider> siteProvider;
+    private MediaLoader mediaLoader;
 
     private final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
 
@@ -272,7 +262,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             return metadataBag;
           }
         
-        final ResourceFile file = findMediaResourceFile(siteNodeProperties, mediaId);
+        final ResourceFile file = mediaLoader.findMediaResourceFile(siteNodeProperties, mediaId);
         
         if (metadataBag != null)
           {
@@ -296,56 +286,6 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
         return metadataBag;
       }
 
-    // BEGIN TODO: refactor to a MediaFinder
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ResourceFile findMediaResourceFile (final @Nonnull ResourceProperties siteNodeProperties, 
-                                                final @Nonnull Id mediaId) 
-      throws NotFoundException, IOException 
-      {
-        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-        return findMedia(mediaId, properties).getFile();
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * Finds a {@link Media} item for the given id.
-     *
-     * @param  mediaId            the media id
-     * @param  properties         the configuration properties
-     * @return                    the {@code Media}
-     * @throws NotFoundException  if no {@code Media} is found
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private Media findMedia (final @Nonnull Id mediaId, final @Nonnull ResourceProperties properties)
-      throws NotFoundException, IOException
-      {
-        final Site site = siteProvider.get().getSite();
-
-        for (final Iterator<String> i = properties.getProperty(PROPERTY_MEDIA_PATHS).iterator(); i.hasNext(); )
-          {
-            final String mediaPath = i.next();
-            final String resourceRelativePath = String.format(mediaPath, mediaId.stringValue());
-
-            try
-              {
-                return site.find(Media).withRelativePath(resourceRelativePath).result();
-              }
-            catch (NotFoundException e)
-              {
-                if (!i.hasNext())
-                  {
-                    throw e;
-                  }
-              }
-          }
-
-        throw new RuntimeException("Shouldn't get here");
-      }
-    // END TODO
 
     /*******************************************************************************************************************
      *
