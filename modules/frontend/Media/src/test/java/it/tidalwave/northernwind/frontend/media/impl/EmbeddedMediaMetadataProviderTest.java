@@ -172,14 +172,12 @@ public class EmbeddedMediaMetadataProviderTest
         exif.setFNumber(new Rational(11));
         exif.setExposureBiasValue(new Rational(-2, 3));
         exif.setISOSpeedRatings(100);
+        final MetadataBag metadata = new MetadataBag(tiff, exif, iptc, xmp);
         
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
         when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1"));
-
         when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
 
-        final MetadataBag metadata = new MetadataBag(tiff, exif, iptc, xmp);
-        
         final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
         
         assertThat(result, is(expectedResult));
