@@ -157,7 +157,7 @@ public class EmbeddedMediaMetadataProviderTest
         
         assertThat(fixture.metadataMapById.get(mediaId), sameInstance(metadataBag));
         
-        verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
+        verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
       }
     
     /*******************************************************************************************************************
@@ -181,7 +181,7 @@ public class EmbeddedMediaMetadataProviderTest
             log.info(">>>> next expiration time: {}", metadataBag.getExpirationTime());
           }
         
-        verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
+        verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
         verify(mediaFile,   times(0)).getLatestModificationTime();
       }
     
@@ -208,7 +208,7 @@ public class EmbeddedMediaMetadataProviderTest
             assertThat(metadataBag2, is(sameInstance(metadataBag)));
             assertThat(metadataBag2.getExpirationTime(), is(nextExpirationTime));
 
-            verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
+            verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
             verify(mediaFile,   times(count)).getLatestModificationTime();
           }
       }
@@ -235,7 +235,7 @@ public class EmbeddedMediaMetadataProviderTest
             assertThat(metadataBag2, is(not(sameInstance(metadataBag))));
             assertThat(metadataBag2.getExpirationTime(), is(nextExpirationTime));
 
-            verify(mediaLoader, times(count + 1)).loadImage(any(ResourceFile.class));
+            verify(mediaLoader, times(count + 1)).loadImage(eq(mediaFile));
             verify(mediaFile,   times(count)).getLatestModificationTime();
           }
       }
