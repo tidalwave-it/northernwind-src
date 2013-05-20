@@ -154,7 +154,7 @@ public class EmbeddedMediaMetadataProviderTest
              NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
       {
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
-        when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1"));
+        when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));
         when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
 
         final MetadataBag metadata = metadataBuilder.build();
@@ -162,26 +162,6 @@ public class EmbeddedMediaMetadataProviderTest
         final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
         
         assertThat(result, is(expectedResult));
-      }
-    
-    @DataProvider(name = "metadataProvider") @Nonnull
-    public Object[][] dataProvider()
-      {
-        return new Object[][]
-          {
-              {
-                new MetadataBuilder().withXmpDcTitle("The title")
-                                     .withExifModel("Model")
-                                     .withExifFocalLength(new Rational(70))
-                                     .withExifExposureTime(new Rational(1, 640))
-                                     .withExifFNumber(new Rational(11))
-                                     .withExifExposureBiasValue(new Rational(-2, 3))
-                                     .withExifIsoSpeedRatings(100)
-                                     .withXmpAuxLensId("1"),
-                "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo",
-                "Foo bar Model + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title baz bar foo"
-              }   
-          };
       }
     
     /*******************************************************************************************************************
@@ -294,4 +274,39 @@ public class EmbeddedMediaMetadataProviderTest
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
         log.info("==== Time set to           {}", new DateTime());
       }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "metadataProvider") @Nonnull
+    private Object[][] dataProvider()
+      {
+        return new Object[][]
+          {
+              {
+                new MetadataBuilder().withXmpDcTitle("The title 1")
+                                     .withExifModel("Model 1")
+                                     .withExifFocalLength(new Rational(70))
+                                     .withExifExposureTime(new Rational(1, 640))
+                                     .withExifFNumber(new Rational(11))
+                                     .withExifExposureBiasValue(new Rational(-2, 3))
+                                     .withExifIsoSpeedRatings(100)
+                                     .withXmpAuxLensId("1"),
+                "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo",
+                "Foo bar Model 1 + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title 1 baz bar foo"
+              },
+              {
+                new MetadataBuilder().withXmpDcTitle("The title 2")
+                                     .withExifModel("Model 2")
+                                     .withExifFocalLength(new Rational(20))
+                                     .withExifExposureTime(new Rational(1, 20))
+                                     .withExifFNumber(new Rational(8))
+                                     .withExifExposureBiasValue(new Rational(+1, 3))
+                                     .withExifIsoSpeedRatings(200)
+                                     .withXmpAuxLensId("2"),
+                "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo",
+                "Foo bar Model 2 + Lens2 @ 20 mm, 1/20 sec @ f/8.0, +0.33 EV, ISO 200 foo bar The title 2 baz bar foo"
+              }   
+          };
+      }    
   }
