@@ -46,7 +46,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.MetadataBag;
+import it.tidalwave.northernwind.frontend.media.impl.MetadataBag;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

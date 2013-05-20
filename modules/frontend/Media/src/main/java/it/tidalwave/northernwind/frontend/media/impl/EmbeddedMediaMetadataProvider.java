@@ -35,11 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
-import org.joda.time.DateTime;
-import org.imajine.image.EditableImage;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 import it.tidalwave.util.Id;
@@ -50,7 +47,6 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.Setter;
 
 /***********************************************************************************************************************
@@ -64,70 +60,6 @@ import lombok.Setter;
 @Slf4j
 public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
   {
-    @Getter @ToString
-    class MetadataBag // FIXME: refactor to an outer class
-      {
-        @Getter
-        private final DateTime creationTime = new DateTime();
-        
-        @Getter
-        private DateTime expirationTime = creationTime.plusSeconds(medatataExpirationTime);
-        
-        @Nonnull
-        private final TIFF tiff;
-
-        @Nonnull
-        private final EXIF exif;
-
-        @Nonnull
-        private final IPTC iptc;
-
-        @Nonnull
-        private final XMP xmp;
-        
-        /***************************************************************************************************************
-         *
-         **************************************************************************************************************/
-        public MetadataBag (final @Nonnull ResourceFile file)
-          throws IOException 
-          {
-            log.debug(">>>> loading medatata...");
-            final EditableImage image = mediaLoader.loadImage(file);
-            tiff = image.getMetadata(TIFF.class);
-            exif = image.getMetadata(EXIF.class);
-            iptc = image.getMetadata(IPTC.class);
-            xmp = image.getMetadata(XMP.class);
-          }
-
-        /***************************************************************************************************************
-         *
-         *
-         **************************************************************************************************************/
-        private void postponeExpirationTime()
-          {
-            expirationTime = new DateTime().plusSeconds(medatataExpirationTime);
-          }
-        
-        /***************************************************************************************************************
-         *
-         **************************************************************************************************************/
-        private void log (final @Nonnull Id id)
-          {
-            final Map<String, String> xmpProperties = xmp.getXmpProperties();
-            log.debug("XMP({}): {}", id, xmpProperties);
-
-            for (final int tagCode : exif.getTagCodes())
-              {
-                log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
-              }
-
-            for (final int tagCode : tiff.getTagCodes())
-              {
-                log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
-              }
-          }
-      }
-
     public final static Key<List<String>> PROPERTY_LENS_IDS = new Key<>("lensIds");
 
     public final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
