@@ -198,6 +198,33 @@ public class EmbeddedMediaMetadataProviderTest
           }
       }
     
+    @Test
+    public void must_reload_after_expiration_time_when_file_has_been_changed()
+      throws Exception
+      {
+        final DateTime firstExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
+        DateTime latestExpirationTime = firstExpirationTime;
+        
+        final MetadataBag metadataBag = fixture.findMetadataById(mediaId, siteNodeProperties);
+        
+        for (int count = 1; count < 10; count++)
+          {
+            setTime(latestExpirationTime.plusMillis(1));
+            when(mediaFile.getLatestModificationTime()).thenReturn(new DateTime().plusMillis(1));
+            final DateTime nextExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
+            latestExpirationTime = nextExpirationTime;
+            
+            final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            log.info(">>>> next expiration time: {}", metadataBag.getExpirationTime());
+            
+            assertThat(metadataBag2, is(not(sameInstance(metadataBag))));
+            assertThat(metadataBag2.getExpirationTime(), is(nextExpirationTime));
+
+            verify(mediaLoader, times(count + 1)).loadImage(any(ResourceFile.class));
+            verify(mediaFile,   times(count)).getLatestModificationTime();
+          }
+      }
+    
     private static void setTime (final @Nonnull DateTime dateTime)
       {
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
