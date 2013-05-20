@@ -20,6 +20,11 @@ import org.imajine.image.metadata.EXIF;
  **********************************************************************************************************************/
 public class ShootingDataInterpolator extends MetadataInterpolatorSupport
   {
+    public ShootingDataInterpolator() 
+      {
+        super("$shootingData$");
+      }
+    
     @Override @Nonnull
     public String interpolate (final @Nonnull String string, final @Nonnull Context context) 
       {
@@ -49,6 +54,6 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
         builder.append(", ISO ");
         builder.append(exif.getISOSpeedRatings().intValue());
 
-        return string.replace("$shootingData$", builder.toString());
+        return string.replace(id, builder.toString());
       }
   }

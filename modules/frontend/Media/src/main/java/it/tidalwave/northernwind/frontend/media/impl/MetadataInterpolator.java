@@ -30,5 +30,8 @@ public interface MetadataInterpolator
       }
     
     @Nonnull
+    public String getId();
+    
+    @Nonnull
     public String interpolate (@Nonnull String string, @Nonnull Context context);
   }

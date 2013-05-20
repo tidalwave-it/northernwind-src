@@ -27,18 +27,14 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
-import org.imajine.image.Rational;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.TIFF;
-import org.imajine.image.metadata.XMP;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -120,10 +116,6 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
                                                     final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException
       {
-        final XMP xmp = metadata.getXmp();
-        final TIFF tiff = metadata.getTiff();
-        final EXIF exif = metadata.getExif();
-        final Map<String, String> xmpProperties = xmp.getXmpProperties();
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
 //            final String string = formatted(iptc.getObject(517, String.class));
 
@@ -148,17 +140,20 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             metadata.log(id);
           }
 
-        String string = format;
         final MetadataInterpolator.Context context = new MetadataInterpolator.Context(metadata, lensMap);
+        final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
+        // FIXME: discover them with an annotation
+        metadataInterpolators.add(new XmlDcTitleInterpolator());
+        metadataInterpolators.add(new ShootingDataInterpolator());
 
-        if (format.contains("$XMP.dc.title$"))
+        String string = format;
+        
+        for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
           {
-            string = new XmlDcTitleInterpolator().interpolate(string, context);
-          }
-
-        if (format.contains("$shootingData$"))
-          {
-            string = new ShootingDataInterpolator().interpolate(string, context);
+            if (string.contains(metadataInterpolator.getId()))
+              {
+                string = metadataInterpolator.interpolate(string, context);
+              }
           }
         
         return string;

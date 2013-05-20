@@ -4,11 +4,12 @@
  * %%
  * #L%
  */
-
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -16,8 +17,12 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@RequiredArgsConstructor
 public abstract class MetadataInterpolatorSupport implements MetadataInterpolator
   {
+    @Getter @Nonnull
+    protected final String id;
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
