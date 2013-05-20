@@ -59,6 +59,7 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import org.imajine.image.Rational;
+import org.testng.annotations.DataProvider;
         
 /***********************************************************************************************************************
  *
@@ -145,32 +146,42 @@ public class EmbeddedMediaMetadataProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test
-    public void must_properly_interpolate_metadata_string()
+    @Test(dataProvider = "metadataProvider")
+    public void must_properly_interpolate_metadata_string (final @Nonnull MetadataBuilder metadataBuilder,
+                                                           final @Nonnull String format,
+                                                           final @Nonnull String expectedResult)
       throws IOException, NotFoundException, 
              NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
       {
-        final String format = "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo";
-        final String expectedResult = "Foo bar Model + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title baz bar foo";
-        
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
         when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1"));
         when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
 
-        final MetadataBuilder metadataBuilder = new MetadataBuilder();
-        final MetadataBag metadata = metadataBuilder.withXmpDcTitle("The title")
-                                                    .withExifModel("Model")
-                                                    .withExifFocalLength(new Rational(70))
-                                                    .withExifExposureTime(new Rational(1, 640))
-                                                    .withExifFNumber(new Rational(11))
-                                                    .withExifExposureBiasValue(new Rational(-2, 3))
-                                                    .withExifIsoSpeedRatings(100)
-                                                    .withXmpAuxLensId("1")
-                                                    .build();
+        final MetadataBag metadata = metadataBuilder.build();
         
         final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
         
         assertThat(result, is(expectedResult));
+      }
+    
+    @DataProvider(name = "metadataProvider") @Nonnull
+    public Object[][] dataProvider()
+      {
+        return new Object[][]
+          {
+              {
+                new MetadataBuilder().withXmpDcTitle("The title")
+                                     .withExifModel("Model")
+                                     .withExifFocalLength(new Rational(70))
+                                     .withExifExposureTime(new Rational(1, 640))
+                                     .withExifFNumber(new Rational(11))
+                                     .withExifExposureBiasValue(new Rational(-2, 3))
+                                     .withExifIsoSpeedRatings(100)
+                                     .withXmpAuxLensId("1"),
+                "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo",
+                "Foo bar Model + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title baz bar foo"
+              }   
+          };
       }
     
     /*******************************************************************************************************************

@@ -7,27 +7,28 @@
 
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Wither;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor @ToString
 class MetadataBuilder 
   {
     @Wither
