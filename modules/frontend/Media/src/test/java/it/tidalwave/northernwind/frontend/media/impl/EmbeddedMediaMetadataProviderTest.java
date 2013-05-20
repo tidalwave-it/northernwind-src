@@ -46,13 +46,22 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS;
 import it.tidalwave.northernwind.frontend.media.impl.MetadataBag;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import org.imajine.image.Rational;
         
 /***********************************************************************************************************************
  *
@@ -134,6 +143,46 @@ public class EmbeddedMediaMetadataProviderTest
         assertThat(fixture.getMedatataExpirationTime(), is(600));
         baseTime = new DateTime(1369080000000L);
         setTime(baseTime);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_interpolate_metadata_string()
+      throws IOException, NotFoundException, 
+             NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+      {
+        final String format = "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo";
+        final String expectedResult = "Foo bar Model + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title baz bar foo";
+        final TIFF tiff = new TIFF();
+        final EXIF exif = new EXIF();
+        final IPTC iptc = new IPTC();
+        final XMP xmp = new XMP();
+        final Map<String, String> xmpProperties = new HashMap<>();
+        xmpProperties.put("dc:title[1]", "The title");
+        xmpProperties.put("aux:LensID", "1");
+        final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
+        method.setAccessible(true);
+        method.invoke(xmp, xmpProperties);
+        
+        exif.setModel("Model");
+        exif.setFocalLength(new Rational(70));
+        exif.setExposureTime(new Rational(1, 640));
+        exif.setFNumber(new Rational(11));
+        exif.setExposureBiasValue(new Rational(-2, 3));
+        exif.setISOSpeedRatings(100);
+        
+        final ResourceProperties resourceProperties = mock(ResourceProperties.class);
+        when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1"));
+
+        when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
+
+        final MetadataBag metadata = new MetadataBag(tiff, exif, iptc, xmp);
+        
+        final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
+        
+        assertThat(result, is(expectedResult));
       }
     
     /*******************************************************************************************************************
