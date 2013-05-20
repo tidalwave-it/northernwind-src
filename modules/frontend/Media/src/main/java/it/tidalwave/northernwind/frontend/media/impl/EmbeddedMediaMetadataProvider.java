@@ -27,6 +27,8 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -34,30 +36,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.io.File;
 import java.io.IOException;
+import org.joda.time.DateTime;
 import org.imajine.image.EditableImage;
+import org.imajine.image.Rational;
+import org.imajine.image.op.ReadOp;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
+import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
-import org.imajine.image.op.ReadOp;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.Setter;
 import static org.imajine.image.op.ReadOp.Type.*;
 import static it.tidalwave.northernwind.core.model.Media.Media;
-import javax.annotation.CheckForNull;
-import org.imajine.image.Rational;
-import org.imajine.image.metadata.TIFF;
 
 /***********************************************************************************************************************
  *
@@ -70,9 +72,15 @@ import org.imajine.image.metadata.TIFF;
 @Slf4j
 public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
   {
-    @RequiredArgsConstructor @Getter @ToString
-    static class MetadataBag
+    @Getter @ToString
+    class MetadataBag // FIXME: refactor to an outer class
       {
+        @Getter
+        private final DateTime creationTime = new DateTime();
+        
+        @Getter
+        private DateTime expirationTime = creationTime.plusSeconds(medatataExpirationTime);
+        
         @Nonnull
         private final TIFF tiff;
 
@@ -84,6 +92,48 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
         @Nonnull
         private final XMP xmp;
+        
+        /***************************************************************************************************************
+         *
+         **************************************************************************************************************/
+        public MetadataBag (final @Nonnull ResourceFile file)
+          throws IOException 
+          {
+            log.debug(">>>> loading medatata...");
+            final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
+            tiff = image.getMetadata(TIFF.class);
+            exif = image.getMetadata(EXIF.class);
+            iptc = image.getMetadata(IPTC.class);
+            xmp = image.getMetadata(XMP.class);
+          }
+
+        /***************************************************************************************************************
+         *
+         *
+         **************************************************************************************************************/
+        private void postponeExpirationTime()
+          {
+            expirationTime = new DateTime().plusSeconds(medatataExpirationTime);
+          }
+        
+        /***************************************************************************************************************
+         *
+         **************************************************************************************************************/
+        private void log (final @Nonnull Id id)
+          {
+            final Map<String, String> xmpProperties = xmp.getXmpProperties();
+            log.debug("XMP({}): {}", id, xmpProperties);
+
+            for (final int tagCode : exif.getTagCodes())
+              {
+                log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
+              }
+
+            for (final int tagCode : tiff.getTagCodes())
+              {
+                log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
+              }
+          }
       }
 
     private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
@@ -92,6 +142,10 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
     private final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 
+    /** Expiration time for metadata in seconds; after this time, medatata are reloaded. */
+    @Getter @Setter @Nonnegative
+    private int medatataExpirationTime = 10 * 60;
+    
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
 
@@ -139,7 +193,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
             if (log.isDebugEnabled())
               {
-                logMetadata(id, metadataBag);
+                metadataBag.log(id);
               }
 
             String string = format;
@@ -206,29 +260,55 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      ******************************************************************************************************************/
     // FIXME: shouldn't synchronize the whole method, only map manipulation
     @Nonnull
-    private synchronized MetadataBag findMetadataById (final @Nonnull Id mediaId,
-                                                       final @Nonnull ResourceProperties siteNodeProperties)
+    /* package */ synchronized MetadataBag findMetadataById (final @Nonnull Id mediaId,
+                                                             final @Nonnull ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException
       {
+        log.debug("findMetadataById({}, ...)", mediaId);
         MetadataBag metadataBag = metadataMapById.get(mediaId);
 
-        if (metadataBag == null)
+        if ((metadataBag != null) && metadataBag.getExpirationTime().isAfterNow())
           {
-            final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-            final Media media = findMedia(mediaId, properties);
-            final File file = media.getFile().toFile();
-            final EditableImage image = EditableImage.create(new ReadOp(file, METADATA));
-            final TIFF tiff = image.getMetadata(TIFF.class);
-            final EXIF exif = image.getMetadata(EXIF.class);
-            final IPTC iptc = image.getMetadata(IPTC.class);
-            final XMP xmp = image.getMetadata(XMP.class);
-            metadataBag = new MetadataBag(tiff, exif, iptc, xmp);
+            return metadataBag;
+          }
+        
+        final ResourceFile file = findMediaResourceFile(siteNodeProperties, mediaId);
+        
+        if (metadataBag != null)
+          {
+            if (file.getLatestModificationTime().isAfter(metadataBag.getCreationTime()))
+              {
+                log.debug(">>>> media file is more recent than metadata");
+                metadataBag = null;  
+              }
+            else
+              {
+                metadataBag.postponeExpirationTime();
+              }
+          }
+        
+        if (metadataBag == null) 
+          {
+            metadataBag = new MetadataBag(file);
             metadataMapById.put(mediaId, metadataBag);
           }
 
         return metadataBag;
       }
 
+    // BEGIN TODO: refactor to a MediaFinder
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private ResourceFile findMediaResourceFile (final @Nonnull ResourceProperties siteNodeProperties, 
+                                                final @Nonnull Id mediaId) 
+      throws NotFoundException, IOException 
+      {
+        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        return findMedia(mediaId, properties).getFile();
+      }
+    
     /*******************************************************************************************************************
      *
      * Finds a {@link Media} item for the given id.
@@ -265,29 +345,8 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
         throw new RuntimeException("Shouldn't get here");
       }
+    // END TODO
 
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private static void logMetadata (final @Nonnull Id id, final @Nonnull MetadataBag metadataBag)
-      {
-        final XMP xmp = metadataBag.getXmp();
-        final TIFF tiff = metadataBag.getTiff();
-        final EXIF exif = metadataBag.getExif();
-        final Map<String, String> xmpProperties = xmp.getXmpProperties();
-        log.debug("XMP({}): {}", id, xmpProperties);
-
-        for (final int tagCode : exif.getTagCodes())
-          {
-            log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
-          }
-
-        for (final int tagCode : tiff.getTagCodes())
-          {
-            log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
-          }
-      }
-    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
