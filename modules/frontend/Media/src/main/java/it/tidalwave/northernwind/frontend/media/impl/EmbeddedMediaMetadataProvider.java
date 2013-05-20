@@ -128,7 +128,9 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
       }
 
-    private final static Key<List<String>> PROPERTY_LENS_IDS = new Key<>("lensIds");
+    public final static Key<List<String>> PROPERTY_LENS_IDS = new Key<>("lensIds");
+
+    public final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
 
     /* package */ final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 

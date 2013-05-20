@@ -11,20 +11,19 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Iterator;
-import java.util.List;
 import java.io.IOException;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import static it.tidalwave.northernwind.core.model.Media.Media;
 import org.imajine.image.EditableImage;
 import org.imajine.image.op.ReadOp;
 import static org.imajine.image.op.ReadOp.Type.METADATA;
+import static it.tidalwave.northernwind.core.model.Media.Media;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
 
 /***********************************************************************************************************************
  *
@@ -34,8 +33,6 @@ import static org.imajine.image.op.ReadOp.Type.METADATA;
  **********************************************************************************************************************/
 public class DefaultMediaLoader implements MediaLoader
   {
-    private final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
-
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
     
@@ -49,7 +46,7 @@ public class DefaultMediaLoader implements MediaLoader
                                                final @Nonnull Id mediaId) 
       throws NotFoundException, IOException 
       {
-        final ResourceProperties properties = siteNodeProperties.getGroup(EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID);
+        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
         return findMedia(mediaId, properties).getFile();
       }
     
