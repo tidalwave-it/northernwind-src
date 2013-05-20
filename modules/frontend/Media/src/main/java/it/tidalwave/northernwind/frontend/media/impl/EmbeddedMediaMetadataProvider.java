@@ -121,6 +121,8 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             metadata.log(id);
           }
         
+        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
+        //            final String string = formatted(iptc.getObject(517, String.class));
         final MetadataInterpolator.Context context = 
                 new MetadataInterpolator.Context(metadata, getLensMap(siteNodeProperties));
         final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
@@ -198,8 +200,6 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
     private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException 
       {
-        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
-        //            final String string = formatted(iptc.getObject(517, String.class));
         final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();
         

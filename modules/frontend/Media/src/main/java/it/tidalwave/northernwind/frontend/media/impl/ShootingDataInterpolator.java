@@ -57,11 +57,9 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
         builder.append(" + ");
         builder.append(formatted(lensMap.get(xmpProperties.get("aux:LensID"))));
         builder.append(" @ ");
-        builder.append(exif.getFocalLength().intValue());
+        builder.append(exif.getFocalLength().intValue()).append(" mm, ");
         // FIXME: eventually teleconverter
-        builder.append(" mm, ");
-        builder.append(exif.getExposureTime().toString());
-        builder.append(" sec @ f/");
+        builder.append(exif.getExposureTime().toString()).append(" sec @ f/");
         builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
 
         final Rational exposureBiasValue = exif.getExposureBiasValue();
@@ -71,8 +69,7 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
             builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
           }
 
-        builder.append(", ISO ");
-        builder.append(exif.getISOSpeedRatings().intValue());
+        builder.append(", ISO ").append(exif.getISOSpeedRatings().intValue());
 
         return string.replace(id, builder.toString());
       }
