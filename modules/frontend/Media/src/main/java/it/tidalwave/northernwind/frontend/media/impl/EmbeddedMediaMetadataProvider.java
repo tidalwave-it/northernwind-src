@@ -92,70 +92,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
             final long time = System.currentTimeMillis();
             final MetadataBag metadataBag = findMetadataById(id, siteNodeProperties);
-            final XMP xmp = metadataBag.getXmp();
-            final TIFF tiff = metadataBag.getTiff();
-            final EXIF exif = metadataBag.getExif();
-            final Map<String, String> xmpProperties = xmp.getXmpProperties();
-            // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
-//            final String string = formatted(iptc.getObject(517, String.class));
-
-            final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-            final Map<String, String> lensMap = new HashMap<>();
-
-            try
-              {
-                for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
-                  {
-                    final String[] split = s.split(":");
-                    lensMap.put(split[0].trim(), split[1].trim());
-                  }
-              }
-            catch (NotFoundException e)
-              {
-                log.warn("", e);
-              }
-
-            if (log.isDebugEnabled())
-              {
-                metadataBag.log(id);
-              }
-
-            String string = format;
-
-            if (format.contains("$XMP.dc.title$"))
-              {
-                string = string.replace("$XMP.dc.title$", formatted(xmpProperties.get("dc:title[1]")));
-              }
-
-            if (format.contains("$shootingData$"))
-              {
-                final StringBuilder builder = new StringBuilder();
-                builder.append(formatted(exif.getModel()));
-                builder.append(" + ");
-                builder.append(formatted(lensMap.get(xmpProperties.get("aux:LensID"))));
-                builder.append(" @ ");
-                builder.append(exif.getFocalLength().intValue());
-                // FIXME: eventually teleconverter
-                builder.append(" mm, ");
-                builder.append(exif.getExposureTime().toString());
-                builder.append(" sec @ f/");
-                builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
-
-                final Rational exposureBiasValue = exif.getExposureBiasValue();
-
-                if (exposureBiasValue.getNumerator() != 0)
-                  {
-                    builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
-                  }
-
-                builder.append(", ISO ");
-                builder.append(exif.getISOSpeedRatings().intValue());
-
-                string = string.replace("$shootingData$", builder.toString());
-
-                // Nikon D200 + AF-S 300 f/4D + TC 17E, 1/250 sec @ f/9, ISO 100
-              }
-
+            final String string = interpolateMedatadaString(id, metadataBag, format, siteNodeProperties);
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
 
             return string;
@@ -170,6 +107,83 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             log.warn("Cannot get metadata for " + id, e);
             return "";
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
+    /* package */ String interpolateMedatadaString (final @Nonnull Id id,
+                                                    final @Nonnull MetadataBag metadata,
+                                                    final @Nonnull String format,
+                                                    final @Nonnull ResourceProperties siteNodeProperties)
+      throws IOException
+      {
+        final XMP xmp = metadata.getXmp();
+        final TIFF tiff = metadata.getTiff();
+        final EXIF exif = metadata.getExif();
+        final Map<String, String> xmpProperties = xmp.getXmpProperties();
+        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
+//            final String string = formatted(iptc.getObject(517, String.class));
+
+        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        final Map<String, String> lensMap = new HashMap<>();
+
+        try
+          {
+            for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
+              {
+                final String[] split = s.split(":");
+                lensMap.put(split[0].trim(), split[1].trim());
+              }
+          }
+        catch (NotFoundException e)
+          {
+            log.warn("", e);
+          }
+
+        if (log.isDebugEnabled())
+          {
+            metadata.log(id);
+          }
+
+        String string = format;
+
+        if (format.contains("$XMP.dc.title$"))
+          {
+            string = string.replace("$XMP.dc.title$", formatted(xmpProperties.get("dc:title[1]")));
+          }
+
+        if (format.contains("$shootingData$"))
+          {
+            final StringBuilder builder = new StringBuilder();
+            builder.append(formatted(exif.getModel()));
+            builder.append(" + ");
+            builder.append(formatted(lensMap.get(xmpProperties.get("aux:LensID"))));
+            builder.append(" @ ");
+            builder.append(exif.getFocalLength().intValue());
+            // FIXME: eventually teleconverter
+            builder.append(" mm, ");
+            builder.append(exif.getExposureTime().toString());
+            builder.append(" sec @ f/");
+            builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
+
+            final Rational exposureBiasValue = exif.getExposureBiasValue();
+
+            if (exposureBiasValue.getNumerator() != 0)
+              {
+                builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
+              }
+
+            builder.append(", ISO ");
+            builder.append(exif.getISOSpeedRatings().intValue());
+
+            string = string.replace("$shootingData$", builder.toString());
+            // Nikon D200 + AF-S 300 f/4D + TC 17E, 1/250 sec @ f/9, ISO 100
+          }
+        
+        return string;
       }
 
     /*******************************************************************************************************************
