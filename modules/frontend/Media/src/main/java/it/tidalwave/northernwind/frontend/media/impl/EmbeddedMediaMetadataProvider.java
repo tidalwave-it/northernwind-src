@@ -141,7 +141,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
     @Inject @Nonnull
     private MediaLoader mediaLoader;
 
-    private final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
+    /* package */ final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
 
     /*******************************************************************************************************************
      *
