@@ -116,31 +116,13 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
                                                     final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException
       {
-        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
-//            final String string = formatted(iptc.getObject(517, String.class));
-
-        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-        final Map<String, String> lensMap = new HashMap<>();
-
-        try
-          {
-            for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
-              {
-                final String[] split = s.split(":");
-                lensMap.put(split[0].trim(), split[1].trim());
-              }
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("", e);
-          }
-
         if (log.isDebugEnabled())
           {
             metadata.log(id);
           }
-
-        final MetadataInterpolator.Context context = new MetadataInterpolator.Context(metadata, lensMap);
+        
+        final MetadataInterpolator.Context context = 
+                new MetadataInterpolator.Context(metadata, getLensMap(siteNodeProperties));
         final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
         // FIXME: discover them with an annotation
         metadataInterpolators.add(new XmlDcTitleInterpolator());
@@ -207,5 +189,33 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
 
         return metadataBag;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
+      throws IOException 
+      {
+        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
+        //            final String string = formatted(iptc.getObject(517, String.class));
+        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        final Map<String, String> lensMap = new HashMap<>();
+        
+        try
+          {
+            for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
+              {
+                final String[] split = s.split(":");
+                lensMap.put(split[0].trim(), split[1].trim());
+              }
+          }
+        catch (NotFoundException e)
+          {
+            log.warn("", e);
+          }
+        
+        return lensMap;
       }
   }
