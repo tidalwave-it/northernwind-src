@@ -46,6 +46,8 @@ import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.MetadataBag;
+import javax.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
@@ -59,6 +61,7 @@ import static org.hamcrest.CoreMatchers.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class EmbeddedMediaMetadataProviderTest
   {
     static class MockedImage
@@ -127,10 +130,10 @@ public class EmbeddedMediaMetadataProviderTest
         when(mediaLoader.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
         
         baseTime = new DateTime();
-        DateTimeUtils.setCurrentMillisFixed(baseTime.getMillis());
+        setTime(baseTime);
       }
     
-    @Test(enabled = false)
+    @Test
     public void must_correctly_load_medatada_when_not_in_cache()
       throws Exception
       {
@@ -149,18 +152,18 @@ public class EmbeddedMediaMetadataProviderTest
         verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
       }
     
-    @Test(enabled = false)
+    @Test
     public void must_keep_the_same_instance_in_cache_for_a_few_time_without_checking_file_modification()
       throws Exception
       {
         final MetadataBag metadataBag = fixture.findMetadataById(mediaId, siteNodeProperties);
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
         
-        for (long time = baseTime.getMillis(); 
-             time < expectedExpirationTime.getMillis();
-             time += fixture.getMedatataExpirationTime() / 100)
+        for (DateTime time = baseTime; 
+             time.isBefore(expectedExpirationTime);
+             time = time.plusMillis((1000 * fixture.getMedatataExpirationTime()) / 100))
           {
-            DateTimeUtils.setCurrentMillisFixed(time);
+            setTime(time);
             final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             assertThat(metadataBag2, is(sameInstance(metadataBag)));
           }
@@ -181,16 +184,23 @@ public class EmbeddedMediaMetadataProviderTest
         
         for (int count = 1; count < 10; count++)
           {
-            DateTimeUtils.setCurrentMillisFixed(latestExpirationTime.plusMillis(1).getMillis());
+            setTime(latestExpirationTime.plusMillis(1));
             final DateTime nextExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
             latestExpirationTime = nextExpirationTime;
             final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
-
+            log.info(">>>> next expiration time: {}", metadataBag.getExpirationTime());
+            
             assertThat(metadataBag2, is(sameInstance(metadataBag)));
             assertThat(metadataBag2.getExpirationTime(), is(nextExpirationTime));
 
             verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
             verify(mediaFile,   times(count)).getLatestModificationTime();
           }
+      }
+    
+    private static void setTime (final @Nonnull DateTime dateTime)
+      {
+        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+        log.info("==== Time set to {}", new DateTime());
       }
   }
