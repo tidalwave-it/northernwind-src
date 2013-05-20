@@ -268,6 +268,8 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
         
         if (metadataBag != null)
           {
+            log.debug(">>>> checking for file modification...");
+            
             if (file.getLatestModificationTime().isAfter(metadataBag.getCreationTime()))
               {
                 log.debug(">>>> media file is more recent than metadata");
