@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
@@ -46,15 +47,12 @@ import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.MetadataBag;
-import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.any;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
-import org.joda.time.format.DateTimeParser;
         
 /***********************************************************************************************************************
  *
