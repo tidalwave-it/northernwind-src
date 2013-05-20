@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true)
-@Getter @ToString @Slf4j
+@Getter @ToString @Slf4j @RequiredArgsConstructor
 class MetadataBag 
   {
     @Inject
