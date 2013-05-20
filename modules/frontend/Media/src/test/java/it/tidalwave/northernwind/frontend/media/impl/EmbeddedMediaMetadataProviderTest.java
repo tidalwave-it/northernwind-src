@@ -118,14 +118,14 @@ public class EmbeddedMediaMetadataProviderTest
         context = new ClassPathXmlApplicationContext("EmbeddedMediaMetadataProviderTestBeans.xml");
         fixture = context.getBean(EmbeddedMediaMetadataProvider.class);
         mediaLoader = context.getBean(MediaLoader.class);
+        mediaFile = mock(ResourceFile.class);
         mockedImage = new MockedImage();
+        siteNodeProperties = mock(ResourceProperties.class);
+        mediaId = new Id("mediaId");
         
         when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
         when(mediaLoader.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
         
-        mediaId = new Id("mediaId");
-        siteNodeProperties = mock(ResourceProperties.class);
-        mediaFile = mock(ResourceFile.class);
         baseTime = new DateTime();
         DateTimeUtils.setCurrentMillisFixed(baseTime.getMillis());
       }
@@ -149,7 +149,7 @@ public class EmbeddedMediaMetadataProviderTest
         verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
       }
     
-    @Test
+    @Test(enabled = false)
     public void must_keep_the_same_instance_in_cache_for_a_few_time_without_checking_file_modification()
       throws Exception
       {
@@ -167,5 +167,25 @@ public class EmbeddedMediaMetadataProviderTest
         
         verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
         verify(mediaFile,   times(0)).getLatestModificationTime();
+      }
+    
+    @Test
+    public void must_check_file_modification_after_expiration_time_and_still_keep_in_cache_when_no_modifications()
+      throws Exception
+      {
+        final DateTime firstExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
+        when(mediaFile.getLatestModificationTime()).thenReturn(baseTime.minusMillis(1));
+        
+        final MetadataBag metadataBag = fixture.findMetadataById(mediaId, siteNodeProperties);
+        
+        DateTimeUtils.setCurrentMillisFixed(firstExpirationTime.getMillis() + 1);
+        final DateTime secondExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
+        final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+        
+        assertThat(metadataBag2, is(sameInstance(metadataBag)));
+        assertThat(metadataBag2.getExpirationTime(), is(secondExpirationTime));
+        
+        verify(mediaLoader, times(1)).loadImage(any(ResourceFile.class));
+        verify(mediaFile,   times(1)).getLatestModificationTime();
       }
   }
