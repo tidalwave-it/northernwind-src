@@ -55,6 +55,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import lombok.experimental.Wither;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -145,6 +146,37 @@ public class EmbeddedMediaMetadataProviderTest
         setTime(baseTime);
       }
     
+    static class MetadataBuilder
+      {
+//        @Wither
+//        String title;
+//        
+        @Nonnull
+        public MetadataBag build()
+          throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+          {
+            final TIFF tiff = new TIFF();
+            final EXIF exif = new EXIF();
+            final IPTC iptc = new IPTC();
+            final XMP xmp = new XMP();
+            final Map<String, String> xmpProperties = new HashMap<>();
+            xmpProperties.put("dc:title[1]", "The title");
+            xmpProperties.put("aux:LensID", "1");
+            final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
+            method.setAccessible(true);
+            method.invoke(xmp, xmpProperties);
+
+            exif.setModel("Model");
+            exif.setFocalLength(new Rational(70));
+            exif.setExposureTime(new Rational(1, 640));
+            exif.setFNumber(new Rational(11));
+            exif.setExposureBiasValue(new Rational(-2, 3));
+            exif.setISOSpeedRatings(100);
+            
+            return new MetadataBag(tiff, exif, iptc, xmp);
+          }
+      }
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -155,29 +187,14 @@ public class EmbeddedMediaMetadataProviderTest
       {
         final String format = "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo";
         final String expectedResult = "Foo bar Model + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title baz bar foo";
-        final TIFF tiff = new TIFF();
-        final EXIF exif = new EXIF();
-        final IPTC iptc = new IPTC();
-        final XMP xmp = new XMP();
-        final Map<String, String> xmpProperties = new HashMap<>();
-        xmpProperties.put("dc:title[1]", "The title");
-        xmpProperties.put("aux:LensID", "1");
-        final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
-        method.setAccessible(true);
-        method.invoke(xmp, xmpProperties);
-        
-        exif.setModel("Model");
-        exif.setFocalLength(new Rational(70));
-        exif.setExposureTime(new Rational(1, 640));
-        exif.setFNumber(new Rational(11));
-        exif.setExposureBiasValue(new Rational(-2, 3));
-        exif.setISOSpeedRatings(100);
-        final MetadataBag metadata = new MetadataBag(tiff, exif, iptc, xmp);
         
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
         when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1"));
         when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
 
+        final MetadataBuilder metadataBuilder = new MetadataBuilder();
+        final MetadataBag metadata = metadataBuilder.build();
+        
         final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
         
         assertThat(result, is(expectedResult));
