@@ -149,38 +149,16 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
 
         String string = format;
+        final MetadataInterpolator.Context context = new MetadataInterpolator.Context(metadata, lensMap);
 
         if (format.contains("$XMP.dc.title$"))
           {
-            string = string.replace("$XMP.dc.title$", formatted(xmpProperties.get("dc:title[1]")));
+            string = new XmlDcTitleInterpolator().interpolate(string, context);
           }
 
         if (format.contains("$shootingData$"))
           {
-            final StringBuilder builder = new StringBuilder();
-            builder.append(formatted(exif.getModel()));
-            builder.append(" + ");
-            builder.append(formatted(lensMap.get(xmpProperties.get("aux:LensID"))));
-            builder.append(" @ ");
-            builder.append(exif.getFocalLength().intValue());
-            // FIXME: eventually teleconverter
-            builder.append(" mm, ");
-            builder.append(exif.getExposureTime().toString());
-            builder.append(" sec @ f/");
-            builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
-
-            final Rational exposureBiasValue = exif.getExposureBiasValue();
-
-            if (exposureBiasValue.getNumerator() != 0)
-              {
-                builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
-              }
-
-            builder.append(", ISO ");
-            builder.append(exif.getISOSpeedRatings().intValue());
-
-            string = string.replace("$shootingData$", builder.toString());
-            // Nikon D200 + AF-S 300 f/4D + TC 17E, 1/250 sec @ f/9, ISO 100
+            string = new ShootingDataInterpolator().interpolate(string, context);
           }
         
         return string;
@@ -234,15 +212,5 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
 
         return metadataBag;
-      }
-
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String formatted (final @CheckForNull String string)
-      {
-        return (string != null) ? string : "";
       }
   }
