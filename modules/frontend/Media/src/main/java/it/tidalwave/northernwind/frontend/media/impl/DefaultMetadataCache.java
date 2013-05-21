@@ -38,9 +38,11 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.imajine.image.EditableImage;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -51,6 +53,23 @@ import org.imajine.image.EditableImage;
 @Slf4j
 public class DefaultMetadataCache implements MetadataCache
   {
+    @RequiredArgsConstructor @Getter @ToString
+    class ExpirableMetadata
+      {
+        @Nonnull
+        private final Metadata metadata;
+        
+        private final DateTime creationTime = new DateTime();
+
+        @Nonnull
+        private DateTime expirationTime = creationTime.plusSeconds(medatataExpirationTime);
+        
+        public void postponeExpirationTime() 
+          {
+            expirationTime = new DateTime().plusSeconds(medatataExpirationTime);
+          }
+      }
+    
     /** Expiration time for metadata in seconds; after this time, medatata are reloaded. */
     @Getter @Setter @Nonnegative
     private int medatataExpirationTime = 10 * 60;
@@ -58,7 +77,7 @@ public class DefaultMetadataCache implements MetadataCache
     @Inject @Nonnull
     private MediaLoader mediaLoader;
 
-    /* package */ final Map<Id, Metadata> metadataMapById = new HashMap<>();
+    /* package */ final Map<Id, ExpirableMetadata> metadataMapById = new HashMap<>();
 
     /*******************************************************************************************************************
      *
@@ -72,11 +91,11 @@ public class DefaultMetadataCache implements MetadataCache
       throws NotFoundException, IOException
       {
         log.debug("findMetadataById({}, ...)", mediaId);
-        Metadata metadata = metadataMapById.get(mediaId);
+        ExpirableMetadata metadata = metadataMapById.get(mediaId);
 
         if ((metadata != null) && metadata.getExpirationTime().isAfterNow())
           {
-            return metadata;
+            return metadata.getMetadata();
           }
         
         final ResourceFile file = mediaLoader.findMediaResourceFile(siteNodeProperties, mediaId);
@@ -99,11 +118,10 @@ public class DefaultMetadataCache implements MetadataCache
         if (metadata == null) 
           {
             log.debug(">>>> loading medatata...");
-            final EditableImage image = mediaLoader.loadImage(file);
-            metadata = new DefaultMetadata(image, medatataExpirationTime);
+            metadata = new ExpirableMetadata(mediaLoader.loadMetadata(file));
             metadataMapById.put(mediaId, metadata);
           }
 
-        return metadata;
+        return metadata.getMetadata();
       }
   }

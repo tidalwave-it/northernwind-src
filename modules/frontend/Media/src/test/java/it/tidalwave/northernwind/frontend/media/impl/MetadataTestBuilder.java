@@ -103,6 +103,6 @@ class MetadataTestBuilder
                                                           .withXmp(xmp)
                                                           .build();
         
-        return new DefaultMetadata(image, 0);
+        return new DefaultMetadata(image);
       }
   }

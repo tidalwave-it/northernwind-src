@@ -33,7 +33,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import org.imajine.image.EditableImage;
 
 /***********************************************************************************************************************
  *
@@ -55,6 +54,6 @@ public interface MediaLoader
      *
      ******************************************************************************************************************/
     @Nonnull
-    public EditableImage loadImage (@Nonnull ResourceFile file) 
+    public Metadata loadMetadata (@Nonnull ResourceFile file)
       throws IOException;
   }

@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,10 +42,10 @@ import org.imajine.image.metadata.XMP;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -54,32 +53,11 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Getter @ToString @Slf4j
+@RequiredArgsConstructor @ToString @Slf4j
 class DefaultMetadata implements Metadata
   {
     @Nonnull
     private final EditableImage image;
-
-    @Nonnegative
-    private final int expirationPeriod;
-    
-    @Getter
-    private final DateTime creationTime = new DateTime();
-    
-    @Getter
-    private DateTime expirationTime;
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    public DefaultMetadata (final @Nonnull EditableImage image,
-                            final @Nonnegative int expirationPeriod) 
-      throws IOException 
-      {
-        this.image = image;
-        this.expirationPeriod = expirationPeriod;
-        expirationTime = creationTime.plusSeconds(expirationPeriod);
-      }
 
     /*******************************************************************************************************************
      *
@@ -128,15 +106,6 @@ class DefaultMetadata implements Metadata
           }
         
         return string;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public void postponeExpirationTime() 
-      {
-        expirationTime = new DateTime().plusSeconds(expirationPeriod);
       }
 
     /*******************************************************************************************************************

@@ -76,10 +76,11 @@ public class DefaultMediaLoader implements MediaLoader
      * 
      ******************************************************************************************************************/
     @Override @Nonnull
-    public EditableImage loadImage (final @Nonnull ResourceFile file) 
+    public Metadata loadMetadata (final @Nonnull ResourceFile file) 
       throws IOException 
       {
-        return EditableImage.create(new ReadOp(file.toFile(), METADATA));
+        final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
+        return new DefaultMetadata(image);
       }
     
     /*******************************************************************************************************************

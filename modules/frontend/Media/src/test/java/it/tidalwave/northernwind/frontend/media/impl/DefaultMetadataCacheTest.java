@@ -40,12 +40,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataCache.ExpirableMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
         
 /***********************************************************************************************************************
  *
@@ -104,7 +107,16 @@ public class DefaultMetadataCacheTest
         mediaId = new Id("mediaId");
         
         when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
-        when(mediaLoader.loadImage(same(mediaFile))).thenReturn(image);
+        
+        // Don't use 'thenReturn(new DefaultMetadata(image))' as a new instance must be created each time
+        when(mediaLoader.loadMetadata(same(mediaFile))).thenAnswer(new Answer<DefaultMetadata>()
+          {
+            @Override
+            public DefaultMetadata answer (final @Nonnull InvocationOnMock invocation) 
+              {
+                return new DefaultMetadata(image);
+              }
+          });
         
         assertThat(fixture.getMedatataExpirationTime(), is(600));
         baseTime = new DateTime(1369080000000L);
@@ -126,12 +138,14 @@ public class DefaultMetadataCacheTest
         assertThat(metadata.getDirectory(EXIF.class), sameInstance(exif));
         assertThat(metadata.getDirectory(IPTC.class), sameInstance(iptc));
         assertThat(metadata.getDirectory(XMP.class),  sameInstance(xmp));
-        assertThat(metadata.getCreationTime(),   is(baseTime));
-        assertThat(metadata.getExpirationTime(), is(expectedExpirationTime));
         
-        assertThat(fixture.metadataMapById.get(mediaId), sameInstance(metadata));
+        final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+        assertThat(expirableMetadata, is(notNullValue()));
+        assertThat(expirableMetadata.getMetadata(), sameInstance(metadata));
+        assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
+        assertThat(expirableMetadata.getExpirationTime(), is(expectedExpirationTime));
         
-        verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
+        verify(mediaLoader, times(1)).loadMetadata(eq(mediaFile));
       }
     
     /*******************************************************************************************************************
@@ -154,11 +168,15 @@ public class DefaultMetadataCacheTest
             final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(sameInstance(metadata)));
-            assertThat(metadata2.getExpirationTime(), is(expectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadata.getExpirationTime());
+            
+            final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+            assertThat(expirableMetadata, is(notNullValue()));
+            assertThat(expirableMetadata.getMetadata(), sameInstance(metadata2));
+            assertThat(expirableMetadata.getExpirationTime(), is(expectedExpirationTime));
+            log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
           }
         
-        verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
+        verify(mediaLoader, times(1)).loadMetadata(eq(mediaFile));
         verify(mediaFile,   times(0)).getLatestModificationTime();
       }
     
@@ -182,10 +200,14 @@ public class DefaultMetadataCacheTest
             final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(sameInstance(metadata)));
-            assertThat(metadata2.getExpirationTime(), is(nextExpectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadata2.getExpirationTime());
+            
+            final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+            assertThat(expirableMetadata, is(notNullValue()));
+            assertThat(expirableMetadata.getMetadata(), sameInstance(metadata2));
+            assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
+            log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
-            verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
+            verify(mediaLoader, times(1)).loadMetadata(eq(mediaFile));
             verify(mediaFile,   times(count)).getLatestModificationTime();
           }
       }
@@ -209,10 +231,14 @@ public class DefaultMetadataCacheTest
             final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(not(sameInstance(metadata))));
-            assertThat(metadata2.getExpirationTime(), is(nextExpectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadata2.getExpirationTime());
+            
+            final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+            assertThat(expirableMetadata, is(notNullValue()));
+            assertThat(expirableMetadata.getMetadata(), sameInstance(metadata2));
+            assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
+            log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
-            verify(mediaLoader, times(count + 1)).loadImage(eq(mediaFile));
+            verify(mediaLoader, times(count + 1)).loadMetadata(eq(mediaFile));
             verify(mediaFile,   times(count)).getLatestModificationTime();
           }
       }
