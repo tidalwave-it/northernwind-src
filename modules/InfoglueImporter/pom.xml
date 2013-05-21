@@ -5,13 +5,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-20-SNAPSHOT</version>
+        <version>1.1-ALPHA-20</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-importer-infoglue</artifactId>
-    <version>1.37-SNAPSHOT</version>
+    <version>1.37</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Infoglue Importer</name>
 
