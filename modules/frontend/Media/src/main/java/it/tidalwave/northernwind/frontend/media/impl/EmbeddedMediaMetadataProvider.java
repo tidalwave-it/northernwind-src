@@ -85,7 +85,6 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
         try
           {
             log.info("getMetadataString({}, {})", id, format);
-
             final long time = System.currentTimeMillis();
             final MetadataBag metadataBag = findMetadataById(id, siteNodeProperties);
             final String string = interpolateMedatadaString(id, metadataBag, format, siteNodeProperties);
@@ -95,12 +94,12 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
         catch (NotFoundException e)
           {
-            log.warn("Cannot find media " + id, e);
+            log.warn("Cannot find media for id: " + id, e);
             return "";
           }
         catch (IOException e)
           {
-            log.warn("Cannot get metadata for " + id, e);
+            log.warn("Unexpected I/O error for id: " + id, e);
             return "";
           }
       }
