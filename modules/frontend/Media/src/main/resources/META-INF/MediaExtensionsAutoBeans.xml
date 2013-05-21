@@ -56,7 +56,11 @@
 
     <!-- Name must be upper cased since it's part of a public API -->
     <bean id="EmbeddedMediaMetadataProvider" 
-          class="it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider">
+          class="it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider"/>
+    
+    <bean id="metadataCache" 
+          class="it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataCache"
+          lazy-init="true">
         <property name="medatataExpirationTime" value="${nw.media.metadata.expirationTime}" />
     </bean>
     

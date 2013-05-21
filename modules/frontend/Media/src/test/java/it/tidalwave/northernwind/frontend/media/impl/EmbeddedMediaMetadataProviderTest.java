@@ -43,8 +43,6 @@ import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 import org.imajine.image.metadata.Directory;
 import org.imajine.image.op.CreateOp;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.Id;
@@ -108,7 +106,7 @@ public class EmbeddedMediaMetadataProviderTest
 
     private EmbeddedMediaMetadataProvider fixture;
     
-    private MediaLoader mediaLoader;
+    private MetadataCache metadataCache;
     
     private MockedImage mockedImage;
     
@@ -117,8 +115,6 @@ public class EmbeddedMediaMetadataProviderTest
     private ResourceProperties siteNodeProperties;
     
     private ResourceFile mediaFile;
-    
-    private DateTime baseTime;
     
     /*******************************************************************************************************************
      *
@@ -129,18 +125,14 @@ public class EmbeddedMediaMetadataProviderTest
       {
         context = new ClassPathXmlApplicationContext("EmbeddedMediaMetadataProviderTestBeans.xml");
         fixture = context.getBean(EmbeddedMediaMetadataProvider.class);
-        mediaLoader = context.getBean(MediaLoader.class);
+        metadataCache = context.getBean(MetadataCache.class);
         mediaFile = mock(ResourceFile.class);
         mockedImage = new MockedImage();
         siteNodeProperties = mock(ResourceProperties.class);
         mediaId = new Id("mediaId");
-        
-        when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
-        when(mediaLoader.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
-        
-        assertThat(fixture.getMedatataExpirationTime(), is(600));
-        baseTime = new DateTime(1369080000000L);
-        setTime(baseTime);
+
+//        when(metadataCache.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
+//        when(metadataCache.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
       }
     
     /*******************************************************************************************************************
@@ -162,120 +154,6 @@ public class EmbeddedMediaMetadataProviderTest
         final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
         
         assertThat(result, is(expectedResult));
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_correctly_load_medatada_when_not_in_cache()
-      throws Exception
-      {
-        final MetadataBag metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
-        
-        final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
-        assertThat(metadata.getTiff(), sameInstance(mockedImage.tiff));
-        assertThat(metadata.getExif(), sameInstance(mockedImage.exif));
-        assertThat(metadata.getIptc(), sameInstance(mockedImage.iptc));
-        assertThat(metadata.getXmp(),  sameInstance(mockedImage.xmp));
-        assertThat(metadata.getCreationTime(),   is(baseTime));
-        assertThat(metadata.getExpirationTime(), is(expectedExpirationTime));
-        
-        assertThat(fixture.metadataMapById.get(mediaId), sameInstance(metadata));
-        
-        verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_cache_the_same_instance_within_expiration_time_without_checking_for_file_modification()
-      throws Exception
-      {
-        final MetadataBag metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
-        
-        final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
-        
-        for (DateTime time = baseTime; 
-             time.isBefore(expectedExpirationTime);
-             time = time.plusSeconds(fixture.getMedatataExpirationTime() / 100))
-          {
-            setTime(time);
-            
-            final MetadataBag metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
-            
-            assertThat(metadata2, is(sameInstance(metadata)));
-            assertThat(metadata2.getExpirationTime(), is(expectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadata.getExpirationTime());
-          }
-        
-        verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
-        verify(mediaFile,   times(0)).getLatestModificationTime();
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_check_file_modification_after_expiration_time_and_still_keep_in_cache_when_no_modifications()
-      throws Exception
-      {
-        DateTime nextExpectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
-        when(mediaFile.getLatestModificationTime()).thenReturn(baseTime.minusMillis(1));
-        
-        final MetadataBag metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
-        
-        for (int count = 1; count <= 10; count++)
-          {
-            setTime(nextExpectedExpirationTime.plusMillis(1));
-            nextExpectedExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
-            
-            final MetadataBag metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
-            
-            assertThat(metadata2, is(sameInstance(metadata)));
-            assertThat(metadata2.getExpirationTime(), is(nextExpectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadata2.getExpirationTime());
-
-            verify(mediaLoader, times(1)).loadImage(eq(mediaFile));
-            verify(mediaFile,   times(count)).getLatestModificationTime();
-          }
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_reload_metadata_after_expiration_time_when_file_has_been_changed()
-      throws Exception
-      {
-        DateTime nextExpectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());        
-        final MetadataBag metadataBag = fixture.findMetadataById(mediaId, siteNodeProperties);
-        
-        for (int count = 1; count < 10; count++)
-          {
-            setTime(nextExpectedExpirationTime.plusMillis(1));
-            when(mediaFile.getLatestModificationTime()).thenReturn(new DateTime().plusMillis(1));
-            nextExpectedExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
-            
-            final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
-            
-            assertThat(metadataBag2, is(not(sameInstance(metadataBag))));
-            assertThat(metadataBag2.getExpirationTime(), is(nextExpectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadataBag2.getExpirationTime());
-
-            verify(mediaLoader, times(count + 1)).loadImage(eq(mediaFile));
-            verify(mediaFile,   times(count)).getLatestModificationTime();
-          }
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private static void setTime (final @Nonnull DateTime dateTime)
-      {
-        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
-        log.info("==== Time set to           {}", new DateTime());
       }
     
     /*******************************************************************************************************************

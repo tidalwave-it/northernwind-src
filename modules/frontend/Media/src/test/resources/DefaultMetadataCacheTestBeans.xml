@@ -44,16 +44,12 @@
     <context:spring-configured />
 
     <bean id="fixture" 
-          class="it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider"
+          class="it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataCache"
           lazy-init="true">
     </bean>
 
     <bean id="mediaLoader" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="it.tidalwave.northernwind.frontend.media.impl.MediaLoader" />
-    </bean>
-    
-    <bean id="metadataCache" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="it.tidalwave.northernwind.frontend.media.impl.MetadataCache" />
     </bean>
     
 </beans>

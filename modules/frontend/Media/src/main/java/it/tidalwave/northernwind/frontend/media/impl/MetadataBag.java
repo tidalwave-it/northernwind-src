@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Map;
@@ -56,17 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 class MetadataBag 
   {
     @Inject
-    private EmbeddedMediaMetadataProvider embeddedMediaMetadataProvider;
-    
-    @Inject
     private MediaLoader mediaLoader;
-    
-    @Getter
-    private final DateTime creationTime = new DateTime();
-    
-    @Getter
-    private DateTime expirationTime = 
-                         creationTime.plusSeconds(embeddedMediaMetadataProvider.getMedatataExpirationTime());
     
     @Nonnull
     private final TIFF tiff;
@@ -80,10 +71,20 @@ class MetadataBag
     @Nonnull
     private final XMP xmp;
 
+    @Nonnegative
+    private final int expirationPeriod;
+    
+    @Getter
+    private final DateTime creationTime = new DateTime();
+    
+    @Getter
+    private DateTime expirationTime;
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public MetadataBag (final @Nonnull ResourceFile file) 
+    public MetadataBag (final @Nonnull ResourceFile file,
+                        final @Nonnegative int expirationPeriod) 
       throws IOException 
       {
         log.debug(">>>> loading medatata...");
@@ -92,6 +93,8 @@ class MetadataBag
         exif = image.getMetadata(EXIF.class);
         iptc = image.getMetadata(IPTC.class);
         xmp = image.getMetadata(XMP.class);
+        this.expirationPeriod = expirationPeriod;
+        expirationTime = creationTime.plusSeconds(expirationPeriod);
       }
 
     /*******************************************************************************************************************
@@ -100,7 +103,7 @@ class MetadataBag
      ******************************************************************************************************************/
     void postponeExpirationTime() 
       {
-        expirationTime = new DateTime().plusSeconds(embeddedMediaMetadataProvider.getMedatataExpirationTime());
+        expirationTime = new DateTime().plusSeconds(expirationPeriod);
       }
 
     /*******************************************************************************************************************

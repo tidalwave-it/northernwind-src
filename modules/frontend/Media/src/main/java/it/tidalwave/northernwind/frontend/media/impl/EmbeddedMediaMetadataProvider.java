@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -38,12 +37,9 @@ import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
-import lombok.Getter;
-import lombok.Setter;
 
 /***********************************************************************************************************************
  *
@@ -62,14 +58,8 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
     /* package */ final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 
-    /** Expiration time for metadata in seconds; after this time, medatata are reloaded. */
-    @Getter @Setter @Nonnegative
-    private int medatataExpirationTime = 10 * 60;
-    
     @Inject @Nonnull
-    private MediaLoader mediaLoader;
-
-    /* package */ final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
+    private MetadataCache metadataCache;
 
     /*******************************************************************************************************************
      *
@@ -86,7 +76,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           {
             log.info("getMetadataString({}, {})", mediaId, format);
             final long time = System.currentTimeMillis();
-            final MetadataBag metadata = findMetadataById(mediaId, siteNodeProperties);
+            final MetadataBag metadata = metadataCache.findMetadataById(mediaId, siteNodeProperties);
             final String string = interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
 
@@ -140,56 +130,6 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
         
         return string;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Finds metadata for the given id.
-     *
-     * @param  mediaId            the media id
-     * @param  properties         the configuration properties
-     * @return                    the {@code Media}
-     * @throws NotFoundException  if no {@code Media} is found
-     *
-     ******************************************************************************************************************/
-    // FIXME: shouldn't synchronize the whole method, only map manipulation
-    @Nonnull
-    /* package */ synchronized MetadataBag findMetadataById (final @Nonnull Id mediaId,
-                                                             final @Nonnull ResourceProperties siteNodeProperties)
-      throws NotFoundException, IOException
-      {
-        log.debug("findMetadataById({}, ...)", mediaId);
-        MetadataBag metadataBag = metadataMapById.get(mediaId);
-
-        if ((metadataBag != null) && metadataBag.getExpirationTime().isAfterNow())
-          {
-            return metadataBag;
-          }
-        
-        final ResourceFile file = mediaLoader.findMediaResourceFile(siteNodeProperties, mediaId);
-        
-        if (metadataBag != null)
-          {
-            log.debug(">>>> checking for file modification...");
-            
-            if (file.getLatestModificationTime().isAfter(metadataBag.getCreationTime()))
-              {
-                log.debug(">>>> media file is more recent than metadata");
-                metadataBag = null;  
-              }
-            else
-              {
-                metadataBag.postponeExpirationTime();
-              }
-          }
-        
-        if (metadataBag == null) 
-          {
-            metadataBag = new MetadataBag(file);
-            metadataMapById.put(mediaId, metadataBag);
-          }
-
-        return metadataBag;
       }
 
     /*******************************************************************************************************************
