@@ -44,12 +44,14 @@ import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
+ * A test facility for programmatically creating items of {@link Metadata} with a fluent interface.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NoArgsConstructor @AllArgsConstructor @ToString
-class MetadataBuilder 
+class MetadataTestBuilder 
   {
     @Wither
     private String xmpDcTitle;

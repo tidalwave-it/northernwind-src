@@ -139,7 +139,7 @@ public class EmbeddedMediaMetadataProviderTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "metadataProvider")
-    public void must_properly_interpolate_metadata_string (final @Nonnull MetadataBuilder metadataBuilder,
+    public void must_properly_interpolate_metadata_string (final @Nonnull MetadataTestBuilder metadataBuilder,
                                                            final @Nonnull String format,
                                                            final @Nonnull String expectedResult)
       throws IOException, NotFoundException, 
@@ -165,7 +165,7 @@ public class EmbeddedMediaMetadataProviderTest
         return new Object[][]
           {
               {
-                new MetadataBuilder().withXmpDcTitle("The title 1")
+                new MetadataTestBuilder().withXmpDcTitle("The title 1")
                                      .withExifModel("Model 1")
                                      .withExifFocalLength(new Rational(70))
                                      .withExifExposureTime(new Rational(1, 640))
@@ -177,7 +177,7 @@ public class EmbeddedMediaMetadataProviderTest
                 "Foo bar Model 1 + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title 1 baz bar foo"
               },
               {
-                new MetadataBuilder().withXmpDcTitle("The title 2")
+                new MetadataTestBuilder().withXmpDcTitle("The title 2")
                                      .withExifModel("Model 2")
                                      .withExifFocalLength(new Rational(20))
                                      .withExifExposureTime(new Rational(1, 20))
