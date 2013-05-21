@@ -78,28 +78,28 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      ******************************************************************************************************************/
     // FIXME: should use the Metadata API of blueMarine, but we have first to make it work with Spring and its DI.
     @Override @Nonnull
-    public String getMetadataString (final @Nonnull Id id,
+    public String getMetadataString (final @Nonnull Id mediaId,
                                      final @Nonnull String format,
                                      final @Nonnull ResourceProperties siteNodeProperties)
       {
         try
           {
-            log.info("getMetadataString({}, {})", id, format);
+            log.info("getMetadataString({}, {})", mediaId, format);
             final long time = System.currentTimeMillis();
-            final MetadataBag metadataBag = findMetadataById(id, siteNodeProperties);
-            final String string = interpolateMedatadaString(id, metadataBag, format, siteNodeProperties);
+            final MetadataBag metadataBag = findMetadataById(mediaId, siteNodeProperties);
+            final String string = interpolateMedatadaString(mediaId, metadataBag, format, siteNodeProperties);
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
 
             return string;
           }
         catch (NotFoundException e)
           {
-            log.warn("Cannot find media for id: " + id, e);
+            log.warn("Cannot find media for id: " + mediaId, e);
             return "";
           }
         catch (IOException e)
           {
-            log.warn("Unexpected I/O error for id: " + id, e);
+            log.warn("Unexpected I/O error for id: " + mediaId, e);
             return "";
           }
       }
@@ -109,7 +109,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      * 
      *
      ******************************************************************************************************************/
-    /* package */ String interpolateMedatadaString (final @Nonnull Id id,
+    /* package */ String interpolateMedatadaString (final @Nonnull Id mediaId,
                                                     final @Nonnull MetadataBag metadata,
                                                     final @Nonnull String format,
                                                     final @Nonnull ResourceProperties siteNodeProperties)
@@ -117,7 +117,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       {
         if (log.isDebugEnabled())
           {
-            metadata.log(id);
+            metadata.log(mediaId);
           }
         
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
