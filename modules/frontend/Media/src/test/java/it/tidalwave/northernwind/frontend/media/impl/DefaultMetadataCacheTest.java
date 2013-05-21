@@ -142,7 +142,7 @@ public class DefaultMetadataCacheTest
     public void must_correctly_load_medatada_when_not_in_cache()
       throws Exception
       {
-        final MetadataBag metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
         assertThat(metadata.getTiff(), sameInstance(mockedImage.tiff));
@@ -164,7 +164,7 @@ public class DefaultMetadataCacheTest
     public void must_cache_the_same_instance_within_expiration_time_without_checking_for_file_modification()
       throws Exception
       {
-        final MetadataBag metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
         
@@ -174,7 +174,7 @@ public class DefaultMetadataCacheTest
           {
             setTime(time);
             
-            final MetadataBag metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(sameInstance(metadata)));
             assertThat(metadata2.getExpirationTime(), is(expectedExpirationTime));
@@ -195,14 +195,14 @@ public class DefaultMetadataCacheTest
         DateTime nextExpectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
         when(mediaFile.getLatestModificationTime()).thenReturn(baseTime.minusMillis(1));
         
-        final MetadataBag metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         for (int count = 1; count <= 10; count++)
           {
             setTime(nextExpectedExpirationTime.plusMillis(1));
             nextExpectedExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
             
-            final MetadataBag metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(sameInstance(metadata)));
             assertThat(metadata2.getExpirationTime(), is(nextExpectedExpirationTime));
@@ -221,7 +221,7 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         DateTime nextExpectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());        
-        final MetadataBag metadataBag = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         for (int count = 1; count < 10; count++)
           {
@@ -229,11 +229,11 @@ public class DefaultMetadataCacheTest
             when(mediaFile.getLatestModificationTime()).thenReturn(new DateTime().plusMillis(1));
             nextExpectedExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
             
-            final MetadataBag metadataBag2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
-            assertThat(metadataBag2, is(not(sameInstance(metadataBag))));
-            assertThat(metadataBag2.getExpirationTime(), is(nextExpectedExpirationTime));
-            log.info(">>>> next expiration time: {}", metadataBag2.getExpirationTime());
+            assertThat(metadata2, is(not(sameInstance(metadata))));
+            assertThat(metadata2.getExpirationTime(), is(nextExpectedExpirationTime));
+            log.info(">>>> next expiration time: {}", metadata2.getExpirationTime());
 
             verify(mediaLoader, times(count + 1)).loadImage(eq(mediaFile));
             verify(mediaFile,   times(count)).getLatestModificationTime();

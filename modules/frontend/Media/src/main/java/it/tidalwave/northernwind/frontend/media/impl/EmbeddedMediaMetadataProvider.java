@@ -76,7 +76,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           {
             log.info("getMetadataString({}, {})", mediaId, format);
             final long time = System.currentTimeMillis();
-            final MetadataBag metadata = metadataCache.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata = metadataCache.findMetadataById(mediaId, siteNodeProperties);
             final String string = interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
 
@@ -100,7 +100,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      *
      ******************************************************************************************************************/
     /* package */ String interpolateMedatadaString (final @Nonnull Id mediaId,
-                                                    final @Nonnull MetadataBag metadata,
+                                                    final @Nonnull Metadata metadata,
                                                     final @Nonnull String format,
                                                     final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException

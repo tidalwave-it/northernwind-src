@@ -149,7 +149,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));
         when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
 
-        final MetadataBag metadata = metadataBuilder.build();
+        final Metadata metadata = metadataBuilder.build();
         
         final String result = fixture.interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
         

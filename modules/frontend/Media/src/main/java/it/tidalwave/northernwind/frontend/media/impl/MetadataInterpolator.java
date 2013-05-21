@@ -44,7 +44,7 @@ public interface MetadataInterpolator
     @RequiredArgsConstructor @Getter @ToString
     public class Context
       {
-        private final MetadataBag metadata;
+        private final Metadata metadata;
         
         private final Map<String, String> lensMap;
       }

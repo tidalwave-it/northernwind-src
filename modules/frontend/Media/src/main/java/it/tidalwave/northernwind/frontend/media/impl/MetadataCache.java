@@ -35,6 +35,9 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
  *
+ * This service implements a {@link Metadata} provider with a cache policy for reducing the accesses to the actual data 
+ * provider.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -43,17 +46,17 @@ public interface MetadataCache
   {
     /*******************************************************************************************************************
      *
-     * Finds metadata for the given id.
+     * Finds a {@link Metadata} item for the given id. The returned item could be cached.
      *
      * @param  mediaId            the media id
      * @param  siteNodeProperties the configuration properties
-     * @return                    the {@code Media}
-     * @throws NotFoundException  if no {@code Media} is found
+     * @return                    the {@code Metadata}
+     * @throws NotFoundException  if no {@code Metadata} is found
      *
      ******************************************************************************************************************/
     @Nonnull
-    public MetadataBag findMetadataById (@Nonnull Id mediaId,
-                                         @Nonnull ResourceProperties siteNodeProperties)
+    public Metadata findMetadataById (@Nonnull Id mediaId,
+                                      @Nonnull ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException;
     
     public int getMedatataExpirationTime();

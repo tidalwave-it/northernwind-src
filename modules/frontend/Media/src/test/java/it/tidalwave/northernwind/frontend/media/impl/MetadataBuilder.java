@@ -76,7 +76,7 @@ class MetadataBuilder
     private String xmpAuxLensId;
 
     @Nonnull
-    public MetadataBag build()
+    public Metadata build()
       throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException 
       {
         final TIFF tiff = new TIFF();
@@ -96,6 +96,6 @@ class MetadataBuilder
         exif.setExposureBiasValue(exifExposureBiasValue);
         exif.setISOSpeedRatings(exifIsoSpeedRatings);
         
-        return new MetadataBag(tiff, exif, iptc, xmp, 0);
+        return new Metadata(tiff, exif, iptc, xmp, 0);
       }
   }

@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  **********************************************************************************************************************/
 @Configurable(preConstruction = true)
 @Getter @ToString @Slf4j @RequiredArgsConstructor
-class MetadataBag 
+class Metadata 
   {
     @Inject
     private MediaLoader mediaLoader;
@@ -83,7 +83,7 @@ class MetadataBag
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public MetadataBag (final @Nonnull ResourceFile file,
+    public Metadata (final @Nonnull ResourceFile file,
                         final @Nonnegative int expirationPeriod) 
       throws IOException 
       {

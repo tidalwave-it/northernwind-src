@@ -57,7 +57,7 @@ public class DefaultMetadataCache implements MetadataCache
     @Inject @Nonnull
     private MediaLoader mediaLoader;
 
-    /* package */ final Map<Id, MetadataBag> metadataMapById = new HashMap<>();
+    /* package */ final Map<Id, Metadata> metadataMapById = new HashMap<>();
 
     /*******************************************************************************************************************
      *
@@ -66,41 +66,41 @@ public class DefaultMetadataCache implements MetadataCache
      ******************************************************************************************************************/
     // FIXME: shouldn't synchronize the whole method, only map manipulation
     @Override @Nonnull
-    public synchronized MetadataBag findMetadataById (final @Nonnull Id mediaId,
-                                                      final @Nonnull ResourceProperties siteNodeProperties)
+    public synchronized Metadata findMetadataById (final @Nonnull Id mediaId,
+                                                   final @Nonnull ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException
       {
         log.debug("findMetadataById({}, ...)", mediaId);
-        MetadataBag metadataBag = metadataMapById.get(mediaId);
+        Metadata metadata = metadataMapById.get(mediaId);
 
-        if ((metadataBag != null) && metadataBag.getExpirationTime().isAfterNow())
+        if ((metadata != null) && metadata.getExpirationTime().isAfterNow())
           {
-            return metadataBag;
+            return metadata;
           }
         
         final ResourceFile file = mediaLoader.findMediaResourceFile(siteNodeProperties, mediaId);
         
-        if (metadataBag != null)
+        if (metadata != null)
           {
             log.debug(">>>> checking for file modification...");
             
-            if (file.getLatestModificationTime().isAfter(metadataBag.getCreationTime()))
+            if (file.getLatestModificationTime().isAfter(metadata.getCreationTime()))
               {
                 log.debug(">>>> media file is more recent than metadata");
-                metadataBag = null;  
+                metadata = null;  
               }
             else
               {
-                metadataBag.postponeExpirationTime();
+                metadata.postponeExpirationTime();
               }
           }
         
-        if (metadataBag == null) 
+        if (metadata == null) 
           {
-            metadataBag = new MetadataBag(file, medatataExpirationTime);
-            metadataMapById.put(mediaId, metadataBag);
+            metadata = new Metadata(file, medatataExpirationTime);
+            metadataMapById.put(mediaId, metadata);
           }
 
-        return metadataBag;
+        return metadata;
       }
   }
