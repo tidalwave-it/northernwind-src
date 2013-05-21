@@ -55,6 +55,6 @@
     <context:spring-configured />
 
     <bean id="fixture" 
-          class="it.tidalwave.northernwind.frontend.media.impl.interpolator.DefaultMetadataInterpolatorFactory" />
+          class="it.tidalwave.northernwind.frontend.media.impl.interpolator.ScanningMetadataInterpolatorFactory" />
     
 </beans>

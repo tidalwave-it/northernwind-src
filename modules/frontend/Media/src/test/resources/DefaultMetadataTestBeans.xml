@@ -44,6 +44,6 @@
     <context:spring-configured />
 
     <bean id="metadataInterpolators" 
-          class="it.tidalwave.northernwind.frontend.media.impl.interpolator.DefaultMetadataInterpolatorFactory" />
+          class="it.tidalwave.northernwind.frontend.media.impl.interpolator.ScanningMetadataInterpolatorFactory" />
         
 </beans>

@@ -48,7 +48,7 @@ import static java.util.Arrays.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultMetadataInterpolatorFactory implements MetadataInterpolatorFactory
+public class ScanningMetadataInterpolatorFactory implements MetadataInterpolatorFactory
   {
     @Getter
     private final List<MetadataInterpolator> interpolators = new ArrayList<>();

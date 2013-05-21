@@ -48,7 +48,7 @@ import static org.hamcrest.CoreMatchers.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultMetadataInterpolatorFactoryTest
+public class ScanningMetadataInterpolatorFactoryTest
   {
     private ApplicationContext context;
 
@@ -61,7 +61,7 @@ public class DefaultMetadataInterpolatorFactoryTest
     public void setupFixture()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultMetadataInterpolatorFactoryTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("ScanningMetadataInterpolatorFactoryTestBeans.xml");
         fixture = context.getBean(MetadataInterpolatorFactory.class);
       }
     

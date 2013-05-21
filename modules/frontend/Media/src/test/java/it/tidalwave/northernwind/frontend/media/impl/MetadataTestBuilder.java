@@ -27,7 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.DefaultMetadataInterpolatorFactory;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.ScanningMetadataInterpolatorFactory;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.HashMap;
