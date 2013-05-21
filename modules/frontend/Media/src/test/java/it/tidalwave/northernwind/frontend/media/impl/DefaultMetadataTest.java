@@ -94,7 +94,7 @@ public class DefaultMetadataTest
           {
               {
                 new MetadataTestBuilder().withXmpDcTitle("The title 1")
-                                         .withExifModel("Model 1")
+                                         .withExifModel("Model1")
                                          .withExifFocalLength(new Rational(70))
                                          .withExifExposureTime(new Rational(1, 640))
                                          .withExifFNumber(new Rational(11))
@@ -102,11 +102,11 @@ public class DefaultMetadataTest
                                          .withExifIsoSpeedRatings(100)
                                          .withXmpAuxLensId("1"),
                 "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo",
-                "Foo bar Model 1 + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title 1 baz bar foo"
+                "Foo bar Model1 + Lens1 @ 70 mm, 1/640 sec @ f/11.0, -0.67 EV, ISO 100 foo bar The title 1 baz bar foo"
               },
               {
                 new MetadataTestBuilder().withXmpDcTitle("The title 2")
-                                         .withExifModel("Model 2")
+                                         .withExifModel("Model2")
                                          .withExifFocalLength(new Rational(20))
                                          .withExifExposureTime(new Rational(1, 20))
                                          .withExifFNumber(new Rational(8))
@@ -114,7 +114,7 @@ public class DefaultMetadataTest
                                          .withExifIsoSpeedRatings(200)
                                          .withXmpAuxLensId("2"),
                 "Foo bar $shootingData$ foo bar $XMP.dc.title$ baz bar foo",
-                "Foo bar Model 2 + Lens2 @ 20 mm, 1/20 sec @ f/8.0, +0.33 EV, ISO 200 foo bar The title 2 baz bar foo"
+                "Foo bar Model2 + Lens2 @ 20 mm, 1/20 sec @ f/8.0, +0.33 EV, ISO 200 foo bar The title 2 baz bar foo"
               }   
           };
       }    
