@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.util.Id;
@@ -59,10 +58,4 @@ public interface MetadataCache
     public Metadata findMetadataById (@Nonnull Id mediaId,
                                       @Nonnull ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException;
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnegative
-    public int getMedatataExpirationTime();
   }
