@@ -40,6 +40,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.imajine.image.EditableImage;
 
 /***********************************************************************************************************************
  *
@@ -97,7 +98,9 @@ public class DefaultMetadataCache implements MetadataCache
         
         if (metadata == null) 
           {
-            metadata = new Metadata(file, medatataExpirationTime);
+            log.debug(">>>> loading medatata...");
+            final EditableImage image = mediaLoader.loadImage(file);
+            metadata = new Metadata(image, medatataExpirationTime);
             metadataMapById.put(mediaId, metadata);
           }
 

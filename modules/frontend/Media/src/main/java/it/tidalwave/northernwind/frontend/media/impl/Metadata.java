@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Map;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -38,9 +37,7 @@ import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -52,13 +49,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true)
 @Getter @ToString @Slf4j @RequiredArgsConstructor
 class Metadata 
   {
-    @Inject
-    private MediaLoader mediaLoader;
-    
     @Nonnull
     private final TIFF tiff;
     
@@ -83,12 +76,10 @@ class Metadata
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public Metadata (final @Nonnull ResourceFile file,
-                        final @Nonnegative int expirationPeriod) 
+    public Metadata (final @Nonnull EditableImage image,
+                     final @Nonnegative int expirationPeriod) 
       throws IOException 
       {
-        log.debug(">>>> loading medatata...");
-        final EditableImage image = mediaLoader.loadImage(file);
         tiff = image.getMetadata(TIFF.class);
         exif = image.getMetadata(EXIF.class);
         iptc = image.getMetadata(IPTC.class);
