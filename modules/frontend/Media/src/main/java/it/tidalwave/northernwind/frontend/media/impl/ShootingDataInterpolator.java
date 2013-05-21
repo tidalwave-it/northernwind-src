@@ -43,7 +43,7 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
   {
     public ShootingDataInterpolator() 
       {
-        super("$shootingData$");
+        super("shootingData");
       }
     
     @Override @Nonnull
@@ -72,6 +72,6 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
 
         builder.append(", ISO ").append(exif.getISOSpeedRatings().intValue());
 
-        return template.replace(macro, builder.toString());
+        return template.replace("$" + macro + "$", builder.toString());
       }
   }
