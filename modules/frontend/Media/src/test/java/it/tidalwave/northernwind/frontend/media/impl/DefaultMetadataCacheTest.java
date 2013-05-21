@@ -28,6 +28,7 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
+import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
@@ -61,7 +62,15 @@ public class DefaultMetadataCacheTest
     
     private MediaLoader mediaLoader;
     
-    private ImageTestBuilder imageBuilder;
+    private EditableImage image;
+    
+    private TIFF tiff;
+    
+    private EXIF exif;
+    
+    private IPTC iptc;
+    
+    private XMP xmp;
     
     private Id mediaId;
     
@@ -82,12 +91,20 @@ public class DefaultMetadataCacheTest
         fixture = context.getBean(DefaultMetadataCache.class);
         mediaLoader = context.getBean(MediaLoader.class);
         mediaFile = mock(ResourceFile.class);
-        imageBuilder = new ImageTestBuilder();
+        tiff = new TIFF();
+        exif = new EXIF();
+        iptc = new IPTC();
+        xmp = new XMP();
+        image = new ImageTestBuilder().withTiff(tiff)
+                                      .withExif(exif)
+                                      .withIptc(iptc)
+                                      .withXmp(xmp)
+                                      .build();
         siteNodeProperties = mock(ResourceProperties.class);
         mediaId = new Id("mediaId");
         
         when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
-        when(mediaLoader.loadImage(same(mediaFile))).thenReturn(imageBuilder.image);
+        when(mediaLoader.loadImage(same(mediaFile))).thenReturn(image);
         
         assertThat(fixture.getMedatataExpirationTime(), is(600));
         baseTime = new DateTime(1369080000000L);
@@ -104,10 +121,10 @@ public class DefaultMetadataCacheTest
         final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
-        assertThat(metadata.getDirectory(TIFF.class), sameInstance(imageBuilder.tiff));
-        assertThat(metadata.getDirectory(EXIF.class), sameInstance(imageBuilder.exif));
-        assertThat(metadata.getDirectory(IPTC.class), sameInstance(imageBuilder.iptc));
-        assertThat(metadata.getDirectory(XMP.class),  sameInstance(imageBuilder.xmp));
+        assertThat(metadata.getDirectory(TIFF.class), sameInstance(tiff));
+        assertThat(metadata.getDirectory(EXIF.class), sameInstance(exif));
+        assertThat(metadata.getDirectory(IPTC.class), sameInstance(iptc));
+        assertThat(metadata.getDirectory(XMP.class),  sameInstance(xmp));
         assertThat(metadata.getCreationTime(),   is(baseTime));
         assertThat(metadata.getExpirationTime(), is(expectedExpirationTime));
         

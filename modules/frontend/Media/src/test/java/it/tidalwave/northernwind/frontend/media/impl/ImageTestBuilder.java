@@ -31,6 +31,9 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.Directory;
 import org.imajine.image.metadata.EXIF;
@@ -38,6 +41,7 @@ import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 import org.imajine.image.op.CreateOp;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -45,23 +49,27 @@ import org.imajine.image.op.CreateOp;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@NoArgsConstructor @AllArgsConstructor
 class ImageTestBuilder 
   {
-    //        final TIFF tiff = mock(TIFF.class);
-    //        final EXIF exif = mock(EXIF.class);
-    //        final IPTC iptc = mock(IPTC.class);
-    //        final XMP xmp = mock(XMP.class);
-    //
-    final TIFF tiff = new TIFF();
-    final EXIF exif = new EXIF();
-    final IPTC iptc = new IPTC();
-    final XMP xmp = new XMP();
-    final EditableImage image = EditableImage.create(new CreateOp(10, 10, EditableImage.DataType.BYTE)); // mock(EditableImage.class);
+    @Wither
+    private TIFF tiff;
+    
+    @Wither
+    private EXIF exif;
+    
+    @Wither
+    private IPTC iptc;
+    
+    @Wither
+    private XMP xmp;
 
-    public ImageTestBuilder()
+    @Nonnull
+    public EditableImage build()
       throws Exception 
       {
         // TODO: EditableImage getMetadata() can't be mocked :-( because it's final - use PowerMock?
+        final EditableImage image = EditableImage.create(new CreateOp(10, 10, EditableImage.DataType.BYTE)); // mock(EditableImage.class);
         final Field metadataMapByClassField = image.getClass().getDeclaredField("metadataMapByClass");
         metadataMapByClassField.setAccessible(true);
         final Map<Class<? extends Directory>, List<? extends Directory>> metadataMapByClass = (Map<Class<? extends Directory>, List<? extends Directory>>) metadataMapByClassField.get(image);
@@ -73,5 +81,7 @@ class ImageTestBuilder
         //        when(image.getMetadata(eq(EXIF.class))).thenReturn(exif);
         //        when(image.getMetadata(eq(IPTC.class))).thenReturn(iptc);
         //        when(image.getMetadata(eq(XMP.class))).thenReturn(xmp);
+        
+        return image;
       }
   }

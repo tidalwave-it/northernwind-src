@@ -36,6 +36,11 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
+import org.imajine.image.EditableImage;
+import org.imajine.image.metadata.EXIF;
+import org.imajine.image.metadata.IPTC;
+import org.imajine.image.metadata.TIFF;
+import org.imajine.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
@@ -76,24 +81,28 @@ class MetadataTestBuilder
     public Metadata build()
       throws Exception 
       {
-        final ImageTestBuilder imageBuilder = new ImageTestBuilder();
-//        final TIFF tiff = new TIFF();
-//        final EXIF exif = new EXIF();
-//        final IPTC iptc = new IPTC();
-//        final XMP xmp = new XMP();
+        final TIFF tiff = new TIFF();
+        final EXIF exif = new EXIF();
+        final IPTC iptc = new IPTC();
+        final XMP xmp = new XMP();
         final Map<String, String> xmpProperties = new HashMap<>();
         xmpProperties.put("dc:title[1]", xmpDcTitle);
         xmpProperties.put("aux:LensID", xmpAuxLensId);
-        final Method method = imageBuilder.xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
+        final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
         method.setAccessible(true);
-        method.invoke(imageBuilder.xmp, xmpProperties);
-        imageBuilder.exif.setModel(exifModel);
-        imageBuilder.exif.setFocalLength(exifFocalLength);
-        imageBuilder.exif.setExposureTime(exifExposureTime);
-        imageBuilder.exif.setFNumber(exifFNumber);
-        imageBuilder.exif.setExposureBiasValue(exifExposureBiasValue);
-        imageBuilder.exif.setISOSpeedRatings(exifIsoSpeedRatings);
+        method.invoke(xmp, xmpProperties);
+        exif.setModel(exifModel);
+        exif.setFocalLength(exifFocalLength);
+        exif.setExposureTime(exifExposureTime);
+        exif.setFNumber(exifFNumber);
+        exif.setExposureBiasValue(exifExposureBiasValue);
+        exif.setISOSpeedRatings(exifIsoSpeedRatings);
+        final EditableImage image = new ImageTestBuilder().withTiff(tiff)
+                                                          .withExif(exif)
+                                                          .withIptc(iptc)
+                                                          .withXmp(xmp)
+                                                          .build();
         
-        return new DefaultMetadata(imageBuilder.image, 0);
+        return new DefaultMetadata(image, 0);
       }
   }
