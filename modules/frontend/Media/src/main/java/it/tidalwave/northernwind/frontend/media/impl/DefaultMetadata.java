@@ -42,11 +42,13 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import lombok.RequiredArgsConstructor;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 
 /***********************************************************************************************************************
  *
+ * A default implementation of {@link Metadata}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -62,7 +64,7 @@ class DefaultMetadata implements Metadata
     
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
@@ -73,10 +75,10 @@ class DefaultMetadata implements Metadata
     
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public String interpolateMetadataString (final @Nonnull ResourceProperties siteNodeProperties,
                                              final @Nonnull String format)
       throws IOException
