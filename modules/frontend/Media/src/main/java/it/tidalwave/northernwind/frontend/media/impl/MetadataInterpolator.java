@@ -35,12 +35,18 @@ import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * An interface for classes capable to interpolate some metadata items in a template.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface MetadataInterpolator 
   {
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @RequiredArgsConstructor @Getter @ToString
     public class Context
       {
@@ -49,9 +55,25 @@ public interface MetadataInterpolator
         private final Map<String, String> lensMap;
       }
     
+    /*******************************************************************************************************************
+     *
+     * Returns the macro that this interpolator is capable to expand.
+     * 
+     * @return  the macro
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getId();
     
+    /*******************************************************************************************************************
+     *
+     * Interpolates a template.
+     * 
+     * @param  template  the template
+     * @param  context   a context
+     * @return           the interpolated string
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public String interpolate (@Nonnull String string, @Nonnull Context context);
+    public String interpolate (@Nonnull String template, @Nonnull Context context);
   }
