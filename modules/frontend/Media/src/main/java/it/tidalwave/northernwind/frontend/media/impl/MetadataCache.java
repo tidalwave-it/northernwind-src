@@ -49,12 +49,12 @@ public interface MetadataCache
      * Finds a {@link Metadata} item for the given id. The returned item could be cached.
      *
      * @param  mediaId            the media id
-     * @param  siteNodeProperties the configuration properties
+     * @param  properties         some configuration properties
      * @return                    the {@code Metadata}
      * @throws NotFoundException  if no {@code Metadata} is found
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Metadata findMetadataById (@Nonnull Id mediaId, @Nonnull ResourceProperties siteNodeProperties)
+    public Metadata findMetadataById (@Nonnull Id mediaId, @Nonnull ResourceProperties properties)
       throws NotFoundException, IOException;
   }
