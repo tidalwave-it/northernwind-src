@@ -32,10 +32,6 @@ import java.io.IOException;
 import org.joda.time.DateTime;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.metadata.TIFF;
-import org.imajine.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
