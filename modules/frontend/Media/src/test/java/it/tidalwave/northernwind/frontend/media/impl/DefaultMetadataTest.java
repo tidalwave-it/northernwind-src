@@ -38,9 +38,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
         
 /***********************************************************************************************************************
  *
@@ -51,7 +55,7 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class DefaultMetadataTest
   {
-    private Id mediaId;
+    private ApplicationContext context;
     
     private ResourceProperties properties;
     
@@ -62,6 +66,8 @@ public class DefaultMetadataTest
     public void setup()
       throws Exception
       {
+        context = new ClassPathXmlApplicationContext("DefaultMetadataTestBeans.xml");
+        context.getBean(MetadataInterpolatorFactory.class); // initialize it
         properties = mock(ResourceProperties.class);
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
         when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));

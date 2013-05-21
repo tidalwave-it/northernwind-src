@@ -103,8 +103,8 @@ class MetadataTestBuilder
                                                           .withIptc(iptc)
                                                           .withXmp(xmp)
                                                           .build();
-        final DefaultMetadataInterpolatorFactory interpolatorFactory = new DefaultMetadataInterpolatorFactory();
-        interpolatorFactory.initialize();
-        return new DefaultMetadata("test", image, interpolatorFactory);
+//        final DefaultMetadataInterpolatorFactory interpolatorFactory = new DefaultMetadataInterpolatorFactory();
+//        interpolatorFactory.initialize();
+        return new DefaultMetadata("test", image);
       }
   }

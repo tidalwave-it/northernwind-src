@@ -27,10 +27,17 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
+import it.tidalwave.util.spring.ClassScanner;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.core.type.filter.TypeFilter;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import static java.util.Arrays.*;
 
 /***********************************************************************************************************************
  *
@@ -38,6 +45,7 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultMetadataInterpolatorFactory implements MetadataInterpolatorFactory
   {
     @Getter
@@ -47,8 +55,34 @@ public class DefaultMetadataInterpolatorFactory implements MetadataInterpolatorF
     public void initialize()
       {
         interpolators.clear();
-        // FIXME: discover them with an annotation
-        interpolators.add(new XmlDcTitleInterpolator());
-        interpolators.add(new ShootingDataInterpolator());
+        log.info("Scanning for metadata interpolators...");
+        
+        final ClassScanner scanner = new ClassScanner().withIncludeFilter(new TypeFilter() 
+          {
+            // FIXME: doesn't check through the whole hierarchy
+            @Override
+            public boolean match (final @Nonnull MetadataReader metadataReader, 
+                                  final @Nonnull MetadataReaderFactory metadataReaderFactory)
+              {
+                final List<String> interfaceNames = asList(metadataReader.getClassMetadata().getInterfaceNames());
+                final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
+                
+                return interfaceNames.contains(MetadataInterpolator.class.getName()) ||
+                       superClassName.equals(MetadataInterpolatorSupport.class.getName());
+              }
+          });
+        
+        for (final Class<?> clazz : scanner.findClasses())
+          {
+            try 
+              {
+                interpolators.add((MetadataInterpolator)clazz.newInstance());
+                log.info(">>>> added metadata interpolator: {}", clazz);
+              } 
+            catch (InstantiationException | IllegalAccessException e) 
+              {
+                log.warn("Couldn't add metadata interpolator: " + clazz, e);
+              }
+          }
       }
   }
