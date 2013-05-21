@@ -44,7 +44,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
@@ -55,20 +54,11 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Getter @ToString @Slf4j @RequiredArgsConstructor
+@Getter @ToString @Slf4j
 class DefaultMetadata implements Metadata
   {
     @Nonnull
-    private final TIFF tiff;
-    
-    @Nonnull
-    private final EXIF exif;
-    
-    @Nonnull
-    private final IPTC iptc;
-    
-    @Nonnull
-    private final XMP xmp;
+    private final EditableImage image;
 
     @Nonnegative
     private final int expirationPeriod;
@@ -86,14 +76,22 @@ class DefaultMetadata implements Metadata
                             final @Nonnegative int expirationPeriod) 
       throws IOException 
       {
-        tiff = image.getMetadata(TIFF.class);
-        exif = image.getMetadata(EXIF.class);
-        iptc = image.getMetadata(IPTC.class);
-        xmp = image.getMetadata(XMP.class);
+        this.image = image;
         this.expirationPeriod = expirationPeriod;
         expirationTime = creationTime.plusSeconds(expirationPeriod);
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public <T> T getDirectory (final @Nonnull Class<T> metadataClass)
+      {
+        return image.getMetadata(metadataClass);
+      }
+    
     /*******************************************************************************************************************
      *
      *
@@ -146,6 +144,10 @@ class DefaultMetadata implements Metadata
      ******************************************************************************************************************/
     private void log (final @Nonnull Id id) 
       {
+        final TIFF tiff = image.getMetadata(TIFF.class);
+        final EXIF exif = image.getMetadata(EXIF.class);
+        final IPTC iptc = image.getMetadata(IPTC.class);
+        final XMP xmp = image.getMetadata(XMP.class);
         final Map<String, String> xmpProperties = xmp.getXmpProperties();
         log.debug("XMP({}): {}", id, xmpProperties);
         

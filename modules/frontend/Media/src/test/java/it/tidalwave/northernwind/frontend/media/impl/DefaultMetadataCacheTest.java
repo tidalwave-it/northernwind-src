@@ -28,17 +28,10 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
-import org.imajine.image.metadata.Directory;
-import org.imajine.image.op.CreateOp;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.springframework.context.ApplicationContext;
@@ -62,40 +55,6 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class DefaultMetadataCacheTest
   {
-    static class MockedImage
-      {
-//        final TIFF tiff = mock(TIFF.class);
-//        final EXIF exif = mock(EXIF.class);
-//        final IPTC iptc = mock(IPTC.class);
-//        final XMP xmp = mock(XMP.class);
-//        
-        final TIFF tiff = new TIFF();
-        final EXIF exif = new EXIF();
-        final IPTC iptc = new IPTC();
-        final XMP xmp = new XMP();
-        
-        final EditableImage image = EditableImage.create(new CreateOp(10, 10, EditableImage.DataType.BYTE)); // mock(EditableImage.class);
-        
-        public MockedImage()
-          throws Exception
-          {
-            // TODO: EditableImage getMetadata() can't be mocked :-( because it's final - use PowerMock?
-            final Field metadataMapByClassField = image.getClass().getDeclaredField("metadataMapByClass");
-            metadataMapByClassField.setAccessible(true);
-            final Map<Class<? extends Directory>, List<? extends Directory>> metadataMapByClass = 
-                    (Map<Class<? extends Directory>, List<? extends Directory>>) metadataMapByClassField.get(image);
-            metadataMapByClass.put(TIFF.class, Collections.singletonList(tiff));
-            metadataMapByClass.put(EXIF.class, Collections.singletonList(exif));
-            metadataMapByClass.put(IPTC.class, Collections.singletonList(iptc));
-            metadataMapByClass.put(XMP.class, Collections.singletonList(xmp));
-
-    //        when(image.getMetadata(eq(TIFF.class))).thenReturn(tiff);
-    //        when(image.getMetadata(eq(EXIF.class))).thenReturn(exif);
-    //        when(image.getMetadata(eq(IPTC.class))).thenReturn(iptc);
-    //        when(image.getMetadata(eq(XMP.class))).thenReturn(xmp);
-          }
-      }
-    
     private ApplicationContext context;
 
     private DefaultMetadataCache fixture;
@@ -145,10 +104,10 @@ public class DefaultMetadataCacheTest
         final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
-        assertThat(metadata.getTiff(), sameInstance(mockedImage.tiff));
-        assertThat(metadata.getExif(), sameInstance(mockedImage.exif));
-        assertThat(metadata.getIptc(), sameInstance(mockedImage.iptc));
-        assertThat(metadata.getXmp(),  sameInstance(mockedImage.xmp));
+        assertThat(metadata.getDirectory(TIFF.class), sameInstance(mockedImage.tiff));
+        assertThat(metadata.getDirectory(EXIF.class), sameInstance(mockedImage.exif));
+        assertThat(metadata.getDirectory(IPTC.class), sameInstance(mockedImage.iptc));
+        assertThat(metadata.getDirectory(XMP.class),  sameInstance(mockedImage.xmp));
         assertThat(metadata.getCreationTime(),   is(baseTime));
         assertThat(metadata.getExpirationTime(), is(expectedExpirationTime));
         

@@ -28,15 +28,10 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.imajine.image.Rational;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.metadata.TIFF;
-import org.imajine.image.metadata.XMP;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -79,25 +74,26 @@ class MetadataTestBuilder
 
     @Nonnull
     public Metadata build()
-      throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException 
+      throws Exception 
       {
-        final TIFF tiff = new TIFF();
-        final EXIF exif = new EXIF();
-        final IPTC iptc = new IPTC();
-        final XMP xmp = new XMP();
+        final MockedImage mockedImage = new MockedImage();
+//        final TIFF tiff = new TIFF();
+//        final EXIF exif = new EXIF();
+//        final IPTC iptc = new IPTC();
+//        final XMP xmp = new XMP();
         final Map<String, String> xmpProperties = new HashMap<>();
         xmpProperties.put("dc:title[1]", xmpDcTitle);
         xmpProperties.put("aux:LensID", xmpAuxLensId);
-        final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
+        final Method method = mockedImage.xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
         method.setAccessible(true);
-        method.invoke(xmp, xmpProperties);
-        exif.setModel(exifModel);
-        exif.setFocalLength(exifFocalLength);
-        exif.setExposureTime(exifExposureTime);
-        exif.setFNumber(exifFNumber);
-        exif.setExposureBiasValue(exifExposureBiasValue);
-        exif.setISOSpeedRatings(exifIsoSpeedRatings);
+        method.invoke(mockedImage.xmp, xmpProperties);
+        mockedImage.exif.setModel(exifModel);
+        mockedImage.exif.setFocalLength(exifFocalLength);
+        mockedImage.exif.setExposureTime(exifExposureTime);
+        mockedImage.exif.setFNumber(exifFNumber);
+        mockedImage.exif.setExposureBiasValue(exifExposureBiasValue);
+        mockedImage.exif.setISOSpeedRatings(exifIsoSpeedRatings);
         
-        return new DefaultMetadata(tiff, exif, iptc, xmp, 0);
+        return new DefaultMetadata(mockedImage.image, 0);
       }
   }
