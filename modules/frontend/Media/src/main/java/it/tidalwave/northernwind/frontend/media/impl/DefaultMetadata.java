@@ -84,8 +84,8 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String interpolateMetadataString (final @Nonnull ResourceProperties siteNodeProperties,
-                                             final @Nonnull String template)
+    public String interpolateString (final @Nonnull String template, 
+                                     final @Nonnull ResourceProperties properties)
       throws IOException
       {
         if (log.isDebugEnabled())
@@ -95,7 +95,7 @@ class DefaultMetadata implements Metadata
         
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
         //            final String string = formatted(iptc.getObject(517, String.class));
-        final Context context = new Context(this, getLensMap(siteNodeProperties));
+        final Context context = new Context(this, getLensMap(properties));
         final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
         // FIXME: discover them with an annotation
         metadataInterpolators.add(new XmlDcTitleInterpolator());

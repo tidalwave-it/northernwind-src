@@ -45,12 +45,12 @@ public interface Metadata
      *
      * Interpolates the given template expanding macros with values from metadata items.
      * 
-     * @param template      the template
+     * @param template    the template
      * @param properties  some properties for customization 
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateMetadataString (@Nonnull ResourceProperties properties, @Nonnull String template)
+    public String interpolateString (@Nonnull String template, @Nonnull ResourceProperties properties)
       throws IOException;
 
     /*******************************************************************************************************************

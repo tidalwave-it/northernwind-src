@@ -81,11 +81,10 @@ public class EmbeddedMediaMetadataProviderTest
       throws Exception
       {
         final Metadata metadata = mock(Metadata.class);
-        when(metadata.interpolateMetadataString(same(siteNodeProperties), anyString()))
-                .thenReturn("result");
+        when(metadata.interpolateString(anyString(), same(siteNodeProperties))).thenReturn("result");
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties))).thenReturn(metadata);
         
-        final String result = fixture.getMetadataString(mediaId, "format", siteNodeProperties);
+        final String result = fixture.getMetadataString(mediaId, "template", siteNodeProperties);
         
         assertThat(result, is("result"));
       }
@@ -100,7 +99,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
                 .thenThrow(new NotFoundException("Media not found"));
         
-        final String result = fixture.getMetadataString(mediaId, "format", siteNodeProperties);
+        final String result = fixture.getMetadataString(mediaId, "template", siteNodeProperties);
 
         assertThat(result, is(""));
       }
@@ -115,7 +114,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
                 .thenThrow(new IOException("Cannot open file"));
         
-        final String result = fixture.getMetadataString(mediaId, "format", siteNodeProperties);
+        final String result = fixture.getMetadataString(mediaId, "template", siteNodeProperties);
 
         assertThat(result, is(""));
       }

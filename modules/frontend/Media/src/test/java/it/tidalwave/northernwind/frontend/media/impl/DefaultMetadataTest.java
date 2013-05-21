@@ -53,7 +53,7 @@ public class DefaultMetadataTest
   {
     private Id mediaId;
     
-    private ResourceProperties siteNodeProperties;
+    private ResourceProperties properties;
     
     /*******************************************************************************************************************
      *
@@ -62,10 +62,10 @@ public class DefaultMetadataTest
     public void setup()
       throws Exception
       {
-        siteNodeProperties = mock(ResourceProperties.class);
+        properties = mock(ResourceProperties.class);
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
         when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));
-        when(siteNodeProperties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
+        when(properties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
       }
     
     /*******************************************************************************************************************
@@ -73,13 +73,13 @@ public class DefaultMetadataTest
      ******************************************************************************************************************/
     @Test(dataProvider = "metadataProvider")
     public void must_properly_interpolate_metadata_string (final @Nonnull MetadataTestBuilder metadataBuilder,
-                                                           final @Nonnull String format,
+                                                           final @Nonnull String template,
                                                            final @Nonnull String expectedResult)
       throws Exception
       {
         final Metadata fixture = metadataBuilder.build();
         
-        final String result = fixture.interpolateMetadataString(siteNodeProperties, format);
+        final String result = fixture.interpolateString(template, properties);
         
         assertThat(result, is(expectedResult));
       }
