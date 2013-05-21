@@ -33,6 +33,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
  *
+ * A container of metadata for a given media item.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -41,17 +43,24 @@ interface Metadata
   {
     /*******************************************************************************************************************
      *
-     *
+     * Interpolates the given template expanding macros with values from metadata items.
+     * 
+     * @param template      the template
+     * @param properties  some properties for customization 
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateMetadataString (@Nonnull ResourceProperties siteNodeProperties, @Nonnull String format)
+    public String interpolateMetadataString (@Nonnull ResourceProperties properties, @Nonnull String template)
       throws IOException;
 
     /*******************************************************************************************************************
      *
-     *
+     * Returns a metadata directory (e.g. TIFF, EXIF, etc...)
+     * 
+     * @param   directoryClass  the directory type
+     * @return  the directory
+     * 
      ******************************************************************************************************************/
     @Nonnull
-    public <T> T getDirectory (@Nonnull Class<T> metadataClass);
+    public <T> T getDirectory (@Nonnull Class<T> directoryClass);
   }
