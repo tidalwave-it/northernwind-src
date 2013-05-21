@@ -27,15 +27,19 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import java.io.IOException;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
-        
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -55,8 +59,6 @@ public class EmbeddedMediaMetadataProviderTest
     
     private ResourceProperties siteNodeProperties;
     
-    private ResourceFile mediaFile;
-    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -67,11 +69,54 @@ public class EmbeddedMediaMetadataProviderTest
         context = new ClassPathXmlApplicationContext("EmbeddedMediaMetadataProviderTestBeans.xml");
         fixture = context.getBean(EmbeddedMediaMetadataProvider.class);
         metadataCache = context.getBean(MetadataCache.class);
-        mediaFile = mock(ResourceFile.class);
         siteNodeProperties = mock(ResourceProperties.class);
         mediaId = new Id("mediaId");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_the_interpolated_string_when_metadata_is_found() 
+      throws Exception
+      {
+        final Metadata metadata = mock(Metadata.class);
+        when(metadata.interpolateMetadataString(eq(mediaId), same(siteNodeProperties), anyString()))
+                .thenReturn("result");
+        when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties))).thenReturn(metadata);
+        
+        final String result = fixture.getMetadataString(mediaId, "format", siteNodeProperties);
+        
+        assertThat(result, is("result"));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_empty_string_when_media_not_found()
+      throws Exception
+      {
+        when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
+                .thenThrow(new NotFoundException("Media not found"));
+        
+        final String result = fixture.getMetadataString(mediaId, "format", siteNodeProperties);
 
-//        when(metadataCache.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
-//        when(metadataCache.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
+        assertThat(result, is(""));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_empty_string_when_io_error()
+      throws Exception
+      {
+        when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
+                .thenThrow(new IOException("Cannot open file"));
+        
+        final String result = fixture.getMetadataString(mediaId, "format", siteNodeProperties);
+
+        assertThat(result, is(""));
       }
   }
