@@ -95,6 +95,7 @@ public class DefaultMetadataCache implements MetadataCache
 
         if ((metadata != null) && metadata.getExpirationTime().isAfterNow())
           {
+            log.debug(">>>> returning cached data which will expire at {}", metadata.getExpirationTime());
             return metadata.getMetadata();
           }
         
@@ -106,7 +107,7 @@ public class DefaultMetadataCache implements MetadataCache
             
             if (file.getLatestModificationTime().isAfter(metadata.getCreationTime()))
               {
-                log.debug(">>>> media file is more recent than metadata");
+                log.debug(">>>>>>>> media file is more recent than metadata");
                 metadata = null;  
               }
             else
