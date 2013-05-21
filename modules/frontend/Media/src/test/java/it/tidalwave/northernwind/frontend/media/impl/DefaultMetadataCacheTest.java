@@ -121,6 +121,7 @@ public class DefaultMetadataCacheTest
         final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
+        // FIXME: the validity of loaded data must be moved to the loader test
         assertThat(metadata.getDirectory(TIFF.class), sameInstance(tiff));
         assertThat(metadata.getDirectory(EXIF.class), sameInstance(exif));
         assertThat(metadata.getDirectory(IPTC.class), sameInstance(iptc));
