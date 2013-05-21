@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class MetadataInterpolatorSupport implements MetadataInterpolator
   {
     @Getter @Nonnull
-    protected final String id;
+    protected final String macro;
     
     /*******************************************************************************************************************
      *

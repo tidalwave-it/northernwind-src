@@ -101,7 +101,7 @@ class DefaultMetadata implements Metadata
         
         for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
           {
-            if (string.contains(metadataInterpolator.getId()))
+            if (string.contains(metadataInterpolator.getMacro()))
               {
                 string = metadataInterpolator.interpolate(string, context);
               }

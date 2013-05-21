@@ -47,7 +47,7 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
       }
     
     @Override @Nonnull
-    public String interpolate (final @Nonnull String string, final @Nonnull Context context) 
+    public String interpolate (final @Nonnull String template, final @Nonnull Context context) 
       {
         final EXIF exif = context.getMetadata().getDirectory(EXIF.class);
         final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
@@ -72,6 +72,6 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
 
         builder.append(", ISO ").append(exif.getISOSpeedRatings().intValue());
 
-        return string.replace(id, builder.toString());
+        return template.replace(macro, builder.toString());
       }
   }
