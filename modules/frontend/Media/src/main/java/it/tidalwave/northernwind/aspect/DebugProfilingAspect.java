@@ -71,12 +71,12 @@ public class DebugProfilingAspect
                                                            final @Nonnull Class<T> annotationClass)
       throws NoSuchMethodException
       {
-        final String methodName = pjp.getSignature().getName();
         final MethodSignature methodSignature = (MethodSignature)pjp.getSignature();
         Method method = methodSignature.getMethod();
         
         if (method.getDeclaringClass().isInterface()) 
           {
+            final String methodName = pjp.getSignature().getName();
             method = pjp.getTarget().getClass().getDeclaredMethod(methodName, method.getParameterTypes());    
           }          
         
