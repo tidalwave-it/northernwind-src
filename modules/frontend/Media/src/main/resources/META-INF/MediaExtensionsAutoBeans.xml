@@ -67,4 +67,7 @@
     <bean id="metadataLoader"
           class="it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataLoader"/>
     
+    <bean id="metadataInterpolators" 
+          class="it.tidalwave.northernwind.frontend.media.impl.interpolator.DefaultMetadataInterpolatorFactory" />
+    
 </beans>

@@ -28,9 +28,8 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
@@ -39,16 +38,17 @@ import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmlDcTitleInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
+import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -58,7 +58,7 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @ToString @Slf4j
+@Configurable @AllArgsConstructor @ToString @Slf4j
 class DefaultMetadata implements Metadata
   {
     @Nonnull
@@ -66,6 +66,20 @@ class DefaultMetadata implements Metadata
 
     @Nonnull
     private final EditableImage image;
+    
+    @Inject @Nonnull
+    private MetadataInterpolatorFactory interpolatorFactory;
+
+    /*******************************************************************************************************************
+     *
+     *
+     * 
+     ******************************************************************************************************************/
+    public DefaultMetadata (final @Nonnull String mediaName, final @Nonnull EditableImage image)
+      {
+        this.mediaName = mediaName;
+        this.image = image;
+      }
     
     /*******************************************************************************************************************
      *
@@ -96,18 +110,14 @@ class DefaultMetadata implements Metadata
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
         //            final String string = formatted(iptc.getObject(517, String.class));
         final Context context = new Context(this, getLensMap(properties));
-        final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
-        // FIXME: discover them with an annotation
-        metadataInterpolators.add(new XmlDcTitleInterpolator());
-        metadataInterpolators.add(new ShootingDataInterpolator());
 
         String result = template;
         
-        for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
+        for (final MetadataInterpolator interpolator : interpolatorFactory.getInterpolators())
           {
-            if (result.contains("$" + metadataInterpolator.getMacro() + "$"))
+            if (result.contains("$" + interpolator.getMacro() + "$"))
               {
-                result = metadataInterpolator.interpolate(result, context);
+                result = interpolator.interpolate(result, context);
               }
           }
         

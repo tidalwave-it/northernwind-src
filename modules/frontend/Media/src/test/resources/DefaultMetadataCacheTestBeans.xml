@@ -52,4 +52,8 @@
         <constructor-arg value="it.tidalwave.northernwind.frontend.media.impl.MetadataLoader" />
     </bean>
     
+    <bean id="metadataInterpolators" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory" />
+    </bean>
+    
 </beans>

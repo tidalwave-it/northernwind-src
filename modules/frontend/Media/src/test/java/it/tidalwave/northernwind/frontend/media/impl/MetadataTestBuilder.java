@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.DefaultMetadataInterpolatorFactory;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -102,7 +103,8 @@ class MetadataTestBuilder
                                                           .withIptc(iptc)
                                                           .withXmp(xmp)
                                                           .build();
-        
-        return new DefaultMetadata("test", image);
+        final DefaultMetadataInterpolatorFactory interpolatorFactory = new DefaultMetadataInterpolatorFactory();
+        interpolatorFactory.initialize();
+        return new DefaultMetadata("test", image, interpolatorFactory);
       }
   }
