@@ -46,6 +46,8 @@ import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
+ * A default implementation of {@link MetadataCache}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -53,6 +55,11 @@ import org.joda.time.DateTime;
 @Slf4j
 public class DefaultMetadataCache implements MetadataCache
   {
+    /*******************************************************************************************************************
+     *
+     * A holder of {@code Metadata} together with expiration information.
+     *
+     ******************************************************************************************************************/
     @RequiredArgsConstructor @Getter @ToString
     class ExpirableMetadata
       {
@@ -64,6 +71,11 @@ public class DefaultMetadataCache implements MetadataCache
         @Nonnull
         private DateTime expirationTime = creationTime.plusSeconds(medatataExpirationTime);
         
+        /***************************************************************************************************************
+         *
+         * Postpones the expiration time.
+         *
+         **************************************************************************************************************/
         public void postponeExpirationTime() 
           {
             expirationTime = new DateTime().plusSeconds(medatataExpirationTime);
