@@ -27,9 +27,9 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import it.tidalwave.northernwind.frontend.media.impl.Metadata;
-import java.util.Map;
 import javax.annotation.Nonnull;
+import java.util.Map;
+import it.tidalwave.northernwind.frontend.media.impl.Metadata;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
