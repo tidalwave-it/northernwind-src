@@ -46,7 +46,7 @@ interface Metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateMetadataString (@Nonnull Id mediaId,
+    public String interpolateMetadataString (@Nonnull Id mediaId, // FIXME: useless!
                                              @Nonnull ResourceProperties siteNodeProperties,
                                              @Nonnull String format)
       throws IOException;
