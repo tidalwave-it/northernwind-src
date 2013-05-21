@@ -45,10 +45,10 @@ public class XmlDcTitleInterpolator extends MetadataInterpolatorSupport
       }
     
     @Override @Nonnull
-    public String interpolate (final @Nonnull String string, final @Nonnull Context context)
+    public String interpolate (final @Nonnull String template, final @Nonnull Context context)
       {
         final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
         
-        return string.replace(macro, formatted(xmpProperties.get("dc:title[1]")));
+        return template.replace(macro, formatted(xmpProperties.get("dc:title[1]")));
       }
   }
