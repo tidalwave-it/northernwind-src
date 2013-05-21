@@ -61,7 +61,7 @@ public class DefaultMetadataCacheTest
     
     private MediaLoader mediaLoader;
     
-    private MockedImage mockedImage;
+    private ImageTestBuilder imageBuilder;
     
     private Id mediaId;
     
@@ -82,12 +82,12 @@ public class DefaultMetadataCacheTest
         fixture = context.getBean(DefaultMetadataCache.class);
         mediaLoader = context.getBean(MediaLoader.class);
         mediaFile = mock(ResourceFile.class);
-        mockedImage = new MockedImage();
+        imageBuilder = new ImageTestBuilder();
         siteNodeProperties = mock(ResourceProperties.class);
         mediaId = new Id("mediaId");
         
         when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
-        when(mediaLoader.loadImage(same(mediaFile))).thenReturn(mockedImage.image);
+        when(mediaLoader.loadImage(same(mediaFile))).thenReturn(imageBuilder.image);
         
         assertThat(fixture.getMedatataExpirationTime(), is(600));
         baseTime = new DateTime(1369080000000L);
@@ -104,10 +104,10 @@ public class DefaultMetadataCacheTest
         final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
-        assertThat(metadata.getDirectory(TIFF.class), sameInstance(mockedImage.tiff));
-        assertThat(metadata.getDirectory(EXIF.class), sameInstance(mockedImage.exif));
-        assertThat(metadata.getDirectory(IPTC.class), sameInstance(mockedImage.iptc));
-        assertThat(metadata.getDirectory(XMP.class),  sameInstance(mockedImage.xmp));
+        assertThat(metadata.getDirectory(TIFF.class), sameInstance(imageBuilder.tiff));
+        assertThat(metadata.getDirectory(EXIF.class), sameInstance(imageBuilder.exif));
+        assertThat(metadata.getDirectory(IPTC.class), sameInstance(imageBuilder.iptc));
+        assertThat(metadata.getDirectory(XMP.class),  sameInstance(imageBuilder.xmp));
         assertThat(metadata.getCreationTime(),   is(baseTime));
         assertThat(metadata.getExpirationTime(), is(expectedExpirationTime));
         

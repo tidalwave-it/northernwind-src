@@ -76,7 +76,7 @@ class MetadataTestBuilder
     public Metadata build()
       throws Exception 
       {
-        final MockedImage mockedImage = new MockedImage();
+        final ImageTestBuilder imageBuilder = new ImageTestBuilder();
 //        final TIFF tiff = new TIFF();
 //        final EXIF exif = new EXIF();
 //        final IPTC iptc = new IPTC();
@@ -84,16 +84,16 @@ class MetadataTestBuilder
         final Map<String, String> xmpProperties = new HashMap<>();
         xmpProperties.put("dc:title[1]", xmpDcTitle);
         xmpProperties.put("aux:LensID", xmpAuxLensId);
-        final Method method = mockedImage.xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
+        final Method method = imageBuilder.xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
         method.setAccessible(true);
-        method.invoke(mockedImage.xmp, xmpProperties);
-        mockedImage.exif.setModel(exifModel);
-        mockedImage.exif.setFocalLength(exifFocalLength);
-        mockedImage.exif.setExposureTime(exifExposureTime);
-        mockedImage.exif.setFNumber(exifFNumber);
-        mockedImage.exif.setExposureBiasValue(exifExposureBiasValue);
-        mockedImage.exif.setISOSpeedRatings(exifIsoSpeedRatings);
+        method.invoke(imageBuilder.xmp, xmpProperties);
+        imageBuilder.exif.setModel(exifModel);
+        imageBuilder.exif.setFocalLength(exifFocalLength);
+        imageBuilder.exif.setExposureTime(exifExposureTime);
+        imageBuilder.exif.setFNumber(exifFNumber);
+        imageBuilder.exif.setExposureBiasValue(exifExposureBiasValue);
+        imageBuilder.exif.setISOSpeedRatings(exifIsoSpeedRatings);
         
-        return new DefaultMetadata(mockedImage.image, 0);
+        return new DefaultMetadata(imageBuilder.image, 0);
       }
   }

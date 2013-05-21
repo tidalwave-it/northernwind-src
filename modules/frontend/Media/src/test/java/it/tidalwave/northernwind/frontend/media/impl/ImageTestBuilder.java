@@ -45,7 +45,7 @@ import org.imajine.image.op.CreateOp;
  * @version $Id$
  *
  **********************************************************************************************************************/
-class MockedImage 
+class ImageTestBuilder 
   {
     //        final TIFF tiff = mock(TIFF.class);
     //        final EXIF exif = mock(EXIF.class);
@@ -58,7 +58,7 @@ class MockedImage
     final XMP xmp = new XMP();
     final EditableImage image = EditableImage.create(new CreateOp(10, 10, EditableImage.DataType.BYTE)); // mock(EditableImage.class);
 
-    public MockedImage()
+    public ImageTestBuilder()
       throws Exception 
       {
         // TODO: EditableImage getMetadata() can't be mocked :-( because it's final - use PowerMock?
