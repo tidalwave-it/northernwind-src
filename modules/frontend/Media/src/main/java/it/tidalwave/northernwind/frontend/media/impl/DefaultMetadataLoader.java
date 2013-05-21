@@ -47,6 +47,8 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
 
 /***********************************************************************************************************************
  *
+ * The default implementation of {@link MetadataLoader}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
