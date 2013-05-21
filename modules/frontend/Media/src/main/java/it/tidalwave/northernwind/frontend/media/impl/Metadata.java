@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
@@ -46,9 +45,7 @@ interface Metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateMetadataString (@Nonnull Id mediaId, // FIXME: useless!
-                                             @Nonnull ResourceProperties siteNodeProperties,
-                                             @Nonnull String format)
+    public String interpolateMetadataString (@Nonnull ResourceProperties siteNodeProperties, @Nonnull String format)
       throws IOException;
 
     /*******************************************************************************************************************

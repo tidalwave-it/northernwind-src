@@ -80,7 +80,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       throws IOException 
       {
         final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
-        return new DefaultMetadata(image);
+        return new DefaultMetadata(file.getName(), image);
       }
     
     /*******************************************************************************************************************

@@ -114,7 +114,7 @@ public class DefaultMetadataCacheTest
             @Override
             public DefaultMetadata answer (final @Nonnull InvocationOnMock invocation) 
               {
-                return new DefaultMetadata(image);
+                return new DefaultMetadata("media.jpg", image);
               }
           });
         

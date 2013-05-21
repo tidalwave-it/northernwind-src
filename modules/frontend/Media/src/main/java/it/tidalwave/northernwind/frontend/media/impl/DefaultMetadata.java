@@ -38,7 +38,6 @@ import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.ToString;
@@ -56,8 +55,11 @@ import lombok.RequiredArgsConstructor;
 class DefaultMetadata implements Metadata
   {
     @Nonnull
-    private final EditableImage image;
+    private final String mediaName;
 
+    @Nonnull
+    private final EditableImage image;
+    
     /*******************************************************************************************************************
      *
      *
@@ -75,14 +77,13 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateMetadataString (final @Nonnull Id mediaId,
-                                             final @Nonnull ResourceProperties siteNodeProperties,
+    public String interpolateMetadataString (final @Nonnull ResourceProperties siteNodeProperties,
                                              final @Nonnull String format)
       throws IOException
       {
         if (log.isDebugEnabled())
           {
-            log(mediaId);
+            log();
           }
         
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
@@ -110,23 +111,23 @@ class DefaultMetadata implements Metadata
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void log (final @Nonnull Id id) 
+    private void log() 
       {
         final TIFF tiff = image.getMetadata(TIFF.class);
         final EXIF exif = image.getMetadata(EXIF.class);
         final IPTC iptc = image.getMetadata(IPTC.class);
         final XMP xmp = image.getMetadata(XMP.class);
         final Map<String, String> xmpProperties = xmp.getXmpProperties();
-        log.debug("XMP({}): {}", id, xmpProperties);
+        log.debug("XMP({}): {}", mediaName, xmpProperties);
         
         for (final int tagCode : exif.getTagCodes()) 
           {
-            log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
+            log.debug("EXIF({}).{}: {}", mediaName, exif.getTagName(tagCode), exif.getObject(tagCode));
           }
         
         for (final int tagCode : tiff.getTagCodes()) 
           {
-            log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
+            log.debug("TIFF({}).{}: {}", mediaName, tiff.getTagName(tagCode), tiff.getObject(tagCode));
           }
       }
     

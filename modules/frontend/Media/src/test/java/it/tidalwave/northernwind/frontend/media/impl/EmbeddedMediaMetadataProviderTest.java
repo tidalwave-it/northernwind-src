@@ -81,7 +81,7 @@ public class EmbeddedMediaMetadataProviderTest
       throws Exception
       {
         final Metadata metadata = mock(Metadata.class);
-        when(metadata.interpolateMetadataString(eq(mediaId), same(siteNodeProperties), anyString()))
+        when(metadata.interpolateMetadataString(same(siteNodeProperties), anyString()))
                 .thenReturn("result");
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties))).thenReturn(metadata);
         
