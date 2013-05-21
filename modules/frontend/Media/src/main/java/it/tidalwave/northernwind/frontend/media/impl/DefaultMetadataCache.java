@@ -75,7 +75,7 @@ public class DefaultMetadataCache implements MetadataCache
     private int medatataExpirationTime = 10 * 60;
     
     @Inject @Nonnull
-    private MediaLoader mediaLoader;
+    private MetadataLoader metadataLoader;
 
     /* package */ final Map<Id, ExpirableMetadata> metadataMapById = new HashMap<>();
 
@@ -98,7 +98,7 @@ public class DefaultMetadataCache implements MetadataCache
             return metadata.getMetadata();
           }
         
-        final ResourceFile file = mediaLoader.findMediaResourceFile(siteNodeProperties, mediaId);
+        final ResourceFile file = metadataLoader.findMediaResourceFile(siteNodeProperties, mediaId);
         
         if (metadata != null)
           {
@@ -118,7 +118,7 @@ public class DefaultMetadataCache implements MetadataCache
         if (metadata == null) 
           {
             log.debug(">>>> loading medatata...");
-            metadata = new ExpirableMetadata(mediaLoader.loadMetadata(file));
+            metadata = new ExpirableMetadata(metadataLoader.loadMetadata(file));
             metadataMapById.put(mediaId, metadata);
           }
 

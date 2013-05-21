@@ -63,7 +63,7 @@ public class DefaultMetadataCacheTest
 
     private DefaultMetadataCache fixture;
     
-    private MediaLoader mediaLoader;
+    private MetadataLoader metadataLoader;
     
     private EditableImage image;
     
@@ -92,7 +92,7 @@ public class DefaultMetadataCacheTest
       {
         context = new ClassPathXmlApplicationContext("DefaultMetadataCacheTestBeans.xml");
         fixture = context.getBean(DefaultMetadataCache.class);
-        mediaLoader = context.getBean(MediaLoader.class);
+        metadataLoader = context.getBean(MetadataLoader.class);
         mediaFile = mock(ResourceFile.class);
         tiff = new TIFF();
         exif = new EXIF();
@@ -106,10 +106,10 @@ public class DefaultMetadataCacheTest
         siteNodeProperties = mock(ResourceProperties.class);
         mediaId = new Id("mediaId");
         
-        when(mediaLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
+        when(metadataLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
         
         // Don't use 'thenReturn(new DefaultMetadata(image))' as a new instance must be created each time
-        when(mediaLoader.loadMetadata(same(mediaFile))).thenAnswer(new Answer<DefaultMetadata>()
+        when(metadataLoader.loadMetadata(same(mediaFile))).thenAnswer(new Answer<DefaultMetadata>()
           {
             @Override
             public DefaultMetadata answer (final @Nonnull InvocationOnMock invocation) 
@@ -145,7 +145,7 @@ public class DefaultMetadataCacheTest
         assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
         assertThat(expirableMetadata.getExpirationTime(), is(expectedExpirationTime));
         
-        verify(mediaLoader, times(1)).loadMetadata(eq(mediaFile));
+        verify(metadataLoader, times(1)).loadMetadata(eq(mediaFile));
       }
     
     /*******************************************************************************************************************
@@ -176,8 +176,8 @@ public class DefaultMetadataCacheTest
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
           }
         
-        verify(mediaLoader, times(1)).loadMetadata(eq(mediaFile));
-        verify(mediaFile,   times(0)).getLatestModificationTime();
+        verify(metadataLoader, times(1)).loadMetadata(eq(mediaFile));
+        verify(mediaFile,      times(0)).getLatestModificationTime();
       }
     
     /*******************************************************************************************************************
@@ -207,8 +207,8 @@ public class DefaultMetadataCacheTest
             assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
-            verify(mediaLoader, times(1)).loadMetadata(eq(mediaFile));
-            verify(mediaFile,   times(count)).getLatestModificationTime();
+            verify(metadataLoader, times(1)).loadMetadata(eq(mediaFile));
+            verify(mediaFile,      times(count)).getLatestModificationTime();
           }
       }
     
@@ -238,8 +238,8 @@ public class DefaultMetadataCacheTest
             assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
-            verify(mediaLoader, times(count + 1)).loadMetadata(eq(mediaFile));
-            verify(mediaFile,   times(count)).getLatestModificationTime();
+            verify(metadataLoader, times(count + 1)).loadMetadata(eq(mediaFile));
+            verify(mediaFile,      times(count)).getLatestModificationTime();
           }
       }
     

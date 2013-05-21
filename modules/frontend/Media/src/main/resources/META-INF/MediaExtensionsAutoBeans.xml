@@ -64,7 +64,7 @@
         <property name="medatataExpirationTime" value="${nw.media.metadata.expirationTime}" />
     </bean>
     
-    <bean id="mediaLoader"
-          class="it.tidalwave.northernwind.frontend.media.impl.DefaultMediaLoader"/>
+    <bean id="metadataLoader"
+          class="it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataLoader"/>
     
 </beans>

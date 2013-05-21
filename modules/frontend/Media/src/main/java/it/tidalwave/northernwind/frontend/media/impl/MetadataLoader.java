@@ -40,7 +40,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MediaLoader 
+public interface MetadataLoader 
   {
     /*******************************************************************************************************************
      *

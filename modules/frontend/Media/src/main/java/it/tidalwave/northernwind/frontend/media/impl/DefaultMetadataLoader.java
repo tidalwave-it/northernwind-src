@@ -51,7 +51,7 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultMediaLoader implements MediaLoader
+public class DefaultMetadataLoader implements MetadataLoader
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
