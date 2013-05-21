@@ -29,10 +29,7 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -77,7 +74,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             log.info("getMetadataString({}, {})", mediaId, format);
             final long time = System.currentTimeMillis();
             final Metadata metadata = metadataCache.findMetadataById(mediaId, siteNodeProperties);
-            final String string = interpolateMedatadaString(mediaId, metadata, format, siteNodeProperties);
+            final String string = metadata.interpolateMedatadaString(mediaId, format, siteNodeProperties);
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
 
             return string;
@@ -92,69 +89,5 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             log.warn("Unexpected I/O error for id: " + mediaId, e);
             return "";
           }
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    /* package */ String interpolateMedatadaString (final @Nonnull Id mediaId,
-                                                    final @Nonnull Metadata metadata,
-                                                    final @Nonnull String format,
-                                                    final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException
-      {
-        if (log.isDebugEnabled())
-          {
-            metadata.log(mediaId);
-          }
-        
-        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
-        //            final String string = formatted(iptc.getObject(517, String.class));
-        final MetadataInterpolator.Context context = 
-                new MetadataInterpolator.Context(metadata, getLensMap(siteNodeProperties));
-        final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
-        // FIXME: discover them with an annotation
-        metadataInterpolators.add(new XmlDcTitleInterpolator());
-        metadataInterpolators.add(new ShootingDataInterpolator());
-
-        String string = format;
-        
-        for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
-          {
-            if (string.contains(metadataInterpolator.getId()))
-              {
-                string = metadataInterpolator.interpolate(string, context);
-              }
-          }
-        
-        return string;
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException 
-      {
-        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-        final Map<String, String> lensMap = new HashMap<>();
-        
-        try
-          {
-            for (final String s : properties.getProperty(PROPERTY_LENS_IDS))
-              {
-                final String[] split = s.split(":");
-                lensMap.put(split[0].trim(), split[1].trim());
-              }
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("", e);
-          }
-        
-        return lensMap;
       }
   }

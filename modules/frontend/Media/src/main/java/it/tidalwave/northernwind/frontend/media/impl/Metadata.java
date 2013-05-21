@@ -29,6 +29,9 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -38,10 +41,13 @@ import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 
 /***********************************************************************************************************************
  *
@@ -90,6 +96,43 @@ class Metadata
 
     /*******************************************************************************************************************
      *
+     * 
+     *
+     ******************************************************************************************************************/
+    /* package */ String interpolateMedatadaString (final @Nonnull Id mediaId,
+                                                    final @Nonnull String format,
+                                                    final @Nonnull ResourceProperties siteNodeProperties)
+      throws IOException
+      {
+        if (log.isDebugEnabled())
+          {
+            log(mediaId);
+          }
+        
+        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
+        //            final String string = formatted(iptc.getObject(517, String.class));
+        final MetadataInterpolator.Context context = 
+                new MetadataInterpolator.Context(this, getLensMap(siteNodeProperties));
+        final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
+        // FIXME: discover them with an annotation
+        metadataInterpolators.add(new XmlDcTitleInterpolator());
+        metadataInterpolators.add(new ShootingDataInterpolator());
+
+        String string = format;
+        
+        for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
+          {
+            if (string.contains(metadataInterpolator.getId()))
+              {
+                string = metadataInterpolator.interpolate(string, context);
+              }
+          }
+        
+        return string;
+      }
+
+    /*******************************************************************************************************************
+     *
      *
      ******************************************************************************************************************/
     void postponeExpirationTime() 
@@ -100,7 +143,7 @@ class Metadata
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    void log (final @Nonnull Id id) 
+    private void log (final @Nonnull Id id) 
       {
         final Map<String, String> xmpProperties = xmp.getXmpProperties();
         log.debug("XMP({}): {}", id, xmpProperties);
@@ -114,5 +157,31 @@ class Metadata
           {
             log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
+      throws IOException 
+      {
+        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        final Map<String, String> lensMap = new HashMap<>();
+        
+        try
+          {
+            for (final String s : properties.getProperty(EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS))
+              {
+                final String[] split = s.split(":");
+                lensMap.put(split[0].trim(), split[1].trim());
+              }
+          }
+        catch (NotFoundException e)
+          {
+            log.warn("", e);
+          }
+        
+        return lensMap;
       }
   }
