@@ -159,11 +159,11 @@ public class DefaultMetadataCacheTest
         
         final DateTime expectedExpirationTime = baseTime.plusSeconds(fixture.getMedatataExpirationTime());
         
-        for (DateTime time = baseTime; 
-             time.isBefore(expectedExpirationTime);
-             time = time.plusSeconds(fixture.getMedatataExpirationTime() / 100))
+        for (DateTime now = baseTime; 
+             now.isBefore(expectedExpirationTime);
+             now = now.plusSeconds(fixture.getMedatataExpirationTime() / 100))
           {
-            setTime(time);
+            setTime(now);
             
             final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
@@ -195,8 +195,9 @@ public class DefaultMetadataCacheTest
         
         for (int count = 1; count <= 10; count++)
           {
-            setTime(nextExpectedExpirationTime.plusMillis(1));
-            nextExpectedExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
+            final DateTime now = nextExpectedExpirationTime.plusMillis(1);
+            setTime(now);
+            nextExpectedExpirationTime = now.plusSeconds(fixture.getMedatataExpirationTime());
             
             final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
@@ -226,9 +227,10 @@ public class DefaultMetadataCacheTest
         
         for (int count = 1; count < 10; count++)
           {
-            setTime(nextExpectedExpirationTime.plusMillis(1));
-            when(mediaFile.getLatestModificationTime()).thenReturn(new DateTime().plusMillis(1));
-            nextExpectedExpirationTime = new DateTime().plusSeconds(fixture.getMedatataExpirationTime());
+            final DateTime now = nextExpectedExpirationTime.plusMillis(1);
+            setTime(now);
+            when(mediaFile.getLatestModificationTime()).thenReturn(now.plusMillis(1));
+            nextExpectedExpirationTime = now.plusSeconds(fixture.getMedatataExpirationTime());
             
             final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
             
@@ -237,7 +239,7 @@ public class DefaultMetadataCacheTest
             final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
-//            assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
+            assertThat(expirableMetadata.getCreationTime(),   is(now));
             assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
