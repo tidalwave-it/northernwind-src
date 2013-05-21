@@ -48,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
+import java.util.Set;
 
 /***********************************************************************************************************************
  *
@@ -123,16 +124,30 @@ class DefaultMetadata implements Metadata
         final IPTC iptc = image.getMetadata(IPTC.class);
         final XMP xmp = image.getMetadata(XMP.class);
         final Map<String, String> xmpProperties = xmp.getXmpProperties();
-        log.debug("XMP({}): {}", mediaName, xmpProperties);
+        
+        for (final int tagCode : tiff.getTagCodes()) 
+          {
+            log.debug("TIFF({}).{}: {}", mediaName, tiff.getTagName(tagCode), tiff.getObject(tagCode));
+          }
         
         for (final int tagCode : exif.getTagCodes()) 
           {
             log.debug("EXIF({}).{}: {}", mediaName, exif.getTagName(tagCode), exif.getObject(tagCode));
           }
         
-        for (final int tagCode : tiff.getTagCodes()) 
+        for (final int tagCode : iptc.getTagCodes()) 
           {
-            log.debug("TIFF({}).{}: {}", mediaName, tiff.getTagName(tagCode), tiff.getObject(tagCode));
+            log.debug("IPTC({}).{}: {}", mediaName, iptc.getTagName(tagCode), iptc.getObject(tagCode));
+          }
+        
+        for (final int tagCode : xmp.getTagCodes()) 
+          {
+            log.debug("XMP({}).{}: {}", mediaName, xmp.getTagName(tagCode), xmp.getObject(tagCode));
+          }
+        
+        for (final Map.Entry<String, String> e : xmpProperties.entrySet())
+          {
+            log.debug("XMPprop({}).{}: {}", mediaName, e.getKey(), e.getValue());
           }
       }
     
