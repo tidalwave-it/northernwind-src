@@ -56,11 +56,20 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <!-- Fix for NW-130 -->
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>xmpcore-patched</artifactId>
             <version>5.1.0</version> <!-- FIXME -->
         </dependency>
+
+        <!-- TEST DEPENDENCIES -->        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 </project>
