@@ -82,7 +82,7 @@ public class MetadataTest
       {
         final Metadata fixture = metadataBuilder.build();
         
-        final String result = fixture.interpolateMedatadaString(mediaId, format, siteNodeProperties);
+        final String result = fixture.interpolateMetadataString(mediaId, siteNodeProperties, format);
         
         assertThat(result, is(expectedResult));
       }

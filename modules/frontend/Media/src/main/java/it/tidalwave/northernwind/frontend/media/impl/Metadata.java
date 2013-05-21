@@ -96,12 +96,13 @@ class Metadata
 
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
-    /* package */ String interpolateMedatadaString (final @Nonnull Id mediaId,
-                                                    final @Nonnull String format,
-                                                    final @Nonnull ResourceProperties siteNodeProperties)
+    @Nonnull
+    public String interpolateMetadataString (final @Nonnull Id mediaId,
+                                             final @Nonnull ResourceProperties siteNodeProperties,
+                                             final @Nonnull String format)
       throws IOException
       {
         if (log.isDebugEnabled())
@@ -135,7 +136,7 @@ class Metadata
      *
      *
      ******************************************************************************************************************/
-    void postponeExpirationTime() 
+    public void postponeExpirationTime() 
       {
         expirationTime = new DateTime().plusSeconds(expirationPeriod);
       }

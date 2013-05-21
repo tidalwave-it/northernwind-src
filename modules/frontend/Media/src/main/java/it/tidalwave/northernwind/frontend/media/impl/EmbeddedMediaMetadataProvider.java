@@ -74,7 +74,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
             log.info("getMetadataString({}, {})", mediaId, format);
             final long time = System.currentTimeMillis();
             final Metadata metadata = metadataCache.findMetadataById(mediaId, siteNodeProperties);
-            final String string = metadata.interpolateMedatadaString(mediaId, format, siteNodeProperties);
+            final String string = metadata.interpolateMetadataString(mediaId, siteNodeProperties, format);
             log.info(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
 
             return string;
