@@ -55,7 +55,6 @@ public interface MetadataCache
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Metadata findMetadataById (@Nonnull Id mediaId,
-                                      @Nonnull ResourceProperties siteNodeProperties)
+    public Metadata findMetadataById (@Nonnull Id mediaId, @Nonnull ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException;
   }
