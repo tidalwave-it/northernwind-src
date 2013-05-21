@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
-import java.util.Set;
+import java.util.TreeMap;
 
 /***********************************************************************************************************************
  *
@@ -123,7 +123,7 @@ class DefaultMetadata implements Metadata
         final EXIF exif = image.getMetadata(EXIF.class);
         final IPTC iptc = image.getMetadata(IPTC.class);
         final XMP xmp = image.getMetadata(XMP.class);
-        final Map<String, String> xmpProperties = xmp.getXmpProperties();
+        final Map<String, String> xmpProperties = new TreeMap<>(xmp.getXmpProperties());
         
         for (final int tagCode : tiff.getTagCodes()) 
           {
