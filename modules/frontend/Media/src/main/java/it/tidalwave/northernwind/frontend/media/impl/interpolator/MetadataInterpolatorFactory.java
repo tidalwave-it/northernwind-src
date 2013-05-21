@@ -32,12 +32,21 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
+ * Provides a collection of {@link MetadataInterpolator}s.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface MetadataInterpolatorFactory 
   {
+    /*******************************************************************************************************************
+     *
+     * Returns a collection of {@link MetadataInterpolator}s
+     * 
+     * @return  the interpolators
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public Collection<MetadataInterpolator> getInterpolators();
   }
