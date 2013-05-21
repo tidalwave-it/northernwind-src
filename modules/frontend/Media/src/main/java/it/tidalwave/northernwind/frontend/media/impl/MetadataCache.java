@@ -27,11 +27,11 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import it.tidalwave.northernwind.core.model.ResourceProperties;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
-import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
  *
