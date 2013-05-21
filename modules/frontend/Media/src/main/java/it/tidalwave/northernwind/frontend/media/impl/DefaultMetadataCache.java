@@ -103,15 +103,19 @@ public class DefaultMetadataCache implements MetadataCache
         
         if (metadata != null)
           {
-            log.debug(">>>> checking for file modification...");
+            final DateTime fileLatestModificationTime = file.getLatestModificationTime();
+            final DateTime metadataCreationTime = metadata.getCreationTime();
             
-            if (file.getLatestModificationTime().isAfter(metadata.getCreationTime()))
+            if (fileLatestModificationTime.isAfter(metadataCreationTime))
               {
-                log.debug(">>>>>>>> media file is more recent than metadata");
+                log.debug(">>>>>>>> expiring metadata: file {} > metadata {}",
+                          fileLatestModificationTime, metadataCreationTime);
                 metadata = null;  
               }
             else
               {
+                log.debug(">>>>>>>> postponing metadata expiration: file {} < metadata {}",
+                          fileLatestModificationTime, metadataCreationTime);
                 metadata.postponeExpirationTime();
               }
           }
