@@ -141,7 +141,7 @@ public class DefaultMetadataCacheTest
         
         final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
         assertThat(expirableMetadata, is(notNullValue()));
-        assertThat(expirableMetadata.getMetadata(), sameInstance(metadata));
+        assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata));
         assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
         assertThat(expirableMetadata.getExpirationTime(), is(expectedExpirationTime));
         
@@ -170,8 +170,9 @@ public class DefaultMetadataCacheTest
             assertThat(metadata2, is(sameInstance(metadata)));
             
             final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
-            assertThat(expirableMetadata, is(notNullValue()));
-            assertThat(expirableMetadata.getMetadata(), sameInstance(metadata2));
+            assertThat(expirableMetadata,                     is(notNullValue()));
+            assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
+            assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
             assertThat(expirableMetadata.getExpirationTime(), is(expectedExpirationTime));
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
           }
@@ -202,8 +203,9 @@ public class DefaultMetadataCacheTest
             assertThat(metadata2, is(sameInstance(metadata)));
             
             final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
-            assertThat(expirableMetadata, is(notNullValue()));
-            assertThat(expirableMetadata.getMetadata(), sameInstance(metadata2));
+            assertThat(expirableMetadata,                     is(notNullValue()));
+            assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
+            assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
             assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
@@ -233,8 +235,9 @@ public class DefaultMetadataCacheTest
             assertThat(metadata2, is(not(sameInstance(metadata))));
             
             final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
-            assertThat(expirableMetadata, is(notNullValue()));
-            assertThat(expirableMetadata.getMetadata(), sameInstance(metadata2));
+            assertThat(expirableMetadata,                     is(notNullValue()));
+            assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
+//            assertThat(expirableMetadata.getCreationTime(),   is(baseTime));
             assertThat(expirableMetadata.getExpirationTime(), is(nextExpectedExpirationTime));
             log.info(">>>> next expiration time: {}", expirableMetadata.getExpirationTime());
 
