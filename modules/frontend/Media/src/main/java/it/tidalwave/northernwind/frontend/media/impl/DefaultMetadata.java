@@ -27,6 +27,9 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmlDcTitleInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;

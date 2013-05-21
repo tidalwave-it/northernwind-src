@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.media.impl;
+package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;

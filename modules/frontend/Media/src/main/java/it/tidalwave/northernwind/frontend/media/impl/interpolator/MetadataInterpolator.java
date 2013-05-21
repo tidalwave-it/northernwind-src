@@ -25,8 +25,9 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.media.impl;
+package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
+import it.tidalwave.northernwind.frontend.media.impl.Metadata;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import lombok.Getter;
