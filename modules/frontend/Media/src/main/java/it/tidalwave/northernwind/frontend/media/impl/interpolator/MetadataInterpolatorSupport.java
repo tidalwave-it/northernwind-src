@@ -34,7 +34,9 @@ import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * A support class for implementing a metadata interpolator.
+ * 
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
