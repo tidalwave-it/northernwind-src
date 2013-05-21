@@ -118,7 +118,7 @@ public class DefaultMetadataCacheTest
               }
           });
         
-        assertThat(fixture.getMedatataExpirationTime(), is(600));
+        assertThat(fixture.getMedatataExpirationTime(), is(DefaultMetadataCache.DEFAULT_METADATA_EXPIRATION_TIME));
         initialTime = new DateTime(1369080000000L);
         setTime(initialTime);
       }

@@ -82,9 +82,11 @@ public class DefaultMetadataCache implements MetadataCache
           }
       }
     
+    public static final int DEFAULT_METADATA_EXPIRATION_TIME = 10 * 60;
+    
     /** Expiration time for metadata in seconds; after this time, medatata are reloaded. */
     @Getter @Setter @Nonnegative
-    private int medatataExpirationTime = 10 * 60;
+    private int medatataExpirationTime = DEFAULT_METADATA_EXPIRATION_TIME;
     
     @Inject @Nonnull
     private MetadataLoader metadataLoader;
