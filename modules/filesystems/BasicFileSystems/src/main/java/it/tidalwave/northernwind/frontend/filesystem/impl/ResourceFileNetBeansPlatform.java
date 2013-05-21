@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable  @Slf4j @ToString(of="delegate")
+@Configurable @Slf4j @ToString(of="delegate")
 public class ResourceFileNetBeansPlatform implements ResourceFile
   {
     interface Exclusions
