@@ -54,7 +54,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
     public final static Key<List<String>> PROPERTY_MEDIA_PATHS = new Key<>("mediaPaths");
 
-    /* package */ final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
+    public final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 
     @Inject @Nonnull
     private MetadataCache metadataCache;
