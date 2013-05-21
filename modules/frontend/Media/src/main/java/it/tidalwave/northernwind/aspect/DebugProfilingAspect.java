@@ -74,7 +74,7 @@ public class DebugProfilingAspect
         final MethodSignature methodSignature = (MethodSignature)pjp.getSignature();
         Method method = methodSignature.getMethod();
         
-        if (method.getDeclaringClass().isInterface()) 
+        if (method.getDeclaringClass().isInterface()) // FIXME && annotation inheritance -- FIXME also ancestor class
           {
             final String methodName = pjp.getSignature().getName();
             method = pjp.getTarget().getClass().getDeclaredMethod(methodName, method.getParameterTypes());    
