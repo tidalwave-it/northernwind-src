@@ -27,14 +27,12 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmlDcTitleInterpolator;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.io.IOException;
 import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
@@ -43,12 +41,14 @@ import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmlDcTitleInterpolator;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
-import java.util.TreeMap;
 
 /***********************************************************************************************************************
  *
