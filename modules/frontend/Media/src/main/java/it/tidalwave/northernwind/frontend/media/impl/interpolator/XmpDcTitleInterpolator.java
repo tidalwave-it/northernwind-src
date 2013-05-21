@@ -37,9 +37,9 @@ import org.imajine.image.metadata.XMP;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class XmlDcTitleInterpolator extends MetadataInterpolatorSupport
+public class XmpDcTitleInterpolator extends MetadataInterpolatorSupport
   {
-    public XmlDcTitleInterpolator() 
+    public XmpDcTitleInterpolator() 
       {
         super("XMP.dc.title");
       }

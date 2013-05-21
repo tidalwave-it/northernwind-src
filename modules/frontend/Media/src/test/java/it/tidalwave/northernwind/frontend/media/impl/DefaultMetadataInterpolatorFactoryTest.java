@@ -34,7 +34,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmlDcTitleInterpolator;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmpDcTitleInterpolator;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -75,7 +75,7 @@ public class DefaultMetadataInterpolatorFactoryTest
         
         final Iterator<MetadataInterpolator> i = interpolators.iterator();
         assertThat(i.next(), is(instanceOf(ShootingDataInterpolator.class)));
-        assertThat(i.next(), is(instanceOf(XmlDcTitleInterpolator.class)));
+        assertThat(i.next(), is(instanceOf(XmpDcTitleInterpolator.class)));
         assertThat(i.hasNext(), is(false));
       }
   }
