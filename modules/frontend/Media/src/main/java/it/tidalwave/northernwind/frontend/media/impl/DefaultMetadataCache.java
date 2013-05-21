@@ -100,7 +100,7 @@ public class DefaultMetadataCache implements MetadataCache
           {
             log.debug(">>>> loading medatata...");
             final EditableImage image = mediaLoader.loadImage(file);
-            metadata = new Metadata(image, medatataExpirationTime);
+            metadata = new DefaultMetadata(image, medatataExpirationTime);
             metadataMapById.put(mediaId, metadata);
           }
 

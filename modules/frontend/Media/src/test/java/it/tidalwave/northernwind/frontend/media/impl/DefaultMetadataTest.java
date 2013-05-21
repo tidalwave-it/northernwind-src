@@ -52,7 +52,7 @@ import org.testng.annotations.BeforeMethod;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class MetadataTest
+public class DefaultMetadataTest
   {
     private Id mediaId;
     

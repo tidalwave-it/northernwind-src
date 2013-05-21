@@ -98,6 +98,6 @@ class MetadataTestBuilder
         exif.setExposureBiasValue(exifExposureBiasValue);
         exif.setISOSpeedRatings(exifIsoSpeedRatings);
         
-        return new Metadata(tiff, exif, iptc, xmp, 0);
+        return new DefaultMetadata(tiff, exif, iptc, xmp, 0);
       }
   }

@@ -27,27 +27,15 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import org.imajine.image.EditableImage;
+import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 
 /***********************************************************************************************************************
  *
@@ -55,134 +43,64 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Getter @ToString @Slf4j @RequiredArgsConstructor
-class Metadata 
+interface Metadata 
   {
-    @Nonnull
-    private final TIFF tiff;
-    
-    @Nonnull
-    private final EXIF exif;
-    
-    @Nonnull
-    private final IPTC iptc;
-    
-    @Nonnull
-    private final XMP xmp;
-
-    @Nonnegative
-    private final int expirationPeriod;
-    
-    @Getter
-    private final DateTime creationTime = new DateTime();
-    
-    @Getter
-    private DateTime expirationTime;
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    public Metadata (final @Nonnull EditableImage image,
-                     final @Nonnegative int expirationPeriod) 
-      throws IOException 
-      {
-        tiff = image.getMetadata(TIFF.class);
-        exif = image.getMetadata(EXIF.class);
-        iptc = image.getMetadata(IPTC.class);
-        xmp = image.getMetadata(XMP.class);
-        this.expirationPeriod = expirationPeriod;
-        expirationTime = creationTime.plusSeconds(expirationPeriod);
-      }
-
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateMetadataString (final @Nonnull Id mediaId,
-                                             final @Nonnull ResourceProperties siteNodeProperties,
-                                             final @Nonnull String format)
-      throws IOException
-      {
-        if (log.isDebugEnabled())
-          {
-            log(mediaId);
-          }
-        
-        // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
-        //            final String string = formatted(iptc.getObject(517, String.class));
-        final MetadataInterpolator.Context context = 
-                new MetadataInterpolator.Context(this, getLensMap(siteNodeProperties));
-        final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
-        // FIXME: discover them with an annotation
-        metadataInterpolators.add(new XmlDcTitleInterpolator());
-        metadataInterpolators.add(new ShootingDataInterpolator());
-
-        String string = format;
-        
-        for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
-          {
-            if (string.contains(metadataInterpolator.getId()))
-              {
-                string = metadataInterpolator.interpolate(string, context);
-              }
-          }
-        
-        return string;
-      }
+    public String interpolateMetadataString (@Nonnull Id mediaId,
+                                             @Nonnull ResourceProperties siteNodeProperties,
+                                             @Nonnull String format)
+      throws IOException;
 
     /*******************************************************************************************************************
      *
-     *
-     ******************************************************************************************************************/
-    public void postponeExpirationTime() 
-      {
-        expirationTime = new DateTime().plusSeconds(expirationPeriod);
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private void log (final @Nonnull Id id) 
-      {
-        final Map<String, String> xmpProperties = xmp.getXmpProperties();
-        log.debug("XMP({}): {}", id, xmpProperties);
-        
-        for (final int tagCode : exif.getTagCodes()) 
-          {
-            log.debug("EXIF({}).{}: {}", id, exif.getTagName(tagCode), exif.getObject(tagCode));
-          }
-        
-        for (final int tagCode : tiff.getTagCodes()) 
-          {
-            log.debug("TIFF({}).{}: {}", id, tiff.getTagName(tagCode), tiff.getObject(tagCode));
-          }
-      }
-    
-    /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException 
-      {
-        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-        final Map<String, String> lensMap = new HashMap<>();
+    public TIFF getTiff();
         
-        try
-          {
-            for (final String s : properties.getProperty(EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS))
-              {
-                final String[] split = s.split(":");
-                lensMap.put(split[0].trim(), split[1].trim());
-              }
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("", e);
-          }
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public EXIF getExif();
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public IPTC getIptc();
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public XMP getXmp();
         
-        return lensMap;
-      }
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public DateTime getCreationTime();
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public DateTime getExpirationTime();
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public void postponeExpirationTime();
   }
