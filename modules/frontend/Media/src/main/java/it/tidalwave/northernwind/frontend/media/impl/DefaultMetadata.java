@@ -47,6 +47,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
 
 /***********************************************************************************************************************
  *
@@ -83,7 +84,7 @@ class DefaultMetadata implements Metadata
      ******************************************************************************************************************/
     @Override @Nonnull
     public String interpolateMetadataString (final @Nonnull ResourceProperties siteNodeProperties,
-                                             final @Nonnull String format)
+                                             final @Nonnull String template)
       throws IOException
       {
         if (log.isDebugEnabled())
@@ -93,24 +94,23 @@ class DefaultMetadata implements Metadata
         
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
         //            final String string = formatted(iptc.getObject(517, String.class));
-        final MetadataInterpolator.Context context = 
-                new MetadataInterpolator.Context(this, getLensMap(siteNodeProperties));
+        final Context context = new Context(this, getLensMap(siteNodeProperties));
         final List<MetadataInterpolator> metadataInterpolators = new ArrayList<>();
         // FIXME: discover them with an annotation
         metadataInterpolators.add(new XmlDcTitleInterpolator());
         metadataInterpolators.add(new ShootingDataInterpolator());
 
-        String string = format;
+        String result = template;
         
         for (final MetadataInterpolator metadataInterpolator : metadataInterpolators)
           {
-            if (string.contains("$" + metadataInterpolator.getMacro() + "$"))
+            if (result.contains("$" + metadataInterpolator.getMacro() + "$"))
               {
-                string = metadataInterpolator.interpolate(string, context);
+                result = metadataInterpolator.interpolate(result, context);
               }
           }
         
-        return string;
+        return result;
       }
 
     /*******************************************************************************************************************
