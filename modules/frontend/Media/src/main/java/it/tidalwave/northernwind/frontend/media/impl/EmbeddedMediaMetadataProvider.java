@@ -34,6 +34,7 @@ import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.aspect.DebugProfiling;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -64,20 +65,15 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      *
      ******************************************************************************************************************/
     // FIXME: should use the Metadata API of blueMarine, but we have first to make it work with Spring and its DI.
-    @Override @Nonnull
+    @Override @Nonnull @DebugProfiling(message = "metadata retrieved")
     public String getMetadataString (final @Nonnull Id mediaId,
                                      final @Nonnull String format,
                                      final @Nonnull ResourceProperties siteNodeProperties)
       {
         try
           {
-            log.debug("getMetadataString({}, {})", mediaId, format);
-            final long time = System.currentTimeMillis();
             final Metadata metadata = metadataCache.findMetadataById(mediaId, siteNodeProperties);
-            final String string = metadata.interpolateMetadataString(mediaId, siteNodeProperties, format);
-            log.debug(">>>> metadata retrieved in {} msec", System.currentTimeMillis() - time);
-
-            return string;
+            return metadata.interpolateMetadataString(mediaId, siteNodeProperties, format);
           }
         catch (NotFoundException e)
           {
