@@ -38,7 +38,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
  *
- * A factory for domain objects.
+ * A factory for creating domain objects.
  *
  * @author  Fabrizio Giudici
  * @version $Id: $
@@ -66,7 +66,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Content createContent (@Nonnull ResourceFile folder);
+    public Content createContent (@Nonnull ResourceFile file);
 
     /*******************************************************************************************************************
      *
@@ -83,8 +83,9 @@ public interface ModelFactory
      *
      * Creates a new {@link SiteNode}.
      *
-     * @param  file  the file for the {@code SiteNode}
-     * @return       the {@code SiteNode}
+     * @param  site    the {@code Site} that the {@code SiteNode} belongs to
+     * @param  folder  the folder representing the {@code SiteNode}
+     * @return         the {@code SiteNode}
      *
      ******************************************************************************************************************/
     @Nonnull

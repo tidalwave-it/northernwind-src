@@ -35,6 +35,8 @@ import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * An event telling us that a {@link ResourceFileSystem} has been udpated.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *

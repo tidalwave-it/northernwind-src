@@ -35,6 +35,8 @@ import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
+ * An object representing an incoming request.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -42,29 +44,89 @@ import it.tidalwave.util.NotFoundException;
 @Immutable
 public interface Request
   {
+    /*******************************************************************************************************************
+     *
+     * Creates a clone with the given relative URI
+     * 
+     * @param   relativeUri  the relative URI
+     * @return               the clone
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public Request withRelativeUri (@Nonnull String relativeUri);
 
+    /*******************************************************************************************************************
+     *
+     * Returns the base URL of this request.
+     * 
+     * @return  the base URL
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getBaseUrl();
 
+    /*******************************************************************************************************************
+     *
+     * Returns the relative URI of this request.
+     * 
+     * @return  the relative URI
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getRelativeUri();
 
+    /*******************************************************************************************************************
+     *
+     * Returns the original relative URI of this request.
+     * 
+     * @return  the original relative URI
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getOriginalRelativeUri();
 
+    /*******************************************************************************************************************
+     *
+     * Returns the locales preferred by the client originating this request.
+     * 
+     * @return  the preferred locales
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public List<Locale> getPreferredLocales();
 
+    /*******************************************************************************************************************
+     *
+     * Returns a parameter value.
+     * 
+     * @param  parameterName  the name of the parameter
+     * @return                the value of the parameter
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getParameter (@Nonnull String parameterName)
       throws NotFoundException;
 
+    /*******************************************************************************************************************
+     *
+     * Returns a parameter value in form of a list.
+     * 
+     * @param  parameterName  the name of the parameter
+     * @return                the value of the parameter
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public List<String> getMultiValuedParameter (@Nonnull String parameterName)
       throws NotFoundException;
 
+    /*******************************************************************************************************************
+     *
+     * Returns the path params.
+     * 
+     * @param  siteNode  
+     * @return           the path params
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getPathParams (@Nonnull SiteNode siteNode);
   }

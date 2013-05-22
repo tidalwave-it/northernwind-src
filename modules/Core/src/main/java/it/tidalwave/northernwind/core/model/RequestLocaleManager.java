@@ -34,7 +34,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 /***********************************************************************************************************************
  *
- * Manages the {@link Locale}s for elaborating the current request.
+ * Manages the {@link Locale}-related stuff for elaborating the current request.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -52,6 +52,13 @@ public interface RequestLocaleManager
     @Nonnull
     public List<Locale> getLocales();
 
+    /*******************************************************************************************************************
+     *
+     * Returns a properly localized formatter for date and time.
+     *
+     * @return   the localized formatter
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public DateTimeFormatter getDateTimeFormatter();
   }
