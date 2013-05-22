@@ -47,9 +47,9 @@ public interface Content extends Resource, Composite<Content, Finder<Content>>
 
     /*******************************************************************************************************************
      *
-     * Returns the URI mapped to this resource.
+     * Returns the exposed URI mapped to this resource.
      *
-     * @return  the URI
+     * @return  the exposed URI
      * @throws  NotFoundException  if the resource can't be found
      * @throws  IOException        if an I/O error occurs (??? FIXME)
      *

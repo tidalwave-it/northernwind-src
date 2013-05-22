@@ -42,8 +42,8 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface Resource
   {
-    /** This property, controls whether this resource is a placeholder. A placeholder resource is not mapped to any
-        relative URI, but can be found by relative path. */
+    /** This property, controls whether this resource is a placeholder. See {@link #isPlaceHolder} for more information
+     */
     public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<>("placeHolder");
 
     public static final Class<Resource> Resource = Resource.class;
@@ -84,7 +84,9 @@ public interface Resource
      *
      * A placeholder resource doesn't contain anything, it just provides a placeholder for a path element. For instance,
      * if in the pair parent/child child is a placeholder, the relative URI /parent/child will be mapped to parent
-     * (which supposedly manages path params).
+     * (which supposedly manages path params). This is useful for processing REST path params, for instance.
+     * 
+     * @return  {@code true} if this resource is a placeholder
      *
      ******************************************************************************************************************/
     public boolean isPlaceHolder();

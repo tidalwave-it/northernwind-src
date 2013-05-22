@@ -98,6 +98,8 @@ public interface RequestContext extends RequestResettable
      *
      * Sets a dynamic node property. These properties can be associated to the current {@link SiteNode}, created in
      * a dynamic fashion while processing the {@link Request} and available only in the {@link RequestContext}.
+     * 
+     * FIXME: rename to setTemporaryNodeProperty
      *
      * @param  key    the property key
      * @param  value  the property value

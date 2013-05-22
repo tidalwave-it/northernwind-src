@@ -60,7 +60,7 @@
     <bean id="statisticsCollector" class="it.tidalwave.northernwind.profiling.impl.DefaultStatisticsCollector"/>
     
     <task:scheduled-tasks scheduler="scheduler">
-        <task:scheduled ref="statisticsCollector" method="dumpStatistics" cron="${nb.recentStatisticsPeriod}"/>
+        <task:scheduled ref="statisticsCollector" method="dumpStatistics" cron="${nw.recentStatisticsPeriod}"/>
     </task:scheduled-tasks>
 
 </beans>

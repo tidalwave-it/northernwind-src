@@ -65,7 +65,7 @@ public class MercurialFileSystemProviderTest
     public void setupFixture()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
         properties.put("test.workAreaFolder", "target/workarea");
@@ -110,7 +110,7 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         fixture.swapCounter = 0;
-        prepareSourceRepository(Option.DONT_STRIP);
+        prepareSourceRepository(Option.VOID_OPTION);
 
         fixture.checkForUpdates();
 

@@ -25,20 +25,30 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.media.impl;
+package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import org.testng.annotations.Test;
+import javax.annotation.Nonnull;
+import java.util.Map;
+import org.imajine.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DummyTest
+public class XmpDcTitleInterpolator extends MetadataInterpolatorSupport
   {
-    @Test
-    public void dummy()
+    public XmpDcTitleInterpolator() 
       {
+        super("XMP.dc.title");
+      }
+    
+    @Override @Nonnull
+    public String interpolate (final @Nonnull String template, final @Nonnull Context context)
+      {
+        final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
+        
+        return template.replace("$" + macro + "$", formatted(xmpProperties.get("dc:title[1]")));
       }
   }

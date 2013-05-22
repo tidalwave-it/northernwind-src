@@ -31,15 +31,32 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
+ * The file system to which a {@link ResourceFile} belongs to.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface ResourceFileSystem
   {
+    /*******************************************************************************************************************
+     *
+     * Returns the root of this file system.
+     * 
+     * @return  the root folder
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourceFile getRoot();
 
-    @Nonnull
+    /*******************************************************************************************************************
+     *
+     * Returns the file with the given path
+     * TODO replace with a Finder
+     * 
+     * @param   path  the file path
+     * @return        the file, null if not found
+     *
+     ******************************************************************************************************************/
     public ResourceFile findFileByPath (@Nonnull String path);
   }

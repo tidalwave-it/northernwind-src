@@ -27,8 +27,8 @@
   #L%
   -->
 
-<configuration debug="true"> 
-
+<configuration debug="false"> 
+    
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
@@ -47,4 +47,7 @@
     <root level="info">
         <appender-ref ref="FILE" />
     </root>
+    
+    <include file="\${nw.logConfig}" optional="true" />
+    
 </configuration>

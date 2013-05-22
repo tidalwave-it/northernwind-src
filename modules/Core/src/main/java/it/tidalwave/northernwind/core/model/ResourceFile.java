@@ -37,64 +37,198 @@ import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
+ * A file backing a {@link Resource}. There can be various implementations of this interface: plain files on the local
+ * disk, items in a zip file, elements of a repository such as Mercurial or Git, objects stored within a database, 
+ * etc...
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface ResourceFile
   {
+    /*******************************************************************************************************************
+     *
+     * Returns the {@link ResourceFileSystem} this file belongs to.
+     * 
+     * @return  the {@code ResourceFileSystem}
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourceFileSystem getFileSystem();
 
+    /*******************************************************************************************************************
+     *
+     * Returns the name of this file (it doesn't include the full path).
+     * 
+     * @return  the name of the file
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getName();
 
+    /*******************************************************************************************************************
+     * 
+     * Returns the full path of this file.
+     * FIXME: the root object returns "" in place of "/" - this will change in future
+     * 
+     * @return  the full path of the file
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public String getPath(); // FIXME: inherits from FileObject the fact that root is "" and not "/"
+    public String getPath(); 
 
+    /*******************************************************************************************************************
+     *
+     * Returns {@code true} whether this file is a folder.
+     * 
+     * @return  {@code true} for a folder
+     *
+     ******************************************************************************************************************/
     public boolean isFolder();
 
+    /*******************************************************************************************************************
+     *
+     * Returns {@code true} whether this file is a plain file.
+     * 
+     * @return  {@code true} for a file
+     *
+     ******************************************************************************************************************/
     public boolean isData();
 
+    /*******************************************************************************************************************
+     *
+     * Returns the MIME type associated to the contents of this file. The value is achieved by querying the web server
+     * context.
+     * 
+     * @return  the MIME type
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getMimeType();
 
+    /*******************************************************************************************************************
+     *
+     * Returns an {@link InputStream} that allows to read contents of this file.
+     * 
+     * @return                         the {@code InputStream}
+     * @throws  FileNotFoundException  if the physical data can't be accessed
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public InputStream getInputStream()
       throws FileNotFoundException;
 
+    /*******************************************************************************************************************
+     *
+     * Returns the full contents of this file as text.
+     * 
+     * @param   encoding     the content encoding
+     * @return               the contents
+     * @throws  IOException  if an I/O error occurs
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String asText (@Nonnull String encoding)
       throws IOException;
 
+    /*******************************************************************************************************************
+     *
+     * Returns the full contents of this file as binary data.
+     * 
+     * @return               the contents
+     * @throws  IOException  if an I/O error occurs
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public byte[] asBytes()
       throws IOException;
 
+    /*******************************************************************************************************************
+     *
+     * Returns the latest modification time of this file.
+     * 
+     * @return  the latest modification time
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public DateTime getLatestModificationTime();
 
-    public ResourceFile getParent(); // FIXME: make @Nonnull, throws NotFoundException
+    /*******************************************************************************************************************
+     *
+     * Returns the parent of this file.
+     * FIXME: make @Nonnull, throws NotFoundException when no parent
+     * 
+     * @return  the parent or null if no parent
+     *
+     ******************************************************************************************************************/
+    public ResourceFile getParent();
 
-    public ResourceFile getChildByName (@Nonnull String fileName); // FIXME: make @Nonnull, throws NotFoundException
+    /*******************************************************************************************************************
+     *
+     * Returns a child file with the given name.
+     * FIXME: make @Nonnull, throws NotFoundException when no parent
+     * 
+     * @param   fileName  the child name
+     * @return  the child or null if no child with that name
+     *
+     ******************************************************************************************************************/
+    public ResourceFile getChildByName (@Nonnull String fileName);
 
+    /*******************************************************************************************************************
+     *
+     * Returns all the direct children of this file.
+     * TODO: merge with getChildren(true) using a Finder
+     * 
+     * @return  the children
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public Collection<ResourceFile> getChildren();
 
-    @Nonnull // TODO: replace boolean with enum, perhaps use a Finder
+    /*******************************************************************************************************************
+     *
+     * Returns all the children of this file.
+     * TODO: merge with getChildren() using a Finder
+     * 
+     * @param   recursive  if false, return only the direct child, if true returns all the descendants
+     * @return  the children
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     public Collection<ResourceFile> getChildren (boolean recursive);
 
+    /*******************************************************************************************************************
+     *
+     * FIXME: drop this - it won't work with virtual file systems
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public File toFile();
 
     // TODO: methods below probably can be dropped, are only used in filesystem implementations
+    /*******************************************************************************************************************
+     *
+     * Don't use
+     *
+     ******************************************************************************************************************/
     public void delete()
       throws IOException;
 
+    /*******************************************************************************************************************
+     *
+     * Don't use
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourceFile createFolder (@Nonnull String name)
       throws IOException;
 
+    /*******************************************************************************************************************
+     *
+     * Don't use
+     *
+     ******************************************************************************************************************/
     public void copyTo (@Nonnull ResourceFile targetFolder)
       throws IOException;
   }

@@ -75,7 +75,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
 
         log.warn("Site unavailable, sending maintenance page");
         // TODO: use a resource
-        final String page = String.format("<!DOCTYPE html>\n"
+        final String page = String.format("<!DOCTYPE html>%n"
                 + "<html>\n"
                 + "<head>\n"
                 + "<meta http-equiv=\"Refresh\" content=\"15; url=%s%s\"/>\n"

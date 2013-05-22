@@ -32,8 +32,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
-import java.util.Collections;
-import java.util.List;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
@@ -57,7 +55,17 @@ import org.springframework.beans.factory.BeanFactory;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * The implementation relies upon two alternate repositories to perform atomic changes:
+ *
+ * <ol>
+ *     <li>the <code>exposedRepository</code> is the one whose contents are used for publishing, and it's never touched
+ *     </li>
+ *     <li>the <code>alternateRepository</code> is kept behind the scenes and it's used for updates</li>
+ * </ol>
+ *
+ * When there are changes in the <code>alternateRepository</code>, the two repositories are swapped.
+ *
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
@@ -95,7 +103,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     /*******************************************************************************************************************
      *
-     *
+     * Makes sure both repository repositories are populated and activates one of them.
      *
      ******************************************************************************************************************/
     @PostConstruct
@@ -110,12 +118,12 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
             if (repositories[i].isEmpty())
               {
-                // FIXME: this is inefficient, clones both from the remote repo
+                // FIXME: this is inefficient, since it clones both from the remote repo
                 repositories[i].clone(new URI(remoteRepositoryUrl));
               }
           }
 
-        messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class);
+        messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class); // FIXME
 
         swapRepositories(); // initialization
         swapCounter = 0;
@@ -123,7 +131,9 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     /*******************************************************************************************************************
      *
-     *
+     * Checks whether there are incoming changes. Changes are detected when there's a new tag whose name follows the
+     * pattern 'published-<version>'. Changes are pulled in the alternate repository, then repositories are swapped, at
+     * last the alternateRepository is updated too.
      *
      ******************************************************************************************************************/
     public void checkForUpdates()
@@ -168,15 +178,18 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     /*******************************************************************************************************************
      *
+     * Swaps the repositories.
      *
+     * @throws IOException in case of error
+     * @throws PropertyVetoException in case of error
      *
      ******************************************************************************************************************/
     private void swapRepositories()
       throws IOException, PropertyVetoException
       {
         exposedRepository = repositories[repositorySelector];
-        alternateRepository = repositories[(repositorySelector + 1) % 2];
         repositorySelector = (repositorySelector + 1) % 2;
+        alternateRepository = repositories[repositorySelector];
         fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
         swapCounter++;
 
@@ -186,7 +199,11 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     /*******************************************************************************************************************
      *
+     * Finds a new tag.
      *
+     * @return  the new tag
+     * @throws NotFoundException if no new tag is found
+     * @throws IOException in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -196,8 +213,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
         log.info("Checking for updates...");
 
         alternateRepository.pull();
-        // would throw NotFoundException if no publishing tag
-        final Tag latestTag = getLatestPublishingTag(alternateRepository);
+        final Tag latestTag = alternateRepository.getLatestTagMatching("^published-.*"); // NotFoundException if no tag
 
         try
           {
@@ -206,33 +222,10 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
                 return latestTag;
               }
           }
-        catch (NotFoundException e)
+        catch (NotFoundException e) // exposedRepository not initialized
           {
             log.info(">>>> repo must be initialized");
             return latestTag;
-          }
-
-        throw new NotFoundException();
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository repository)
-      throws IOException, NotFoundException
-      {
-        final List<Tag> tags = repository.getTags();
-        Collections.reverse(tags);
-
-        for (final Tag tag : tags)
-          {
-            if (tag.getName().startsWith("published-"))
-              {
-                return tag;
-              }
           }
 
         throw new NotFoundException();

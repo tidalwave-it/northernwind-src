@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
+ * A provider for a {@link Site}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *

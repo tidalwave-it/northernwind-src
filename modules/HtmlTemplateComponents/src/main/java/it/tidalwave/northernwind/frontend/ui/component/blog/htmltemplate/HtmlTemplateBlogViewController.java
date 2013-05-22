@@ -207,7 +207,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, computeTitle(post)); 
           }
 
-        htmlBuilder.append(String.format("</div>\n"));
+        htmlBuilder.append(String.format("</div>%n"));
         htmlParts.add(htmlBuilder.toString());
       }
     

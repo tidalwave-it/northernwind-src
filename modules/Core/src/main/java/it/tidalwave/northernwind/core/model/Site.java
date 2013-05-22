@@ -52,9 +52,10 @@ public interface Site
 
     /*******************************************************************************************************************
      *
-     * Creates a link.
+     * Creates an HTML link to the node mapped to the given URI.
      *
-     * @return   the link
+     * @param  relativeUri  the target URI
+     * @return              the link
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -63,6 +64,9 @@ public interface Site
     /*******************************************************************************************************************
      *
      * Finds something.
+     * 
+     * @param  type  the type of thing to find
+     * @return       the {@link Finder} for that thing.
      *
      ******************************************************************************************************************/
     @Nonnull

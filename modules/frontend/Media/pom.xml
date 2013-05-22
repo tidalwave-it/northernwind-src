@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-20-SNAPSHOT</version>
+        <version>1.1-ALPHA-21-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Media Extensions</name>
     <description>Media Extensions.</description>
@@ -26,6 +26,16 @@
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-jdk14</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org-slf4j-jdk14</artifactId>
+                    <groupId>com.kenai.nbpwr</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -46,11 +56,20 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <!-- Fix for NW-130 -->
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>xmpcore-patched</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.0</version> <!-- FIXME -->
         </dependency>
+
+        <!-- TEST DEPENDENCIES -->        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 </project>

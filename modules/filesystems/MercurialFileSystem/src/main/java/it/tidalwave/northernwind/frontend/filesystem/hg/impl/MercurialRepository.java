@@ -80,6 +80,20 @@ public interface MercurialRepository
 
     /*******************************************************************************************************************
      *
+     * Returns the latest tag matching the given regular expression.
+     *
+     * @param   regexp              the regular expression
+     * @return                      the <code>Tag</code>
+     * @throws  NotFoundException   if no tag is found
+     * @throws  IOException         in case of error
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Tag getLatestTagMatching (@Nonnull String regexp)
+      throws IOException, NotFoundException;
+    
+    /*******************************************************************************************************************
+     *
      * Updates the repository to the given tag.
      *
      ******************************************************************************************************************/

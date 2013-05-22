@@ -33,6 +33,10 @@ import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
+ * Processing of a request also involves running through a pipeline of processors, each one implementing this interface.
+ * Each processor can be just another stage of the pipeline or be the final processor, in function of the result of
+ * its invocation.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -46,6 +50,11 @@ public interface RequestProcessor
 
     /*******************************************************************************************************************
      *
+     * Try to process the current request.
+     * 
+     * @param   request  the request
+     * @return  {@code CONTINUE} if the next processor should be called, {@code BREAK} if this was the final processor
+     *          of this request
      *
      ******************************************************************************************************************/
     @Nonnull

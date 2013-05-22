@@ -43,6 +43,8 @@ import org.testng.annotations.DataProvider;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /***********************************************************************************************************************
  *
@@ -61,7 +63,12 @@ public class DefaultMercurialRepositoryTest
     public void createSourceRepository()
       throws Exception
       {
-        workArea = new File("target/workarea").toPath();
+        // FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
+        // the project sources
+//        workArea = new File("target/workarea").toPath();
+        workArea = Files.createTempDirectory("hg-workarea");
+        workArea.toFile().delete();
+        workArea = Files.createTempDirectory("hg-workarea");
       }
 
     @BeforeMethod
@@ -77,7 +84,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_clone_a_repository()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
         // TODO: assert contents
       }
@@ -87,7 +94,7 @@ public class DefaultMercurialRepositoryTest
     public void must_throw_NotFoundException_when_asking_for_the_current_tag_for_an_empty_workarea()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
 
         fixture.getCurrentTag();
@@ -97,7 +104,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_enumerate_tags()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
 
         assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));
@@ -107,7 +114,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_return_the_latest_tag()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
 
         assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));
@@ -119,7 +126,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_update_to_a_tag (final @Nonnull Tag tag)
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -134,7 +141,7 @@ public class DefaultMercurialRepositoryTest
     public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -144,9 +151,9 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_pull_changesets()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP);
+        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
         fixture.clone(sourceRepository.toUri());
-        prepareSourceRepository(Option.DONT_STRIP);
+        prepareSourceRepository(Option.VOID_OPTION);
 
         fixture.pull();
 

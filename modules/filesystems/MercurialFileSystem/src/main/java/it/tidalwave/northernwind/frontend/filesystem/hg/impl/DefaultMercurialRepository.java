@@ -201,6 +201,29 @@ public class DefaultMercurialRepository implements MercurialRepository
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override @Nonnull
+    public Tag getLatestTagMatching (final @Nonnull String regexp)
+      throws IOException, NotFoundException
+      {
+        final List<Tag> tags = getTags();
+        Collections.reverse(tags);
+
+        for (final Tag tag : tags)
+          {
+            if (tag.getName().matches(regexp))
+              {
+                return tag;
+              }
+          }
+
+        throw new NotFoundException();
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private List<Tag> toTagList (final @Nonnull List<String> strings)
       {

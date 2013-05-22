@@ -36,6 +36,10 @@ import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * An exceptional response representing a situation that should be reported to the client with a specific HTTP status
+ * code. Note that this class doesn't necessarily represent an error, but it could be e.g. a redirect and such. This
+ * class can also carry headers to be included as part of the response
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -49,17 +53,37 @@ public class HttpStatusException extends Exception
     @Getter
     private final Map<String, String> headers;
 
+    /*******************************************************************************************************************
+     *
+     * Creates an instance with the given HTTP status.
+     * 
+     * @param  httpStatus  the status
+     *
+     ******************************************************************************************************************/
     public HttpStatusException (final int httpStatus)
       {
         this(httpStatus, Collections.<String, String>emptyMap());
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     private HttpStatusException (final int httpStatus, final @Nonnull Map<String, String> headers)
       {
         this.httpStatus = httpStatus;
         this.headers = headers;
       }
 
+    /*******************************************************************************************************************
+     *
+     * Creates a clone with the given header.
+     * 
+     * @param  name   the header name
+     * @param  value  the header value
+     * @return        the clone
+     * 
+     ******************************************************************************************************************/
     @Nonnull
     public HttpStatusException withHeader (final @Nonnull String name, final @Nonnull String value)
       {

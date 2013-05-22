@@ -343,7 +343,9 @@ public class Executor
     private static String findPathFor (final @Nonnull String executable)
       throws IOException
       {
-        for (final String path : System.getenv("PATH").split(File.pathSeparator))
+        final String pathEnv = System.getenv("PATH") + File.pathSeparator + "/usr/local/bin";
+        
+        for (final String path : pathEnv.split(File.pathSeparator))
           {
             final File file = new File(new File(path), executable);
 
