@@ -246,7 +246,6 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <!--<version>0.5.5.201112152213</version>-->
                         <version>0.6.2.201302030002</version>
                         <configuration>
                             <propertyName>tft.test.jacoco.argLine</propertyName>
@@ -263,7 +262,7 @@
                             </execution>
                             <execution>
                                 <id>report</id>
-                                <!--<phase>prepare-package</phase>-->
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
