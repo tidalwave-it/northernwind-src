@@ -129,7 +129,6 @@
                                         <artifactItem>
                                             <groupId>it.tidalwave.northernwind</groupId>
                                             <artifactId>it-tidalwave-northernwind-frontend-webapp-commons</artifactId>
-                                            <version>1.1-ALPHA-20-SNAPSHOT</version> <!-- FIXME DON'T COMMIT! -->
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${project.basedir}/target/commons</outputDirectory>
