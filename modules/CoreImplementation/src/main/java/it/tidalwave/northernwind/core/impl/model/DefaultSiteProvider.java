@@ -73,7 +73,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Inject @Nonnull
     private ModelFactory modelFactory;
 
-//    @Inject @Named("taskExecutor") @Nonnull
+//    @Inject @Named("taskExecutor") @Nonnull FIXME: See NW-157
     @Getter @Setter @Nonnull
     private TaskExecutor executor;
 
