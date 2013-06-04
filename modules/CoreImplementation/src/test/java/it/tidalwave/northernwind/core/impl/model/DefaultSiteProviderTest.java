@@ -34,6 +34,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
+import java.io.IOException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
@@ -131,5 +132,21 @@ public class DefaultSiteProviderTest
       {
         fixture = context.getBean(DefaultSiteProvider.class);
         assertThat(fixture.getContextPath(), is("thecontextpath"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_non_null_site_even_in_cause_of_initialization_failure()
+      throws Exception
+      {
+        doThrow(new IOException("test")).when(site).initialize();
+        
+        fixture = context.getBean(DefaultSiteProvider.class);
+        executor.doExecute(); // emulate Site initialization in background
+        
+        assertThat(fixture.getSite(), sameInstance((Site)site));
+        assertThat(fixture.isSiteAvailable(), is(false));
       }
   }
