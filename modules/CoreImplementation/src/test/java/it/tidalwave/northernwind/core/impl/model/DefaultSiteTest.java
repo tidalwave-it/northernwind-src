@@ -103,7 +103,7 @@ public class DefaultSiteTest
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
         
-        siteBuilder = new Site.Builder().withContextPath("contextpath")
+        siteBuilder = new Site.Builder().withContextPath("/contextpath")
                                         .withDocumentPath("content/document")
                                         .withMediaPath("content/media")
                                         .withLibraryPath("content/library")
@@ -212,7 +212,7 @@ public class DefaultSiteTest
       {
         fixture = new DefaultSite(siteBuilder);
         
-        assertThat(fixture.getContextPath(), is("contextpath"));
+        assertThat(fixture.getContextPath(), is("/contextpath"));
         assertThat(fixture.documentPath, is("content/document"));
         assertThat(fixture.mediaPath, is("content/media"));
         assertThat(fixture.libraryPath, is("content/library"));
@@ -353,10 +353,10 @@ public class DefaultSiteTest
       {
         return new Object[][]
           {
-            { "/link",         "lpp3-lpp2-lpp1-/baseUrlcontextpath/link/" },
-            { "/link/",        "lpp3-lpp2-lpp1-/baseUrlcontextpath/link/" },
-            { "/link?arg=val", "lpp3-lpp2-lpp1-/baseUrlcontextpath/link?arg=val" },
-            { "/image.jpg",    "lpp3-lpp2-lpp1-/baseUrlcontextpath/image.jpg" },
+            { "/link",         "lpp3-lpp2-lpp1-/baseUrl/contextpath/link/" },
+            { "/link/",        "lpp3-lpp2-lpp1-/baseUrl/contextpath/link/" },
+            { "/link?arg=val", "lpp3-lpp2-lpp1-/baseUrl/contextpath/link?arg=val" },
+            { "/image.jpg",    "lpp3-lpp2-lpp1-/baseUrl/contextpath/image.jpg" },
                 // TODO: add more 
           };
       }
