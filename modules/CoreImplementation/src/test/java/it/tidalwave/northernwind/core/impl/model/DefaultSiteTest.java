@@ -40,15 +40,18 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
-//import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import org.testng.annotations.DataProvider;
 //import static org.hamcrest.CoreMatchers.notNullValue;
 
@@ -200,6 +203,35 @@ public class DefaultSiteTest
         fixture.initialize();
         
         fsTestSupport.performAssertions(fixture);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_create_a_Finder_for_Resource()
+      throws Exception
+      {
+        final Site.Builder builder = new Site.Builder()
+                .withContextPath("contextpath")
+                .withDocumentPath("content/document")
+                .withMediaPath("content/media")
+                .withLibraryPath("content/library")
+                .withNodePath("structure")
+                .withLogConfigurationEnabled(true)
+                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
+                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
+        
+        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        fsTestSupport.setUp(resourceFileSystem);
+        fixture = new DefaultSite(builder);
+        fixture.initialize();
+        
+        final DefaultSiteFinder<Resource> finder = (DefaultSiteFinder<Resource>)fixture.find(Resource.class);
+        
+//        assertThat(finder.getName) TODO
+        assertThat(finder.mapByRelativePath, is(sameInstance(fixture.libraryMapByRelativePath)));
+        assertThat(finder.mapByRelativeUri,  is(nullValue()));
       }
     
     /*******************************************************************************************************************
