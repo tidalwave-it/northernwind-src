@@ -151,6 +151,9 @@ public class DefaultSiteProviderTest
 
     private ServletContext servletContext;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       {
@@ -173,6 +176,9 @@ public class DefaultSiteProviderTest
 //                         .thenReturn(site);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
@@ -201,6 +207,9 @@ public class DefaultSiteProviderTest
         assertThat(fixture.isSiteAvailable(), is(true));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_return_the_correct_version_string()
       {
@@ -208,6 +217,9 @@ public class DefaultSiteProviderTest
         assertThat(fixture.getVersionString(), is(notNullValue()));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_return_the_correct_context_path_in_a_web_environment()
       {
