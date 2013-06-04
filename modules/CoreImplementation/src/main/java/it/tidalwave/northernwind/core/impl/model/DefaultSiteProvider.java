@@ -116,9 +116,9 @@ public class DefaultSiteProvider implements SiteProvider
     @Override @Nonnull
     public Site getSite()
       {
-        if (site == null) // FIXME: rather create a NullObject site
+        if (site == null) // must never occur, since site is created during initialize()
           {
-            throw new IllegalStateException("site not created yet");
+            throw new IllegalStateException("Initialization internal error - @PostConstruct not called?");
           }
 
         return site;
