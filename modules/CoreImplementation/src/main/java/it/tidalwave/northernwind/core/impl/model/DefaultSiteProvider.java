@@ -70,7 +70,6 @@ public class DefaultSiteProvider implements SiteProvider
     @Inject @Nonnull
     private Provider<ServletContext> servletContext;
 
-    @Getter @Setter
     @Inject @Nonnull
     private ModelFactory modelFactory;
 
