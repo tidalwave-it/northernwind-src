@@ -23,9 +23,9 @@
   
   $Id$
   
-  *********************************************************************************************************************
-  #L%
-  -->
+*********************************************************************************************************************
+#L%
+-->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -71,8 +71,15 @@
         <property name="queueCapacity" value="${nw.task.queueCapacity}" />
     </bean>
 
-    <!-- Generic scheduler -->
-    <task:scheduler id="scheduler" pool-size="10"/>
+    <!-- Generic scheduler for tasks -->
+    <!-- We need autowire-candidate="false" to avoid confusion with other instances of ThreadFactory, and
+         unfortunately task:scheduler doesn't accept this attribute. -->
+    <!--<task:scheduler id="scheduler" pool-size="10" autowire-candidate="false" />-->
+    <bean id="scheduler" 
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"
+          autowire-candidate="false">
+        <property name="poolSize" value="10" />
+    </bean>
 
     <!-- MessageBus stuff -->
     <bean id="applicationMessageBusTaskExecutor" 
