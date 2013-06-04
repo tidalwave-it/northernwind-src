@@ -61,6 +61,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class DefaultSiteProvider implements SiteProvider
   {
+    private static final String DEFAULT_DOCUMENT_PATH = "content/document";
+    private static final String DEFAULT_MEDIA_PATH = "content/media";
+    private static final String DEFAULT_LIBRARY_PATH = "content/library";
+    private static final String DEFAULT_NODE_PATH = "structure";
+    public static final String TEST_CONTEXT_PATH = "/";
+    
     @Inject @Nonnull
     private ApplicationContext applicationContext;
 
@@ -73,16 +79,16 @@ public class DefaultSiteProvider implements SiteProvider
     private TaskExecutor executor;
 
     @Getter @Setter @Nonnull
-    private String documentPath = "content/document";
+    private String documentPath = DEFAULT_DOCUMENT_PATH;
 
     @Getter @Setter @Nonnull
-    private String mediaPath = "content/media";
+    private String mediaPath = DEFAULT_MEDIA_PATH;
 
     @Getter @Setter @Nonnull
-    private String libraryPath = "content/library";
+    private String libraryPath = DEFAULT_LIBRARY_PATH;
 
     @Getter @Setter @Nonnull
-    private String nodePath = "structure";
+    private String nodePath = DEFAULT_NODE_PATH;
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
@@ -205,8 +211,8 @@ public class DefaultSiteProvider implements SiteProvider
           }
         catch (NoSuchBeanDefinitionException e)
           {
-            log.warn("Running in a non-web environment, set contextPath = /");
-            return "/";
+            log.warn("Running in a non-web environment, set contextPath = {}", TEST_CONTEXT_PATH);
+            return TEST_CONTEXT_PATH;
           }
       }
   }
