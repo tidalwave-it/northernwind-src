@@ -39,7 +39,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class EmptyFileSystemTestSupport extends FileSystemTestSupport
+public class EmptyTestFileSystem extends FileSystemTestSupport
   {
     // FIXME: these values are not thread-safe, the same instance is reused...
     protected ResourceFile contentFolder;
@@ -48,12 +48,12 @@ public class EmptyFileSystemTestSupport extends FileSystemTestSupport
     protected ResourceFile libraryFolder;
     protected ResourceFile nodeFolder;
         
-    public EmptyFileSystemTestSupport()
+    public EmptyTestFileSystem()
       {
         super("Empty file system");
       }
 
-    protected EmptyFileSystemTestSupport (final @Nonnull String name)
+    protected EmptyTestFileSystem (final @Nonnull String name)
       {
         super(name);
       }

@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class TestFileSystemWithOnlyIgnoredFiles extends EmptyFileSystemTestSupport
+public class TestFileSystemWithOnlyIgnoredFiles extends EmptyTestFileSystem
   {
     public TestFileSystemWithOnlyIgnoredFiles()
       {
