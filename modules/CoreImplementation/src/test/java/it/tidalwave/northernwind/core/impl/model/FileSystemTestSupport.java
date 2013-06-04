@@ -99,6 +99,29 @@ public abstract class FileSystemTestSupport
      *
      ******************************************************************************************************************/
     @Nonnull
+    protected ResourceFile createMockFile (final @Nonnull ResourceFileSystem fileSystem, 
+                                           final @Nonnull ResourceFile parentFolder, 
+                                           final @Nonnull String name)
+      {
+        final String path = parentFolder.getPath() + "/" + name;
+          
+        final ResourceFile file = createMockFile(name);
+        when(file.getParent()).thenReturn(parentFolder);
+        when(file.getPath()).thenReturn(path);
+        when(file.toString()).thenReturn(path);
+        when(fileSystem.findFileByPath(eq(path))).thenReturn(file);
+        
+        final Collection<ResourceFile> children = parentFolder.getChildren();
+        children.add(file);
+        when(parentFolder.getChildren()).thenReturn(children);
+
+        return file;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     private ResourceFile createMockFolder (final @Nonnull String name)
       {
         final ResourceFile folder = mock(ResourceFile.class);
@@ -108,6 +131,23 @@ public abstract class FileSystemTestSupport
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
         when(folder.getChildren()).thenReturn(new ArrayList<ResourceFile>());
+        
+        return folder;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private ResourceFile createMockFile (final @Nonnull String name)
+      {
+        final ResourceFile folder = mock(ResourceFile.class);
+        when(folder.getName()).thenReturn(name);
+        when(folder.getPath()).thenReturn(name);
+        when(folder.toString()).thenReturn(name);
+        when(folder.isData()).thenReturn(true);
+        when(folder.isFolder()).thenReturn(false);
+//        when(folder.getChildren()).thenReturn(new ArrayList<ResourceFile>());
         
         return folder;
       }

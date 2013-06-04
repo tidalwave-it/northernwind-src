@@ -88,7 +88,12 @@ public class DefaultSiteTest
             @Override
             public Resource answer (final @Nonnull InvocationOnMock invocation) 
               {
-                return mock(Resource.class);
+                final Resource resource = mock(Resource.class);
+                final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
+                final String path = file.getPath();
+                
+                when(resource.toString()).thenReturn(String.format("MockResource(path=%s)", path));
+                return resource;
               }
           });
                 
@@ -111,7 +116,12 @@ public class DefaultSiteTest
             @Override
             public Media answer (final @Nonnull InvocationOnMock invocation) 
               {
-                return mock(Media.class);
+                final Media media = mock(Media.class);
+                final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
+                final String path = file.getPath();
+                
+                when(media.toString()).thenReturn(String.format("MockMedia(path=%s)", path));
+                return media;
               }
           });
                 
@@ -201,7 +211,8 @@ public class DefaultSiteTest
         return new Object[][]
           {
             { new EmptyTestFileSystem() },
-            { new TestFileSystemWithOnlyIgnoredFiles() }
+            { new TestFileSystemWithOnlyIgnoredFiles() },
+            { new TestFileSystemWithAFewStuff1()}
                 // TODO: add more filesystem configurations
           };
       }
