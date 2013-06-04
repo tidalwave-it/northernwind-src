@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
@@ -173,11 +172,9 @@ public class DefaultSiteTest
     public void must_properly_initialize_with_an_empty_site() // TODO: test more filesystem configurations 
       throws Exception
       {
-        final ResourceFile documentFolder = createRootMockFolder("documentPath");
-        final ResourceFile mediaFolder    = createRootMockFolder("mediaPath");
-        final ResourceFile libraryFolder  = createRootMockFolder("libraryPath");
-        final ResourceFile nodeFolder     = createRootMockFolder("nodePath");
-                
+        final EmptyFileSystemTestSupport fsTestSupport = new EmptyFileSystemTestSupport(resourceFileSystem);
+        fsTestSupport.initialize();
+        
         final Site.Builder builder = new Site.Builder()
                 .withContextPath("contextpath")
                 .withDocumentPath("documentPath")
@@ -192,39 +189,6 @@ public class DefaultSiteTest
         
         fixture.initialize();
         
-        assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertThat(fixture.documentMapByRelativePath.get("/").toString(), is("MockContent(path=documentPath)"));
-        
-        assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
-        
-        assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
-        
-        assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertThat(fixture.nodeMapByRelativePath.get("/").toString(), is("MockSiteNode(path=nodePath)"));
-       
-        assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertThat(fixture.nodeMapByRelativeUri.get("relativeUriFor(nodePath)").toString(), is("MockSiteNode(path=nodePath)"));
-      }
-    
-    @Nonnull
-    private ResourceFile createRootMockFolder (final @Nonnull String name)
-      {
-        final ResourceFile folder = createMockFolder(name);
-        when(resourceFileSystem.findFileByPath(eq(name))).thenReturn(folder);
-        return folder;
-      }
-    
-    @Nonnull
-    private ResourceFile createMockFolder (final @Nonnull String name)
-      {
-        final ResourceFile folder = mock(ResourceFile.class);
-        when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(name); // FIXME: parent
-        when(folder.isData()).thenReturn(false);
-        when(folder.isFolder()).thenReturn(true);
-        when(folder.getChildren()).thenReturn(Collections.<ResourceFile>emptyList());
-        when(folder.toString()).thenReturn(name); // FIXME: parent
-        
-        return folder;
+        fsTestSupport.performAssertions(fixture);
       }
   }
