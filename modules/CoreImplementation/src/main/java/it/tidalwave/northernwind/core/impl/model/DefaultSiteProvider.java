@@ -160,7 +160,9 @@ public class DefaultSiteProvider implements SiteProvider
                   }
                 catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
                   {
-                    log.error("While initializing site", e);
+                    log.error("****************************************");
+                    log.error("SITE INITIALIZATION FAILED!", e);
+                    log.error("****************************************");
                   }
               }
           });
