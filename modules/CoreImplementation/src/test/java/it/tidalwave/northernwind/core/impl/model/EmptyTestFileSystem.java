@@ -73,16 +73,16 @@ public class EmptyTestFileSystem extends FileSystemTestSupport
     public void performAssertions (final @Nonnull DefaultSite fixture) 
       {
         assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertItem(fixture.documentMapByRelativePath, "/", "MockContent(path=content/document)");
+        assertItem(fixture.documentMapByRelativePath, "/", "Content(path=content/document)");
         
         assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
         
         assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
         
         assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertItem(fixture.nodeMapByRelativePath, "/", "MockSiteNode(path=structure)");
+        assertItem(fixture.nodeMapByRelativePath, "/", "Node(path=structure)");
        
         assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)", "MockSiteNode(path=structure)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)", "Node(path=structure)");
       }
   }

@@ -92,7 +92,7 @@ public class DefaultSiteTest
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
                 final String path = file.getPath();
                 
-                when(resource.toString()).thenReturn(String.format("MockResource(path=%s)", path));
+                when(resource.toString()).thenReturn(String.format("Resource(path=%s)", path));
                 return resource;
               }
           });
@@ -106,7 +106,7 @@ public class DefaultSiteTest
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
                 final String path = file.getPath();
                 
-                when(content.toString()).thenReturn(String.format("MockContent(path=%s)", path));
+                when(content.toString()).thenReturn(String.format("Content(path=%s)", path));
                 return content;
               }
           });
@@ -120,7 +120,7 @@ public class DefaultSiteTest
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
                 final String path = file.getPath();
                 
-                when(media.toString()).thenReturn(String.format("MockMedia(path=%s)", path));
+                when(media.toString()).thenReturn(String.format("Media(path=%s)", path));
                 return media;
               }
           });
@@ -140,7 +140,7 @@ public class DefaultSiteTest
                 when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn("false");
                 when(siteNode.getProperties()).thenReturn(properties);
                 when(siteNode.getRelativeUri()).thenReturn(relativeUri); 
-                when(siteNode.toString()).thenReturn(String.format("MockSiteNode(path=%s)", path));
+                when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
                 
                 return siteNode;
               }
