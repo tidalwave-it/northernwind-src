@@ -64,7 +64,6 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         createMockFile(fileSystem, libraryFolder, "library2");
       }
 
-
     @Override
     public void performAssertions (final @Nonnull DefaultSite fixture) 
       {
