@@ -316,20 +316,17 @@ public class DefaultSiteTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "links")
-    public void must_create_correct_links (final @Nonnull String link, final @Nonnull String expectedResult)
+    @Test
+    public void must_create_correct_links()
       throws Exception
       {
-        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
         fixture = new DefaultSite(siteBuilder);
-        fixture.initialize();
         
-        final String result = fixture.createLink(link);
+        final String result = fixture.createLink("/link");
           
-        assertThat(result, is(expectedResult));
+        assertThat(result, is("lpp3-lpp2-lpp1-/baseUrl/contextpath/link"));
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -342,23 +339,6 @@ public class DefaultSiteTest
             { new TestFileSystemWithOnlyIgnoredFiles() },
             { new TestFileSystemWithAFewStuff1()       }
                 // TODO: add more filesystem configurations
-          };
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @DataProvider(name = "links")
-    public Object[][] linksDataProvider()
-      {
-        return new Object[][]
-          {
-            { "/link",          "lpp3-lpp2-lpp1-/baseUrl/contextpath/link/"         },
-            { "/link/",         "lpp3-lpp2-lpp1-/baseUrl/contextpath/link/"         },
-            { "/link?arg=val",  "lpp3-lpp2-lpp1-/baseUrl/contextpath/link?arg=val"  },
-            { "/link/?arg=val", "lpp3-lpp2-lpp1-/baseUrl/contextpath/link/?arg=val" },
-            { "/image.jpg",     "lpp3-lpp2-lpp1-/baseUrl/contextpath/image.jpg"     },
-                // TODO: add more 
           };
       }
   }

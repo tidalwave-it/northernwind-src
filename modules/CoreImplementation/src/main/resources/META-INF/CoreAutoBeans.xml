@@ -152,6 +152,9 @@
     <bean id="voidLinkPostProcessor"
           class="it.tidalwave.northernwind.core.impl.model.VoidLinkPostProcessor" />
           
+    <bean id="normalizedLinkPostProcessor"
+          class="it.tidalwave.northernwind.core.impl.model.NormalizedLinkPostProcessor" />
+          
     <bean id="requestLocaleManager"
           class="it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager" >
     </bean>
