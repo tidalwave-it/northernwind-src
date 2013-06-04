@@ -165,7 +165,7 @@ public class DefaultSiteTest
                         thenAnswer(new Answer<String>() 
                   {
                     @Override
-                    public String answer(InvocationOnMock invocation) 
+                    public String answer (final @Nonnull InvocationOnMock invocation) 
                       {
                         return (String)invocation.getArguments()[1]; // default value
                       }
@@ -310,9 +310,9 @@ public class DefaultSiteTest
       {
         return new Object[][]
           {
-            { new EmptyTestFileSystem() },
+            { new EmptyTestFileSystem()                },
             { new TestFileSystemWithOnlyIgnoredFiles() },
-            { new TestFileSystemWithAFewStuff1()}
+            { new TestFileSystemWithAFewStuff1()       }
                 // TODO: add more filesystem configurations
           };
       }
