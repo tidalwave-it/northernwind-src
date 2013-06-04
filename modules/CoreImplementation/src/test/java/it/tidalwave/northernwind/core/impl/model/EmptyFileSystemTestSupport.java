@@ -28,14 +28,10 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /***********************************************************************************************************************
  *
@@ -45,17 +41,13 @@ import static org.mockito.Mockito.when;
  **********************************************************************************************************************/
 public class EmptyFileSystemTestSupport extends FileSystemTestSupport
   {
-    public EmptyFileSystemTestSupport (final @Nonnull ResourceFileSystem fileSystem)
+    @Override
+    public void setUp (final @Nonnull ResourceFileSystem fileSystem)
       {
-        super(fileSystem);
-      }
-    
-    public void initialize()
-      {
-        final ResourceFile documentFolder = createRootMockFolder("documentPath");
-        final ResourceFile mediaFolder    = createRootMockFolder("mediaPath");
-        final ResourceFile libraryFolder  = createRootMockFolder("libraryPath");
-        final ResourceFile nodeFolder     = createRootMockFolder("nodePath");
+        final ResourceFile documentFolder = createRootMockFolder(fileSystem, "documentPath");
+        final ResourceFile mediaFolder    = createRootMockFolder(fileSystem, "mediaPath");
+        final ResourceFile libraryFolder  = createRootMockFolder(fileSystem, "libraryPath");
+        final ResourceFile nodeFolder     = createRootMockFolder(fileSystem, "nodePath");
       }
 
     @Override

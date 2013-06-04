@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import lombok.RequiredArgsConstructor;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -42,24 +41,33 @@ import static org.mockito.Mockito.when;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
 public abstract class FileSystemTestSupport 
   {
-    @Nonnull
-    protected final ResourceFileSystem resourceFileSystem;
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public abstract void setUp (@Nonnull ResourceFileSystem fileSystem);
     
-    public abstract void initialize();
-    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     public abstract void performAssertions (@Nonnull DefaultSite fixture);
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    protected ResourceFile createRootMockFolder (final @Nonnull String name)
+    protected ResourceFile createRootMockFolder (final @Nonnull ResourceFileSystem fileSystem, 
+                                                 final @Nonnull String name)
       {
         final ResourceFile folder = createMockFolder(name);
-        when(resourceFileSystem.findFileByPath(eq(name))).thenReturn(folder);
+        when(fileSystem.findFileByPath(eq(name))).thenReturn(folder);
         return folder;
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     protected ResourceFile createMockFolder (final @Nonnull String name)
       {

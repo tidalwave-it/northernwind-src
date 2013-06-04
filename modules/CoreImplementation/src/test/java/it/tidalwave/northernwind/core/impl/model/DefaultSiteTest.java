@@ -49,6 +49,7 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 //import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
+import org.testng.annotations.DataProvider;
 //import static org.hamcrest.CoreMatchers.notNullValue;
 
 /***********************************************************************************************************************
@@ -168,12 +169,11 @@ public class DefaultSiteTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test
-    public void must_properly_initialize_with_an_empty_site() // TODO: test more filesystem configurations 
+    @Test(dataProvider = "fileSystems")
+    public void must_properly_initialize_with_an_empty_site (final @Nonnull FileSystemTestSupport fsTestSupport) 
       throws Exception
       {
-        final FileSystemTestSupport fsTestSupport = new EmptyFileSystemTestSupport(resourceFileSystem);
-        fsTestSupport.initialize();
+        fsTestSupport.setUp(resourceFileSystem);
         
         final Site.Builder builder = new Site.Builder()
                 .withContextPath("contextpath")
@@ -190,5 +190,18 @@ public class DefaultSiteTest
         fixture.initialize();
         
         fsTestSupport.performAssertions(fixture);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "fileSystems")
+    public Object[][] fileSystemsDataProvider()
+      {
+        return new Object[][]
+          {
+            { new EmptyFileSystemTestSupport() }
+                // TODO: add more filesystem configurations
+          };
       }
   }
