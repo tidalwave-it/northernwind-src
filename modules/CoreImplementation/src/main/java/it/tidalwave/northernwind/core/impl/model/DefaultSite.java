@@ -139,15 +139,15 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     private ResourceFile nodeFolder;
 
-    private final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
 
-    private final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
 
-    private final Map<String, Media> mediaMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, Media> mediaMapByRelativePath = new TreeMap<>();
 
-    private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<>();
 
-    private final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<>();
+    /* package */  final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<>();
 
     private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<>();
 
@@ -390,6 +390,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     /*******************************************************************************************************************
      *
+     * Wrapper against ResourceFileSystem: its methods should throw NFE by themselves
      *
      ******************************************************************************************************************/
     @Nonnull
