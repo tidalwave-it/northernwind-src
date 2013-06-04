@@ -36,6 +36,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.eq;
@@ -164,7 +165,14 @@ public abstract class FileSystemTestSupport
                                       final @Nonnull String key,
                                       final @Nonnull String expectedValue)
       {
-        assertThat(key, map.get(key), is(notNullValue()));
-        assertThat(map.get(key).toString(), is(expectedValue)); 
+        if (expectedValue == null)
+          {
+            assertThat(key, map.get(key), is(nullValue()));
+          }
+        else
+          {
+            assertThat(key, map.get(key), is(notNullValue()));
+            assertThat(map.get(key).toString(), is(expectedValue)); 
+          }
       }
   }

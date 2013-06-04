@@ -98,11 +98,14 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         assertThat(fixture.nodeMapByRelativeUri.size(), is(5));
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)",           "Node(path=structure)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node1)",     "Node(path=structure/node1)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node1)/a",   null);
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node2)",     "Node(path=structure/node2)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node2)/a",   null);
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)",     "Node(path=structure/node3)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)/a",   "Node(path=structure/node3)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)/b",   "Node(path=structure/node3)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)/c/d", "Node(path=structure/node3)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node4)",     "Node(path=structure/node4)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node4)/a",   null);
       }
   }
