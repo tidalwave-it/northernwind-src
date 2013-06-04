@@ -138,7 +138,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
     @Override @Nonnull
     protected List<? extends Type> computeResults()
       {
-        final List<Type> results = new ArrayList<Type>();
+        final List<Type> results = new ArrayList<>();
 
         if (relativePath != null)
           {
