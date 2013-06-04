@@ -82,48 +82,6 @@ public class DefaultSiteTest
         resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_properly_construct()
-      throws Exception
-      {
-        final Site.Builder builder = new Site.Builder()
-                .withContextPath("thecontextpath")
-                .withDocumentPath("testDocumentPath")
-                .withMediaPath("testMediaPath")
-                .withLibraryPath("testLibraryPath")
-                .withNodePath("testNodePath")
-                .withLogConfigurationEnabled(true)
-                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
-        
-        fixture = new DefaultSite(builder);
-        
-        assertThat(fixture.getContextPath(), is("thecontextpath"));
-        assertThat(fixture.documentPath, is("testDocumentPath"));
-        assertThat(fixture.mediaPath, is("testMediaPath"));
-        assertThat(fixture.libraryPath, is("testLibraryPath"));
-        assertThat(fixture.nodePath, is("testNodePath"));
-        assertThat(fixture.logConfigurationEnabled, is(true));
-        assertThat(fixture.getConfiguredLocales(), is(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))));
-        assertThat(fixture.ignoredFolders, is(Arrays.asList("ignored1", "ignored2")));
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_properly_initialize_with_an_empty_site() // TODO: test more filesystem configurations 
-      throws Exception
-      {
-        final ResourceFile documentFolder = createRootMockFolder("documentPath");
-        final ResourceFile mediaFolder    = createRootMockFolder("mediaPath");
-        final ResourceFile libraryFolder  = createRootMockFolder("libraryPath");
-        final ResourceFile nodeFolder     = createRootMockFolder("nodePath");
         
         when(modelFactory.createResource(any(ResourceFile.class))).thenAnswer(new Answer<Resource>() 
           {
@@ -177,6 +135,48 @@ public class DefaultSiteTest
                 return siteNode;
               }
           });
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_construct()
+      throws Exception
+      {
+        final Site.Builder builder = new Site.Builder()
+                .withContextPath("thecontextpath")
+                .withDocumentPath("testDocumentPath")
+                .withMediaPath("testMediaPath")
+                .withLibraryPath("testLibraryPath")
+                .withNodePath("testNodePath")
+                .withLogConfigurationEnabled(true)
+                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
+                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
+        
+        fixture = new DefaultSite(builder);
+        
+        assertThat(fixture.getContextPath(), is("thecontextpath"));
+        assertThat(fixture.documentPath, is("testDocumentPath"));
+        assertThat(fixture.mediaPath, is("testMediaPath"));
+        assertThat(fixture.libraryPath, is("testLibraryPath"));
+        assertThat(fixture.nodePath, is("testNodePath"));
+        assertThat(fixture.logConfigurationEnabled, is(true));
+        assertThat(fixture.getConfiguredLocales(), is(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))));
+        assertThat(fixture.ignoredFolders, is(Arrays.asList("ignored1", "ignored2")));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_initialize_with_an_empty_site() // TODO: test more filesystem configurations 
+      throws Exception
+      {
+        final ResourceFile documentFolder = createRootMockFolder("documentPath");
+        final ResourceFile mediaFolder    = createRootMockFolder("mediaPath");
+        final ResourceFile libraryFolder  = createRootMockFolder("libraryPath");
+        final ResourceFile nodeFolder     = createRootMockFolder("nodePath");
                 
         final Site.Builder builder = new Site.Builder()
                 .withContextPath("contextpath")
