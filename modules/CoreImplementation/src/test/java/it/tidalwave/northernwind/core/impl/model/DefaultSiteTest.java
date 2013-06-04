@@ -353,7 +353,10 @@ public class DefaultSiteTest
       {
         return new Object[][]
           {
-            { "/link", "lpp3-lpp2-lpp1-/baseUrlcontextpath/link/" },
+            { "/link",         "lpp3-lpp2-lpp1-/baseUrlcontextpath/link/" },
+            { "/link/",        "lpp3-lpp2-lpp1-/baseUrlcontextpath/link/" },
+            { "/link?arg=val", "lpp3-lpp2-lpp1-/baseUrlcontextpath/link?arg=val" },
+            { "/image.jpg",    "lpp3-lpp2-lpp1-/baseUrlcontextpath/image.jpg" },
                 // TODO: add more 
           };
       }
