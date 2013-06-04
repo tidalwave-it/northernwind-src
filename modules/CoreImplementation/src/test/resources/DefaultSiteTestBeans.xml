@@ -55,8 +55,6 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.ResourceFileSystemProvider" />
     </bean>
     
-    <bean class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="it.tidalwave.northernwind.core.model.spi.LinkPostProcessor" />
-    </bean>
+    <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor1"/>
 
 </beans>

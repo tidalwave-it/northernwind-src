@@ -36,6 +36,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
@@ -43,6 +44,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.util.Key;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
@@ -69,6 +71,8 @@ public class DefaultSiteTest
     
     private ModelFactory modelFactory;
     
+    private RequestHolder requestHolder;
+    
     private ResourceFileSystemProvider resourceFileSystemProvider;
     
     private ResourceFileSystem resourceFileSystem;
@@ -89,6 +93,12 @@ public class DefaultSiteTest
         resourceProperties = new HashMap<>();
         context = new ClassPathXmlApplicationContext("DefaultSiteTestBeans.xml");
         modelFactory = context.getBean(ModelFactory.class);
+        
+        final Request request = mock(Request.class);
+        when(request.getBaseUrl()).thenReturn("/baseUrl");
+        requestHolder = context.getBean(RequestHolder.class);
+        when(requestHolder.get()).thenReturn(request);
+        
         resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
@@ -301,6 +311,23 @@ public class DefaultSiteTest
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(fixture.nodeMapByRelativePath)));
         assertThat(finder.mapByRelativeUri,  is(sameInstance(fixture.nodeMapByRelativeUri)));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void testCreateLink()
+      throws Exception
+      {
+        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
+        fixture = new DefaultSite(siteBuilder);
+        fixture.initialize();
+        
+        final String link = fixture.createLink("/link");
+          
+        assertThat(link, is("lpp1(/baseUrlcontextpath/link/)"));
       }
     
     /*******************************************************************************************************************
