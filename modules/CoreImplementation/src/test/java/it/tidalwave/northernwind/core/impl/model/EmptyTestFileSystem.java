@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import static it.tidalwave.northernwind.core.impl.model.FileSystemTestSupport.assertItem;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
@@ -72,16 +73,16 @@ public class EmptyTestFileSystem extends FileSystemTestSupport
     public void performAssertions (final @Nonnull DefaultSite fixture) 
       {
         assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertThat(fixture.documentMapByRelativePath.get("/").toString(), is("MockContent(path=content/document)"));
+        assertItem(fixture.documentMapByRelativePath, "/", "MockContent(path=content/document)");
         
         assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
         
         assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
         
         assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertThat(fixture.nodeMapByRelativePath.get("/").toString(), is("MockSiteNode(path=structure)"));
+        assertItem(fixture.nodeMapByRelativePath, "/", "MockSiteNode(path=structure)");
        
         assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertThat(fixture.nodeMapByRelativeUri.get("relativeUriFor(structure)").toString(), is("MockSiteNode(path=structure)"));
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)", "MockSiteNode(path=structure)");
       }
   }
