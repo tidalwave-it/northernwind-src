@@ -154,7 +154,7 @@ public class DefaultSiteTest
               throws Exception
               {
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[1];
-                final String relativeUri = String.format("relativeUriFor(%s)", file.getPath());
+                final String relativeUri = String.format("relativeUriFor:%s", file.getPath());
                 final String path = file.getPath();
                 log.trace(">>>> creating SiteNode for {}", path);
                 final SiteNode siteNode = mock(SiteNode.class);

@@ -85,6 +85,6 @@ public class EmptyTestFileSystem extends FileSystemTestSupport
         assertItem(fixture.nodeMapByRelativePath, "/", "Node(path=structure)");
        
         assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)", "Node(path=structure)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor:structure", "Node(path=structure)");
       }
   }
