@@ -172,7 +172,7 @@ public class DefaultSiteTest
     public void must_properly_initialize_with_an_empty_site() // TODO: test more filesystem configurations 
       throws Exception
       {
-        final EmptyFileSystemTestSupport fsTestSupport = new EmptyFileSystemTestSupport(resourceFileSystem);
+        final FileSystemTestSupport fsTestSupport = new EmptyFileSystemTestSupport(resourceFileSystem);
         fsTestSupport.initialize();
         
         final Site.Builder builder = new Site.Builder()

@@ -31,8 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import lombok.RequiredArgsConstructor;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,35 +42,35 @@ import static org.mockito.Mockito.when;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class EmptyFileSystemTestSupport extends FileSystemTestSupport
+@RequiredArgsConstructor
+public abstract class FileSystemTestSupport 
   {
-    public EmptyFileSystemTestSupport (final @Nonnull ResourceFileSystem fileSystem)
+    @Nonnull
+    protected final ResourceFileSystem resourceFileSystem;
+    
+    public abstract void initialize();
+    
+    public abstract void performAssertions (@Nonnull DefaultSite fixture);
+    
+    @Nonnull
+    protected ResourceFile createRootMockFolder (final @Nonnull String name)
       {
-        super(fileSystem);
+        final ResourceFile folder = createMockFolder(name);
+        when(resourceFileSystem.findFileByPath(eq(name))).thenReturn(folder);
+        return folder;
       }
     
-    public void initialize()
+    @Nonnull
+    protected ResourceFile createMockFolder (final @Nonnull String name)
       {
-        final ResourceFile documentFolder = createRootMockFolder("documentPath");
-        final ResourceFile mediaFolder    = createRootMockFolder("mediaPath");
-        final ResourceFile libraryFolder  = createRootMockFolder("libraryPath");
-        final ResourceFile nodeFolder     = createRootMockFolder("nodePath");
-      }
-
-    @Override
-    public void performAssertions (final @Nonnull DefaultSite fixture) 
-      {
-        assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertThat(fixture.documentMapByRelativePath.get("/").toString(), is("MockContent(path=documentPath)"));
+        final ResourceFile folder = mock(ResourceFile.class);
+        when(folder.getName()).thenReturn(name);
+        when(folder.getPath()).thenReturn(name); // FIXME: parent
+        when(folder.isData()).thenReturn(false);
+        when(folder.isFolder()).thenReturn(true);
+        when(folder.getChildren()).thenReturn(Collections.<ResourceFile>emptyList());
+        when(folder.toString()).thenReturn(name); // FIXME: parent
         
-        assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
-        
-        assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
-        
-        assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertThat(fixture.nodeMapByRelativePath.get("/").toString(), is("MockSiteNode(path=nodePath)"));
-       
-        assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertThat(fixture.nodeMapByRelativeUri.get("relativeUriFor(nodePath)").toString(), is("MockSiteNode(path=nodePath)"));
+        return folder;
       }
   }
