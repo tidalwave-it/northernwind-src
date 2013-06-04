@@ -49,25 +49,17 @@
         </constructor-arg>
     </bean>
 
-    <bean id="modelFactory" class="org.mockito.Mockito" factory-method="spy">
-        <constructor-arg>
-            <bean class="it.tidalwave.northernwind.core.impl.model.MockModelFactory" />
-        </constructor-arg>
+    <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
     </bean>
     
-    <!--
-        <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
-            <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
-        </bean>
-    -->
-
     <bean id="servletContext" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="javax.servlet.ServletContext" />
     </bean>
 
-    <bean id="fixture" 
-          class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider"
-          lazy-init="true">
+    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider" lazy-init="true">
+        <property name="modelFactory" ref="modelFactory"/>
+        
         <property name="documentPath" value="testDocumentPath" />
         <property name="mediaPath" value="testMediaPath" />
         <property name="nodePath" value="testNodePath" />
