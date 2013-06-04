@@ -112,24 +112,24 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private ResourceFileSystemProvider fileSystemProvider;
 
     @Nonnull
-    private final String documentPath;
+    /* package */ final String documentPath;
 
     @Nonnull
-    private final String mediaPath;
+    /* package */ final String mediaPath;
 
     @Nonnull
-    private final String libraryPath;
+    /* package */ final String libraryPath;
 
     @Nonnull
-    private final String nodePath;
+    /* package */ final String nodePath;
 
     @Getter
-    private final boolean logConfigurationEnabled;
+    /* package */ final boolean logConfigurationEnabled;
 
     @Getter @Nonnull
-    private final String contextPath;
+    /* package */ final String contextPath;
 
-    private final List<String> ignoredFolders = new ArrayList<>();
+    /* package */ final List<String> ignoredFolders = new ArrayList<>();
 
     private ResourceFile documentFolder;
 
