@@ -74,8 +74,6 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         assertThat(fixture.documentMapByRelativePath.get("/document2").toString(), is("MockContent(path=content/document/document2)"));
         assertThat(fixture.documentMapByRelativePath.get("/document3").toString(), is("MockContent(path=content/document/document3)"));
         
-//        assertThat(fixture.libraryMapByRelativePath.size(), is(3)); FIXME
-        // FIXME: assert contents
         assertThat(fixture.libraryMapByRelativePath.size(), is(2));
         assertThat(fixture.libraryMapByRelativePath.get("/library1").toString(), is("MockResource(path=content/library/library1)"));
         assertThat(fixture.libraryMapByRelativePath.get("/library2").toString(), is("MockResource(path=content/library/library2)"));
