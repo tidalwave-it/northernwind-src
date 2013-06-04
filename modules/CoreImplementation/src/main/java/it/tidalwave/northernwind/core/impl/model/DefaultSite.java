@@ -384,7 +384,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     /*******************************************************************************************************************
      *
-     * Wrapper against ResourceFileSystem: its methods should throw NFE by themselves
+     * FIXME Wrapper against ResourceFileSystem: its methods should throw NFE by themselves
      *
      ******************************************************************************************************************/
     @Nonnull
