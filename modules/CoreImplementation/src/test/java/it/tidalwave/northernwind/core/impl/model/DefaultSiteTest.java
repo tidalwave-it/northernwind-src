@@ -159,9 +159,17 @@ public class DefaultSiteTest
                 log.trace(">>>> creating SiteNode for {}", path);
                 final SiteNode siteNode = mock(SiteNode.class);
                 
+                // TODO: this is cumbersome code... perhaps just use DefaultResourceProperties?
                 final ResourceProperties properties = mock(ResourceProperties.class);
-                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn("false"); // default
-                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).thenReturn("false"); // default
+                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).
+                        thenAnswer(new Answer<String>() 
+                  {
+                    @Override
+                    public String answer(InvocationOnMock invocation) 
+                      {
+                        return (String)invocation.getArguments()[1]; // default value
+                      }
+                  });
                 
                 for (final Map.Entry<String, String> e : resourceProperties.entrySet())
                   {
