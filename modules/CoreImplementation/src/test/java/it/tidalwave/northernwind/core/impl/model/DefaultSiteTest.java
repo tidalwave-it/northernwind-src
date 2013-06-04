@@ -29,7 +29,9 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -41,6 +43,8 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.util.Key;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -58,6 +62,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultSiteTest
   {
     private ClassPathXmlApplicationContext context;
@@ -72,6 +77,8 @@ public class DefaultSiteTest
 
     private Site.Builder siteBuilder;
     
+    private Map<String, String> resourceProperties;
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -79,6 +86,7 @@ public class DefaultSiteTest
     public void setupFixture()
       throws Exception
       {
+        resourceProperties = new HashMap<>();
         context = new ClassPathXmlApplicationContext("DefaultSiteTestBeans.xml");
         modelFactory = context.getBean(ModelFactory.class);
         resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
@@ -102,6 +110,7 @@ public class DefaultSiteTest
                 final Resource resource = mock(Resource.class);
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
                 final String path = file.getPath();
+                log.trace(">>>> creating Resource for {}", path);
                 
                 when(resource.toString()).thenReturn(String.format("Resource(path=%s)", path));
                 return resource;
@@ -116,6 +125,7 @@ public class DefaultSiteTest
                 final Content content = mock(Content.class);
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
                 final String path = file.getPath();
+                log.trace(">>>> creating Content for {}", path);
                 
                 when(content.toString()).thenReturn(String.format("Content(path=%s)", path));
                 return content;
@@ -130,6 +140,7 @@ public class DefaultSiteTest
                 final Media media = mock(Media.class);
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
                 final String path = file.getPath();
+                log.trace(">>>> creating Media for {}", path);
                 
                 when(media.toString()).thenReturn(String.format("Media(path=%s)", path));
                 return media;
@@ -145,10 +156,25 @@ public class DefaultSiteTest
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[1];
                 final String relativeUri = String.format("relativeUriFor(%s)", file.getPath());
                 final String path = file.getPath();
+                log.trace(">>>> creating SiteNode for {}", path);
                 final SiteNode siteNode = mock(SiteNode.class);
                 
                 final ResourceProperties properties = mock(ResourceProperties.class);
-                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn("false");
+                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn("false"); // default
+                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).thenReturn("false"); // default
+                
+                for (final Map.Entry<String, String> e : resourceProperties.entrySet())
+                  {
+                    if (e.getKey().startsWith(path + "."))
+                      {
+                        final String propertyName = e.getKey().substring(path.length() + 1);
+                        final Key<String> propertyKey = new Key<>(propertyName);
+                        log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
+                        when(properties.getProperty(eq(propertyKey))).thenReturn(e.getValue());
+                        when(properties.getProperty(eq(propertyKey), anyString())).thenReturn(e.getValue());
+                      }
+                  }
+                
                 when(siteNode.getProperties()).thenReturn(properties);
                 when(siteNode.getRelativeUri()).thenReturn(relativeUri); 
                 when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
@@ -184,7 +210,7 @@ public class DefaultSiteTest
     public void must_properly_initialize_with_an_empty_site (final @Nonnull FileSystemTestSupport fsTestSupport) 
       throws Exception
       {
-        fsTestSupport.setUp(resourceFileSystem);
+        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
         fixture = new DefaultSite(siteBuilder);
 
         fixture.initialize();
@@ -200,7 +226,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem);
+        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
         
@@ -219,7 +245,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem);
+        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
         
@@ -238,7 +264,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem);
+        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
         
@@ -257,7 +283,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem);
+        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
         

@@ -27,8 +27,11 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import static it.tidalwave.northernwind.core.impl.model.FileSystemTestSupport.assertItem;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -46,9 +49,10 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
       }
     
     @Override
-    public void setUp (final @Nonnull ResourceFileSystem fileSystem)
+    public void setUp (final @Nonnull ResourceFileSystem fileSystem,
+                       final @Nonnull Map<String, String> resourceProperties)
       {
-        super.setUp(fileSystem);
+        super.setUp(fileSystem, resourceProperties);
         // FIXME: this is flat, create some hierarchy
         createMockFolder(fileSystem, documentFolder, "document1");
         createMockFolder(fileSystem, documentFolder, "document2");
@@ -56,6 +60,7 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         createMockFolder(fileSystem, nodeFolder, "node1");
         createMockFolder(fileSystem, nodeFolder, "node2");
         createMockFolder(fileSystem, nodeFolder, "node3");
+        resourceProperties.put("structure/node3." + SiteNode.PROPERTY_MANAGES_PATH_PARAMS.stringValue(), "true");
         createMockFolder(fileSystem, nodeFolder, "node4");
         createMockFile(fileSystem, mediaFolder, "media1");
         createMockFile(fileSystem, mediaFolder, "media2");
@@ -85,17 +90,19 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         assertItem(fixture.mediaMapByRelativePath, "/media3", "Media(path=content/media/media3)");
         
         assertThat(fixture.nodeMapByRelativePath.size(), is(5));
-        assertItem(fixture.nodeMapByRelativePath, "/",      "Node(path=structure)");
-        assertItem(fixture.nodeMapByRelativePath, "/node1", "Node(path=structure/node1)");
-        assertItem(fixture.nodeMapByRelativePath, "/node2", "Node(path=structure/node2)");
-        assertItem(fixture.nodeMapByRelativePath, "/node3", "Node(path=structure/node3)");
-        assertItem(fixture.nodeMapByRelativePath, "/node4", "Node(path=structure/node4)");
+        assertItem(fixture.nodeMapByRelativePath, "/",          "Node(path=structure)");
+        assertItem(fixture.nodeMapByRelativePath, "/node1",     "Node(path=structure/node1)");
+        assertItem(fixture.nodeMapByRelativePath, "/node2",     "Node(path=structure/node2)");
+        assertItem(fixture.nodeMapByRelativePath, "/node3",     "Node(path=structure/node3)");
        
         assertThat(fixture.nodeMapByRelativeUri.size(), is(5));
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)",       "Node(path=structure)");
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node1)", "Node(path=structure/node1)");
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node2)", "Node(path=structure/node2)");
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)", "Node(path=structure/node3)");
-        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node4)", "Node(path=structure/node4)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure)",           "Node(path=structure)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node1)",     "Node(path=structure/node1)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node2)",     "Node(path=structure/node2)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)",     "Node(path=structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)/a",   "Node(path=structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)/b",   "Node(path=structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)/c/d", "Node(path=structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node4)",     "Node(path=structure/node4)");
       }
   }

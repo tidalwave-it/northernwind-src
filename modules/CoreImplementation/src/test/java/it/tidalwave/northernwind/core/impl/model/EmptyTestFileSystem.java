@@ -31,6 +31,7 @@ import static it.tidalwave.northernwind.core.impl.model.FileSystemTestSupport.as
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -60,7 +61,8 @@ public class EmptyTestFileSystem extends FileSystemTestSupport
       }
     
     @Override
-    public void setUp (final @Nonnull ResourceFileSystem fileSystem)
+    public void setUp (final @Nonnull ResourceFileSystem fileSystem,
+                       final @Nonnull Map<String, String> resourceProperties)
       {
         contentFolder  = createRootMockFolder(fileSystem, "content");
         documentFolder = createMockFolder(fileSystem, contentFolder, "document");
