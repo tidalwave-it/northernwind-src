@@ -360,7 +360,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.trace("traverse({}}", file);
+        log.trace("traverse({})", file);
         final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 
