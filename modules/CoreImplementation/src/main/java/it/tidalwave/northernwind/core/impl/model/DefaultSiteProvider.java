@@ -65,7 +65,7 @@ public class DefaultSiteProvider implements SiteProvider
     private static final String DEFAULT_MEDIA_PATH = "content/media";
     private static final String DEFAULT_LIBRARY_PATH = "content/library";
     private static final String DEFAULT_NODE_PATH = "structure";
-    public static final String TEST_CONTEXT_PATH = "/";
+    public static final String DEFAULT_CONTEXT_PATH = "/";
     
     @Inject @Nonnull
     private Provider<ServletContext> servletContext;
@@ -212,8 +212,8 @@ public class DefaultSiteProvider implements SiteProvider
           }
         catch (NoSuchBeanDefinitionException e)
           {
-            log.warn("Running in a non-web environment, set contextPath = {}", TEST_CONTEXT_PATH);
-            return TEST_CONTEXT_PATH;
+            log.warn("Running in a non-web environment, set contextPath = {}", DEFAULT_CONTEXT_PATH);
+            return DEFAULT_CONTEXT_PATH;
           }
       }
   }
