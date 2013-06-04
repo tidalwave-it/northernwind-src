@@ -56,5 +56,7 @@
     </bean>
     
     <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor1"/>
+    <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor2"/>
+    <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor3"/>
 
 </beans>

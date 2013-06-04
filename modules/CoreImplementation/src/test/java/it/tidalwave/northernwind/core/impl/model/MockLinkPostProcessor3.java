@@ -16,11 +16,11 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockLinkPostProcessor1 implements LinkPostProcessor
+public class MockLinkPostProcessor3 implements LinkPostProcessor
   {
     @Override @Nonnull
     public String postProcess (final @Nonnull String link) 
       {
-        return String.format("lpp1-%s", link);
+        return String.format("lpp3-%s", link);
       }
   }

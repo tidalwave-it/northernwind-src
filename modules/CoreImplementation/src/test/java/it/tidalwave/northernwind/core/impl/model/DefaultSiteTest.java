@@ -327,7 +327,7 @@ public class DefaultSiteTest
         
         final String link = fixture.createLink("/link");
           
-        assertThat(link, is("lpp1(/baseUrlcontextpath/link/)"));
+        assertThat(link, is("lpp3-lpp2-lpp1-/baseUrlcontextpath/link/"));
       }
     
     /*******************************************************************************************************************
