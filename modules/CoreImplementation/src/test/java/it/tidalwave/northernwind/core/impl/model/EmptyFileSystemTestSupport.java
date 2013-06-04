@@ -49,9 +49,10 @@ public class EmptyFileSystemTestSupport extends FileSystemTestSupport
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem)
       {
-        final ResourceFile documentFolder = createRootMockFolder(fileSystem, "content/document");
-        final ResourceFile mediaFolder    = createRootMockFolder(fileSystem, "content/media");
-        final ResourceFile libraryFolder  = createRootMockFolder(fileSystem, "content/library");
+        final ResourceFile contentFolder  = createRootMockFolder(fileSystem, "content");
+        final ResourceFile documentFolder = createMockFolder(fileSystem, contentFolder, "document");
+        final ResourceFile mediaFolder    = createMockFolder(fileSystem, contentFolder, "media");
+        final ResourceFile libraryFolder  = createMockFolder(fileSystem, contentFolder, "library");
         final ResourceFile nodeFolder     = createRootMockFolder(fileSystem, "structure");
       }
 

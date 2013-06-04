@@ -75,15 +75,35 @@ public abstract class FileSystemTestSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ResourceFile createMockFolder (final @Nonnull String name)
+    protected ResourceFile createMockFolder (final @Nonnull ResourceFileSystem fileSystem, 
+                                             final @Nonnull ResourceFile parentFolder, 
+                                             final @Nonnull String name)
+      {
+        final String path = parentFolder.getPath() + "/" + name;
+          
+        final ResourceFile folder = createMockFolder(name);
+        when(folder.getParent()).thenReturn(parentFolder);
+        when(folder.getPath()).thenReturn(path);
+        when(folder.toString()).thenReturn(path);
+        when(fileSystem.findFileByPath(eq(path))).thenReturn(folder);
+                
+        // FIXME: mock parentFolder.getChildren() to return also this folder
+        return folder;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private ResourceFile createMockFolder (final @Nonnull String name)
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(name); // FIXME: parent
+        when(folder.getPath()).thenReturn(name);
+        when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
         when(folder.getChildren()).thenReturn(Collections.<ResourceFile>emptyList());
-        when(folder.toString()).thenReturn(name); // FIXME: parent
         
         return folder;
       }
