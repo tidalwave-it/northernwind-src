@@ -31,6 +31,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +43,6 @@ import javax.servlet.ServletContext;
 import org.openide.util.NbBundle;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -68,7 +68,7 @@ public class DefaultSiteProvider implements SiteProvider
     public static final String TEST_CONTEXT_PATH = "/";
     
     @Inject @Nonnull
-    private ApplicationContext applicationContext;
+    private Provider<ServletContext> servletContext;
 
     @Getter @Setter
     @Inject @Nonnull
@@ -207,7 +207,7 @@ public class DefaultSiteProvider implements SiteProvider
       {
         try
           {
-            return applicationContext.getBean(ServletContext.class).getContextPath();
+            return servletContext.get().getContextPath();
           }
         catch (NoSuchBeanDefinitionException e)
           {
