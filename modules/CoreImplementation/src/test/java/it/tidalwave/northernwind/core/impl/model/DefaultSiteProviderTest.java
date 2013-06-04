@@ -30,7 +30,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import java.util.Arrays;
 import java.util.Locale;
 import javax.servlet.ServletContext;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
@@ -42,6 +41,7 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 /***********************************************************************************************************************
  *
@@ -51,7 +51,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
  **********************************************************************************************************************/
 public class DefaultSiteProviderTest
   {
-    private ApplicationContext context;
+    private ClassPathXmlApplicationContext context;
 
     private DefaultSiteProvider fixture;
 
@@ -132,6 +132,20 @@ public class DefaultSiteProviderTest
       {
         fixture = context.getBean(DefaultSiteProvider.class);
         assertThat(fixture.getContextPath(), is("thecontextpath"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_use_no_context_path_when_ServletContext_is_not_available()
+      throws Exception
+      {
+        ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");
+        
+        fixture = context.getBean(DefaultSiteProvider.class);
+        
+        assertThat(fixture.getContextPath(), is("/"));
       }
 
     /*******************************************************************************************************************
