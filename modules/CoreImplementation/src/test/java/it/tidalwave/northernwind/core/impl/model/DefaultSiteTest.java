@@ -209,6 +209,25 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @Test
+    public void must_properly_create_a_Finder_for_Content()
+      throws Exception
+      {
+        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        fsTestSupport.setUp(resourceFileSystem);
+        fixture = new DefaultSite(siteBuilder);
+        fixture.initialize();
+        
+        final DefaultSiteFinder<Content> finder = (DefaultSiteFinder<Content>)fixture.find(Content.class);
+        
+//        assertThat(finder.getName) TODO
+        assertThat(finder.mapByRelativePath, is(sameInstance(fixture.documentMapByRelativePath)));
+        assertThat(finder.mapByRelativeUri,  is(nullValue()));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
     public void must_properly_create_a_Finder_for_Resource()
       throws Exception
       {
@@ -222,6 +241,44 @@ public class DefaultSiteTest
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(fixture.libraryMapByRelativePath)));
         assertThat(finder.mapByRelativeUri,  is(nullValue()));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_create_a_Finder_for_Media()
+      throws Exception
+      {
+        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        fsTestSupport.setUp(resourceFileSystem);
+        fixture = new DefaultSite(siteBuilder);
+        fixture.initialize();
+        
+        final DefaultSiteFinder<Media> finder = (DefaultSiteFinder<Media>)fixture.find(Media.class);
+        
+//        assertThat(finder.getName) TODO
+        assertThat(finder.mapByRelativePath, is(sameInstance(fixture.mediaMapByRelativePath)));
+        assertThat(finder.mapByRelativeUri,  is(nullValue()));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_create_a_Finder_for_SiteNode()
+      throws Exception
+      {
+        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        fsTestSupport.setUp(resourceFileSystem);
+        fixture = new DefaultSite(siteBuilder);
+        fixture.initialize();
+        
+        final DefaultSiteFinder<SiteNode> finder = (DefaultSiteFinder<SiteNode>)fixture.find(SiteNode.class);
+        
+//        assertThat(finder.getName) TODO
+        assertThat(finder.mapByRelativePath, is(sameInstance(fixture.nodeMapByRelativePath)));
+        assertThat(finder.mapByRelativeUri,  is(sameInstance(fixture.nodeMapByRelativeUri)));
       }
     
     /*******************************************************************************************************************
