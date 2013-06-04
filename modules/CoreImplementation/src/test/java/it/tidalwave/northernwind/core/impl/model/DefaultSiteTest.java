@@ -40,10 +40,9 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.util.Map;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -52,8 +51,6 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import org.testng.annotations.DataProvider;
-//import static org.hamcrest.CoreMatchers.notNullValue;
 
 /***********************************************************************************************************************
  *
@@ -168,23 +165,13 @@ public class DefaultSiteTest
     public void must_properly_construct()
       throws Exception
       {
-        final Site.Builder builder = new Site.Builder()
-                .withContextPath("thecontextpath")
-                .withDocumentPath("testDocumentPath")
-                .withMediaPath("testMediaPath")
-                .withLibraryPath("testLibraryPath")
-                .withNodePath("testNodePath")
-                .withLogConfigurationEnabled(true)
-                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
+        fixture = new DefaultSite(siteBuilder);
         
-        fixture = new DefaultSite(builder);
-        
-        assertThat(fixture.getContextPath(), is("thecontextpath"));
-        assertThat(fixture.documentPath, is("testDocumentPath"));
-        assertThat(fixture.mediaPath, is("testMediaPath"));
-        assertThat(fixture.libraryPath, is("testLibraryPath"));
-        assertThat(fixture.nodePath, is("testNodePath"));
+        assertThat(fixture.getContextPath(), is("contextpath"));
+        assertThat(fixture.documentPath, is("content/document"));
+        assertThat(fixture.mediaPath, is("content/media"));
+        assertThat(fixture.libraryPath, is("content/library"));
+        assertThat(fixture.nodePath, is("structure"));
         assertThat(fixture.logConfigurationEnabled, is(true));
         assertThat(fixture.getConfiguredLocales(), is(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))));
         assertThat(fixture.ignoredFolders, is(Arrays.asList("ignored1", "ignored2")));
