@@ -28,12 +28,15 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -150,5 +153,15 @@ public abstract class FileSystemTestSupport
 //        when(folder.getChildren()).thenReturn(new ArrayList<ResourceFile>());
         
         return folder;
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    protected static void assertItem (final @Nonnull Map<String, ?> map,
+                                      final @Nonnull String key,
+                                      final @Nonnull String expectedValue)
+      {
+        assertThat(map.get(key).toString(), is(expectedValue)); 
       }
   }

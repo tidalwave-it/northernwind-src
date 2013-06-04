@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -98,12 +97,5 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node2)", "MockSiteNode(path=structure/node2)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node3)", "MockSiteNode(path=structure/node3)");
         assertItem(fixture.nodeMapByRelativeUri, "relativeUriFor(structure/node4)", "MockSiteNode(path=structure/node4)");
-      }
-    
-    protected static void assertItem (final @Nonnull Map<String, ?> map,
-                                      final @Nonnull String key,
-                                      final @Nonnull String expectedValue)
-      {
-        assertThat(map.get(key).toString(), is(expectedValue)); 
       }
   }
