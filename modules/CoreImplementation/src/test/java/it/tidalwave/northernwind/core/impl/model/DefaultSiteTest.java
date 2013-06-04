@@ -207,7 +207,7 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "fileSystems")
-    public void must_properly_initialize_with_an_empty_site (final @Nonnull FileSystemTestSupport fsTestSupport) 
+    public void must_properly_initialize (final @Nonnull FileSystemTestSupport fsTestSupport) 
       throws Exception
       {
         fsTestSupport.setUp(resourceFileSystem, resourceProperties);
