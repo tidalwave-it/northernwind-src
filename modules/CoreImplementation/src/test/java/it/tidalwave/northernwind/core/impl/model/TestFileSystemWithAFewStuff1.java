@@ -42,7 +42,7 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
   {
     public TestFileSystemWithAFewStuff1()
       {
-        super("File system with only ignored folders");
+        super("File system with a few stuff 1");
       }
     
     @Override
