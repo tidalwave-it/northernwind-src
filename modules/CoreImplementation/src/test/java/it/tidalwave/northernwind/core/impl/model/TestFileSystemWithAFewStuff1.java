@@ -60,8 +60,10 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         createMockFile(fileSystem, mediaFolder, "media1");
         createMockFile(fileSystem, mediaFolder, "media2");
         createMockFile(fileSystem, mediaFolder, "media3");
+        createMockFile(fileSystem, mediaFolder, "ignored1");
         createMockFile(fileSystem, libraryFolder, "library1");
         createMockFile(fileSystem, libraryFolder, "library2");
+        createMockFile(fileSystem, libraryFolder, "ignored2");
       }
 
     @Override
