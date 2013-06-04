@@ -27,8 +27,8 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.ServletContext;
@@ -50,11 +50,11 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.Setter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.*;
-import static org.mockito.Mockito.*;
 
 // FIXME: should be useless with Mockito, but there's a section which throws NPE
 class MockModelFactory implements ModelFactory
@@ -63,16 +63,22 @@ class MockModelFactory implements ModelFactory
     private DefaultSite site;
 
     @Override
-    public Site createSite (final String contextPath,
-                            final String documentPath,
-                            final String mediaPath,
-                            final String libraryPath,
-                            final String nodePath,
-                            final boolean logConfigurationEnabled,
-                            final List<Locale> configuredLocales,
-                            final List<String> ignoredFolders)
+    public Site.Builder createSite()
       {
-        return site;
+        return new Site.Builder().withCallBack(new Site.Builder.CallBack() 
+          {
+            @Override
+            public Site build (final Site.Builder builder) 
+              {
+                return doCreateSite(builder);
+              }
+          });
+      }
+    
+    @Nonnull
+    public Site doCreateSite (final Site.Builder builder) 
+      {
+        return site;  
       }
 
     @Override
@@ -172,14 +178,17 @@ public class DefaultSiteProviderTest
       throws Exception
       {
         fixture = context.getBean(DefaultSiteProvider.class);
-        verify(modelFactory).createSite(eq("thecontextpath"),
-                                        eq("testDocumentPath"),
-                                        eq("testMediaPath"),
-                                        eq("testLibraryPath"),
-                                        eq("testNodePath"),
-                                        eq(true),
-                                        eq(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))),
-                                        eq(Arrays.asList("ignored1", "ignored2")));
+        
+        verify(modelFactory).doCreateSite(argThat(new SiteBuilderMatcher()
+                .withContextPath("thecontextpath")
+                .withDocumentPath("testDocumentPath")
+                .withMediaPath("testMediaPath")
+                .withLibraryPath("testLibraryPath")
+                .withNodePath("testNodePath")
+                .withConfigurationEnabled(true)
+                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
+                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
+        
         verify(executor).execute(any(Runnable.class));
 
         assertThat(fixture.getSite(), sameInstance((Site)site));

@@ -154,29 +154,22 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
 
     private final List<Locale> configuredLocales = new ArrayList<>();
-
+    
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public DefaultSite (final @Nonnull String contextPath,
-                        final @Nonnull String documentPath,
-                        final @Nonnull String mediaPath,
-                        final @Nonnull String libraryPath,
-                        final @Nonnull String nodePath,
-                        final boolean logConfigurationEnabled,
-                        final @Nonnull List<Locale> configuredLocales,
-                        final @Nonnull List<String> ignoredFolders)
+    protected DefaultSite (final @Nonnull Site.Builder siteBuilder)
       {
-        this.contextPath = contextPath;
-        this.documentPath = documentPath;
-        this.mediaPath = mediaPath;
-        this.libraryPath = libraryPath;
-        this.nodePath = nodePath;
-        this.logConfigurationEnabled = logConfigurationEnabled;
-        this.configuredLocales.addAll(configuredLocales);
-        this.ignoredFolders.addAll(ignoredFolders);
+        this.contextPath = siteBuilder.getContextPath();
+        this.documentPath = siteBuilder.getDocumentPath();
+        this.mediaPath = siteBuilder.getMediaPath();
+        this.libraryPath = siteBuilder.getLibraryPath();
+        this.nodePath = siteBuilder.getNodePath();
+        this.logConfigurationEnabled = siteBuilder.isLogConfigurationEnabled();
+        this.configuredLocales.addAll(siteBuilder.getConfiguredLocales());
+        this.ignoredFolders.addAll(siteBuilder.getIgnoredFolders());
       }
 
     /*******************************************************************************************************************

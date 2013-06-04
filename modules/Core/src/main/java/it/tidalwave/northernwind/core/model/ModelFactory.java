@@ -28,8 +28,6 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import it.tidalwave.util.Id;
@@ -39,6 +37,8 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 /***********************************************************************************************************************
  *
  * A factory for creating domain objects.
+ * 
+ * FIXME: creation of a Site use a builder, while other entities are directly created - perhaps use a builder for all?
  *
  * @author  Fabrizio Giudici
  * @version $Id: $
@@ -134,15 +134,11 @@ public interface ModelFactory
 
     /*******************************************************************************************************************
      *
+     * Creates a new {@link Site}.
+     * 
+     * @return  a builder for the new {@code Site}
      *
      ******************************************************************************************************************/
-    @Nonnull // FIXME: use a SiteCreationParameters bean instead of so many arguments
-    public Site createSite (@Nonnull String contextPath,
-                            @Nonnull String documentPath,
-                            @Nonnull String mediaPath,
-                            @Nonnull String libraryPath,
-                            @Nonnull String nodePath,
-                            boolean logConfigurationEnabled,
-                            @Nonnull List<Locale> configuredLocales,
-                            @Nonnull List<String> ignoredFolders);
+    @Nonnull
+    public Site.Builder createSite();
   }

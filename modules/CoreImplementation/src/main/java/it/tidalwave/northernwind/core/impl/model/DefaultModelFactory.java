@@ -161,23 +161,16 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultSite createSite (final @Nonnull String contextPath,
-                                   final @Nonnull String documentPath,
-                                   final @Nonnull String mediaPath,
-                                   final @Nonnull String libraryPath,
-                                   final @Nonnull String nodePath,
-                                   final boolean logConfigurationEnabled,
-                                   final @Nonnull List<Locale> configuredLocales,
-                                   final @Nonnull List<String> ignoredFolders)
+    public Site.Builder createSite()
       {
-        return new DefaultSite(contextPath,
-                               documentPath,
-                               mediaPath,
-                               libraryPath,
-                               nodePath,
-                               logConfigurationEnabled,
-                               configuredLocales,
-                               ignoredFolders);
+        return new Site.Builder().withCallBack(new Site.Builder.CallBack() 
+          {
+            @Override @Nonnull
+            public Site build (final @Nonnull Site.Builder builder) 
+              {
+                return new DefaultSite(builder);
+              }
+          });
       }
 
     /*******************************************************************************************************************

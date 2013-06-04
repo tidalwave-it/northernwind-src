@@ -30,6 +30,14 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
+import java.nio.file.spi.FileSystemProvider;
+import it.tidalwave.util.Finder;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -42,6 +50,39 @@ import java.util.Locale;
  **********************************************************************************************************************/
 public interface Site
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Site}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
+    @Wither @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Site build (@Nonnull Builder builder);
+          }
+        
+        private CallBack callBack;
+        private String contextPath;
+        private String documentPath;
+        private String mediaPath;
+        private String libraryPath;
+        private String nodePath;
+        private boolean logConfigurationEnabled;
+        private List<Locale> configuredLocales;
+        private List<String> ignoredFolders;
+        
+        @Nonnull
+        public Site build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     /*******************************************************************************************************************
      *
      * Returns the context path for this web site.

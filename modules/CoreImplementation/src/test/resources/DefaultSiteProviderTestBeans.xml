@@ -23,9 +23,9 @@
   
   $Id$
   
-  *********************************************************************************************************************
-  #L%
-  -->
+*********************************************************************************************************************
+#L%
+-->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,20 +46,20 @@
     <bean id="taskExecutor" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
             <bean class="it.tidalwave.northernwind.core.impl.model.WaitingTaskExecutor" />
-       </constructor-arg>
+        </constructor-arg>
     </bean>
 
     <bean id="modelFactory" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
             <bean class="it.tidalwave.northernwind.core.impl.model.MockModelFactory" />
-       </constructor-arg>
+        </constructor-arg>
     </bean>
     
-<!--
-    <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
-    </bean>
--->
+    <!--
+        <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
+            <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
+        </bean>
+    -->
 
     <bean id="servletContext" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="javax.servlet.ServletContext" />
