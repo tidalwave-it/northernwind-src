@@ -75,7 +75,7 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
     public void performAssertions (final @Nonnull DefaultSite fixture) 
       {
         assertThat(fixture.documentMapByRelativePath.size(), is(4));
-        assertItem(fixture.documentMapByRelativePath, "/document1", "Content(path=content/document/document1)");
+        assertItem(fixture.documentMapByRelativePath, "/",          "Content(path=content/document)");
         assertItem(fixture.documentMapByRelativePath, "/document1", "Content(path=content/document/document1)");
         assertItem(fixture.documentMapByRelativePath, "/document2", "Content(path=content/document/document2)");
         assertItem(fixture.documentMapByRelativePath, "/document3", "Content(path=content/document/document3)");
