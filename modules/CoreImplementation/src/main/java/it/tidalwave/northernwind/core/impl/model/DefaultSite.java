@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -281,7 +281,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
             @Override
             public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
               {
-                documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)), modelFactory.createContent(folder));
+                documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)),
+                                              modelFactory.createContent(folder));
               }
           });
 
@@ -292,7 +293,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 if (file.isData())
                   {
-                    libraryMapByRelativePath.put(r(relativePath.substring(libraryPath.length() + 1)), modelFactory.createResource(file));
+                    libraryMapByRelativePath.put(r(relativePath.substring(libraryPath.length() + 1)),
+                                                 modelFactory.createResource(file));
                   }
               }
           });
@@ -304,7 +306,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 if (file.isData())
                   {
-                    mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)), modelFactory.createMedia(file));
+                    mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)),
+                                               modelFactory.createMedia(file));
                   }
               }
           });
@@ -379,14 +382,14 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Logs the configuration contained in the given map of properties.
      *
      ******************************************************************************************************************/
-    private static void logConfiguration (final @Nonnull String name, Map<String, ?> map)
+    private static void logConfiguration (final @Nonnull String name, Map<String, ?> propertyMap)
       {
         log.info(name);
 
-        for (final Entry<String, ?> entry : map.entrySet())
+        for (final Entry<String, ?> entry : propertyMap.entrySet())
           {
             log.info(">>>> {}: {}", entry.getKey(), entry.getValue());
           }
@@ -397,7 +400,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static ResourceFile findMandatoryFolder (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull String path)
+    private static ResourceFile findMandatoryFolder (final @Nonnull ResourceFileSystem fileSystem,
+                                                     final @Nonnull String path)
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
