@@ -200,7 +200,8 @@ public class DefaultSiteTest
       {
         return new Object[][]
           {
-            { new EmptyFileSystemTestSupport() }
+            { new EmptyFileSystemTestSupport() },
+            { new TestFileSystemWithOnlyIgnoredFiles() }
                 // TODO: add more filesystem configurations
           };
       }

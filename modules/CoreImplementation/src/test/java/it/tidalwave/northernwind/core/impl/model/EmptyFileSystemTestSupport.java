@@ -41,19 +41,31 @@ import static org.hamcrest.MatcherAssert.assertThat;
  **********************************************************************************************************************/
 public class EmptyFileSystemTestSupport extends FileSystemTestSupport
   {
+    // FIXME: these values are not thread-safe, the same instance is reused...
+    protected ResourceFile contentFolder;
+    protected ResourceFile documentFolder;
+    protected ResourceFile mediaFolder;
+    protected ResourceFile libraryFolder;
+    protected ResourceFile nodeFolder;
+        
     public EmptyFileSystemTestSupport()
       {
         super("Empty file system");
+      }
+
+    protected EmptyFileSystemTestSupport (final @Nonnull String name)
+      {
+        super(name);
       }
     
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem)
       {
-        final ResourceFile contentFolder  = createRootMockFolder(fileSystem, "content");
-        final ResourceFile documentFolder = createMockFolder(fileSystem, contentFolder, "document");
-        final ResourceFile mediaFolder    = createMockFolder(fileSystem, contentFolder, "media");
-        final ResourceFile libraryFolder  = createMockFolder(fileSystem, contentFolder, "library");
-        final ResourceFile nodeFolder     = createRootMockFolder(fileSystem, "structure");
+        contentFolder  = createRootMockFolder(fileSystem, "content");
+        documentFolder = createMockFolder(fileSystem, contentFolder, "document");
+        mediaFolder    = createMockFolder(fileSystem, contentFolder, "media");
+        libraryFolder  = createMockFolder(fileSystem, contentFolder, "library");
+        nodeFolder     = createRootMockFolder(fileSystem, "structure");
       }
 
     @Override
