@@ -41,6 +41,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
  **********************************************************************************************************************/
 public class EmptyFileSystemTestSupport extends FileSystemTestSupport
   {
+    public EmptyFileSystemTestSupport()
+      {
+        super("Empty file system");
+      }
+    
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem)
       {

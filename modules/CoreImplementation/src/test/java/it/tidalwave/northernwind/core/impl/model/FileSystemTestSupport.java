@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,8 +43,12 @@ import static org.mockito.Mockito.when;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@RequiredArgsConstructor @ToString
 public abstract class FileSystemTestSupport 
   {
+    @Nonnull
+    private final String name;
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
