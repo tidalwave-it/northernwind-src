@@ -102,6 +102,7 @@ public class DefaultSiteTest
                                         .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                                         .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
 
+        // FIXME: perhaps it's better to create a MockModelFactory implements ModelFactory?
         when(modelFactory.createResource(any(ResourceFile.class))).thenAnswer(new Answer<Resource>() 
           {
             @Override
