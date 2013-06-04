@@ -73,6 +73,8 @@ public class DefaultSiteTest
     
     private DefaultSite fixture;
 
+    private Site.Builder siteBuilder;
+    
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -86,6 +88,15 @@ public class DefaultSiteTest
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
         
+        siteBuilder = new Site.Builder().withContextPath("contextpath")
+                                        .withDocumentPath("content/document")
+                                        .withMediaPath("content/media")
+                                        .withLibraryPath("content/library")
+                                        .withNodePath("structure")
+                                        .withLogConfigurationEnabled(true)
+                                        .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
+                                        .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
+
         when(modelFactory.createResource(any(ResourceFile.class))).thenAnswer(new Answer<Resource>() 
           {
             @Override
@@ -187,19 +198,8 @@ public class DefaultSiteTest
       throws Exception
       {
         fsTestSupport.setUp(resourceFileSystem);
-        
-        final Site.Builder builder = new Site.Builder()
-                .withContextPath("contextpath")
-                .withDocumentPath("content/document")
-                .withMediaPath("content/media")
-                .withLibraryPath("content/library")
-                .withNodePath("structure")
-                .withLogConfigurationEnabled(true)
-                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
-        
-        fixture = new DefaultSite(builder);
-        
+        fixture = new DefaultSite(siteBuilder);
+
         fixture.initialize();
         
         fsTestSupport.performAssertions(fixture);
@@ -212,19 +212,9 @@ public class DefaultSiteTest
     public void must_properly_create_a_Finder_for_Resource()
       throws Exception
       {
-        final Site.Builder builder = new Site.Builder()
-                .withContextPath("contextpath")
-                .withDocumentPath("content/document")
-                .withMediaPath("content/media")
-                .withLibraryPath("content/library")
-                .withNodePath("structure")
-                .withLogConfigurationEnabled(true)
-                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
-        
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
         fsTestSupport.setUp(resourceFileSystem);
-        fixture = new DefaultSite(builder);
+        fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
         
         final DefaultSiteFinder<Resource> finder = (DefaultSiteFinder<Resource>)fixture.find(Resource.class);
