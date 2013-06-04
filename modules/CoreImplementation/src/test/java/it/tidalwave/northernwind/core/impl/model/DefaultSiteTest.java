@@ -316,8 +316,8 @@ public class DefaultSiteTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test
-    public void testCreateLink()
+    @Test(dataProvider = "links")
+    public void testCreateLink (final @Nonnull String link, final @Nonnull String expectedResult)
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
@@ -325,9 +325,9 @@ public class DefaultSiteTest
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
         
-        final String link = fixture.createLink("/link");
+        final String result = fixture.createLink(link);
           
-        assertThat(link, is("lpp3-lpp2-lpp1-/baseUrlcontextpath/link/"));
+        assertThat(result, is(expectedResult));
       }
     
     /*******************************************************************************************************************
@@ -342,6 +342,19 @@ public class DefaultSiteTest
             { new TestFileSystemWithOnlyIgnoredFiles() },
             { new TestFileSystemWithAFewStuff1()       }
                 // TODO: add more filesystem configurations
+          };
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "links")
+    public Object[][] linksDataProvider()
+      {
+        return new Object[][]
+          {
+            { "/link", "lpp3-lpp2-lpp1-/baseUrlcontextpath/link/" },
+                // TODO: add more 
           };
       }
   }
