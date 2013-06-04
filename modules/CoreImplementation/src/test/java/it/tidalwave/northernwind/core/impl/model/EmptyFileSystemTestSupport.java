@@ -49,26 +49,26 @@ public class EmptyFileSystemTestSupport extends FileSystemTestSupport
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem)
       {
-        final ResourceFile documentFolder = createRootMockFolder(fileSystem, "documentPath");
-        final ResourceFile mediaFolder    = createRootMockFolder(fileSystem, "mediaPath");
-        final ResourceFile libraryFolder  = createRootMockFolder(fileSystem, "libraryPath");
-        final ResourceFile nodeFolder     = createRootMockFolder(fileSystem, "nodePath");
+        final ResourceFile documentFolder = createRootMockFolder(fileSystem, "content/document");
+        final ResourceFile mediaFolder    = createRootMockFolder(fileSystem, "content/media");
+        final ResourceFile libraryFolder  = createRootMockFolder(fileSystem, "content/library");
+        final ResourceFile nodeFolder     = createRootMockFolder(fileSystem, "structure");
       }
 
     @Override
     public void performAssertions (final @Nonnull DefaultSite fixture) 
       {
         assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertThat(fixture.documentMapByRelativePath.get("/").toString(), is("MockContent(path=documentPath)"));
+        assertThat(fixture.documentMapByRelativePath.get("/").toString(), is("MockContent(path=content/document)"));
         
         assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
         
         assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
         
         assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertThat(fixture.nodeMapByRelativePath.get("/").toString(), is("MockSiteNode(path=nodePath)"));
+        assertThat(fixture.nodeMapByRelativePath.get("/").toString(), is("MockSiteNode(path=structure)"));
        
         assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertThat(fixture.nodeMapByRelativeUri.get("relativeUriFor(nodePath)").toString(), is("MockSiteNode(path=nodePath)"));
+        assertThat(fixture.nodeMapByRelativeUri.get("relativeUriFor(structure)").toString(), is("MockSiteNode(path=structure)"));
       }
   }

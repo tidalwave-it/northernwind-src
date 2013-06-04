@@ -177,10 +177,10 @@ public class DefaultSiteTest
         
         final Site.Builder builder = new Site.Builder()
                 .withContextPath("contextpath")
-                .withDocumentPath("documentPath")
-                .withMediaPath("mediaPath")
-                .withLibraryPath("libraryPath")
-                .withNodePath("nodePath")
+                .withDocumentPath("content/document")
+                .withMediaPath("content/media")
+                .withLibraryPath("content/library")
+                .withNodePath("structure")
                 .withLogConfigurationEnabled(true)
                 .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                 .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
