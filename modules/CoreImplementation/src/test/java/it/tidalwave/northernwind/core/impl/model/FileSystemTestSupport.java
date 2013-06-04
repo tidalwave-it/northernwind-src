@@ -28,9 +28,10 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import java.util.ArrayList;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.mockito.Matchers.eq;
@@ -86,8 +87,11 @@ public abstract class FileSystemTestSupport
         when(folder.getPath()).thenReturn(path);
         when(folder.toString()).thenReturn(path);
         when(fileSystem.findFileByPath(eq(path))).thenReturn(folder);
-                
-        // FIXME: mock parentFolder.getChildren() to return also this folder
+        
+        final Collection<ResourceFile> children = parentFolder.getChildren();
+        children.add(folder);
+        when(parentFolder.getChildren()).thenReturn(children);
+
         return folder;
       }
     
@@ -103,7 +107,7 @@ public abstract class FileSystemTestSupport
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
-        when(folder.getChildren()).thenReturn(Collections.<ResourceFile>emptyList());
+        when(folder.getChildren()).thenReturn(new ArrayList<ResourceFile>());
         
         return folder;
       }
