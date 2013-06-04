@@ -195,7 +195,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         String link = requestHolder.get().getBaseUrl() + contextPath + relativeUri;
 
-        // FIXME: this should go to a ListPostProcessor
+        // FIXME: this should go to a LinkPostProcessor
         if (!relativeUri.contains(".") && !relativeUri.contains("?") && !relativeUri.endsWith("/"))
           {
             link += "/";
