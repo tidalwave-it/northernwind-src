@@ -38,7 +38,7 @@ import it.tidalwave.northernwind.core.model.Request;
  **********************************************************************************************************************/
 public class RequestHolder implements RequestResettable // FIXME: consider merging with RequestContext
   {
-    private final ThreadLocal<Request> requestHolder = new ThreadLocal<Request>();
+    private final ThreadLocal<Request> requestHolder = new ThreadLocal<>();
 
     @Override
     public void requestReset()
