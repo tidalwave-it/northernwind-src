@@ -317,7 +317,7 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "links")
-    public void testCreateLink (final @Nonnull String link, final @Nonnull String expectedResult)
+    public void must_create_correct_links (final @Nonnull String link, final @Nonnull String expectedResult)
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
