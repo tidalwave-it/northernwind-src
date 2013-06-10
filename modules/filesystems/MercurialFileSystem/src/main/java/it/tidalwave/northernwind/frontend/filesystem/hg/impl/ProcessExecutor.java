@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @NoArgsConstructor(access=AccessLevel.PRIVATE) @Slf4j
-public class Executor
+public class ProcessExecutor
   {
     /*******************************************************************************************************************
      *
@@ -246,10 +246,10 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static Executor forExecutable (final @Nonnull String executable)
+    public static ProcessExecutor forExecutable (final @Nonnull String executable)
       throws IOException
       {
-        final Executor executor = new Executor();
+        final ProcessExecutor executor = new ProcessExecutor();
         executor.arguments.add(findPathFor(executable));
         return executor;
       }
@@ -259,7 +259,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor withArgument (final @Nonnull String argument)
+    public ProcessExecutor withArgument (final @Nonnull String argument)
       {
         arguments.add(argument);
         return this;
@@ -270,7 +270,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor withWorkingDirectory (final @Nonnull Path workingDirectory)
+    public ProcessExecutor withWorkingDirectory (final @Nonnull Path workingDirectory)
       {
         this.workingDirectory = workingDirectory;
         return this;
@@ -281,7 +281,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor start()
+    public ProcessExecutor start()
       throws IOException
       {
         log.info(">>>> executing {} ...", arguments);
@@ -311,7 +311,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor waitForCompletion()
+    public ProcessExecutor waitForCompletion()
       throws IOException, InterruptedException
       {
         if (process.waitFor() != 0)
@@ -327,7 +327,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor send (final @Nonnull String string)
+    public ProcessExecutor send (final @Nonnull String string)
       throws IOException
       {
         log.info(">>>> sending '{}'...", string);

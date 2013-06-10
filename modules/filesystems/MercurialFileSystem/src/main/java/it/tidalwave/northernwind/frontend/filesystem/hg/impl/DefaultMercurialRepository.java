@@ -82,7 +82,7 @@ public class DefaultMercurialRepository implements MercurialRepository
                 throw new IOException("Cannot mkdirs " + workArea);
               }
 
-            Executor.forExecutable("hg").withArgument("clone")
+            ProcessExecutor.forExecutable("hg").withArgument("clone")
                                         .withArgument("--noupdate")
                                         .withArgument(uri.toASCIIString())
                                         .withArgument(".")
@@ -107,7 +107,7 @@ public class DefaultMercurialRepository implements MercurialRepository
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("id")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("id")
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
@@ -136,7 +136,7 @@ public class DefaultMercurialRepository implements MercurialRepository
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("tags")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("tags")
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
@@ -161,7 +161,7 @@ public class DefaultMercurialRepository implements MercurialRepository
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("update")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("update")
                                                                   .withArgument("-C")
                                                                   .withArgument(tag.getName())
                                                                   .withWorkingDirectory(workArea)
@@ -185,7 +185,7 @@ public class DefaultMercurialRepository implements MercurialRepository
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("pull")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("pull")
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();

@@ -64,7 +64,7 @@ public class TestRepositoryHelper
             public void apply()
               throws Exception
               {
-                Executor.forExecutable("hg")
+                ProcessExecutor.forExecutable("hg")
                         .withArgument("strip")
                         .withArgument("published-0.9")
                         .withWorkingDirectory(sourceRepository)
@@ -136,7 +136,7 @@ public class TestRepositoryHelper
 
         assertThat(sourceRepository.toFile().mkdirs(), is(true));
 
-        Executor.forExecutable("hg")
+        ProcessExecutor.forExecutable("hg")
                 .withArgument("clone")
                 .withArgument("--noupdate")
                 .withArgument(sourceBundle.toFile().getCanonicalPath())
