@@ -166,7 +166,7 @@ public class ProcessExecutor
         public ConsoleOutput waitFor (final @Nonnull String regexp)
           throws InterruptedException, IOException
           {
-            log.info("waitFor({})", regexp);
+            log.debug("waitFor({})", regexp);
 
             while (filteredBy(regexp).isEmpty())
               {
@@ -214,7 +214,7 @@ public class ProcessExecutor
                     break;
                   }
 
-                log.info(">>>>>>>> {}", s);
+                log.trace(">>>>>>>> {}", s);
                 content.add(s);
 
                 synchronized (this)
@@ -293,8 +293,8 @@ public class ProcessExecutor
 //            environment.add(String.format("%s=%s", e.getKey(), e.getValue()));
 //          }
 
-        log.info(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
-        log.info(">>>> environment:       {}", environment);
+        log.debug(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
+        log.debug(">>>> environment:       {}", environment);
         process = Runtime.getRuntime().exec(arguments.toArray(new String[0]),
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
