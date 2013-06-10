@@ -21,10 +21,10 @@
         <tft.project.description>NorthernWind - lightweight CMS</tft.project.description>
         
         <tft.maven.requiredVersion>3.0.4</tft.maven.requiredVersion>
-        <tft.maven.requiredJdk>[1.7.0,)</tft.maven.requiredJdk>
+        <tft.maven.requiredJdk>[1.7.0-11,1.7.0-99)</tft.maven.requiredJdk>
         <tft.javac.source>1.7</tft.javac.source>
         <tft.javac.target>1.7</tft.javac.target>
-        <netbeans.hint.jdkPlatform>JDK_1.7.0_17</netbeans.hint.jdkPlatform>
+        <netbeans.hint.jdkPlatform>JDK_1.7.0</netbeans.hint.jdkPlatform>
 
         <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
