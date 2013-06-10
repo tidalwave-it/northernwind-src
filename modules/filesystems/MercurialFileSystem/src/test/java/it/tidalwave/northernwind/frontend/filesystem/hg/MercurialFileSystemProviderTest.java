@@ -110,7 +110,6 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         fixture.swapCounter = 0;
-	// Have published-0.9 in the source repo
         prepareSourceRepository(Option.SET_TO_PUBLISHED_0_9);
 
         fixture.checkForUpdates();
