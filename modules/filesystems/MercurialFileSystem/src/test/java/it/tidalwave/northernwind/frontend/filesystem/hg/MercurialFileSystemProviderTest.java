@@ -30,6 +30,7 @@ package it.tidalwave.northernwind.frontend.filesystem.hg;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.file.Files;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
@@ -46,11 +47,10 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
-import java.io.IOException;
-import java.nio.file.Files;
 
 /***********************************************************************************************************************
  *
+ * TODO: rewrite this test in a more readable way
  * @author  Fabrizio Giudici
  * @version $Id$
  *
