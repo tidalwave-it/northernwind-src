@@ -65,7 +65,7 @@ public class MercurialFileSystemProviderTest
     public void setupFixture()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
         properties.put("test.workAreaFolder", "target/workarea");
@@ -111,7 +111,7 @@ public class MercurialFileSystemProviderTest
       {
         fixture.swapCounter = 0;
 	// Have published-0.9 in the source repo
-        prepareSourceRepository(Option.DO_NOTHING);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_9);
 
         fixture.checkForUpdates();
 

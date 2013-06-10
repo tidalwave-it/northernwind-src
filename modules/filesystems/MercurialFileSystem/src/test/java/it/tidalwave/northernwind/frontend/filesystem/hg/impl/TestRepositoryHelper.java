@@ -50,15 +50,16 @@ public class TestRepositoryHelper
   {
     public enum Option
       { 
-        DO_NOTHING
+        SET_TO_PUBLISHED_0_9
           {
             @Override
             public void apply()
               {
+		// do nothing, already to published-0.9
               }
           },
         
-        STRIP_PUBLISHED_0_9
+        SET_TO_PUBLISHED_0_8
           {
             @Override
             public void apply()
@@ -77,9 +78,9 @@ public class TestRepositoryHelper
           throws Exception;
       }
 
-    public static final List<Tag> EXPECTED_TAGS_1 = new ArrayList<>();
+    public static final List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_8 = new ArrayList<>();
 
-    public static final List<Tag> EXPECTED_TAGS_2 = new ArrayList<>();
+    public static final List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_9 = new ArrayList<>();
 
     public static final Path sourceRepository;
 
@@ -101,26 +102,26 @@ public class TestRepositoryHelper
         
         sourceBundle = new File("./src/test/resources/hg.bundle").toPath();
 
-        EXPECTED_TAGS_1.add(new Tag("published-0.1"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.2"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.3"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.4"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.5"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.6"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.7"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_1.add(new Tag("tip"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.1"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.2"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.3"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.4"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.5"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.6"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.7"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.8"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("tip"));
 
-        EXPECTED_TAGS_2.add(new Tag("published-0.1"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.2"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.3"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.4"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.5"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.6"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.7"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.9"));
-        EXPECTED_TAGS_2.add(new Tag("tip"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.1"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.2"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.3"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.4"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.5"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.6"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.7"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.8"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.9"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("tip"));
       }
 
     public static void prepareSourceRepository (final @Nonnull Option option)

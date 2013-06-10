@@ -30,7 +30,6 @@ package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
@@ -44,7 +43,6 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /***********************************************************************************************************************
  *
@@ -84,7 +82,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_clone_a_repository()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
         // TODO: assert contents
       }
@@ -94,7 +92,7 @@ public class DefaultMercurialRepositoryTest
     public void must_throw_NotFoundException_when_asking_for_the_current_tag_for_an_empty_workarea()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         fixture.getCurrentTag();
@@ -104,29 +102,29 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_enumerate_tags()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
-        assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));
+        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
       }
 
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_return_the_latest_tag()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
-        assertThat(fixture.getTags(), is(EXPECTED_TAGS_1));
+        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         // TODO: assert contents
       }
 
     @Test(dependsOnMethods="must_properly_clone_a_repository",
-          dataProvider="validTags1")
+          dataProvider="tagSequenceUpTo0.8")
     public void must_properly_update_to_a_tag (final @Nonnull Tag tag)
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -141,7 +139,7 @@ public class DefaultMercurialRepositoryTest
     public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -151,21 +149,21 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_pull_changesets()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
-        prepareSourceRepository(Option.DO_NOTHING);
+        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_9);
 
         fixture.pull();
 
-        assertThat(fixture.getTags(), is(EXPECTED_TAGS_2));
+        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
       }
 
-    @DataProvider(name="validTags1")
+    @DataProvider(name="tagSequenceUpTo0.8")
     public Object[][] getValidTags1()
       {
         final List<Object[]> validTags = new ArrayList<>();
 
-        for (final Tag tag : EXPECTED_TAGS_1)
+        for (final Tag tag : ALL_TAGS_UP_TO_PUBLISHED_0_8)
           {
             validTags.add(new Object[] { tag });
           }
@@ -173,18 +171,18 @@ public class DefaultMercurialRepositoryTest
         return validTags.toArray(new Object[0][0]);
       }
 
-    @DataProvider(name="validTags2")
-    public Object[][] getValidTags2()
-      {
-        final List<Object[]> validTags = new ArrayList<>();
-
-        for (final Tag tag : EXPECTED_TAGS_2)
-          {
-            validTags.add(new Object[] { tag });
-          }
-
-        return validTags.toArray(new Object[0][0]);
-      }
+//    @DataProvider(name="validTags2")
+//    public Object[][] getValidTags2()
+//      {
+//        final List<Object[]> validTags = new ArrayList<>();
+//
+//        for (final Tag tag : ALL_TAGS_UP_TO_PUBLISHED_0_9)
+//          {
+//            validTags.add(new Object[] { tag });
+//          }
+//
+//        return validTags.toArray(new Object[0][0]);
+//      }
 
     @DataProvider(name="invalidTags")
     public Object[][] getInvalidTags()
