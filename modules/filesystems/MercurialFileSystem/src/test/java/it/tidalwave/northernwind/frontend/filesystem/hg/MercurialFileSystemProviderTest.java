@@ -46,6 +46,8 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /***********************************************************************************************************************
  *
@@ -68,7 +70,12 @@ public class MercurialFileSystemProviderTest
         prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
-        properties.put("test.workAreaFolder", "target/workarea");
+	
+	// FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
+	// the project sources
+	
+        properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath()); 
+	
         final StandardEnvironment environment = new StandardEnvironment();
         environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
         context = new GenericXmlApplicationContext();
