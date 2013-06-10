@@ -50,7 +50,7 @@ public class TestRepositoryHelper
   {
     public enum Option
       { 
-        VOID_OPTION
+        DO_NOTHING
           {
             @Override
             public void apply()
@@ -58,7 +58,7 @@ public class TestRepositoryHelper
               }
           },
         
-        STRIP_TO_PUBLISHED_0_9
+        STRIP_PUBLISHED_0_9
           {
             @Override
             public void apply()

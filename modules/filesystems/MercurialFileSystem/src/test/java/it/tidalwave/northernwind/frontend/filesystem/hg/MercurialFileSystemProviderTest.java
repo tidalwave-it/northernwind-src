@@ -65,7 +65,7 @@ public class MercurialFileSystemProviderTest
     public void setupFixture()
       throws Exception
       {
-        prepareSourceRepository(Option.STRIP_TO_PUBLISHED_0_9);
+        prepareSourceRepository(Option.STRIP_PUBLISHED_0_9);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
         properties.put("test.workAreaFolder", "target/workarea");
@@ -92,7 +92,7 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
       {
-        // Simulate a previous update
+        // Start from published-0.8 that in this test is the latest
         final MercurialRepository mercurialRepository = new DefaultMercurialRepository(fixture.getCurrentWorkArea());
         mercurialRepository.pull();
         mercurialRepository.updateTo(new Tag("published-0.8"));
@@ -110,7 +110,8 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         fixture.swapCounter = 0;
-        prepareSourceRepository(Option.VOID_OPTION);
+	// Have published-0.9 in the source repo
+        prepareSourceRepository(Option.DO_NOTHING);
 
         fixture.checkForUpdates();
 
