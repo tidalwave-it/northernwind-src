@@ -41,8 +41,6 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -144,12 +142,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                                                                        URLDecoder.decode(file.getName(), "UTF-8"));
                   }
               }
-            catch (IOException e)
-              {
-                log.error("", e); // should never occur
-                throw new RuntimeException(e);
-              }
-            catch (NotFoundException e)
+            catch (IOException | NotFoundException e)
               {
                 log.error("", e); // should never occur
                 throw new RuntimeException(e);
