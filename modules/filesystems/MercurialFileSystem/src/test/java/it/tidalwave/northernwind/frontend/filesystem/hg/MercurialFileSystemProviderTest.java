@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.nio.file.Files;
@@ -35,18 +34,16 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
+import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSystemChangedEventMatcher.*;
 
 /***********************************************************************************************************************
  *
@@ -124,24 +121,6 @@ public class MercurialFileSystemProviderTest
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
         assertThat(fixture.swapCounter, is(1));
 
-        verify(messageBus).publish(is(argThat(new BaseMatcher<ResourceFileSystemChangedEvent>()
-          {
-            @Override
-            public boolean matches (final @Nonnull Object item)
-              {
-                if (! (item instanceof ResourceFileSystemChangedEvent))
-                  {
-                    return false;
-                  }
-
-                return true;
-              }
-
-            @Override
-            public void describeTo(Description description)
-              {
-
-              }
-          })));
+        verify(messageBus).publish(is(argThat(fileSystemChangedEvent()))); // TODO: check args
       }
   }
