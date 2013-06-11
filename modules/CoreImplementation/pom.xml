@@ -20,7 +20,7 @@
     <properties>
          <NorthernWind.version>${project.parent.parent.version}</NorthernWind.version>
     </properties>
-   
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -29,6 +29,10 @@
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-html-patches</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
