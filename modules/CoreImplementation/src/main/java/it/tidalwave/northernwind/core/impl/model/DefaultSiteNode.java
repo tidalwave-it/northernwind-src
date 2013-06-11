@@ -93,7 +93,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         resource = modelFactory.createResource(file);
         layout = loadLayout();
 
-        if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
+        if (site.isLogConfigurationEnabled() || log.isDebugEnabled()) // FIXME: Info? Or debug below?
           {
             log.info(">>>> layout for /{}:", resource.getFile().getPath());
             layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
@@ -118,7 +118,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                 log.debug("Compute relativeUri for {}: parentFile: {}", file, parentFile);
                 String parentRelativePath = UriUtilities.urlDecodedPath(parentFile.getPath());
 
-                if (!parentRelativePath.startsWith("/"))
+                if (!parentRelativePath.startsWith("/")) // FIXME: withLeadingSlash()
                   {
                     parentRelativePath = "/" + parentRelativePath;
                   }
@@ -133,7 +133,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   {
                     parentRelativePath = parentRelativePath.replaceAll("^/structure", "");
 
-                    if (parentRelativePath.equals(""))
+                    if (parentRelativePath.equals("")) // FIXME: withLeadingSlash
                       {
                         parentRelativePath = "/";
                       }
@@ -144,7 +144,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                     log.debug(">>>> found {}", parentSiteNode);
                     String p = parentSiteNode.getRelativeUri();
 
-                    if (!p.endsWith("/"))
+                    if (!p.endsWith("/")) // FIXME: withTrailingSlash()
                       {
                         p += "/";
                       }
