@@ -18,6 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tft.mainClass>it.tidalwave.northernwind.importer.infoglue.Main</tft.mainClass>    
+        <tft.test.skip>true</tft.test.skip>
     </properties>
     
     <dependencies>
