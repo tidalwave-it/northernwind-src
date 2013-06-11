@@ -15,6 +15,7 @@
     <version>1.1-ALPHA-21-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>NorthernWind - Frontend Webapp (Jersey)</name>
+    <description>A webapp containing the Jersey front end implementation.</description>
 
     <properties>
         <tft.test.skip>true</tft.test.skip> <!-- No tests, this is just a webapp assembler -->
@@ -32,5 +33,4 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-    <description>A webapp containing the Jersey front end implementation.</description>
 </project>
