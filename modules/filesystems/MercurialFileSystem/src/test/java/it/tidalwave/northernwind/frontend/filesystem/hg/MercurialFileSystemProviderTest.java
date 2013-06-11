@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -49,6 +49,7 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestReposito
 import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSystemChangedEventMatcher.*;
 import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /***********************************************************************************************************************
  *
@@ -75,7 +76,7 @@ public class MercurialFileSystemProviderTest
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
-        properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath()); 
+        properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath());
         context = createContextWithProperties(properties);
         fixture = context.getBean(MercurialFileSystemProvider.class);
         messageBus = context.getBean(MessageBus.class);
@@ -96,7 +97,7 @@ public class MercurialFileSystemProviderTest
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
-	
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -104,10 +105,7 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
       {
-        // Start from published-0.8 that in this test is the latest
-        final MercurialRepository mercurialRepository = new DefaultMercurialRepository(fixture.getCurrentWorkArea());
-        mercurialRepository.pull();
-        mercurialRepository.updateTo(new Tag("published-0.8"));
+		updateWorkAreaTo(fixture.getCurrentWorkArea(), new Tag("published-0.8"));
         fixture.swapCounter = 0;
 
         fixture.checkForUpdates();
@@ -125,6 +123,7 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
       throws Exception
       {
+		updateWorkAreaTo(fixture.getCurrentWorkArea(), new Tag("published-0.8"));
         fixture.swapCounter = 0;
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
 
@@ -133,8 +132,18 @@ public class MercurialFileSystemProviderTest
 		assertInvariantPostConditions();
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
         assertThat(fixture.swapCounter, is(1));
-
         verify(messageBus).publish(is(argThat(fileSystemChangedEvent()))); // TODO: check args
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+	protected static void updateWorkAreaTo (final @Nonnull Path workArea, final @Nonnull Tag tag)
+	  throws IOException
+	  {
+		final MercurialRepository mercurialRepository = new DefaultMercurialRepository(workArea);
+//		mercurialRepository.pull();
+		mercurialRepository.updateTo(tag);
       }
 
     /*******************************************************************************************************************
@@ -150,9 +159,9 @@ public class MercurialFileSystemProviderTest
      *
      ******************************************************************************************************************/
     private void assertThatHasNoCurrentTag(final @Nonnull MercurialRepository repository)
-	  throws IOException 
+	  throws IOException
       {
-		try 
+		try
 		  {
 			final Tag tag = repository.getCurrentTag();
 			fail("Repository should have not current tag, it has " + tag);
@@ -162,13 +171,13 @@ public class MercurialFileSystemProviderTest
 			return; // ok
 		  }
       }
-	
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
 	@Nonnull
     private GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
-        throws IllegalStateException, BeansException 
+        throws IllegalStateException, BeansException
 	  {
 		final StandardEnvironment environment = new StandardEnvironment();
 		environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
@@ -176,7 +185,7 @@ public class MercurialFileSystemProviderTest
 		context.setEnvironment(environment);
 		context.load("/MercurialFileSystemTestBeans.xml");
 		context.refresh();
-		
+
 		return context;
 	  }
   }
