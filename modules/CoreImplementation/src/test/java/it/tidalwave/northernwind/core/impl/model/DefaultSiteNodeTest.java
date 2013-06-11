@@ -128,11 +128,15 @@ public class DefaultSiteNodeTest
      ******************************************************************************************************************/
     @Test(dependsOnMethods = "must_properly_initialize_with_no_layout", dataProvider = "uriProvider")
     public void getRelativeUri_must_return_a_correct_value (final @CheckForNull String exposedUri,
+                                                            final @Nonnull String fileName,
                                                             final @Nonnull String parentUri,
                                                             final @Nonnull String parentPath,
                                                             final @Nonnull String expectedResult)
       throws Exception
       {
+        when(resourceFile.getPath()).thenReturn(parentPath.equals("") ? fileName : parentPath + "/" + fileName);
+        when(resourceFile.getName()).thenReturn(fileName);
+
         final ResourceFile parentResourceFile = mock(ResourceFile.class);
         final SiteNode parentSiteNode = mock(SiteNode.class);
         when(parentSiteNode.getRelativeUri()).thenReturn(parentUri);
@@ -160,7 +164,8 @@ public class DefaultSiteNodeTest
         when(resource.getProperties()).thenReturn(properties);
 
         final SiteFinder<SiteNode> siteNodeFinder = mock(SiteFinder.class);
-        when(siteNodeFinder.withRelativePath(eq(parentPath))).thenReturn(siteNodeFinder); // FIXME: anyString()
+        when(siteNodeFinder.withRelativePath(anyString())).thenReturn(siteNodeFinder); // FIXME: anyString()
+//        when(siteNodeFinder.withRelativePath(eq(parentPath))).thenReturn(siteNodeFinder);
         when(siteNodeFinder.result()).thenReturn(parentSiteNode);
         when(site.find(eq(SiteNode.class))).thenReturn(siteNodeFinder);
 
@@ -184,9 +189,22 @@ public class DefaultSiteNodeTest
       {
         return new Object[][]
           {
-              { "exposedUri", "/parentUri1", "/parent1", "/parentUri1/exposedUri"  },
-              { "exposedUri", "/parentUri2", "/parent2", "/parentUri2/exposedUri"  },
-              { null,         "/parentUri",  "/parent",  "/parentUri/resourceFile" }
+            //   exposedUri    fileName,       parentUri      parentPath           expectedResult
+            // root node
+              { null,         "structure",    "irrelevant",  "",                  "/" },
+              { "exposedUri", "structure",    "irrelevant",  "",                  "/" },
+
+            // just below the root node
+              { null,         "file1",        "/",           "structure",         "/file1" },
+              { null,         "file2",        "/",           "structure",         "/file2" },
+              { "exposedUri", "file1",        "/",           "structure",         "/exposedUri"  },
+              { "exposedUri", "file2",        "/",           "structure",         "/exposedUri"  },
+
+              { null,         "file1",        "/parentUri",  "structure/parent",  "/parentUri/file1" },
+              { null,         "file2",        "/parentUri",  "structure/parent",  "/parentUri/file2" },
+              { "exposedUri", "file1",        "/parentUri1", "structure/parent1", "/parentUri1/exposedUri"  },
+              { "exposedUri", "file1",        "/parentUri2", "structure/parent2", "/parentUri2/exposedUri"  }
+
           };
       }
   }
