@@ -189,21 +189,23 @@ public class DefaultSiteNodeTest
       {
         return new Object[][]
           {
-            //   exposedUri    fileName,       parentUri      parentPath           expectedResult
+            //   exposedUri     fileName,       parentUri      parentPath           expectedResult
             // root node
-              { null,         "structure",    "irrelevant",  "",                  "/" },
-              { "exposedUri", "structure",    "irrelevant",  "",                  "/" },
+              { null,          "structure",    "irrelevant",  "",                  "/"                        },
+              { "exposedUri",  "structure",    "irrelevant",  "",                  "/"                        },
 
             // just below the root node
-              { null,         "file1",        "/",           "structure",         "/file1" },
-              { null,         "file2",        "/",           "structure",         "/file2" },
-              { "exposedUri", "file1",        "/",           "structure",         "/exposedUri"  },
-              { "exposedUri", "file2",        "/",           "structure",         "/exposedUri"  },
+              { null,          "file1",        "/",           "structure",         "/file1"                   },
+              { null,          "file2",        "/",           "structure",         "/file2"                   },
+              { "exposedUri1", "file1",        "/",           "structure",         "/exposedUri1"             },
+              { "exposedUri2", "file2",        "/",           "structure",         "/exposedUri2"             },
 
-              { null,         "file1",        "/parentUri",  "structure/parent",  "/parentUri/file1" },
-              { null,         "file2",        "/parentUri",  "structure/parent",  "/parentUri/file2" },
-              { "exposedUri", "file1",        "/parentUri1", "structure/parent1", "/parentUri1/exposedUri"  },
-              { "exposedUri", "file1",        "/parentUri2", "structure/parent2", "/parentUri2/exposedUri"  }
+              { null,          "file1",        "/parentUri1", "structure/parent3", "/parentUri1/file1"        },
+              { null,          "file2",        "/parentUri1", "structure/parent4", "/parentUri1/file2"        },
+              { null,          "file1",        "/parentUri2", "structure/parent5", "/parentUri2/file1"        },
+              { null,          "file2",        "/parentUri2", "structure/parent6", "/parentUri2/file2"        },
+              { "exposedUri1", "file1",        "/parentUri1", "structure/parent1", "/parentUri1/exposedUri1"  },
+              { "exposedUri2", "file1",        "/parentUri2", "structure/parent2", "/parentUri2/exposedUri2"  }
 
           };
       }
