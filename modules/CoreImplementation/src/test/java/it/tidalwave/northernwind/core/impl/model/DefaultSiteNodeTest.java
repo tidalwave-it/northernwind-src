@@ -127,7 +127,7 @@ public class DefaultSiteNodeTest
       {
         final ResourceFile parentResourceFile = mock(ResourceFile.class);
         final SiteNode parentSiteNode = mock(SiteNode.class);
-        when(parentSiteNode.getRelativeUri()).thenReturn("/parent");
+        when(parentSiteNode.getRelativeUri()).thenReturn("/parentUri");
         when(parentResourceFile.getPath()).thenReturn("/parent");
         when(resourceFile.getParent()).thenReturn(parentResourceFile);
 
@@ -136,13 +136,13 @@ public class DefaultSiteNodeTest
         when(resource.getProperties()).thenReturn(properties);
 
         final SiteFinder<SiteNode> siteNodeFinder = mock(SiteFinder.class);
-        when(siteNodeFinder.withRelativePath(anyString())).thenReturn(siteNodeFinder); // FIXME: anyString()
+        when(siteNodeFinder.withRelativePath(eq("/parent"))).thenReturn(siteNodeFinder); // FIXME: anyString()
         when(siteNodeFinder.result()).thenReturn(parentSiteNode);
         when(site.find(eq(SiteNode.class))).thenReturn(siteNodeFinder);
 
         final String relativeUri = fixture.getRelativeUri();
 
-        assertThat(relativeUri, is("/parent/exposedUri"));
+        assertThat(relativeUri, is("/parentUri/exposedUri"));
       }
 
     // TODO:
