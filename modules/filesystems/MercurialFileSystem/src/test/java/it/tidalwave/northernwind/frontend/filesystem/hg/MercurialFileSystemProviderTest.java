@@ -60,6 +60,9 @@ public class MercurialFileSystemProviderTest
 
     private MessageBus messageBus;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -83,6 +86,9 @@ public class MercurialFileSystemProviderTest
         messageBus = context.getBean(MessageBus.class);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_properly_initialize()
       throws Exception
@@ -92,6 +98,9 @@ public class MercurialFileSystemProviderTest
         verifyZeroInteractions(messageBus);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_initialize")
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
@@ -109,6 +118,9 @@ public class MercurialFileSystemProviderTest
         verifyZeroInteractions(messageBus);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_initialize")
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
       throws Exception
