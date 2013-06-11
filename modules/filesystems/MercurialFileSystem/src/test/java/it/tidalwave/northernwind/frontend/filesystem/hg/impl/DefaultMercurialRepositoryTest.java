@@ -57,6 +57,9 @@ public class DefaultMercurialRepositoryTest
 
     private Path workArea;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeClass
     public void createSourceRepository()
       throws Exception
@@ -69,6 +72,9 @@ public class DefaultMercurialRepositoryTest
         workArea = Files.createTempDirectory("hg-workarea");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -78,6 +84,9 @@ public class DefaultMercurialRepositoryTest
         fixture = new DefaultMercurialRepository(workArea);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_properly_clone_a_repository()
       throws Exception
@@ -87,6 +96,9 @@ public class DefaultMercurialRepositoryTest
         // TODO: assert contents
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           expectedExceptions=NotFoundException.class)
     public void must_throw_NotFoundException_when_asking_for_the_current_tag_for_an_empty_workarea()
@@ -98,6 +110,9 @@ public class DefaultMercurialRepositoryTest
         fixture.getCurrentTag();
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_enumerate_tags()
       throws Exception
@@ -108,6 +123,9 @@ public class DefaultMercurialRepositoryTest
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_return_the_latest_tag()
       throws Exception
@@ -119,6 +137,9 @@ public class DefaultMercurialRepositoryTest
         // TODO: assert contents
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           dataProvider="tagSequenceUpTo0.8")
     public void must_properly_update_to_a_tag (final @Nonnull Tag tag)
@@ -132,6 +153,9 @@ public class DefaultMercurialRepositoryTest
         // TODO: assert contents
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           dataProvider="invalidTags",
           expectedExceptions=IOException.class,
@@ -145,6 +169,9 @@ public class DefaultMercurialRepositoryTest
         fixture.updateTo(tag);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository")
     public void must_properly_pull_changesets()
       throws Exception
@@ -158,8 +185,11 @@ public class DefaultMercurialRepositoryTest
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name="tagSequenceUpTo0.8")
-    public Object[][] getValidTags1()
+    public Object[][] tagSequenceUpTo0_8()
       {
         final List<Object[]> validTags = new ArrayList<>();
 
@@ -171,19 +201,9 @@ public class DefaultMercurialRepositoryTest
         return validTags.toArray(new Object[0][0]);
       }
 
-//    @DataProvider(name="validTags2")
-//    public Object[][] getValidTags2()
-//      {
-//        final List<Object[]> validTags = new ArrayList<>();
-//
-//        for (final Tag tag : ALL_TAGS_UP_TO_PUBLISHED_0_9)
-//          {
-//            validTags.add(new Object[] { tag });
-//          }
-//
-//        return validTags.toArray(new Object[0][0]);
-//      }
-
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name="invalidTags")
     public Object[][] getInvalidTags()
       {
