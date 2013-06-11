@@ -27,9 +27,11 @@
  */
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.nio.file.Files;
+import org.springframework.beans.BeansException;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
@@ -70,18 +72,8 @@ public class MercurialFileSystemProviderTest
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
-	
-	// FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
-	// the project sources
-	
         properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath()); 
-	
-        final StandardEnvironment environment = new StandardEnvironment();
-        environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
-        context = new GenericXmlApplicationContext();
-        context.setEnvironment(environment);
-        context.load("/MercurialFileSystemTestBeans.xml");
-        context.refresh();
+        context = createContextWithProperties(properties);
         fixture = context.getBean(MercurialFileSystemProvider.class);
         messageBus = context.getBean(MessageBus.class);
       }
@@ -135,4 +127,21 @@ public class MercurialFileSystemProviderTest
 
         verify(messageBus).publish(is(argThat(fileSystemChangedEvent()))); // TODO: check args
       }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+	@Nonnull
+    protected GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
+        throws IllegalStateException, BeansException 
+	  {
+		final StandardEnvironment environment = new StandardEnvironment();
+		environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
+		context = new GenericXmlApplicationContext();
+		context.setEnvironment(environment);
+		context.load("/MercurialFileSystemTestBeans.xml");
+		context.refresh();
+		
+		return context;
+	  }
   }
