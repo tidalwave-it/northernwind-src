@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>2.11</version>
+        <version>2.12</version>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
@@ -19,7 +19,7 @@
     <properties>
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
         <tft.project.description>NorthernWind - lightweight CMS</tft.project.description>
-        
+
         <tft.maven.requiredVersion>3.0.4</tft.maven.requiredVersion>
         <tft.maven.requiredJdk>[1.7.0-11,1.7.0-99)</tft.maven.requiredJdk>
         <tft.javac.source>1.7</tft.javac.source>
@@ -31,13 +31,10 @@
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
         <tidalwave.issues>NW</tidalwave.issues>
-        
+
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
         <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
-        <!-- See http://www.oracle.com/technetwork/java/javase/downloads/adoptionguide-137484.html
-        4.1.1 JSR 202 Classfile Changes - due to the fact that we use AspectJ static weaving -->
-        <tft.test.vmOptions>-XX:-UseSplitVerifier</tft.test.vmOptions>
 
         <!-- disables javancss since it's broken with JDK 1.7 -->
         <tft.profile.metrics.defaultGoal>install findbugs:findbugs pmd:cpd pmd:pmd checkstyle:checkstyle clirr:clirr dependency:analyze</tft.profile.metrics.defaultGoal>
@@ -92,7 +89,7 @@
     </repositories>
 
     <dependencyManagement>
-        <dependencies>            
+        <dependencies>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core</artifactId>
@@ -105,7 +102,7 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-core-default</artifactId> 
+                <artifactId>it-tidalwave-northernwind-core-default</artifactId>
                 <classifier>tests</classifier>
                 <version>1.0.38-SNAPSHOT</version>
             </dependency>
@@ -207,8 +204,8 @@
         <connection>scm:hg:${scm.repo.readonly.url}</connection>
         <developerConnection>scm:hg:${scm.repo.effective.url}</developerConnection>
         <url>${scm.repo.browse.url}</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
