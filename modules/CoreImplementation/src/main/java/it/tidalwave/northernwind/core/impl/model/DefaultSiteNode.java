@@ -135,9 +135,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                 else
                   {
                     final ResourceFile parentFile = file.getParent();
-                    String parentRelativePath = urlDecodedPath(parentFile.getPath())
-                                                .replaceAll("^/" + nodeFolder.getPath(), "/")
-                            .replace("//", "/"); // FIXME
+                    final String parentRelativePath = urlDecodedPath(parentFile.getPath())
+                                                        .replaceAll("^/" + nodeFolder.getPath(), "/")
+                                                        .replace("//", "/"); // FIXME
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)
                                                         .result();
