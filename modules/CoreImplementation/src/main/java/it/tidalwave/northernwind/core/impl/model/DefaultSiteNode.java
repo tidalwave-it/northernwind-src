@@ -43,7 +43,6 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.core.model.Site;
-import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -53,6 +52,8 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
+import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
+import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
@@ -121,27 +122,23 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
               {
                 uriComputationCounter++;
 
-                // FIXME: this works, but it's messy code!!!
                 final ResourceFile file = resource.getFile();
-                final String xxx = withLeadingSlash(file.getPath());
+                final String filePath = withLeadingSlash(file.getPath());
 
-                if ("/structure".equals(xxx)) // FIXME: root of structure
+                if ("/structure".equals(filePath)) // FIXME: root of structure
                   {
                     relativeUri = "/";
                   }
                 else
                   {
                     final ResourceFile parentFile = file.getParent();
-                    String parentRelativePath = UriUtilities.urlDecodedPath(parentFile.getPath())
-                                                            .replaceAll("^/structure", "/");
-
+                    String parentRelativePath = urlDecodedPath(parentFile.getPath()).replaceAll("^/structure", "/");
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)
                                                         .result();
-
-                    final String pathSegment = resource.getProperties()
-                                      .getProperty(PROPERTY_EXPOSED_URI, URLDecoder.decode(file.getName(), "UTF-8"));
-                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri()) + pathSegment;
+                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri())
+                                + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
+                                                                       URLDecoder.decode(file.getName(), "UTF-8"));
                   }
               }
             catch (IOException e)
