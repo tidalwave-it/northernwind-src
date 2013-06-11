@@ -55,7 +55,6 @@ import org.joda.time.DateTimeUtils;
 
 /***********************************************************************************************************************
  *
- * TODO: rewrite this test in a more readable way
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -146,9 +145,7 @@ public class MercurialFileSystemProviderTest
 	protected static void updateWorkAreaTo (final @Nonnull Path workArea, final @Nonnull Tag tag)
 	  throws IOException
 	  {
-		final MercurialRepository mercurialRepository = new DefaultMercurialRepository(workArea);
-//		mercurialRepository.pull();
-		mercurialRepository.updateTo(tag);
+		new DefaultMercurialRepository(workArea).updateTo(tag);
       }
 
     /*******************************************************************************************************************
