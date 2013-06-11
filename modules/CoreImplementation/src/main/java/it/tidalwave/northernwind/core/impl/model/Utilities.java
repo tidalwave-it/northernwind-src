@@ -59,7 +59,7 @@ public final class Utilities
       {
         log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
 
-        final List<ResourceFile> files = new ArrayList<ResourceFile>();
+        final List<ResourceFile> files = new ArrayList<>();
 
         for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
           {
