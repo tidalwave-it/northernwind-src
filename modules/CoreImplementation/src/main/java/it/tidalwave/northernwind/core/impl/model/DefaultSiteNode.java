@@ -127,11 +127,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   {
                     relativeUri = "/";
                   }
-                //
-                // Since the segment path of a SiteNode can be different than their name (e.g. by specific exposed URI,
-                // or including path-structured params), we cannot directly operate on the path, but we must navigate
-                // the file structure.
-                //
                 else
                   {
                     final ResourceFile parentFile = file.getParent();
