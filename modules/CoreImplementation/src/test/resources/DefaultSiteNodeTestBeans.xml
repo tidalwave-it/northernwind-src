@@ -44,7 +44,7 @@
     <context:spring-configured />
 
     <bean id="site" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="it.tidalwave.northernwind.core.model.Site" />
+        <constructor-arg value="it.tidalwave.northernwind.core.impl.model.InternalSite" />
     </bean>
 
     <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">

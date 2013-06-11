@@ -63,7 +63,7 @@ public class DefaultSiteNodeTest
 
     private DefaultSiteNode fixture;
 
-    private Site site;
+    private InternalSite site;
 
     private Resource resource;
 
@@ -83,7 +83,7 @@ public class DefaultSiteNodeTest
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteNodeTestBeans.xml");
-        site = context.getBean(Site.class);
+        site = context.getBean(InternalSite.class);
         modelFactory = context.getBean(ModelFactory.class);
         inheritanceHelper = context.getBean(InheritanceHelper.class);
         resourceFile = mock(ResourceFile.class);

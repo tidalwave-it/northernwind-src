@@ -132,13 +132,4 @@ public interface Site
      ******************************************************************************************************************/
     @Nonnull
     public List<Locale> getConfiguredLocales();
-
-    /*******************************************************************************************************************
-     *
-     * Returns {@code true} if we should log the configuration.
-     *
-     * @return   whether the configuration should be logged
-     *
-     ******************************************************************************************************************/
-    public boolean isLogConfigurationEnabled();
   }

@@ -69,7 +69,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-/* package */ class DefaultSite implements Site
+/* package */ class DefaultSite implements InternalSite
   {
     static interface FileVisitor
       {
@@ -154,7 +154,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
 
     private final List<Locale> configuredLocales = new ArrayList<>();
-    
+
     /*******************************************************************************************************************
      *
      *

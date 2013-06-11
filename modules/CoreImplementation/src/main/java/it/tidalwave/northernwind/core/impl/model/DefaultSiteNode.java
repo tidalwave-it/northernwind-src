@@ -73,7 +73,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private final Layout layout;
 
     @Nonnull
-    /* package */ Site site;
+    /* package */ InternalSite site;
 
     @Inject @Nonnull
     private ModelFactory modelFactory;
@@ -94,7 +94,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile file)
+    public DefaultSiteNode (final @Nonnull InternalSite site, final @Nonnull ResourceFile file)
       throws IOException, NotFoundException
       {
         this.site = site;
@@ -133,7 +133,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                 else
                   {
                     final ResourceFile parentFile = file.getParent();
-                    String parentRelativePath = urlDecodedPath(parentFile.getPath()).replaceAll("^" + structure, "/");
+                    String parentRelativePath = urlDecodedPath(parentFile.getPath()).replaceAll("^" + structure, "/")
+                            .replace("//", "/"); // FIXME
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)
                                                         .result();
