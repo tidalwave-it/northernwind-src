@@ -137,6 +137,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     private ResourceFile mediaFolder;
 
+    @Getter
     private ResourceFile nodeFolder;
 
     /* package */  final Map<String, Content> documentMapByRelativePath = new TreeMap<>();

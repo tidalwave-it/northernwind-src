@@ -95,6 +95,10 @@ public class DefaultSiteNodeTest
         when(resource.getFile()).thenReturn(resourceFile);
         when(modelFactory.createResource(any(ResourceFile.class))).thenReturn(resource);
 
+        final ResourceFile nodeFolder = mock(ResourceFile.class);
+        when(nodeFolder.getPath()).thenReturn("structure");
+        when(site.getNodeFolder()).thenReturn(nodeFolder);
+
         emptyPlaceHolderLayout = mock(Layout.class);
         when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
 

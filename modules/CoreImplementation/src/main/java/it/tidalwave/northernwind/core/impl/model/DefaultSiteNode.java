@@ -122,18 +122,19 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 uriComputationCounter++;
 
+                final ResourceFile nodeFolder = site.getNodeFolder();
                 final ResourceFile file = resource.getFile();
-                final String filePath = withLeadingSlash(file.getPath());
-                final String structure = "/structure";
 
-                if (structure.equals(filePath)) // root
+//                if (nodeFolder.equals(file)) // FIXME: requires equals() to work in mocks
+                if (nodeFolder.getPath().equals(file.getPath()))
                   {
                     relativeUri = "/";
                   }
                 else
                   {
                     final ResourceFile parentFile = file.getParent();
-                    String parentRelativePath = urlDecodedPath(parentFile.getPath()).replaceAll("^" + structure, "/")
+                    String parentRelativePath = urlDecodedPath(parentFile.getPath())
+                                                .replaceAll("^/" + nodeFolder.getPath(), "/")
                             .replace("//", "/"); // FIXME
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)

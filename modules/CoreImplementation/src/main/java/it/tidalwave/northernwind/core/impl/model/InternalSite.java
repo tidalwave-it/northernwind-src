@@ -27,17 +27,22 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Site;
 
 /***********************************************************************************************************************
  *
  * Extension of {@link Site} with a few methods requires by the implementations.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public interface InternalSite extends Site
   {
+    @Nonnull
+    public ResourceFile getNodeFolder();
+
     public boolean isLogConfigurationEnabled();
   }
