@@ -233,6 +233,7 @@ public class DefaultSiteNodeTest
               { null,          "file2",        "/parentUri1", "structure/parent4", "/parentUri1/file2"        },
               { null,          "file1",        "/parentUri2", "structure/parent5", "/parentUri2/file1"        },
               { null,          "file2",        "/parentUri2", "structure/parent6", "/parentUri2/file2"        },
+              { null,          "file+%282%29", "/parentUri2", "structure/parent6", "/parentUri2/file (2)"     },
               { "exposedUri1", "file1",        "/parentUri1", "structure/parent1", "/parentUri1/exposedUri1"  },
               { "exposedUri2", "file1",        "/parentUri2", "structure/parent2", "/parentUri2/exposedUri2"  }
           };
