@@ -122,8 +122,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                 final ResourceFile nodeFolder = site.getNodeFolder();
                 final ResourceFile file = resource.getFile();
 
-//                if (nodeFolder.equals(file)) // FIXME: requires equals() to work in mocks
-                if (nodeFolder.getPath().equals(file.getPath()))
+                if (nodeFolder.equals(file)) 
                   {
                     relativeUri = "/";
                   }

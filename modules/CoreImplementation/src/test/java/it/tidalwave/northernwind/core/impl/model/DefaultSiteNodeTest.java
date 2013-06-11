@@ -85,17 +85,13 @@ public class DefaultSiteNodeTest
         site = context.getBean(InternalSite.class);
         modelFactory = context.getBean(ModelFactory.class);
         inheritanceHelper = context.getBean(InheritanceHelper.class);
-        resourceFile = mock(ResourceFile.class);
 
         resource = mock(Resource.class);
-        resourceFile = mock(ResourceFile.class);
-        when(resourceFile.getPath()).thenReturn("/structure/foo/resourceFile");
-        when(resourceFile.getName()).thenReturn("resourceFile");
+        resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
         when(modelFactory.createResource(any(ResourceFile.class))).thenReturn(resource);
 
-        final ResourceFile nodeFolder = mock(ResourceFile.class);
-        when(nodeFolder.getPath()).thenReturn("structure");
+        final ResourceFile nodeFolder = MockResourceFile.folder("structure");
         when(site.getNodeFolder()).thenReturn(nodeFolder);
 
         emptyPlaceHolderLayout = mock(Layout.class);
@@ -173,14 +169,12 @@ public class DefaultSiteNodeTest
                                                 final @Nonnull String parentPath)
       throws IOException, NotFoundException
       {
-        when(resourceFile.getPath()).thenReturn(parentPath.equals("") ? fileName : parentPath + "/" + fileName);
-        when(resourceFile.getName()).thenReturn(fileName);
+        final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
+        resourceFile = MockResourceFile.folder(parentResourceFile, fileName);
+        when(resource.getFile()).thenReturn(resourceFile);
 
-        final ResourceFile parentResourceFile = mock(ResourceFile.class);
         final SiteNode parentSiteNode = mock(SiteNode.class);
         when(parentSiteNode.getRelativeUri()).thenReturn(parentUri);
-        when(parentResourceFile.getPath()).thenReturn(parentPath);
-        when(resourceFile.getParent()).thenReturn(parentResourceFile);
 
         final ResourceProperties properties = mock(ResourceProperties.class);
 
