@@ -122,17 +122,15 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
                 // FIXME: this works, but it's messy code!!!
                 final ResourceFile file = resource.getFile();
-                final ResourceFile parentFile = file.getParent();
-                log.debug("Compute relativeUri for {}: parentFile: {}", file, parentFile);
-                String parentRelativePath = withLeadingSlash(UriUtilities.urlDecodedPath(parentFile.getPath()));
-                log.debug(">>>> parent path '{}'", parentRelativePath);
 
-                if ("structure".equals(file.getPath()))
+                if ("structure".equals(file.getPath())) // FIXME: root of structure
                   {
                     relativeUri = "/";
                   }
                 else
                   {
+                    final ResourceFile parentFile = file.getParent();
+                    String parentRelativePath = withLeadingSlash(UriUtilities.urlDecodedPath(parentFile.getPath()));
                     parentRelativePath = withLeadingSlash(parentRelativePath.replaceAll("^/structure", ""));
 
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
