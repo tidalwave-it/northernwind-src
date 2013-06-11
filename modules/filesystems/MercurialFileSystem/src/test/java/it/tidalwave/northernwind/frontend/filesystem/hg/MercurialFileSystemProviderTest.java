@@ -50,6 +50,8 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSyste
 import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 
 /***********************************************************************************************************************
  *
@@ -106,13 +108,13 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
 		updateWorkAreaTo(fixture.getCurrentWorkArea(), new Tag("published-0.8"));
-        fixture.swapCounter = 0;
+        final int previousSwapCounter = fixture.swapCounter;
 
         fixture.checkForUpdates();
 
 		assertInvariantPostConditions();
         assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
-        assertThat(fixture.swapCounter, is(0));
+        assertThat(fixture.swapCounter, is(previousSwapCounter));
         verifyZeroInteractions(messageBus);
       }
 
@@ -124,15 +126,18 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
 		updateWorkAreaTo(fixture.getCurrentWorkArea(), new Tag("published-0.8"));
-        fixture.swapCounter = 0;
+        final int previousSwapCounter = fixture.swapCounter;
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
+		final DateTime now = new DateTime();
+		DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
         fixture.checkForUpdates();
 
 		assertInvariantPostConditions();
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
-        assertThat(fixture.swapCounter, is(1));
-        verify(messageBus).publish(is(argThat(fileSystemChangedEvent()))); // TODO: check args
+        assertThat(fixture.swapCounter, is(previousSwapCounter + 1));
+        verify(messageBus).publish(is(argThat(fileSystemChangedEvent().withResourceFileSystemProvider(fixture)
+																	   .withLatestModificationTime(now))));
       }
 
     /*******************************************************************************************************************
@@ -158,7 +163,7 @@ public class MercurialFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertThatHasNoCurrentTag(final @Nonnull MercurialRepository repository)
+    private void assertThatHasNoCurrentTag (final @Nonnull MercurialRepository repository)
 	  throws IOException
       {
 		try
@@ -168,7 +173,7 @@ public class MercurialFileSystemProviderTest
 		  }
 		catch (NotFoundException e)
 		  {
-			return; // ok
+			// ok
 		  }
       }
 
