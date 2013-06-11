@@ -37,6 +37,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import org.testng.annotations.BeforeMethod;
@@ -134,6 +135,41 @@ public class DefaultSiteNodeTest
                                                             final @Nonnull String expectedResult)
       throws Exception
       {
+        prepareMocksForGetRelativeUri(exposedUri, fileName, parentUri, parentPath);
+
+        final String relativeUri = fixture.getRelativeUri();
+
+        assertThat(relativeUri, is(expectedResult));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void getRelativeUri_must_be_called_only_once()
+      throws Exception
+      {
+        prepareMocksForGetRelativeUri("exposedUri1", "file1", "/parentUri1", "structure/parent1");
+
+        final int previousUriComputationCounter = fixture.uriComputationCounter;
+
+        for (int i = 0; i < 10; i++)
+          {
+            fixture.getRelativeUri();
+          }
+
+        assertThat(fixture.uriComputationCounter, is(previousUriComputationCounter + 1));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void prepareMocksForGetRelativeUri (final @CheckForNull String exposedUri,
+                                                final @Nonnull String fileName,
+                                                final @Nonnull String parentUri,
+                                                final @Nonnull String parentPath)
+      throws IOException, NotFoundException
+      {
         when(resourceFile.getPath()).thenReturn(parentPath.equals("") ? fileName : parentPath + "/" + fileName);
         when(resourceFile.getName()).thenReturn(fileName);
 
@@ -168,22 +204,11 @@ public class DefaultSiteNodeTest
 //        when(siteNodeFinder.withRelativePath(eq(parentPath))).thenReturn(siteNodeFinder);
         when(siteNodeFinder.result()).thenReturn(parentSiteNode);
         when(site.find(eq(SiteNode.class))).thenReturn(siteNodeFinder);
-
-        final String relativeUri = fixture.getRelativeUri();
-
-        assertThat(relativeUri, is(expectedResult));
       }
 
-    // TODO:
-//    /*******************************************************************************************************************
-//     *
-//     ******************************************************************************************************************/
-//    @Test
-//    public void getRelativeUri_must_be_called_only_once()
-//    {
-//
-//    }
-//
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "uriProvider")
     private Object[][] uriProvider()
       {
@@ -206,7 +231,6 @@ public class DefaultSiteNodeTest
               { null,          "file2",        "/parentUri2", "structure/parent6", "/parentUri2/file2"        },
               { "exposedUri1", "file1",        "/parentUri1", "structure/parent1", "/parentUri1/exposedUri1"  },
               { "exposedUri2", "file1",        "/parentUri2", "structure/parent2", "/parentUri2/exposedUri2"  }
-
           };
       }
   }

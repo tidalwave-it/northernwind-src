@@ -82,6 +82,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     @CheckForNull
     private String relativeUri;
 
+    /* package */ int uriComputationCounter;
+
     /*******************************************************************************************************************
      *
      * Creates a new instance with the given configuration file and mapped to the given URI.
@@ -116,6 +118,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
           {
             try
               {
+                uriComputationCounter++;
+
                 // FIXME: this works, but it's messy code!!!
                 final ResourceFile file = resource.getFile();
                 final ResourceFile parentFile = file.getParent();
