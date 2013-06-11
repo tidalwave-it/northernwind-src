@@ -41,11 +41,14 @@ import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSystemChangedEventMatcher.*;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
 
 /***********************************************************************************************************************
  *
@@ -88,6 +91,8 @@ public class MercurialFileSystemProviderTest
 	    assertInvariantPostConditions();
         assertThat(fixture.exposedRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(fixture.alternateRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+		assertThatHasNoCurrentTag(fixture.exposedRepository);
+		assertThatHasNoCurrentTag(fixture.alternateRepository);
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
@@ -141,6 +146,23 @@ public class MercurialFileSystemProviderTest
 		assertThat(fixture.fileSystemDelegate.getRootDirectory().toPath(), is(fixture.exposedRepository.getWorkArea()));
 	  }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void assertThatHasNoCurrentTag(final @Nonnull MercurialRepository repository)
+	  throws IOException 
+      {
+		try 
+		  {
+			final Tag tag = repository.getCurrentTag();
+			fail("Repository should have not current tag, it has " + tag);
+		  }
+		catch (NotFoundException e)
+		  {
+			return; // ok
+		  }
+      }
+	
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
