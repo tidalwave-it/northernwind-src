@@ -37,6 +37,8 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -44,6 +46,9 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -121,14 +126,13 @@ public class DefaultSiteNodeTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test
-    public void getRelativeUri_must_return_a_correct_value()
+    @Test(dependsOnMethods = "must_properly_initialize_with_no_layout", dataProvider = "uriProvider")
+    public void getRelativeUri_must_return_a_correct_value (final @CheckForNull String exposedUri,
+                                                            final @Nonnull String parentUri,
+                                                            final @Nonnull String parentPath,
+                                                            final @Nonnull String expectedResult)
       throws Exception
       {
-        final String exposedUri = "exposedUri";
-        final String parentUri = "/parentUri";
-        final String parentPath = "/parent";
-
         final ResourceFile parentResourceFile = mock(ResourceFile.class);
         final SiteNode parentSiteNode = mock(SiteNode.class);
         when(parentSiteNode.getRelativeUri()).thenReturn(parentUri);
@@ -136,7 +140,23 @@ public class DefaultSiteNodeTest
         when(resourceFile.getParent()).thenReturn(parentResourceFile);
 
         final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenReturn(exposedUri);
+
+        if (exposedUri != null)
+          {
+            when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenReturn(exposedUri);
+          }
+        else
+          {
+            when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenAnswer(new Answer<String>()
+              {
+                @Override
+                public String answer (final @Nonnull InvocationOnMock invocation)
+                  {
+                    return (String)invocation.getArguments()[1];
+                  }
+              });
+          }
+
         when(resource.getProperties()).thenReturn(properties);
 
         final SiteFinder<SiteNode> siteNodeFinder = mock(SiteFinder.class);
@@ -146,7 +166,7 @@ public class DefaultSiteNodeTest
 
         final String relativeUri = fixture.getRelativeUri();
 
-        assertThat(relativeUri, is(parentUri + "/" + exposedUri));
+        assertThat(relativeUri, is(expectedResult));
       }
 
     // TODO:
@@ -159,4 +179,14 @@ public class DefaultSiteNodeTest
 //
 //    }
 //
+    @DataProvider(name = "uriProvider")
+    private Object[][] uriProvider()
+      {
+        return new Object[][]
+          {
+              { "exposedUri", "/parentUri1", "/parent1", "/parentUri1/exposedUri"  },
+              { "exposedUri", "/parentUri2", "/parent2", "/parentUri2/exposedUri"  },
+              { null,         "/parentUri",  "/parent",  "/parentUri/resourceFile" }
+          };
+      }
   }
