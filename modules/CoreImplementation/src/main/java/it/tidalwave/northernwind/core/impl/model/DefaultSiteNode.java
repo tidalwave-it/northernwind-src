@@ -192,15 +192,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String withLeadingSlash (final @Nonnull String path)
-      {
-        return path.startsWith("/") ? path : ("/" + path);
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
     private static String withTrailingSlash (final @Nonnull String path)
       {
         return path.endsWith("/") ? path : (path + "/");
