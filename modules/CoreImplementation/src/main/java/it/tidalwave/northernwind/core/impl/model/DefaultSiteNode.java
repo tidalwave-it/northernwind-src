@@ -139,7 +139,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                                                         .result();
                     relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri())
                                 + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
-                                                                       URLDecoder.decode(file.getName(), "UTF-8"));
+                                                                       urlDecodedName(file.getName()));
                   }
               }
             catch (IOException | NotFoundException e)

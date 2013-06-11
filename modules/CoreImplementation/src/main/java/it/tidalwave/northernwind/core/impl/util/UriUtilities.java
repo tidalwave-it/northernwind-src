@@ -74,6 +74,21 @@ public final class UriUtilities
 
     /*******************************************************************************************************************
      *
+     * Decodes an URL-encoded name
+     *
+     * @param   name  the URL-encoded name
+     * @return        the plain text name
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static String urlDecodedName (final @Nonnull String name)
+      throws UnsupportedEncodingException
+      {
+        return URLDecoder.decode(name, "UTF-8");
+      }
+
+    /*******************************************************************************************************************
+     *
      * Encodes an URL-encoded URI
      *
      * @param   uri   the plain text URI
