@@ -85,7 +85,10 @@ public class MercurialFileSystemProviderTest
     public void must_properly_initialize()
       throws Exception
       {
-//        assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
+        assertThat(fixture.exposedRepository.getWorkArea(), is(not(fixture.alternateRepository.getWorkArea())));
+		assertThat(fixture.fileSystemDelegate.getRootDirectory().toPath(), is(fixture.exposedRepository.getWorkArea()));
+        assertThat(fixture.exposedRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThat(fixture.alternateRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }

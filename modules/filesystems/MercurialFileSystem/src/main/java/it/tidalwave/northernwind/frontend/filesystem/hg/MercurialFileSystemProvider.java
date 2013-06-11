@@ -48,6 +48,7 @@ import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetB
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +79,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
     @Getter @Setter
     private String workAreaFolder;
 
-    private final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
+    /* package */ final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
 
     @Getter
     private final ResourceFileSystem fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
@@ -93,9 +94,9 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     private final MercurialRepository[] repositories = new MercurialRepository[2];
 
-    private MercurialRepository exposedRepository;
+    /* package */ MercurialRepository exposedRepository;
 
-    private MercurialRepository alternateRepository;
+    /* package */ MercurialRepository alternateRepository;
 
     private int repositorySelector;
 
