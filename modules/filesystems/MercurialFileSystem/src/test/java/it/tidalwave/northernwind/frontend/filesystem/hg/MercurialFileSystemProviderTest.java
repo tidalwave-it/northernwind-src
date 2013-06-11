@@ -126,7 +126,7 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         fixture.swapCounter = 0;
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_9);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
 
         fixture.checkForUpdates();
 

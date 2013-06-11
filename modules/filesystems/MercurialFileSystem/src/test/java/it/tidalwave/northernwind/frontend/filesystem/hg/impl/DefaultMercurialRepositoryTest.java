@@ -178,11 +178,18 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_9);
-
+        fixture.pull();
+	
+        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
+        assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.8"));
+	
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
         fixture.pull();
 
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
+        assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
+        assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.9"));
       }
 
     /*******************************************************************************************************************

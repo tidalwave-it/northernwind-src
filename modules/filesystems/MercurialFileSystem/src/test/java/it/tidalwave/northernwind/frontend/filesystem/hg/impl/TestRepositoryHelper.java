@@ -50,7 +50,7 @@ public class TestRepositoryHelper
   {
     public enum Option
       { 
-        SET_TO_PUBLISHED_0_9
+        UPDATE_TO_PUBLISHED_0_9
           {
             @Override
             public void apply()
