@@ -141,9 +141,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)
                                                         .result();
-                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri())
-                                + resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
-                                                                       urlDecodedName(file.getName()));
+                    final String pathSegment =  resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
+                                                                                     urlDecodedName(file.getName()));
+                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri()) + pathSegment;
                   }
               }
             catch (IOException | NotFoundException e)
