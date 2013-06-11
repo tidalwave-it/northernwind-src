@@ -43,6 +43,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.core.model.Site;
+import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -136,12 +137,10 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)
                                                         .result();
-                    log.debug(">>>> found {}", parentSiteNode);
 
-                    final String localRelativePathPortion = URLDecoder.decode(file.getName(), "UTF-8");
-                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri())
-                                + resource.getProperties()
-                                          .getProperty(PROPERTY_EXPOSED_URI, localRelativePathPortion);
+                    final String pathSegment = resource.getProperties()
+                                      .getProperty(PROPERTY_EXPOSED_URI, URLDecoder.decode(file.getName(), "UTF-8"));
+                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri()) + pathSegment;
                   }
               }
             catch (IOException e)
