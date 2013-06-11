@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -94,10 +94,10 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
 
-	fixture.clone(sourceRepository.toUri());
+        fixture.clone(sourceRepository.toUri());
 
-	assertThat(new File(workArea.toFile(), ".hg").exists(), is(true));
-	assertThat(new File(workArea.toFile(), ".hg").isDirectory(), is(true));
+        assertThat(new File(workArea.toFile(), ".hg").exists(), is(true));
+        assertThat(new File(workArea.toFile(), ".hg").isDirectory(), is(true));
         // TODO: assert contents in .hg
       }
 
@@ -109,7 +109,7 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-	
+
         fixture.clone(sourceRepository.toUri());
 
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
@@ -126,7 +126,7 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-	
+
         fixture.clone(sourceRepository.toUri());
 
         fixture.getCurrentTag();
@@ -141,10 +141,10 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-	
+
         fixture.clone(sourceRepository.toUri());
         fixture.updateTo(tag);
-	
+
         assertThat(fixture.getCurrentTag(), is(tag));
         // TODO: assert contents
       }
@@ -160,7 +160,7 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-	
+
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -175,15 +175,15 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
-	
+
         fixture.pull();
-	
+
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
         assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.8"));
-	
+
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
-	
+
         fixture.pull();
 
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
