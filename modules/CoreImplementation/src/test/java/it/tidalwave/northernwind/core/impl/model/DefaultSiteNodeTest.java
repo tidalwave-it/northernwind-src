@@ -184,6 +184,7 @@ public class DefaultSiteNodeTest
 
         final ResourceProperties properties = mock(ResourceProperties.class);
 
+        // FIXME: consider using a concrete mock for ResourceProperties, since it's cumbersome to mock in this way
         if (exposedUri != null)
           {
             when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenReturn(exposedUri);
