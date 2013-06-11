@@ -59,7 +59,7 @@ public class TestRepositoryHelper
               }
           },
         
-        SET_TO_PUBLISHED_0_8
+        UPDATE_TO_PUBLISHED_0_8
           {
             @Override
             public void apply()

@@ -91,7 +91,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_clone_a_repository()
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
         // TODO: assert contents
       }
@@ -101,10 +101,10 @@ public class DefaultMercurialRepositoryTest
      ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           expectedExceptions=NotFoundException.class)
-    public void must_throw_NotFoundException_when_asking_for_the_current_tag_for_an_empty_workarea()
+    public void must_throw_NotFoundException_when_asking_for_the_current_tag_in_an_empty_workarea()
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         fixture.getCurrentTag();
@@ -117,7 +117,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_enumerate_tags()
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
@@ -130,7 +130,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_return_the_latest_tag()
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
@@ -145,7 +145,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_update_to_a_tag (final @Nonnull Tag tag)
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -163,7 +163,7 @@ public class DefaultMercurialRepositoryTest
     public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
         fixture.updateTo(tag);
@@ -176,7 +176,7 @@ public class DefaultMercurialRepositoryTest
     public void must_properly_pull_changesets()
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
         prepareSourceRepository(Option.SET_TO_PUBLISHED_0_9);
 

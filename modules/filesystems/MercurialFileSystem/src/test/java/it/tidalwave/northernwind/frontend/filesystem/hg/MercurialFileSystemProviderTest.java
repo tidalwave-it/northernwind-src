@@ -67,7 +67,7 @@ public class MercurialFileSystemProviderTest
     public void setupFixture()
       throws Exception
       {
-        prepareSourceRepository(Option.SET_TO_PUBLISHED_0_8);
+        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
 	
