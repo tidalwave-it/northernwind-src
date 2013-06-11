@@ -33,7 +33,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.URLDecoder;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
@@ -128,6 +127,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   {
                     relativeUri = "/";
                   }
+                //
+                // Since SiteNodes can change their segment of path from their name (e.g. by means with properties,
+                // even including path-structured params), we cannot directly operate on the path, but we must navigate
+                // the file structure.
+                //
                 else
                   {
                     final ResourceFile parentFile = file.getParent();
