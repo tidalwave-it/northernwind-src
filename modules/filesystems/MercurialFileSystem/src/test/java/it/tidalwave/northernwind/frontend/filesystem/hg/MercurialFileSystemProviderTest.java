@@ -85,14 +85,13 @@ public class MercurialFileSystemProviderTest
     public void must_properly_initialize()
       throws Exception
       {
-        assertThat(fixture.exposedRepository.getWorkArea(), is(not(fixture.alternateRepository.getWorkArea())));
-		assertThat(fixture.fileSystemDelegate.getRootDirectory().toPath(), is(fixture.exposedRepository.getWorkArea()));
+	    assertInvariantPostConditions();
         assertThat(fixture.exposedRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(fixture.alternateRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
-
+	
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -108,6 +107,7 @@ public class MercurialFileSystemProviderTest
 
         fixture.checkForUpdates();
 
+		assertInvariantPostConditions();
         assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
         assertThat(fixture.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
@@ -125,6 +125,7 @@ public class MercurialFileSystemProviderTest
 
         fixture.checkForUpdates();
 
+		assertInvariantPostConditions();
         assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
         assertThat(fixture.swapCounter, is(1));
 
@@ -134,8 +135,17 @@ public class MercurialFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+	private void assertInvariantPostConditions()
+	  {
+        assertThat(fixture.exposedRepository.getWorkArea(), is(not(fixture.alternateRepository.getWorkArea())));
+		assertThat(fixture.fileSystemDelegate.getRootDirectory().toPath(), is(fixture.exposedRepository.getWorkArea()));
+	  }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
 	@Nonnull
-    protected GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
+    private GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
         throws IllegalStateException, BeansException 
 	  {
 		final StandardEnvironment environment = new StandardEnvironment();
