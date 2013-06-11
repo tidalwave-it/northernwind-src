@@ -7,6 +7,7 @@
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
         <version>2.12</version>
+        <relativePath/>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
