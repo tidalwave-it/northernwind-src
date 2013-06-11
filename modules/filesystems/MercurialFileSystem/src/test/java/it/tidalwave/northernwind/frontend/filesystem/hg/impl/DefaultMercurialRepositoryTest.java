@@ -133,8 +133,8 @@ public class DefaultMercurialRepositoryTest
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         fixture.clone(sourceRepository.toUri());
 
-        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        // TODO: assert contents
+        assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
+        assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.8"));
       }
 
     /*******************************************************************************************************************
