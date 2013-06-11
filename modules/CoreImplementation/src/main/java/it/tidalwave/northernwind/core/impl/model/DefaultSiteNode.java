@@ -124,13 +124,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                 final ResourceFile file = resource.getFile();
                 final ResourceFile parentFile = file.getParent();
                 log.debug("Compute relativeUri for {}: parentFile: {}", file, parentFile);
-                String parentRelativePath = UriUtilities.urlDecodedPath(parentFile.getPath());
-
-                if (!parentRelativePath.startsWith("/")) // FIXME: withLeadingSlash()
-                  {
-                    parentRelativePath = "/" + parentRelativePath;
-                  }
-
+                String parentRelativePath = withLeadingSlash(UriUtilities.urlDecodedPath(parentFile.getPath()));
                 log.debug(">>>> parent path '{}'", parentRelativePath);
 
                 if ("structure".equals(file.getPath()))
@@ -139,29 +133,18 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
                 else
                   {
-                    parentRelativePath = parentRelativePath.replaceAll("^/structure", "");
-
-                    if (parentRelativePath.equals("")) // FIXME: withLeadingSlash
-                      {
-                        parentRelativePath = "/";
-                      }
+                    parentRelativePath = withLeadingSlash(parentRelativePath.replaceAll("^/structure", ""));
 
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath)
                                                         .result();
                     log.debug(">>>> found {}", parentSiteNode);
-                    String p = parentSiteNode.getRelativeUri();
-
-                    if (!p.endsWith("/")) // FIXME: withTrailingSlash()
-                      {
-                        p += "/";
-                      }
 
                     final String localRelativePathPortion = URLDecoder.decode(file.getName(), "UTF-8");
-                    relativeUri = p + resource.getProperties()
-                                              .getProperty(PROPERTY_EXPOSED_URI, localRelativePathPortion);
+                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri())
+                                + resource.getProperties()
+                                          .getProperty(PROPERTY_EXPOSED_URI, localRelativePathPortion);
                   }
-                // END FIXME
               }
             catch (IOException e)
               {
@@ -208,5 +191,23 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
           }
 
         return (layout != null) ? layout : modelFactory.createLayout(new Id(""), "emptyPlaceholder");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String withLeadingSlash (final @Nonnull String path)
+      {
+        return path.startsWith("/") ? path : ("/" + path);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String withTrailingSlash (final @Nonnull String path)
+      {
+        return path.endsWith("/") ? path : (path + "/");
       }
   }
