@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.impl.util.UriUtilities;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -64,16 +65,19 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 /* package */ class DefaultSiteNode implements SiteNode
   {
     @Nonnull @Delegate(types = Resource.class)
-    private final Resource resource;
+    /* package */ final Resource resource;
 
     @Nonnull @Getter
     private final Layout layout;
 
     @Nonnull
-    private DefaultSite site;
+    /* package */ Site site;
 
     @Inject @Nonnull
     private ModelFactory modelFactory;
+
+    @Inject @Nonnull
+    private InheritanceHelper inheritanceHelper;
 
     @CheckForNull
     private String relativeUri;
@@ -86,7 +90,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultSiteNode (final @Nonnull DefaultSite site, final @Nonnull ResourceFile file)
+    public DefaultSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile file)
       throws IOException, NotFoundException
       {
         this.site = site;
@@ -183,7 +187,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
       {
         Layout layout = null;
         // FIXME: Components must be localized
-        final List<ResourceFile> files = Utilities.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml");
+        final List<ResourceFile> files = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml");
 
         for (final ResourceFile layoutFile : files)
           {
