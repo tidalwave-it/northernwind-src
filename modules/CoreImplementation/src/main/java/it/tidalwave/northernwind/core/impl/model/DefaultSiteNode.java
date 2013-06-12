@@ -122,7 +122,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                 final ResourceFile nodeFolder = site.getNodeFolder();
                 final ResourceFile file = resource.getFile();
 
-                if (nodeFolder.equals(file)) 
+                if (nodeFolder.equals(file))
                   {
                     relativeUri = "/";
                   }
@@ -169,7 +169,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
           {
             log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
             final @Cleanup InputStream is = layoutFile.getInputStream();
-            final DefaultLayout overridingLayout = new DefaultLayout().as(Unmarshallable).unmarshal(is);
+            final DefaultLayout overridingLayout = modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
             is.close();
             layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
 
@@ -179,7 +179,10 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               }
           }
 
-        return (layout != null) ? layout : modelFactory.createLayout(new Id(""), "emptyPlaceholder");
+        return (layout != null) ? layout : modelFactory.createLayout()
+                                                       .withId(new Id(""))
+                                                       .withType("emptyPlaceholder")
+                                                       .build();
       }
 
     /*******************************************************************************************************************

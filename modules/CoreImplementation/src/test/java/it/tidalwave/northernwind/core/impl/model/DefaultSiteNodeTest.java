@@ -34,7 +34,6 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import javax.annotation.CheckForNull;
@@ -95,7 +94,16 @@ public class DefaultSiteNodeTest
         when(site.getNodeFolder()).thenReturn(nodeFolder);
 
         emptyPlaceHolderLayout = mock(Layout.class);
-        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
+//        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
+        when(modelFactory.createLayout()).thenReturn(new Layout.Builder().withCallBack(new Layout.Builder.CallBack()
+          {
+            @Override
+            public Layout build (final @Nonnull Layout.Builder builder)
+              {
+                assertThat(builder.getType(), is("emptyPlaceholder"));
+                return emptyPlaceHolderLayout;
+              }
+          }));
 
         fixture = new DefaultSiteNode(site, resourceFile);
       }
@@ -117,7 +125,6 @@ public class DefaultSiteNodeTest
 //    @Test
 //    public void must_properly_initialize_with_layout()
 //      {
-//        TODO: requires ModelFactory to create a default DefaultLayout -> with a Builder
 //        assertThat(fixture.site, sameInstance(site));
 //        assertThat(fixture.resource, sameInstance(resource));
 //        assertThat(fixture.getLayout(), sameInstance(emptyPlaceHolderLayout));
