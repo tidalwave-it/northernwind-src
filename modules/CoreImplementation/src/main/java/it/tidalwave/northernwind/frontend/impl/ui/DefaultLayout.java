@@ -62,15 +62,15 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
     @Nonnull
     private /* final FIXME */ String typeUri;
 
-    private final List<Layout> children = new ArrayList<Layout>();
+    private final List<Layout> children = new ArrayList<>();
 
-    private final Map<Id, Layout> childrenMapById = new HashMap<Id, Layout>();
+    private final Map<Id, Layout> childrenMapById = new HashMap<>();
 
     static class CloneVisitor implements Visitor<Layout, DefaultLayout>
       {
         private DefaultLayout rootLayout;
 
-        private Stack<DefaultLayout> layouts = new Stack<DefaultLayout>();
+        private Stack<DefaultLayout> layouts = new Stack<>();
 
         @Override
         public void preVisit (final @Nonnull Layout layout)
