@@ -27,16 +27,20 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.lang.reflect.Constructor;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.mocks.MockController1;
 import it.tidalwave.northernwind.frontend.impl.ui.mocks.MockController2;
 import it.tidalwave.northernwind.frontend.impl.ui.mocks.MockController3;
 import it.tidalwave.northernwind.frontend.impl.ui.mocks.MockView1;
 import it.tidalwave.northernwind.frontend.impl.ui.mocks.MockView2;
 import it.tidalwave.northernwind.frontend.impl.ui.mocks.MockView3;
-import java.lang.reflect.Constructor;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -50,8 +54,6 @@ public class DefaultViewFactoryTest
   {
     private DefaultViewFactory fixture;
 
-    private ClassPathXmlApplicationContext context;
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -59,7 +61,6 @@ public class DefaultViewFactoryTest
     public void setupFixture()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("ViewBuilderTestBeans.xml");
         fixture = new DefaultViewFactory();
       }
 
@@ -89,5 +90,41 @@ public class DefaultViewFactoryTest
         assertThat(viewBuilder3, is(not(nullValue())));
         assertThat(viewBuilder3.viewConstructor,           is((Constructor)MockView3.class.getConstructors()[0]));
         assertThat(viewBuilder3.viewControllerConstructor, is((Constructor)MockController3.class.getConstructors()[0]));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void createViewAndController_must_delegate_to_the_proper_ViewBuilder()
+      throws Exception
+      {
+        final ViewBuilder viewBuilder = mock(ViewBuilder.class);
+        final SiteNode siteNode = mock(SiteNode.class);
+        final Id id = new Id("theId");
+        final ViewAndController viewAndController = mock(ViewAndController.class);
+        when(viewBuilder.createViewAndController(eq(id), same(siteNode))).thenReturn(viewAndController);
+        fixture.viewBuilderMapByTypeUri.put("type1", viewBuilder);
+
+        final ViewAndController vac = fixture.createViewAndController("type1", id, siteNode);
+
+        verify(viewBuilder).createViewAndController(eq(id), same(siteNode));
+        assertThat(vac, is(sameInstance(viewAndController)));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(expectedExceptions = NotFoundException.class,
+          expectedExceptionsMessageRegExp = "\\QCannot find type2: available: [type1]\\E")
+    public void createViewAndController_must_throw_exception_when_type_is_not_registered()
+      throws Exception
+      {
+        final ViewBuilder viewBuilder = mock(ViewBuilder.class);
+        final SiteNode siteNode = mock(SiteNode.class);
+        final Id id = new Id("theId");
+        fixture.viewBuilderMapByTypeUri.put("type1", viewBuilder);
+
+        final ViewAndController vac = fixture.createViewAndController("type3", id, siteNode);
       }
   }
