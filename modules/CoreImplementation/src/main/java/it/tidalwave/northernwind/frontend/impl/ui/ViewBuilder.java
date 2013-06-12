@@ -56,17 +56,17 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString
+@Configurable @Slf4j @ToString(exclude = "beanFactory")
 /* package */ class ViewBuilder
   {
     @Inject @Nonnull
     private BeanFactory beanFactory;
 
     @Nonnull
-    private final Constructor<?> viewConstructor;
+    /* package */ final Constructor<?> viewConstructor;
 
     @Nonnull
-    private final Constructor<?> viewControllerConstructor;
+    /* package */ final Constructor<?> viewControllerConstructor;
 
     /*******************************************************************************************************************
      *

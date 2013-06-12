@@ -60,7 +60,7 @@ import static it.tidalwave.util.NotFoundException.*;
 @Configurable @Slf4j @ToString
 public class DefaultViewFactory implements ViewFactory
   {
-    private final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
+    /* package */ final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
