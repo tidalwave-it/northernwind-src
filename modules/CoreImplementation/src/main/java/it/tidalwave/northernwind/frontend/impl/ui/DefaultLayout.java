@@ -44,6 +44,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
+import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.role.spring.SpringAsSupport;
 import lombok.Getter;
 
@@ -74,7 +75,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
      *
      *
      ******************************************************************************************************************/
-    static class CloneVisitor implements Visitor<Layout, DefaultLayout>
+    static class CloneVisitor extends VisitorSupport<Layout, DefaultLayout>
       {
         private DefaultLayout rootLayout;
 
@@ -96,11 +97,6 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
               }
 
             layouts.push(newLayout);
-          }
-
-        @Override
-        public void visit (final @Nonnull Layout layout)
-          {
           }
 
         @Override
