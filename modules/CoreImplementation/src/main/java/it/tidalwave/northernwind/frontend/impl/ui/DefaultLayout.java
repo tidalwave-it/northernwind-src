@@ -56,6 +56,9 @@ import lombok.Getter;
 @Configurable @Getter
 public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
   {
+    @Inject @Nonnull
+    private ViewFactory viewFactory;
+
     @Nonnull
     private final Id id;
 
@@ -112,9 +115,6 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
             return rootLayout;
           }
       };
-
-    @Inject @Nonnull
-    private ViewFactory viewFactory;
 
     /*******************************************************************************************************************
      *
