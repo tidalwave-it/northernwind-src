@@ -230,7 +230,7 @@
                         <exclude>**/main/resources/**/*.txt</exclude>
                         <exclude>**/src/test/resources/**/*.xhtml</exclude>
                         <exclude>**/src/test/resources/expected-results/**/*</exclude>
-                        <exclude>modules/CoreImplementation/src/main/java/it/tidalwave/northernwind/core/impl/patches/*.java</exclude>
+                        <exclude>modules/HtmlPatches/src/main/java/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
