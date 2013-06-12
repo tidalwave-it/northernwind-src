@@ -28,10 +28,10 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.Composite;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.role.Identifiable;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -52,7 +52,7 @@ import lombok.experimental.Wither;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Layout extends As, Identifiable
+public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder>
   {
     /*******************************************************************************************************************
      *
@@ -115,13 +115,6 @@ public interface Layout extends As, Identifiable
 
     /*******************************************************************************************************************
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull // TODO: refactor with Composite
-    public List<Layout> getChildren();
-
-    /*******************************************************************************************************************
-     *
      * Accepts a {@link Visitor} to walk inside the structure and returns the (optional) computation product of the
      * {@code Visitor}.
      *
@@ -129,17 +122,8 @@ public interface Layout extends As, Identifiable
      * @return              the {@code Visitor} result
      *
      ******************************************************************************************************************/
-    @Nonnull // TODO: refactor with Composite
+    @Nonnull // TODO: push up to Composite
     public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor)
-      throws NotFoundException;
-
-    /*******************************************************************************************************************
-     *
-     * Returns a sub-layout given its it.
-     *
-     ******************************************************************************************************************/
-    @Nonnull // TODO: refactor in the Finder introduced with Composite
-    public Layout findSubComponentById (@Nonnull Id id)
       throws NotFoundException;
 
     /*******************************************************************************************************************

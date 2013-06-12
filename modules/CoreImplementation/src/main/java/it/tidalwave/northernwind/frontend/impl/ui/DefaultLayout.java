@@ -39,13 +39,14 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Parameters;
 import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.role.Composite.VisitorSupport;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import it.tidalwave.role.Composite.VisitorSupport;
-import it.tidalwave.role.spring.SpringAsSupport;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -69,6 +70,8 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
     private final List<Layout> children = new ArrayList<>();
 
     private final Map<Id, Layout> childrenMapById = new HashMap<>();
+
+    // FIXME: make it Immutable
 
     /*******************************************************************************************************************
      *
@@ -199,10 +202,10 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void add (final @Nonnull Layout layout) // FIXME: drop this
+    @Override @Nonnull
+    public LayoutFinder findChildren()
       {
-        children.add(layout); // FIXME: clone
-        childrenMapById.put(layout.getId(), layout);// FIXME: clone
+        return new DefaultLayoutFinder(children, childrenMapById);
       }
 
     /*******************************************************************************************************************
@@ -210,11 +213,10 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public Layout findSubComponentById (final @Nonnull Id id)
-      throws NotFoundException
+    public void add (final @Nonnull Layout layout) // FIXME: drop this - used only by the CloneVisitor and Infoglue converter
       {
-        return NotFoundException.throwWhenNull(childrenMapById.get(id), "Can't find " + id);
+        children.add(layout); // FIXME: clone
+        childrenMapById.put(layout.getId(), layout);// FIXME: clone
       }
 
     /*******************************************************************************************************************
@@ -234,7 +236,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull // TODO: refactor with Composite
+    @Override @Nonnull // TODO: push up to CompositeSupport
     public <Type> Type accept (final @Nonnull Visitor<Layout, Type> visitor)
       throws NotFoundException
       {
@@ -276,7 +278,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         // Complex rule, but it's to keep compatibility with Infoglue.
         if (sameType)
           {
-            for (final Layout overridingChild : override.getChildren())
+            for (final Layout overridingChild : override.findChildren().results())
               {
                 final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
 
@@ -304,7 +306,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
             this.children.clear();
             this.childrenMapById.clear();
 
-            for (final Layout overridingChild : override.getChildren())
+            for (final Layout overridingChild : override.findChildren().results())
               {
                 add(overridingChild);
               }
