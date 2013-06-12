@@ -116,9 +116,9 @@ public class DefaultViewFactory implements ViewFactory
       {
         log.info("View definitions:");
 
-        for (final ViewBuilder viewDefinition : viewBuilderMapByTypeUri.values())
+        for (final ViewBuilder viewBuilder : viewBuilderMapByTypeUri.values())
           {
-            log.info(">>>> {}", viewDefinition);
+            log.info(">>>> {}", viewBuilder);
           }
       }
   }
