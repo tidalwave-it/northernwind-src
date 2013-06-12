@@ -82,7 +82,9 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     * Creates a new View - ViewController pair.
+     * Creates a new View - ViewController pair. They are first instantiated, and then dependency injection by means
+     * of constructor parameters occur. Injected fields are: the id, the {@link SiteNode}, any service declared in
+     * the Spring context, including {@link Site}; furthermore, a reference of the View is injected in the Controller.
      *
      * @param   id        the view id
      * @param   siteNode  the {@link SiteNode} the view will be built for

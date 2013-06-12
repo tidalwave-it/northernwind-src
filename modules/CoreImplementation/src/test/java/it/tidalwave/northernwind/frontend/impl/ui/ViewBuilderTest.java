@@ -1,0 +1,132 @@
+/*
+ *
+ * PROJECT NAME
+ * PROJECT COPYRIGHT
+ *
+ ***********************************************************************************************************************
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ ***********************************************************************************************************************
+ *
+ * WWW: PROJECT URL
+ * SCM: PROJECT SCM
+ *
+ */
+package it.tidalwave.northernwind.frontend.impl.ui;
+
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
+import it.tidalwave.util.Id;
+import lombok.RequiredArgsConstructor;
+import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.mockito.Mockito.*;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.testng.annotations.BeforeMethod;
+
+/***********************************************************************************************************************
+ *
+ * @author  Fabrizio Giudici
+ * @version $Id$
+ *
+ **********************************************************************************************************************/
+public class ViewBuilderTest
+  {
+    @RequiredArgsConstructor
+    public static class MockView
+      {
+        public final Id id;
+        public final SiteNode siteNode;
+        public final Site site;
+        public final MockService1 service1;
+      }
+
+    @RequiredArgsConstructor
+    public static class MockController
+      {
+        public final Id id;
+        public final SiteNode siteNode;
+        public final MockView view;
+        public final Site site;
+        public final MockService2 service2;
+      }
+
+    private ViewBuilder fixture;
+
+    private ClassPathXmlApplicationContext context;
+
+    private SiteNode siteNode;
+
+    private Id id;
+
+    private Site site;
+
+    private SiteProvider siteProvider;
+
+    private MockService1 service1;
+
+    private MockService2 service2;
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @BeforeMethod
+    public void setupFixture()
+      throws Exception
+      {
+        context = new ClassPathXmlApplicationContext("ViewBuilderTestBeans.xml");
+        siteProvider = context.getBean(SiteProvider.class);
+        service1 = context.getBean(MockService1.class);
+        service2 = context.getBean(MockService2.class);
+
+        siteNode = mock(SiteNode.class);
+        when(siteProvider.getSite()).thenReturn(site);
+
+        id = new Id("theId");
+
+        fixture = new ViewBuilder(MockView.class, MockController.class);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_instantiate_view_and_controller()
+      throws Exception
+      {
+        final ViewAndController viewAndController = fixture.createViewAndController(id, siteNode);
+
+        final Object oController = viewAndController.getController();
+        final Object oView = viewAndController.getView();
+
+        assertThat(oController, is(not(nullValue())));
+        assertThat(oView, is(not(nullValue())));
+        assertThat(oController, is(instanceOf(MockController.class)));
+        assertThat(oView, is(instanceOf(MockView.class)));
+
+        final MockController controller = (MockController)oController;
+        final MockView view = (MockView)oView;
+
+        assertThat(controller.view, is(sameInstance(view)));
+        assertThat(controller.siteNode, is(sameInstance(siteNode)));
+        assertThat(controller.id, is(id));
+        assertThat(controller.site, is(sameInstance(site)));
+        assertThat(controller.service2, is(sameInstance(service2)));
+
+        assertThat(view.siteNode, is(sameInstance(siteNode)));
+        assertThat(view.id, is(id));
+        assertThat(view.site, is(sameInstance(site)));
+        assertThat(view.service1, is(sameInstance(service1)));
+      }
+  }
