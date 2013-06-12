@@ -89,10 +89,14 @@ public interface Layout extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getTypeUri();
+    public String getTypeUri(); // FIXME: perhaps String should be a LayoutType wrapper? Or an Id?
 
     /*******************************************************************************************************************
      *
+     * Creates a clone with another {@code Layout} as a child.
+     *
+     * @param  override  the overriding {@code Layout}
+     * @return           the clone with the new child
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -108,21 +112,6 @@ public interface Layout extends As, Identifiable
      ******************************************************************************************************************/
     @Nonnull
     public Layout withOverride (@Nonnull Layout override);
-
-    /*******************************************************************************************************************
-     *
-     * Creates a new {@link View} with its {@link Controller} for the given {@link SiteNode}, typically because
-     * something needs to render it in response of a request.
-     *
-     * @param   siteNode            the {@code SiteNode}
-     * @return                      the {@code View} and its {@code Controller} within a {@link ViewAndController}
-     * @throws  NotFoundException   if no view component is found
-     * @throws  HttpStatusException if a component asked to return a specific HTTP status
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public ViewAndController createViewAndController (@Nonnull SiteNode siteNode)
-      throws NotFoundException, HttpStatusException;
 
     /*******************************************************************************************************************
      *
@@ -152,4 +141,19 @@ public interface Layout extends As, Identifiable
     @Nonnull // TODO: refactor in the Finder introduced with Composite
     public Layout findSubComponentById (@Nonnull Id id)
       throws NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link View} with its {@link Controller} for the given {@link SiteNode}, typically because
+     * something needs to render it in response of a request.
+     *
+     * @param   siteNode            the {@code SiteNode}
+     * @return                      the {@code View} and its {@code Controller} within a {@link ViewAndController}
+     * @throws  NotFoundException   if no view component is found
+     * @throws  HttpStatusException if a component asked to return a specific HTTP status
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ViewAndController createViewAndController (@Nonnull SiteNode siteNode)
+      throws NotFoundException, HttpStatusException;
   }
