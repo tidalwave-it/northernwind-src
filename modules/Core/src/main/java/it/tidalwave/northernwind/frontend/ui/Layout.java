@@ -149,7 +149,7 @@ public interface Layout extends As, Identifiable
      * Returns a sub-layout given its it.
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Nonnull // TODO: refactor in the Finder introduced with Composite
     public Layout findSubComponentById (@Nonnull Id id)
       throws NotFoundException;
   }
