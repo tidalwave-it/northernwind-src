@@ -84,19 +84,19 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         @Override
         public void preVisit (final @Nonnull Layout layout)
           {
-            final DefaultLayout newLayout = new DefaultLayout(((DefaultLayout)layout).id,
-                                                              ((DefaultLayout)layout).typeUri);
+            final DefaultLayout clone = new DefaultLayout(((DefaultLayout)layout).id,
+                                                          ((DefaultLayout)layout).typeUri);
 
             if (rootLayout == null)
               {
-                rootLayout = newLayout;
+                rootLayout = clone;
               }
             else
               {
-                layouts.peek().add(newLayout);
+                layouts.peek().add(clone);
               }
 
-            layouts.push(newLayout);
+            layouts.push(clone);
           }
 
         @Override
