@@ -277,7 +277,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
         this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
 
-        // Complex rule, but it's Infoglue.
+        // Complex rule, but it's to keep compatibility with Infoglue.
         if (sameType)
           {
             for (final Layout overridingChild : override.getChildren())
