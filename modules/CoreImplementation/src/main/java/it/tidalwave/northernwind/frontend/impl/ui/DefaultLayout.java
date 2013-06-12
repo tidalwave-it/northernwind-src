@@ -259,7 +259,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
     @Override @Nonnull
     public String toString()
       {
-        return String.format("DefaultLayout(id=%s, typeUri=%s, children=%d)", id, typeUri, children.size());
+        return String.format("DefaultLayout(id=%s, typeUri=%s, children.count=%d)", id, typeUri, children.size());
       }
 
     /*******************************************************************************************************************
