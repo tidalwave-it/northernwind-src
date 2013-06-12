@@ -95,12 +95,12 @@ public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder
      *
      * Creates a clone with another {@code Layout} as a child.
      *
-     * @param  override  the overriding {@code Layout}
+     * @param  child     the child {@code Layout}
      * @return           the clone with the new child
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Layout withLayout (@Nonnull Layout layout); // FIXME: rename to withChild()
+    public Layout withLayout (@Nonnull Layout child); // FIXME: rename to withChild()
 
     /*******************************************************************************************************************
      *
