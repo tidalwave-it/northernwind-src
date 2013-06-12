@@ -117,7 +117,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         this.typeUri = "";
       }
 
-    /* Clone - FIXME: public only for InfoglueImporter */
+    /** Clone - FIXME: public only for InfoglueImporter */
     public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
         Parameters.checkNonNull(id, "id");
