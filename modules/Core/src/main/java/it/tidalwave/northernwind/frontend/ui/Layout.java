@@ -46,6 +46,8 @@ import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
+ * A {@code Layout} contains the description of the visual structure of a {@link SiteNode}.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -98,6 +100,10 @@ public interface Layout extends As, Identifiable
 
     /*******************************************************************************************************************
      *
+     * Creates a clone with another {@code Layout} overriding some parts.
+     *
+     * @param  override  the overriding {@code Layout}
+     * @return           the clone with the override in effect
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -105,6 +111,11 @@ public interface Layout extends As, Identifiable
 
     /*******************************************************************************************************************
      *
+     * Creates a new {@link View} with its {@link Controller} for the given {@link SiteNode}, typically because
+     * something needs to render it in response of a request.
+     *
+     * @param   siteNode            the {@code SiteNode}
+     * @return                      the {@code View} and its {@code Controller} within a {@link ViewAndController}
      * @throws  NotFoundException   if no view component is found
      * @throws  HttpStatusException if a component asked to return a specific HTTP status
      *
@@ -122,6 +133,11 @@ public interface Layout extends As, Identifiable
 
     /*******************************************************************************************************************
      *
+     * Accepts a {@link Visitor} to walk inside the structure and returns the (optional) computation product of the
+     * {@code Visitor}.
+     *
+     * @param  visitor      the {@code Visitor}
+     * @return              the {@code Visitor} result
      *
      ******************************************************************************************************************/
     @Nonnull // TODO: refactor with Composite
@@ -130,6 +146,7 @@ public interface Layout extends As, Identifiable
 
     /*******************************************************************************************************************
      *
+     * Returns a sub-layout given its it.
      *
      ******************************************************************************************************************/
     @Nonnull
