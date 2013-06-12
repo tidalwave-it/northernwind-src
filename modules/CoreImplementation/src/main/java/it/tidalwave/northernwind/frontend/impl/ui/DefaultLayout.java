@@ -66,6 +66,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
 
     private final Map<Id, Layout> childrenMapById = new HashMap<>();
 
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     static class CloneVisitor implements Visitor<Layout, DefaultLayout>
       {
         private DefaultLayout rootLayout;
@@ -111,6 +116,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
     @Inject @Nonnull
     private ViewFactory viewFactory;
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public DefaultLayout()
       {
         this.id = new Id("");
@@ -118,6 +128,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
       }
 
     /** Clone - FIXME: public only for InfoglueImporter */
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
         Parameters.checkNonNull(id, "id");
@@ -126,12 +141,22 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         this.typeUri = typeUri;
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public DefaultLayout (final @Nonnull Builder builder)
       {
         this.id = builder.getId();
         this.typeUri = builder.getType();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public DefaultLayout clone()
       {
@@ -145,6 +170,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Layout withOverride (final @Nonnull Layout override)
       {
@@ -153,6 +183,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         return result;
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     // Here everything is already cloned
     private void applyOverride (final @Nonnull Layout override)
       {
@@ -197,6 +232,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Layout withLayout (final @Nonnull Layout layout)
       {
@@ -207,12 +247,22 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         return clone;
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     public void add (final @Nonnull Layout layout) // FIXME: drop this
       {
         children.add(layout); // FIXME: clone
         childrenMapById.put(layout.getId(), layout);// FIXME: clone
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Layout findSubComponentById (final @Nonnull Id id)
       throws NotFoundException
@@ -220,6 +270,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         return NotFoundException.throwWhenNull(childrenMapById.get(id), "Can't find " + id);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public ViewAndController createViewAndController (final @Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException
@@ -227,6 +282,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         return viewFactory.createViewAndController(typeUri, id, siteNode);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull // TODO: refactor with Composite
     public <Type> Type accept (final @Nonnull Visitor<Layout, Type> visitor)
       throws NotFoundException
@@ -244,6 +304,11 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
         return visitor.getValue();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String toString()
       {
