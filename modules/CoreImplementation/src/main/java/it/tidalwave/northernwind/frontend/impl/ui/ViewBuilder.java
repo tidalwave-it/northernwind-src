@@ -135,7 +135,7 @@ import lombok.extern.slf4j.Slf4j;
                                                   final @Nonnull Object ... overridingArgs)
       throws NotFoundException
       {
-        final List<Object> result = new ArrayList<Object>();
+        final List<Object> result = new ArrayList<>();
 
         x: for (final Class<?> argumentType : constructor.getParameterTypes())
           {
