@@ -100,7 +100,7 @@ public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Layout withLayout (@Nonnull Layout layout);
+    public Layout withLayout (@Nonnull Layout layout); // FIXME: rename to withChild()
 
     /*******************************************************************************************************************
      *
