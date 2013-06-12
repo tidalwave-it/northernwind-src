@@ -68,7 +68,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
 
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     static class CloneVisitor implements Visitor<Layout, DefaultLayout>
@@ -185,55 +185,6 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
 
     /*******************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
-    // Here everything is already cloned
-    private void applyOverride (final @Nonnull Layout override)
-      {
-        final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
-        this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
-
-        // Complex rule, but it's Infoglue.
-        if (sameType)
-          {
-            for (final Layout overridingChild : override.getChildren())
-              {
-                final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
-
-                if (overriddenChild == null)
-                  {
-                    add(overridingChild);
-                  }
-                else
-                  {
-                    childrenMapById.put(overridingChild.getId(), overridingChild);
-                    final int i = children.indexOf(overriddenChild);
-
-                    if (i < 0)
-                      {
-                        throw new IllegalArgumentException();
-                      }
-
-                    children.set(i, overridingChild);
-                    //                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);
-                  }
-              }
-          }
-        else
-          {
-            this.children.clear();
-            this.childrenMapById.clear();
-
-            for (final Layout overridingChild : override.getChildren())
-              {
-                add(overridingChild);
-              }
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
@@ -313,5 +264,54 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
     public String toString()
       {
         return String.format("DefaultLayout(id=%s, typeUri=%s, children=%d)", id, typeUri, children.size());
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    // Here everything is already cloned
+    private void applyOverride (final @Nonnull Layout override)
+      {
+        final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
+        this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
+
+        // Complex rule, but it's Infoglue.
+        if (sameType)
+          {
+            for (final Layout overridingChild : override.getChildren())
+              {
+                final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
+
+                if (overriddenChild == null)
+                  {
+                    add(overridingChild);
+                  }
+                else
+                  {
+                    childrenMapById.put(overridingChild.getId(), overridingChild);
+                    final int i = children.indexOf(overriddenChild);
+
+                    if (i < 0)
+                      {
+                        throw new IllegalArgumentException();
+                      }
+
+                    children.set(i, overridingChild);
+                    //                    ((DefaultLayout)overriddenChild).applyOverride(overridingChild);
+                  }
+              }
+          }
+        else
+          {
+            this.children.clear();
+            this.childrenMapById.clear();
+
+            for (final Layout overridingChild : override.getChildren())
+              {
+                add(overridingChild);
+              }
+          }
       }
   }
