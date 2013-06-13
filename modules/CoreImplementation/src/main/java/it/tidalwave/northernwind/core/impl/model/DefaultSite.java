@@ -59,6 +59,7 @@ import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
+import it.tidalwave.northernwind.core.model.ModifiablePath;
 
 /***********************************************************************************************************************
  *
@@ -192,16 +193,18 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String createLink (final @Nonnull String relativeUri)
+    public String createLink (final @Nonnull ModifiablePath relativeUri)
       {
-        String link = requestHolder.get().getBaseUrl() + contextPath + relativeUri;
+        ModifiablePath link = new ModifiablePath(contextPath);
+        link.append(relativeUri);
+        String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
 
         for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)
           {
-            link = linkPostProcessor.postProcess(link);
+            linkAsString = linkPostProcessor.postProcess(linkAsString);
           }
 
-        return link;
+        return linkAsString;
       }
 
     /*******************************************************************************************************************
@@ -312,15 +315,15 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
                     if (!siteNode.isPlaceHolder())
                       {
-                        final String relativeUri = siteNode.getRelativeUri();
+                        final ModifiablePath relativeUri = siteNode.getRelativeUri();
 
                         if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
                           {
-                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri) + "(|/.*$)", siteNode);
+                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + "(|/.*$)", siteNode);
                           }
                         else
                           {
-                            nodeMapByRelativeUri.put(relativeUri, siteNode);
+                            nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
                           }
                       }
                   }

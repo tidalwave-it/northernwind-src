@@ -33,6 +33,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -41,8 +42,8 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NotThreadSafe @ToString
-public class ModifiablePath
+@NotThreadSafe @ToString @EqualsAndHashCode
+public class ModifiablePath implements Cloneable
   {
     private final List<String> segments;
 
@@ -60,6 +61,14 @@ public class ModifiablePath
           {
             segments.remove(0);
           }
+      }
+
+    @Override @Nonnull
+    public ModifiablePath clone()
+      {
+        final ModifiablePath clone = new ModifiablePath();
+        clone.segments.addAll(this.segments);
+        return clone;
       }
 
     @Nonnull
@@ -106,19 +115,25 @@ public class ModifiablePath
         return segments.size();
       }
 
-    public void prepend (final @Nonnull String ... strings)
+    @Nonnull
+    public ModifiablePath prepend (final @Nonnull String ... strings)
       {
         segments.addAll(0, Arrays.asList(strings));
+        return this;
       }
 
-    public void append (final @Nonnull ModifiablePath path)
+    @Nonnull
+    public ModifiablePath append (final @Nonnull ModifiablePath path)
       {
         segments.addAll(path.segments);
+        return this;
       }
 
-    public void append (final @Nonnull String ... strings)
+    @Nonnull
+    public ModifiablePath append (final @Nonnull String ... strings)
       {
         segments.addAll(Arrays.asList(strings));
+        return this;
       }
 
     @Nonnull
@@ -135,4 +150,11 @@ public class ModifiablePath
 
         return buffer.toString();
       }
+
+
+
+//    public String toString()
+//    {
+//        throw new RuntimeException();
+//    }
   }

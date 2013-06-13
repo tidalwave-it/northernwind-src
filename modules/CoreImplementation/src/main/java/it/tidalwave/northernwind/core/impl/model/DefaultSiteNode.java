@@ -81,7 +81,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private InheritanceHelper inheritanceHelper;
 
     @CheckForNull
-    private String relativeUri;
+    private ModifiablePath relativeUri;
 
     /* package */ int uriComputationCounter;
 
@@ -113,7 +113,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull @Override
-    public synchronized String getRelativeUri()
+    public synchronized ModifiablePath getRelativeUri()
       {
         if (relativeUri == null) // FIXME: is lazy evaluation really needed?
           {
@@ -126,7 +126,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 try
                   {
-                    uri.append(new ModifiablePath(getParent().getRelativeUri()));
+                    uri.append(getParent().getRelativeUri());
                     uri.append(resource.getProperties()
                                        .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
                   }
@@ -137,12 +137,12 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   }
               }
 
-            relativeUri = uri.asString();
+            relativeUri = uri;
           }
 
         log.debug(">>>> relativeUri: {}", relativeUri);
 
-        return relativeUri;
+        return relativeUri.clone();
       }
 
     /*******************************************************************************************************************
