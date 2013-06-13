@@ -157,7 +157,8 @@ import java.io.UnsupportedEncodingException;
         Layout layout = null;
         // FIXME: Components must be localized
         // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
-        // loca overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
+        // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
+        // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
         final List<ResourceFile> files = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml");
 
         for (final ResourceFile layoutFile : files)
