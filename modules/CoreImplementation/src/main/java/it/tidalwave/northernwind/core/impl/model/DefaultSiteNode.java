@@ -127,13 +127,7 @@ import java.io.UnsupportedEncodingException;
 
                 if (!nodeFolder.equals(file))
                   {
-                    final ResourceFile parentFile = file.getParent();
-                    final ModifiablePath parentRelativePath = pathFor(parentFile);
-                    parentRelativePath.popLeading(pathFor(nodeFolder));
-                    final SiteNode parentSiteNode = site.find(SiteNode.class)
-                                                        .withRelativePath(parentRelativePath.asString())
-                                                        .result();
-                    r.append(new ModifiablePath(parentSiteNode.getRelativeUri()));
+                    r.append(new ModifiablePath(getParent(file, nodeFolder).getRelativeUri()));
                     r.append(resource.getProperties()
                                      .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
                   }
@@ -183,6 +177,20 @@ import java.io.UnsupportedEncodingException;
                                                        .withId(new Id(""))
                                                        .withType("emptyPlaceholder")
                                                        .build();
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private SiteNode getParent (final @Nonnull ResourceFile file, final @Nonnull ResourceFile nodeFolder)
+      throws NotFoundException, UnsupportedEncodingException
+      {
+        final ResourceFile parentFile = file.getParent();
+        final ModifiablePath parentRelativePath = pathFor(parentFile);
+        parentRelativePath.popLeading(pathFor(nodeFolder));
+        
+        return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
       }
 
     /*******************************************************************************************************************
