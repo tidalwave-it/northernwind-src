@@ -73,8 +73,7 @@ public class ModifiablePath
       {
         if (!segments.subList(0, uri.segments.size()).equals(uri.segments))
           {
-            throw new IllegalArgumentException("The path doesn't start with " + uri.asString() + ": " + asString()
-                    + " ZZZ " + uri.segments + " " + segments);
+            throw new IllegalArgumentException("The path doesn't start with " + uri.asString() + ": " + asString());
           }
 
         final List<String> temp = new ArrayList<>(segments.subList(uri.segments.size(), segments.size()));
