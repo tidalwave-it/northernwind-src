@@ -51,10 +51,10 @@ public class ModifiablePath
         segments = new ArrayList<>();
       }
 
-    public ModifiablePath (final @Nonnull String relativeUri)
+    public ModifiablePath (final @Nonnull String path)
       {
-        final int start = relativeUri.startsWith("/") ? 1 : 0;
-        segments = new ArrayList<>(Arrays.asList(relativeUri.substring(start).split("/")));
+        final int start = path.startsWith("/") ? 1 : 0;
+        segments = new ArrayList<>(Arrays.asList(path.substring(start).split("/")));
 
         if (segments.get(0).equals("")) // FIXME
           {
@@ -111,9 +111,9 @@ public class ModifiablePath
         segments.addAll(0, Arrays.asList(strings));
       }
 
-    public void append (final @Nonnull ModifiablePath relativeUri)
+    public void append (final @Nonnull ModifiablePath path)
       {
-        segments.addAll(relativeUri.segments);
+        segments.addAll(path.segments);
       }
 
     public void append (final @Nonnull String ... strings)
