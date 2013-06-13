@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.MockSiteNodeSiteFinder;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeClass;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -71,13 +71,13 @@ public class MacroFilterTestSupport
 
         when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
         when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
-        when(site.createLink(any(ModifiablePath.class))).thenAnswer(new Answer<String>()
+        when(site.createLink(any(ResourcePath.class))).thenAnswer(new Answer<String>()
           {
             @Override @Nonnull
             public String answer (final @Nonnull InvocationOnMock invocation)
               {
-                return "/LINK" + ((ModifiablePath)invocation.getArguments()[0]).asString();
-//                return ((ModifiablePath)invocation.getArguments()[0]).prepend("LINK").asString();
+                return "/LINK" + ((ResourcePath)invocation.getArguments()[0]).asString();
+//                return ((ResourcePath)invocation.getArguments()[0]).prepend("LINK").asString();
               }
           });
       }

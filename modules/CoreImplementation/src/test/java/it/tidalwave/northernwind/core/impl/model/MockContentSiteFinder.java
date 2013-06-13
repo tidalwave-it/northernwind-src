@@ -34,7 +34,7 @@ import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import static org.mockito.Mockito.*;
 
@@ -74,11 +74,11 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
 
             if (relativePath.equals("/"))
               {
-                when(content.getExposedUri()).thenReturn(new ModifiablePath());
+                when(content.getExposedUri()).thenReturn(new ResourcePath());
               }
             else
               {
-                when(content.getExposedUri()).thenReturn(new ModifiablePath("EXPOSED-" + relativePath.substring(1)
+                when(content.getExposedUri()).thenReturn(new ResourcePath("EXPOSED-" + relativePath.substring(1)
                                                                                   .replace('/', '-')
                                                                                   .replace(' ', '-')));
               }

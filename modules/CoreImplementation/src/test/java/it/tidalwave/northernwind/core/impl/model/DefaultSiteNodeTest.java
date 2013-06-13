@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -144,7 +144,7 @@ public class DefaultSiteNodeTest
       {
         prepareMocksForGetRelativeUri(exposedUri, fileName, parentUri, parentPath);
 
-        final ModifiablePath relativeUri = fixture.getRelativeUri();
+        final ResourcePath relativeUri = fixture.getRelativeUri();
 
         assertThat(relativeUri.asString(), is(expectedResult));
       }
@@ -182,7 +182,7 @@ public class DefaultSiteNodeTest
         when(resource.getFile()).thenReturn(resourceFile);
 
         final SiteNode parentSiteNode = mock(SiteNode.class);
-        when(parentSiteNode.getRelativeUri()).thenReturn(new ModifiablePath(parentUri));
+        when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
 
         final ResourceProperties properties = mock(ResourceProperties.class);
 

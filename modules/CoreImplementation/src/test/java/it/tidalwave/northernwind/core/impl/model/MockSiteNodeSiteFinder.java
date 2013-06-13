@@ -27,7 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -68,7 +68,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteF
     protected List<? extends SiteNode> computeResults()
       {
         final SiteNode content = mock(SiteNode.class);
-        when(content.getRelativeUri()).thenReturn(new ModifiablePath("URI-" + relativePath.substring(1)));
+        when(content.getRelativeUri()).thenReturn(new ResourcePath("URI-" + relativePath.substring(1)));
         return Arrays.asList(content);
       }
 

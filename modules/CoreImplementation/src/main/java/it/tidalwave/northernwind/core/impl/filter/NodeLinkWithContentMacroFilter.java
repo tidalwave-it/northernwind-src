@@ -40,7 +40,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -82,7 +82,7 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final ModifiablePath link = siteNode.getRelativeUri().append(content.getExposedUri());
+        final ResourcePath link = siteNode.getRelativeUri().append(content.getExposedUri());
 
         if ((language == null) || (postProcessor == null))
           {

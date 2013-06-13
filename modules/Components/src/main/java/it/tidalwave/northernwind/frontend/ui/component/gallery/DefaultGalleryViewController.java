@@ -27,7 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
 
                 for (final Item item : itemMapById.values())
                   {
-                    final ModifiablePath relativeUri = siteNode.getRelativeUri().append(item.getId().stringValue());
+                    final ResourcePath relativeUri = siteNode.getRelativeUri().append(item.getId().stringValue());
                     results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
                   }
 

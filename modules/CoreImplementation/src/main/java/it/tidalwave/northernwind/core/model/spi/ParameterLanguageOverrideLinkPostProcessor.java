@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *

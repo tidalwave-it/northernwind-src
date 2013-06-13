@@ -27,7 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Finder;
@@ -59,10 +59,10 @@ public interface CompositeSiteNodeController
 
         @Nonnull
 //        @Getter @Nonnull
-        private final ModifiablePath relativeUri;
+        private final ResourcePath relativeUri;
 
         @Nonnull
-        public ModifiablePath getRelativeUri() // FIXME
+        public ResourcePath getRelativeUri() // FIXME
           {
             return relativeUri.clone();
           }

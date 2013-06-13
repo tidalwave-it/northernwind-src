@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +72,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException
       {
-        final ModifiablePath mediaUri = new ModifiablePath(request.getRelativeUri());
+        final ResourcePath mediaUri = new ResourcePath(request.getRelativeUri());
 
         if (!mediaUri.popLeading().equals(uriPrefix))
           {

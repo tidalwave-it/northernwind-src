@@ -38,7 +38,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -103,7 +103,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final int itemCount = items.size();
         final int index = items.indexOf(item);
         final Site site = siteProvider.get().getSite();
-        final ModifiablePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
         final String previousUrl = site.createLink(baseUrl.append(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.append(items.get((index + 1) % itemCount).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.append("lightbox"));
@@ -196,7 +196,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final int itemCount = items.size();
         final int index = items.indexOf(item);
         final Site site = siteProvider.get().getSite();
-        final ModifiablePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
         final String redirectUrl = site.createLink(baseUrl.append("/#!/" + item.getId().stringValue())); // FIXME .replaceAll("/$", ""));
         final String previousUrl = site.createLink(baseUrl.append(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.append(items.get((index + 1) % itemCount).getId().stringValue()));
@@ -229,7 +229,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     public void renderLightboxFallback (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
       {
         final Site site = siteProvider.get().getSite();
-        final ModifiablePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
         final StringBuilder builder = new StringBuilder();
 
         for (final Item item : items)

@@ -36,7 +36,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -196,7 +196,7 @@ public class DefaultSiteTest
                   }
 
                 when(siteNode.getProperties()).thenReturn(properties);
-                when(siteNode.getRelativeUri()).thenReturn(new ModifiablePath(relativeUri));
+                when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
                 when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
                 return siteNode;
@@ -323,7 +323,7 @@ public class DefaultSiteTest
       {
         fixture = new DefaultSite(siteBuilder);
 
-        final String result = fixture.createLink(new ModifiablePath("link"));
+        final String result = fixture.createLink(new ResourcePath("link"));
 
         assertThat(result, is("lpp3-lpp2-lpp1-/baseUrl/contextpath/link"));
       }

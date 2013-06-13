@@ -55,6 +55,6 @@ public interface Content extends Resource, Composite<Content, Finder<Content>>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ModifiablePath getExposedUri()
+    public ResourcePath getExposedUri()
       throws NotFoundException, IOException;
   }

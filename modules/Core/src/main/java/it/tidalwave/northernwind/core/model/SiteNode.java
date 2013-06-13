@@ -77,5 +77,5 @@ public interface SiteNode extends Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ModifiablePath getRelativeUri();
+    public ResourcePath getRelativeUri();
   }

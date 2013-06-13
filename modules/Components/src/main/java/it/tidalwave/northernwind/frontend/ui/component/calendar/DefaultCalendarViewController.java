@@ -51,7 +51,7 @@ import javax.xml.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -162,7 +162,7 @@ public class DefaultCalendarViewController implements CalendarViewController
             for (int i = 0; i < nodes.getLength(); i++)
               {
                 final Node node = nodes.item(i);
-                final String link = site.createLink(new ModifiablePath(node.getAttributes().getNamedItem("link").getNodeValue()));
+                final String link = site.createLink(new ResourcePath(node.getAttributes().getNamedItem("link").getNodeValue()));
                 final String name = node.getAttributes().getNamedItem("name").getNodeValue();
                 builder.append(String.format("<li><a href='%s'/>%s</a></li>%n", link, name));
               }

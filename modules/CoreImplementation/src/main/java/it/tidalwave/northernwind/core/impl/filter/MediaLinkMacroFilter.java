@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 
 /***********************************************************************************************************************
@@ -53,7 +53,7 @@ public class MediaLinkMacroFilter extends MacroFilter
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        final ModifiablePath relativePath = new ModifiablePath(matcher.group(1));
+        final ResourcePath relativePath = new ResourcePath(matcher.group(1));
         relativePath.prepend("media");
         return siteProvider.get().getSite().createLink(relativePath);
       }

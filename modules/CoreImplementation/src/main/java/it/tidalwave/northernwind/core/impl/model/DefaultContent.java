@@ -38,7 +38,7 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -157,7 +157,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ModifiablePath getExposedUri() // TODO: rename to getDefaultExposedUri
+    public ResourcePath getExposedUri() // TODO: rename to getDefaultExposedUri
       throws NotFoundException, IOException
       {
         String title = resource.getProperties().getProperty(PROPERTY_TITLE);
@@ -171,7 +171,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
                      .replaceAll("\\?", "")
                      .replaceAll(":", "")
                      .replaceAll("[^\\w-]*", "");
-        return new ModifiablePath(title.toLowerCase());
+        return new ResourcePath(title.toLowerCase());
       }
 
     /*******************************************************************************************************************

@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -81,7 +81,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private InheritanceHelper inheritanceHelper;
 
     @CheckForNull
-    private ModifiablePath relativeUri;
+    private ResourcePath relativeUri;
 
     /* package */ int uriComputationCounter;
 
@@ -113,13 +113,13 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull @Override
-    public synchronized ModifiablePath getRelativeUri()
+    public synchronized ResourcePath getRelativeUri()
       {
         if (relativeUri == null) // FIXME: is lazy evaluation really needed?
           {
             uriComputationCounter++;
 
-            final ModifiablePath uri = new ModifiablePath();
+            final ResourcePath uri = new ResourcePath();
             final ResourceFile file = resource.getFile();
 
             if (!file.equals(site.getNodeFolder()))
@@ -191,7 +191,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private SiteNode getParent()
       throws NotFoundException, UnsupportedEncodingException
       {
-        final ModifiablePath parentRelativePath = pathFor(resource.getFile().getParent())
+        final ResourcePath parentRelativePath = pathFor(resource.getFile().getParent())
                                       .relativeTo(pathFor(site.getNodeFolder()));
 
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
@@ -213,9 +213,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static ModifiablePath pathFor (final @Nonnull ResourceFile parentFile)
+    private static ResourcePath pathFor (final @Nonnull ResourceFile parentFile)
       throws UnsupportedEncodingException
       {
-        return new ModifiablePath(urlDecodedPath(parentFile.getPath()));
+        return new ResourcePath(urlDecodedPath(parentFile.getPath()));
       }
   }

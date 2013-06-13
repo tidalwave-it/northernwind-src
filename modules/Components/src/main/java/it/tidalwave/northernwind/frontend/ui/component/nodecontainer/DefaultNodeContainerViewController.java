@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -156,7 +156,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                                                                             Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri
-                                                                   : site.createLink(new ModifiablePath(relativeUri));
+                                                                   : site.createLink(new ResourcePath(relativeUri));
                 builder.append(String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link));
               }
           }
@@ -184,7 +184,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                                                                             Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri
-                                                                   : site.createLink(new ModifiablePath(relativeUri));
+                                                                   : site.createLink(new ResourcePath(relativeUri));
                 final String template = "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n";
                 builder.append(String.format(template, link));
               }
@@ -238,7 +238,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
               {
                 // Always use </script> to close, as some browsers break without
                 builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>%n",
-                                             site.createLink(new ModifiablePath(relativeUri))));
+                                             site.createLink(new ResourcePath(relativeUri))));
               }
           }
         catch (IOException e)

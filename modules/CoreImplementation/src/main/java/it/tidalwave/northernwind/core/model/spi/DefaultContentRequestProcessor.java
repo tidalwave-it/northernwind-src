@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
@@ -109,7 +109,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
 
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
           {
-            throw new HttpStatusException(302).withHeader("Location", site.createLink(new ModifiablePath(relativeUri)));
+            throw new HttpStatusException(302).withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
           }
       }
   }

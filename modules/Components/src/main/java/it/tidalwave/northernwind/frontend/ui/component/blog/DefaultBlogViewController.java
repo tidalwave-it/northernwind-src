@@ -52,7 +52,7 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -117,7 +117,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                       {
                         try
                           {
-                            final ModifiablePath relativeUri = siteNode.getRelativeUri().append(getExposedUri(post));
+                            final ResourcePath relativeUri = siteNode.getRelativeUri().append(getExposedUri(post));
                             results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
                           }
                         catch (NotFoundException e)
@@ -264,7 +264,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 throw new NotFoundException();
               }
 
-            posts.add(findPostByExposedUri(allPosts, new ModifiablePath(pathParams)));
+            posts.add(findPostByExposedUri(allPosts, new ResourcePath(pathParams)));
             log.debug(">>>> found a single post matching exposed Uri");
 
             if (index) // pathParams matches an exposedUri; thus it's not a category, so an index wants all
@@ -314,7 +314,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Content findPostByExposedUri (final List<Content> allPosts, final @Nonnull ModifiablePath exposedUri)
+    private Content findPostByExposedUri (final List<Content> allPosts, final @Nonnull ResourcePath exposedUri)
       throws NotFoundException, IOException
       {
         for (final Content post : allPosts)
@@ -373,12 +373,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ModifiablePath getExposedUri (final @Nonnull Content post)
+    protected ResourcePath getExposedUri (final @Nonnull Content post)
       throws IOException, NotFoundException
       {
         try
           {
-            return new ModifiablePath(post.getProperties().getProperty(SiteNode.PROPERTY_EXPOSED_URI));
+            return new ResourcePath(post.getProperties().getProperty(SiteNode.PROPERTY_EXPOSED_URI));
           }
         catch (NotFoundException e)
           {

@@ -59,7 +59,7 @@ import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
-import it.tidalwave.northernwind.core.model.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -193,9 +193,9 @@ import it.tidalwave.northernwind.core.model.ModifiablePath;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String createLink (final @Nonnull ModifiablePath relativeUri)
+    public String createLink (final @Nonnull ResourcePath relativeUri)
       {
-        ModifiablePath link = new ModifiablePath(contextPath);
+        ResourcePath link = new ResourcePath(contextPath);
         link.append(relativeUri);
         String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
 
@@ -315,7 +315,7 @@ import it.tidalwave.northernwind.core.model.ModifiablePath;
 
                     if (!siteNode.isPlaceHolder())
                       {
-                        final ModifiablePath relativeUri = siteNode.getRelativeUri();
+                        final ResourcePath relativeUri = siteNode.getRelativeUri();
 
                         if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
                           {

@@ -43,16 +43,16 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @ToString @EqualsAndHashCode
-public class ModifiablePath implements Cloneable
+public class ResourcePath implements Cloneable
   {
     private final List<String> segments;
 
-    public ModifiablePath()
+    public ResourcePath()
       {
         segments = new ArrayList<>();
       }
 
-    public ModifiablePath (final @Nonnull String path)
+    public ResourcePath (final @Nonnull String path)
       {
         final int start = path.startsWith("/") ? 1 : 0;
         segments = new ArrayList<>(Arrays.asList(path.substring(start).split("/")));
@@ -64,9 +64,9 @@ public class ModifiablePath implements Cloneable
       }
 
     @Override @Nonnull
-    public ModifiablePath clone()
+    public ResourcePath clone()
       {
-        final ModifiablePath clone = new ModifiablePath();
+        final ResourcePath clone = new ResourcePath();
         clone.segments.addAll(this.segments);
         return clone;
       }
@@ -78,7 +78,7 @@ public class ModifiablePath implements Cloneable
       }
 
     @Nonnull
-    public ModifiablePath relativeTo (final @Nonnull ModifiablePath uri)
+    public ResourcePath relativeTo (final @Nonnull ResourcePath uri)
       {
         if (!segments.subList(0, uri.segments.size()).equals(uri.segments))
           {
@@ -116,21 +116,21 @@ public class ModifiablePath implements Cloneable
       }
 
     @Nonnull
-    public ModifiablePath prepend (final @Nonnull String ... strings)
+    public ResourcePath prepend (final @Nonnull String ... strings)
       {
         segments.addAll(0, Arrays.asList(strings));
         return this;
       }
 
     @Nonnull
-    public ModifiablePath append (final @Nonnull ModifiablePath path)
+    public ResourcePath append (final @Nonnull ResourcePath path)
       {
         segments.addAll(path.segments);
         return this;
       }
 
     @Nonnull
-    public ModifiablePath append (final @Nonnull String ... strings)
+    public ResourcePath append (final @Nonnull String ... strings)
       {
         segments.addAll(Arrays.asList(strings));
         return this;
