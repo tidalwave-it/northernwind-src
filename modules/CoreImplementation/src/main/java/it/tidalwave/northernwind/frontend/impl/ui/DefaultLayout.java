@@ -188,7 +188,7 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout withLayout (final @Nonnull Layout layout)
+    public Layout withChild (final @Nonnull Layout layout)
       {
         final DefaultLayout clone = clone();
         clone.children.add(layout);

@@ -107,7 +107,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
 
         for (final ComponentJaxb childComponentJaxb : componentJaxb.getComponent())
           {
-            layout = layout.withLayout(unmarshal(childComponentJaxb));
+            layout = layout.withChild(unmarshal(childComponentJaxb));
           }
 
         return layout;
