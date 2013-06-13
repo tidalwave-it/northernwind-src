@@ -119,16 +119,16 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
           {
             uriComputationCounter++;
 
-            final ResourcePath uri = new ResourcePath();
+            relativeUri = new ResourcePath();
             final ResourceFile file = resource.getFile();
 
             if (!file.equals(site.getNodeFolder()))
               {
                 try
                   {
-                    uri.append(getParent().getRelativeUri());
-                    uri.append(resource.getProperties()
-                                       .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
+                    relativeUri = relativeUri.with(getParent().getRelativeUri())
+                                             .with(resource.getProperties()
+                                                    .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
                   }
                 catch (IOException | NotFoundException e)
                   {
@@ -136,13 +136,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                     throw new RuntimeException(e);
                   }
               }
-
-            relativeUri = uri;
           }
 
         log.debug(">>>> relativeUri: {}", relativeUri);
 
-        return relativeUri.clone();
+        return relativeUri;
       }
 
     /*******************************************************************************************************************

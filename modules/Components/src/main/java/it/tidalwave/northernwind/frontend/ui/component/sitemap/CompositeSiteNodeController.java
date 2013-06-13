@@ -57,15 +57,8 @@ public interface CompositeSiteNodeController
         @Nonnull
         private final SiteNode parentSiteNode;
 
-        @Nonnull
-//        @Getter @Nonnull
+        @Getter @Nonnull
         private final ResourcePath relativeUri;
-
-        @Nonnull
-        public ResourcePath getRelativeUri() // FIXME
-          {
-            return relativeUri.clone();
-          }
 
         @Getter @Nonnull
         private final ResourceProperties properties;

@@ -221,7 +221,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 
             if (year != selectedYear)
               {
-                final String url = site.createLink(siteNode.getRelativeUri().append("" + year));
+                final String url = site.createLink(siteNode.getRelativeUri().with("" + year));
                 builder.append(String.format("<a href='%s'>%d</a>%n", url, year));
               }
             else

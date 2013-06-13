@@ -103,10 +103,10 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final int itemCount = items.size();
         final int index = items.indexOf(item);
         final Site site = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
-        final String previousUrl = site.createLink(baseUrl.append(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.append(items.get((index + 1) % itemCount).getId().stringValue()));
-        final String lightboxUrl = site.createLink(baseUrl.append("lightbox"));
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
+        final String previousUrl = site.createLink(baseUrl.with(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
+        final String nextUrl     = site.createLink(baseUrl.with(items.get((index + 1) % itemCount).getId().stringValue()));
+        final String lightboxUrl = site.createLink(baseUrl.with("lightbox"));
         final ST t = new ST(galleryTemplate, '$', '$').add("caption", item.getDescription())
                                                       .add("previous", previousUrl)
                                                       .add("next", nextUrl)
@@ -129,7 +129,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         try
           {
             final SiteNode siteNode = context.getSiteNode();
-            final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri().append("images.xml"));
+            final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri().with("images.xml"));
 
             builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
             builder.append(String.format("var bluetteCatalogUrl = \"%s\";%n", link));
@@ -196,11 +196,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final int itemCount = items.size();
         final int index = items.indexOf(item);
         final Site site = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
-        final String redirectUrl = site.createLink(baseUrl.append("/#!/" + item.getId().stringValue())); // FIXME .replaceAll("/$", ""));
-        final String previousUrl = site.createLink(baseUrl.append(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.append(items.get((index + 1) % itemCount).getId().stringValue()));
-        final String lightboxUrl = site.createLink(baseUrl.append("lightbox"));
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
+        final String redirectUrl = site.createLink(baseUrl.with("/#!/" + item.getId().stringValue())); // FIXME .replaceAll("/$", ""));
+        final String previousUrl = site.createLink(baseUrl.with(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
+        final String nextUrl     = site.createLink(baseUrl.with(items.get((index + 1) % itemCount).getId().stringValue()));
+        final String lightboxUrl = site.createLink(baseUrl.with("lightbox"));
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
@@ -229,17 +229,17 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     public void renderLightboxFallback (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
       {
         final Site site = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prepend(site.getContextPath());
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
         final StringBuilder builder = new StringBuilder();
 
         for (final Item item : items)
           {
             final String id = item.getId().stringValue();
-            final String link = site.createLink(baseUrl.append(id));
+            final String link = site.createLink(baseUrl.with(id));
             builder.append(String.format("<a href=\"%s\"><img src=\"/media/stillimages/100/%s.jpg\"/></a>%n", link, id));
           }
 
-        final String redirectUrl = site.createLink(baseUrl.append("/#!/lightbox")); // FIXME.replaceAll("/$", "");
+        final String redirectUrl = site.createLink(baseUrl.with("/#!/lightbox")); // FIXME.replaceAll("/$", "");
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"

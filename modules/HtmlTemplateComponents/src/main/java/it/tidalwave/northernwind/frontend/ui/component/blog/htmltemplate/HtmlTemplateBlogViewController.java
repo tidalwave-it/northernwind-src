@@ -289,7 +289,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         try
           {
-            final String link = site.createLink(siteNode.getRelativeUri().append(getExposedUri(post)));
+            final String link = site.createLink(siteNode.getRelativeUri().with(getExposedUri(post)));
             htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>%n", link));
             requestContext.setDynamicNodeProperty(PROP_ADD_URL, link);
           }
@@ -312,7 +312,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         try
           {
-            final String link = site.createLink(siteNode.getRelativeUri().append(getExposedUri(post)));
+            final String link = site.createLink(siteNode.getRelativeUri().with(getExposedUri(post)));
             final String title = post.getProperties().getProperty(PROPERTY_TITLE);
             htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>%n", link, title));
           }

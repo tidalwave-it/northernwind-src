@@ -29,10 +29,11 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import javax.annotation.concurrent.Immutable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -42,39 +43,48 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NotThreadSafe @ToString @EqualsAndHashCode
-public class ResourcePath implements Cloneable // FIXME: must be Immutable
+@Immutable @ToString @EqualsAndHashCode
+public class ResourcePath
   {
     private final List<String> segments;
 
     public ResourcePath()
       {
-        segments = new ArrayList<>();
+        this(Collections.<String>emptyList());
+      }
+
+    private static String x (final @Nonnull String path)
+      {
+        if (path.startsWith("http:") || path.startsWith("https:"))
+          {
+            throw new IllegalArgumentException("ResourcePath can't hold a URL");
+          }
+
+        final int start = path.startsWith("/") ? 1 : 0;
+        return path.substring(start);
       }
 
     public ResourcePath (final @Nonnull String path)
       {
-        final int start = path.startsWith("/") ? 1 : 0;
-        segments = new ArrayList<>(Arrays.asList(path.substring(start).split("/")));
+        this(Arrays.asList(x(path).split("/")));
+      }
 
-        if (segments.get(0).equals("")) // FIXME
+    private ResourcePath (final @Nonnull List<String> segments)
+      {
+        this.segments = new ArrayList<>(segments);
+
+        if (this.segments.size() > 0 && this.segments.get(0).equals("")) // FIXME
           {
-            segments.remove(0);
+            this.segments.remove(0);
           }
-      }
 
-    @Override @Nonnull
-    public ResourcePath clone()
-      {
-        final ResourcePath clone = new ResourcePath();
-        clone.segments.addAll(this.segments);
-        return clone;
-      }
-
-    @Nonnull
-    public String popLeading()
-      {
-        return segments.remove(0);
+        for (final String segment : this.segments)
+          {
+            if ("".equals(segment))
+              {
+                throw new IllegalArgumentException("Empty element in " + this);
+              }
+          }
       }
 
     @Nonnull
@@ -85,17 +95,35 @@ public class ResourcePath implements Cloneable // FIXME: must be Immutable
             throw new IllegalArgumentException("The path doesn't start with " + uri.asString() + ": " + asString());
           }
 
-        final List<String> temp = new ArrayList<>(segments.subList(uri.segments.size(), segments.size()));
-        segments.clear();
-        segments.addAll(temp);
-
-        return this;
+        return new ResourcePath(segments.subList(uri.segments.size(), segments.size()));
       }
 
     @Nonnull
-    public String popTrailing()
+    public String getLeading()
       {
-        return segments.remove(segments.size() - 1);
+        return segments.get(0);
+      }
+
+    @Nonnull
+    public ResourcePath withoutLeading()
+      {
+        final List<String> temp = new ArrayList<>(segments);
+        temp.remove(0);
+        return new ResourcePath(temp);
+      }
+
+    @Nonnull
+    public String getTrailing()
+      {
+        return segments.get(segments.size() - 1);
+      }
+
+    @Nonnull
+    public ResourcePath withoutTrailing()
+      {
+        final List<String> temp = new ArrayList<>(segments);
+        temp.remove(temp.size() - 1);
+        return new ResourcePath(temp);
       }
 
     public boolean startsWith (final @Nonnull String string)
@@ -116,24 +144,27 @@ public class ResourcePath implements Cloneable // FIXME: must be Immutable
       }
 
     @Nonnull
-    public ResourcePath prepend (final @Nonnull String ... strings)
+    public ResourcePath prependedWith (final @Nonnull String ... strings)
       {
-        segments.addAll(0, Arrays.asList(strings));
-        return this;
+        final List<String> temp = new ArrayList<>(segments);
+        temp.addAll(0, Arrays.asList(strings));
+        return new ResourcePath(temp);
       }
 
     @Nonnull
-    public ResourcePath append (final @Nonnull ResourcePath path)
+    public ResourcePath with (final @Nonnull ResourcePath path)
       {
-        segments.addAll(path.segments);
-        return this;
+        final List<String> temp = new ArrayList<>(segments);
+        temp.addAll(path.segments);
+        return new ResourcePath(temp);
       }
 
     @Nonnull
-    public ResourcePath append (final @Nonnull String ... strings)
+    public ResourcePath with (final @Nonnull String ... strings)
       {
-        segments.addAll(Arrays.asList(strings));
-        return this;
+        final List<String> temp = new ArrayList<>(segments);
+        temp.addAll(Arrays.asList(strings));
+        return new ResourcePath(temp);
       }
 
     @Nonnull
@@ -148,13 +179,11 @@ public class ResourcePath implements Cloneable // FIXME: must be Immutable
             separator = "/";
           }
 
+        if (buffer.toString().contains("//"))
+          {
+            throw new RuntimeException("Error in stringification: " + buffer + " - " + this);
+          }
+
         return buffer.toString();
       }
-
-
-
-//    public String toString()
-//    {
-//        throw new RuntimeException();
-//    }
   }
