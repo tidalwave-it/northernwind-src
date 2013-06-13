@@ -197,7 +197,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final int index = items.indexOf(item);
         final Site site = siteProvider.get().getSite();
         final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
-        final String redirectUrl = site.createLink(baseUrl.with("/#!/" + item.getId().stringValue())); // FIXME .replaceAll("/$", ""));
+        final String redirectUrl = site.createLink(baseUrl.with("#!", item.getId().stringValue())); // FIXME .replaceAll("/$", ""));
         final String previousUrl = site.createLink(baseUrl.with(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.with(items.get((index + 1) % itemCount).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.with("lightbox"));
@@ -239,7 +239,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
             builder.append(String.format("<a href=\"%s\"><img src=\"/media/stillimages/100/%s.jpg\"/></a>%n", link, id));
           }
 
-        final String redirectUrl = site.createLink(baseUrl.with("/#!/lightbox")); // FIXME.replaceAll("/$", "");
+        final String redirectUrl = site.createLink(baseUrl.with("#!", "lightbox")); // FIXME.replaceAll("/$", "");
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
