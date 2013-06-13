@@ -117,28 +117,28 @@ import java.io.UnsupportedEncodingException;
       {
         if (relativeUri == null)
           {
-            try
+            uriComputationCounter++;
+
+            final ModifiablePath uri = new ModifiablePath();
+            final ResourceFile nodeFolder = site.getNodeFolder();
+            final ResourceFile file = resource.getFile();
+
+            if (!nodeFolder.equals(file))
               {
-                uriComputationCounter++;
-
-                final ModifiablePath uri = new ModifiablePath();
-                final ResourceFile nodeFolder = site.getNodeFolder();
-                final ResourceFile file = resource.getFile();
-
-                if (!nodeFolder.equals(file))
+                try
                   {
                     uri.append(new ModifiablePath(getParent().getRelativeUri()));
                     uri.append(resource.getProperties()
                                        .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
                   }
+                catch (IOException | NotFoundException e)
+                  {
+                    log.error("", e); // should never occur
+                    throw new RuntimeException(e);
+                  }
+              }
 
-                relativeUri = uri.asString();
-              }
-            catch (IOException | NotFoundException e)
-              {
-                log.error("", e); // should never occur
-                throw new RuntimeException(e);
-              }
+            relativeUri = uri.asString();
           }
 
         log.debug(">>>> relativeUri: {}", relativeUri);
