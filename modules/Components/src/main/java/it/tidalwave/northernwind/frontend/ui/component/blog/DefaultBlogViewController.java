@@ -251,7 +251,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         String pathParams = requestHolder.get().getPathParams(siteNode);
         pathParams = pathParams.replace("/", "");
-        log.info(">>>> pathParams: {}", pathParams);
+        log.debug(">>>> pathParams: {}", pathParams);
 
         final boolean index = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_INDEX, "false"));
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
@@ -321,7 +321,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             try
               {
-                log.info("{} vs {}", exposedUri, getExposedUri(post));
                 if (exposedUri.equals(getExposedUri(post)))
                   {
                     return post;
