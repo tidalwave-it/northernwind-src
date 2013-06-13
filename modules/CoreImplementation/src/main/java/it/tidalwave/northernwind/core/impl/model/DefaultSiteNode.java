@@ -133,10 +133,9 @@ import java.io.UnsupportedEncodingException;
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath.asString())
                                                         .result();
-                    final String pathSegment =  resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
-                                                                                     urlDecodedName(file.getName()));
                     r.append(new ModifiablePath(parentSiteNode.getRelativeUri()));
-                    r.append(pathSegment);
+                    r.append(resource.getProperties()
+                                     .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
                   }
 
                 relativeUri = r.asString();
