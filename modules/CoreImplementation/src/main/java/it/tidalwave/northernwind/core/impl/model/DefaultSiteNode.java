@@ -27,13 +27,13 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.impl.util.ModifiablePath;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
@@ -41,6 +41,7 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.impl.util.ModifiablePath;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
@@ -52,7 +53,6 @@ import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
-import java.io.UnsupportedEncodingException;
 
 /***********************************************************************************************************************
  *
@@ -98,7 +98,7 @@ import java.io.UnsupportedEncodingException;
       {
         this.site = site;
         resource = modelFactory.createResource(file);
-        layout = loadLayout();
+        layout = computeLayout(); // FIXME: move to @PostConstruct
 
         if (site.isLogConfigurationEnabled() || log.isDebugEnabled()) // FIXME: Info? Or debug below?
           {
@@ -151,22 +151,19 @@ import java.io.UnsupportedEncodingException;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Layout loadLayout()
+    private Layout computeLayout()
       throws IOException, NotFoundException
       {
         Layout layout = null;
-        // FIXME: Components must be localized
         // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
         // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
         // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
-        final List<ResourceFile> files = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(), "Components_en.xml");
-
-        for (final ResourceFile layoutFile : files)
+        // FIXME: Components must be localized
+        final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(),
+                                                                                           "Components_en.xml");
+        for (final ResourceFile layoutFile : layoutFiles)
           {
-            log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
-            final @Cleanup InputStream is = layoutFile.getInputStream();
-            final DefaultLayout overridingLayout = modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
-            is.close();
+            final DefaultLayout overridingLayout = loadLayout(layoutFile);
             layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
 
             if (log.isDebugEnabled())
@@ -198,6 +195,20 @@ import java.io.UnsupportedEncodingException;
                                       .relativeTo(pathFor(site.getNodeFolder()));
 
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private DefaultLayout loadLayout (final @Nonnull ResourceFile layoutFile)
+      throws IOException
+      {
+        log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
+        final @Cleanup InputStream is = layoutFile.getInputStream();
+        final DefaultLayout layout = modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
+        is.close();
+        return layout;
       }
 
     /*******************************************************************************************************************
