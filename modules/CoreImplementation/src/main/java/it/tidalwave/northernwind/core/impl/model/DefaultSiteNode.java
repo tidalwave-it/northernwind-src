@@ -52,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
+import java.io.UnsupportedEncodingException;
 
 /***********************************************************************************************************************
  *
@@ -127,8 +128,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                 if (!nodeFolder.equals(file))
                   {
                     final ResourceFile parentFile = file.getParent();
-                    final ModifiablePath parentRelativePath = new ModifiablePath(urlDecodedPath(parentFile.getPath()));
-                    parentRelativePath.popLeading(new ModifiablePath(nodeFolder.getPath()));
+                    final ModifiablePath parentRelativePath = pathFor(parentFile);
+                    parentRelativePath.popLeading(pathFor(nodeFolder));
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath.asString())
                                                         .result();
@@ -189,8 +190,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String withTrailingSlash (final @Nonnull String path)
+    private static ModifiablePath pathFor (final @Nonnull ResourceFile parentFile)
+      throws UnsupportedEncodingException
       {
-        return path.endsWith("/") ? path : (path + "/");
+        return new ModifiablePath(urlDecodedPath(parentFile.getPath()));
       }
   }
