@@ -116,7 +116,7 @@ public class DefaultViewFactoryTest
      *
      ******************************************************************************************************************/
     @Test(expectedExceptions = NotFoundException.class,
-          expectedExceptionsMessageRegExp = "\\QCannot find type2: available: [type1]\\E")
+          expectedExceptionsMessageRegExp = "\\QCannot find type3: available: [type1]\\E")
     public void createViewAndController_must_throw_exception_when_type_is_not_registered()
       throws Exception
       {
