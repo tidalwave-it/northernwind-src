@@ -115,7 +115,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     @Nonnull @Override
     public synchronized String getRelativeUri()
       {
-        if (relativeUri == null)
+        if (relativeUri == null) // FIXME: is lazy evaluation really needed?
           {
             uriComputationCounter++;
 
