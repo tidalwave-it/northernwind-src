@@ -121,18 +121,18 @@ import java.io.UnsupportedEncodingException;
               {
                 uriComputationCounter++;
 
-                final ModifiablePath r = new ModifiablePath();
+                final ModifiablePath uri = new ModifiablePath();
                 final ResourceFile nodeFolder = site.getNodeFolder();
                 final ResourceFile file = resource.getFile();
 
                 if (!nodeFolder.equals(file))
                   {
-                    r.append(new ModifiablePath(getParent(file, nodeFolder).getRelativeUri()));
-                    r.append(resource.getProperties()
-                                     .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
+                    uri.append(new ModifiablePath(getParent().getRelativeUri()));
+                    uri.append(resource.getProperties()
+                                       .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
                   }
 
-                relativeUri = r.asString();
+                relativeUri = uri.asString();
               }
             catch (IOException | NotFoundException e)
               {
@@ -183,13 +183,12 @@ import java.io.UnsupportedEncodingException;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private SiteNode getParent (final @Nonnull ResourceFile file, final @Nonnull ResourceFile nodeFolder)
+    private SiteNode getParent()
       throws NotFoundException, UnsupportedEncodingException
       {
-        final ResourceFile parentFile = file.getParent();
-        final ModifiablePath parentRelativePath = pathFor(parentFile);
-        parentRelativePath.popLeading(pathFor(nodeFolder));
-        
+        final ModifiablePath parentRelativePath = pathFor(resource.getFile().getParent());
+        parentRelativePath.popLeading(pathFor(site.getNodeFolder()));
+
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
       }
 
