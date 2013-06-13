@@ -186,8 +186,8 @@ import java.io.UnsupportedEncodingException;
     private SiteNode getParent()
       throws NotFoundException, UnsupportedEncodingException
       {
-        final ModifiablePath parentRelativePath = pathFor(resource.getFile().getParent());
-        parentRelativePath.popLeading(pathFor(site.getNodeFolder()));
+        final ModifiablePath parentRelativePath = pathFor(resource.getFile().getParent())
+                                      .relativeTo(pathFor(site.getNodeFolder()));
 
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
       }

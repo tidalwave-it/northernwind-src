@@ -69,7 +69,7 @@ public class ModifiablePath
       }
 
     @Nonnull
-    public void popLeading (final @Nonnull ModifiablePath uri)
+    public ModifiablePath relativeTo (final @Nonnull ModifiablePath uri)
       {
         if (!segments.subList(0, uri.segments.size()).equals(uri.segments))
           {
@@ -80,6 +80,8 @@ public class ModifiablePath
         final List<String> temp = new ArrayList<>(segments.subList(uri.segments.size(), segments.size()));
         segments.clear();
         segments.addAll(temp);
+
+        return this;
       }
 
     @Nonnull
