@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Map;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import javax.annotation.CheckForNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.hamcrest.CoreMatchers.is;
@@ -165,7 +166,7 @@ public abstract class FileSystemTestSupport
      ******************************************************************************************************************/
     protected static void assertItem (final @Nonnull Map<String, ?> map,
                                       final @Nonnull String key,
-                                      final @Nonnull String expectedValue)
+                                      final @CheckForNull String expectedValue)
       {
         if (expectedValue == null)
           {
