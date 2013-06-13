@@ -206,9 +206,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       {
         log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
         final @Cleanup InputStream is = layoutFile.getInputStream();
-        final DefaultLayout layout = modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
-        is.close();
-        return layout;
+        return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
       }
 
     /*******************************************************************************************************************
