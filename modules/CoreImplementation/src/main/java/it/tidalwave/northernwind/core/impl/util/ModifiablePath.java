@@ -124,13 +124,15 @@ public class ModifiablePath
     @Nonnull
     public String asString()
       {
-        final StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder("/");
+        String separator = "";
 
-        for (final String s : segments)
+        for (final String segment : segments)
           {
-            buffer.append("/").append(s);
+            buffer.append(separator).append(segment);
+            separator = "/";
           }
 
-        return buffer.toString().equals("") ? "/" : buffer.toString(); // FIXME
+        return buffer.toString();
       }
   }
