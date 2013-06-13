@@ -174,7 +174,7 @@ public abstract class FileSystemTestSupport
           }
         else
           {
-            assertThat(key, map.get(key), is(notNullValue()));
+            assertThat(key + " -> " + map.keySet(), map.get(key), is(notNullValue()));
             assertThat(map.get(key).toString(), is(expectedValue));
           }
       }
