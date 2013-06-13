@@ -120,10 +120,9 @@ import java.io.UnsupportedEncodingException;
             uriComputationCounter++;
 
             final ModifiablePath uri = new ModifiablePath();
-            final ResourceFile nodeFolder = site.getNodeFolder();
             final ResourceFile file = resource.getFile();
 
-            if (!nodeFolder.equals(file))
+            if (!file.equals(site.getNodeFolder()))
               {
                 try
                   {
