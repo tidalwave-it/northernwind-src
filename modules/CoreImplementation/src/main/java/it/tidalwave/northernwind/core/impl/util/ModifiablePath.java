@@ -42,82 +42,82 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @ToString
-public class ModifiableRelativeUri
+public class ModifiablePath
   {
-    private final List<String> parts;
+    private final List<String> segments;
 
-    public ModifiableRelativeUri()
+    public ModifiablePath()
       {
-        parts = new ArrayList<>();
+        segments = new ArrayList<>();
       }
 
-    public ModifiableRelativeUri (final @Nonnull String relativeUri)
+    public ModifiablePath (final @Nonnull String relativeUri)
       {
         final int start = relativeUri.startsWith("/") ? 1 : 0;
-        parts = new ArrayList<>(Arrays.asList(relativeUri.substring(start).split("/")));
+        segments = new ArrayList<>(Arrays.asList(relativeUri.substring(start).split("/")));
 
-        if (parts.get(0).equals("")) // FIXME
+        if (segments.get(0).equals("")) // FIXME
           {
-            parts.remove(0);
+            segments.remove(0);
           }
       }
 
     @Nonnull
     public String popLeading()
       {
-        return parts.remove(0);
+        return segments.remove(0);
       }
 
     @Nonnull
-    public void popLeading (final @Nonnull ModifiableRelativeUri uri)
+    public void popLeading (final @Nonnull ModifiablePath uri)
       {
-        if (!parts.subList(0, uri.parts.size()).equals(uri.parts))
+        if (!segments.subList(0, uri.segments.size()).equals(uri.segments))
           {
             throw new IllegalArgumentException("The path doesn't start with " + uri.asString() + ": " + asString()
-                    + " ZZZ " + uri.parts + " " + parts);
+                    + " ZZZ " + uri.segments + " " + segments);
           }
 
-        final List<String> temp = new ArrayList<>(parts.subList(uri.parts.size(), parts.size()));
-        parts.clear();
-        parts.addAll(temp);
+        final List<String> temp = new ArrayList<>(segments.subList(uri.segments.size(), segments.size()));
+        segments.clear();
+        segments.addAll(temp);
       }
 
     @Nonnull
     public String popTrailing()
       {
-        return parts.remove(parts.size() - 1);
+        return segments.remove(segments.size() - 1);
       }
 
     public boolean startsWith (final @Nonnull String string)
       {
-        return parts.get(0).equals(string);
+        return segments.get(0).equals(string);
       }
 
     @Nonnull
     public String getExtension()
       {
-        return parts.get(parts.size() - 1).replaceAll("^.*\\.", "");
+        return segments.get(segments.size() - 1).replaceAll("^.*\\.", "");
       }
 
     @Nonnegative
     public int getPartsCount()
       {
-        return parts.size();
+        return segments.size();
       }
 
     public void prepend (final @Nonnull String ... strings)
       {
-        parts.addAll(0, Arrays.asList(strings));
+        segments.addAll(0, Arrays.asList(strings));
       }
 
-    public void append (final @Nonnull ModifiableRelativeUri relativeUri)
+    public void append (final @Nonnull ModifiablePath relativeUri)
       {
-        parts.addAll(relativeUri.parts);
+        segments.addAll(relativeUri.segments);
       }
 
     public void append (final @Nonnull String ... strings)
       {
-        parts.addAll(Arrays.asList(strings));
+        segments.addAll(Arrays.asList(strings));
       }
 
     @Nonnull
@@ -125,7 +125,7 @@ public class ModifiableRelativeUri
       {
         final StringBuilder buffer = new StringBuilder();
 
-        for (final String s : parts)
+        for (final String s : segments)
           {
             buffer.append("/").append(s);
           }

@@ -27,7 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.impl.util.ModifiableRelativeUri;
+import it.tidalwave.northernwind.core.impl.util.ModifiablePath;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -120,21 +120,21 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 uriComputationCounter++;
 
-                final ModifiableRelativeUri r = new ModifiableRelativeUri();
+                final ModifiablePath r = new ModifiablePath();
                 final ResourceFile nodeFolder = site.getNodeFolder();
                 final ResourceFile file = resource.getFile();
 
                 if (!nodeFolder.equals(file))
                   {
                     final ResourceFile parentFile = file.getParent();
-                    final ModifiableRelativeUri parentRelativePath = new ModifiableRelativeUri(urlDecodedPath(parentFile.getPath()));
-                    parentRelativePath.popLeading(new ModifiableRelativeUri(nodeFolder.getPath()));
+                    final ModifiablePath parentRelativePath = new ModifiablePath(urlDecodedPath(parentFile.getPath()));
+                    parentRelativePath.popLeading(new ModifiablePath(nodeFolder.getPath()));
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
                                                         .withRelativePath(parentRelativePath.asString())
                                                         .result();
                     final String pathSegment =  resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
                                                                                      urlDecodedName(file.getName()));
-                    r.append(new ModifiableRelativeUri(parentSiteNode.getRelativeUri()));
+                    r.append(new ModifiablePath(parentSiteNode.getRelativeUri()));
                     r.append(pathSegment);
                   }
 
