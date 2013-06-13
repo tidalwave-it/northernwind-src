@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.util;
+package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

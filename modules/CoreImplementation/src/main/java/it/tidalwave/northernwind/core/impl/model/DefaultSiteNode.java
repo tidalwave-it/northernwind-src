@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.impl.util.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ModifiablePath;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;

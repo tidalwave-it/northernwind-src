@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.util.ModifiablePath;
+import it.tidalwave.northernwind.core.model.ModifiablePath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
