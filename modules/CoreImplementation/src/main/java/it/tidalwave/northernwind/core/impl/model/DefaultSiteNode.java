@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.impl.util.ModifiableRelativeUri;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -119,26 +120,25 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 uriComputationCounter++;
 
+                final ModifiableRelativeUri r = new ModifiableRelativeUri();
                 final ResourceFile nodeFolder = site.getNodeFolder();
                 final ResourceFile file = resource.getFile();
 
-                if (nodeFolder.equals(file))
-                  {
-                    relativeUri = "/";
-                  }
-                else
+                if (!nodeFolder.equals(file))
                   {
                     final ResourceFile parentFile = file.getParent();
-                    final String parentRelativePath = urlDecodedPath(parentFile.getPath())
-                                                        .replaceAll("^/" + nodeFolder.getPath(), "/")
-                                                        .replace("//", "/"); // FIXME
+                    final ModifiableRelativeUri parentRelativePath = new ModifiableRelativeUri(urlDecodedPath(parentFile.getPath()));
+                    parentRelativePath.popLeading(new ModifiableRelativeUri(nodeFolder.getPath()));
                     final SiteNode parentSiteNode = site.find(SiteNode.class)
-                                                        .withRelativePath(parentRelativePath)
+                                                        .withRelativePath(parentRelativePath.asString())
                                                         .result();
                     final String pathSegment =  resource.getProperties().getProperty(PROPERTY_EXPOSED_URI,
                                                                                      urlDecodedName(file.getName()));
-                    relativeUri = withTrailingSlash(parentSiteNode.getRelativeUri()) + pathSegment;
+                    r.append(new ModifiableRelativeUri(parentSiteNode.getRelativeUri()));
+                    r.append(pathSegment);
                   }
+
+                relativeUri = r.asString();
               }
             catch (IOException | NotFoundException e)
               {
