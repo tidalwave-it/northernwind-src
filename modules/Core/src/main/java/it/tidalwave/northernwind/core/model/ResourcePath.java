@@ -43,7 +43,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @ToString @EqualsAndHashCode
-public class ResourcePath implements Cloneable
+public class ResourcePath implements Cloneable // FIXME: must be Immutable
   {
     private final List<String> segments;
 
