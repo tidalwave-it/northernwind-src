@@ -55,6 +55,7 @@ public class ResourcePathTest
 
         assertThat(fixture.segments, is(not(nullValue())));
         assertThat(fixture.segments.isEmpty(), is(true));
+        assertThat(fixture.asString(), is("/"));
       }
 
     /*******************************************************************************************************************
