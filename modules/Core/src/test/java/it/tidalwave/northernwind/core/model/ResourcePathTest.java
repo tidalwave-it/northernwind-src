@@ -77,7 +77,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "asStringDataProvider",
+    @Test(dataProvider = "asStringProvider",
           dependsOnMethods = { "must_properly_create_an_empty_path", "must_properly_create_an_empty_path_from_string" })
     public void must_properly_compute_asString (final @Nonnull List<String> segments,
                                                 final @Nonnull String expectedAsString)
@@ -160,7 +160,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "startsWithDataProvider")
+    @Test(dataProvider = "startsWithProvider")
     public void must_properly_compute_startsWith (final @Nonnull String path,
                                                   final @Nonnull String leadingSegment,
                                                   final @Nonnull boolean expectedResult)
@@ -189,7 +189,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "appendPrependDataProvider",
+    @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_append2 (final @Nonnull String path,
                                        final @Nonnull String appendingPathAsString,
@@ -205,7 +205,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "appendPrependDataProvider",
+    @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_prepend (final @Nonnull String path,
                                        final @Nonnull String appendingPathAsString,
@@ -307,8 +307,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "startsWithDataProvider")
-    private Object[][] startsWithDataProvider()
+    @DataProvider(name = "startsWithProvider")
+    private Object[][] startsWithProvider()
       {
         return new Object[][]
           {
@@ -327,8 +327,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "asStringDataProvider")
-    private Object[][] asStringDataProvider()
+    @DataProvider(name = "asStringProvider")
+    private Object[][] asStringProvider()
       {
         return new Object[][]
           {
@@ -342,8 +342,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "appendPrependDataProvider")
-    private Object[][] appendPrependDataProvider()
+    @DataProvider(name = "appendPrependProvider")
+    private Object[][] appendPrependProvider()
       {
         return new Object[][]
           {
