@@ -31,6 +31,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.concurrent.Immutable;
@@ -53,6 +54,11 @@ public class ResourcePath
         this(Collections.<String>emptyList());
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     private static String x (final @Nonnull String path)
       {
         if (path.startsWith("http:") || path.startsWith("https:"))
@@ -64,12 +70,26 @@ public class ResourcePath
         return path.substring(start);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Creates an instance out of a string.
+     *
+     * @param  path  the path
+     *
+     ******************************************************************************************************************/
     public ResourcePath (final @Nonnull String path)
       {
         this(Arrays.asList(x(path).split("/")));
       }
 
-    private ResourcePath (final @Nonnull List<String> segments)
+    /*******************************************************************************************************************
+     *
+     * Creates an instance out of a collection of strings.
+     *
+     * @param  path  the path
+     *
+     ******************************************************************************************************************/
+    private ResourcePath (final @Nonnull Collection<String> segments)
       {
         this.segments = new ArrayList<>(segments);
 
@@ -87,23 +107,49 @@ public class ResourcePath
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns a clone path which is relative to the given path. For instance, if this is "/foo/bar/baz" and path is
+     * "/foo/bar", the returned clone represents "/baz".
+     *
+     * @param   path                        the path to which we're computing the relative position
+     * @return                              the clone
+     * @throws  IllegalArgumentException    if path is not a prefix of this
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath relativeTo (final @Nonnull ResourcePath uri)
+    public ResourcePath relativeTo (final @Nonnull ResourcePath path)
       {
-        if (!segments.subList(0, uri.segments.size()).equals(uri.segments))
+        if (!segments.subList(0, path.segments.size()).equals(path.segments))
           {
-            throw new IllegalArgumentException("The path doesn't start with " + uri.asString() + ": " + asString());
+            throw new IllegalArgumentException("The path doesn't start with " + path.asString() + ": " + asString());
           }
 
-        return new ResourcePath(segments.subList(uri.segments.size(), segments.size()));
+        return new ResourcePath(segments.subList(path.segments.size(), segments.size()));
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns the leading segment of this path. For instance, if the current object represents "/foo/bar/baz", "foo" is
+     * returned.
+     *
+     * @return  the leading segment of this path
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getLeading()
       {
         return segments.get(0);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns a clone without the leading segment. For instance, if the current object represents "/foo/bar/baz",
+     * the returned clone represents "/bar/baz".
+     *
+     * @return  the clone
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourcePath withoutLeading()
       {
@@ -112,12 +158,28 @@ public class ResourcePath
         return new ResourcePath(temp);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns the trailing segment of this path. For instance, if the current object represents "/foo/bar/baz",
+     * "baz" is returned.
+     *
+     * @return  the trailing segment of this path
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getTrailing()
       {
         return segments.get(segments.size() - 1);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns a clone without the trailing segment. For instance, if the current object represents "/foo/bar/baz",
+     * the returned clone represents "/foo/bar".
+     *
+     * @return  the clone
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourcePath withoutTrailing()
       {
@@ -126,31 +188,72 @@ public class ResourcePath
         return new ResourcePath(temp);
       }
 
-    public boolean startsWith (final @Nonnull String string)
+    /*******************************************************************************************************************
+     *
+     * Returns {@code true} if the leading segment of this path is the given one.
+     *
+     * @param  segment  the expected leading segment
+     * @return          {@code true} if this path starts with the given leading segment
+     *
+     ******************************************************************************************************************/
+    public boolean startsWith (final @Nonnull String segment)
       {
-        return !segments.isEmpty() && segments.get(0).equals(string);
+        return !segments.isEmpty() && segments.get(0).equals(segment);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns the file extension of this path. For instance, if this object represents "/foo/bar/baz.jpg", "jpg" is
+     * returned.
+     *
+     * @return  the file extension of this path
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String getExtension()
       {
         return segments.get(segments.size() - 1).replaceAll("^.*\\.", "");
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns the count of segments in this path.
+     *
+     * @return  the count of segments
+     *
+     ******************************************************************************************************************/
     @Nonnegative
-    public int getPartsCount()
+    public int getPartsCount() // FIXME: rename to getSegmentsCount
       {
         return segments.size();
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns a clone with the given prepended segments. For instance, if this object represents "/foo/bar/", and
+     * "baz", "bax" are given as argument, the returned clone represents "/baz/bax/foo/bar".
+     *
+     * @param   the segments to prepend
+     * @return  the clone
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath prependedWith (final @Nonnull String ... strings)
+    public ResourcePath prependedWith (final @Nonnull String ... segments)
       {
-        final List<String> temp = new ArrayList<>(segments);
-        temp.addAll(0, Arrays.asList(strings));
+        final List<String> temp = new ArrayList<>(this.segments);
+        temp.addAll(0, Arrays.asList(segments));
         return new ResourcePath(temp);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns a clone with the given appended path. For instance, if this object represents "/foo/bar/", and
+     * "/baz/bax" is given as argument, the returned clone represents "/foo/bar/baz/bax".
+     *
+     * @param   the segments to prepend
+     * @return  the clone
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
@@ -159,6 +262,15 @@ public class ResourcePath
         return new ResourcePath(temp);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns a clone with the given appended segments. For instance, if this object represents "/foo/bar/", and
+     * "baz", "bax" are given as argument, the returned clone represents "/foo/bar/baz/bax".
+     *
+     * @param   the segments to prepend
+     * @return  the clone
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull String ... strings)
       {
@@ -167,6 +279,14 @@ public class ResourcePath
         return new ResourcePath(temp);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Returns the string representation of this path. This representation always starts with a leading "/" and has no
+     * trailing "/". For empty paths "/" is returned.
+     *
+     * @return  the string representation
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String asString()
       {
