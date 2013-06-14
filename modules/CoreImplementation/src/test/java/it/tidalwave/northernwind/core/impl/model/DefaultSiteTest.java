@@ -104,7 +104,7 @@ public class DefaultSiteTest
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
 
-        siteBuilder = new Site.Builder().withContextPath("/contextpath")
+        siteBuilder = new Site.Builder().withContextPath("/contextpath") // TODO: should also test ""
                                         .withDocumentPath("content/document")
                                         .withMediaPath("content/media")
                                         .withLibraryPath("content/library")
