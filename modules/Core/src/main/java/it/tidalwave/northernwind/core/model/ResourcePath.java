@@ -167,7 +167,8 @@ public class ResourcePath
     @Nonnull
     public String getExtension()
       {
-        return getTrailing().replaceAll("^.*\\.", "");
+        final String trailing = getTrailing();
+        return !trailing.contains(".") ? "" : trailing.replaceAll("^.*\\.", "");
       }
 
     /*******************************************************************************************************************

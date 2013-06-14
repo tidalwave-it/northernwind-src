@@ -235,6 +235,18 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "extensionProvider")
+    public void must_properly_compute_extension (final @Nonnull String path,
+                                                 final @Nonnull String expectedExtension)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.getExtension(), is(expectedExtension));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "segmentProvider")
     private Object[][] segmentProvider()
       {
@@ -343,6 +355,25 @@ public class ResourcePathTest
             { "/foo/bar/baz", "a",     "/foo/bar/baz/a",     "/a/foo/bar/baz"     },
             { "/foo/bar/baz", "a/b",   "/foo/bar/baz/a/b",   "/a/b/foo/bar/baz"   },
             { "/foo/bar/baz", "a/b/c", "/foo/bar/baz/a/b/c", "/a/b/c/foo/bar/baz" },
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "extensionProvider")
+    private Object[][] extensionProvider()
+      {
+        return new Object[][]
+          {
+          //  path                  extension
+            { "/foo",               "",       },
+            { "/foo.jpg",           "jpg",    },
+            { "/foo.gif",           "gif",    },
+            { "/foo.gif.jpg",       "jpg",    },
+            { "/foo/bar.jpg",       "jpg",    },
+            { "/foo/bar.gif",       "gif",    },
+            { "/foo/bar.jpg.gif",   "gif",    },
           };
       }
   }
