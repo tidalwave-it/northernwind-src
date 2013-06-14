@@ -79,7 +79,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             return CONTINUE;
           }
 
-        mediaUri = mediaUri.withoutLeading();
+        mediaUri = mediaUri.withoutLeading(); // media
         //
         // Media that can be served at different sizes are mapped to URLs such as:
         //
