@@ -227,7 +227,10 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
-            { "/foo", "/foo", asList("foo") }
+          //  path              exp. asString       exp. segments
+            { "/foo",           "/foo",             asList("foo")               },
+            { "/foo/bar",       "/foo/bar",         asList("foo", "bar")        },
+            { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz") }
           };
       }
 
@@ -239,6 +242,7 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
+          //  path            parent      relative
             { "/foo/bar/baz", "/foo/bar", "/baz" }
           };
       }
@@ -251,10 +255,11 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
+          // path             leading   trailing
 //            { "/",            "", "" }
-            { "/foo",         "foo", "foo" },
-            { "/foo/bar",     "foo", "bar" },
-            { "/foo/bar/baz", "foo", "baz" }
+            { "/foo",         "foo",    "foo" },
+            { "/foo/bar",     "foo",    "bar" },
+            { "/foo/bar/baz", "foo",    "baz" }
           };
       }
 
@@ -266,10 +271,11 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
+          // path             w/o leading   w/o trailing
 //            { "/",            "", "" }
-            { "/foo",         "/",        "/" },
-            { "/foo/bar",     "/bar",     "/foo" },
-            { "/foo/bar/baz", "/bar/baz", "/foo/bar" }
+            { "/foo",         "/",          "/" },
+            { "/foo/bar",     "/bar",       "/foo" },
+            { "/foo/bar/baz", "/bar/baz",   "/foo/bar" }
           };
       }
 
@@ -316,6 +322,7 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
+          //  path            param    appended              prepended
             { "/foo",         "a",     "/foo/a",             "/a/foo"             },
             { "/foo",         "a/b",   "/foo/a/b",           "/a/b/foo"           },
             { "/foo/bar",     "a",     "/foo/bar/a",         "/a/foo/bar"         },
