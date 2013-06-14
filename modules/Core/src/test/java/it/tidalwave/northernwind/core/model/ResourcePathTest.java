@@ -91,13 +91,27 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "dp3")
+    @Test(dataProvider = "leadingAndTrailingProvider")
     public void must_properly_compute_leading_segment (final @Nonnull String path,
-                                                       final @Nonnull String expectedLeadingSegment)
+                                                       final @Nonnull String expectedLeadingSegment,
+                                                       final @Nonnull String expectedTrailingSegment)
       {
         final ResourcePath fixture = new ResourcePath(path);
 
         assertThat(fixture.getLeading(), is(expectedLeadingSegment));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "leadingAndTrailingProvider")
+    public void must_properly_compute_trailing_segment (final @Nonnull String path,
+                                                       final @Nonnull String expectedLeadingSegment,
+                                                       final @Nonnull String expectedTrailingSegment)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.getTrailing(), is(expectedTrailingSegment));
       }
 
     /*******************************************************************************************************************
@@ -127,12 +141,12 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "dp3")
-    private Object[][] dp3()
+    @DataProvider(name = "leadingAndTrailingProvider")
+    private Object[][] leadingAndTrailingProvider()
       {
         return new Object[][]
           {
-            { "/foo/bar/baz", "foo" }
+            { "/foo/bar/baz", "foo", "baz" }
           };
       }
   }
