@@ -29,9 +29,10 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -73,26 +74,36 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
     public String postProcess (final @Nonnull String link, final @Nonnull String parameterValue)
       {
         final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
+        final String regexp = "([\\?&])(" + parameterName + "=[a-z,0-9]*)";
+
+        final Matcher matcher = Pattern.compile(regexp).matcher(link);
+
+        if (matcher.find()) // replace a parameter already present
+          {
+            final StringBuffer buffer = new StringBuffer();
+            matcher.appendReplacement(buffer, matcher.group(1) + parameterName + "=" + parameterValue);
+            matcher.appendTail(buffer);
+
+            return buffer.toString();
+          }
+
         final StringBuilder builder = new StringBuilder(link);
 
-        if (!link.matches(".*[\\?&]" + parameterName + "=.*")) // might have been previously explicitly set
+        if (link.contains("?"))
           {
-            if (link.contains("?"))
-              {
-                builder.append("&");
-              }
-            else
-              {
-                if (!builder.toString().endsWith("/"))
-                  {
-                    builder.append("/");
-                  }
-
-                builder.append("?");
-              }
-
-            builder.append(parameterName).append("=").append(parameterValue);
+            builder.append("&");
           }
+        else
+          {
+            if (!builder.toString().endsWith("/"))
+              {
+                builder.append("/");
+              }
+
+            builder.append("?");
+          }
+
+        builder.append(parameterName).append("=").append(parameterValue);
 
         return builder.toString();
       }
