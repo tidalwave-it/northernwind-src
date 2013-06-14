@@ -143,6 +143,19 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "startsWithDataProvider")
+    public void must_properly_compute_startsWith (final @Nonnull String path,
+                                                  final @Nonnull String leadingSegment,
+                                                  final @Nonnull boolean expectedResult)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.startsWith(leadingSegment), is(expectedResult));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "dp1")
     private Object[][] dp1()
       {
@@ -191,6 +204,23 @@ public class ResourcePathTest
             { "/foo",         "/",        "/" },
             { "/foo/bar",     "/bar",     "/foo" },
             { "/foo/bar/baz", "/bar/baz", "/foo/bar" }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "startsWithDataProvider")
+    private Object[][] startsWithDataProvider()
+      {
+        return new Object[][]
+          {
+            { "/foo",         "foo",  true },
+            { "/foo/bar",     "foo",  true },
+            { "/foo/bar/baz", "foo",  true },
+            { "/foo",         "foot", false },
+            { "/foo/bar",     "foot", false },
+            { "/foo/bar/baz", "foot", false }
           };
       }
   }
