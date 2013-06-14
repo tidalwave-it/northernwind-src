@@ -227,7 +227,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "appendDataProvider",
+    @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_append_path (final @Nonnull String pathAsString,
                                            final @Nonnull String secondPathAsString,
