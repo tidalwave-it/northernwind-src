@@ -61,22 +61,6 @@ public class ResourcePath
 
     /*******************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
-    private static String x (final @Nonnull String path)
-      {
-        if (path.startsWith("http:") || path.startsWith("https:"))
-          {
-            throw new IllegalArgumentException("ResourcePath can't hold a URL");
-          }
-
-        final int start = path.startsWith("/") ? 1 : 0;
-        return path.substring(start);
-      }
-
-    /*******************************************************************************************************************
-     *
      * Creates an instance out of a string.
      *
      * @param  path  the path
@@ -84,7 +68,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath (final @Nonnull String path)
       {
-        this(Arrays.asList(x(path).split("/")));
+        this(Arrays.asList(verified(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -308,5 +292,22 @@ public class ResourcePath
           }
 
         return buffer.toString();
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String verified (final @Nonnull String path)
+      {
+        if (path.startsWith("http:") || path.startsWith("https:"))
+          {
+            throw new IllegalArgumentException("ResourcePath can't hold a URL");
+          }
+
+        final int start = path.startsWith("/") ? 1 : 0;
+        return path.substring(start);
       }
   }
