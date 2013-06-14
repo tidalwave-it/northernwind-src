@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.model;
 
+import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.concurrent.Immutable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
