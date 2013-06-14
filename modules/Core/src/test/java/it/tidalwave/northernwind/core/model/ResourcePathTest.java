@@ -91,11 +91,11 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "segmentProvider",
           dependsOnMethods = "must_properly_create_an_empty_path")
-    public void must_properly_create_an_empty_path_from_string (final @Nonnull String path,
+    public void must_properly_create_an_empty_path_from_string (final @Nonnull String pathAsString,
                                                                 final @Nonnull String expectedAsString,
                                                                 final @Nonnull List<String> expectedSegments)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
         assertThat(fixture.segments, is(not(nullValue())));
         assertThat(fixture.segments, is(expectedSegments));
@@ -132,13 +132,13 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "relativePathProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_compute_relative_paths (final @Nonnull String path,
-                                                      final @Nonnull String referencePath,
+    public void must_properly_compute_relative_paths (final @Nonnull String pathAsString,
+                                                      final @Nonnull String parentPathAsString,
                                                       final @Nonnull String expectedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
-        final ResourcePath r = new ResourcePath(referencePath);
-        final ResourcePath relativePath = fixture.relativeTo(r);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath parentPath = new ResourcePath(parentPathAsString);
+        final ResourcePath relativePath = fixture.relativeTo(parentPath);
 
         assertThat(relativePath.asString(), is(expectedPathAsString));
       }
@@ -149,23 +149,23 @@ public class ResourcePathTest
     @Test(dataProvider = "nonRelativePathProvider",
           dependsOnMethods = "must_properly_compute_asString",
           expectedExceptions = IllegalArgumentException.class)
-    public void must_properly_reject_non_relative_paths (final @Nonnull String path,
-                                                         final @Nonnull String referencePath)
+    public void must_properly_reject_non_relative_paths (final @Nonnull String pathAsString,
+                                                         final @Nonnull String parentPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
-        final ResourcePath r = new ResourcePath(referencePath);
-        fixture.relativeTo(r);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath parentPath = new ResourcePath(parentPathAsString);
+        fixture.relativeTo(parentPath);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "leadingAndTrailingProvider")
-    public void must_properly_compute_leading_segment (final @Nonnull String path,
+    public void must_properly_compute_leading_segment (final @Nonnull String pathAsString,
                                                        final @Nonnull String expectedLeadingSegment,
                                                        final @Nonnull String expectedTrailingSegment)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
         assertThat(fixture.getLeading(), is(expectedLeadingSegment));
       }
@@ -174,11 +174,11 @@ public class ResourcePathTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "leadingAndTrailingProvider")
-    public void must_properly_compute_trailing_segment (final @Nonnull String path,
+    public void must_properly_compute_trailing_segment (final @Nonnull String pathAsString,
                                                        final @Nonnull String expectedLeadingSegment,
                                                        final @Nonnull String expectedTrailingSegment)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
         assertThat(fixture.getTrailing(), is(expectedTrailingSegment));
       }
@@ -188,13 +188,13 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "withoutLeadingAndTrailingProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_compute_without_leading (final @Nonnull String path,
-                                                       final @Nonnull String expectedWitoutLeadingPath,
-                                                       final @Nonnull String expectedWithoutTrailingPath)
+    public void must_properly_compute_without_leading (final @Nonnull String pathAsString,
+                                                       final @Nonnull String expectedPathWithoutLeadingAsString,
+                                                       final @Nonnull String expectedPathWithoutTrailingAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
-        assertThat(fixture.withoutLeading().asString(), is(expectedWitoutLeadingPath));
+        assertThat(fixture.withoutLeading().asString(), is(expectedPathWithoutLeadingAsString));
       }
 
     /*******************************************************************************************************************
@@ -203,23 +203,23 @@ public class ResourcePathTest
     @Test(dataProvider = "withoutLeadingAndTrailingProvider",
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_compute_without_trailing (final @Nonnull String path,
-                                                        final @Nonnull String expectedWitoutLeadingPath,
-                                                        final @Nonnull String expectedWithoutTrailingPath)
+                                                        final @Nonnull String expectedPathWithoutLeadingAsString,
+                                                        final @Nonnull String expectedPathWithoutTrailingAsString)
       {
         final ResourcePath fixture = new ResourcePath(path);
 
-        assertThat(fixture.withoutTrailing().asString(), is(expectedWithoutTrailingPath));
+        assertThat(fixture.withoutTrailing().asString(), is(expectedPathWithoutTrailingAsString));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "startsWithProvider")
-    public void must_properly_compute_startsWith (final @Nonnull String path,
+    public void must_properly_compute_startsWith (final @Nonnull String pathAsString,
                                                   final @Nonnull String leadingSegment,
                                                   final @Nonnull boolean expectedResult)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
         assertThat(fixture.startsWith(leadingSegment), is(expectedResult));
       }
@@ -229,12 +229,12 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendDataProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_append1 (final @Nonnull String path,
+    public void must_properly_append1 (final @Nonnull String pathAsString,
                                        final @Nonnull String appendingPathAsString,
                                        final @Nonnull String expectedAppendedPathAsString,
                                        final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
         final ResourcePath appendingPath = new ResourcePath(appendingPathAsString);
 
         assertThat(fixture.appendedWith(appendingPath).asString(), is(expectedAppendedPathAsString));
@@ -245,12 +245,12 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_append2 (final @Nonnull String path,
+    public void must_properly_append2 (final @Nonnull String pathAsString,
                                        final @Nonnull String appendingPathAsString,
                                        final @Nonnull String expectedAppendedPathAsString,
                                        final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
         final String[] segments = appendingPathAsString.split("/");
 
         assertThat(fixture.appendedWith(segments).asString(), is(expectedAppendedPathAsString));
@@ -261,12 +261,12 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_prepend (final @Nonnull String path,
+    public void must_properly_prepend (final @Nonnull String pathAsString,
                                        final @Nonnull String appendingPathAsString,
                                        final @Nonnull String expectedAppendedPathAsString,
                                        final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
         final String[] segments = appendingPathAsString.split("/");
 
         assertThat(fixture.prependedWith(segments).asString(), is(expectedPrependedPathAsString));
@@ -277,11 +277,11 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "segmentProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_count_segments (final @Nonnull String path,
+    public void must_properly_count_segments (final @Nonnull String pathAsString,
                                               final @Nonnull String expectedAsString,
                                               final @Nonnull List<String> expectedSegments)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
         assertThat(fixture.getSegmentCount(), is(expectedSegments.size()));
       }
@@ -290,10 +290,10 @@ public class ResourcePathTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "extensionProvider")
-    public void must_properly_compute_extension (final @Nonnull String path,
+    public void must_properly_compute_extension (final @Nonnull String pathAsString,
                                                  final @Nonnull String expectedExtension)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath fixture = new ResourcePath(pathAsString);
 
         assertThat(fixture.getExtension(), is(expectedExtension));
       }
