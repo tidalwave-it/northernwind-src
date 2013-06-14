@@ -27,11 +27,15 @@
  */
 package it.tidalwave.northernwind.core.model;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.annotation.Nonnull;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -51,5 +55,32 @@ public class ResourcePathTest
 
         assertThat(fixture.segments, is(not(nullValue())));
         assertThat(fixture.segments.isEmpty(), is(true));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "dp1")
+    public void must_properly_create_an_empty_path_from_string (final @Nonnull String path,
+                                                                final @Nonnull String expectedAsString,
+                                                                final @Nonnull List<String> expectedSegments)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.segments, is(not(nullValue())));
+        assertThat(fixture.segments, is(expectedSegments));
+        assertThat(fixture.asString(), is(expectedAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "dp1")
+    private Object[][] dp1()
+      {
+        return new Object[][]
+          {
+            { "/foo", "/foo", Arrays.asList("foo") }
+          };
       }
   }
