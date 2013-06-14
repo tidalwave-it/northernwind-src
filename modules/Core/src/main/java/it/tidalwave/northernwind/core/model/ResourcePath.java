@@ -158,6 +158,20 @@ public class ResourcePath
 
     /*******************************************************************************************************************
      *
+     * Returns the file extension of this path. For instance, if this object represents "/foo/bar/baz.jpg", "jpg" is
+     * returned.
+     *
+     * @return  the file extension of this path
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getExtension()
+      {
+        return getTrailing().replaceAll("^.*\\.", "");
+      }
+
+    /*******************************************************************************************************************
+     *
      * Returns a clone without the leading segment. For instance, if the current object represents "/foo/bar/baz",
      * the returned clone represents "/bar/baz".
      *
@@ -199,20 +213,6 @@ public class ResourcePath
     public boolean startsWith (final @Nonnull String segment)
       {
         return !segments.isEmpty() && segments.get(0).equals(segment);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Returns the file extension of this path. For instance, if this object represents "/foo/bar/baz.jpg", "jpg" is
-     * returned.
-     *
-     * @return  the file extension of this path
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getExtension()
-      {
-        return segments.get(segments.size() - 1).replaceAll("^.*\\.", "");
       }
 
     /*******************************************************************************************************************
