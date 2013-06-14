@@ -77,6 +77,18 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "invalidPathsProvider",
+          dependsOnMethods = "must_properly_create_an_empty_path",
+          expectedExceptions = IllegalArgumentException.class,
+          expectedExceptionsMessageRegExp = "\\QResourcePath can't hold a URL\\E")
+    public void must_reject_invalid_paths (final @Nonnull String invalidPathAsString)
+      {
+        new ResourcePath(invalidPathAsString);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "asStringProvider",
           dependsOnMethods = { "must_properly_create_an_empty_path", "must_properly_create_an_empty_path_from_string" })
     public void must_properly_compute_asString (final @Nonnull List<String> segments,
@@ -256,6 +268,19 @@ public class ResourcePathTest
             { "/foo",           "/foo",             asList("foo")               },
             { "/foo/bar",       "/foo/bar",         asList("foo", "bar")        },
             { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz") }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "invalidPathsProvider")
+    private Object[][] invalidPathsProvider()
+      {
+        return new Object[][]
+          {
+            { "http://acme.com"  },
+            { "https://acme.com" }
           };
       }
 
