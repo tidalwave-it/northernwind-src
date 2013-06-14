@@ -209,7 +209,7 @@ public class ResourcePath
      *
      ******************************************************************************************************************/
     @Nonnegative
-    public int getPartsCount() // FIXME: rename to getSegmentsCount
+    public int getSegmentCount()
       {
         return segments.size();
       }

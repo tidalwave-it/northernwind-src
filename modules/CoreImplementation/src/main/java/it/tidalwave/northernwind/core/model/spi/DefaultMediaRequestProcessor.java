@@ -96,7 +96,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             // http://stoppingdown.net/media/stillimages/1920/20120802-0010.jpg
             // Should be dealt with a specific redirector in the website and removed from here.
             //
-            if (mediaUri.getPartsCount() == 3)
+            if (mediaUri.getSegmentCount() == 3)
               {
                 final String extension = mediaUri.getExtension();
                 final String fileName = mediaUri.getTrailing(); // 20120802-0010.jpg

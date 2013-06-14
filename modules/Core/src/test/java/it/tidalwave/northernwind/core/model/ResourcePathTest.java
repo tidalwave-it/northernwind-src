@@ -241,7 +241,7 @@ public class ResourcePathTest
       {
         final ResourcePath fixture = new ResourcePath(path);
 
-        assertThat(fixture.getPartsCount(), is(expectedSegments.size()));
+        assertThat(fixture.getSegmentCount(), is(expectedSegments.size()));
       }
 
     /*******************************************************************************************************************
