@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.testng.annotations.Test;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -156,6 +157,18 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "asStringDataProvider")
+    public void must_properly_compute_asString (final @Nonnull List<String> segments,
+                                                final @Nonnull String expectedAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(segments);
+
+        assertThat(fixture.asString(), is(expectedAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "dp1")
     private Object[][] dp1()
       {
@@ -224,6 +237,21 @@ public class ResourcePathTest
             { "/foo/bar/baz", "foot", false },
 
             { "/foo",         "",     false }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "asStringDataProvider")
+    private Object[][] asStringDataProvider()
+      {
+        return new Object[][]
+          {
+            { asList(""),                   "/"},
+            { asList("foo"),                "/foo"},
+            { asList("foo", "bar"),         "/foo/bar"},
+            { asList("foo", "bar", "baz"),  "/foo/bar/baz"},
           };
       }
   }

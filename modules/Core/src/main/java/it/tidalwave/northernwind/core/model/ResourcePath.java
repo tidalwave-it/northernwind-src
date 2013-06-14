@@ -89,7 +89,7 @@ public class ResourcePath
      * @param  path  the path
      *
      ******************************************************************************************************************/
-    private ResourcePath (final @Nonnull Collection<String> segments)
+    /* package */ ResourcePath (final @Nonnull Collection<String> segments)
       {
         this.segments = new ArrayList<>(segments);
 
