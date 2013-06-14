@@ -274,9 +274,10 @@ public class ResourcePath
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull String ... strings)
       {
-        final List<String> temp = new ArrayList<>(segments);
-        temp.addAll(Arrays.asList(strings));
-        return new ResourcePath(temp);
+        return appendedWith(new ResourcePath(Arrays.asList(strings)));
+//        final List<String> temp = new ArrayList<>(segments);
+//        temp.addAll(Arrays.asList(strings));
+//        return new ResourcePath(temp);
       }
 
     /*******************************************************************************************************************

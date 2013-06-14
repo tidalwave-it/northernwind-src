@@ -172,6 +172,36 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "appendDataProvider",
+          dependsOnMethods = "must_properly_compute_asString")
+    public void must_properly_append1 (final @Nonnull String path,
+                                       final @Nonnull String appendingPathAsString,
+                                       final @Nonnull String expectedPathAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath appendingPath = new ResourcePath(appendingPathAsString);
+
+        assertThat(fixture.appendedWith(appendingPath).asString(), is(expectedPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "appendDataProvider",
+          dependsOnMethods = "must_properly_compute_asString")
+    public void must_properly_append2 (final @Nonnull String path,
+                                       final @Nonnull String appendingPathAsString,
+                                       final @Nonnull String expectedPathAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+        final String[] segments = appendingPathAsString.split("/");
+
+        assertThat(fixture.appendedWith(segments).asString(), is(expectedPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "dp1")
     private Object[][] dp1()
       {
@@ -255,6 +285,24 @@ public class ResourcePathTest
             { asList("foo"),                "/foo"},
             { asList("foo", "bar"),         "/foo/bar"},
             { asList("foo", "bar", "baz"),  "/foo/bar/baz"},
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "appendDataProvider")
+    private Object[][] appendDataProvider()
+      {
+        return new Object[][]
+          {
+            { "/foo",         "a",     "/foo/a"             },
+            { "/foo",         "a/b",   "/foo/a/b"           },
+            { "/foo/bar",     "a",     "/foo/bar/a"         },
+            { "/foo/bar",     "a/b",   "/foo/bar/a/b"       },
+            { "/foo/bar/baz", "a",     "/foo/bar/baz/a"     },
+            { "/foo/bar/baz", "a/b",   "/foo/bar/baz/a/b"   },
+            { "/foo/bar/baz", "a/b/c", "/foo/bar/baz/a/b/c" },
           };
       }
   }
