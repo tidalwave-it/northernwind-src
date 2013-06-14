@@ -50,6 +50,7 @@ import lombok.ToString;
 @Immutable @ToString @EqualsAndHashCode
 public class ResourcePath
   {
+    @Nonnull
     /* package */ final List<String> segments;
 
     /*******************************************************************************************************************
