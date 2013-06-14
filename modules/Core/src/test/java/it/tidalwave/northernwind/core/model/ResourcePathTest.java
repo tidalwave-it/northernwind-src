@@ -117,6 +117,32 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "withoutLeadingAndTrailingProvider")
+    public void must_properly_compute_without_leading (final @Nonnull String path,
+                                                       final @Nonnull String expectedWitoutLeadingPath,
+                                                       final @Nonnull String expectedWithoutTrailingPath)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.withoutLeading().asString(), is(expectedWitoutLeadingPath));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "withoutLeadingAndTrailingProvider")
+    public void must_properly_compute_without_trailing (final @Nonnull String path,
+                                                        final @Nonnull String expectedWitoutLeadingPath,
+                                                        final @Nonnull String expectedWithoutTrailingPath)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.withoutTrailing().asString(), is(expectedWithoutTrailingPath));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "dp1")
     private Object[][] dp1()
       {
@@ -150,6 +176,21 @@ public class ResourcePathTest
             { "/foo",         "foo", "foo" },
             { "/foo/bar",     "foo", "bar" },
             { "/foo/bar/baz", "foo", "baz" }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "withoutLeadingAndTrailingProvider")
+    private Object[][] withoutLeadingAndTrailingProvider()
+      {
+        return new Object[][]
+          {
+//            { "/",            "", "" }
+            { "/foo",         "/",        "/" },
+            { "/foo/bar",     "/bar",     "/foo" },
+            { "/foo/bar/baz", "/bar/baz", "/foo/bar" }
           };
       }
   }
