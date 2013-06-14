@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 /***********************************************************************************************************************
  *
  * A default implementation of {@link LayoutFinder}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -49,6 +49,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> implements LayoutFinder
   {
+    private static final long serialVersionUID = 2354576587657345L;
+    
     @Nonnull
     private final List<Layout> children;
 

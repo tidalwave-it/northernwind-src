@@ -179,7 +179,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public <Type> SiteFinder<Type> find (final @Nonnull Class<Type> type)
       {
         final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);

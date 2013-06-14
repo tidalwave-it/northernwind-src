@@ -47,6 +47,8 @@ import static org.mockito.Mockito.*;
 public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>>
                                    implements SiteFinder<Content>
   {
+    private final static long serialVersionUID = 1L;
+    
     private String relativePath;
 
     private String relativeUri;

@@ -46,6 +46,8 @@ import static org.mockito.Mockito.*;
 public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>>
                                     implements SiteFinder<SiteNode>
   {
+    private final static long serialVersionUID = 1L;
+    
     private String relativePath;
 
     private String relativeUri;

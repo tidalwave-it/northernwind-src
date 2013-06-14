@@ -144,7 +144,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public Finder<Content> findChildren()
       {
-        return new FolderBasedFinderSupport(this);
+        return new FolderBasedFinderSupport<Content>(this);
       }
 
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or this the next

@@ -55,7 +55,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude={"localeRequestManager", "macroExpander", "properties", "propertyResolver", "requestContext"})
+@Configurable @Slf4j @ToString(of = {"file", "placeHolder"})
 /* package */ class DefaultResource implements Resource
   {
     @Inject @Nonnull
@@ -82,7 +82,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      ******************************************************************************************************************/
     private DefaultResourceProperties.PropertyResolver propertyResolver = new DefaultResourceProperties.PropertyResolver()
       {
-        @Override
+        @Override @SuppressWarnings("unchecked")
         public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key)
           throws NotFoundException, IOException
           {
