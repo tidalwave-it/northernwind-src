@@ -267,7 +267,11 @@ public class ResourcePathTest
           //  path              exp. asString       exp. segments
             { "/foo",           "/foo",             asList("foo")               },
             { "/foo/bar",       "/foo/bar",         asList("foo", "bar")        },
-            { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz") }
+            { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz") },
+
+            { "foo",           "/foo",              asList("foo")               },
+            { "foo/bar",       "/foo/bar",          asList("foo", "bar")        },
+            { "foo/bar/baz",   "/foo/bar/baz",      asList("foo", "bar", "baz") }
           };
       }
 
