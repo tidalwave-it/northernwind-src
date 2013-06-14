@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -154,7 +155,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS,
                                                                             Collections.<String>emptyList()))
               {
-                final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
+                final String link = relativeUri.startsWith("http") ? relativeUri
+                                                                   : site.createLink(new ResourcePath(relativeUri));
                 builder.append(String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link));
               }
           }
@@ -181,7 +183,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             for (final String relativeUri : getViewProperties().getProperty(PROPERTY_PRINT_STYLE_SHEETS,
                                                                             Collections.<String>emptyList()))
               {
-                final String link = relativeUri.startsWith("http") ? relativeUri : site.createLink(relativeUri);
+                final String link = relativeUri.startsWith("http") ? relativeUri
+                                                                   : site.createLink(new ResourcePath(relativeUri));
                 final String template = "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n";
                 builder.append(String.format(template, link));
               }
@@ -235,7 +238,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
               {
                 // Always use </script> to close, as some browsers break without
                 builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>%n",
-                                             site.createLink(relativeUri)));
+                                             site.createLink(new ResourcePath(relativeUri))));
               }
           }
         catch (IOException e)

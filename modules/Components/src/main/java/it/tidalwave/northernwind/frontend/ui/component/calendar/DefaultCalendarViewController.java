@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -51,6 +51,7 @@ import javax.xml.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -161,7 +162,7 @@ public class DefaultCalendarViewController implements CalendarViewController
             for (int i = 0; i < nodes.getLength(); i++)
               {
                 final Node node = nodes.item(i);
-                final String link = site.createLink(node.getAttributes().getNamedItem("link").getNodeValue());
+                final String link = site.createLink(new ResourcePath(node.getAttributes().getNamedItem("link").getNodeValue()));
                 final String name = node.getAttributes().getNamedItem("name").getNodeValue();
                 builder.append(String.format("<li><a href='%s'/>%s</a></li>%n", link, name));
               }
@@ -220,7 +221,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 
             if (year != selectedYear)
               {
-                final String url = site.createLink(siteNode.getRelativeUri() + "/" + year);
+                final String url = site.createLink(siteNode.getRelativeUri().appendedWith("" + year));
                 builder.append(String.format("<a href='%s'>%d</a>%n", url, year));
               }
             else

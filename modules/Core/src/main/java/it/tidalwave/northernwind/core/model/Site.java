@@ -100,7 +100,7 @@ public interface Site
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String createLink (@Nonnull String relativeUri);
+    public String createLink (@Nonnull ResourcePath relativeUri);
 
     /*******************************************************************************************************************
      *
