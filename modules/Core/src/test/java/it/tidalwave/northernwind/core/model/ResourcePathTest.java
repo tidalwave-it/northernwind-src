@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.testng.annotations.Test;
@@ -217,6 +216,20 @@ public class ResourcePathTest
         final String[] segments = appendingPathAsString.split("/");
 
         assertThat(fixture.prependedWith(segments).asString(), is(expectedPrependedPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "segmentProvider",
+          dependsOnMethods = "must_properly_compute_asString")
+    public void must_properly_count_segments (final @Nonnull String path,
+                                              final @Nonnull String expectedAsString,
+                                              final @Nonnull List<String> expectedSegments)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+
+        assertThat(fixture.getPartsCount(), is(expectedSegments.size()));
       }
 
     /*******************************************************************************************************************
