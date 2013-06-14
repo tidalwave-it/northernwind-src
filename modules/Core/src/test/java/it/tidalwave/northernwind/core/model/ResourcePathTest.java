@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.model;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.testng.annotations.Test;
@@ -56,6 +57,15 @@ public class ResourcePathTest
         assertThat(fixture.segments, is(not(nullValue())));
         assertThat(fixture.segments.isEmpty(), is(true));
         assertThat(fixture.asString(), is("/"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void must_reject_segments_containing_slash()
+      {
+        new ResourcePath(asList("a", "b", "/c"));
       }
 
     /*******************************************************************************************************************

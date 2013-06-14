@@ -71,7 +71,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath (final @Nonnull String path)
       {
-        this(Arrays.asList(verified(path).split("/")));
+        this(Arrays.asList(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -83,7 +83,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     /* package */ ResourcePath (final @Nonnull Collection<String> segments)
       {
-        this.segments = new ArrayList<>(segments);
+        this.segments = validated(new ArrayList<>(segments));
 
         if (this.segments.size() > 0 && this.segments.get(0).equals("")) // FIXME
           {
@@ -229,7 +229,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull String ... segments)
       {
-        final List<String> temp = new ArrayList<>(Arrays.asList(segments));
+        final List<String> temp = validated(new ArrayList<>(Arrays.asList(segments)));
         temp.addAll(this.segments);
         return new ResourcePath(temp);
       }
@@ -261,9 +261,9 @@ public class ResourcePath
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath appendedWith (final @Nonnull String ... strings)
+    public ResourcePath appendedWith (final @Nonnull String ... segments)
       {
-        return appendedWith(new ResourcePath(Arrays.asList(strings)));
+        return appendedWith(new ResourcePath(Arrays.asList(segments)));
       }
 
     /*******************************************************************************************************************
@@ -300,7 +300,7 @@ public class ResourcePath
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String verified (final @Nonnull String path)
+    private static String validated (final @Nonnull String path)
       {
         if (path.startsWith("http:") || path.startsWith("https:"))
           {
@@ -309,5 +309,24 @@ public class ResourcePath
 
         final int start = path.startsWith("/") ? 1 : 0;
         return path.substring(start);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static List<String> validated (final @Nonnull List<String> segments)
+      {
+        for (final String segment : segments)
+          {
+            if (segment.contains("/"))
+              {
+                throw new IllegalArgumentException("Segments cannot contain a slash: " + segment);
+              }
+          }
+
+        return segments;
       }
   }
