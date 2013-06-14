@@ -74,12 +74,27 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
       {
         return new Object[][]
           {
-            { "http://acme.com/path/resource",                 "en", "http://acme.com/path/resource/?lang=en"        }, // FIXME: why the trailing slash?
-            { "http://acme.com/path/resource?a=b",             "en", "http://acme.com/path/resource?a=b&lang=en"     },
-            { "http://acme.com/path/resource?lang=it",         "en", "http://acme.com/path/resource?lang=en"         },
-            { "http://acme.com/path/resource?lang=it&a=b",     "en", "http://acme.com/path/resource?lang=en&a=b"     },
-            { "http://acme.com/path/resource?c=d&lang=it",     "en", "http://acme.com/path/resource?c=d&lang=en"     },
-            { "http://acme.com/path/resource?c=d&lang=it&a=b", "en", "http://acme.com/path/resource?c=d&lang=en&a=b" }
+            { "http://acme.com/path/resource",                  "en", "http://acme.com/path/resource?lang=en"         },
+            { "http://acme.com/path/resource?a=b",              "en", "http://acme.com/path/resource?a=b&lang=en"     },
+            { "http://acme.com/path/resource?lang=it",          "en", "http://acme.com/path/resource?lang=en"         },
+            { "http://acme.com/path/resource?lang=it&a=b",      "en", "http://acme.com/path/resource?lang=en&a=b"     },
+            { "http://acme.com/path/resource?c=d&lang=it",      "en", "http://acme.com/path/resource?c=d&lang=en"     },
+            { "http://acme.com/path/resource?c=d&lang=it&a=b",  "en", "http://acme.com/path/resource?c=d&lang=en&a=b" },
+
+            { "http://acme.com/path/resource/",                 "en", "http://acme.com/path/resource/?lang=en"        },
+            { "http://acme.com/path/resource/?a=b",             "en", "http://acme.com/path/resource/?a=b&lang=en"    },
+            { "http://acme.com/path/resource/?lang=it",         "en", "http://acme.com/path/resource/?lang=en"        },
+            { "http://acme.com/path/resource/?lang=it&a=b",     "en", "http://acme.com/path/resource/?lang=en&a=b"    },
+            { "http://acme.com/path/resource/?c=d&lang=it",     "en", "http://acme.com/path/resource/?c=d&lang=en"    },
+            { "http://acme.com/path/resource/?c=d&lang=it&a=b", "en", "http://acme.com/path/resource/?c=d&lang=en&a=b"},
+
+            // NW-165
+            { "http://acme.com/path/image.jpg",                 "en", "http://acme.com/path/image.jpg?lang=en"        },
+            { "http://acme.com/path/image.jpg?a=b",             "en", "http://acme.com/path/image.jpg?a=b&lang=en"    },
+            { "http://acme.com/path/image.jpg?lang=it",         "en", "http://acme.com/path/image.jpg?lang=en"        },
+            { "http://acme.com/path/image.jpg?lang=it&a=b",     "en", "http://acme.com/path/image.jpg?lang=en&a=b"    },
+            { "http://acme.com/path/image.jpg?c=d&lang=it",     "en", "http://acme.com/path/image.jpg?c=d&lang=en"    },
+            { "http://acme.com/path/image.jpg?c=d&lang=it&a=b", "en", "http://acme.com/path/image.jpg?c=d&lang=en&a=b"}
           };
       }
   }

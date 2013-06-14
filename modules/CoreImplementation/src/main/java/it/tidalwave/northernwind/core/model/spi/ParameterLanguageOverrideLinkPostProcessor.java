@@ -95,7 +95,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
           }
         else
           {
-            if (!builder.toString().endsWith("/"))
+            if (!builder.toString().endsWith("/") && !builder.toString().contains(".")) // FIXME: check . only in trailing
               {
                 builder.append("/");
               }
