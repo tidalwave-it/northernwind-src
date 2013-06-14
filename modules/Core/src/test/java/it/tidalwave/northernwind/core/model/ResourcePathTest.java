@@ -146,6 +146,9 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
+//            { "/",            "", "" }
+            { "/foo",         "foo", "foo" },
+            { "/foo/bar",     "foo", "bar" },
             { "/foo/bar/baz", "foo", "baz" }
           };
       }
