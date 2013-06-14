@@ -62,7 +62,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "dp1")
+    @Test(dataProvider = "dp1",
+          dependsOnMethods = "must_properly_create_an_empty_path")
     public void must_properly_create_an_empty_path_from_string (final @Nonnull String path,
                                                                 final @Nonnull String expectedAsString,
                                                                 final @Nonnull List<String> expectedSegments)
@@ -77,7 +78,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "asStringDataProvider")
+    @Test(dataProvider = "asStringDataProvider",
+          dependsOnMethods = { "must_properly_create_an_empty_path", "must_properly_create_an_empty_path_from_string" })
     public void must_properly_compute_asString (final @Nonnull List<String> segments,
                                                 final @Nonnull String expectedAsString)
       {
