@@ -27,11 +27,11 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import org.testng.annotations.Test;
 import static java.util.Arrays.asList;
+import java.util.Collections;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -57,6 +57,24 @@ public class ResourcePathTest
         assertThat(fixture.segments, is(not(nullValue())));
         assertThat(fixture.segments.isEmpty(), is(true));
         assertThat(fixture.asString(), is("/"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void must_reject_null_segments()
+      {
+        new ResourcePath(asList("a", null, "/c"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void must_reject_empty_segments()
+      {
+        new ResourcePath(asList("a", "", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -398,10 +416,10 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
-            { asList(""),                   "/"},
-            { asList("foo"),                "/foo"},
-            { asList("foo", "bar"),         "/foo/bar"},
-            { asList("foo", "bar", "baz"),  "/foo/bar/baz"},
+            { Collections.<String>emptyList(),  "/"},
+            { asList("foo"),                    "/foo"},
+            { asList("foo", "bar"),             "/foo/bar"},
+            { asList("foo", "bar", "baz"),      "/foo/bar/baz"},
           };
       }
 

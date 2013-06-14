@@ -84,19 +84,6 @@ public class ResourcePath
     /* package */ ResourcePath (final @Nonnull Collection<String> segments)
       {
         this.segments = validated(new ArrayList<>(segments));
-
-        if (this.segments.size() > 0 && this.segments.get(0).equals("")) // FIXME
-          {
-            this.segments.remove(0);
-          }
-
-        for (final String segment : this.segments)
-          {
-            if ("".equals(segment))
-              {
-                throw new IllegalArgumentException("Empty element in " + this);
-              }
-          }
       }
 
     /*******************************************************************************************************************
@@ -286,6 +273,7 @@ public class ResourcePath
             separator = "/";
           }
 
+        // FIXME: this check is probably redundant now that there are safety tests
         if (buffer.toString().contains("//"))
           {
             throw new RuntimeException("Error in stringification: " + buffer + " - " + this);
@@ -321,9 +309,19 @@ public class ResourcePath
       {
         for (final String segment : segments)
           {
+            if (segment == null)
+              {
+                throw new IllegalArgumentException("Null segment in " + segments);
+              }
+
+            if (segment.equals(""))
+              {
+                throw new IllegalArgumentException("Empty segment in " + segments);
+              }
+
             if (segment.contains("/"))
               {
-                throw new IllegalArgumentException("Segments cannot contain a slash: " + segment);
+                throw new IllegalArgumentException("Segments cannot contain a slash: " + segments);
               }
           }
 
