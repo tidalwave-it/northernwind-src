@@ -76,12 +76,38 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "dp2")
+    public void must_properly_compute_relative_paths (final @Nonnull String path,
+                                                      final @Nonnull String referencePath,
+                                                      final @Nonnull String expectedPathAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath r = new ResourcePath(referencePath);
+        final ResourcePath relativePath = fixture.relativeTo(r);
+
+        assertThat(relativePath.asString(), is(expectedPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "dp1")
     private Object[][] dp1()
       {
         return new Object[][]
           {
             { "/foo", "/foo", Arrays.asList("foo") }
+          };
+      }
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "dp2")
+    private Object[][] dp2()
+      {
+        return new Object[][]
+          {
+            { "/foo/bar/baz", "/foo/bar", "/baz" }
           };
       }
   }
