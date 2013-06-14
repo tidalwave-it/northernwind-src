@@ -206,13 +206,13 @@ public class ResourcePath
      *
      * Returns {@code true} if the leading segment of this path is the given one.
      *
-     * @param  segment  the expected leading segment
-     * @return          {@code true} if this path starts with the given leading segment
+     * @param  leadingSegment  the expected leading segment
+     * @return                 {@code true} if this path starts with the given leading segment
      *
      ******************************************************************************************************************/
-    public boolean startsWith (final @Nonnull String segment)
+    public boolean startsWith (final @Nonnull String leadingSegment)
       {
-        return !segments.isEmpty() && segments.get(0).equals(segment);
+        return !segments.isEmpty() && segments.get(0).equals(leadingSegment);
       }
 
     /*******************************************************************************************************************
