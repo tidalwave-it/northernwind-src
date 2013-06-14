@@ -178,27 +178,45 @@ public class ResourcePathTest
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_append1 (final @Nonnull String path,
                                        final @Nonnull String appendingPathAsString,
-                                       final @Nonnull String expectedPathAsString)
+                                       final @Nonnull String expectedAppendedPathAsString,
+                                       final @Nonnull String expectedPrependedPathAsString)
       {
         final ResourcePath fixture = new ResourcePath(path);
         final ResourcePath appendingPath = new ResourcePath(appendingPathAsString);
 
-        assertThat(fixture.appendedWith(appendingPath).asString(), is(expectedPathAsString));
+        assertThat(fixture.appendedWith(appendingPath).asString(), is(expectedAppendedPathAsString));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "appendDataProvider",
+    @Test(dataProvider = "appendPrependDataProvider",
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_append2 (final @Nonnull String path,
                                        final @Nonnull String appendingPathAsString,
-                                       final @Nonnull String expectedPathAsString)
+                                       final @Nonnull String expectedAppendedPathAsString,
+                                       final @Nonnull String expectedPrependedPathAsString)
       {
         final ResourcePath fixture = new ResourcePath(path);
         final String[] segments = appendingPathAsString.split("/");
 
-        assertThat(fixture.appendedWith(segments).asString(), is(expectedPathAsString));
+        assertThat(fixture.appendedWith(segments).asString(), is(expectedAppendedPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "appendPrependDataProvider",
+          dependsOnMethods = "must_properly_compute_asString")
+    public void must_properly_prepend (final @Nonnull String path,
+                                       final @Nonnull String appendingPathAsString,
+                                       final @Nonnull String expectedAppendedPathAsString,
+                                       final @Nonnull String expectedPrependedPathAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+        final String[] segments = appendingPathAsString.split("/");
+
+        assertThat(fixture.prependedWith(segments).asString(), is(expectedPrependedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -293,18 +311,18 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "appendDataProvider")
-    private Object[][] appendDataProvider()
+    @DataProvider(name = "appendPrependDataProvider")
+    private Object[][] appendPrependDataProvider()
       {
         return new Object[][]
           {
-            { "/foo",         "a",     "/foo/a"             },
-            { "/foo",         "a/b",   "/foo/a/b"           },
-            { "/foo/bar",     "a",     "/foo/bar/a"         },
-            { "/foo/bar",     "a/b",   "/foo/bar/a/b"       },
-            { "/foo/bar/baz", "a",     "/foo/bar/baz/a"     },
-            { "/foo/bar/baz", "a/b",   "/foo/bar/baz/a/b"   },
-            { "/foo/bar/baz", "a/b/c", "/foo/bar/baz/a/b/c" },
+            { "/foo",         "a",     "/foo/a",             "/a/foo"             },
+            { "/foo",         "a/b",   "/foo/a/b",           "/a/b/foo"           },
+            { "/foo/bar",     "a",     "/foo/bar/a",         "/a/foo/bar"         },
+            { "/foo/bar",     "a/b",   "/foo/bar/a/b",       "/a/b/foo/bar"       },
+            { "/foo/bar/baz", "a",     "/foo/bar/baz/a",     "/a/foo/bar/baz"     },
+            { "/foo/bar/baz", "a/b",   "/foo/bar/baz/a/b",   "/a/b/foo/bar/baz"   },
+            { "/foo/bar/baz", "a/b/c", "/foo/bar/baz/a/b/c", "/a/b/c/foo/bar/baz" },
           };
       }
   }
