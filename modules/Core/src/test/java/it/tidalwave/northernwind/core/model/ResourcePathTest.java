@@ -118,6 +118,20 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "nonRelativePathProvider",
+          dependsOnMethods = "must_properly_compute_asString",
+          expectedExceptions = IllegalArgumentException.class)
+    public void must_properly_reject_non_relative_paths (final @Nonnull String path,
+                                                         final @Nonnull String referencePath)
+      {
+        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath r = new ResourcePath(referencePath);
+        fixture.relativeTo(r);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "leadingAndTrailingProvider")
     public void must_properly_compute_leading_segment (final @Nonnull String path,
                                                        final @Nonnull String expectedLeadingSegment,
@@ -298,6 +312,19 @@ public class ResourcePathTest
           {
           //  path            parent      relative
             { "/foo/bar/baz", "/foo/bar", "/baz" }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "nonRelativePathProvider")
+    private Object[][] nonRelativePathProvider()
+      {
+        return new Object[][]
+          {
+          //  path            parent
+            { "/foo/bar/baz", "/foo/bar2" }
           };
       }
 

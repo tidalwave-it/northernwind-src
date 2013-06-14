@@ -114,7 +114,7 @@ public class ResourcePath
       {
         if (!segments.subList(0, path.segments.size()).equals(path.segments))
           {
-            throw new IllegalArgumentException("The path doesn't start with " + path.asString() + ": " + asString());
+            throw new IllegalArgumentException("The path " + path.asString() + " doesn't start with " + asString());
           }
 
         return new ResourcePath(segments.subList(path.segments.size(), segments.size()));
