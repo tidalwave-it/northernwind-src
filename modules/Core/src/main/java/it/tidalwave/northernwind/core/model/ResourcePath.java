@@ -72,7 +72,8 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath (final @Nonnull String path)
       {
-        this(Arrays.asList(validated(path).split("/")));
+        this((path.equals("/") | path.equals("")) ? Collections.<String>emptyList()
+                                                  : Arrays.asList(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -207,19 +208,34 @@ public class ResourcePath
 
     /*******************************************************************************************************************
      *
-     * Returns a clone with the given prepended segments. For instance, if this object represents "/foo/bar/", and
+     * Returns a clone with the given prepended path. For instance, if this object represents "/foo/bar/", and
      * "baz", "bax" are given as argument, the returned clone represents "/baz/bax/foo/bar".
      *
-     * @param   the segments to prepend
-     * @return  the clone
+     * @param   path    the path to prepend
+     * @return          the clone
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath prependedWith (final @Nonnull String ... segments)
+    public ResourcePath prependedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> temp = validated(new ArrayList<>(Arrays.asList(segments)));
+        final List<String> temp = new ArrayList<>(path.segments);
         temp.addAll(this.segments);
         return new ResourcePath(temp);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns a clone with the given prepended path. For instance, if this object represents "/foo/bar/", and
+     * "baz", "bax" are given as argument, the returned clone represents "/baz/bax/foo/bar".
+     *
+     * @param   path    the path to prepend
+     * @return          the clone
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourcePath prependedWith (final @Nonnull String path)
+      {
+        return prependedWith(new ResourcePath(path));
       }
 
     /*******************************************************************************************************************
@@ -227,31 +243,31 @@ public class ResourcePath
      * Returns a clone with the given appended path. For instance, if this object represents "/foo/bar/", and
      * "/baz/bax" is given as argument, the returned clone represents "/foo/bar/baz/bax".
      *
-     * @param   the segments to prepend
-     * @return  the clone
+     * @param   path    the path to prepend
+     * @return          the clone
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> temp = new ArrayList<>(segments);
+        final List<String> temp = new ArrayList<>(this.segments);
         temp.addAll(path.segments);
         return new ResourcePath(temp);
       }
 
     /*******************************************************************************************************************
      *
-     * Returns a clone with the given appended segments. For instance, if this object represents "/foo/bar/", and
+     * Returns a clone with the given appended path. For instance, if this object represents "/foo/bar/", and
      * "baz", "bax" are given as argument, the returned clone represents "/foo/bar/baz/bax".
      *
-     * @param   the segments to prepend
-     * @return  the clone
+     * @param   path    the path to prepend
+     * @return          the clone
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath appendedWith (final @Nonnull String ... segments)
+    public ResourcePath appendedWith (final @Nonnull String path)
       {
-        return appendedWith(new ResourcePath(Arrays.asList(segments)));
+        return appendedWith(new ResourcePath(path));
       }
 
     /*******************************************************************************************************************

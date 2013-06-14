@@ -229,13 +229,13 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendDataProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_append1 (final @Nonnull String pathAsString,
-                                       final @Nonnull String appendingPathAsString,
-                                       final @Nonnull String expectedAppendedPathAsString,
-                                       final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_append_path (final @Nonnull String pathAsString,
+                                           final @Nonnull String secondPathAsString,
+                                           final @Nonnull String expectedAppendedPathAsString,
+                                           final @Nonnull String expectedPrependedPathAsString)
       {
         final ResourcePath fixture = new ResourcePath(pathAsString);
-        final ResourcePath appendingPath = new ResourcePath(appendingPathAsString);
+        final ResourcePath appendingPath = new ResourcePath(secondPathAsString);
 
         assertThat(fixture.appendedWith(appendingPath).asString(), is(expectedAppendedPathAsString));
       }
@@ -245,15 +245,14 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_append2 (final @Nonnull String pathAsString,
-                                       final @Nonnull String appendingPathAsString,
-                                       final @Nonnull String expectedAppendedPathAsString,
-                                       final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_append_string (final @Nonnull String pathAsString,
+                                             final @Nonnull String secondPathAsString,
+                                             final @Nonnull String expectedAppendedPathAsString,
+                                             final @Nonnull String expectedPrependedPathAsString)
       {
         final ResourcePath fixture = new ResourcePath(pathAsString);
-        final String[] segments = appendingPathAsString.split("/");
 
-        assertThat(fixture.appendedWith(segments).asString(), is(expectedAppendedPathAsString));
+        assertThat(fixture.appendedWith(secondPathAsString).asString(), is(expectedAppendedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -261,15 +260,30 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_prepend (final @Nonnull String pathAsString,
-                                       final @Nonnull String appendingPathAsString,
-                                       final @Nonnull String expectedAppendedPathAsString,
-                                       final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_prepend_path (final @Nonnull String pathAsString,
+                                            final @Nonnull String secondPathAsString,
+                                            final @Nonnull String expectedAppendedPathAsString,
+                                            final @Nonnull String expectedPrependedPathAsString)
       {
         final ResourcePath fixture = new ResourcePath(pathAsString);
-        final String[] segments = appendingPathAsString.split("/");
+        final ResourcePath prependingPath = new ResourcePath(secondPathAsString);
 
-        assertThat(fixture.prependedWith(segments).asString(), is(expectedPrependedPathAsString));
+        assertThat(fixture.prependedWith(prependingPath).asString(), is(expectedPrependedPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "appendPrependProvider",
+          dependsOnMethods = "must_properly_compute_asString")
+    public void must_properly_prepend_string (final @Nonnull String pathAsString,
+                                              final @Nonnull String secondPathAsString,
+                                              final @Nonnull String expectedAppendedPathAsString,
+                                              final @Nonnull String expectedPrependedPathAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(pathAsString);
+
+        assertThat(fixture.prependedWith(secondPathAsString).asString(), is(expectedPrependedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -307,13 +321,15 @@ public class ResourcePathTest
         return new Object[][]
           {
           //  path              exp. asString       exp. segments
-            { "/foo",           "/foo",             asList("foo")               },
-            { "/foo/bar",       "/foo/bar",         asList("foo", "bar")        },
-            { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz") },
+            { "",               "/",                Collections.<String>emptyList() },
+            { "/",              "/",                Collections.<String>emptyList() },
+            { "/foo",           "/foo",             asList("foo")                   },
+            { "/foo/bar",       "/foo/bar",         asList("foo", "bar")            },
+            { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz")     },
 
-            { "foo",           "/foo",              asList("foo")               },
-            { "foo/bar",       "/foo/bar",          asList("foo", "bar")        },
-            { "foo/bar/baz",   "/foo/bar/baz",      asList("foo", "bar", "baz") }
+            { "foo",            "/foo",             asList("foo")                   },
+            { "foo/bar",        "/foo/bar",         asList("foo", "bar")            },
+            { "foo/bar/baz",    "/foo/bar/baz",     asList("foo", "bar", "baz")     }
           };
       }
 
@@ -432,6 +448,8 @@ public class ResourcePathTest
         return new Object[][]
           {
           //  path            param    appended              prepended
+            { "/foo",         "",      "/foo",               "/foo"               },
+            { "/foo",         "/",     "/foo",               "/foo"               },
             { "/foo",         "a",     "/foo/a",             "/a/foo"             },
             { "/foo",         "a/b",   "/foo/a/b",           "/a/b/foo"           },
             { "/foo/bar",     "a",     "/foo/bar/a",         "/a/foo/bar"         },
