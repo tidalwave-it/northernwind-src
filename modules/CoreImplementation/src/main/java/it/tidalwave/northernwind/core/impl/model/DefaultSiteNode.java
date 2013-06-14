@@ -126,9 +126,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               {
                 try
                   {
-                    relativeUri = relativeUri.with(getParent().getRelativeUri())
-                                             .with(resource.getProperties()
-                                                    .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName())));
+                    final String segment = resource.getProperties()
+                                                   .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName()));
+                    relativeUri = relativeUri.with(getParent().getRelativeUri()).with(segment);
                   }
                 catch (IOException | NotFoundException e)
                   {
@@ -190,7 +190,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       throws NotFoundException, UnsupportedEncodingException
       {
         final ResourcePath parentRelativePath = pathFor(resource.getFile().getParent())
-                                      .relativeTo(pathFor(site.getNodeFolder()));
+                                    .relativeTo(pathFor(site.getNodeFolder()));
 
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
       }
