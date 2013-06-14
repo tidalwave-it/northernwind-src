@@ -144,6 +144,20 @@ public class ResourcePath
 
     /*******************************************************************************************************************
      *
+     * Returns the trailing segment of this path. For instance, if the current object represents "/foo/bar/baz",
+     * "baz" is returned.
+     *
+     * @return  the trailing segment of this path
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getTrailing()
+      {
+        return segments.get(segments.size() - 1);
+      }
+
+    /*******************************************************************************************************************
+     *
      * Returns a clone without the leading segment. For instance, if the current object represents "/foo/bar/baz",
      * the returned clone represents "/bar/baz".
      *
@@ -156,20 +170,6 @@ public class ResourcePath
         final List<String> temp = new ArrayList<>(segments);
         temp.remove(0);
         return new ResourcePath(temp);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Returns the trailing segment of this path. For instance, if the current object represents "/foo/bar/baz",
-     * "baz" is returned.
-     *
-     * @return  the trailing segment of this path
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getTrailing()
-      {
-        return segments.get(segments.size() - 1);
       }
 
     /*******************************************************************************************************************
