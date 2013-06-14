@@ -77,7 +77,20 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "dp2")
+    @Test(dataProvider = "asStringDataProvider")
+    public void must_properly_compute_asString (final @Nonnull List<String> segments,
+                                                final @Nonnull String expectedAsString)
+      {
+        final ResourcePath fixture = new ResourcePath(segments);
+
+        assertThat(fixture.asString(), is(expectedAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "dp2",
+          dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_compute_relative_paths (final @Nonnull String path,
                                                       final @Nonnull String referencePath,
                                                       final @Nonnull String expectedPathAsString)
@@ -118,7 +131,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "withoutLeadingAndTrailingProvider")
+    @Test(dataProvider = "withoutLeadingAndTrailingProvider",
+          dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_compute_without_leading (final @Nonnull String path,
                                                        final @Nonnull String expectedWitoutLeadingPath,
                                                        final @Nonnull String expectedWithoutTrailingPath)
@@ -131,7 +145,8 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "withoutLeadingAndTrailingProvider")
+    @Test(dataProvider = "withoutLeadingAndTrailingProvider",
+          dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_compute_without_trailing (final @Nonnull String path,
                                                         final @Nonnull String expectedWitoutLeadingPath,
                                                         final @Nonnull String expectedWithoutTrailingPath)
@@ -152,18 +167,6 @@ public class ResourcePathTest
         final ResourcePath fixture = new ResourcePath(path);
 
         assertThat(fixture.startsWith(leadingSegment), is(expectedResult));
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test(dataProvider = "asStringDataProvider")
-    public void must_properly_compute_asString (final @Nonnull List<String> segments,
-                                                final @Nonnull String expectedAsString)
-      {
-        final ResourcePath fixture = new ResourcePath(segments);
-
-        assertThat(fixture.asString(), is(expectedAsString));
       }
 
     /*******************************************************************************************************************
