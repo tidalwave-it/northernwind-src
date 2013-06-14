@@ -226,8 +226,8 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull String ... segments)
       {
-        final List<String> temp = new ArrayList<>(this.segments);
-        temp.addAll(0, Arrays.asList(segments));
+        final List<String> temp = new ArrayList<>(Arrays.asList(segments));
+        temp.addAll(this.segments);
         return new ResourcePath(temp);
       }
 
@@ -261,9 +261,6 @@ public class ResourcePath
     public ResourcePath appendedWith (final @Nonnull String ... strings)
       {
         return appendedWith(new ResourcePath(Arrays.asList(strings)));
-//        final List<String> temp = new ArrayList<>(segments);
-//        temp.addAll(Arrays.asList(strings));
-//        return new ResourcePath(temp);
       }
 
     /*******************************************************************************************************************
