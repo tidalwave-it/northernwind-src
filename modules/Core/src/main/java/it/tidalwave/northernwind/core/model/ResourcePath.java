@@ -40,6 +40,9 @@ import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * This class encapsulate a path, that is a sequence of segments separated by a "/", and provides methods to manipulate
+ * it.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
