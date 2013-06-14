@@ -62,7 +62,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "dp1",
+    @Test(dataProvider = "segmentProvider",
           dependsOnMethods = "must_properly_create_an_empty_path")
     public void must_properly_create_an_empty_path_from_string (final @Nonnull String path,
                                                                 final @Nonnull String expectedAsString,
@@ -91,7 +91,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "dp2",
+    @Test(dataProvider = "relativePathProvider",
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_compute_relative_paths (final @Nonnull String path,
                                                       final @Nonnull String referencePath,
@@ -222,20 +222,20 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "dp1")
-    private Object[][] dp1()
+    @DataProvider(name = "segmentProvider")
+    private Object[][] segmentProvider()
       {
         return new Object[][]
           {
-            { "/foo", "/foo", Arrays.asList("foo") }
+            { "/foo", "/foo", asList("foo") }
           };
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "dp2")
-    private Object[][] dp2()
+    @DataProvider(name = "relativePathProvider")
+    private Object[][] relativePathProvider()
       {
         return new Object[][]
           {
