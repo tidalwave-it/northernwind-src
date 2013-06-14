@@ -195,7 +195,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
     @Override @Nonnull
     public String createLink (final @Nonnull ResourcePath relativeUri)
       {
-        final ResourcePath link = relativeUri.prependedWith(contextPath);
+        final ResourcePath link = new ResourcePath(contextPath).with(relativeUri);
         String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
 
         for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)
