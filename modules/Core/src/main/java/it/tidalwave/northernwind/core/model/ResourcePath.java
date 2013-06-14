@@ -128,7 +128,7 @@ public class ResourcePath
 
     public boolean startsWith (final @Nonnull String string)
       {
-        return segments.get(0).equals(string);
+        return !segments.isEmpty() && segments.get(0).equals(string);
       }
 
     @Nonnull
