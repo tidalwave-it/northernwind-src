@@ -103,7 +103,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
                 mediaUri = mediaUri.withoutTrailing();
                 final String size = mediaUri.getTrailing();     // 1920
                 mediaUri = mediaUri.withoutTrailing();
-                mediaUri = mediaUri.with(fileName.replaceAll("\\..*$", ""), size, "image." + extension);
+                mediaUri = mediaUri.appendedWith(fileName.replaceAll("\\..*$", ""), size, "image." + extension);
                 mediaUri = mediaUri.prependedWith(uriPrefix);
                 final String redirect = mediaUri.asString();
                 log.info(">>>> permanently redirecting to {}", redirect);
@@ -119,7 +119,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             mediaUri = mediaUri.withoutTrailing();
             final String mediaId = mediaUri.getTrailing();    // 20120802-0010
             mediaUri = mediaUri.withoutTrailing();
-            mediaUri = mediaUri.with(size, mediaId + "." + extension);
+            mediaUri = mediaUri.appendedWith(size, mediaId + "." + extension);
           }
 
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();

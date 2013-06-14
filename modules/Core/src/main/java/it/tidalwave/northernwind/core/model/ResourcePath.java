@@ -152,7 +152,7 @@ public class ResourcePath
       }
 
     @Nonnull
-    public ResourcePath with (final @Nonnull ResourcePath path)
+    public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
         final List<String> temp = new ArrayList<>(segments);
         temp.addAll(path.segments);
@@ -160,7 +160,7 @@ public class ResourcePath
       }
 
     @Nonnull
-    public ResourcePath with (final @Nonnull String ... strings)
+    public ResourcePath appendedWith (final @Nonnull String ... strings)
       {
         final List<String> temp = new ArrayList<>(segments);
         temp.addAll(Arrays.asList(strings));

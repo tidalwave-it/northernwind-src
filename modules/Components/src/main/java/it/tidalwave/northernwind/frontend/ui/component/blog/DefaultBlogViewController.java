@@ -117,7 +117,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                       {
                         try
                           {
-                            final ResourcePath relativeUri = siteNode.getRelativeUri().with(getExposedUri(post));
+                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(getExposedUri(post));
                             results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
                           }
                         catch (NotFoundException e)

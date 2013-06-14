@@ -128,7 +128,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                   {
                     final String segment = resource.getProperties()
                                                    .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName()));
-                    relativeUri = relativeUri.with(getParent().getRelativeUri()).with(segment);
+                    relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (IOException | NotFoundException e)
                   {

@@ -82,7 +82,7 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final ResourcePath link = siteNode.getRelativeUri().with(content.getExposedUri());
+        final ResourcePath link = siteNode.getRelativeUri().appendedWith(content.getExposedUri());
 
         if ((language == null) || (postProcessor == null))
           {
