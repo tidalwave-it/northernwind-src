@@ -49,6 +49,11 @@ public class ResourcePath
   {
     /* package */ final List<String> segments;
 
+    /*******************************************************************************************************************
+     *
+     * Creates an empty path, that is "/".
+     *
+     ******************************************************************************************************************/
     public ResourcePath()
       {
         this(Collections.<String>emptyList());
@@ -84,9 +89,9 @@ public class ResourcePath
 
     /*******************************************************************************************************************
      *
-     * Creates an instance out of a collection of strings.
+     * Creates an instance out of a collection of segments.
      *
-     * @param  path  the path
+     * @param  segments  the segments
      *
      ******************************************************************************************************************/
     /* package */ ResourcePath (final @Nonnull Collection<String> segments)
