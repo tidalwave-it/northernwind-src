@@ -27,16 +27,16 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import java.util.List;
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static java.util.Arrays.asList;
-import java.util.Collections;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
