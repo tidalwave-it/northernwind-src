@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -52,8 +52,8 @@ public interface SiteNode extends Resource
      *  defined, the local portion of the relative path is used. */
     public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
 
-    /** If sets to true, this property makes the {@code SiteNode} to match not only its {@code /relativeUri}, but also
-     *  {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
+    /** If sets to true, this property makes the {@code SiteNode} capable to match not only its {@code /relativeUri},
+     *  but also {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
     // FIXME: must be Boolean
     public static final Key<String> PROPERTY_MANAGES_PATH_PARAMS = new Key<>("managesPathParams");
 
@@ -77,5 +77,5 @@ public interface SiteNode extends Resource
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getRelativeUri();
+    public ResourcePath getRelativeUri();
   }

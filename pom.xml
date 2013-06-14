@@ -6,12 +6,13 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>2.11-SNAPSHOT</version>
+        <version>2.12</version>
+        <relativePath />
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind</artifactId>
-    <version>1.1-ALPHA-21-SNAPSHOT</version>
+    <version>1.1-ALPHA-22-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (master)</name>
     <inceptionYear>2011</inceptionYear>
@@ -19,25 +20,22 @@
     <properties>
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
         <tft.project.description>NorthernWind - lightweight CMS</tft.project.description>
-        
+
         <tft.maven.requiredVersion>3.0.4</tft.maven.requiredVersion>
-        <tft.maven.requiredJdk>[1.7.0,)</tft.maven.requiredJdk>
+        <tft.maven.requiredJdk>[1.7.0-11,1.7.0-99)</tft.maven.requiredJdk>
         <tft.javac.source>1.7</tft.javac.source>
         <tft.javac.target>1.7</tft.javac.target>
-        <netbeans.hint.jdkPlatform>JDK_1.7.0_17</netbeans.hint.jdkPlatform>
+        <netbeans.hint.jdkPlatform>JDK_1.7.0</netbeans.hint.jdkPlatform>
 
         <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
         <tidalwave.issues>NW</tidalwave.issues>
-        
+
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
         <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
-        <!-- See http://www.oracle.com/technetwork/java/javase/downloads/adoptionguide-137484.html
-        4.1.1 JSR 202 Classfile Changes - due to the fact that we use AspectJ static weaving -->
-        <tft.test.vmOptions>-XX:-UseSplitVerifier</tft.test.vmOptions>
 
         <!-- disables javancss since it's broken with JDK 1.7 -->
         <tft.profile.metrics.defaultGoal>install findbugs:findbugs pmd:cpd pmd:pmd checkstyle:checkstyle clirr:clirr dependency:analyze</tft.profile.metrics.defaultGoal>
@@ -92,112 +90,117 @@
     </repositories>
 
     <dependencyManagement>
-        <dependencies>            
+        <dependencies>
+            <dependency>
+                <groupId>it.tidalwave.northernwind</groupId>
+                <artifactId>it-tidalwave-html-patches</artifactId>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core</artifactId>
-                <version>1.0.38-SNAPSHOT</version>
+                <version>1.0.39-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-                <version>1.0.38-SNAPSHOT</version>
+                <version>1.0.39-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-core-default</artifactId> 
+                <artifactId>it-tidalwave-northernwind-core-default</artifactId>
                 <classifier>tests</classifier>
-                <version>1.0.38-SNAPSHOT</version>
+                <version>1.0.39-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
-                <version>1.0.37-SNAPSHOT</version>
+                <version>1.0.38-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
-                <version>1.0.37-SNAPSHOT</version>
+                <version>1.0.38-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-filesystem-hg</artifactId>
-                <version>1.0.8-SNAPSHOT</version>
+                <version>1.0.9-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
-                <version>1.0.6-SNAPSHOT</version>
+                <version>1.0.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
-                <version>1.0.38-SNAPSHOT</version>
+                <version>1.0.39-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-                <version>1.0.38-SNAPSHOT</version>
+                <version>1.0.39-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-vaadin</artifactId>
-                <version>1.0.38-SNAPSHOT</version>
+                <version>1.0.39-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-commons</artifactId>
-                <version>1.0.37-SNAPSHOT</version>
+                <version>1.0.38-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-                <version>1.0.11-SNAPSHOT</version>
+                <version>1.0.12-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-vaadin</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-commons</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-vaadin-webapp</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media-springmvc</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc-webapp</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media-springmvc-webapp</artifactId>
-                <version>1.1-ALPHA-21-SNAPSHOT</version>
+                <version>1.1-ALPHA-22-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -207,11 +210,18 @@
         <connection>scm:hg:${scm.repo.readonly.url}</connection>
         <developerConnection>scm:hg:${scm.repo.effective.url}</developerConnection>
         <url>${scm.repo.browse.url}</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
+            <plugin>
+                <!--  FIX for SUP-12  -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <extensions>false</extensions>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
@@ -220,7 +230,7 @@
                         <exclude>**/main/resources/**/*.txt</exclude>
                         <exclude>**/src/test/resources/**/*.xhtml</exclude>
                         <exclude>**/src/test/resources/expected-results/**/*</exclude>
-                        <exclude>modules/CoreImplementation/src/main/java/it/tidalwave/northernwind/core/impl/patches/*.java</exclude>
+                        <exclude>modules/HtmlPatches/src/main/java/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

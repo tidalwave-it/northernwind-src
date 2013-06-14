@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.util.ModifiableRelativeUri;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -72,12 +72,14 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException
       {
-        final ModifiableRelativeUri mediaUri = new ModifiableRelativeUri(request.getRelativeUri());
+        ResourcePath mediaUri = new ResourcePath(request.getRelativeUri());
 
-        if (!mediaUri.popLeading().equals(uriPrefix))
+        if (!mediaUri.startsWith(uriPrefix))
           {
             return CONTINUE;
           }
+
+        mediaUri = mediaUri.withoutLeading(); // media
         //
         // Media that can be served at different sizes are mapped to URLs such as:
         //
@@ -94,13 +96,17 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             // http://stoppingdown.net/media/stillimages/1920/20120802-0010.jpg
             // Should be dealt with a specific redirector in the website and removed from here.
             //
-            if (mediaUri.getPartsCount() == 3)
+            if (mediaUri.getSegmentCount() == 3)
               {
                 final String extension = mediaUri.getExtension();
-                final String fileName = mediaUri.popTrailing(); // 20120802-0010.jpg
-                final String size = mediaUri.popTrailing();     // 1920
-                mediaUri.append(fileName.replaceAll("\\..*$", ""), size, "image." + extension);
-                mediaUri.prepend(uriPrefix);
+                final String fileName = mediaUri.getTrailing(); // 20120802-0010.jpg
+                mediaUri = mediaUri.withoutTrailing();
+                final String size = mediaUri.getTrailing();     // 1920
+                mediaUri = mediaUri.withoutTrailing();
+                mediaUri = mediaUri.appendedWith(fileName.replaceAll("\\..*$", ""))
+                                   .appendedWith("" + size)
+                                   .appendedWith("image." + extension);
+                mediaUri = mediaUri.prependedWith(uriPrefix);
                 final String redirect = mediaUri.asString();
                 log.info(">>>> permanently redirecting to {}", redirect);
                 responseHolder.response().permanentRedirect(redirect).put();
@@ -109,10 +115,13 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             // END TODO
 
             final String extension = mediaUri.getExtension(); // jpg
-            final String fileName = mediaUri.popTrailing();   // image.jpg
-            final String size = mediaUri.popTrailing();       // 1920
-            final String mediaId = mediaUri.popTrailing();    // 20120802-0010
-            mediaUri.append(size, mediaId + "." + extension);
+            final String fileName = mediaUri.getTrailing();   // image.jpg
+            mediaUri = mediaUri.withoutTrailing();
+            final String size = mediaUri.getTrailing();       // 1920
+            mediaUri = mediaUri.withoutTrailing();
+            final String mediaId = mediaUri.getTrailing();    // 20120802-0010
+            mediaUri = mediaUri.withoutTrailing();
+            mediaUri = mediaUri.appendedWith(size).appendedWith(mediaId + "." + extension);
           }
 
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();

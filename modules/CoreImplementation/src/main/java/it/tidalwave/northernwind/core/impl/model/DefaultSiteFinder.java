@@ -50,10 +50,10 @@ import lombok.ToString;
 public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>
   {
     @Nonnull
-    private final Map<String, Type> mapByRelativePath;
+    /* package */ final Map<String, Type> mapByRelativePath;
 
     @Nonnull
-    private final RegexTreeMap<Type> mapByRelativeUri;
+    /* package */ final RegexTreeMap<Type> mapByRelativeUri;
 
     @CheckForNull
     private String relativePath;
@@ -138,7 +138,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
     @Override @Nonnull
     protected List<? extends Type> computeResults()
       {
-        final List<Type> results = new ArrayList<Type>();
+        final List<Type> results = new ArrayList<>();
 
         if (relativePath != null)
           {

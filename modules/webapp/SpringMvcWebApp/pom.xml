@@ -6,17 +6,21 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-webapp</artifactId>
-        <version>1.1-ALPHA-21-SNAPSHOT</version>
+        <version>1.1-ALPHA-22-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-springmvc-webapp</artifactId>
-    <version>1.1-ALPHA-21-SNAPSHOT</version>
+    <version>1.1-ALPHA-22-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>NorthernWind - Frontend Webapp (Spring MVC)</name>
     <description>A webapp containing the Spring MVC front end implementation.</description>
-    
+
+    <properties>
+        <tft.test.skip>true</tft.test.skip> <!-- No tests, this is just a webapp assembler -->
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>

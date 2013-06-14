@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @NoArgsConstructor(access=AccessLevel.PRIVATE) @Slf4j
-public class Executor
+public class ProcessExecutor
   {
     /*******************************************************************************************************************
      *
@@ -166,7 +166,7 @@ public class Executor
         public ConsoleOutput waitFor (final @Nonnull String regexp)
           throws InterruptedException, IOException
           {
-            log.info("waitFor({})", regexp);
+            log.debug("waitFor({})", regexp);
 
             while (filteredBy(regexp).isEmpty())
               {
@@ -214,7 +214,7 @@ public class Executor
                     break;
                   }
 
-                log.info(">>>>>>>> {}", s);
+                log.trace(">>>>>>>> {}", s);
                 content.add(s);
 
                 synchronized (this)
@@ -246,10 +246,10 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static Executor forExecutable (final @Nonnull String executable)
+    public static ProcessExecutor forExecutable (final @Nonnull String executable)
       throws IOException
       {
-        final Executor executor = new Executor();
+        final ProcessExecutor executor = new ProcessExecutor();
         executor.arguments.add(findPathFor(executable));
         return executor;
       }
@@ -259,7 +259,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor withArgument (final @Nonnull String argument)
+    public ProcessExecutor withArgument (final @Nonnull String argument)
       {
         arguments.add(argument);
         return this;
@@ -270,7 +270,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor withWorkingDirectory (final @Nonnull Path workingDirectory)
+    public ProcessExecutor withWorkingDirectory (final @Nonnull Path workingDirectory)
       {
         this.workingDirectory = workingDirectory;
         return this;
@@ -281,10 +281,10 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor start()
+    public ProcessExecutor start()
       throws IOException
       {
-        log.info(">>>> executing {} ...", arguments);
+        log.debug(">>>> executing {} ...", arguments);
 
         final List<String> environment = new ArrayList<>();
 
@@ -293,8 +293,8 @@ public class Executor
 //            environment.add(String.format("%s=%s", e.getKey(), e.getValue()));
 //          }
 
-        log.info(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
-        log.info(">>>> environment:       {}", environment);
+        log.debug(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
+        log.debug(">>>> environment:       {}", environment);
         process = Runtime.getRuntime().exec(arguments.toArray(new String[0]),
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
@@ -311,7 +311,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor waitForCompletion()
+    public ProcessExecutor waitForCompletion()
       throws IOException, InterruptedException
       {
         if (process.waitFor() != 0)
@@ -327,7 +327,7 @@ public class Executor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Executor send (final @Nonnull String string)
+    public ProcessExecutor send (final @Nonnull String string)
       throws IOException
       {
         log.info(">>>> sending '{}'...", string);
@@ -344,7 +344,7 @@ public class Executor
       throws IOException
       {
         final String pathEnv = System.getenv("PATH") + File.pathSeparator + "/usr/local/bin";
-        
+
         for (final String path : pathEnv.split(File.pathSeparator))
           {
             final File file = new File(new File(path), executable);

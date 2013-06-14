@@ -59,6 +59,7 @@ import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -69,7 +70,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-/* package */ class DefaultSite implements Site
+/* package */ class DefaultSite implements InternalSite
   {
     static interface FileVisitor
       {
@@ -112,24 +113,24 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private ResourceFileSystemProvider fileSystemProvider;
 
     @Nonnull
-    private final String documentPath;
+    /* package */ final String documentPath;
 
     @Nonnull
-    private final String mediaPath;
+    /* package */ final String mediaPath;
 
     @Nonnull
-    private final String libraryPath;
+    /* package */ final String libraryPath;
 
     @Nonnull
-    private final String nodePath;
+    /* package */ final String nodePath;
 
     @Getter
-    private final boolean logConfigurationEnabled;
+    /* package */ final boolean logConfigurationEnabled;
 
     @Getter @Nonnull
-    private final String contextPath;
+    /* package */ final String contextPath;
 
-    private final List<String> ignoredFolders = new ArrayList<>();
+    /* package */ final List<String> ignoredFolders = new ArrayList<>();
 
     private ResourceFile documentFolder;
 
@@ -137,24 +138,25 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     private ResourceFile mediaFolder;
 
+    @Getter
     private ResourceFile nodeFolder;
 
-    private final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
 
-    private final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
 
-    private final Map<String, Media> mediaMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, Media> mediaMapByRelativePath = new TreeMap<>();
 
-    private final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<>();
+    /* package */  final Map<String, SiteNode> nodeMapByRelativePath = new TreeMap<>();
 
-    private final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<>();
+    /* package */  final RegexTreeMap<SiteNode> nodeMapByRelativeUri = new RegexTreeMap<>();
 
     private final Map<Class<?>, Map<String, ?>> relativePathMapsByType = new HashMap<>();
 
     private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
 
     private final List<Locale> configuredLocales = new ArrayList<>();
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -191,22 +193,17 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String createLink (final @Nonnull String relativeUri)
+    public String createLink (final @Nonnull ResourcePath relativeUri)
       {
-        String link = requestHolder.get().getBaseUrl() + contextPath + relativeUri;
-
-        // FIXME: this should go to a ListPostProcessor
-        if (!relativeUri.contains(".") && !relativeUri.contains("?") && !relativeUri.endsWith("/"))
-          {
-            link += "/";
-          }
+        final ResourcePath link = new ResourcePath(contextPath).appendedWith(relativeUri);
+        String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
 
         for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)
           {
-            link = linkPostProcessor.postProcess(link);
+            linkAsString = linkPostProcessor.postProcess(linkAsString);
           }
 
-        return link;
+        return linkAsString;
       }
 
     /*******************************************************************************************************************
@@ -235,7 +232,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
      *
      *
      ******************************************************************************************************************/
-    public void initialize()
+    /* package */ void initialize()
       throws IOException, NotFoundException, PropertyVetoException
       {
         log.info("initialize()");
@@ -317,15 +314,15 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
                     if (!siteNode.isPlaceHolder())
                       {
-                        final String relativeUri = siteNode.getRelativeUri();
+                        final ResourcePath relativeUri = siteNode.getRelativeUri();
 
                         if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
                           {
-                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri) + "(|/.*$)", siteNode);
+                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + "(|/.*$)", siteNode);
                           }
                         else
                           {
-                            nodeMapByRelativeUri.put(relativeUri, siteNode);
+                            nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
                           }
                       }
                   }
@@ -360,7 +357,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                            final @Nonnull FileVisitor visitor)
       throws UnsupportedEncodingException
       {
-        log.trace("traverse({}}", file);
+        log.trace("traverse({})", file);
         final String relativeUri = urlDecodedPath(file.getPath());
         visitor.visit(file, relativeUri);
 
@@ -390,6 +387,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
     /*******************************************************************************************************************
      *
+     * FIXME Wrapper against ResourceFileSystem: its methods should throw NFE by themselves
      *
      ******************************************************************************************************************/
     @Nonnull

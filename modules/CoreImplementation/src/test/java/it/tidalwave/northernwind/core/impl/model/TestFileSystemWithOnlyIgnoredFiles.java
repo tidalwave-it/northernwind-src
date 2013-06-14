@@ -25,14 +25,11 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.util;
+package it.tidalwave.northernwind.core.impl.model;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import java.util.Map;
 
 /***********************************************************************************************************************
  *
@@ -40,70 +37,21 @@ import java.util.List;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NotThreadSafe
-public class ModifiableRelativeUri
+public class TestFileSystemWithOnlyIgnoredFiles extends EmptyTestFileSystem
   {
-    private final List<String> parts;
-
-    public ModifiableRelativeUri (final @Nonnull String relativeUri)
+    public TestFileSystemWithOnlyIgnoredFiles()
       {
-        if (!relativeUri.startsWith("/"))
-          {
-            throw new IllegalArgumentException("Relative URI must start with /: was " + relativeUri);
-          }
-
-        parts = new ArrayList<>(Arrays.asList(relativeUri.substring(1).split("/")));
+        super("File system with only ignored folders");
+      }
+    
+    @Override
+    public void setUp (final @Nonnull ResourceFileSystem fileSystem,
+                       final @Nonnull Map<String, String> resourceProperties)
+      {
+        super.setUp(fileSystem, resourceProperties);
+        createMockFolder(fileSystem, documentFolder, "ignored1");
+        createMockFolder(fileSystem, nodeFolder, "ignored2");
       }
 
-    @Nonnull
-    public String popLeading()
-      {
-        return parts.remove(0);
-      }
-
-    @Nonnull
-    public String popTrailing()
-      {
-        return parts.remove(parts.size() - 1);
-      }
-
-    public boolean startsWith (final @Nonnull String string)
-      {
-        return parts.get(0).equals(string);
-      }
-
-    @Nonnull
-    public String getExtension()
-      {
-        return parts.get(parts.size() - 1).replaceAll("^.*\\.", "");
-      }
-
-    @Nonnegative
-    public int getPartsCount()
-      {
-        return parts.size();
-      }
-
-    public void prepend (final @Nonnull String ... strings)
-      {
-        parts.addAll(0, Arrays.asList(strings));
-      }
-
-    public void append (final @Nonnull String ... strings)
-      {
-        parts.addAll(Arrays.asList(strings));
-      }
-
-    @Nonnull
-    public String asString()
-      {
-        final StringBuilder buffer = new StringBuilder();
-
-        for (final String s : parts)
-          {
-            buffer.append("/").append(s);
-          }
-
-        return buffer.toString();
-      }
+    // performAssertions() same as superclass
   }

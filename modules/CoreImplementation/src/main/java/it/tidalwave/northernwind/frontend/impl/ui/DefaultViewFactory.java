@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -60,7 +60,7 @@ import static it.tidalwave.util.NotFoundException.*;
 @Configurable @Slf4j @ToString
 public class DefaultViewFactory implements ViewFactory
   {
-    private final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<String, ViewBuilder>();
+    /* package */ final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
@@ -116,9 +116,9 @@ public class DefaultViewFactory implements ViewFactory
       {
         log.info("View definitions:");
 
-        for (final ViewBuilder viewDefinition : viewBuilderMapByTypeUri.values())
+        for (final ViewBuilder viewBuilder : viewBuilderMapByTypeUri.values())
           {
-            log.info(">>>> {}", viewDefinition);
+            log.info(">>>> {}", viewBuilder);
           }
       }
   }

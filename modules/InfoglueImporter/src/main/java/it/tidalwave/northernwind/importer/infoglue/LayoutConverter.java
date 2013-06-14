@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -30,7 +30,6 @@ package it.tidalwave.northernwind.importer.infoglue;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.role.Marshallable;
-import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -375,10 +374,10 @@ public class LayoutConverter extends Parser
 
             try
               {
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-5"))
-                             .findSubComponentById(new Id("content1"))
-                             .findSubComponentById(new Id("content1-9"));
+                rootComponent.findChildren().withId(new Id("local")).result()
+                             .findChildren().withId(new Id("local-5")).result()
+                             .findChildren().withId(new Id("content1")).result()
+                             .findChildren().withId(new Id("content1-9"));
                 properties.put(new Key<Object>("content1-9.project"), "4204333");
                 properties.put(new Key<Object>("content1-9.security"), "b11c31c8");
                 properties.put(new Key<Object>("content1-9.invisible"), "false");
@@ -393,10 +392,10 @@ public class LayoutConverter extends Parser
               }
             try
               {
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-2"))
-                             .findSubComponentById(new Id("content5"))
-                             .findSubComponentById(new Id("content5-7"));
+                rootComponent.findChildren().withId(new Id("local")).result()
+                             .findChildren().withId(new Id("local-2")).result()
+                             .findChildren().withId(new Id("content5")).result()
+                             .findChildren().withId(new Id("content5-7"));
                 properties.put(new Key<Object>("content5-7.title"), "Post index");
               }
             catch (NotFoundException e)
@@ -405,10 +404,10 @@ public class LayoutConverter extends Parser
               }
             try
               {
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-2"))
-                             .findSubComponentById(new Id("content3"))
-                             .findSubComponentById(new Id("content3-3"));
+                rootComponent.findChildren().withId(new Id("local")).result()
+                             .findChildren().withId(new Id("local-2")).result()
+                             .findChildren().withId(new Id("content3")).result()
+                             .findChildren().withId(new Id("content3-3"));
                 properties.put(new Key<Object>("content3-3.title"), "Categories");
               }
             catch (NotFoundException e)
@@ -429,7 +428,7 @@ public class LayoutConverter extends Parser
 //              }
             try // move footer at the bottom of base
               {
-                final Layout footer = rootComponent.findSubComponentById(new Id("footer"));
+                final Layout footer = rootComponent.findChildren().withId(new Id("footer")).result();
                 final Field children = DefaultLayout.class.getDeclaredField("children");
                 final Field childrenMapById = DefaultLayout.class.getDeclaredField("childrenMapById");
                 children.setAccessible(true);

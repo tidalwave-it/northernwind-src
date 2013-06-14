@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -63,6 +63,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
     @Inject @Nonnull
     private Provider<FilterSetExpander> macroExpander;
+
+    @Inject @Nonnull
+    private InheritanceHelper inheritanceHelper;
 
     @Nonnull @Getter
     private final ResourceFile file;
@@ -145,7 +148,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
         properties = new DefaultResourceProperties(new Id(""), propertyResolver);
 
-        for (final ResourceFile propertyFile : Utilities.getInheritedPropertyFiles(file, "Properties_en.xml"))
+        for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, "Properties_en.xml"))
           {
             log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
             @Cleanup final InputStream is = propertyFile.getInputStream();
