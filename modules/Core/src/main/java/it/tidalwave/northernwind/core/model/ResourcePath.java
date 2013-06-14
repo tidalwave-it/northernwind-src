@@ -182,9 +182,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath withoutLeading()
       {
-        final List<String> temp = new ArrayList<>(segments);
-        temp.remove(0);
-        return new ResourcePath(temp);
+        return new ResourcePath(segments.subList(1, segments.size()));
       }
 
     /*******************************************************************************************************************
@@ -198,9 +196,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath withoutTrailing()
       {
-        final List<String> temp = new ArrayList<>(segments);
-        temp.remove(temp.size() - 1);
-        return new ResourcePath(temp);
+        return new ResourcePath(segments.subList(0, segments.size() - 1));
       }
 
     /*******************************************************************************************************************
