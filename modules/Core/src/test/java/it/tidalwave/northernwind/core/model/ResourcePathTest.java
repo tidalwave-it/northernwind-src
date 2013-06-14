@@ -218,9 +218,12 @@ public class ResourcePathTest
             { "/foo",         "foo",  true },
             { "/foo/bar",     "foo",  true },
             { "/foo/bar/baz", "foo",  true },
+
             { "/foo",         "foot", false },
             { "/foo/bar",     "foot", false },
-            { "/foo/bar/baz", "foot", false }
+            { "/foo/bar/baz", "foot", false },
+
+            { "/foo",         "",     false }
           };
       }
   }
