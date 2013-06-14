@@ -47,7 +47,7 @@ import lombok.ToString;
 @Immutable @ToString @EqualsAndHashCode
 public class ResourcePath
   {
-    private final List<String> segments;
+    /* package */ final List<String> segments;
 
     public ResourcePath()
       {
