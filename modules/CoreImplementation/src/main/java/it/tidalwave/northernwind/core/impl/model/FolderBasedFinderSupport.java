@@ -42,7 +42,6 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import static it.tidalwave.northernwind.core.model.Resource.*;
 
 /***********************************************************************************************************************
  *
