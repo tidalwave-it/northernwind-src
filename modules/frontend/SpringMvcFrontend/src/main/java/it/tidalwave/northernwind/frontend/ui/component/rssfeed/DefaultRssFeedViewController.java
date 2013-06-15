@@ -117,7 +117,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final ResourceProperties postProperties = post.getProperties();
         final Item item = new Item();
         final Content content = new Content();
-        content.setType("text/html");
+        content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
         content.setValue(postProperties.getProperty(Properties.PROPERTY_FULL_TEXT));
         item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));
 //        item.setAuthor("author " + i); TODO
@@ -126,7 +126,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
         try
           {
-            final String link = site.createLink(getExposedUri(post));
+            final String link = site.createLink(post.getExposedUri());
 //            final String link = linkBase + getExposedUri(post).asString() + "/";
             final Guid guid = new Guid();
             guid.setPermaLink(true);

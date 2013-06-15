@@ -117,7 +117,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                       {
                         try
                           {
-                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(getExposedUri(post));
+                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(post.getExposedUri());
                             results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
                           }
                         catch (NotFoundException e)
@@ -321,7 +321,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             try
               {
-                if (exposedUri.equals(getExposedUri(post)))
+                if (exposedUri.equals(post.getExposedUri()))
                   {
                     return post;
                   }
@@ -366,24 +366,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     protected abstract void render()
       throws Exception;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected ResourcePath getExposedUri (final @Nonnull Content post)
-      throws IOException, NotFoundException
-      {
-        try
-          {
-            return new ResourcePath(post.getProperties().getProperty(SiteNode.PROPERTY_EXPOSED_URI));
-          }
-        catch (NotFoundException e)
-          {
-            return post.getExposedUri();
-          }
-      }
 
     /*******************************************************************************************************************
      *

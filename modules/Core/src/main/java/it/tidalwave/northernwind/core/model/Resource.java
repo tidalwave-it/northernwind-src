@@ -42,6 +42,10 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface Resource
   {
+    /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
+     *  defined, the resource uses a reasonable default. */
+    public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
+
     /** This property, controls whether this resource is a placeholder. See {@link #isPlaceHolder} for more information
      */
     public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<>("placeHolder");

@@ -48,10 +48,6 @@ public interface SiteNode extends Resource
     /** The label used for creating navigation links to this {@code SiteNode}. */
     public static final Key<String> PROPERTY_NAVIGATION_LABEL = new Key<>("navigationLabel");
 
-    /** The local portion of relativeUri by which this {@code SiteNode} is exposed to the web. If this property is not
-     *  defined, the local portion of the relative path is used. */
-    public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
-
     /** If sets to true, this property makes the {@code SiteNode} capable to match not only its {@code /relativeUri},
      *  but also {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
     // FIXME: must be Boolean

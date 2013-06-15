@@ -47,7 +47,7 @@ import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-//import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.core.impl.model.DefaultContent.*;
 
 // FIXME: reimplement with an Aspect
 @RequiredArgsConstructor
@@ -160,8 +160,16 @@ class ResourcePropertiesDelegate implements ResourceProperties
     public ResourcePath getExposedUri()
       throws NotFoundException, IOException
       {
-        return getDefaultExposedUri();
+        try
+          {
+            return new ResourcePath(getProperties().getProperty(PROPERTY_EXPOSED_URI));
+          }
+        catch (NotFoundException e)
+          {
+            return getDefaultExposedUri();
+          }
       }
+
 
     /*******************************************************************************************************************
      *
