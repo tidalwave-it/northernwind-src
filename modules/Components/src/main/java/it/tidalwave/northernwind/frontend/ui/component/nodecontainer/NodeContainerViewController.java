@@ -38,15 +38,21 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface NodeContainerViewController
   {
+    /** The prefix to prepend to the HTML title. */
     public static final Key<String> PROPERTY_TITLE_PREFIX = new Key<>("titlePrefix");
 
+    /** The list of relative paths or URLs for screen CSS style sheets. */
     public static final Key<List<String>> PROPERTY_SCREEN_STYLE_SHEETS = new Key<>("screenStyleSheets");
 
+    /** The list of relative paths or URLs for print CSS style sheets. */
     public static final Key<List<String>> PROPERTY_PRINT_STYLE_SHEETS = new Key<>("printStyleSheets");
 
+    /** The list of relative paths for inlined RSS feeds. */
     public static final Key<List<String>> PROPERTY_RSS_FEEDS = new Key<>("rssFeeds");
 
+    /** The list of relative paths or URLs for external JavaScript scripts. */
     public static final Key<List<String>> PROPERTY_SCRIPTS = new Key<>("scripts");
 
+    /** The list of relative paths for inlined JavaScript scripts. */
     public static final Key<List<String>> PROPERTY_INLINED_SCRIPTS = new Key<>("inlinedScripts");
   }
