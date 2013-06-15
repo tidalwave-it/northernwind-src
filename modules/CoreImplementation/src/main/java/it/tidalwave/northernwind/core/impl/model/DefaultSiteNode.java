@@ -62,8 +62,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j
-@ToString(exclude = { "layout", "site", "modelFactory", "relativeUri" ,"inheritanceHelper", "uriComputationCounter" })
+@Configurable(preConstruction = true) @Slf4j @ToString(of = { "resource", "relativeUri" })
 /* package */ class DefaultSiteNode implements SiteNode
   {
     @Nonnull @Delegate(types = Resource.class)

@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -47,9 +47,9 @@ public final class Properties
 
     public static final Key<String> PROPERTY_DESCRIPTION = new Key<>("description");
 
-    public static final Key<String> PROPERTY_FULL_TEXT = new Key<>("fullText.xhtml");
+    public static final Key<String> PROPERTY_FULL_TEXT = new Key<>("fullText");
 
-    public static final Key<String> PROPERTY_TEMPLATE = new Key<>("template.xhtml");
+    public static final Key<String> PROPERTY_TEMPLATE = new Key<>("template");
     // FIXME: those should be Key<DateTime>
     public static final Key<String> PROPERTY_CREATION_DATE = new Key<>("creationDateTime");
 
@@ -59,7 +59,7 @@ public final class Properties
 
     public static final Key<String> PROPERTY_CLASS = new Key<>("class");
 
-    public static final Key<String> PROPERTY_TEMPLATE_RESOURCE = new Key<>("template");
+    public static final Key<String> PROPERTY_TEMPLATE_PATH = new Key<>("templatePath");
 
     public static final Key<String> PROPERTY_WRAPPER_TEMPLATE_RESOURCE = new Key<>("wrapperTemplate");
 

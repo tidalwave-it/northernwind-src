@@ -33,6 +33,7 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -44,16 +45,19 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * This class tries to resolve a property by loading it from a (X)HTML file. The file is searched in the given folder
- * with the same name of the property, localized. First a XHTML resource is tried, then a HTML one. If the searched
- * property is {@code fullText}, and the managed locales are {@code en} and {@code it}, then the following files are
- * searched for:
+ * This class tries to resolve a property by loading it from a text file. The file is searched in the given folder
+ * with the same name of the property, localized.If the searched property is {@code fullText}, and the managed locales
+ * are {@code en} and {@code it}, then the following files are searched for:
  *
  * <ul>
  * <li>{@code fullText_en.xhtml}</li>
  * <li>{@code fullText_en.html}</li>
+ * <li>{@code fullText_en.xml}</li>
+ * <li>{@code fullText_en.txt}</li>
  * <li>{@code fullText_it.xhtml}</li>
  * <li>{@code fullText_it.html}</li>
+ * <li>{@code fullText_it.xml}</li>
+ * <li>{@code fullText_it.txt}</li>
  * </ul>
  *
  * Files are pre-processed through the {@link FilterSetExpander}. If the file MIME type is XHTML, UTF-8 is used for the
@@ -68,6 +72,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class HtmlResourcePropertyResolver implements ResourceProperties.PropertyResolver
   {
+    private static final ImmutableList<String> EXTENSIONS = ImmutableList.of(".xhtml", ".html", ".xml", ".txt");
+
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
 
@@ -128,26 +134,23 @@ public class HtmlResourcePropertyResolver implements ResourceProperties.Property
 
         for (final Locale locale : localeRequestManager.getLocales())
           {
-            final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
-            localizedFile = folder.getChildByName(localizedFileName);
-
-            if ((localizedFile == null) && localizedFileName.endsWith(".xhtml"))
+            for (final String extension : EXTENSIONS)
               {
-                localizedFile = folder.getChildByName(localizedFileName.replaceAll("\\.xhtml$", ".html"));
-              }
+                final String localizedFileName = fileName + "_" + locale.getLanguage() + extension;
+                localizedFile = folder.getChildByName(localizedFileName);
 
-            if (localizedFile != null)
-              {
-                break;
-              }
+                if (localizedFile != null)
+                  {
+                    return localizedFile;
+                  }
 
-            fileNamesNotFound.append(separator);
-            fileNamesNotFound.append(localizedFileName);
-            separator = ",";
+                fileNamesNotFound.append(separator);
+                fileNamesNotFound.append(localizedFileName);
+                separator = ",";
+              }
           }
 
-        return NotFoundException.throwWhenNull(localizedFile,
-                    String.format("findLocalizedFile(): %s/{%s}", folder.getPath().asString(), fileNamesNotFound));
+        throw new NotFoundException(String.format("%s/{%s}", folder.getPath().asString(), fileNamesNotFound));
       }
   }
 

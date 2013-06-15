@@ -259,7 +259,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         try
           {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH);
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }
