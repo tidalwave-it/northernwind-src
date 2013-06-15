@@ -175,8 +175,8 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "leadingAndTrailingProvider")
     public void must_properly_compute_trailing_segment (final @Nonnull String pathAsString,
-                                                       final @Nonnull String expectedLeadingSegment,
-                                                       final @Nonnull String expectedTrailingSegment)
+                                                        final @Nonnull String expectedLeadingSegment,
+                                                        final @Nonnull String expectedTrailingSegment)
       {
         final ResourcePath fixture = new ResourcePath(pathAsString);
 
