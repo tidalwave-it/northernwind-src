@@ -70,7 +70,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
-public class HtmlResourcePropertyResolver implements ResourceProperties.PropertyResolver
+public class TextResourcePropertyResolver implements ResourceProperties.PropertyResolver
   {
     private static final ImmutableList<String> EXTENSIONS = ImmutableList.of(".xhtml", ".html", ".xml", ".txt");
 
@@ -88,7 +88,7 @@ public class HtmlResourcePropertyResolver implements ResourceProperties.Property
      *
      *
      ******************************************************************************************************************/
-    public HtmlResourcePropertyResolver (final @Nonnull ResourceFile folder)
+    public TextResourcePropertyResolver (final @Nonnull ResourceFile folder)
       {
         this.folder = folder;
       }

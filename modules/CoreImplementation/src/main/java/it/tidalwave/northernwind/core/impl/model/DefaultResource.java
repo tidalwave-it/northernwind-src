@@ -81,7 +81,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     public DefaultResource (final @Nonnull ResourceFile file)
       {
         this.file = file;
-        propertyResolver = new HtmlResourcePropertyResolver(file);
+        propertyResolver = new TextResourcePropertyResolver(file);
       }
 
     /*******************************************************************************************************************
