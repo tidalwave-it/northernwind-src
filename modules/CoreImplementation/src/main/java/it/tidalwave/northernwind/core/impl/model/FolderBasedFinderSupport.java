@@ -57,15 +57,16 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
   {
     private static final long serialVersionUID = 2345536092354546452L;
 
+    @Inject @Nonnull
+    private transient Provider<SiteProvider> siteProvider;
+
     @Nonnull
     private final Class<Type> typeClass;
 
     @Nonnull
     private final ResourceFile parentFile;
 
-    @Inject @Nonnull
-    private transient Provider<SiteProvider> siteProvider;
-
+    @Nonnull
     private final ResourcePath resourceRootPath;
 
     /*******************************************************************************************************************
