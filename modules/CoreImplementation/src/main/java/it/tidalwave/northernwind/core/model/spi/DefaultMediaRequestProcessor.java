@@ -126,7 +126,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
 
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
         final ResourceFile file = media.getFile();
-        log.info(">>>> serving contents of /{} ...", file.getPath().asString());
+        log.info(">>>> serving contents of {} ...", file.getPath().asString());
         responseHolder.response().fromFile(file)
                                  .withExpirationTime(duration)
                                  .put();
