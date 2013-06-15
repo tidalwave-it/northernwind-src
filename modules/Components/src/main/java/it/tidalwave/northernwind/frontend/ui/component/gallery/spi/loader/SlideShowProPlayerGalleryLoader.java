@@ -65,6 +65,8 @@ import org.xml.sax.SAXException;
 @Slf4j
 public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
   {
+    public static final Key<String> PROPERTY_IMAGES = new Key<>("images");
+    
     private static final String XPATH_IMG = "/gallery/album/img";
 
     public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties)
@@ -83,7 +85,7 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
             final DocumentBuilder db = dbf.newDocumentBuilder(); // FIXME: inject
             final XPathFactory xPathFactory = XPathFactory.newInstance(); // FIXME: inject
 
-            final String s = siteNode.getProperties().getProperty(new Key<String>("images"));
+            final String s = siteNode.getProperties().getProperty(PROPERTY_IMAGES);
             final Document document = db.parse(new InputSource(new StringReader(s)));
             final XPath xPath = xPathFactory.newXPath();
             final XPathExpression jx1 = xPath.compile(XPATH_IMG);
