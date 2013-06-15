@@ -193,11 +193,11 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
     @Nonnull
     private static <Type> void addResults (final @Nonnull List<Type> results,
                                            final @Nonnull Map<String, Type> map,
-                                           final @Nonnull String string)
+                                           final @Nonnull String relativePath)
       {
-        if (!string.contains("*")) // FIXME: better way to guess a regexp?
+        if (!relativePath.contains("*")) // FIXME: better way to guess a regexp?
           {
-            final Type result = map.get(string);
+            final Type result = map.get(relativePath);
 
             if (result != null)
               {
@@ -207,7 +207,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
 
         else
           {
-            final Pattern pattern = Pattern.compile(string);
+            final Pattern pattern = Pattern.compile(relativePath);
 
             for (final Entry<String, Type> entry : map.entrySet())
               {
