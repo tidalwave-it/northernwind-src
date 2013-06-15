@@ -139,6 +139,9 @@ import lombok.extern.slf4j.Slf4j;
     @Getter
     private ResourceFile nodeFolder;
 
+    // Note that this class can't be final neither use ImmutableMaps, since during the traversing of the filesystem
+    // resources need to access the partially created internal structure.
+
     /* package */  final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
 
     /* package */  final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
