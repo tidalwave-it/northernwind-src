@@ -336,7 +336,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
           }
 
-        throw new NotFoundException("Blog post with exposedUri=" + exposedUri);
+        throw new NotFoundException("Blog post with exposedUri=" + exposedUri.asString());
       }
 
     /*******************************************************************************************************************

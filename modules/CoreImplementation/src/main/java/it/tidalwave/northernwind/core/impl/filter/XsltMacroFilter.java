@@ -108,7 +108,7 @@ public class XsltMacroFilter implements Filter
         for (final Resource resource : siteProvider.get().getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
           {
             final ResourceFile file = resource.getFile();
-            log.info(">>>> /{}", file.getPath());
+            log.info(">>>> {}", file.getPath().asString());
             xsltBuffer.append(file.asText("UTF-8"));
           }
 

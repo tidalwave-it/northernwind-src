@@ -56,7 +56,7 @@ public class DefaultInheritanceHelper implements InheritanceHelper
 
         for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
           {
-            log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
+            log.trace(">>>> probing {} ...", parent.getPath().asString() + "/" + propertyFileName);
             final ResourceFile propertyFile = parent.getChildByName(propertyFileName);
 
             if (propertyFile != null)

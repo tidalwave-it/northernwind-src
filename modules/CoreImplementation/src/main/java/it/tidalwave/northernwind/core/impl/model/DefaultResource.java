@@ -200,7 +200,8 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
             separator = ",";
           }
 
-        return NotFoundException.throwWhenNull(localizedFile, String.format("%s/{%s}", file.getPath(), fileNamesNotFound));
+        return NotFoundException.throwWhenNull(localizedFile,
+                    String.format("findLocalizedFile(): %s/{%s}", file.getPath().asString(), fileNamesNotFound));
       }
 
     /*******************************************************************************************************************
