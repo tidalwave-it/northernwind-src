@@ -73,7 +73,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public Layout unmarshal (final @Nonnull InputStream is)
       throws IOException
       {
