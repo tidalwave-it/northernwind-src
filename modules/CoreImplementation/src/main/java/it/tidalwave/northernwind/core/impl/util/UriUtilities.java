@@ -36,6 +36,8 @@ import static lombok.AccessLevel.*;
 
 /***********************************************************************************************************************
  *
+ * FIXME: get rid of this, merge to ResourcePath.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *

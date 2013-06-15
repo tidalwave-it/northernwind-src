@@ -45,7 +45,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
- * A piece of content to be composed into a page.
+ *
  *
  * @author  Fabrizio Giudici
  * @version $Id$

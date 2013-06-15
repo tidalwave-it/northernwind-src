@@ -194,7 +194,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
                                            final @Nonnull Map<String, Type> map,
                                            final @Nonnull String string)
       {
-        if (!string.contains("*")) // FIXME: better way to guess a regexp
+        if (!string.contains("*")) // FIXME: better way to guess a regexp?
           {
             final Type result = map.get(string);
 
