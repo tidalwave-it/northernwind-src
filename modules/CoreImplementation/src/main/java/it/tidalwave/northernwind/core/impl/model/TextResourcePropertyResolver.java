@@ -131,7 +131,6 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
       throws NotFoundException
       {
         log.trace("findLocalizedFile({})", fileName);
-        ResourceFile localizedFile = null;
         final StringBuilder fileNamesNotFound = new StringBuilder();
         String separator = "";
 
@@ -140,7 +139,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
             for (final String extension : EXTENSIONS)
               {
                 final String localizedFileName = fileName + localeSuffix + extension;
-                localizedFile = folder.getChildByName(localizedFileName);
+                final ResourceFile localizedFile = folder.getChildByName(localizedFileName);
 
                 if (localizedFile != null)
                   {
