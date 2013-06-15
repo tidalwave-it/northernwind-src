@@ -49,6 +49,10 @@ import lombok.extern.slf4j.Slf4j;
  * are {@code en} and {@code it}, then the following files are searched for:
  *
  * <ul>
+ * <li>{@code fullText.xhtml}</li>
+ * <li>{@code fullText.html}</li>
+ * <li>{@code fullText.xml}</li>
+ * <li>{@code fullText.txt}</li>
  * <li>{@code fullText_en.xhtml}</li>
  * <li>{@code fullText_en.html}</li>
  * <li>{@code fullText_en.xml}</li>
