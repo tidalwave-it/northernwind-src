@@ -30,11 +30,7 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -51,7 +47,7 @@ import lombok.ToString;
 public class ResourcePath
   {
     @Nonnull
-    /* package */ final List<String> segments;
+    /* package */ final ImmutableList<String> segments;
 
     /*******************************************************************************************************************
      *
@@ -60,7 +56,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath()
       {
-        this(Collections.<String>emptyList());
+        this(ImmutableList.<String>of());
       }
 
     /*******************************************************************************************************************
@@ -72,8 +68,8 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath (final @Nonnull String path)
       {
-        this((path.equals("/") | path.equals("")) ? Collections.<String>emptyList()
-                                                  : Arrays.asList(validated(path).split("/")));
+        this((path.equals("/") | path.equals("")) ? ImmutableList.<String>of()
+                                                  : ImmutableList.<String>copyOf(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -83,9 +79,9 @@ public class ResourcePath
      * @param  segments  the segments
      *
      ******************************************************************************************************************/
-    /* package */ ResourcePath (final @Nonnull Collection<String> segments)
+    /* package */ ResourcePath (final @Nonnull ImmutableList<String> segments)
       {
-        this.segments = validated(new ArrayList<>(segments));
+        this.segments = validated(segments);
       }
 
     /*******************************************************************************************************************
@@ -190,7 +186,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     public boolean startsWith (final @Nonnull String leadingSegment)
       {
-        return !segments.isEmpty() && segments.get(0).equals(leadingSegment);
+        return !segments.isEmpty() && getLeading().equals(leadingSegment);
       }
 
     /*******************************************************************************************************************
@@ -218,9 +214,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> temp = new ArrayList<>(path.segments);
-        temp.addAll(this.segments);
-        return new ResourcePath(temp);
+        return new ResourcePath(new ImmutableList.Builder<String>().addAll(path.segments).addAll(segments).build());
       }
 
     /*******************************************************************************************************************
@@ -250,9 +244,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> temp = new ArrayList<>(this.segments);
-        temp.addAll(path.segments);
-        return new ResourcePath(temp);
+        return new ResourcePath(new ImmutableList.Builder<String>().addAll(segments).addAll(path.segments).build());
       }
 
     /*******************************************************************************************************************
@@ -322,15 +314,10 @@ public class ResourcePath
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<String> validated (final @Nonnull List<String> segments)
+    private static ImmutableList<String> validated (final @Nonnull ImmutableList<String> segments)
       {
         for (final String segment : segments)
           {
-            if (segment == null)
-              {
-                throw new IllegalArgumentException("Null segment in " + segments);
-              }
-
             if (segment.equals(""))
               {
                 throw new IllegalArgumentException("Empty segment in " + segments);

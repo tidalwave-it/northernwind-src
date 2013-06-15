@@ -28,15 +28,15 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
+import com.google.common.collect.ImmutableList;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static com.google.common.collect.ImmutableList.of;
 
 /***********************************************************************************************************************
  *
@@ -62,10 +62,10 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void must_reject_null_segments()
       {
-        new ResourcePath(asList("a", null, "/c"));
+        final ResourcePath fixture = new ResourcePath(of("a", null, "/c"));
       }
 
     /*******************************************************************************************************************
@@ -74,7 +74,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_empty_segments()
       {
-        new ResourcePath(asList("a", "", "/c"));
+        final ResourcePath fixture = new ResourcePath(of("a", "", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -83,7 +83,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_segments_containing_slash()
       {
-        new ResourcePath(asList("a", "b", "/c"));
+        final ResourcePath fixture = new ResourcePath(of("a", "b", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -111,7 +111,7 @@ public class ResourcePathTest
           expectedExceptionsMessageRegExp = "\\QResourcePath can't hold a URL\\E")
     public void must_reject_invalid_paths (final @Nonnull String invalidPathAsString)
       {
-        new ResourcePath(invalidPathAsString);
+        final ResourcePath fixture = new ResourcePath(invalidPathAsString);
       }
 
     /*******************************************************************************************************************
@@ -119,7 +119,7 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "asStringProvider",
           dependsOnMethods = { "must_properly_create_an_empty_path", "must_properly_create_an_empty_path_from_string" })
-    public void must_properly_compute_asString (final @Nonnull List<String> segments,
+    public void must_properly_compute_asString (final @Nonnull ImmutableList<String> segments,
                                                 final @Nonnull String expectedAsString)
       {
         final ResourcePath fixture = new ResourcePath(segments);
@@ -321,15 +321,15 @@ public class ResourcePathTest
         return new Object[][]
           {
           //  path              exp. asString       exp. segments
-            { "",               "/",                Collections.<String>emptyList() },
-            { "/",              "/",                Collections.<String>emptyList() },
-            { "/foo",           "/foo",             asList("foo")                   },
-            { "/foo/bar",       "/foo/bar",         asList("foo", "bar")            },
-            { "/foo/bar/baz",   "/foo/bar/baz",     asList("foo", "bar", "baz")     },
+            { "",               "/",                of()                        },
+            { "/",              "/",                of()                        },
+            { "/foo",           "/foo",             of("foo")                   },
+            { "/foo/bar",       "/foo/bar",         of("foo", "bar")            },
+            { "/foo/bar/baz",   "/foo/bar/baz",     of("foo", "bar", "baz")     },
 
-            { "foo",            "/foo",             asList("foo")                   },
-            { "foo/bar",        "/foo/bar",         asList("foo", "bar")            },
-            { "foo/bar/baz",    "/foo/bar/baz",     asList("foo", "bar", "baz")     }
+            { "foo",            "/foo",             of("foo")                   },
+            { "foo/bar",        "/foo/bar",         of("foo", "bar")            },
+            { "foo/bar/baz",    "/foo/bar/baz",     of("foo", "bar", "baz")     }
           };
       }
 
@@ -432,10 +432,10 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
-            { Collections.<String>emptyList(),  "/"},
-            { asList("foo"),                    "/foo"},
-            { asList("foo", "bar"),             "/foo/bar"},
-            { asList("foo", "bar", "baz"),      "/foo/bar/baz"},
+            { of(),                     "/"},
+            { of("foo"),                "/foo"},
+            { of("foo", "bar"),         "/foo/bar"},
+            { of("foo", "bar", "baz"),  "/foo/bar/baz"},
           };
       }
 
