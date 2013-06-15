@@ -74,7 +74,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     @Nonnull
     private final Site site;
 
-    private final List<Item> items = new ArrayList<Item>();
+    private final List<Item> items = new ArrayList<>();
 
     private final String linkBase;
 
