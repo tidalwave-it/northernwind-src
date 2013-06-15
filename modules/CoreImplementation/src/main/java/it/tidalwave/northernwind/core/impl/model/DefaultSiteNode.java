@@ -30,7 +30,10 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -38,6 +41,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -47,7 +51,6 @@ import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Cleanup;
 import lombok.Delegate;
-import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static java.net.URLDecoder.*;
@@ -68,8 +71,8 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
     @Nonnull @Delegate(types = Resource.class)
     /* package */ final Resource resource;
 
-    @Nonnull @Getter
-    private final Layout layout;
+    @Nonnull
+    private final Map<Locale, Layout> layoutMapByLocale = new HashMap<>();
 
     @Nonnull
     /* package */ InternalSite site;
@@ -79,6 +82,9 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
 
     @Inject @Nonnull
     private InheritanceHelper inheritanceHelper;
+
+    @Inject @Nonnull
+    private RequestLocaleManager localeRequestManager;
 
     @CheckForNull
     private ResourcePath relativeUri;
@@ -98,13 +104,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
       {
         this.site = site;
         resource = modelFactory.createResource(file);
-        layout = computeLayout(); // FIXME: move to @PostConstruct
-
-        if (site.isLogConfigurationEnabled() || log.isDebugEnabled()) // FIXME: Info? Or debug below?
-          {
-            log.info(">>>> layout for {}:", resource.getFile().getPath().asString());
-            layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
-          }
+        loadLayouts();
       }
 
     /*******************************************************************************************************************
@@ -148,32 +148,54 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override @Nonnull
+    public Layout getLayout()
+      {
+        return layoutMapByLocale.get(localeRequestManager.getLocales().get(0));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    private Layout computeLayout()
+    private void loadLayouts()
       throws IOException, NotFoundException
       {
-        Layout layout = null;
-        // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
-        // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
-        // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
-        // FIXME: Components must be localized
-        final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(),
-                                                                                           "Components_en.xml");
-        for (final ResourceFile layoutFile : layoutFiles)
+        for (final Locale locale : localeRequestManager.getLocales())
           {
-            final DefaultLayout overridingLayout = loadLayout(layoutFile);
-            layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
-
-            if (log.isDebugEnabled())
+            Layout layout = null;
+            // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
+            // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
+            // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
+            final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(),
+                                                                                               locale,
+                                                                                               "Components");
+            for (final ResourceFile layoutFile : layoutFiles)
               {
-                overridingLayout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.DEBUG));
-              }
-          }
+                final DefaultLayout overridingLayout = loadLayout(layoutFile);
+                layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
 
-        return (layout != null) ? layout : modelFactory.createLayout()
-                                                       .withId(new Id(""))
-                                                       .withType("emptyPlaceholder")
-                                                       .build();
+                if (log.isDebugEnabled())
+                  {
+                    overridingLayout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.DEBUG));
+                  }
+              }
+
+            layout = (layout != null) ? layout : modelFactory.createLayout()
+                                                             .withId(new Id(""))
+                                                             .withType("emptyPlaceholder")
+                                                             .build();
+
+            if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
+              {
+                log.debug(">>>> layout for {} ():", resource.getFile().getPath().asString(), locale);
+                layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
+              }
+
+            layoutMapByLocale.put(locale, layout);
+          }
       }
 
     /*******************************************************************************************************************

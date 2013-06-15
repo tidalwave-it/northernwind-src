@@ -30,6 +30,9 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -37,14 +40,16 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_PLACE_HOLDER;
+import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
  *
@@ -63,11 +68,13 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     @Inject @Nonnull
     private InheritanceHelper inheritanceHelper;
 
+    @Inject @Nonnull
+    private RequestLocaleManager localeRequestManager;
+
     @Nonnull @Getter
     private final ResourceFile file;
 
-    @Nonnull @Getter
-    private ResourceProperties properties;
+    private final Map<Locale, ResourceProperties> propertyMapByLocale = new HashMap<>();
 
     @Getter
     private boolean placeHolder;
@@ -90,9 +97,20 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
+    public ResourceProperties getProperties()
+      {
+        return propertyMapByLocale.get(localeRequestManager.getLocales().get(0));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
     public ResourceProperties getPropertyGroup (final @Nonnull Id id)
       {
-        return properties.getGroup(id);
+        return getProperties().getGroup(id);
       }
 
     /*******************************************************************************************************************
@@ -103,29 +121,35 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     /* package */ void loadProperties()
       throws IOException
       {
-        log.trace("loadProperties() for {}", file.getPath().asString());
+        log.debug("loadProperties() for {}", file.getPath().asString());
+
         boolean tmpPlaceHolder = true;
 
-        properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
-
-        for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, "Properties_en.xml"))
+        for (final Locale locale : localeRequestManager.getLocales())
           {
-            log.trace(">>>> reading properties from {}...", propertyFile.getPath().asString());
-            @Cleanup final InputStream is = propertyFile.getInputStream();
-            final ResourceProperties tempProperties =
-                modelFactory.createProperties().build().as(Unmarshallable).unmarshal(is);
-//                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
-            log.trace(">>>>>>>> read properties: {}", tempProperties);
-            properties = properties.merged(tempProperties);
-            tmpPlaceHolder &= !propertyFile.getParent().equals(file);
-          }
+            ResourceProperties properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
 
-        placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
+            for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, locale, "Properties"))
+              {
+                log.trace(">>>> reading properties from {} ({})...", propertyFile.getPath().asString(), locale);
+                @Cleanup final InputStream is = propertyFile.getInputStream();
+                final ResourceProperties tempProperties =
+                    modelFactory.createProperties().build().as(Unmarshallable).unmarshal(is);
+    //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
+                log.trace(">>>>>>>> read properties: {} ({})", tempProperties, locale);
+                properties = properties.merged(tempProperties);
+                tmpPlaceHolder &= !propertyFile.getParent().equals(file);
+              }
 
-        if (log.isDebugEnabled())
-          {
-            log.debug(">>>> properties for {}:", file.getPath().asString());
-            logProperties(">>>>>>>>", properties);
+            placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
+
+            if (log.isDebugEnabled())
+              {
+                log.debug(">>>> properties for {} ({}):", file.getPath().asString(), locale);
+                logProperties(">>>>>>>>", properties);
+              }
+
+            propertyMapByLocale.put(locale, properties);
           }
       }
 
@@ -134,9 +158,10 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      * FIXME: move to ResourceProperties!
      *
      ******************************************************************************************************************/
-    private void logProperties (final @Nonnull String indent ,final @Nonnull ResourceProperties properties)
+    private void logProperties (final @Nonnull String indent,
+                                final @Nonnull ResourceProperties properties)
       {
-        log.debug("{} simple property items:", indent);
+        log.debug("{} property items:", indent);
 
         for (final Key<?> key : properties.getKeys())
           {

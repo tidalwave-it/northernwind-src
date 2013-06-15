@@ -46,11 +46,21 @@ public interface RequestLocaleManager
      *
      * Returns the {@link Locale}s for the current request. They are ordered by preference, descending.
      *
-     * @return   the {@code Locale}s.
+     * @return   the {@code Locale}s
      *
      ******************************************************************************************************************/
     @Nonnull
     public List<Locale> getLocales();
+
+    /*******************************************************************************************************************
+     *
+     * Returns the {@link Locale} suffixes for the current request. They are ordered by preference, descending.
+     *
+     * @return   the {@code Locale} suffixes
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<String> getLocaleSuffixes();
 
     /*******************************************************************************************************************
      *

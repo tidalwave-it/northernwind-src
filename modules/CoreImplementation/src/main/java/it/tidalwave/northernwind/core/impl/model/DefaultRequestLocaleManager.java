@@ -81,6 +81,25 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public List<String> getLocaleSuffixes()
+      {
+        final List<String> suffixes = new ArrayList<>();
+        suffixes.add("");
+
+        for (final Locale locale : getLocales())
+          {
+            suffixes.add("_" + locale.getLanguage());
+          }
+
+        return suffixes;
+      }
+
+    /*******************************************************************************************************************
+     *
      *
      ******************************************************************************************************************/
     public void setRequestLocale (final @Nonnull Locale locale)
