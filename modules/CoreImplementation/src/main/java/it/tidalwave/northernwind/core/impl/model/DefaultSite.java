@@ -80,7 +80,7 @@ import lombok.extern.slf4j.Slf4j;
         public boolean accept (@Nonnull ResourceFile file);
       }
 
-    private final FileFilter DIRECTORY_FILTER = new FileFilter()
+    private final FileFilter FOLDER_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull ResourceFile file)
@@ -89,12 +89,12 @@ import lombok.extern.slf4j.Slf4j;
           }
       };
 
-    private final FileFilter ALL_FILTER = new FileFilter()
+    private final FileFilter FILE_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull ResourceFile file)
           {
-            return !ignoredFolders.contains(file.getName());
+            return file.isData() && !ignoredFolders.contains(file.getName());
           }
       };
 
@@ -264,7 +264,7 @@ import lombok.extern.slf4j.Slf4j;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(documentFolder, DIRECTORY_FILTER, new FilePredicate()
+        traverse(documentFolder, FOLDER_FILTER, new FilePredicate()
           {
             @Override
             public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
@@ -273,31 +273,25 @@ import lombok.extern.slf4j.Slf4j;
               }
           });
 
-        traverse(libraryFolder, ALL_FILTER, new FilePredicate()
+        traverse(libraryFolder, FILE_FILTER, new FilePredicate()
           {
             @Override
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                if (file.isData())
-                  {
-                    libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource(file));
-                  }
+                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource(file));
               }
           });
 
-        traverse(mediaFolder, ALL_FILTER, new FilePredicate()
+        traverse(mediaFolder, FILE_FILTER, new FilePredicate()
           {
             @Override
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                if (file.isData())
-                  {
-                    mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia(file));
-                  }
+                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia(file));
               }
           });
 
-        traverse(nodeFolder, DIRECTORY_FILTER, new FilePredicate()
+        traverse(nodeFolder, FOLDER_FILTER, new FilePredicate()
           {
             @Override
             public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
@@ -340,44 +334,45 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     * Accepts a {@link FileVisitor} to visit a file or folder.
+     * Traverse the file system with a {@link FilePredicate}.
      *
-     * @param  folder      the folder to visit
+     * @param  folder      the folder to traverse
      * @param  fileFilter  the filter for directory contents
-     * @param  visitor     the visitor
+     * @param  predicate   the predicate
      *
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourceFile folder,
                            final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FilePredicate visitor)
+                           final @Nonnull FilePredicate predicate)
       {
-        traverse(folder, folder, fileFilter, visitor);
+        traverse(folder, folder, fileFilter, predicate);
       }
 
     /*******************************************************************************************************************
      *
-     * Accepts a {@link FileVisitor} to visit a file or folder.
+     * Traverse the file system with a {@link FilePredicate}.
      *
-     * @param  file        the file to visit
+     * @param  file        the file to traverse
      * @param  fileFilter  the filter for directory contents
-     * @param  visitor     the visitor
+     * @param  predicate   the predicate
      *
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourceFile rootFolder,
                            final @Nonnull ResourceFile file,
                            final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FilePredicate visitor)
+                           final @Nonnull FilePredicate predicate)
       {
         log.trace("traverse({})", file);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootFolder.getPath());
-        visitor.apply(file, relativePath);
+
+        if (fileFilter.accept(file))
+          {
+            predicate.apply(file, relativePath);
+          }
 
         for (final ResourceFile child : file.getChildren())
           {
-            if (fileFilter.accept(child))
-              {
-                traverse(rootFolder, child, fileFilter, visitor);
-              }
+            traverse(rootFolder, child, fileFilter, predicate);
           }
       }
 
