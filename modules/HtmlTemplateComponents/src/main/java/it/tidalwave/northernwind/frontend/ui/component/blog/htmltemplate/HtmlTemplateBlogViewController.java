@@ -75,7 +75,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     private boolean referencesRendered;
 
-    private final List<String> htmlParts = new ArrayList<String>();
+    private final List<String> htmlParts = new ArrayList<>();
 
     /*******************************************************************************************************************
      *
@@ -355,10 +355,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             return ((pattern.length() == 2) ? DateTimeFormat.forStyle(pattern)
                                             : DateTimeFormat.forPattern(pattern)).withLocale(requestLocaleManager.getLocales().get(0));
           }
-        catch (NotFoundException e)
-          {
-          }
-        catch (IOException e)
+        catch (NotFoundException | IOException e)
           {
           }
 
