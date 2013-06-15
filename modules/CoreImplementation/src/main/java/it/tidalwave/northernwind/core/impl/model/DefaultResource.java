@@ -143,14 +143,14 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     /* package */ void loadProperties()
       throws IOException
       {
-        log.trace("loadProperties() for /{}", file.getPath());
+        log.trace("loadProperties() for {}", file.getPath().asString());
         boolean tmpPlaceHolder = true;
 
         properties = new DefaultResourceProperties(new Id(""), propertyResolver);
 
         for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, "Properties_en.xml"))
           {
-            log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
+            log.trace(">>>> reading properties from {}...", propertyFile.getPath().asString());
             @Cleanup final InputStream is = propertyFile.getInputStream();
             final ResourceProperties tempProperties = new DefaultResourceProperties(propertyResolver).as(Unmarshallable).unmarshal(is);
             log.trace(">>>>>>>> read properties: {}", tempProperties);
@@ -162,7 +162,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
         if (log.isDebugEnabled())
           {
-            log.debug(">>>> properties for /{}:", file.getPath());
+            log.debug(">>>> properties for {}:", file.getPath().asString());
             logProperties(">>>>>>>>", properties);
           }
       }
