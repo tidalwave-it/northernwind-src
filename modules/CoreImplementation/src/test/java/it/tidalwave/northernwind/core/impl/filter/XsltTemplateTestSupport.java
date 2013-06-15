@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

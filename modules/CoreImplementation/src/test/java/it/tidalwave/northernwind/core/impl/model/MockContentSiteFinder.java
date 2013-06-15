@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
@@ -48,7 +49,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
                                    implements SiteFinder<Content>
   {
     private final static long serialVersionUID = 1L;
-    
+
     private String relativePath;
 
     private String relativeUri;

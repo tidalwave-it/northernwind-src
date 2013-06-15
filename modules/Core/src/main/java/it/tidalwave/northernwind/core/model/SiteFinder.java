@@ -28,6 +28,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import com.google.common.base.Predicate;
 import it.tidalwave.util.spi.ExtendedFinderSupport;
 
 /***********************************************************************************************************************
@@ -38,11 +39,6 @@ import it.tidalwave.util.spi.ExtendedFinderSupport;
  **********************************************************************************************************************/
 public interface SiteFinder<Type> extends ExtendedFinderSupport<Type, SiteFinder<Type>>
   {
-    public static interface Predicate<Type>
-      {
-        public boolean apply (@Nonnull Type object);
-      }
-
     @Nonnull
     public SiteFinder<Type> withRelativePath (@Nonnull String relativePath);
 
