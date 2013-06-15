@@ -345,7 +345,7 @@ import lombok.extern.slf4j.Slf4j;
                            final @Nonnull FileFilter fileFilter,
                            final @Nonnull FilePredicate predicate)
       {
-        traverse(folder, folder, fileFilter, predicate);
+        traverse(folder.getPath(), folder, fileFilter, predicate);
       }
 
     /*******************************************************************************************************************
@@ -357,13 +357,13 @@ import lombok.extern.slf4j.Slf4j;
      * @param  predicate   the predicate
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull ResourceFile rootFolder,
+    private void traverse (final @Nonnull ResourcePath rootPath,
                            final @Nonnull ResourceFile file,
                            final @Nonnull FileFilter fileFilter,
                            final @Nonnull FilePredicate predicate)
       {
         log.trace("traverse({})", file);
-        final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootFolder.getPath());
+        final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
         if (fileFilter.accept(file))
           {
@@ -372,7 +372,7 @@ import lombok.extern.slf4j.Slf4j;
 
         for (final ResourceFile child : file.getChildren())
           {
-            traverse(rootFolder, child, fileFilter, predicate);
+            traverse(rootPath, child, fileFilter, predicate);
           }
       }
 
