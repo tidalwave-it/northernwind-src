@@ -36,7 +36,6 @@ import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -157,9 +156,17 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties createProperties (final @Nonnull Id id)
+    public ResourceProperties.Builder createProperties()
       {
-        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
+        return new ResourceProperties.Builder().withCallBack(new ResourceProperties.Builder.CallBack()
+          {
+            @Override @Nonnull
+            public ResourceProperties build (final @Nonnull ResourceProperties.Builder builder)
+              {
+                return new DefaultResourceProperties(builder);
+              }
+          });
+//        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
       }
 
     /*******************************************************************************************************************

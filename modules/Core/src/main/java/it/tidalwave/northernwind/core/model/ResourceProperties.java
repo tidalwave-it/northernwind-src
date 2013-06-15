@@ -35,6 +35,12 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -46,6 +52,50 @@ import it.tidalwave.role.Identifiable;
  **********************************************************************************************************************/
 public interface ResourceProperties extends As, Identifiable
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link ResourceProperties}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
+    @Wither @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public ResourceProperties build (@Nonnull ResourceProperties.Builder builder);
+          }
+
+        private ResourceProperties.Builder.CallBack callBack;
+        private Id id = new Id("");
+        private PropertyResolver propertyResolver = PropertyResolver.DEFAULT;
+
+        @Nonnull
+        public ResourceProperties build()
+          {
+            return callBack.build(this);
+          }
+      }
+
+    public static interface PropertyResolver // FIXME: drop this
+      {
+        public static PropertyResolver DEFAULT = new PropertyResolver()
+          {
+            @Override
+            public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
+              throws NotFoundException, IOException
+              {
+                throw new NotFoundException();
+              }
+          };
+
+        @Nonnull
+        public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
+          throws NotFoundException, IOException;
+      }
+
     /*******************************************************************************************************************
      *
      * Retrieves a property.

@@ -54,24 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString(exclude={"propertyResolver"})
 public class DefaultResourceProperties extends SpringAsSupport implements ResourceProperties
   {
-    public static interface PropertyResolver // FIXME: drop this
-      {
-        public static PropertyResolver DEFAULT = new PropertyResolver()
-          {
-            @Override
-            public <Type> Type resolveProperty(Id propertyGroupId, Key<Type> key)
-              throws NotFoundException, IOException
-              {
-                throw new NotFoundException();
-              }
-          };
-
-        @Nonnull
-        public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
-          throws NotFoundException, IOException;
-      }
-
-    public static ResourceProperties DEFAULT = new DefaultResourceProperties(PropertyResolver.DEFAULT);
+    public static ResourceProperties DEFAULT = new DefaultResourceProperties(new ResourceProperties.Builder());
 
     @Nonnull @Getter
     private final Id id;
@@ -83,27 +66,14 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Nonnull
     private final PropertyResolver propertyResolver;
 
-    // TODO: clean up constructors, then use ModelFactory.
-
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull PropertyResolver propertyResolver)
+    /* package */ DefaultResourceProperties (final @Nonnull ResourceProperties.Builder builder)
       {
-        this.id = new Id("");
-        this.propertyResolver = propertyResolver;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull Id id,
-                                      final @Nonnull PropertyResolver propertyResolver)
-      {
-        this.id = id;
-        this.propertyResolver = propertyResolver;
+        this.id = builder.getId();
+        this.propertyResolver = builder.getPropertyResolver();
       }
 
     /*******************************************************************************************************************
@@ -216,7 +186,8 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     public ResourceProperties getGroup (final @Nonnull Id id)
       {
         final DefaultResourceProperties properties = groupMap.get(id);
-        return properties != null ? properties : new DefaultResourceProperties(id, propertyResolver);
+        return properties != null ? properties
+                                  : new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
 
     /*******************************************************************************************************************
@@ -308,6 +279,6 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Override @Nonnull
     public ResourceProperties withId (final @Nonnull Id id)
       {
-        return new DefaultResourceProperties(id, propertyResolver);
+        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
   }

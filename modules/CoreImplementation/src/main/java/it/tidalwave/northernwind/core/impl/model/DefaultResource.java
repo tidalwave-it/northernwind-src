@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -58,6 +59,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 @Configurable @Slf4j @ToString(of = {"file", "placeHolder"})
 /* package */ class DefaultResource implements Resource
   {
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
+
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
 
@@ -80,7 +84,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      *
      *
      ******************************************************************************************************************/
-    private DefaultResourceProperties.PropertyResolver propertyResolver = new DefaultResourceProperties.PropertyResolver()
+    private ResourceProperties.PropertyResolver propertyResolver = new ResourceProperties.PropertyResolver()
       {
         @Override @SuppressWarnings("unchecked")
         public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key)
@@ -146,13 +150,14 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
         log.trace("loadProperties() for {}", file.getPath().asString());
         boolean tmpPlaceHolder = true;
 
-        properties = new DefaultResourceProperties(new Id(""), propertyResolver);
+        properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
 
         for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, "Properties_en.xml"))
           {
             log.trace(">>>> reading properties from {}...", propertyFile.getPath().asString());
             @Cleanup final InputStream is = propertyFile.getInputStream();
-            final ResourceProperties tempProperties = new DefaultResourceProperties(propertyResolver).as(Unmarshallable).unmarshal(is);
+            final ResourceProperties tempProperties =
+                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
             log.trace(">>>>>>>> read properties: {}", tempProperties);
             properties = properties.merged(tempProperties);
             tmpPlaceHolder &= !propertyFile.getParent().equals(file);

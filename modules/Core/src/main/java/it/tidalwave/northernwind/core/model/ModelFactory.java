@@ -30,7 +30,6 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 
@@ -131,7 +130,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourceProperties createProperties (@Nonnull Id id);
+    public ResourceProperties.Builder createProperties();
 
     /*******************************************************************************************************************
      *
