@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -39,7 +39,7 @@ import lombok.ToString;
  * An exceptional response representing a situation that should be reported to the client with a specific HTTP status
  * code. Note that this class doesn't necessarily represent an error, but it could be e.g. a redirect and such. This
  * class can also carry headers to be included as part of the response
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -56,7 +56,7 @@ public class HttpStatusException extends Exception
     /*******************************************************************************************************************
      *
      * Creates an instance with the given HTTP status.
-     * 
+     *
      * @param  httpStatus  the status
      *
      ******************************************************************************************************************/
@@ -78,11 +78,11 @@ public class HttpStatusException extends Exception
     /*******************************************************************************************************************
      *
      * Creates a clone with the given header.
-     * 
+     *
      * @param  name   the header name
      * @param  value  the header value
      * @return        the clone
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public HttpStatusException withHeader (final @Nonnull String name, final @Nonnull String value)
