@@ -50,9 +50,9 @@ import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.net.URLDecoder.*;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
-import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
@@ -127,7 +127,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
                 try
                   {
                     final String segment = resource.getProperties()
-                                                   .getProperty(PROPERTY_EXPOSED_URI, urlDecodedName(file.getName()));
+                                                   .getProperty(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (IOException | NotFoundException e)
@@ -189,8 +189,8 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private SiteNode getParent()
       throws NotFoundException, UnsupportedEncodingException
       {
-        final ResourcePath parentRelativePath = pathFor(resource.getFile().getParent())
-                                    .relativeTo(pathFor(site.getNodeFolder()));
+        final ResourcePath parentRelativePath = resource.getFile().getParent().getPath().urlDecoded()
+                                              .relativeTo(site.getNodeFolder().getPath());
 
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
       }
@@ -207,13 +207,13 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
       }
 
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static ResourcePath pathFor (final @Nonnull ResourceFile parentFile)
-      throws UnsupportedEncodingException
-      {
-        return new ResourcePath(urlDecodedPath(parentFile.getPath().asString()));
-      }
+//    /*******************************************************************************************************************
+//     *
+//     ******************************************************************************************************************/
+//    @Nonnull
+//    private static ResourcePath pathFor (final @Nonnull ResourceFile parentFile)
+//      throws UnsupportedEncodingException
+//      {
+//        return new ResourcePath(urlDecodedPath(parentFile.getPath().asString()));
+//      }
   }

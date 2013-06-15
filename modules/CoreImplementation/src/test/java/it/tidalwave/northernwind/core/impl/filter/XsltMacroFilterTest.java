@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -80,6 +81,7 @@ public class XsltMacroFilterTest
         final ResourceFile file = mock(ResourceFile.class);
         final String resourceName = "/it/tidalwave/northernwind/core/impl/model/Photo.xslt";
         final String xslt = IOUtils.toString(getClass().getResourceAsStream(resourceName));
+        when(file.getPath()).thenReturn(new ResourcePath(resourceName));
         when(file.asText(anyString())).thenReturn(xslt);
 
         final Resource resource = mock(Resource.class);

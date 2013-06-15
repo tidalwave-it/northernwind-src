@@ -37,6 +37,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static com.google.common.collect.ImmutableList.of;
+import java.io.UnsupportedEncodingException;
 
 /***********************************************************************************************************************
  *
@@ -315,6 +316,20 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "urlEncodedPathProvider",
+          dependsOnMethods = "must_properly_compute_asString")
+    public void must_properly_url_decode (final @Nonnull String plainPathAsString,
+                                          final @Nonnull String encodedPathAsString)
+      throws UnsupportedEncodingException
+      {
+        final ResourcePath fixture = new ResourcePath(encodedPathAsString);
+
+        assertThat(fixture.urlDecoded().asString(), is(plainPathAsString));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "segmentProvider")
     private Object[][] segmentProvider()
       {
@@ -476,6 +491,21 @@ public class ResourcePathTest
             { "/foo/bar.jpg",       "jpg",    },
             { "/foo/bar.gif",       "gif",    },
             { "/foo/bar.jpg.gif",   "gif",    },
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider(name = "urlEncodedPathProvider")
+    private Object[][] urlEncodedPathProvider()
+      {
+        return new Object[][]
+          {
+          //  plain            encoded
+            { "/",             "/",                 },
+            { "/foo",          "foo"                },
+            { "/foo/bar (2)",  "foo/bar+%282%29"    }
           };
       }
   }

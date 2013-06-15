@@ -37,8 +37,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.io.UnsupportedEncodingException;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -105,7 +105,7 @@ import lombok.ToString;
         try
           {
             return new DefaultRequest(baseUrl,
-                                      UriUtilities.urlDecodedPath(relativeUri),
+                                      new ResourcePath(relativeUri).urlDecoded().asString(),
                                       relativeUri,
                                       parametersMap,
                                       preferredLocales);

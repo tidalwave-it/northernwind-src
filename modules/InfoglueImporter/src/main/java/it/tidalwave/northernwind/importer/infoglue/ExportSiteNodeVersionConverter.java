@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.importer.infoglue;
 
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.Nonnull;

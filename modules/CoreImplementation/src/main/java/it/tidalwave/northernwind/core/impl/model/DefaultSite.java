@@ -59,7 +59,6 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
 /***********************************************************************************************************************
  *
@@ -358,8 +357,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       throws UnsupportedEncodingException
       {
         log.trace("traverse({})", file);
-        final ResourcePath relativeUri = new ResourcePath(urlDecodedPath(file.getPath().asString()));
-        visitor.visit(file, relativeUri);
+        visitor.visit(file, file.getPath().urlDecoded());
 
         for (final ResourceFile child : file.getChildren())
           {

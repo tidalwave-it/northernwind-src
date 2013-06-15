@@ -41,7 +41,6 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
@@ -96,7 +95,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
               {
                 try
                   {
-                    final String relativeUri = urlDecodedPath(childFile.getPath().relativeTo(uriPrefix).asString());
+                    final String relativeUri = childFile.getPath().relativeTo(uriPrefix).urlDecoded().asString();
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
                 catch (UnsupportedEncodingException | NotFoundException e)

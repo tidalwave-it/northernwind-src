@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.importer.infoglue;
 
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
 import lombok.Getter;

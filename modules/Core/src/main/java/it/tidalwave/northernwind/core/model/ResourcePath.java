@@ -27,10 +27,13 @@
  */
 package it.tidalwave.northernwind.core.model;
 
+import com.google.common.collect.ImmutableCollection;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -260,6 +263,27 @@ public class ResourcePath
     public ResourcePath appendedWith (final @Nonnull String path)
       {
         return appendedWith(new ResourcePath(path));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns a URL-decoded clone.
+     *
+     * @return          the clone
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourcePath urlDecoded()
+      throws UnsupportedEncodingException
+      {
+        final ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
+
+        for (final String segment : segments)
+          {
+            builder.add(URLDecoder.decode(segment, "UTF-8"));
+          }
+
+        return new ResourcePath(builder.build());
       }
 
     /*******************************************************************************************************************
