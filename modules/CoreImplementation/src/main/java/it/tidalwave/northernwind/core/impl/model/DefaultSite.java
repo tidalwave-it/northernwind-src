@@ -264,15 +264,6 @@ import lombok.extern.slf4j.Slf4j;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(documentFolder, FOLDER_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
-              {
-                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent(folder));
-              }
-          });
-
         traverse(libraryFolder, FILE_FILTER, new FilePredicate()
           {
             @Override
@@ -288,6 +279,15 @@ import lombok.extern.slf4j.Slf4j;
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
                 mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia(file));
+              }
+          });
+
+        traverse(documentFolder, FOLDER_FILTER, new FilePredicate()
+          {
+            @Override
+            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+              {
+                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent(folder));
               }
           });
 
