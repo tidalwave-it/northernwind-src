@@ -51,6 +51,10 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
     </bean>
 
+    <bean id="requestLocaleManager" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="it.tidalwave.northernwind.core.model.RequestLocaleManager" />
+    </bean>
+
     <bean id="inheritanceHelper" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="it.tidalwave.northernwind.core.impl.model.InheritanceHelper" />
     </bean>
