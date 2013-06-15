@@ -148,7 +148,7 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
       {
-        final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
+        final Map<String, List<String>> parameterMap = new HashMap<>();
 
         for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
           {
