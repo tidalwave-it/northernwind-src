@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -65,7 +66,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     @Inject @Nonnull
     private transient Provider<SiteProvider> siteProvider;
 
-    private final String uriPrefix;
+    private final ResourcePath uriPrefix;
 
     /*******************************************************************************************************************
      *
@@ -76,7 +77,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
       {
         this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME assumes the interesting interface is [0]
         this.file = owner.getFile();
-        this.uriPrefix = "/content/document"; // FIXME: site.getRelativeUriPrefix(typeClass);
+        this.uriPrefix = new ResourcePath("/content/document"); // FIXME: site.getRelativeUriPrefix(typeClass);
       }
 
     /*******************************************************************************************************************
@@ -95,7 +96,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
               {
                 try
                   {
-                    final String relativeUri = urlDecodedPath((childFile.getPath()).substring(uriPrefix.length()));
+                    final String relativeUri = urlDecodedPath(childFile.getPath().relativeTo(uriPrefix).asString());
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
                 catch (UnsupportedEncodingException | NotFoundException e)

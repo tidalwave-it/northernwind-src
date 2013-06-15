@@ -64,27 +64,27 @@ public class EmptyTestFileSystem extends FileSystemTestSupport
     public void setUp (final @Nonnull ResourceFileSystem fileSystem,
                        final @Nonnull Map<String, String> resourceProperties)
       {
-        contentFolder  = createRootMockFolder(fileSystem, "content");
-        documentFolder = createMockFolder(fileSystem, contentFolder, "document");
-        mediaFolder    = createMockFolder(fileSystem, contentFolder, "media");
-        libraryFolder  = createMockFolder(fileSystem, contentFolder, "library");
-        nodeFolder     = createRootMockFolder(fileSystem, "structure");
+        contentFolder  = createRootMockFolder(fileSystem, "/content");
+        documentFolder = createMockFolder(fileSystem, contentFolder, "/document");
+        mediaFolder    = createMockFolder(fileSystem, contentFolder, "/media");
+        libraryFolder  = createMockFolder(fileSystem, contentFolder, "/library");
+        nodeFolder     = createRootMockFolder(fileSystem, "/structure");
       }
 
     @Override
     public void performAssertions (final @Nonnull DefaultSite fixture)
       {
         assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertItem(fixture.documentMapByRelativePath, "/", "Content(path=content/document)");
+        assertItem(fixture.documentMapByRelativePath, "/", "Content(path=/content/document)");
 
         assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
 
         assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
 
         assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertItem(fixture.nodeMapByRelativePath, "/", "Node(path=structure)");
+        assertItem(fixture.nodeMapByRelativePath, "/", "Node(path=/structure)");
 
         assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure", "Node(path=structure)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure", "Node(path=/structure)");
       }
   }

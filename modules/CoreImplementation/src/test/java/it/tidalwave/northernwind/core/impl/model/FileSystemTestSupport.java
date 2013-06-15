@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Map;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.CheckForNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -89,13 +90,13 @@ public abstract class FileSystemTestSupport
                                              final @Nonnull ResourceFile parentFolder,
                                              final @Nonnull String name)
       {
-        final String path = parentFolder.getPath() + "/" + name;
+        final ResourcePath path = parentFolder.getPath().appendedWith(name);
 
         final ResourceFile folder = createMockFolder(name);
         when(folder.getParent()).thenReturn(parentFolder);
         when(folder.getPath()).thenReturn(path);
-        when(folder.toString()).thenReturn(path);
-        when(fileSystem.findFileByPath(eq(path))).thenReturn(folder);
+        when(folder.toString()).thenReturn(path.asString());
+        when(fileSystem.findFileByPath(eq(path.asString()))).thenReturn(folder);
 
         final Collection<ResourceFile> children = parentFolder.getChildren();
         children.add(folder);
@@ -112,13 +113,13 @@ public abstract class FileSystemTestSupport
                                            final @Nonnull ResourceFile parentFolder,
                                            final @Nonnull String name)
       {
-        final String path = parentFolder.getPath() + "/" + name;
+        final ResourcePath path = parentFolder.getPath().appendedWith(name);
 
         final ResourceFile file = createMockFile(name);
         when(file.getParent()).thenReturn(parentFolder);
         when(file.getPath()).thenReturn(path);
-        when(file.toString()).thenReturn(path);
-        when(fileSystem.findFileByPath(eq(path))).thenReturn(file);
+        when(file.toString()).thenReturn(path.asString());
+        when(fileSystem.findFileByPath(eq(path.asString()))).thenReturn(file);
 
         final Collection<ResourceFile> children = parentFolder.getChildren();
         children.add(file);
@@ -135,7 +136,7 @@ public abstract class FileSystemTestSupport
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(name);
+        when(folder.getPath()).thenReturn(new ResourcePath(name));
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
@@ -152,7 +153,7 @@ public abstract class FileSystemTestSupport
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(name);
+        when(folder.getPath()).thenReturn(new ResourcePath(name));
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(true);
         when(folder.isFolder()).thenReturn(false);

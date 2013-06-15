@@ -105,10 +105,10 @@ public class DefaultSiteTest
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
 
         siteBuilder = new Site.Builder().withContextPath("/contextpath") // TODO: should also test ""
-                                        .withDocumentPath("content/document")
-                                        .withMediaPath("content/media")
-                                        .withLibraryPath("content/library")
-                                        .withNodePath("structure")
+                                        .withDocumentPath("/content/document")
+                                        .withMediaPath("/content/media")
+                                        .withLibraryPath("/content/library")
+                                        .withNodePath("/structure")
                                         .withLogConfigurationEnabled(true)
                                         .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                                         .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
@@ -121,7 +121,7 @@ public class DefaultSiteTest
               {
                 final Resource resource = mock(Resource.class);
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
-                final String path = file.getPath();
+                final String path = file.getPath().asString();
                 log.trace(">>>> creating Resource for {}", path);
 
                 when(resource.toString()).thenReturn(String.format("Resource(path=%s)", path));
@@ -136,7 +136,7 @@ public class DefaultSiteTest
               {
                 final Content content = mock(Content.class);
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
-                final String path = file.getPath();
+                final String path = file.getPath().asString();
                 log.trace(">>>> creating Content for {}", path);
 
                 when(content.toString()).thenReturn(String.format("Content(path=%s)", path));
@@ -151,7 +151,7 @@ public class DefaultSiteTest
               {
                 final Media media = mock(Media.class);
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
-                final String path = file.getPath();
+                final String path = file.getPath().asString();
                 log.trace(">>>> creating Media for {}", path);
 
                 when(media.toString()).thenReturn(String.format("Media(path=%s)", path));
@@ -166,8 +166,8 @@ public class DefaultSiteTest
               throws Exception
               {
                 final ResourceFile file = (ResourceFile)invocation.getArguments()[1];
-                final String relativeUri = String.format("relativeUriFor:%s", file.getPath());
-                final String path = file.getPath();
+                final String relativeUri = String.format("relativeUriFor:%s", file.getPath().asString());
+                final String path = file.getPath().asString();
                 log.trace(">>>> creating SiteNode for {}", path);
                 final SiteNode siteNode = mock(SiteNode.class);
 
@@ -214,10 +214,10 @@ public class DefaultSiteTest
         fixture = new DefaultSite(siteBuilder);
 
         assertThat(fixture.getContextPath(), is("/contextpath"));
-        assertThat(fixture.documentPath, is("content/document"));
-        assertThat(fixture.mediaPath, is("content/media"));
-        assertThat(fixture.libraryPath, is("content/library"));
-        assertThat(fixture.nodePath, is("structure"));
+        assertThat(fixture.documentPath, is("/content/document"));
+        assertThat(fixture.mediaPath, is("/content/media"));
+        assertThat(fixture.libraryPath, is("/content/library"));
+        assertThat(fixture.nodePath, is("/structure"));
         assertThat(fixture.logConfigurationEnabled, is(true));
         assertThat(fixture.getConfiguredLocales(), is(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))));
         assertThat(fixture.ignoredFolders, is(Arrays.asList("ignored1", "ignored2")));

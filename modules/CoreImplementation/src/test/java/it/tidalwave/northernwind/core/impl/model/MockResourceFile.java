@@ -38,6 +38,7 @@ import java.io.InputStream;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -57,7 +58,7 @@ public class MockResourceFile implements ResourceFile
     private final String name;
 
     @Getter @Nonnull
-    private final String path;
+    private final ResourcePath path;
 
 //    @Nonnull
 //    public static ResourceFile file (final @Nonnull String path)
@@ -68,24 +69,24 @@ public class MockResourceFile implements ResourceFile
     @Nonnull
     public static ResourceFile folder (final @Nonnull ResourceFile parent, final @Nonnull String fileName)
       {
-        final String parentPath = parent.getPath();
-        return new MockResourceFile(parent, parentPath.equals("") ? fileName : parentPath + "/" + fileName, true);
+        final ResourcePath parentPath = parent.getPath();
+        return new MockResourceFile(parent, parentPath.appendedWith(fileName), true);
       }
 
     @Nonnull
     public static ResourceFile folder (final @Nonnull String path)
       {
-        return new MockResourceFile(null, path, true);
+        return new MockResourceFile(null, new ResourcePath(path), true);
       }
 
     private MockResourceFile (final @Nonnull ResourceFile parent,
-                              final @Nonnull String path,
+                              final @Nonnull ResourcePath path,
                               final boolean directory)
       {
         this.parent = parent;
         this.directory = directory;
         this.path = path;
-        this.name = path.substring(("/" + path).lastIndexOf('/'));
+        this.name = (path.getSegmentCount() == 0) ? "" : path.getTrailing();
       }
 
     @Override

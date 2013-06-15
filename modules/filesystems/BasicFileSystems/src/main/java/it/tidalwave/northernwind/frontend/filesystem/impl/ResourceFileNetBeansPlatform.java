@@ -46,6 +46,7 @@ import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -63,6 +64,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     interface Exclusions
       {
         public String getName();
+        public ResourcePath getPath();
         public ResourceFile getParent();
         public ResourceFile getFileObject (String fileName);
         public Collection<ResourceFile> getChildren();
@@ -89,6 +91,12 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       {
         this.fileSystem = fileSystem;
         this.delegate = delegate;
+      }
+
+    @Override @Nonnull
+    public ResourcePath getPath()
+      {
+        return new ResourcePath(delegate.getPath());
       }
 
     @Override @Nonnull

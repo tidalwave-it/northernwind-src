@@ -102,7 +102,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
 
         if (site.isLogConfigurationEnabled() || log.isDebugEnabled()) // FIXME: Info? Or debug below?
           {
-            log.info(">>>> layout for /{}:", resource.getFile().getPath());
+            log.info(">>>> layout for {}:", resource.getFile().getPath().asString());
             layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
           }
       }
@@ -138,7 +138,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
               }
           }
 
-        log.debug(">>>> relativeUri: {}", relativeUri);
+        log.debug(">>>> relativeUri: {}", relativeUri.asString());
 
         return relativeUri;
       }
@@ -202,7 +202,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private DefaultLayout loadLayout (final @Nonnull ResourceFile layoutFile)
       throws IOException
       {
-        log.trace(">>>> reading layout from /{}...", layoutFile.getPath());
+        log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
         final @Cleanup InputStream is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
       }
@@ -214,6 +214,6 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
     private static ResourcePath pathFor (final @Nonnull ResourceFile parentFile)
       throws UnsupportedEncodingException
       {
-        return new ResourcePath(urlDecodedPath(parentFile.getPath()));
+        return new ResourcePath(urlDecodedPath(parentFile.getPath().asString()));
       }
   }

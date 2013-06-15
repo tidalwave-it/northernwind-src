@@ -176,7 +176,7 @@ public class LayeredFileSystemProviderTest
       {
         if (fileObject.isData())
           {
-            lines.add(String.format("%s: %s", fileObject.getPath(), fileObject.asText("UTF-8")));
+            lines.add(String.format("%s: %s", fileObject.getPath().asString(), fileObject.asText("UTF-8")));
           }
         else
           {

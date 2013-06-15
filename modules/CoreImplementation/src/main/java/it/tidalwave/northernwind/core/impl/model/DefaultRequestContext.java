@@ -129,6 +129,6 @@ public class DefaultRequestContext implements RequestContext
     @Nonnull
     private static String toString (final @CheckForNull Resource resource)
       {
-        return (resource == null) ? "null" : resource.getFile().getPath();
+        return (resource == null) ? "null" : resource.getFile().getPath().asString();
       }
   }

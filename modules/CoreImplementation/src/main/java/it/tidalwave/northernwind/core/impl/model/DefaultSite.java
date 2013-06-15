@@ -74,7 +74,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
   {
     static interface FileVisitor
       {
-        public void visit (@Nonnull ResourceFile file, @Nonnull String relativeUri);
+        public void visit (@Nonnull ResourceFile file, @Nonnull ResourcePath relativeUri);
       }
 
     static interface FileFilter
@@ -254,10 +254,10 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         log.info(">>>> contextPath:        {}", contextPath);
         log.info(">>>> ignoredFolders:     {}", ignoredFolders);
         log.info(">>>> fileSystem:         {}", fileSystem);
-        log.info(">>>> documentPath:       {}", documentFolder.getPath());
-        log.info(">>>> libraryPath:        {}", libraryFolder.getPath());
-        log.info(">>>> mediaPath:          {}", mediaFolder.getPath());
-        log.info(">>>> nodePath:           {}", nodeFolder.getPath());
+        log.info(">>>> documentPath:       {}", documentFolder.getPath().asString());
+        log.info(">>>> libraryPath:        {}", libraryFolder.getPath().asString());
+        log.info(">>>> mediaPath:          {}", mediaFolder.getPath().asString());
+        log.info(">>>> nodePath:           {}", nodeFolder.getPath().asString());
         log.info(">>>> locales:            {}", configuredLocales);
 
         documentMapByRelativePath.clear();
@@ -269,9 +269,9 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
+            public void visit (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
-                documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)),
+                documentMapByRelativePath.put(relativePath.relativeTo(documentFolder.getPath()).asString(),
                                               modelFactory.createContent(folder));
               }
           });
@@ -279,11 +279,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(libraryFolder, ALL_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath)
+            public void visit (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
                 if (file.isData())
                   {
-                    libraryMapByRelativePath.put(r(relativePath.substring(libraryPath.length() + 1)),
+                    libraryMapByRelativePath.put(relativePath.relativeTo(libraryFolder.getPath()).asString(),
                                                  modelFactory.createResource(file));
                   }
               }
@@ -292,11 +292,11 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(mediaFolder, ALL_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath)
+            public void visit (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
                 if (file.isData())
                   {
-                    mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)),
+                    mediaMapByRelativePath.put(relativePath.relativeTo(mediaFolder.getPath()).asString(),
                                                modelFactory.createMedia(file));
                   }
               }
@@ -305,12 +305,12 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
+            public void visit (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
                 try
                   {
                     final SiteNode siteNode = modelFactory.createSiteNode(DefaultSite.this, folder);
-                    nodeMapByRelativePath.put(r(relativePath.substring(nodePath.length() + 1)), siteNode);
+                    nodeMapByRelativePath.put(relativePath.relativeTo(nodeFolder.getPath()).asString(), siteNode);
 
                     if (!siteNode.isPlaceHolder())
                       {
@@ -358,7 +358,7 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
       throws UnsupportedEncodingException
       {
         log.trace("traverse({})", file);
-        final String relativeUri = urlDecodedPath(file.getPath());
+        final ResourcePath relativeUri = new ResourcePath(urlDecodedPath(file.getPath().asString()));
         visitor.visit(file, relativeUri);
 
         for (final ResourceFile child : file.getChildren())
@@ -398,15 +398,5 @@ import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
         return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
         // don't log fileSystem.getRoot() since if fileSystem is broken it can trigger secondary errors
                             // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String r (final @Nonnull String s)
-      {
-        return "".equals(s) ? "/" : s;
       }
   }

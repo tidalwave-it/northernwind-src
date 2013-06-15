@@ -61,10 +61,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class DefaultSiteProvider implements SiteProvider
   {
-    private static final String DEFAULT_DOCUMENT_PATH = "content/document";
-    private static final String DEFAULT_MEDIA_PATH = "content/media";
-    private static final String DEFAULT_LIBRARY_PATH = "content/library";
-    private static final String DEFAULT_NODE_PATH = "structure";
+    private static final String DEFAULT_DOCUMENT_PATH = "/content/document";
+    private static final String DEFAULT_MEDIA_PATH = "/content/media";
+    private static final String DEFAULT_LIBRARY_PATH = "/content/library";
+    private static final String DEFAULT_NODE_PATH = "/structure";
     public static final String DEFAULT_CONTEXT_PATH = "/";
 
     @Inject @Nonnull

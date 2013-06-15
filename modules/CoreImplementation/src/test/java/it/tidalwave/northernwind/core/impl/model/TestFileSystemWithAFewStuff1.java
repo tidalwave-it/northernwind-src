@@ -60,7 +60,7 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
         createMockFolder(fileSystem, nodeFolder, "node1");
         createMockFolder(fileSystem, nodeFolder, "node2");
         createMockFolder(fileSystem, nodeFolder, "node3");
-        resourceProperties.put("structure/node3." + SiteNode.PROPERTY_MANAGES_PATH_PARAMS.stringValue(), "true");
+        resourceProperties.put("/structure/node3." + SiteNode.PROPERTY_MANAGES_PATH_PARAMS.stringValue(), "true");
         createMockFolder(fileSystem, nodeFolder, "node4");
         createMockFile(fileSystem, mediaFolder, "media1");
         createMockFile(fileSystem, mediaFolder, "media2");
@@ -75,37 +75,37 @@ public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
     public void performAssertions (final @Nonnull DefaultSite fixture)
       {
         assertThat(fixture.documentMapByRelativePath.size(), is(4));
-        assertItem(fixture.documentMapByRelativePath, "/",          "Content(path=content/document)");
-        assertItem(fixture.documentMapByRelativePath, "/document1", "Content(path=content/document/document1)");
-        assertItem(fixture.documentMapByRelativePath, "/document2", "Content(path=content/document/document2)");
-        assertItem(fixture.documentMapByRelativePath, "/document3", "Content(path=content/document/document3)");
+        assertItem(fixture.documentMapByRelativePath, "/",          "Content(path=/content/document)");
+        assertItem(fixture.documentMapByRelativePath, "/document1", "Content(path=/content/document/document1)");
+        assertItem(fixture.documentMapByRelativePath, "/document2", "Content(path=/content/document/document2)");
+        assertItem(fixture.documentMapByRelativePath, "/document3", "Content(path=/content/document/document3)");
 
         assertThat(fixture.libraryMapByRelativePath.size(), is(2));
-        assertItem(fixture.libraryMapByRelativePath, "/library1", "Resource(path=content/library/library1)");
-        assertItem(fixture.libraryMapByRelativePath, "/library2", "Resource(path=content/library/library2)");
+        assertItem(fixture.libraryMapByRelativePath, "/library1", "Resource(path=/content/library/library1)");
+        assertItem(fixture.libraryMapByRelativePath, "/library2", "Resource(path=/content/library/library2)");
 
         assertThat(fixture.mediaMapByRelativePath.size(), is(3));
-        assertItem(fixture.mediaMapByRelativePath, "/media1", "Media(path=content/media/media1)");
-        assertItem(fixture.mediaMapByRelativePath, "/media2", "Media(path=content/media/media2)");
-        assertItem(fixture.mediaMapByRelativePath, "/media3", "Media(path=content/media/media3)");
+        assertItem(fixture.mediaMapByRelativePath, "/media1", "Media(path=/content/media/media1)");
+        assertItem(fixture.mediaMapByRelativePath, "/media2", "Media(path=/content/media/media2)");
+        assertItem(fixture.mediaMapByRelativePath, "/media3", "Media(path=/content/media/media3)");
 
         assertThat(fixture.nodeMapByRelativePath.size(), is(5));
-        assertItem(fixture.nodeMapByRelativePath, "/",          "Node(path=structure)");
-        assertItem(fixture.nodeMapByRelativePath, "/node1",     "Node(path=structure/node1)");
-        assertItem(fixture.nodeMapByRelativePath, "/node2",     "Node(path=structure/node2)");
-        assertItem(fixture.nodeMapByRelativePath, "/node3",     "Node(path=structure/node3)");
+        assertItem(fixture.nodeMapByRelativePath, "/",          "Node(path=/structure)");
+        assertItem(fixture.nodeMapByRelativePath, "/node1",     "Node(path=/structure/node1)");
+        assertItem(fixture.nodeMapByRelativePath, "/node2",     "Node(path=/structure/node2)");
+        assertItem(fixture.nodeMapByRelativePath, "/node3",     "Node(path=/structure/node3)");
 
         assertThat(fixture.nodeMapByRelativeUri.size(), is(5));
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure",           "Node(path=structure)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node1",     "Node(path=structure/node1)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node1/a",   null);
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node2",     "Node(path=structure/node2)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node2/a",   null);
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node3",     "Node(path=structure/node3)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node3/a",   "Node(path=structure/node3)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node3/b",   "Node(path=structure/node3)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node3/c/d", "Node(path=structure/node3)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node4",     "Node(path=structure/node4)");
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:structure/node4/a",   null);
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure",           "Node(path=/structure)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node1",     "Node(path=/structure/node1)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node1/a",   null);
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node2",     "Node(path=/structure/node2)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node2/a",   null);
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node3",     "Node(path=/structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node3/a",   "Node(path=/structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node3/b",   "Node(path=/structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node3/c/d", "Node(path=/structure/node3)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node4",     "Node(path=/structure/node4)");
+        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure/node4/a",   null);
       }
   }
