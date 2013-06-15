@@ -70,9 +70,9 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 /* package */ class DefaultSite implements InternalSite
   {
-    static interface FileVisitor
+    static interface FilePredicate
       {
-        public void visit (@Nonnull ResourceFile file, @Nonnull ResourcePath relativeUri);
+        public void apply (@Nonnull ResourceFile file, @Nonnull ResourcePath relativeUri);
       }
 
     static interface FileFilter
@@ -264,19 +264,19 @@ import lombok.extern.slf4j.Slf4j;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor()
+        traverse(documentFolder, DIRECTORY_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
                 documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent(folder));
               }
           });
 
-        traverse(libraryFolder, ALL_FILTER, new FileVisitor()
+        traverse(libraryFolder, ALL_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
                 if (file.isData())
                   {
@@ -285,10 +285,10 @@ import lombok.extern.slf4j.Slf4j;
               }
           });
 
-        traverse(mediaFolder, ALL_FILTER, new FileVisitor()
+        traverse(mediaFolder, ALL_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
                 if (file.isData())
                   {
@@ -297,10 +297,10 @@ import lombok.extern.slf4j.Slf4j;
               }
           });
 
-        traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor()
+        traverse(nodeFolder, DIRECTORY_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
                 try
                   {
@@ -349,7 +349,7 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourceFile folder,
                            final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FileVisitor visitor)
+                           final @Nonnull FilePredicate visitor)
       {
         traverse(folder, folder, fileFilter, visitor);
       }
@@ -366,11 +366,11 @@ import lombok.extern.slf4j.Slf4j;
     private void traverse (final @Nonnull ResourceFile rootFolder,
                            final @Nonnull ResourceFile file,
                            final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FileVisitor visitor)
+                           final @Nonnull FilePredicate visitor)
       {
         log.trace("traverse({})", file);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootFolder.getPath());
-        visitor.visit(file, relativePath);
+        visitor.apply(file, relativePath);
 
         for (final ResourceFile child : file.getChildren())
           {
