@@ -37,6 +37,17 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * Implements the default inheritance policy for properties. The sequence of loaded file is:
+ *
+ * <ul>
+ * <li>parent default</li>
+ * <li>parent localized</li>
+ * <li>this level default</li>
+ * <li>this level localized</li>
+ * <li>override default</li>
+ * <li>override localized</li>
+ * </ul>
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -59,13 +70,6 @@ public class DefaultInheritanceHelper implements InheritanceHelper
         suffixes.add("_" + locale.getLanguage());
         final List<ResourceFile> files = new ArrayList<>();
 
-        // Sequence of inheritance
-        // parent default
-        // parent localized
-        // this default
-        // this localized
-        // override default
-        // override localized
         for (final ResourceFile parentFolder : getHierarchyFolders(folder))
           {
             files.addAll(getFiles("", propertyFileName, parentFolder, suffixes));
