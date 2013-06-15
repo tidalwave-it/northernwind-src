@@ -30,6 +30,8 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -132,11 +134,11 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
         final StringBuilder fileNamesNotFound = new StringBuilder();
         String separator = "";
 
-        for (final Locale locale : localeRequestManager.getLocales())
+        for (final String localeSuffix : getLocaleSuffixes())
           {
             for (final String extension : EXTENSIONS)
               {
-                final String localizedFileName = fileName + "_" + locale.getLanguage() + extension;
+                final String localizedFileName = fileName + localeSuffix + extension;
                 localizedFile = folder.getChildByName(localizedFileName);
 
                 if (localizedFile != null)
@@ -151,6 +153,24 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
           }
 
         throw new NotFoundException(String.format("%s/{%s}", folder.getPath().asString(), fileNamesNotFound));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<String> getLocaleSuffixes()
+      {
+        final List<String> languageCodes = new ArrayList<>();
+        languageCodes.add("");
+
+        for (final Locale locale : localeRequestManager.getLocales())
+          {
+            languageCodes.add("_" + locale.getLanguage());
+          }
+
+        return languageCodes;
       }
   }
 
