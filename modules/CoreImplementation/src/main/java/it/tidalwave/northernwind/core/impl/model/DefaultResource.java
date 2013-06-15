@@ -129,16 +129,23 @@ import lombok.extern.slf4j.Slf4j;
           {
             ResourceProperties properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
 
-            for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, locale, "Properties"))
+            if (file.isData())
               {
-                log.trace(">>>> reading properties from {} ({})...", propertyFile.getPath().asString(), locale);
-                @Cleanup final InputStream is = propertyFile.getInputStream();
-                final ResourceProperties tempProperties =
-                    modelFactory.createProperties().build().as(Unmarshallable).unmarshal(is);
-    //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
-                log.trace(">>>>>>>> read properties: {} ({})", tempProperties, locale);
-                properties = properties.merged(tempProperties);
-                tmpPlaceHolder &= !propertyFile.getParent().equals(file);
+                tmpPlaceHolder = false;
+              }
+            else
+              {
+                for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, locale, "Properties"))
+                  {
+                    log.trace(">>>> reading properties from {} ({})...", propertyFile.getPath().asString(), locale);
+                    @Cleanup final InputStream is = propertyFile.getInputStream();
+                    final ResourceProperties tempProperties =
+                        modelFactory.createProperties().build().as(Unmarshallable).unmarshal(is);
+        //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
+                    log.trace(">>>>>>>> read properties: {} ({})", tempProperties, locale);
+                    properties = properties.merged(tempProperties);
+                    tmpPlaceHolder &= !propertyFile.getParent().equals(file);
+                  }
               }
 
             placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
