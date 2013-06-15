@@ -37,10 +37,15 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface CalendarViewController
   {
+    /** The list of entries of the calendar. */
     public static final Key<String> PROPERTY_ENTRIES = new Key<>("entries");
 
-    // FIXME: those should be Integer
-    public static final Key<String> PROPERTY_SELECTED_YEAR = new Key<>("selectedYear");
-    public static final Key<String> PROPERTY_FIRST_YEAR = new Key<>("firstYear");
-    public static final Key<String> PROPERTY_LAST_YEAR = new Key<>("lastYear");
+    /** The selected year of the calendar. */
+    public static final Key<String> PROPERTY_SELECTED_YEAR = new Key<>("selectedYear");  // FIXME: Integer
+
+    /** The first year in the year selector of the calendar. */
+    public static final Key<String> PROPERTY_FIRST_YEAR = new Key<>("firstYear");  // FIXME: Integer
+
+    /** The last year in the year selector of the calendar. */
+    public static final Key<String> PROPERTY_LAST_YEAR = new Key<>("lastYear");  // FIXME: Integer
   }
