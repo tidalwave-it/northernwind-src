@@ -37,10 +37,12 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import static it.tidalwave.northernwind.core.model.Resource.*;
 
 /***********************************************************************************************************************
  *
@@ -50,7 +52,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString
+@Configurable(preConstruction = true) @Slf4j @ToString
 public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
   {
     private static final long serialVersionUID = 2345536092354546452L;
@@ -59,23 +61,31 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private final Class<Type> typeClass;
 
     @Nonnull
-    private final ResourceFile file;
+    private final ResourceFile parentFile;
 
     @Inject @Nonnull
     private transient Provider<SiteProvider> siteProvider;
 
-    private final ResourcePath uriPrefix;
+    private final ResourcePath resourceRootPath;
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
     @SuppressWarnings("unchecked")
-    public FolderBasedFinderSupport (final @Nonnull Type owner)
+    public FolderBasedFinderSupport (final @Nonnull Type parentResource)
       {
-        this.typeClass = (Class<Type>)owner.getClass().getInterfaces()[0]; // FIXME assumes the interesting interface is [0]
-        this.file = owner.getFile();
-        this.uriPrefix = new ResourcePath("/content/document"); // FIXME: site.getRelativeUriPrefix(typeClass);
+        try
+          {
+            final Site site = siteProvider.get().getSite();
+            this.typeClass = (Class<Type>)parentResource.getClass().getInterfaces()[0]; // FIXME assumes the interesting interface is [0]
+            this.resourceRootPath = site.find(typeClass).withRelativePath("/").result().getFile().getPath();
+            this.parentFile = parentResource.getFile();
+          }
+        catch (NotFoundException e)
+          {
+            throw new RuntimeException(e); // never occurs
+          }
       }
 
     /*******************************************************************************************************************
@@ -88,13 +98,13 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
       {
         final List<Type> result = new ArrayList<>();
 
-        for (final ResourceFile childFile : file.getChildren(true))
+        for (final ResourceFile childFile : parentFile.getChildren(true))
           {
             if (childFile.isFolder())
               {
                 try
                   {
-                    final String relativeUri = childFile.getPath().relativeTo(uriPrefix).urlDecoded().asString();
+                    final String relativeUri = childFile.getPath().relativeTo(resourceRootPath).urlDecoded().asString();
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
                 catch (NotFoundException e)
