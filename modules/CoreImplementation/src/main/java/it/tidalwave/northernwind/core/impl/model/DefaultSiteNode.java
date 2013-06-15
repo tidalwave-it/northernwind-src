@@ -187,7 +187,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
      ******************************************************************************************************************/
     @Nonnull
     private SiteNode getParent()
-      throws NotFoundException, UnsupportedEncodingException
+      throws NotFoundException
       {
         final ResourcePath parentRelativePath = resource.getFile().getParent().getPath().urlDecoded()
                                               .relativeTo(site.getNodeFolder().getPath());
@@ -206,14 +206,4 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
         final @Cleanup InputStream is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
       }
-
-//    /*******************************************************************************************************************
-//     *
-//     ******************************************************************************************************************/
-//    @Nonnull
-//    private static ResourcePath pathFor (final @Nonnull ResourceFile parentFile)
-//      throws UnsupportedEncodingException
-//      {
-//        return new ResourcePath(urlDecodedPath(parentFile.getPath().asString()));
-//      }
   }

@@ -37,7 +37,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static com.google.common.collect.ImmutableList.of;
-import java.io.UnsupportedEncodingException;
 
 /***********************************************************************************************************************
  *
@@ -320,7 +319,6 @@ public class ResourcePathTest
           dependsOnMethods = "must_properly_compute_asString")
     public void must_properly_url_decode (final @Nonnull String plainPathAsString,
                                           final @Nonnull String encodedPathAsString)
-      throws UnsupportedEncodingException
       {
         final ResourcePath fixture = new ResourcePath(encodedPathAsString);
 

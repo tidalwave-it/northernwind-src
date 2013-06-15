@@ -40,7 +40,6 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -270,8 +269,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void visit (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
-                documentMapByRelativePath.put(relativePath.relativeTo(documentFolder.getPath()).asString(),
-                                              modelFactory.createContent(folder));
+                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent(folder));
               }
           });
 
@@ -282,8 +280,7 @@ import lombok.extern.slf4j.Slf4j;
               {
                 if (file.isData())
                   {
-                    libraryMapByRelativePath.put(relativePath.relativeTo(libraryFolder.getPath()).asString(),
-                                                 modelFactory.createResource(file));
+                    libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource(file));
                   }
               }
           });
@@ -295,8 +292,7 @@ import lombok.extern.slf4j.Slf4j;
               {
                 if (file.isData())
                   {
-                    mediaMapByRelativePath.put(relativePath.relativeTo(mediaFolder.getPath()).asString(),
-                                               modelFactory.createMedia(file));
+                    mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia(file));
                   }
               }
           });
@@ -309,7 +305,7 @@ import lombok.extern.slf4j.Slf4j;
                 try
                   {
                     final SiteNode siteNode = modelFactory.createSiteNode(DefaultSite.this, folder);
-                    nodeMapByRelativePath.put(relativePath.relativeTo(nodeFolder.getPath()).asString(), siteNode);
+                    nodeMapByRelativePath.put(relativePath.asString(), siteNode);
 
                     if (!siteNode.isPlaceHolder())
                       {
@@ -346,24 +342,41 @@ import lombok.extern.slf4j.Slf4j;
      *
      * Accepts a {@link FileVisitor} to visit a file or folder.
      *
+     * @param  folder      the folder to visit
+     * @param  fileFilter  the filter for directory contents
+     * @param  visitor     the visitor
+     *
+     ******************************************************************************************************************/
+    private void traverse (final @Nonnull ResourceFile folder,
+                           final @Nonnull FileFilter fileFilter,
+                           final @Nonnull FileVisitor visitor)
+      {
+        traverse(folder, folder, fileFilter, visitor);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Accepts a {@link FileVisitor} to visit a file or folder.
+     *
      * @param  file        the file to visit
      * @param  fileFilter  the filter for directory contents
      * @param  visitor     the visitor
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull ResourceFile file,
+    private void traverse (final @Nonnull ResourceFile rootFolder,
+                           final @Nonnull ResourceFile file,
                            final @Nonnull FileFilter fileFilter,
                            final @Nonnull FileVisitor visitor)
-      throws UnsupportedEncodingException
       {
         log.trace("traverse({})", file);
-        visitor.visit(file, file.getPath().urlDecoded());
+        final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootFolder.getPath());
+        visitor.visit(file, relativePath);
 
         for (final ResourceFile child : file.getChildren())
           {
             if (fileFilter.accept(child))
               {
-                traverse(child, fileFilter, visitor);
+                traverse(rootFolder, child, fileFilter, visitor);
               }
           }
       }

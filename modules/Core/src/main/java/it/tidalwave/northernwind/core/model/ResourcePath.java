@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import com.google.common.collect.ImmutableCollection;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -274,13 +273,19 @@ public class ResourcePath
      ******************************************************************************************************************/
     @Nonnull
     public ResourcePath urlDecoded()
-      throws UnsupportedEncodingException
       {
         final ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
 
         for (final String segment : segments)
           {
-            builder.add(URLDecoder.decode(segment, "UTF-8"));
+            try
+              {
+                builder.add(URLDecoder.decode(segment, "UTF-8"));
+              }
+            catch (UnsupportedEncodingException e)
+              {
+                throw new RuntimeException(e);
+              }
           }
 
         return new ResourcePath(builder.build());

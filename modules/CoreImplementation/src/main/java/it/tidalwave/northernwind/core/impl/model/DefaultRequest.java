@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.io.UnsupportedEncodingException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -102,18 +101,11 @@ import lombok.ToString;
     @Override @Nonnull
     public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
       {
-        try
-          {
-            return new DefaultRequest(baseUrl,
-                                      new ResourcePath(relativeUri).urlDecoded().asString(),
-                                      relativeUri,
-                                      parametersMap,
-                                      preferredLocales);
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            throw new RuntimeException(e);
-          }
+        return new DefaultRequest(baseUrl,
+                                  new ResourcePath(relativeUri).urlDecoded().asString(),
+                                  relativeUri,
+                                  parametersMap,
+                                  preferredLocales);
       }
 
     /*******************************************************************************************************************

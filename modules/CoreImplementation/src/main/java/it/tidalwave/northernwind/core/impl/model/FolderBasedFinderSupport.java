@@ -32,7 +32,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
@@ -98,7 +97,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
                     final String relativeUri = childFile.getPath().relativeTo(uriPrefix).urlDecoded().asString();
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
                   }
-                catch (UnsupportedEncodingException | NotFoundException e)
+                catch (NotFoundException e)
                   {
                     log.error("", e);
                   }
