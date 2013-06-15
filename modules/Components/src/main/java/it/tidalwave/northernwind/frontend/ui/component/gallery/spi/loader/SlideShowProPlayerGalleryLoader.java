@@ -46,7 +46,13 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.DOMException;
+import org.xml.sax.SAXException;
 
 /***********************************************************************************************************************
  *
@@ -69,7 +75,7 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
     @Override @Nonnull
     public List<Item> loadGallery (final @Nonnull SiteNode siteNode)
       {
-        final List<Item> items = new ArrayList<Item>();
+        final List<Item> items = new ArrayList<>();
 
         try
           {
@@ -92,7 +98,8 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
                 items.add(createItem(new Id(src)));
               }
           }
-        catch (Exception e)
+        catch (ParserConfigurationException | NotFoundException | IOException |
+               SAXException | XPathExpressionException | DOMException e)
           {
             log.warn("", e);
           }
