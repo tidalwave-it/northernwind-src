@@ -52,7 +52,8 @@ import static org.hamcrest.CoreMatchers.*;
 
 /***********************************************************************************************************************
  *
- * @author fritz
+ * @author  Fabrizio Giudici
+ * @version $Id$
  *
  **********************************************************************************************************************/
 public class XsltMacroFilterTest
@@ -63,6 +64,9 @@ public class XsltMacroFilterTest
 
     private Site site;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -89,6 +93,9 @@ public class XsltMacroFilterTest
         fixture = context.getBean(XsltMacroFilter.class);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_not_filter_resources_that_are_not_XHTML()
       {
@@ -99,6 +106,9 @@ public class XsltMacroFilterTest
         assertThat(result, is(text));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "fileNames")
     public void must_filter_XHTML_resources (final @Nonnull String fileName)
       throws IOException
@@ -115,6 +125,9 @@ public class XsltMacroFilterTest
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @DataProvider(name = "fileNames")
     public Object[][] fileNamesProvider()
       {
