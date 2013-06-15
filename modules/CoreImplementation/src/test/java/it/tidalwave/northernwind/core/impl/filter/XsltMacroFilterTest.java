@@ -81,10 +81,10 @@ public class XsltMacroFilterTest
         final Resource resource = mock(Resource.class);
         when(resource.getFile()).thenReturn(file);
 
-        final Map<String, Resource> map = new HashMap<String, Resource>();
+        final Map<String, Resource> map = new HashMap<>();
         map.put("/XsltTemplates/Photo.xlst", resource);
         when(site.find(eq(Resource.class))).thenReturn(
-                new DefaultSiteFinder<Resource>("name", map, new RegexTreeMap<Resource>()));
+                new DefaultSiteFinder<>("name", map, new RegexTreeMap<Resource>()));
 
         fixture = context.getBean(XsltMacroFilter.class);
       }
