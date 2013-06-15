@@ -157,7 +157,19 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourcePath getExposedUri() // TODO: rename to getDefaultExposedUri
+    public ResourcePath getExposedUri()
+      throws NotFoundException, IOException
+      {
+        return getDefaultExposedUri();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private ResourcePath getDefaultExposedUri()
       throws NotFoundException, IOException
       {
         String title = resource.getProperties().getProperty(PROPERTY_TITLE);
