@@ -197,7 +197,7 @@ public class XsltMacroFilter implements Filter
         try
           {
             final URIResolver uriResolver = context.getBean(URIResolver.class);
-            log.info("Using URIResolver: {}", uriResolver.getClass());
+            log.trace("Using URIResolver: {}", uriResolver.getClass());
             transformer.setURIResolver(uriResolver);
           }
         catch (NoSuchBeanDefinitionException e)
