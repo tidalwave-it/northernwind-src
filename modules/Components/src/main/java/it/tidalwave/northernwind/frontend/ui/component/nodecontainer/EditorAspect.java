@@ -42,62 +42,59 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * FIXME: move to the Editor module
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Aspect @Slf4j
-public class EditorAspect 
+public class EditorAspect
   {
     @Inject @Nonnull
     private SiteProvider siteProvider;
-    
+
     @Inject @Nonnull
     private RequestHolder requestHolder;
-    
-    // FIXME: shoulnd't depend on Aloha - 
-    // use a fixed path /editor.css and use an @include inside it
+
     @Getter @Setter
     private String cssRelativeUri = "/css/InlineEditor.css";
-//    private String cssRelativeUri = "/alohaeditor/0.21.0/aloha/css/aloha.css";
-    
+
     @Getter @Setter
     private String scriptRelativeUri = "/Fragments/InlineEditor";
-    
+
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController.computeScreenCssSection(..))")
-    public Object injectEditorCss (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object injectEditorCss (final @Nonnull ProceedingJoinPoint pjp)
       throws Throwable
       {
         String result = (String)pjp.proceed();
-        
+
         if (requestHolder.isEditMode())
           {
-            result += String.format(DefaultNodeContainerViewController.LINK_RELSTYLESHEET_MEDIASCREEN_HREF, cssRelativeUri); 
+            result += String.format(DefaultNodeContainerViewController.LINK_RELSTYLESHEET_MEDIASCREEN_HREF, cssRelativeUri);
           }
-        
+
         return result;
       }
-    
+
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController.computeInlinedScriptsSection(..))")
-    public Object injectEditorScript (final @Nonnull ProceedingJoinPoint pjp) 
+    public Object injectEditorScript (final @Nonnull ProceedingJoinPoint pjp)
       throws Throwable
       {
         String result = (String)pjp.proceed();
-        
+
         if (requestHolder.isEditMode())
           {
             try
               {
                 final Content script = siteProvider.getSite().find(Content).withRelativePath(scriptRelativeUri).result();
-                result += script.getProperties().getProperty(PROPERTY_TEMPLATE);  
-              }        
+                result += script.getProperties().getProperty(PROPERTY_TEMPLATE);
+              }
             catch (NotFoundException | IOException e)
               {
-                // ok, no script  
-              }      
+                // ok, no script
+              }
           }
-        
+
         return result;
       }
   }
