@@ -182,8 +182,15 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         final DateTime blogDateTime = getBlogDateTime(post);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
+
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
-        htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty(PROPERTY_TITLE)));
+
+        final String extraAttributes2 = requestHolder.isEditMode() ?
+                                        "class='nw-editable-section' id='/" + post.getFile().getPath() + "/" + PROPERTY_TITLE.stringValue() + "'" : "";
+        htmlBuilder.append(String.format("<h3 %s>%s</h3>%n",
+                                         extraAttributes2,
+                                         properties.getProperty(PROPERTY_TITLE)));
+
 
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         renderDate(htmlBuilder, blogDateTime);
@@ -193,7 +200,12 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         if (addBody)
           {
-            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty(PROPERTY_FULL_TEXT)));
+            final String editClasses = requestHolder.isEditMode() ? "nw-editable-section" : "";
+            final String extraAttributes = requestHolder.isEditMode() ? "id='/" + post.getFile().getPath() + "/" + PROPERTY_FULL_TEXT.stringValue() + "'" : "";
+            htmlBuilder.append(String.format("<div class='nw-blog-post-content %s' %s>%s</div>%n",
+                                             editClasses,
+                                             extraAttributes,
+                                             properties.getProperty(PROPERTY_FULL_TEXT)));
 
             try
               {

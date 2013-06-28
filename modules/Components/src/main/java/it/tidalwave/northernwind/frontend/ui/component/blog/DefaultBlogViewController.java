@@ -88,7 +88,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private final Site site;
 
     @Nonnull
-    private final RequestHolder requestHolder;
+    protected final RequestHolder requestHolder;
 
     @Nonnull
     protected final RequestContext requestContext;
