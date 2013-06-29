@@ -128,6 +128,7 @@ public class XsltMacroFilter implements Filter
             return text;
           }
 
+        // FIXME: buggy and cumbersome
         if (!initialized)
           {
             try
