@@ -39,6 +39,7 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +52,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(exclude={"propertyResolver"})
-public class DefaultResourceProperties extends SpringAsSupport implements ResourceProperties
+// FIXME: this is a patched copy, needs public constructor for builder - see NW-180
+@Slf4j @ToString(exclude={"propertyResolver", "asSupport"})
+public class DefaultResourceProperties implements ResourceProperties
   {
     public static ResourceProperties DEFAULT = new DefaultResourceProperties(new ResourceProperties.Builder());
 
@@ -66,11 +68,14 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Nonnull
     private final PropertyResolver propertyResolver;
 
+    @Delegate
+    private final SpringAsSupport asSupport = new SpringAsSupport(this);
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    /* package */ DefaultResourceProperties (final @Nonnull ResourceProperties.Builder builder)
+    public DefaultResourceProperties (final @Nonnull ResourceProperties.Builder builder)
       {
         this.id = builder.getId();
         this.propertyResolver = builder.getPropertyResolver();
