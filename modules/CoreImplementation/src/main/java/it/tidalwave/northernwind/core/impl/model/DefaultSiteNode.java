@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
+import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.spring.SpringAsSupport;
@@ -157,6 +158,17 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
     public Layout getLayout()
       {
         return layoutMapByLocale.get(localeRequestManager.getLocales().get(0));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Finder<SiteNode> findChildren()
+      {
+        throw new UnsupportedOperationException("Not supported yet.");
       }
 
     /*******************************************************************************************************************

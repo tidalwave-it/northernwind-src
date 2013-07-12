@@ -99,6 +99,12 @@ public interface CompositeSiteNodeController
           {
             throw new UnsupportedOperationException("Not supported.");
           }
+
+        @Override @Nonnull
+        public Finder<SiteNode> findChildren()
+          {
+            throw new UnsupportedOperationException("Not supported.");
+          }
       }
 
     @Nonnull
