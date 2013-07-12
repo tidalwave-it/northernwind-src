@@ -59,4 +59,11 @@
         <constructor-arg value="it.tidalwave.northernwind.core.impl.model.InheritanceHelper" />
     </bean>
 
+    <!-- DCI role injector -->
+    <bean id="roleManager"
+          class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
+
+    <bean id="contextManager"
+         class="it.tidalwave.role.spring.SpringContextManager" />
+
 </beans>

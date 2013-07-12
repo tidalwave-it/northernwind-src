@@ -33,9 +33,11 @@ import java.util.regex.Pattern;
 import java.text.Normalizer;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -121,8 +123,11 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Inject @Nonnull
     private RequestContext requestContext;
 
-    @Nonnull @Delegate(types=Resource.class, excludes=Exclusions.class)
+    @Nonnull @Delegate(types = Resource.class, excludes = { As.class, Exclusions.class })
     private final Resource resource;
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
 
     /*******************************************************************************************************************
      *

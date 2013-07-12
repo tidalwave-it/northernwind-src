@@ -36,9 +36,11 @@ import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -47,6 +49,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_PLACE_HOLDER;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import lombok.Cleanup;
+import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +73,9 @@ import lombok.extern.slf4j.Slf4j;
 
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
 
     @Nonnull @Getter
     private final ResourceFile file;

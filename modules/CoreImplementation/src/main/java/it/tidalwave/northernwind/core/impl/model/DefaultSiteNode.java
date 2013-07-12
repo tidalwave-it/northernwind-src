@@ -38,8 +38,10 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -68,7 +70,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
 @Configurable(preConstruction = true) @Slf4j @ToString(of = { "resource", "relativeUri" })
 /* package */ class DefaultSiteNode implements SiteNode
   {
-    @Nonnull @Delegate(types = Resource.class)
+    @Nonnull @Delegate(types = Resource.class, excludes = As.class)
     /* package */ final Resource resource;
 
     @Nonnull
@@ -85,6 +87,9 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
 
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
 
     @CheckForNull
     private ResourcePath relativeUri;

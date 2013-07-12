@@ -29,11 +29,13 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -48,14 +50,17 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j @ToString
+@Configurable(preConstruction = true) @Slf4j @ToString(of = "resource")
 /* package */ class DefaultMedia implements Media
   {
-    @Nonnull @Getter @Delegate(types = Resource.class)
+    @Nonnull @Getter @Delegate(types = Resource.class, excludes = As.class)
     private final Resource resource;
 
     @Inject @Nonnull
     private ModelFactory modelFactory;
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
 
     /*******************************************************************************************************************
      *

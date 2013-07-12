@@ -28,6 +28,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
 
 /***********************************************************************************************************************
  *
@@ -37,7 +38,7 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceFileSystem
+public interface ResourceFileSystem extends As
   {
     /*******************************************************************************************************************
      *

@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import org.joda.time.DateTime;
+import it.tidalwave.util.As;
 
 /***********************************************************************************************************************
  *
@@ -45,7 +46,7 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceFile
+public interface ResourceFile extends As
   {
     /*******************************************************************************************************************
      *

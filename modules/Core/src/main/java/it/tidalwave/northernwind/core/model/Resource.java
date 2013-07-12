@@ -28,6 +28,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 
@@ -40,7 +41,7 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Resource
+public interface Resource extends As
   {
     /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
      *  defined, the resource uses a reasonable default. */
