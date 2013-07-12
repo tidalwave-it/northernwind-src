@@ -51,6 +51,11 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
  **********************************************************************************************************************/
 public interface CompositeSiteNodeController
   {
+    /**
+     *
+     * Since findChildrenSiteNodes() returns "virtual" nodes, that is nodes mapped to parameterized URIs, they can't be
+     * found inside the Site. A special implementation is provided.
+     */
     @RequiredArgsConstructor @ToString
     public static class ChildSiteNode implements SiteNode
       {
@@ -63,6 +68,8 @@ public interface CompositeSiteNodeController
         @Getter @Nonnull
         private final ResourceProperties properties;
 
+        // TODO: perhaps the methods below could be implemented by delegating to the first real SiteNode up in the
+        // hierarchy.
         @Override
         public Layout getLayout()
           {
