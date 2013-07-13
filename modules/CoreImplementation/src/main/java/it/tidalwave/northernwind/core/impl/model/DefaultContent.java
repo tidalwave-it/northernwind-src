@@ -108,7 +108,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString(exclude="requestContext")
+@Configurable @Slf4j @ToString(exclude="requestContext")
 /* package */ class DefaultContent implements Content
   {
     interface Exclusions
@@ -116,8 +116,8 @@ class ResourcePropertiesDelegate implements ResourceProperties
         public ResourceProperties getProperties();
       }
 
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
+    @Nonnull
+    private final ModelFactory modelFactory;
 
     @Inject @Nonnull
     private RequestContext requestContext;
@@ -137,6 +137,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      ******************************************************************************************************************/
     public DefaultContent (final @Nonnull Content.Builder builder)
       {
+        this.modelFactory = builder.getModelFactory();
         resource = modelFactory.createResource().withFile(builder.getFolder()).build();
       }
 

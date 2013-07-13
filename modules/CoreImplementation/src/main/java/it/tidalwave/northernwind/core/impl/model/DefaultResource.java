@@ -65,8 +65,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j @ToString(of = {"file", "placeHolder"})
 /* package */ class DefaultResource implements Resource
   {
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
+    @Nonnull
+    private final ModelFactory modelFactory;
 
     @Inject @Nonnull
     private InheritanceHelper inheritanceHelper;
@@ -93,6 +93,7 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     public DefaultResource (final @Nonnull Resource.Builder builder)
       {
+        this.modelFactory = builder.getModelFactory();
         this.file = builder.getFile();
         propertyResolver = new TextResourcePropertyResolver(file);
       }

@@ -104,8 +104,8 @@ import lombok.extern.slf4j.Slf4j;
     @Inject @Nonnull
     private RequestHolder requestHolder;
 
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
+    @Nonnull
+    private final ModelFactory modelFactory;
 
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private ResourceFileSystemProvider fileSystemProvider;
@@ -165,6 +165,7 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     protected DefaultSite (final @Nonnull Site.Builder siteBuilder)
       {
+        this.modelFactory = siteBuilder.getModelFactory();
         this.contextPath = siteBuilder.getContextPath();
         this.documentPath = siteBuilder.getDocumentPath();
         this.mediaPath = siteBuilder.getMediaPath();
