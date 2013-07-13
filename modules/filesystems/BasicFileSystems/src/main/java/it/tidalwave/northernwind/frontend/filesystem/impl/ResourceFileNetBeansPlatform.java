@@ -39,7 +39,6 @@ import java.util.Date;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import javax.servlet.ServletContext;
 import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -49,6 +48,7 @@ import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.MimeTypeResolver;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -80,7 +80,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Inject @Nonnull
-    private Provider<ServletContext> servletContext;
+    private Provider<MimeTypeResolver> mimeTypeResolver;
 
     @Getter @Nonnull
     private final ResourceFileSystemNetBeansPlatform fileSystem;
@@ -159,11 +159,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override @Nonnull
     public String getMimeType()
       {
-        final String fileName = delegate.getNameExt();
-        String mimeType = servletContext.get().getMimeType(fileName);
-        mimeType = (mimeType != null) ? mimeType : "content/unknown";
-        log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
-        return mimeType;
+        return mimeTypeResolver.get().getMimeType(delegate.getNameExt());
       }
 
     @Override @Nonnull

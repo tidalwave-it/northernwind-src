@@ -110,6 +110,9 @@
     <bean id="modelFactory"
           class="it.tidalwave.northernwind.core.impl.model.DefaultModelFactory"/>
 
+    <bean id="mimeTypeResolver"
+          class="it.tidalwave.northernwind.core.impl.model.ServletContextMimeTypeResolver"/>
+
     <bean id="inheritanceHelper"
           class="it.tidalwave.northernwind.core.impl.model.DefaultInheritanceHelper" />
 
