@@ -85,7 +85,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Getter @Nonnull
     private final ResourceFileSystemNetBeansPlatform fileSystem;
 
-    @Delegate(excludes = Exclusions.class) @Nonnull
+    @Getter @Delegate(excludes = Exclusions.class) @Nonnull
     private final FileObject delegate;
 
     @Delegate
