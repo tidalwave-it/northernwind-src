@@ -103,7 +103,7 @@ public class DefaultModelFactory extends ModelFactorySupport
     public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
       throws IOException, NotFoundException
       {
-        return new DefaultSiteNode((DefaultSite)site, folder);
+        return new DefaultSiteNode(this, (DefaultSite)site, folder);
       }
 
     /*******************************************************************************************************************

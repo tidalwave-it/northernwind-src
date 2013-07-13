@@ -38,14 +38,11 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.As;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -53,12 +50,12 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Cleanup;
-import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static java.net.URLDecoder.*;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
+import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
 
 /***********************************************************************************************************************
  *
@@ -68,12 +65,9 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j @ToString(of = { "resource", "relativeUri" })
-/* package */ class DefaultSiteNode implements SiteNode
+@Configurable(preConstruction = true) @Slf4j @ToString(callSuper = true, of = "relativeUri")
+/* package */ class DefaultSiteNode extends SiteNodeSupport
   {
-    @Nonnull @Delegate(types = Resource.class, excludes = As.class)
-    /* package */ final Resource resource;
-
     @Nonnull
     private final Map<Locale, Layout> layoutMapByLocale = new HashMap<>();
 
@@ -81,16 +75,10 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
     /* package */ InternalSite site;
 
     @Inject @Nonnull
-    private ModelFactory modelFactory;
-
-    @Inject @Nonnull
     private InheritanceHelper inheritanceHelper;
 
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
-
-    @Delegate
-    private final As asSupport = new SpringAsSupport(this);
 
     @CheckForNull
     private ResourcePath relativeUri;
@@ -105,11 +93,13 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultSiteNode (final @Nonnull InternalSite site, final @Nonnull ResourceFile file)
+    public DefaultSiteNode (final @Nonnull ModelFactory modelFactory,
+                            final @Nonnull InternalSite site,
+                            final @Nonnull ResourceFile file)
       throws IOException, NotFoundException
       {
+        super(modelFactory, file);
         this.site = site;
-        resource = modelFactory.createResource().withFile(file).build();
         loadLayouts();
       }
 
@@ -126,14 +116,14 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
             uriComputationCounter++;
 
             relativeUri = new ResourcePath();
-            final ResourceFile file = resource.getFile();
+            final ResourceFile file = getResource().getFile();
 
             if (!file.equals(site.getNodeFolder()))
               {
                 try
                   {
-                    final String segment = resource.getProperties()
-                                                   .getProperty(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
+                    final String segment = getResource().getProperties()
+                                                        .getProperty(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (IOException | NotFoundException e)
@@ -186,7 +176,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
             // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
             // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
             // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
-            final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(resource.getFile(),
+            final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(getResource().getFile(),
                                                                                                locale,
                                                                                                "Components");
             for (final ResourceFile layoutFile : layoutFiles)
@@ -207,7 +197,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
 
             if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
               {
-                log.debug(">>>> layout for {} ():", resource.getFile().getPath().asString(), locale);
+                log.debug(">>>> layout for {} ():", getResource().getFile().getPath().asString(), locale);
                 layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
               }
 
@@ -228,7 +218,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
     private SiteNode getParent()
       throws NotFoundException
       {
-        final ResourcePath parentRelativePath = resource.getFile().getParent().getPath().urlDecoded()
+        final ResourcePath parentRelativePath = getResource().getFile().getParent().getPath().urlDecoded()
                                               .relativeTo(site.getNodeFolder().getPath());
 
         return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();

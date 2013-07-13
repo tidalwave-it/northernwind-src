@@ -25,28 +25,41 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.spi.MediaSupport;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.util.As;
+import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.Delegate;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
- * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or
- * such.
+ * A partial implementation of (@link SiteNode}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(callSuper = true)
-/* package */ class DefaultMedia extends MediaSupport
+public abstract class SiteNodeSupport implements SiteNode
   {
-    public DefaultMedia (final @Nonnull Media.Builder builder)
+    @Nonnull
+    protected final ModelFactory modelFactory;
+
+    @Getter @Delegate(excludes = As.class) @Nonnull
+    private final Resource resource;
+
+    @Delegate
+    private final SpringAsSupport asSupport = new SpringAsSupport(this);
+
+    public SiteNodeSupport (final @Nonnull ModelFactory modelFactory,
+                            final @Nonnull ResourceFile file)
       {
-        super(builder);
+        this.modelFactory = modelFactory;
+        this.resource = modelFactory.createResource().withFile(file).build();
       }
   }

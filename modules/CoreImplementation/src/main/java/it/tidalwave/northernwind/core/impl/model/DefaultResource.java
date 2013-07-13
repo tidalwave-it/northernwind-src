@@ -36,23 +36,20 @@ import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.spring.SpringAsSupport;
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_PLACE_HOLDER;
-import static it.tidalwave.role.Unmarshallable.Unmarshallable;
+import it.tidalwave.northernwind.core.model.spi.ResourceSupport;
 import lombok.Cleanup;
-import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_PLACE_HOLDER;
+import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
  *
@@ -62,23 +59,14 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(of = {"file", "placeHolder"})
-/* package */ class DefaultResource implements Resource
+@Configurable @Slf4j @ToString(callSuper = true, of = "placeHolder")
+/* package */ class DefaultResource extends ResourceSupport
   {
-    @Nonnull
-    private final ModelFactory modelFactory;
-
     @Inject @Nonnull
     private InheritanceHelper inheritanceHelper;
 
     @Inject @Nonnull
     private RequestLocaleManager localeRequestManager;
-
-    @Delegate
-    private final As asSupport = new SpringAsSupport(this);
-
-    @Nonnull @Getter
-    private final ResourceFile file;
 
     private final Map<Locale, ResourceProperties> propertyMapByLocale = new HashMap<>();
 
@@ -93,9 +81,8 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     public DefaultResource (final @Nonnull Resource.Builder builder)
       {
-        this.modelFactory = builder.getModelFactory();
-        this.file = builder.getFile();
-        propertyResolver = new TextResourcePropertyResolver(file);
+        super(builder);
+        propertyResolver = new TextResourcePropertyResolver(getFile());
       }
 
     /*******************************************************************************************************************
@@ -111,23 +98,13 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public ResourceProperties getPropertyGroup (final @Nonnull Id id)
-      {
-        return getProperties().getGroup(id);
-      }
-
-    /*******************************************************************************************************************
-     *
      *
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void loadProperties()
       throws IOException
       {
+        final ResourceFile file = getFile();
         log.debug("loadProperties() for {}", file.getPath().asString());
 
         boolean tmpPlaceHolder = true;

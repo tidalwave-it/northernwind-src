@@ -122,7 +122,7 @@ public class DefaultSiteNodeTest
               }
           }));
 
-        fixture = new DefaultSiteNode(site, resourceFile);
+        fixture = new DefaultSiteNode(modelFactory, site, resourceFile);
       }
 
     /*******************************************************************************************************************
@@ -132,7 +132,7 @@ public class DefaultSiteNodeTest
     public void must_properly_initialize_with_no_layout()
       {
         assertThat(fixture.site, sameInstance(site));
-        assertThat(fixture.resource, sameInstance(resource));
+        assertThat(fixture.getResource(), sameInstance(resource));
         assertThat(fixture.getLayout(), sameInstance(emptyPlaceHolderLayout));
       }
 

@@ -25,28 +25,45 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.spi.MediaSupport;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.util.Id;
+import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Delegate;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
- * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or
- * such.
+ * A partial implementation of (@link Resource}.
  *
- * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(callSuper = true)
-/* package */ class DefaultMedia extends MediaSupport
+public abstract class ResourceSupport implements Resource
   {
-    public DefaultMedia (final @Nonnull Media.Builder builder)
+    @Nonnull
+    protected final ModelFactory modelFactory;
+
+    @Getter @Nonnull
+    private final ResourceFile file;
+
+    @Delegate
+    private final SpringAsSupport asSupport = new SpringAsSupport(this);
+
+    public ResourceSupport (final @Nonnull Resource.Builder builder)
       {
-        super(builder);
+        this.modelFactory = builder.getModelFactory();
+        this.file = builder.getFile();
+      }
+
+    @Override @Nonnull
+    public final ResourceProperties getPropertyGroup (final @Nonnull Id id)
+      {
+        return getProperties().getGroup(id);
       }
   }

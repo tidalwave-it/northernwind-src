@@ -131,9 +131,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     @Nonnull
     private Class<Type> getInterface (final @Nonnull Type parentResource)
       {
-        for (Class<?> type = parentResource.getClass();
-             type != null;
-             type = type.getSuperclass())
+        for (Class<?> type = parentResource.getClass(); type != null; type = type.getSuperclass())
           {
             for (final Class<?> i : type.getInterfaces())
               {

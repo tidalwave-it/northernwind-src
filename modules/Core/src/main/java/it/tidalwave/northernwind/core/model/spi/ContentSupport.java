@@ -25,28 +25,45 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.spi.MediaSupport;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.util.As;
+import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Delegate;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
- * A {@code DefaultMedia} item is a document that is served as-is, without any processing. It's typically an image or
- * such.
+ * A partial implementation of (@link Content}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(callSuper = true)
-/* package */ class DefaultMedia extends MediaSupport
+public abstract class ContentSupport implements Content
   {
-    public DefaultMedia (final @Nonnull Media.Builder builder)
+    interface Exclusions
       {
-        super(builder);
+        public ResourceProperties getProperties();
+      }
+
+    @Getter @Nonnull @Delegate(excludes = { As.class, Exclusions.class })
+    private final Resource resource;
+
+    @Delegate
+    private final SpringAsSupport asSupport = new SpringAsSupport(this);
+
+    @Nonnull
+    protected final ModelFactory modelFactory;
+
+    public ContentSupport (final @Nonnull Content.Builder builder)
+      {
+        this.modelFactory = builder.getModelFactory();
+        this.resource = modelFactory.createResource().withFile(builder.getFolder()).build();
       }
   }

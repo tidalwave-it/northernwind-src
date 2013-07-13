@@ -25,13 +25,16 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
+import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.spi.MediaSupport;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Resource;
+import lombok.Delegate;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -42,11 +45,20 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(callSuper = true)
-/* package */ class DefaultMedia extends MediaSupport
+public abstract class MediaSupport implements Media
   {
-    public DefaultMedia (final @Nonnull Media.Builder builder)
+    @Nonnull
+    protected final ModelFactory modelFactory;
+
+    @Nonnull @Getter @Delegate(types = Resource.class, excludes = As.class)
+    private final Resource resource;
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
+
+    public MediaSupport (final @Nonnull Media.Builder builder)
       {
-        super(builder);
+        this.modelFactory = builder.getModelFactory();
+        resource = modelFactory.createResource().withFile(builder.getFile()).build();
       }
   }

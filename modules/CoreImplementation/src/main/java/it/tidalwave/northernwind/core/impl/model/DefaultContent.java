@@ -33,17 +33,14 @@ import java.util.regex.Pattern;
 import java.text.Normalizer;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.As;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
-import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.spi.ContentSupport;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -108,25 +105,11 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude="requestContext")
-/* package */ class DefaultContent implements Content
+@Configurable @Slf4j @ToString(callSuper = true, exclude="requestContext")
+/* package */ class DefaultContent extends ContentSupport
   {
-    interface Exclusions
-      {
-        public ResourceProperties getProperties();
-      }
-
-    @Nonnull
-    private final ModelFactory modelFactory;
-
     @Inject @Nonnull
     private RequestContext requestContext;
-
-    @Nonnull @Delegate(types = Resource.class, excludes = { As.class, Exclusions.class })
-    private final Resource resource;
-
-    @Delegate
-    private final As asSupport = new SpringAsSupport(this);
 
     /*******************************************************************************************************************
      *
@@ -137,8 +120,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      ******************************************************************************************************************/
     public DefaultContent (final @Nonnull Content.Builder builder)
       {
-        this.modelFactory = builder.getModelFactory();
-        resource = modelFactory.createResource().withFile(builder.getFolder()).build();
+        super(builder);
       }
 
     /*******************************************************************************************************************
@@ -184,7 +166,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     private ResourcePath getDefaultExposedUri()
       throws NotFoundException, IOException
       {
-        String title = resource.getProperties().getProperty(PROPERTY_TITLE);
+        String title = getResource().getProperties().getProperty(PROPERTY_TITLE);
         title = deAccent(title);
         title = title.replaceAll(" ", "-")
                      .replaceAll(",", "")
@@ -214,6 +196,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public ResourceProperties getProperties()
       {
-        return new ResourcePropertiesDelegate(requestContext, this, resource.getProperties());
+        return new ResourcePropertiesDelegate(requestContext, this, getResource().getProperties());
       }
   }
