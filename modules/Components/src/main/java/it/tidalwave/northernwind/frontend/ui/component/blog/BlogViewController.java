@@ -39,8 +39,6 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
  **********************************************************************************************************************/
 public interface BlogViewController extends CompositeSiteNodeController
   {
-    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<>("contents");
-
     // FIXME: these should be Integer
     public static final Key<String> PROPERTY_MAX_FULL_ITEMS = new Key<>("maxFullItems");
 

@@ -49,9 +49,9 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -118,7 +118,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final Item item = new Item();
         final Content content = new Content();
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
-        content.setValue(postProperties.getProperty(Properties.PROPERTY_FULL_TEXT));
+        content.setValue(postProperties.getProperty(PROPERTY_FULL_TEXT));
         item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(blogDateTime.toDate());

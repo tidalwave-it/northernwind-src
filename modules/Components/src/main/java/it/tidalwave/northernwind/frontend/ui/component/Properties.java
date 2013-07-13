@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.ui.component;
 
 //import org.joda.time.DateTime;
 import it.tidalwave.util.Key;
+import java.util.List;
 import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.*;
 
@@ -65,4 +66,5 @@ public final class Properties
 
     public static final Key<String> PROPERTY_DATE_FORMAT = new Key<>("dateFormat");
 
+    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<>("contents");
   }
