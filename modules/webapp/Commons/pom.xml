@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-webapp</artifactId>
-        <version>1.1-ALPHA-24-SNAPSHOT</version>
+        <version>1.1-ALPHA-24</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-webapp-commons</artifactId>
-    <version>1.1-ALPHA-24-SNAPSHOT</version>
+    <version>1.1-ALPHA-24</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Webapp Commons</name>
     <description>Common resources for webapps.</description>
