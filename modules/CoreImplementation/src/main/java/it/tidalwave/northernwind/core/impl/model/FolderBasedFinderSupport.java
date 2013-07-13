@@ -31,14 +31,18 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +59,9 @@ import lombok.extern.slf4j.Slf4j;
 public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
   {
     private static final long serialVersionUID = 2345536092354546452L;
+
+    private static final List<Class<?>> ALLOWED_TYPES =
+            Arrays.<Class<?>>asList(Content.class, SiteNode.class, Media.class);
 
     @Inject @Nonnull
     private transient Provider<SiteProvider> siteProvider;
@@ -78,7 +85,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
         try
           {
             final Site site = siteProvider.get().getSite();
-            this.typeClass = (Class<Type>)parentResource.getClass().getInterfaces()[0]; // FIXME assumes the interesting interface is [0]
+            this.typeClass = getInterface(parentResource);
             this.resourceRootPath = site.find(typeClass).withRelativePath("/").result().getFile().getPath();
             this.parentFile = parentResource.getFile();
           }
@@ -115,5 +122,28 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
           }
 
         return result;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Class<Type> getInterface (final @Nonnull Type parentResource)
+      {
+        for (Class<?> type = parentResource.getClass();
+             type != null;
+             type = type.getSuperclass())
+          {
+            for (final Class<?> i : type.getInterfaces())
+              {
+                if (ALLOWED_TYPES.contains(i))
+                  {
+                    return (Class<Type>)i;
+                  }
+              }
+          }
+
+        throw new IllegalArgumentException("Illegal type: " + parentResource + "; allowed must implement " + ALLOWED_TYPES);
       }
   }
