@@ -147,7 +147,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
           {
             if (mapByRelativePath == null)
               {
-                throw new IllegalArgumentException("Illegal type: ");
+                throw new IllegalArgumentException("Illegal type");
               }
 
             addResults(results, mapByRelativePath, relativePath);
