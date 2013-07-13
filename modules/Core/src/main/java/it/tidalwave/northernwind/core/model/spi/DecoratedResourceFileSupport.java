@@ -30,7 +30,6 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.util.Finder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
