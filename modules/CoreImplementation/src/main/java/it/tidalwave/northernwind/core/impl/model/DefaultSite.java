@@ -365,7 +365,7 @@ import lombok.extern.slf4j.Slf4j;
                            final @Nonnull FileFilter fileFilter,
                            final @Nonnull FilePredicate predicate)
       {
-        log.trace("traverse({})", file);
+        log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, predicate);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
         if (fileFilter.accept(file))
