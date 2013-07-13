@@ -91,9 +91,9 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    public DefaultResource (final @Nonnull ResourceFile file)
+    public DefaultResource (final @Nonnull Resource.Builder builder)
       {
-        this.file = file;
+        this.file = builder.getFile();
         propertyResolver = new TextResourcePropertyResolver(file);
       }
 

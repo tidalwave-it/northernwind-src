@@ -272,7 +272,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource(file));
+                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
               }
           });
 
@@ -281,7 +281,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia(file));
+                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
               }
           });
 
@@ -290,7 +290,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
-                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent(folder));
+                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
               }
           });
 

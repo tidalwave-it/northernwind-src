@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * An implementation of {@link MimeTypeResolver} that delegates to a {@link ServletContext}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -52,6 +52,12 @@ public class ServletContextMimeTypeResolver implements MimeTypeResolver
     public String getMimeType (final @Nonnull String fileName)
       {
         String mimeType = servletContext.get().getMimeType(fileName);
+
+        if ((mimeType == null) && fileName.endsWith(".mp4"))
+          {
+            mimeType = "video/mp4";
+          }
+
         mimeType = (mimeType != null) ? mimeType : "content/unknown";
         log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
         return mimeType;

@@ -31,6 +31,12 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -42,6 +48,32 @@ import it.tidalwave.role.SimpleComposite;
  **********************************************************************************************************************/
 public interface Content extends Resource, SimpleComposite<Content>
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Content}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
+    @Wither @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Content build (@Nonnull Content.Builder builder);
+          }
+
+        private Content.Builder.CallBack callBack;
+        private ResourceFile folder;
+
+        @Nonnull
+        public Content build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     public static final Class<Content> Content = Content.class;
 
     /*******************************************************************************************************************

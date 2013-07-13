@@ -95,7 +95,16 @@ public class DefaultSiteNodeTest
         resource = mock(Resource.class);
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
-        when(modelFactory.createResource(any(ResourceFile.class))).thenReturn(resource);
+        
+        when(modelFactory.createResource()).thenReturn(new Resource.Builder().withCallBack(new Resource.Builder.CallBack()
+          {
+            @Override
+            public Resource build(Resource.Builder builder)
+              {
+                return resource;
+              }
+          }));
+
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.ENGLISH));
 
         final ResourceFile nodeFolder = MockResourceFile.folder("structure");

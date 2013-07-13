@@ -109,7 +109,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
       throws IOException, NotFoundException
       {
         this.site = site;
-        resource = modelFactory.createResource(file);
+        resource = modelFactory.createResource().withFile(file).build();
         loadLayouts();
       }
 

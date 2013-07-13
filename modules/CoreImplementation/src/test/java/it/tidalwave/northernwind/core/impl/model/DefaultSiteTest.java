@@ -27,32 +27,25 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.util.Key;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -70,7 +63,7 @@ public class DefaultSiteTest
   {
     private ClassPathXmlApplicationContext context;
 
-    private ModelFactory modelFactory;
+    private MockModelFactory modelFactory;
 
     private RequestHolder requestHolder;
 
@@ -82,8 +75,6 @@ public class DefaultSiteTest
 
     private Site.Builder siteBuilder;
 
-    private Map<String, String> resourceProperties;
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -91,9 +82,8 @@ public class DefaultSiteTest
     public void setupFixture()
       throws Exception
       {
-        resourceProperties = new HashMap<>();
         context = new ClassPathXmlApplicationContext("DefaultSiteTestBeans.xml");
-        modelFactory = context.getBean(ModelFactory.class);
+        modelFactory = context.getBean(MockModelFactory.class);
 
         final Request request = mock(Request.class);
         when(request.getBaseUrl()).thenReturn("/baseUrl");
@@ -112,96 +102,6 @@ public class DefaultSiteTest
                                         .withLogConfigurationEnabled(true)
                                         .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                                         .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
-
-        // FIXME: perhaps it's better to create a MockModelFactory implements ModelFactory?
-        when(modelFactory.createResource(any(ResourceFile.class))).thenAnswer(new Answer<Resource>()
-          {
-            @Override
-            public Resource answer (final @Nonnull InvocationOnMock invocation)
-              {
-                final Resource resource = mock(Resource.class);
-                final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
-                final String path = file.getPath().asString();
-                log.trace(">>>> creating Resource for {}", path);
-
-                when(resource.toString()).thenReturn(String.format("Resource(path=%s)", path));
-                return resource;
-              }
-          });
-
-        when(modelFactory.createContent(any(ResourceFile.class))).thenAnswer(new Answer<Content>()
-          {
-            @Override
-            public Content answer (final @Nonnull InvocationOnMock invocation)
-              {
-                final Content content = mock(Content.class);
-                final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
-                final String path = file.getPath().asString();
-                log.trace(">>>> creating Content for {}", path);
-
-                when(content.toString()).thenReturn(String.format("Content(path=%s)", path));
-                return content;
-              }
-          });
-
-        when(modelFactory.createMedia(any(ResourceFile.class))).thenAnswer(new Answer<Media>()
-          {
-            @Override
-            public Media answer (final @Nonnull InvocationOnMock invocation)
-              {
-                final Media media = mock(Media.class);
-                final ResourceFile file = (ResourceFile)invocation.getArguments()[0];
-                final String path = file.getPath().asString();
-                log.trace(">>>> creating Media for {}", path);
-
-                when(media.toString()).thenReturn(String.format("Media(path=%s)", path));
-                return media;
-              }
-          });
-
-        when(modelFactory.createSiteNode(any(Site.class), any(ResourceFile.class))).thenAnswer(new Answer<SiteNode>()
-          {
-            @Override
-            public SiteNode answer (final @Nonnull InvocationOnMock invocation)
-              throws Exception
-              {
-                final ResourceFile file = (ResourceFile)invocation.getArguments()[1];
-                final String relativeUri = String.format("relativeUriFor:%s", file.getPath().asString());
-                final String path = file.getPath().asString();
-                log.trace(">>>> creating SiteNode for {}", path);
-                final SiteNode siteNode = mock(SiteNode.class);
-
-                // TODO: this is cumbersome code... perhaps just use DefaultResourceProperties?
-                final ResourceProperties properties = mock(ResourceProperties.class);
-                when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).
-                        thenAnswer(new Answer<String>()
-                  {
-                    @Override
-                    public String answer (final @Nonnull InvocationOnMock invocation)
-                      {
-                        return (String)invocation.getArguments()[1]; // default value
-                      }
-                  });
-
-                for (final Map.Entry<String, String> e : resourceProperties.entrySet())
-                  {
-                    if (e.getKey().startsWith(path + "."))
-                      {
-                        final String propertyName = e.getKey().substring(path.length() + 1);
-                        final Key<String> propertyKey = new Key<>(propertyName);
-                        log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
-                        when(properties.getProperty(eq(propertyKey))).thenReturn(e.getValue());
-                        when(properties.getProperty(eq(propertyKey), anyString())).thenReturn(e.getValue());
-                      }
-                  }
-
-                when(siteNode.getProperties()).thenReturn(properties);
-                when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
-                when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
-
-                return siteNode;
-              }
-          });
       }
 
     /*******************************************************************************************************************
@@ -230,7 +130,7 @@ public class DefaultSiteTest
     public void must_properly_initialize (final @Nonnull FileSystemTestSupport fsTestSupport)
       throws Exception
       {
-        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         fixture = new DefaultSite(siteBuilder);
 
         fixture.initialize();
@@ -246,7 +146,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
 
@@ -265,7 +165,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
 
@@ -284,7 +184,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
 
@@ -303,7 +203,7 @@ public class DefaultSiteTest
       throws Exception
       {
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, resourceProperties);
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         fixture = new DefaultSite(siteBuilder);
         fixture.initialize();
 

@@ -35,7 +35,6 @@ import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -66,8 +65,8 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    public DefaultMedia (final @Nonnull ResourceFile file)
+    public DefaultMedia (final @Nonnull Media.Builder builder)
       {
-        resource = modelFactory.createResource(file);
+        resource = modelFactory.createResource().withFile(builder.getFile()).build();
       }
   }

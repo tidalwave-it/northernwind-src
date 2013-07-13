@@ -27,6 +27,14 @@
  */
 package it.tidalwave.northernwind.core.model;
 
+import javax.annotation.Nonnull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
+
 /***********************************************************************************************************************
  *
  * A {@code Media} item is a document that is served as-is, without any processing. It's typically an image or such.
@@ -37,5 +45,31 @@ package it.tidalwave.northernwind.core.model;
  **********************************************************************************************************************/
 public interface Media extends Resource
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Content}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
+    @Wither @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Media build (@Nonnull Media.Builder builder);
+          }
+
+        private Media.Builder.CallBack callBack;
+        private ResourceFile file;
+
+        @Nonnull
+        public Media build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     public static final Class<Media> Media = Media.class;
   }

@@ -49,6 +49,9 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  *
  **********************************************************************************************************************/
 public class ModelFactorySupport implements ModelFactory,
+                                            Resource.Builder.CallBack,
+                                            Content.Builder.CallBack,
+                                            Media.Builder.CallBack,
                                             ResourceProperties.Builder.CallBack,
                                             Site.Builder.CallBack,
                                             Layout.Builder.CallBack
@@ -59,9 +62,9 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource createResource (final @Nonnull ResourceFile file)
+    public final Resource.Builder createResource()
       {
-        throw new UnsupportedOperationException("Not supported.");
+        return new Resource.Builder().withCallBack(this);
       }
 
     /*******************************************************************************************************************
@@ -70,9 +73,9 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content createContent (final @Nonnull ResourceFile file)
+    public final Content.Builder createContent()
       {
-        throw new UnsupportedOperationException("Not supported.");
+        return new Content.Builder().withCallBack(this);
       }
 
     /*******************************************************************************************************************
@@ -93,9 +96,9 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media createMedia (final @Nonnull ResourceFile rf)
+    public final Media.Builder createMedia()
       {
-        throw new UnsupportedOperationException("Not supported.");
+        return new Media.Builder().withCallBack(this);
       }
 
     /*******************************************************************************************************************
@@ -182,6 +185,39 @@ public class ModelFactorySupport implements ModelFactory,
      ******************************************************************************************************************/
     @Override @Nonnull
     public Layout build (final @Nonnull Layout.Builder builder)
+      {
+        throw new UnsupportedOperationException("Not supported.");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Resource build (final @Nonnull Resource.Builder builder)
+      {
+        throw new UnsupportedOperationException("Not supported.");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Content build (final @Nonnull Content.Builder builder)
+      {
+        throw new UnsupportedOperationException("Not supported.");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Media build (final @Nonnull Media.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }

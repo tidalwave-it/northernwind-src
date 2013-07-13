@@ -43,7 +43,6 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
@@ -136,9 +135,9 @@ class ResourcePropertiesDelegate implements ResourceProperties
      * @param   file   the configuration file
      *
      ******************************************************************************************************************/
-    public DefaultContent (final @Nonnull ResourceFile file)
+    public DefaultContent (final @Nonnull Content.Builder builder)
       {
-        resource = modelFactory.createResource(file);
+        resource = modelFactory.createResource().withFile(builder.getFolder()).build();
       }
 
     /*******************************************************************************************************************

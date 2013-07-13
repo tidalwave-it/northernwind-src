@@ -67,9 +67,9 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource createResource (final @Nonnull ResourceFile file)
+    public Resource build (final @Nonnull Resource.Builder builder)
       {
-        return new DefaultResource(file);
+        return new DefaultResource(builder);
       }
 
     /*******************************************************************************************************************
@@ -78,9 +78,9 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content createContent (final @Nonnull ResourceFile folder)
+    public Content build (final @Nonnull Content.Builder builder)
       {
-        return new DefaultContent(folder);
+        return new DefaultContent(builder);
       }
 
     /*******************************************************************************************************************
@@ -89,9 +89,9 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media createMedia (final @Nonnull ResourceFile file)
+    public Media build (final @Nonnull Media.Builder builder)
       {
-        return new DefaultMedia(file);
+        return new DefaultMedia(builder);
       }
 
     /*******************************************************************************************************************

@@ -31,6 +31,12 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -43,6 +49,32 @@ import it.tidalwave.util.Key;
  **********************************************************************************************************************/
 public interface Resource extends As
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Resource}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
+    @Wither @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Resource build (@Nonnull Resource.Builder builder);
+          }
+
+        private Resource.Builder.CallBack callBack;
+        private ResourceFile file;
+
+        @Nonnull
+        public Resource build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
      *  defined, the resource uses a reasonable default. */
     public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
