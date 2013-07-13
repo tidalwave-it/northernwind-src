@@ -36,6 +36,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
 
@@ -55,8 +56,8 @@ public interface Site
      * A builder of a {@link Site}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
-    @Wither @Getter @ToString(exclude = "callBack")
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
@@ -66,14 +67,27 @@ public interface Site
             public Site build (@Nonnull Builder builder);
           }
 
-        private CallBack callBack;
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
         private String contextPath;
+        @Wither
         private String documentPath;
+        @Wither
         private String mediaPath;
+        @Wither
         private String libraryPath;
+        @Wither
         private String nodePath;
+        @Wither
         private boolean logConfigurationEnabled;
+        @Wither
         private List<Locale> configuredLocales;
+        @Wither
         private List<String> ignoredFolders;
 
         @Nonnull

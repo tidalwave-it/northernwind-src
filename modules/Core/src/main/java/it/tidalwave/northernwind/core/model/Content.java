@@ -34,7 +34,7 @@ import it.tidalwave.role.SimpleComposite;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
 
@@ -53,18 +53,24 @@ public interface Content extends Resource, SimpleComposite<Content>
      * A builder of a {@link Content}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
-    @Wither @Getter @ToString(exclude = "callBack")
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
         public static interface CallBack
           {
             @Nonnull
-            public Content build (@Nonnull Content.Builder builder);
+            public Content build (@Nonnull Builder builder);
           }
 
-        private Content.Builder.CallBack callBack;
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
         private ResourceFile folder;
 
         @Nonnull

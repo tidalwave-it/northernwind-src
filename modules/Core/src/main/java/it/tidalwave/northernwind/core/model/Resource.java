@@ -34,7 +34,7 @@ import it.tidalwave.util.Key;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
 
@@ -54,18 +54,24 @@ public interface Resource extends As
      * A builder of a {@link Resource}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
-    @Wither @Getter @ToString(exclude = "callBack")
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
         public static interface CallBack
           {
             @Nonnull
-            public Resource build (@Nonnull Resource.Builder builder);
+            public Resource build (@Nonnull Builder builder);
           }
 
-        private Resource.Builder.CallBack callBack;
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
         private ResourceFile file;
 
         @Nonnull

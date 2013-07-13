@@ -64,7 +64,7 @@ public class ModelFactorySupport implements ModelFactory,
     @Override @Nonnull
     public final Resource.Builder createResource()
       {
-        return new Resource.Builder().withCallBack(this);
+        return new Resource.Builder(this, this);
       }
 
     /*******************************************************************************************************************
@@ -75,7 +75,7 @@ public class ModelFactorySupport implements ModelFactory,
     @Override @Nonnull
     public final Content.Builder createContent()
       {
-        return new Content.Builder().withCallBack(this);
+        return new Content.Builder(this, this);
       }
 
     /*******************************************************************************************************************
@@ -98,7 +98,7 @@ public class ModelFactorySupport implements ModelFactory,
     @Override @Nonnull
     public final Media.Builder createMedia()
       {
-        return new Media.Builder().withCallBack(this);
+        return new Media.Builder(this, this);
       }
 
     /*******************************************************************************************************************
@@ -131,7 +131,7 @@ public class ModelFactorySupport implements ModelFactory,
     @Override @Nonnull
     public final Layout.Builder createLayout()
       {
-        return new Layout.Builder().withCallBack(this);
+        return new Layout.Builder(this, this);
       }
 
     /*******************************************************************************************************************
@@ -142,7 +142,7 @@ public class ModelFactorySupport implements ModelFactory,
     @Override @Nonnull
     public final ResourceProperties.Builder createProperties()
       {
-        return new ResourceProperties.Builder().withCallBack(this);
+        return new ResourceProperties.Builder(this, this);
       }
 
     /*******************************************************************************************************************
@@ -153,7 +153,7 @@ public class ModelFactorySupport implements ModelFactory,
     @Override @Nonnull
     public final Site.Builder createSite()
       {
-        return new Site.Builder().withCallBack(this);
+        return new Site.Builder(this, this);
       }
 
     /*******************************************************************************************************************

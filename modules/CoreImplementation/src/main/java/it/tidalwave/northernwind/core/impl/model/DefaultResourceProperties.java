@@ -56,8 +56,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString(exclude={"propertyResolver", "asSupport"})
 public class DefaultResourceProperties implements ResourceProperties
   {
-    public static ResourceProperties DEFAULT = new DefaultResourceProperties(new ResourceProperties.Builder());
-
     @Nonnull @Getter
     private final Id id;
 
@@ -191,8 +189,8 @@ public class DefaultResourceProperties implements ResourceProperties
     public ResourceProperties getGroup (final @Nonnull Id id)
       {
         final DefaultResourceProperties properties = groupMap.get(id);
-        return properties != null ? properties
-                                  : new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
+        return properties != null ? properties : new DefaultResourceProperties(this);
+//                                  : new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
 
     /*******************************************************************************************************************
@@ -284,6 +282,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public ResourceProperties withId (final @Nonnull Id id)
       {
-        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
+        return new DefaultResourceProperties(this);
+//        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
   }

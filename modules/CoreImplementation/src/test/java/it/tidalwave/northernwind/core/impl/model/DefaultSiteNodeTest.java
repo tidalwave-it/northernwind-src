@@ -95,8 +95,8 @@ public class DefaultSiteNodeTest
         resource = mock(Resource.class);
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
-        
-        when(modelFactory.createResource()).thenReturn(new Resource.Builder().withCallBack(new Resource.Builder.CallBack()
+
+        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, new Resource.Builder.CallBack()
           {
             @Override
             public Resource build(Resource.Builder builder)
@@ -112,7 +112,7 @@ public class DefaultSiteNodeTest
 
         emptyPlaceHolderLayout = mock(Layout.class);
 //        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
-        when(modelFactory.createLayout()).thenReturn(new Layout.Builder().withCallBack(new Layout.Builder.CallBack()
+        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, new Layout.Builder.CallBack()
           {
             @Override
             public Layout build (final @Nonnull Layout.Builder builder)
