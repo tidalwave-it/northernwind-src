@@ -37,6 +37,7 @@ import org.joda.time.DateTime;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.ExtendedFinderSupport;
 import it.tidalwave.role.Composite;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -59,12 +60,22 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
         public Finder withName (@Nonnull String name);
       }
 
+    @ToString(callSuper = true)
     public static class FinderSupport extends it.tidalwave.util.spi.FinderSupport<ResourceFile, Finder> implements Finder
       {
         protected boolean recursive = false;
 
         @CheckForNull
         protected String name;
+
+        public FinderSupport()
+          {
+          }
+
+        public FinderSupport (final @Nonnull String name)
+          {
+            super(name);
+          }
 
         @Override @Nonnull
         public Finder withRecursion (final boolean recursive)
