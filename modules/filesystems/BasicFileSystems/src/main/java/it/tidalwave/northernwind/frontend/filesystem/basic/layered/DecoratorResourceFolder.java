@@ -91,7 +91,18 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
                         throw new IllegalArgumentException("relativePath: " + name);
                       }
 
-                    return Collections.singletonList(getChildrenMap().get(name));
+                    final ResourceFile child = getChildrenMap().get(name);
+
+                    return (child != null) ? Collections.singletonList(child) : Collections.<ResourceFile>emptyList();
+                  }
+                //
+                // FIXME: this reproduces the behaviour before the refactoring for NW-192 - but it's (and was) wrong
+                // since it doesn't consider delegates. It should be rewritten by relying on getChildrenMap() and
+                // making it eventually support recursion.
+                //
+                else if (recursive)
+                  {
+                    return delegate.findChildren().withRecursion(recursive).results();
                   }
                 else
                   {

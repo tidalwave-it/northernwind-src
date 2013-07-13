@@ -125,7 +125,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new FinderSupport()
+        return new FinderSupport(getClass().getSimpleName()+ ": " + delegate)
           {
             @Override @Nonnull
             protected List<? extends ResourceFile> computeResults()
@@ -134,7 +134,12 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
 
                 if (name != null)
                   {
-                    result.add(fileSystem.createResourceFile(delegate.getFileObject(name)));
+                    final FileObject child = delegate.getFileObject(name);
+
+                    if (child != null)
+                      {
+                        result.add(fileSystem.createResourceFile(child));
+                      }
                   }
                 else
                   {
