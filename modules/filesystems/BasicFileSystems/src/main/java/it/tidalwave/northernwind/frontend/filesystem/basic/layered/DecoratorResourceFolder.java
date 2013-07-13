@@ -41,6 +41,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +80,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new FinderSupport()
+        return new ResourceFileFinderSupport()
           {
             @Override @Nonnull
             protected List<? extends ResourceFile> computeResults()

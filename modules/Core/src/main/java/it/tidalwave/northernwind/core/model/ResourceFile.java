@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +36,6 @@ import org.joda.time.DateTime;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.ExtendedFinderSupport;
 import it.tidalwave.role.Composite;
-import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -51,47 +49,34 @@ import lombok.ToString;
  **********************************************************************************************************************/
 public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.Finder>
   {
+    /*******************************************************************************************************************
+     *
+     * A {@link Finder} for retrieving children of {@link ResourceFile}.
+     *
+     ******************************************************************************************************************/
     public static interface Finder extends ExtendedFinderSupport<ResourceFile, Finder>
       {
+        /*******************************************************************************************************************
+         *
+         * Sets the recursion mode for search.
+         *
+         * @param  recursion  whether the search must be recursive
+         * @return            a cloned finder
+         *
+         ******************************************************************************************************************/
         @Nonnull
         public Finder withRecursion (boolean recursion);
 
+        /*******************************************************************************************************************
+         *
+         * Sets the name of the child to find.
+         *
+         * @param  name       the name of the file
+         * @return            a cloned finder
+         *
+         ******************************************************************************************************************/
         @Nonnull
         public Finder withName (@Nonnull String name);
-      }
-
-    @ToString(callSuper = true)
-    public static class FinderSupport extends it.tidalwave.util.spi.FinderSupport<ResourceFile, Finder> implements Finder
-      {
-        protected boolean recursive = false;
-
-        @CheckForNull
-        protected String name;
-
-        public FinderSupport()
-          {
-          }
-
-        public FinderSupport (final @Nonnull String name)
-          {
-            super(name);
-          }
-
-        @Override @Nonnull
-        public Finder withRecursion (final boolean recursive)
-          {
-            final FinderSupport clone = (FinderSupport)clone();
-            clone.recursive = recursive;
-            return clone;
-          }
-
-        @Override @Nonnull
-        public Finder withName (final @Nonnull String name)
-          {
-            final FinderSupport clone = (FinderSupport)clone();
-            clone.name = name;
-            return clone;
-          }
       }
 
     /*******************************************************************************************************************

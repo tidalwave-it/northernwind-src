@@ -75,7 +75,7 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new FinderSupport()
+        return new ResourceFileFinderSupport()
           {
             @Override @Nonnull
             protected List<? extends ResourceFile> computeResults()

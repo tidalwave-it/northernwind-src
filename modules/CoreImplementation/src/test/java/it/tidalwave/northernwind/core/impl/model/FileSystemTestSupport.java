@@ -27,16 +27,16 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFile.FinderSupport;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import java.util.List;
-import javax.annotation.CheckForNull;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.hamcrest.CoreMatchers.is;
@@ -59,10 +59,10 @@ import static org.mockito.Mockito.when;
 public abstract class FileSystemTestSupport
   {
     @RequiredArgsConstructor
-    static class ListFinder extends FinderSupport
+    static class ListFinder extends ResourceFileFinderSupport
       {
         @Nonnull
-        private final Collection<ResourceFile> results;
+        final Collection<ResourceFile> results;
 
         @Override
         protected List<? extends ResourceFile> computeResults()

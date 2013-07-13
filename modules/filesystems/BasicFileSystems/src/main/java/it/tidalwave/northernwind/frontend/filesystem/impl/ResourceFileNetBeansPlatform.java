@@ -48,6 +48,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.MimeTypeResolver;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -125,7 +126,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new FinderSupport(getClass().getSimpleName()+ ": " + delegate)
+        return new ResourceFileFinderSupport(getClass().getSimpleName()+ ": " + delegate)
           {
             @Override @Nonnull
             protected List<? extends ResourceFile> computeResults()
