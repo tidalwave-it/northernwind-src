@@ -160,7 +160,7 @@ public class MercurialFileSystemProviderTest
      *
      ******************************************************************************************************************/
     private void assertThatHasNoCurrentTag (final @Nonnull MercurialRepository repository)
-	  throws IOException
+      throws IOException
       {
         try
           {
@@ -176,7 +176,7 @@ public class MercurialFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-	@Nonnull
+    @Nonnull
     private GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
       throws IllegalStateException, BeansException
       {
