@@ -72,8 +72,9 @@ public class XsltMacroFilterTest
     public void setupFixture()
       throws Exception
       {
-        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
-                                                                              "XsltMacroFilterTestBeans.xml");
+        // FIXME
+//        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
+        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);

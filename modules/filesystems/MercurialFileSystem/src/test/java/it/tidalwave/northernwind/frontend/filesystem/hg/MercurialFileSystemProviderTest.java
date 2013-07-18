@@ -30,11 +30,18 @@ package it.tidalwave.northernwind.frontend.filesystem.hg;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.role.ContextManager;
+import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
@@ -47,11 +54,6 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSystemChangedEventMatcher.*;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 
 /***********************************************************************************************************************
  *
@@ -180,6 +182,7 @@ public class MercurialFileSystemProviderTest
     private GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
       throws IllegalStateException, BeansException
       {
+        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         final StandardEnvironment environment = new StandardEnvironment();
         environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
         context = new GenericXmlApplicationContext();

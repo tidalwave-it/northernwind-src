@@ -34,6 +34,8 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
+import it.tidalwave.role.ContextManager;
+import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
@@ -64,6 +66,7 @@ public class LayeredFileSystemProviderTest
     @BeforeMethod
     public void createFixture()
       {
+        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         fixture = new LayeredFileSystemProvider();
       }
 
