@@ -80,7 +80,7 @@ public class XsltMacroFilterTest
 
         final ResourceFile file = mock(ResourceFile.class);
         final String resourceName = "/it/tidalwave/northernwind/core/impl/model/Photo.xslt";
-        final String xslt = IOUtils.toString(getClass().getResourceAsStream(resourceName)); // FIXME: charset!
+        final String xslt = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
         when(file.getPath()).thenReturn(new ResourcePath(resourceName));
         when(file.asText(anyString())).thenReturn(xslt);
 
