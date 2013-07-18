@@ -116,14 +116,14 @@ public class XsltMacroFilterTest
       throws IOException
       {
         final String resourceName = String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName);
-        final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName));
+        final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
         final String result = fixture.filter(text, "application/xhtml+xml");
 
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml",
                                                          fileName));
         final File actualFile = new File(String.format("target/test-artifacts/%s-filtered.xhtml", fileName));
         actualFile.getParentFile().mkdirs();
-        FileUtils.write(actualFile, result);
+        FileUtils.write(actualFile, result, "UTF-8");
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
 
