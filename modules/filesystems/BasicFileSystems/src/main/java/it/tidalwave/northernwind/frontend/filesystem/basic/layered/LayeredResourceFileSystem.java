@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.io.IOException;
 import it.tidalwave.util.As;
-import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -61,7 +61,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
     private final IdentityHashMap<ResourceFile, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
 
     @Delegate
-    private final As asSupport = new SpringAsSupport(this);
+    private final As asSupport = new AsSupport(this);
 
     /*******************************************************************************************************************
      *

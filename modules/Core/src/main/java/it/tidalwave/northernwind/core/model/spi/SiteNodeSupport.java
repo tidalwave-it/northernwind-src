@@ -29,7 +29,7 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
-import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -54,7 +54,7 @@ public abstract class SiteNodeSupport implements SiteNode
     private final Resource resource;
 
     @Delegate
-    private final SpringAsSupport asSupport = new SpringAsSupport(this);
+    private final AsSupport as = new AsSupport(this);
 
     public SiteNodeSupport (final @Nonnull ModelFactory modelFactory,
                             final @Nonnull ResourceFile file)

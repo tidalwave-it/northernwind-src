@@ -37,7 +37,7 @@ import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Delegate;
 import lombok.Getter;
@@ -67,7 +67,7 @@ public class DefaultResourceProperties implements ResourceProperties
     private final PropertyResolver propertyResolver;
 
     @Delegate
-    private final SpringAsSupport asSupport = new SpringAsSupport(this);
+    private final AsSupport as = new AsSupport(this);
 
     /*******************************************************************************************************************
      *

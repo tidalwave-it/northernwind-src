@@ -31,12 +31,12 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.role.spring.SpringAsSupport;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -72,7 +72,7 @@ public interface CompositeSiteNodeController
         private final ResourceProperties properties;
 
         @Delegate
-        private final As asSupport = new SpringAsSupport(this);
+        private final As asSupport = new AsSupport(this);
 
         // TODO: perhaps the methods below could be implemented by delegating to the first real SiteNode up in the
         // hierarchy.

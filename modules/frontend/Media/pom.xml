@@ -16,12 +16,12 @@
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Media Extensions</name>
     <description>Media Extensions.</description>
-    
+
     <properties>
         <!-- Otherwise can't be released because of missing javadocs -->
         <tft.javadoc.excludePackageNames />
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -42,6 +42,10 @@
             <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-role-spring</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.imajine.image</groupId>
             <artifactId>org-imajine-image-core</artifactId>
             <exclusions>
@@ -56,13 +60,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Fix for NW-130 -->
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>xmpcore-patched</artifactId>
             <version>5.1.0</version> <!-- FIXME -->
         </dependency>
-
     </dependencies>
 </project>

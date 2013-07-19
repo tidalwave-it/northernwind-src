@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.joda.time.DateTime;
 import it.tidalwave.util.As;
-import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -63,7 +63,7 @@ public class MockResourceFile implements ResourceFile
     private final ResourcePath path;
 
     @Delegate
-    private final As asSupport = new SpringAsSupport(this);
+    private final As asSupport = new AsSupport(this);
 
 //    @Nonnull
 //    public static ResourceFile file (final @Nonnull String path)
