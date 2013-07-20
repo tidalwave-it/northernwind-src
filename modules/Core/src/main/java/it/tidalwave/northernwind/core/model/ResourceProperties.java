@@ -29,6 +29,8 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -76,6 +78,9 @@ public interface ResourceProperties extends As, Identifiable
 
         @Wither
         private Id id = new Id("");
+
+        @Wither
+        private Map<Key<?>, Object> values = Collections.emptyMap();
 
         @Wither
         private PropertyResolver propertyResolver = PropertyResolver.DEFAULT;

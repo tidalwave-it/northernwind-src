@@ -77,6 +77,13 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         this.id = builder.getId();
         this.propertyResolver = builder.getPropertyResolver();
+        this.propertyMap.putAll(builder.getValues());
+//        for (final Entry<Key<?>, Object> entry : builder.getValues().entrySet())
+//          {
+//            final String s = entry.getKey().stringValue();
+//            final Object value = entry.getValue();
+//            propertyMap.put(new Key<>(s), value);
+//          }
       }
 
     /*******************************************************************************************************************
@@ -104,7 +111,8 @@ public class DefaultResourceProperties implements ResourceProperties
 
     /*******************************************************************************************************************
      *
-     * Legacy code for converting from flat-style properties.
+     * Legacy code for converting from flat-style properties. This is different than passing from() in the Builder,
+     * since that approach doesn't support nested groups.
      *
      ******************************************************************************************************************/
     public DefaultResourceProperties (final @Nonnull Id id,
