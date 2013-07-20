@@ -1,0 +1,9 @@
+<div class="wrapper">
+    <h2 class="accessibility">Navigation</h2>
+    <div class="nw-VerticalMenu">
+        $title$
+        <ul>
+            $content$
+        </ul>
+    </div>
+</div>
