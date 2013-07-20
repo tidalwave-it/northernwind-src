@@ -67,7 +67,7 @@ public class DefaultResourceProperties implements ResourceProperties
     private final PropertyResolver propertyResolver;
 
     @Delegate
-    private final AsSupport as = new AsSupport(this);
+    private final AsSupport asSupport = new AsSupport(this);
 
     /*******************************************************************************************************************
      *
