@@ -242,6 +242,19 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
+    public DefaultResourceProperties withoutProperty (final @Nonnull Key<?> key)
+      {
+        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        result.propertyMap.remove(key);
+        return result;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
     public DefaultResourceProperties withProperties (final @Nonnull ResourceProperties properties)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
