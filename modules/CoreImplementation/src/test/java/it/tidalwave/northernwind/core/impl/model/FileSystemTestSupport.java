@@ -152,10 +152,10 @@ public abstract class FileSystemTestSupport
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
         when(folder.getPath()).thenReturn(new ResourcePath(name));
-        when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
         when(folder.findChildren()).thenReturn(new ListFinder(new ArrayList<ResourceFile>()));
+        when(folder.toString()).thenReturn(name);
 
         return folder;
       }
