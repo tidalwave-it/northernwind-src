@@ -20,16 +20,16 @@
     <properties>
         <tft.javadoc.excludePackageNames />
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>

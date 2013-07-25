@@ -25,14 +25,12 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model.aspect;
+package it.tidalwave.northernwind.profiling;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.Request;
 
 /***********************************************************************************************************************
- *
- * FIXME: move to the Profiling module
  *
  * @author  Fabrizio Giudici
  * @version $Id$

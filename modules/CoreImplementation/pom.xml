@@ -27,6 +27,10 @@
             <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
+        </dependency>
+        <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role-spring</artifactId>
         </dependency>
@@ -90,4 +94,22 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <configuration>
+                    <aspectLibraries combine.children="append">
+                        <dependency>
+                            <groupId>it.tidalwave.northernwind</groupId>
+                            <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
+                        </dependency>
+                    </aspectLibraries>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
