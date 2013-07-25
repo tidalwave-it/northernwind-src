@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable @Aspect @Slf4j
-public class ProfilerAspect
+public class RequestProfilerAspect
   {
     @Inject
     private BeanFactory factory;
