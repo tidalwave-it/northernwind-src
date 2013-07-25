@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,6 +45,7 @@ import java.util.Locale;
  * @version $Revision$ $Date$
  * @author <a href="mailto:arkin@intalio.com">Assaf Arkin</a>
  */
+@SuppressWarnings("all")
 public final class HTMLdtd
 {
 
@@ -373,11 +374,11 @@ public final class HTMLdtd
             _byChar = new Hashtable();
             is = HTMLdtd.class.getResourceAsStream( ENTITIES_RESOURCE );
             if ( is == null ) {
-            	throw new RuntimeException( 
+            	throw new RuntimeException(
 				    DOMMessageFormatter.formatMessage(
 				    DOMMessageFormatter.SERIALIZER_DOMAIN,
                     "ResourceNotFound", new Object[] {ENTITIES_RESOURCE}));
-            }    
+            }
             reader = new BufferedReader( new InputStreamReader( is, "ASCII" ) );
             line = reader.readLine();
             while ( line != null ) {
@@ -402,10 +403,10 @@ public final class HTMLdtd
             }
             is.close();
         }  catch ( Exception except ) {
-			throw new RuntimeException( 
+			throw new RuntimeException(
 				DOMMessageFormatter.formatMessage(
 				DOMMessageFormatter.SERIALIZER_DOMAIN,
-                "ResourceNotLoaded", new Object[] {ENTITIES_RESOURCE, except.toString()}));        	
+                "ResourceNotLoaded", new Object[] {ENTITIES_RESOURCE, except.toString()}));
         } finally {
             if ( is != null ) {
                 try {

@@ -27,17 +27,20 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
+import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
+import it.tidalwave.util.Finder;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.spi.AsSupport;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import javax.annotation.Nonnull;
-import it.tidalwave.util.Finder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.util.Id;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import it.tidalwave.northernwind.core.model.ResourceFile;
+import lombok.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -51,6 +54,11 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
  **********************************************************************************************************************/
 public interface CompositeSiteNodeController
   {
+    /**
+     *
+     * Since findChildrenSiteNodes() returns "virtual" nodes, that is nodes mapped to parameterized URIs, they can't be
+     * found inside the Site. A special implementation is provided.
+     */
     @RequiredArgsConstructor @ToString
     public static class ChildSiteNode implements SiteNode
       {
@@ -63,6 +71,11 @@ public interface CompositeSiteNodeController
         @Getter @Nonnull
         private final ResourceProperties properties;
 
+        @Delegate
+        private final As asSupport = new AsSupport(this);
+
+        // TODO: perhaps the methods below could be implemented by delegating to the first real SiteNode up in the
+        // hierarchy.
         @Override
         public Layout getLayout()
           {
@@ -83,6 +96,12 @@ public interface CompositeSiteNodeController
 
         @Override
         public boolean isPlaceHolder()
+          {
+            throw new UnsupportedOperationException("Not supported.");
+          }
+
+        @Override @Nonnull
+        public Finder<SiteNode> findChildren()
           {
             throw new UnsupportedOperationException("Not supported.");
           }

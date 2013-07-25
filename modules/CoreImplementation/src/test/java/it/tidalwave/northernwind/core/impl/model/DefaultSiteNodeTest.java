@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -39,6 +40,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import java.util.Arrays;
+import java.util.Locale;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -72,6 +75,8 @@ public class DefaultSiteNodeTest
 
     private InheritanceHelper inheritanceHelper;
 
+    private RequestLocaleManager requestLocaleManager;
+
     private Layout emptyPlaceHolderLayout;
 
     /*******************************************************************************************************************
@@ -85,18 +90,29 @@ public class DefaultSiteNodeTest
         site = context.getBean(InternalSite.class);
         modelFactory = context.getBean(ModelFactory.class);
         inheritanceHelper = context.getBean(InheritanceHelper.class);
+        requestLocaleManager = context.getBean(RequestLocaleManager.class);
 
         resource = mock(Resource.class);
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
-        when(modelFactory.createResource(any(ResourceFile.class))).thenReturn(resource);
+
+        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, new Resource.Builder.CallBack()
+          {
+            @Override
+            public Resource build(Resource.Builder builder)
+              {
+                return resource;
+              }
+          }));
+
+        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.ENGLISH));
 
         final ResourceFile nodeFolder = MockResourceFile.folder("structure");
         when(site.getNodeFolder()).thenReturn(nodeFolder);
 
         emptyPlaceHolderLayout = mock(Layout.class);
 //        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
-        when(modelFactory.createLayout()).thenReturn(new Layout.Builder().withCallBack(new Layout.Builder.CallBack()
+        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, new Layout.Builder.CallBack()
           {
             @Override
             public Layout build (final @Nonnull Layout.Builder builder)
@@ -106,7 +122,7 @@ public class DefaultSiteNodeTest
               }
           }));
 
-        fixture = new DefaultSiteNode(site, resourceFile);
+        fixture = new DefaultSiteNode(modelFactory, site, resourceFile);
       }
 
     /*******************************************************************************************************************
@@ -116,7 +132,7 @@ public class DefaultSiteNodeTest
     public void must_properly_initialize_with_no_layout()
       {
         assertThat(fixture.site, sameInstance(site));
-        assertThat(fixture.resource, sameInstance(resource));
+        assertThat(fixture.getResource(), sameInstance(resource));
         assertThat(fixture.getLayout(), sameInstance(emptyPlaceHolderLayout));
       }
 

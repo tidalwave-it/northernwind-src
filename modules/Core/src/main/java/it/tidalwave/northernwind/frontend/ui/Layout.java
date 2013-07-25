@@ -35,12 +35,13 @@ import it.tidalwave.role.Composite;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.role.Identifiable;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
 
@@ -59,19 +60,27 @@ public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder
      * A builder of a {@link Layout}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
-    @Wither @Getter @ToString(exclude = "callBack")
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
         public static interface CallBack
           {
             @Nonnull
-            public Layout build (@Nonnull Layout.Builder builder);
+            public Layout build (@Nonnull Builder builder);
           }
 
-        private Layout.Builder.CallBack callBack;
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
         private Id id;
+
+        @Wither
         private String type;
 
         @Nonnull

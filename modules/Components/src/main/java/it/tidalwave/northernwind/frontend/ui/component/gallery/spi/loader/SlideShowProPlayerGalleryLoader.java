@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -46,7 +46,13 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
+import it.tidalwave.util.NotFoundException;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.DOMException;
+import org.xml.sax.SAXException;
 
 /***********************************************************************************************************************
  *
@@ -59,6 +65,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
   {
+    public static final Key<String> PROPERTY_IMAGES = new Key<>("images");
+    
     private static final String XPATH_IMG = "/gallery/album/img";
 
     public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties)
@@ -69,7 +77,7 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
     @Override @Nonnull
     public List<Item> loadGallery (final @Nonnull SiteNode siteNode)
       {
-        final List<Item> items = new ArrayList<Item>();
+        final List<Item> items = new ArrayList<>();
 
         try
           {
@@ -77,7 +85,7 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
             final DocumentBuilder db = dbf.newDocumentBuilder(); // FIXME: inject
             final XPathFactory xPathFactory = XPathFactory.newInstance(); // FIXME: inject
 
-            final String s = siteNode.getProperties().getProperty(new Key<String>("images.xml"));
+            final String s = siteNode.getProperties().getProperty(PROPERTY_IMAGES);
             final Document document = db.parse(new InputSource(new StringReader(s)));
             final XPath xPath = xPathFactory.newXPath();
             final XPathExpression jx1 = xPath.compile(XPATH_IMG);
@@ -92,7 +100,8 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
                 items.add(createItem(new Id(src)));
               }
           }
-        catch (Exception e)
+        catch (ParserConfigurationException | NotFoundException | IOException |
+               SAXException | XPathExpressionException | DOMException e)
           {
             log.warn("", e);
           }

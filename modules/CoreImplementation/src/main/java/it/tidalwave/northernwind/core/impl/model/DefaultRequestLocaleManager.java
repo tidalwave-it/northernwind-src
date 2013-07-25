@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -55,7 +55,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
 
-    private final ThreadLocal<Locale> localeHolder = new ThreadLocal<Locale>();
+    private final ThreadLocal<Locale> localeHolder = new ThreadLocal<>();
 
     /*******************************************************************************************************************
      *
@@ -66,7 +66,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     public List<Locale> getLocales()
       {
         final Locale requestLocale = localeHolder.get();
-        final List<Locale> locales = new ArrayList<Locale>(siteProvider.get().getSite().getConfiguredLocales());
+        final List<Locale> locales = new ArrayList<>(siteProvider.get().getSite().getConfiguredLocales());
 
         if (requestLocale != null)
           {
@@ -77,6 +77,25 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
         log.debug(">>>> locales: {}", locales);
 
         return locales;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public List<String> getLocaleSuffixes()
+      {
+        final List<String> suffixes = new ArrayList<>();
+        suffixes.add("");
+
+        for (final Locale locale : getLocales())
+          {
+            suffixes.add("_" + locale.getLanguage());
+          }
+
+        return suffixes;
       }
 
     /*******************************************************************************************************************

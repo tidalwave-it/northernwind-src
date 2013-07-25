@@ -35,19 +35,19 @@ import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -59,7 +59,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString
-public class DefaultModelFactory implements ModelFactory
+public class DefaultModelFactory extends ModelFactorySupport
   {
     /*******************************************************************************************************************
      *
@@ -67,9 +67,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource createResource (final @Nonnull ResourceFile file)
+    public Resource build (final @Nonnull Resource.Builder builder)
       {
-        return new DefaultResource(file);
+        return new DefaultResource(builder);
       }
 
     /*******************************************************************************************************************
@@ -78,9 +78,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content createContent (final @Nonnull ResourceFile folder)
+    public Content build (final @Nonnull Content.Builder builder)
       {
-        return new DefaultContent(folder);
+        return new DefaultContent(builder);
       }
 
     /*******************************************************************************************************************
@@ -89,9 +89,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media createMedia (final @Nonnull ResourceFile file)
+    public Media build (final @Nonnull Media.Builder builder)
       {
-        return new DefaultMedia(file);
+        return new DefaultMedia(builder);
       }
 
     /*******************************************************************************************************************
@@ -103,7 +103,7 @@ public class DefaultModelFactory implements ModelFactory
     public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
       throws IOException, NotFoundException
       {
-        return new DefaultSiteNode((DefaultSite)site, folder);
+        return new DefaultSiteNode(this, (DefaultSite)site, folder);
       }
 
     /*******************************************************************************************************************
@@ -112,16 +112,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout.Builder createLayout()
+    public Layout build (final @Nonnull Layout.Builder builder)
       {
-        return new Layout.Builder().withCallBack(new Layout.Builder.CallBack()
-          {
-            @Override @Nonnull
-            public Layout build (final @Nonnull Layout.Builder builder)
-              {
-                return new DefaultLayout(builder);
-              }
-          });
+        return new DefaultLayout(builder);
       }
 
     /*******************************************************************************************************************
@@ -140,7 +133,7 @@ public class DefaultModelFactory implements ModelFactory
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest)
       {
         String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
@@ -157,9 +150,10 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties createProperties (final @Nonnull Id id)
+    public ResourceProperties build (final @Nonnull ResourceProperties.Builder builder)
       {
-        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
+        return new DefaultResourceProperties(builder);
+//        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
       }
 
     /*******************************************************************************************************************
@@ -168,16 +162,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Site.Builder createSite()
+    public Site build (final @Nonnull Site.Builder builder)
       {
-        return new Site.Builder().withCallBack(new Site.Builder.CallBack()
-          {
-            @Override @Nonnull
-            public Site build (final @Nonnull Site.Builder builder)
-              {
-                return new DefaultSite(builder);
-              }
-          });
+        return new DefaultSite(builder);
       }
 
     /*******************************************************************************************************************

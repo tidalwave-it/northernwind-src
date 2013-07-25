@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -154,7 +154,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       {
         log.trace("emptyFolder({}, {}", folder);
 
-        for (final ResourceFile child : folder.getChildren())
+        for (final ResourceFile child : folder.findChildren().results())
           {
             child.delete();
           }
@@ -169,7 +169,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
 
-        for (final ResourceFile sourceChild : sourceFolder.getChildren())
+        for (final ResourceFile sourceChild : sourceFolder.findChildren().results())
           {
             if (!sourceChild.isFolder())
               {
@@ -178,7 +178,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
               }
           }
 
-        for (final ResourceFile sourceChild : sourceFolder.getChildren())
+        for (final ResourceFile sourceChild : sourceFolder.findChildren().results())
           {
             if (sourceChild.isFolder())
               {

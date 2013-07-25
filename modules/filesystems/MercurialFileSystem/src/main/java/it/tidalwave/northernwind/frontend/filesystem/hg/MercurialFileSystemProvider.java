@@ -142,7 +142,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
         try
           {
             final Tag newTag = findNewTag();
-            log.info(">>>> new tag seen: {}", newTag);
+            log.info(">>>> new tag: {}", newTag);
             alternateRepository.updateTo(newTag);
             swapRepositories();
             messageBus.publish(new ResourceFileSystemChangedEvent(this, new DateTime()));
@@ -155,7 +155,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
           }
         catch (Exception e)
           {
-            log.warn(">>>> error when checking for updates", e);
+            log.warn(">>>> error when checking for updates in " + alternateRepository.getWorkArea(), e);
           }
       }
 

@@ -43,7 +43,9 @@ public class NormalizedLinkPostProcessor implements LinkPostProcessor
     @Override @Nonnull
     public String postProcess (final @Nonnull String link)
       {
-        if (!link.contains(".") && !link.contains("?") && !link.endsWith("/"))
+        final String trailing = link.replaceAll("^.*/", "");
+
+        if (!trailing.contains(".") && !link.contains("?") && !link.endsWith("/"))
           {
             return link + "/";
           }

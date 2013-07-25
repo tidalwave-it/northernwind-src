@@ -35,10 +35,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.io.UnsupportedEncodingException;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -102,18 +101,11 @@ import lombok.ToString;
     @Override @Nonnull
     public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
       {
-        try
-          {
-            return new DefaultRequest(baseUrl,
-                                      UriUtilities.urlDecodedPath(relativeUri),
-                                      relativeUri,
-                                      parametersMap,
-                                      preferredLocales);
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            throw new RuntimeException(e);
-          }
+        return new DefaultRequest(baseUrl,
+                                  new ResourcePath(relativeUri).urlDecoded().asString(),
+                                  relativeUri,
+                                  parametersMap,
+                                  preferredLocales);
       }
 
     /*******************************************************************************************************************
@@ -148,7 +140,7 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
       {
-        final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
+        final Map<String, List<String>> parameterMap = new HashMap<>();
 
         for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
           {

@@ -30,11 +30,11 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Provider;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -43,60 +43,46 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.spi.ResourceSupport;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_PLACE_HOLDER;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
+ *
+ * The default implementation for {@link Resource}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(exclude={"localeRequestManager", "macroExpander", "properties", "propertyResolver", "requestContext"})
-/* package */ class DefaultResource implements Resource
+@Configurable @Slf4j @ToString(callSuper = true, of = "placeHolder")
+/* package */ class DefaultResource extends ResourceSupport
   {
-    @Inject @Nonnull
-    private RequestLocaleManager localeRequestManager;
-
-    @Inject @Nonnull
-    private Provider<FilterSetExpander> macroExpander;
-
     @Inject @Nonnull
     private InheritanceHelper inheritanceHelper;
 
-    @Nonnull @Getter
-    private final ResourceFile file;
+    @Inject @Nonnull
+    private RequestLocaleManager localeRequestManager;
 
-    @Nonnull @Getter
-    private ResourceProperties properties;
+    private final Map<Locale, ResourceProperties> propertyMapByLocale = new HashMap<>();
 
     @Getter
     private boolean placeHolder;
 
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    private DefaultResourceProperties.PropertyResolver propertyResolver = new DefaultResourceProperties.PropertyResolver()
-      {
-        @Override
-        public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> key)
-          throws NotFoundException, IOException
-          {
-            return (Type)getFileBasedProperty(key.stringValue()); // FIXME: use also Id for SiteNode?
-          }
-      };
+    private final ResourceProperties.PropertyResolver propertyResolver;
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public DefaultResource (final @Nonnull ResourceFile file)
+    public DefaultResource (final @Nonnull Resource.Builder builder)
       {
-        this.file = file;
+        super(builder);
+        propertyResolver = new TextResourcePropertyResolver(getFile());
       }
 
     /*******************************************************************************************************************
@@ -105,34 +91,9 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties getPropertyGroup (final @Nonnull Id id)
+    public ResourceProperties getProperties()
       {
-        return properties.getGroup(id);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String getFileBasedProperty (final @Nonnull String propertyName)
-      throws NotFoundException, IOException
-      {
-        log.trace("getFileBasedProperty({})", propertyName);
-
-        final ResourceFile propertyFile = findLocalizedFile(propertyName);
-        log.trace(">>>> reading from {}", propertyFile.getPath());
-        final String charset = propertyFile.getMimeType().equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
-
-        try
-          {
-            return macroExpander.get().filter(propertyFile.asText(charset), propertyFile.getMimeType());
-          }
-        catch (RuntimeException e) // FIXME: introduce a FilterException
-          {
-            throw new IOException(e);
-          }
+        return propertyMapByLocale.get(localeRequestManager.getLocales().get(0));
       }
 
     /*******************************************************************************************************************
@@ -143,73 +104,55 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
     /* package */ void loadProperties()
       throws IOException
       {
-        log.trace("loadProperties() for /{}", file.getPath());
+        final ResourceFile file = getFile();
+        log.debug("loadProperties() for {}", file.getPath().asString());
+
         boolean tmpPlaceHolder = true;
-
-        properties = new DefaultResourceProperties(new Id(""), propertyResolver);
-
-        for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, "Properties_en.xml"))
-          {
-            log.trace(">>>> reading properties from /{}...", propertyFile.getPath());
-            @Cleanup final InputStream is = propertyFile.getInputStream();
-            final ResourceProperties tempProperties = new DefaultResourceProperties(propertyResolver).as(Unmarshallable).unmarshal(is);
-            log.trace(">>>>>>>> read properties: {}", tempProperties);
-            properties = properties.merged(tempProperties);
-            tmpPlaceHolder &= !propertyFile.getParent().equals(file);
-          }
-
-        placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
-
-        if (log.isDebugEnabled())
-          {
-            log.debug(">>>> properties for /{}:", file.getPath());
-            logProperties(">>>>>>>>", properties);
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ResourceFile findLocalizedFile (final @Nonnull String fileName)
-      throws NotFoundException
-      {
-        log.trace("findLocalizedFile({})", fileName);
-        ResourceFile localizedFile = null;
-        final StringBuilder fileNamesNotFound = new StringBuilder();
-        String separator = "";
 
         for (final Locale locale : localeRequestManager.getLocales())
           {
-            final String localizedFileName = fileName.replace(".", "_" + locale.getLanguage() + ".");
-            localizedFile = file.getChildByName(localizedFileName);
+            ResourceProperties properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
 
-            if ((localizedFile == null) && localizedFileName.endsWith(".xhtml"))
+            if (file.isData())
               {
-                localizedFile = file.getChildByName(localizedFileName.replaceAll("\\.xhtml$", ".html"));
+                tmpPlaceHolder = false;
+              }
+            else
+              {
+                for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, locale, "Properties"))
+                  {
+                    log.trace(">>>> reading properties from {} ({})...", propertyFile.getPath().asString(), locale);
+                    @Cleanup final InputStream is = propertyFile.getInputStream();
+                    final ResourceProperties tempProperties =
+                        modelFactory.createProperties().build().as(Unmarshallable).unmarshal(is);
+        //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
+                    log.trace(">>>>>>>> read properties: {} ({})", tempProperties, locale);
+                    properties = properties.merged(tempProperties);
+                    tmpPlaceHolder &= !propertyFile.getParent().equals(file);
+                  }
               }
 
-            if (localizedFile != null)
+            placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
+
+            if (log.isDebugEnabled())
               {
-                break;
+                log.debug(">>>> properties for {} ({}):", file.getPath().asString(), locale);
+                logProperties(">>>>>>>>", properties);
               }
 
-            fileNamesNotFound.append(separator);
-            fileNamesNotFound.append(localizedFileName);
-            separator = ",";
+            propertyMapByLocale.put(locale, properties);
           }
-
-        return NotFoundException.throwWhenNull(localizedFile, String.format("%s/{%s}", file.getPath(), fileNamesNotFound));
       }
 
     /*******************************************************************************************************************
      *
+     * FIXME: move to ResourceProperties!
      *
      ******************************************************************************************************************/
-    private void logProperties (final @Nonnull String indent ,final @Nonnull ResourceProperties properties)
+    private void logProperties (final @Nonnull String indent,
+                                final @Nonnull ResourceProperties properties)
       {
-        log.debug("{} simple property items:", indent);
+        log.debug("{} property items:", indent);
 
         for (final Key<?> key : properties.getKeys())
           {

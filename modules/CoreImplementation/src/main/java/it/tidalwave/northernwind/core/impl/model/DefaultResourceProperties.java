@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -37,8 +37,9 @@ import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -51,28 +52,10 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(exclude={"propertyResolver"})
-public class DefaultResourceProperties extends SpringAsSupport implements ResourceProperties
+// FIXME: this is a patched copy, needs public constructor for builder - see NW-180
+@Slf4j @ToString(exclude={"propertyResolver", "asSupport"})
+public class DefaultResourceProperties implements ResourceProperties
   {
-    public static interface PropertyResolver // FIXME: drop this
-      {
-        public static PropertyResolver DEFAULT = new PropertyResolver()
-          {
-            @Override
-            public <Type> Type resolveProperty(Id propertyGroupId, Key<Type> key)
-              throws NotFoundException, IOException
-              {
-                throw new NotFoundException();
-              }
-          };
-
-        @Nonnull
-        public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
-          throws NotFoundException, IOException;
-      }
-
-    public static ResourceProperties DEFAULT = new DefaultResourceProperties(PropertyResolver.DEFAULT);
-
     @Nonnull @Getter
     private final Id id;
 
@@ -83,27 +66,24 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Nonnull
     private final PropertyResolver propertyResolver;
 
-    // TODO: clean up constructors, then use ModelFactory.
+    @Delegate
+    private final AsSupport asSupport = new AsSupport(this);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull PropertyResolver propertyResolver)
+    public DefaultResourceProperties (final @Nonnull ResourceProperties.Builder builder)
       {
-        this.id = new Id("");
-        this.propertyResolver = propertyResolver;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull Id id,
-                                      final @Nonnull PropertyResolver propertyResolver)
-      {
-        this.id = id;
-        this.propertyResolver = propertyResolver;
+        this.id = builder.getId();
+        this.propertyResolver = builder.getPropertyResolver();
+        this.propertyMap.putAll(builder.getValues());
+//        for (final Entry<Key<?>, Object> entry : builder.getValues().entrySet())
+//          {
+//            final String s = entry.getKey().stringValue();
+//            final Object value = entry.getValue();
+//            propertyMap.put(new Key<>(s), value);
+//          }
       }
 
     /*******************************************************************************************************************
@@ -131,7 +111,8 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
 
     /*******************************************************************************************************************
      *
-     * Legacy code for converting from flat-style properties.
+     * Legacy code for converting from flat-style properties. This is different than passing from() in the Builder,
+     * since that approach doesn't support nested groups.
      *
      ******************************************************************************************************************/
     public DefaultResourceProperties (final @Nonnull Id id,
@@ -180,7 +161,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public <Type> Type getProperty (@Nonnull Key<Type> key)
       throws NotFoundException, IOException
       {
@@ -216,7 +197,8 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     public ResourceProperties getGroup (final @Nonnull Id id)
       {
         final DefaultResourceProperties properties = groupMap.get(id);
-        return properties != null ? properties : new DefaultResourceProperties(id, propertyResolver);
+        return properties != null ? properties : new DefaultResourceProperties(this);
+//                                  : new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
 
     /*******************************************************************************************************************
@@ -251,6 +233,19 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
         result.propertyMap.put(key, value); // FIXME: clone property
+        return result;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public DefaultResourceProperties withoutProperty (final @Nonnull Key<?> key)
+      {
+        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        result.propertyMap.remove(key);
         return result;
       }
 
@@ -308,6 +303,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Override @Nonnull
     public ResourceProperties withId (final @Nonnull Id id)
       {
-        return new DefaultResourceProperties(id, propertyResolver);
+        return new DefaultResourceProperties(this);
+//        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
   }

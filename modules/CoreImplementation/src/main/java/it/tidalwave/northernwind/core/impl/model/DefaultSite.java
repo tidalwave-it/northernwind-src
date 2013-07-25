@@ -40,15 +40,15 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -58,8 +58,6 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.impl.util.UriUtilities.*;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -72,9 +70,9 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 @Configurable @Slf4j
 /* package */ class DefaultSite implements InternalSite
   {
-    static interface FileVisitor
+    static interface FilePredicate
       {
-        public void visit (@Nonnull ResourceFile file, @Nonnull String relativeUri);
+        public void apply (@Nonnull ResourceFile file, @Nonnull ResourcePath relativeUri);
       }
 
     static interface FileFilter
@@ -82,7 +80,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
         public boolean accept (@Nonnull ResourceFile file);
       }
 
-    private final FileFilter DIRECTORY_FILTER = new FileFilter()
+    private final FileFilter FOLDER_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull ResourceFile file)
@@ -91,12 +89,12 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
           }
       };
 
-    private final FileFilter ALL_FILTER = new FileFilter()
+    private final FileFilter FILE_FILTER = new FileFilter()
       {
         @Override
         public boolean accept (final @Nonnull ResourceFile file)
           {
-            return !ignoredFolders.contains(file.getName());
+            return file.isData() && !ignoredFolders.contains(file.getName());
           }
       };
 
@@ -106,8 +104,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
     @Inject @Nonnull
     private RequestHolder requestHolder;
 
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
+    @Nonnull
+    private final ModelFactory modelFactory;
 
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private ResourceFileSystemProvider fileSystemProvider;
@@ -141,6 +139,9 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
     @Getter
     private ResourceFile nodeFolder;
 
+    // Note that this class can't be final neither use ImmutableMaps, since during the traversing of the filesystem
+    // resources need to access the partially created internal structure.
+
     /* package */  final Map<String, Content> documentMapByRelativePath = new TreeMap<>();
 
     /* package */  final Map<String, Resource> libraryMapByRelativePath = new TreeMap<>();
@@ -164,6 +165,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
      ******************************************************************************************************************/
     protected DefaultSite (final @Nonnull Site.Builder siteBuilder)
       {
+        this.modelFactory = siteBuilder.getModelFactory();
         this.contextPath = siteBuilder.getContextPath();
         this.documentPath = siteBuilder.getDocumentPath();
         this.mediaPath = siteBuilder.getMediaPath();
@@ -179,7 +181,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public <Type> SiteFinder<Type> find (final @Nonnull Class<Type> type)
       {
         final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
@@ -254,10 +256,10 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
         log.info(">>>> contextPath:        {}", contextPath);
         log.info(">>>> ignoredFolders:     {}", ignoredFolders);
         log.info(">>>> fileSystem:         {}", fileSystem);
-        log.info(">>>> documentPath:       {}", documentFolder.getPath());
-        log.info(">>>> libraryPath:        {}", libraryFolder.getPath());
-        log.info(">>>> mediaPath:          {}", mediaFolder.getPath());
-        log.info(">>>> nodePath:           {}", nodeFolder.getPath());
+        log.info(">>>> documentPath:       {}", documentFolder.getPath().asString());
+        log.info(">>>> libraryPath:        {}", libraryFolder.getPath().asString());
+        log.info(">>>> mediaPath:          {}", mediaFolder.getPath().asString());
+        log.info(">>>> nodePath:           {}", nodeFolder.getPath().asString());
         log.info(">>>> locales:            {}", configuredLocales);
 
         documentMapByRelativePath.clear();
@@ -266,51 +268,42 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(documentFolder, DIRECTORY_FILTER, new FileVisitor()
+        traverse(libraryFolder, FILE_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
+            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                documentMapByRelativePath.put(r(relativePath.substring(documentPath.length() + 1)),
-                                              modelFactory.createContent(folder));
+                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
               }
           });
 
-        traverse(libraryFolder, ALL_FILTER, new FileVisitor()
+        traverse(mediaFolder, FILE_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath)
+            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                if (file.isData())
-                  {
-                    libraryMapByRelativePath.put(r(relativePath.substring(libraryPath.length() + 1)),
-                                                 modelFactory.createResource(file));
-                  }
+                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
               }
           });
 
-        traverse(mediaFolder, ALL_FILTER, new FileVisitor()
+        traverse(documentFolder, FOLDER_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile file, final @Nonnull String relativePath)
+            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
-                if (file.isData())
-                  {
-                    mediaMapByRelativePath.put(r(relativePath.substring(mediaPath.length() + 1)),
-                                               modelFactory.createMedia(file));
-                  }
+                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
               }
           });
 
-        traverse(nodeFolder, DIRECTORY_FILTER, new FileVisitor()
+        traverse(nodeFolder, FOLDER_FILTER, new FilePredicate()
           {
             @Override
-            public void visit (final @Nonnull ResourceFile folder, final @Nonnull String relativePath)
+            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
                 try
                   {
                     final SiteNode siteNode = modelFactory.createSiteNode(DefaultSite.this, folder);
-                    nodeMapByRelativePath.put(r(relativePath.substring(nodePath.length() + 1)), siteNode);
+                    nodeMapByRelativePath.put(relativePath.asString(), siteNode);
 
                     if (!siteNode.isPlaceHolder())
                       {
@@ -345,28 +338,45 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 
     /*******************************************************************************************************************
      *
-     * Accepts a {@link FileVisitor} to visit a file or folder.
+     * Traverse the file system with a {@link FilePredicate}.
      *
-     * @param  file        the file to visit
+     * @param  folder      the folder to traverse
      * @param  fileFilter  the filter for directory contents
-     * @param  visitor     the visitor
+     * @param  predicate   the predicate
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull ResourceFile file,
+    private void traverse (final @Nonnull ResourceFile folder,
                            final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FileVisitor visitor)
-      throws UnsupportedEncodingException
+                           final @Nonnull FilePredicate predicate)
       {
-        log.trace("traverse({})", file);
-        final String relativeUri = urlDecodedPath(file.getPath());
-        visitor.visit(file, relativeUri);
+        traverse(folder.getPath(), folder, fileFilter, predicate);
+      }
 
-        for (final ResourceFile child : file.getChildren())
+    /*******************************************************************************************************************
+     *
+     * Traverse the file system with a {@link FilePredicate}.
+     *
+     * @param  file        the file to traverse
+     * @param  fileFilter  the filter for directory contents
+     * @param  predicate   the predicate
+     *
+     ******************************************************************************************************************/
+    private void traverse (final @Nonnull ResourcePath rootPath,
+                           final @Nonnull ResourceFile file,
+                           final @Nonnull FileFilter fileFilter,
+                           final @Nonnull FilePredicate predicate)
+      {
+        log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, predicate);
+        final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
+
+        if (fileFilter.accept(file))
           {
-            if (fileFilter.accept(child))
-              {
-                traverse(child, fileFilter, visitor);
-              }
+            predicate.apply(file, relativePath);
+          }
+
+        for (final ResourceFile child : file.findChildren().results())
+          {
+            traverse(rootPath, child, fileFilter, predicate);
           }
       }
 
@@ -398,15 +408,5 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
         return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
         // don't log fileSystem.getRoot() since if fileSystem is broken it can trigger secondary errors
                             // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String r (final @Nonnull String s)
-      {
-        return "".equals(s) ? "/" : s;
       }
   }

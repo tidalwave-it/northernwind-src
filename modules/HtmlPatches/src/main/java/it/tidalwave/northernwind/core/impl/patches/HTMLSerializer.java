@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -88,13 +88,14 @@ import org.xml.sax.SAXException;
  * </ul>
  *
  * @deprecated This class was deprecated in Xerces 2.6.2. It is
- * recommended that new applications use JAXP's Transformation API 
+ * recommended that new applications use JAXP's Transformation API
  * for XML (TrAX) for serializing HTML. See the Xerces documentation
  * for more information.
  * @version $Revision$ $Date$
  * @author <a href="mailto:arkin@intalio.com">Assaf Arkin</a>
  * @see Serializer
  */
+@SuppressWarnings("all")
 public class HTMLSerializer
     extends BaseMarkupSerializer
 {
@@ -208,7 +209,7 @@ public class HTMLSerializer
 
         try {
             if ( _printer == null )
-            	throw new IllegalStateException( 
+            	throw new IllegalStateException(
 				    DOMMessageFormatter.formatMessage(
 				    DOMMessageFormatter.SERIALIZER_DOMAIN,
                     "NoWriterSupplied", null));
@@ -220,7 +221,7 @@ public class HTMLSerializer
                 // the document's DOCTYPE. Space preserving defaults
                 // to that of the output format.
                 if ( ! _started )
-                    startDocument( (localName == null || localName.length() == 0) 
+                    startDocument( (localName == null || localName.length() == 0)
                         ? rawName : localName );
             } else {
                 // For any other element, if first in parent, then
@@ -239,13 +240,13 @@ public class HTMLSerializer
 
             // Do not change the current element state yet.
             // This only happens in endElement().
-            
+
             // As per SAX2, the namespace URI is an empty string if the element has no
             // namespace URI, or namespaces is turned off. The check against null protects
             // against broken SAX implementations, so I've left it there. - mrglavas
             boolean hasNamespaceURI = (namespaceURI != null && namespaceURI.length() != 0);
 
-            // SAX2: rawName (QName) could be empty string if 
+            // SAX2: rawName (QName) could be empty string if
             // namespace-prefixes property is false.
             if ( rawName == null || rawName.length() == 0) {
                 rawName = localName;
@@ -349,7 +350,7 @@ public class HTMLSerializer
             state = enterElementState( namespaceURI, localName, rawName, preserveSpace );
 
             // Prevents line breaks inside A/TD
-            
+
             if ( HTMLdtd.isPreserveSpace(htmlName)) {
                 state.empty = false;
                 _printer.printText( '>' );
@@ -486,7 +487,7 @@ public class HTMLSerializer
 
         try {
             if ( _printer == null )
-                throw new IllegalStateException( 
+                throw new IllegalStateException(
 				    DOMMessageFormatter.formatMessage(
 				    DOMMessageFormatter.SERIALIZER_DOMAIN,
                     "NoWriterSupplied", null));
@@ -801,7 +802,7 @@ public class HTMLSerializer
         // serialize an opening tag.
         if ( elem.hasChildNodes() || ! HTMLdtd.isEmptyTag( tagName ) ) {
             // Enter an element state, and serialize the children
-            // one by one. Finally, end the element.            
+            // one by one. Finally, end the element.
             state = enterElementState( null, null, tagName, preserveSpace );
 
             if ( HTMLdtd.isPreserveSpace(tagName)) {

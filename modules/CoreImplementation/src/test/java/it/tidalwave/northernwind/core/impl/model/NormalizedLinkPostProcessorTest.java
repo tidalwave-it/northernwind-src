@@ -43,9 +43,9 @@ import static org.hamcrest.CoreMatchers.is;
 public class NormalizedLinkPostProcessorTest
   {
     private NormalizedLinkPostProcessor fixture;
-    
+
     @BeforeMethod
-    public void setUp() 
+    public void setUp()
       {
         fixture = new NormalizedLinkPostProcessor();
       }
@@ -55,7 +55,7 @@ public class NormalizedLinkPostProcessorTest
       throws Exception
       {
         final String result = fixture.postProcess(link);
-          
+
         assertThat(result, is(expectedResult));
       }
 
@@ -69,7 +69,15 @@ public class NormalizedLinkPostProcessorTest
             { "/link?arg=val",  "/link?arg=val"  },
             { "/link/?arg=val", "/link/?arg=val" },
             { "/image.jpg",     "/image.jpg"     },
-                // TODO: add more 
+
+            //
+            { "http://acme.com/link",          "http://acme.com/link/"         },
+            { "http://acme.com/link/",         "http://acme.com/link/"         },
+            { "http://acme.com/link?arg=val",  "http://acme.com/link?arg=val"  },
+            { "http://acme.com/link/?arg=val", "http://acme.com/link/?arg=val" },
+            { "http://acme.com/image.jpg",     "http://acme.com/image.jpg"     },
+
+            // TODO: add more
           };
       }
   }

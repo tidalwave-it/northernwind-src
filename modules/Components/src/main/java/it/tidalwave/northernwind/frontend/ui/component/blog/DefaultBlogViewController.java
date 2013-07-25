@@ -45,6 +45,8 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -52,8 +54,6 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -107,7 +107,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             protected List<? extends SiteNode> computeResults()
               {
                 log.info("findCompositeContents()");
-                final List<SiteNode> results = new ArrayList<SiteNode>();
+                final List<SiteNode> results = new ArrayList<>();
 
                 try
                   {
@@ -117,24 +117,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
                       {
                         try
                           {
-                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(getExposedUri(post));
+                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(post.getExposedUri());
                             results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
                           }
-                        catch (NotFoundException e)
-                          {
-                            log.warn("", e);
-                          }
-                        catch (IOException e)
+                        catch (NotFoundException | IOException e)
                           {
                             log.warn("", e);
                           }
                       }
                   }
-                catch (NotFoundException e)
-                  {
-                    log.warn("", e);
-                  }
-                catch (IOException e)
+                catch (NotFoundException | IOException e)
                   {
                     log.warn("", e);
                   }
@@ -226,7 +218,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private List<Content> findAllPosts (final @Nonnull ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException
       {
-        final List<Content> allPosts = new ArrayList<Content>();
+        final List<Content> allPosts = new ArrayList<>();
 
         for (final String relativePath : siteNodeProperties.getProperty(PROPERTY_CONTENTS))
           {
@@ -255,7 +247,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         final boolean index = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_INDEX, "false"));
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
-        final List<Content> posts = new ArrayList<Content>();
+        final List<Content> posts = new ArrayList<>();
 
         try
           {
@@ -321,7 +313,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             try
               {
-                if (exposedUri.equals(getExposedUri(post)))
+                if (exposedUri.equals(post.getExposedUri()))
                   {
                     return post;
                   }
@@ -336,7 +328,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
           }
 
-        throw new NotFoundException("Blog post with exposedUri=" + exposedUri);
+        throw new NotFoundException("Blog post with exposedUri=" + exposedUri.asString());
       }
 
     /*******************************************************************************************************************
@@ -366,24 +358,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     protected abstract void render()
       throws Exception;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected ResourcePath getExposedUri (final @Nonnull Content post)
-      throws IOException, NotFoundException
-      {
-        try
-          {
-            return new ResourcePath(post.getProperties().getProperty(SiteNode.PROPERTY_EXPOSED_URI));
-          }
-        catch (NotFoundException e)
-          {
-            return post.getExposedUri();
-          }
-      }
 
     /*******************************************************************************************************************
      *

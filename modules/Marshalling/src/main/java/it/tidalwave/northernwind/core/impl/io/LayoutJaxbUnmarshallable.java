@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @DciRole(datum = Layout.class) @ToString @Slf4j
+@Configurable @DciRole(datumType = Layout.class) @ToString @Slf4j
 public class LayoutJaxbUnmarshallable implements Unmarshallable
   {
     @Inject @Nonnull
@@ -73,7 +73,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public Layout unmarshal (final @Nonnull InputStream is)
       throws IOException
       {

@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Locale;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 
 /***********************************************************************************************************************
@@ -49,5 +50,6 @@ public interface InheritanceHelper
      ******************************************************************************************************************/
     @Nonnull
     public List<ResourceFile> getInheritedPropertyFiles (@Nonnull ResourceFile folder,
+                                                         @Nonnull Locale locale,
                                                          @Nonnull String propertyFileName);
   }

@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -71,7 +72,7 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
       }
 
     @Override
-    public void doWithResults(Predicate predicate)
+    public void doWithResults(Predicate<Resource> predicate)
       {
       }
 
@@ -111,13 +112,13 @@ public class XsltTemplateTestSupport
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
         final ResourceFileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
-        final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
-        final List<Resource> resources = new ArrayList<Resource>();
+        final ResourceFile file = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
+        final List<Resource> resources = new ArrayList<>();
 
-        for (final ResourceFile xsltFileObject : fileObject.getChildren())
+        for (final ResourceFile xsltFile : file.findChildren().results())
           {
             final Resource resource = mock(Resource.class);
-            when(resource.getFile()).thenReturn(xsltFileObject);
+            when(resource.getFile()).thenReturn(xsltFile);
             resources.add(resource);
           }
 

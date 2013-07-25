@@ -31,10 +31,23 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.util.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
+ *
+ * Implements the default inheritance policy for properties. The sequence of loaded file is:
+ *
+ * <ul>
+ * <li>parent default</li>
+ * <li>parent localized</li>
+ * <li>this level default</li>
+ * <li>this level localized</li>
+ * <li>override default</li>
+ * <li>override localized</li>
+ * </ul>
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -44,38 +57,75 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultInheritanceHelper implements InheritanceHelper
   {
     /*******************************************************************************************************************
-    *
-    ******************************************************************************************************************/
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public List<ResourceFile> getInheritedPropertyFiles (final @Nonnull ResourceFile folder,
+                                                         final @Nonnull Locale locale,
                                                          final @Nonnull String propertyFileName)
       {
         log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
 
+        final List<String> suffixes = new ArrayList<>();
+        suffixes.add("");
+        suffixes.add("_" + locale.getLanguage());
         final List<ResourceFile> files = new ArrayList<>();
 
-        for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion
+        for (final ResourceFile parentFolder : getHierarchyFolders(folder))
           {
-            log.trace(">>>> probing {} ...", parent.getPath() + "/" + propertyFileName);
-            final ResourceFile propertyFile = parent.getChildByName(propertyFileName);
-
-            if (propertyFile != null)
-              {
-                files.add(propertyFile);
-              }
+            files.addAll(getFiles("", propertyFileName, parentFolder, suffixes));
           }
 
-        Collections.reverse(files);
-
-        final ResourceFile propertyFile = folder.getChildByName("Override" + propertyFileName);
-
-        if (propertyFile != null)
-          {
-            files.add(propertyFile);
-          }
+        files.addAll(getFiles("Override", propertyFileName, folder, suffixes));
 
         log.trace(">>>> property file candidates: {}", files);
 
         return files;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private List<ResourceFile> getFiles (final @Nonnull String prefix,
+                                         final @Nonnull String propertyFileName,
+                                         final @Nonnull ResourceFile folder,
+                                         final @Nonnull List<String> suffixes)
+      {
+        final List<ResourceFile> files = new ArrayList<>();
+
+        for (final String localeSuffix : suffixes)
+          {
+            final String fileName = prefix + propertyFileName + localeSuffix + ".xml";
+            log.trace(">>>> probing {} ...", folder.getPath().asString() + "/" + fileName);
+
+            try
+              {
+                files.add(folder.findChildren().withName(fileName).result());
+              }
+            catch (NotFoundException e)
+              {
+                // ok. do nothing
+              }
+          }
+
+        return files;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<ResourceFile> getHierarchyFolders (final @Nonnull ResourceFile folder)
+      {
+        final List<ResourceFile> folders = new ArrayList<>();
+
+        for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion?
+          {
+            folders.add(parent);
+          }
+
+        Collections.reverse(folders);
+
+        return folders;
       }
   }

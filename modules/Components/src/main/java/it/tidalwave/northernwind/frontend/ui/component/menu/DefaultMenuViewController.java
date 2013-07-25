@@ -85,7 +85,7 @@ public class DefaultMenuViewController implements MenuViewController
           {
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
 
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH);
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }

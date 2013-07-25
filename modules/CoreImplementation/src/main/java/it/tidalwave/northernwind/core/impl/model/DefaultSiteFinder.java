@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import com.google.common.base.Predicate;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteFinder;
@@ -49,10 +50,12 @@ import lombok.ToString;
 @ToString(callSuper = true, exclude = "mapByRelativePath")
 public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>
   {
+    private final static long serialVersionUID = 3242345356779345L;
+
     @Nonnull
     /* package */ final Map<String, Type> mapByRelativePath;
 
-    @Nonnull
+    @CheckForNull
     /* package */ final RegexTreeMap<Type> mapByRelativeUri;
 
     @CheckForNull
@@ -66,10 +69,16 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      ******************************************************************************************************************/
     public DefaultSiteFinder (final @Nonnull String name,
-                              final @Nonnull Map<String, Type> mapByRelativePath,
-                              final @Nonnull RegexTreeMap<Type> mapByRelativeUri)
+                              final @CheckForNull Map<String, Type> mapByRelativePath,
+                              final @CheckForNull RegexTreeMap<Type> mapByRelativeUri)
       {
         super(name);
+
+        if (mapByRelativePath == null)
+          {
+            throw new IllegalArgumentException("Searching for a relativePath, but no map - " + this);
+          }
+
         this.mapByRelativePath = mapByRelativePath;
         this.mapByRelativeUri = mapByRelativeUri;
       }
@@ -142,11 +151,6 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
 
         if (relativePath != null)
           {
-            if (mapByRelativePath == null)
-              {
-                throw new IllegalArgumentException("Illegal type: ");
-              }
-
             addResults(results, mapByRelativePath, relativePath);
           }
 
@@ -154,7 +158,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
           {
             if (mapByRelativeUri == null)
               {
-                throw new IllegalArgumentException("Illegal type");
+                throw new IllegalArgumentException("Searching for a relativeUri, but no map - " + this);
               }
 
             addResults(results, mapByRelativeUri, relativeUri);
@@ -190,11 +194,11 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
     @Nonnull
     private static <Type> void addResults (final @Nonnull List<Type> results,
                                            final @Nonnull Map<String, Type> map,
-                                           final @Nonnull String string)
+                                           final @Nonnull String relativePath)
       {
-        if (!string.contains("*")) // FIXME: better way to guess a regexp
+        if (!relativePath.contains("*")) // FIXME: better way to guess a regexp?
           {
-            final Type result = map.get(string);
+            final Type result = map.get(relativePath);
 
             if (result != null)
               {
@@ -204,7 +208,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
 
         else
           {
-            final Pattern pattern = Pattern.compile(string);
+            final Pattern pattern = Pattern.compile(relativePath);
 
             for (final Entry<String, Type> entry : map.entrySet())
               {

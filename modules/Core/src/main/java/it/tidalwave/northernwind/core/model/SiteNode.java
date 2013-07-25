@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Key;
+import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
@@ -41,16 +42,12 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteNode extends Resource
+public interface SiteNode extends Resource, SimpleComposite<SiteNode>
   {
     public static final Class<SiteNode> SiteNode = SiteNode.class;
 
     /** The label used for creating navigation links to this {@code SiteNode}. */
     public static final Key<String> PROPERTY_NAVIGATION_LABEL = new Key<>("navigationLabel");
-
-    /** The local portion of relativeUri by which this {@code SiteNode} is exposed to the web. If this property is not
-     *  defined, the local portion of the relative path is used. */
-    public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
 
     /** If sets to true, this property makes the {@code SiteNode} capable to match not only its {@code /relativeUri},
      *  but also {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */

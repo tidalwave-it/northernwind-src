@@ -39,6 +39,10 @@ import it.tidalwave.northernwind.core.model.Site;
  * @version $Id$
  *
  **********************************************************************************************************************/
+// FIXME: drop it
+// isLogConfiguraitonEnabled() can be pushed to Site
+// getNodeFolder() can be site.find(SiteNode.class).withRelativePath("/").result().getFile();
+
 public interface InternalSite extends Site
   {
     @Nonnull

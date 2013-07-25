@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@DciRole(datum = Layout.class) @Configurable @Slf4j
+@DciRole(datumType = Layout.class) @Configurable @Slf4j
 public class LayoutJaxbMarshallable implements Marshallable
   {
     @Nonnull

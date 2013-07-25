@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
@@ -38,7 +39,6 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
@@ -259,7 +259,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         try
           {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_RESOURCE);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH);
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
           }

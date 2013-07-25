@@ -1,35 +1,42 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
  * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -40,8 +47,44 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Resource
+public interface Resource extends As
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Resource}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Resource build (@Nonnull Builder builder);
+          }
+
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
+        private ResourceFile file;
+
+        @Nonnull
+        public Resource build()
+          {
+            return callBack.build(this);
+          }
+      }
+
+    /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
+     *  defined, the resource uses a reasonable default. */
+    public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
+
     /** This property, controls whether this resource is a placeholder. See {@link #isPlaceHolder} for more information
      */
     public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<>("placeHolder");
@@ -85,7 +128,7 @@ public interface Resource
      * A placeholder resource doesn't contain anything, it just provides a placeholder for a path element. For instance,
      * if in the pair parent/child child is a placeholder, the relative URI /parent/child will be mapped to parent
      * (which supposedly manages path params). This is useful for processing REST path params, for instance.
-     * 
+     *
      * @return  {@code true} if this resource is a placeholder
      *
      ******************************************************************************************************************/

@@ -29,15 +29,18 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.Objects;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import org.joda.time.DateTime;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import lombok.Delegate;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -57,7 +60,10 @@ public class MockResourceFile implements ResourceFile
     private final String name;
 
     @Getter @Nonnull
-    private final String path;
+    private final ResourcePath path;
+
+    @Delegate
+    private final As asSupport = new AsSupport(this);
 
 //    @Nonnull
 //    public static ResourceFile file (final @Nonnull String path)
@@ -68,24 +74,24 @@ public class MockResourceFile implements ResourceFile
     @Nonnull
     public static ResourceFile folder (final @Nonnull ResourceFile parent, final @Nonnull String fileName)
       {
-        final String parentPath = parent.getPath();
-        return new MockResourceFile(parent, parentPath.equals("") ? fileName : parentPath + "/" + fileName, true);
+        final ResourcePath parentPath = parent.getPath();
+        return new MockResourceFile(parent, parentPath.appendedWith(fileName), true);
       }
 
     @Nonnull
     public static ResourceFile folder (final @Nonnull String path)
       {
-        return new MockResourceFile(null, path, true);
+        return new MockResourceFile(null, new ResourcePath(path), true);
       }
 
     private MockResourceFile (final @Nonnull ResourceFile parent,
-                              final @Nonnull String path,
+                              final @Nonnull ResourcePath path,
                               final boolean directory)
       {
         this.parent = parent;
         this.directory = directory;
         this.path = path;
-        this.name = path.substring(("/" + path).lastIndexOf('/'));
+        this.name = (path.getSegmentCount() == 0) ? "" : path.getTrailing();
       }
 
     @Override
@@ -159,24 +165,6 @@ public class MockResourceFile implements ResourceFile
       }
 
     @Override
-    public ResourceFile getChildByName(String fileName)
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
-    public Collection<ResourceFile> getChildren()
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
-    public Collection<ResourceFile> getChildren(boolean recursive)
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
     public File toFile()
       {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -196,6 +184,12 @@ public class MockResourceFile implements ResourceFile
 
     @Override
     public void copyTo(ResourceFile targetFolder)
+      {
+        throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    @Override
+    public Finder findChildren()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }

@@ -27,13 +27,16 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import javax.annotation.CheckForNull;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import static org.hamcrest.CoreMatchers.is;
@@ -55,6 +58,19 @@ import static org.mockito.Mockito.when;
 @RequiredArgsConstructor @ToString
 public abstract class FileSystemTestSupport
   {
+    @RequiredArgsConstructor
+    static class ListFinder extends ResourceFileFinderSupport
+      {
+        @Nonnull
+        final Collection<ResourceFile> results;
+
+        @Override
+        protected List<? extends ResourceFile> computeResults()
+          {
+            return new ArrayList<>(results);
+          }
+      }
+
     @Nonnull
     private final String name;
 
@@ -89,17 +105,17 @@ public abstract class FileSystemTestSupport
                                              final @Nonnull ResourceFile parentFolder,
                                              final @Nonnull String name)
       {
-        final String path = parentFolder.getPath() + "/" + name;
+        final ResourcePath path = parentFolder.getPath().appendedWith(name);
 
         final ResourceFile folder = createMockFolder(name);
         when(folder.getParent()).thenReturn(parentFolder);
         when(folder.getPath()).thenReturn(path);
-        when(folder.toString()).thenReturn(path);
-        when(fileSystem.findFileByPath(eq(path))).thenReturn(folder);
+        when(folder.toString()).thenReturn(path.asString());
+        when(fileSystem.findFileByPath(eq(path.asString()))).thenReturn(folder);
 
-        final Collection<ResourceFile> children = parentFolder.getChildren();
+        final Collection<ResourceFile> children = new ArrayList<>(parentFolder.findChildren().results());
         children.add(folder);
-        when(parentFolder.getChildren()).thenReturn(children);
+        when(parentFolder.findChildren()).thenReturn(new ListFinder(children));
 
         return folder;
       }
@@ -112,17 +128,17 @@ public abstract class FileSystemTestSupport
                                            final @Nonnull ResourceFile parentFolder,
                                            final @Nonnull String name)
       {
-        final String path = parentFolder.getPath() + "/" + name;
+        final ResourcePath path = parentFolder.getPath().appendedWith(name);
 
         final ResourceFile file = createMockFile(name);
         when(file.getParent()).thenReturn(parentFolder);
         when(file.getPath()).thenReturn(path);
-        when(file.toString()).thenReturn(path);
-        when(fileSystem.findFileByPath(eq(path))).thenReturn(file);
+        when(file.toString()).thenReturn(path.asString());
+        when(fileSystem.findFileByPath(eq(path.asString()))).thenReturn(file);
 
-        final Collection<ResourceFile> children = parentFolder.getChildren();
+        final Collection<ResourceFile> children = new ArrayList<>(parentFolder.findChildren().results());
         children.add(file);
-        when(parentFolder.getChildren()).thenReturn(children);
+        when(parentFolder.findChildren()).thenReturn(new ListFinder(children));
 
         return file;
       }
@@ -135,11 +151,11 @@ public abstract class FileSystemTestSupport
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(name);
-        when(folder.toString()).thenReturn(name);
+        when(folder.getPath()).thenReturn(new ResourcePath(name));
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
-        when(folder.getChildren()).thenReturn(new ArrayList<ResourceFile>());
+        when(folder.findChildren()).thenReturn(new ListFinder(new ArrayList<ResourceFile>()));
+        when(folder.toString()).thenReturn(name);
 
         return folder;
       }
@@ -152,11 +168,11 @@ public abstract class FileSystemTestSupport
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(name);
+        when(folder.getPath()).thenReturn(new ResourcePath(name));
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(true);
         when(folder.isFolder()).thenReturn(false);
-//        when(folder.getChildren()).thenReturn(new ArrayList<ResourceFile>());
+        when(folder.findChildren()).thenReturn(new ListFinder(new ArrayList<ResourceFile>()));
 
         return folder;
       }
