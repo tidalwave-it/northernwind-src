@@ -65,15 +65,21 @@
 
     <!-- Generic task executor -->
     <bean id="taskExecutor"
-          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
-          autowire-candidate="false"> <!-- See NW-157 -->
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <property name="corePoolSize" value="${nw.task.corePoolSize}" />
         <property name="maxPoolSize" value="${nw.task.maxPoolSize}" />
         <property name="queueCapacity" value="${nw.task.queueCapacity}" />
     </bean>
 
-    <!-- Generic scheduler -->
-    <task:scheduler id="scheduler" pool-size="10"/>
+    <!-- Generic scheduler for tasks -->
+    <!-- We need autowire-candidate="false" to avoid confusion with other instances of ThreadFactory, and
+         unfortunately task:scheduler doesn't accept this attribute. -->
+    <!--<task:scheduler id="scheduler" pool-size="10" autowire-candidate="false" />-->
+    <bean id="scheduler"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"
+          autowire-candidate="false">
+        <property name="poolSize" value="10" />
+    </bean>
 
     <!-- MessageBus stuff -->
     <bean id="applicationMessageBusTaskExecutor"
@@ -152,7 +158,6 @@
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
         <property name="localesAsString" value="${nw.site.locales}" />
         <property name="ignoredFoldersAsString" value="${nw.ignoredFolders}" />
-        <property name="executor" ref="taskExecutor"/>
     </bean>
 
     <bean id="voidLinkPostProcessor"

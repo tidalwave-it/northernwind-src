@@ -65,7 +65,6 @@
         <property name="logConfigurationEnabled" value="true" />
         <property name="localesAsString" value="en,it,fr" />
         <property name="ignoredFoldersAsString" value="ignored1:ignored2" />
-        <property name="executor" ref="taskExecutor"/>
     </bean>
 
 </beans>
