@@ -39,7 +39,7 @@
         <tft.jsr305.version>2.0.1</tft.jsr305.version>
         <tft.lombok.version>0.11.6</tft.lombok.version>
         <tft.mockito.version>1.8.5</tft.mockito.version>
-        <thesefoolishthings.version>1.34</thesefoolishthings.version>
+        <thesefoolishthings.version>1.35</thesefoolishthings.version>
         <vaadin.version>6.6.1</vaadin.version>
 
         <tft.maven-dependency-plugin.version>2.8</tft.maven-dependency-plugin.version>
