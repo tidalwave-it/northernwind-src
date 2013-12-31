@@ -27,10 +27,13 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
+import java.text.DecimalFormat;
+import java.util.Arrays;
 import javax.annotation.Nonnull;
 import java.util.Map;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.EXIF;
+import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 
 /***********************************************************************************************************************
@@ -49,12 +52,28 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
     @Override @Nonnull
     public String interpolate (final @Nonnull String template, final @Nonnull Context context)
       {
+        final TIFF tiff = context.getMetadata().getDirectory(TIFF.class);
         final EXIF exif = context.getMetadata().getDirectory(EXIF.class);
-        final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
+        final XMP xmp = context.getMetadata().getDirectory(XMP.class);
+        final Map<String, String> xmpProperties = xmp.getXmpProperties();
         final Map<String, String> lensMap = context.getLensMap();
 
         final StringBuilder builder = new StringBuilder();
-        builder.append(formatted(exif.getModel()));
+        String cameraModel = formatted(exif.getModel());
+
+        builder.append("//").append(xmpProperties).append("//");
+
+        if ("".equals(cameraModel))
+          {
+            cameraModel = formatted(tiff.getModel());
+          }
+
+        if ("".equals(cameraModel))
+          {
+            cameraModel = formatted(xmpProperties.get("tiff:Model"));
+          }
+
+        builder.append(cameraModel);
         builder.append(" + ");
 
         String lens = formatted(lensMap.get(xmpProperties.get("aux:LensID")));
