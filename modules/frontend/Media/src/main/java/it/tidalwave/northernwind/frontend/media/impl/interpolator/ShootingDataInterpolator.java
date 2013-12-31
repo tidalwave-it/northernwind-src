@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.text.DecimalFormat;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.XMP;
@@ -68,8 +69,8 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
         builder.append(" @ ");
         builder.append(exif.getFocalLength().intValue()).append(" mm, ");
         // FIXME: eventually teleconverter
-        builder.append(exif.getExposureTime().toString()).append(" sec @ f/");
-        builder.append(String.format("%.1f", exif.getFNumber().floatValue()));
+        builder.append(exif.getExposureTime().toString()).append(" sec @ \u0192/");
+        builder.append(new DecimalFormat("0.#").format(exif.getFNumber().floatValue()));
 
         final Rational exposureBiasValue = exif.getExposureBiasValue();
 
