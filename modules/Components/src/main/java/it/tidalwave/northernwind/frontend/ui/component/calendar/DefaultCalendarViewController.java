@@ -116,9 +116,9 @@ public class DefaultCalendarViewController implements CalendarViewController
 
         final String entries = siteNodeProperties.getProperty(PROPERTY_ENTRIES);
         final StringBuilder builder = new StringBuilder();
-        final int selectedYear = Integer.parseInt(viewProperties.getProperty(PROPERTY_SELECTED_YEAR, "" + currentYear));
-        final int firstYear = Integer.parseInt(viewProperties.getProperty(PROPERTY_FIRST_YEAR, "" + Math.min(selectedYear, currentYear)));
-        final int lastYear = Integer.parseInt(viewProperties.getProperty(PROPERTY_LAST_YEAR, "" + Math.max(selectedYear, currentYear)));
+        final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR, currentYear);
+        final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR, Math.min(selectedYear, currentYear));
+        final int lastYear = viewProperties.getIntProperty(PROPERTY_LAST_YEAR, Math.max(selectedYear, currentYear));
         final int columns = 4;
 
         builder.append("<div class='nw-calendar'>\n");

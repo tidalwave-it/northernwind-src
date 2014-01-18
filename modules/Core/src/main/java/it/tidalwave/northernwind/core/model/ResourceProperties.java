@@ -137,6 +137,19 @@ public interface ResourceProperties extends As, Identifiable
 
     /*******************************************************************************************************************
      *
+     * Retrieves a property, eventually returning a default value.
+     *
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<Integer>
+    public int getIntProperty (@Nonnull Key<String> key, @Nonnull int defaultValue)
+      throws IOException;
+
+    /*******************************************************************************************************************
+     *
      * Retrieves a subgroup of properties.
      *
      * @param   id                  the id

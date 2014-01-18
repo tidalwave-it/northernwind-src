@@ -156,9 +156,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
         try
           {
             final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
-            final int maxFullItems = Integer.parseInt(componentProperties.getProperty(PROPERTY_MAX_FULL_ITEMS, "99"));
-            final int maxLeadinItems = Integer.parseInt(componentProperties.getProperty(PROPERTY_MAX_LEADIN_ITEMS, "99"));
-            final int maxItems = Integer.parseInt(componentProperties.getProperty(PROPERTY_MAX_ITEMS, "99"));
+            final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS, 99);
+            final int maxLeadinItems = componentProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS, 99);
+            final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS, 99);
 
             log.debug(">>>> initializing controller for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                           new Object[] { view.getId(), maxFullItems, maxLeadinItems, maxItems });

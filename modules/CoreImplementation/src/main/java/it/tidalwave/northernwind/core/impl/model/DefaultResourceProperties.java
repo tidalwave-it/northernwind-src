@@ -194,6 +194,18 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
+    public int getIntProperty (final @Nonnull Key<String> key, final @Nonnull int defaultValue)
+      throws IOException
+      {
+        return Integer.parseInt(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
     public ResourceProperties getGroup (final @Nonnull Id id)
       {
         final DefaultResourceProperties properties = groupMap.get(id);
