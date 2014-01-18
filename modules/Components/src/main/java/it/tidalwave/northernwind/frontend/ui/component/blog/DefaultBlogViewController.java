@@ -244,10 +244,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException, NotFoundException, HttpStatusException
       {
-        String pathParams = requestHolder.get().getPathParams(siteNode);
-        pathParams = pathParams.replaceFirst("^/", "");
-        log.debug(">>>> pathParams: {}", pathParams);
-
+        final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
         final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
         final List<Content> posts = new ArrayList<>();
