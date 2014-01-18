@@ -151,12 +151,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws Exception
       {
         // FIXME: ugly workaround for a design limitation. See NW-110.
-        if (isCalledBySitemapController()) // called at initialization
+        if (isCalledBySitemapController()) // called as a CompositeContentsController
           {
             return;
           }
 
-        // called as a CompositeContentsController
+        // called at initialization
         try
           {
             final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
