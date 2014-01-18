@@ -149,11 +149,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws Exception
       {
         // FIXME: ugly workaround for a design limitation. See NW-110.
-        if (isCalledBySitemapController())
+        if (isCalledBySitemapController()) // called at initialization
           {
             return;
           }
 
+        // called as a CompositeContentsController
         try
           {
             final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
@@ -234,7 +235,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * FIXME: works, but it's really cumbersome
      *
      ******************************************************************************************************************/
     // TODO: embed the sort by reverse date in the finder
@@ -249,30 +249,39 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
         final List<Content> posts = new ArrayList<>();
-
-        try
+        //
+        // The thing work differently in function of pathParams:
+        // + when no pathParams, it returns all the posts
+        // + when it matches a category, it returns all the posts in that category
+        // + when it matches an exposed URI of a single specific post, and not in 'index' mode it returns only that
+        //   post; if in 'index' mode, it returns all the posts.
+        //
+        if ("".equals(pathParams))
           {
-            if ("".equals(pathParams))
-              {
-                throw new NotFoundException(); // fallback
-              }
-
-            // might not find the given post - in which case a NotFoundException is thrown, and will fall back
-            // in interpreting the pathParams as a category
-            posts.add(findPostByExposedUri(allPosts, new ResourcePath(pathParams)));
-            log.debug(">>>> found a single post matching exposed Uri");
-
-            if (index) // pathParams matches an exposedUri; thus it's not a category, so an index wants all
-              {
-                log.debug(">>>> we're an index, adding all");
-                posts.clear();
-                posts.addAll(allPosts);
-                throw new NotFoundException(); // fallback
-              }
+            posts.addAll(allPosts);
           }
-        catch (NotFoundException e) // pathParams doesn't match an exposedUri; it will eventually match a category
+        else
           {
-            filterByCategory(allPosts, posts, pathParams);
+            try
+              {
+                final Content singlePost = findPostByExposedUri(allPosts, new ResourcePath(pathParams));
+
+                if (!index) // pathParams matches an exposedUri; thus it's not a category, so an index wants all
+                  {
+                    log.debug(">>>> found a single post matching exposed Uri");
+                    posts.add(singlePost);
+                  }
+                else
+                  {
+                    log.debug(">>>> we're an index, adding all");
+                    posts.addAll(allPosts);
+                  }
+              }
+            // pathParams doesn't match an exposedUri, so it's interpreted as a category to filter posts
+            catch (NotFoundException e)
+              {
+                filterByCategory(allPosts, posts, pathParams);
+              }
           }
 
         // If not index mode, nothing found and searched for something in path params, return 404
