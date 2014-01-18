@@ -53,6 +53,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.PROPERTY_CATEGORY;
 
 /***********************************************************************************************************************
  *
@@ -253,9 +254,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             if ("".equals(pathParams))
               {
-                throw new NotFoundException();
+                throw new NotFoundException(); // fallback
               }
 
+            // might not find the given post - in which case a NotFoundException is thrown, and will fall back
+            // in interpreting the pathParams as a category
             posts.add(findPostByExposedUri(allPosts, new ResourcePath(pathParams)));
             log.debug(">>>> found a single post matching exposed Uri");
 
@@ -264,28 +267,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 log.debug(">>>> we're an index, adding all");
                 posts.clear();
                 posts.addAll(allPosts);
-                throw new NotFoundException();
+                throw new NotFoundException(); // fallback
               }
           }
         catch (NotFoundException e) // pathParams doesn't match an exposedUri; it will eventually match a category
           {
-            log.debug(">>>> now filtering by category...");
-
-            for (final Content post : allPosts)
-              {
-                try
-                  {
-                    if (pathParams.equals("")
-                        || pathParams.equals(post.getProperties().getProperty(PROPERTY_CATEGORY, "---")))
-                      {
-                        posts.add(post);
-                      }
-                  }
-                catch (IOException e2)
-                  {
-                    log.warn("", e2);
-                  }
-              }
+            filterByCategory(allPosts, posts, pathParams);
           }
 
         // If not index mode, nothing found and searched for something in path params, return 404
@@ -299,6 +286,39 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> found {} items", posts.size());
 
         return posts;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Adds to {@code destinationPosts} all the {@code sourcePosts} that matches the selected {@code category}; all
+     * posts if the category is empty.
+     *
+     * @param  sourcePosts          the source posts
+     * @param  destinationPosts     the destination posts
+     * @param  category             the category
+     *
+     ******************************************************************************************************************/
+    private void filterByCategory (final @Nonnull List<Content> sourcePosts,
+                                   final @Nonnull List<Content> destinationPosts,
+                                   final @Nonnull String category)
+      {
+        log.debug(">>>> now filtering by category...");
+
+        for (final Content post : sourcePosts)
+          {
+            try
+              {
+                if (category.equals("")
+                    || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY, "---")))
+                  {
+                    destinationPosts.add(post);
+                  }
+              }
+            catch (IOException e2)
+              {
+                log.warn("", e2);
+              }
+          }
       }
 
     /*******************************************************************************************************************
