@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import java.util.List;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 
