@@ -29,8 +29,10 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
+import java.net.URLEncoder;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -189,6 +191,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         renderDate(htmlBuilder, blogDateTime);
         renderCategory(htmlBuilder, post);
+        renderTags(htmlBuilder, post);
         renderPermalink(htmlBuilder, post);
         htmlBuilder.append("</div>");
 
@@ -325,7 +328,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     /*******************************************************************************************************************
      *
-     * Renders the permalink of the blog post.
+     * Renders the category of the blog post.
      *
      ******************************************************************************************************************/
     private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
@@ -339,6 +342,36 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         catch (NotFoundException e)
           {
             // ok, no category
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the tags of the blog post.
+     *
+     ******************************************************************************************************************/
+    private void renderTags (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
+      throws IOException
+      {
+        try
+          {
+            final StringBuilder buffer = new StringBuilder();
+            String separator = "";
+
+            for (final String tag : Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).split(",")))
+              {
+                final String link = site.createLink(siteNode.getRelativeUri()
+                                                            .appendedWith(TAG_PREFIX + URLEncoder.encode(tag, "UTF-8")));
+                buffer.append(separator).append(String.format("%n<a class='nw-tag' href='%s'>%s</a>", link, tag));
+                separator = ", ";
+              }
+
+            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-tags'>Tagged as %s</span>",
+                               buffer.toString()));
+          }
+        catch (NotFoundException | IOException e)
+          {
+            // ok, no tags
           }
       }
 

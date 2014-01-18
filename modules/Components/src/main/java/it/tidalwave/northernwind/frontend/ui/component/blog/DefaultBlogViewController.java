@@ -68,6 +68,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     public static final DateTime TIME0 = new DateTime(0);
 
+    protected static final String TAG_PREFIX = "tag/";
+
     private final Comparator<Content> REVERSE_DATE_COMPARATOR = new Comparator<Content>()
       {
         @Override
@@ -262,16 +264,24 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
         else
           {
-            try
+            if (pathParams.startsWith(TAG_PREFIX))
               {
-                final Content singlePost = findPostByExposedUri(allPosts, new ResourcePath(pathParams));
-                // pathParams matches an exposedUri; thus it's not a category, so an index wants all
-                posts.addAll(index ? allPosts : Collections.singletonList(singlePost));
+                final String tag = pathParams.replaceFirst("^" + TAG_PREFIX, "");
+                filterByTag(allPosts, posts, tag);
               }
-            catch (NotFoundException e)
+            else
               {
-                // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
-                filterByCategory(allPosts, posts, pathParams);
+                try
+                  {
+                    final Content singlePost = findPostByExposedUri(allPosts, new ResourcePath(pathParams));
+                    // pathParams matches an exposedUri; thus it's not a category, so an index wants all
+                    posts.addAll(index ? allPosts : Collections.singletonList(singlePost));
+                  }
+                catch (NotFoundException e)
+                  {
+                    // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
+                    filterByCategory(allPosts, posts, pathParams);
+                  }
               }
           }
 
@@ -302,14 +312,44 @@ public abstract class DefaultBlogViewController implements BlogViewController
                                    final @Nonnull List<Content> destinationPosts,
                                    final @Nonnull String category)
       {
-        log.debug(">>>> now filtering by category...");
-
         for (final Content post : sourcePosts)
           {
             try
               {
                 if (category.equals("")
                     || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY, "---")))
+                  {
+                    destinationPosts.add(post);
+                  }
+              }
+            catch (IOException e2)
+              {
+                log.warn("", e2);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Adds to {@code destinationPosts} all the {@code sourcePosts} that matches the selected {@code tag}; all
+     * posts if the category is empty.
+     *
+     * @param  sourcePosts          the source posts
+     * @param  destinationPosts     the destination posts
+     * @param  tag                  the tag
+     *
+     ******************************************************************************************************************/
+    private void filterByTag (final @Nonnull List<Content> sourcePosts,
+                              final @Nonnull List<Content> destinationPosts,
+                              final @Nonnull String tag)
+      {
+        for (final Content post : sourcePosts)
+          {
+            try
+              {
+                final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS, "").split(","));
+
+                if (tags.contains(tag))
                   {
                     destinationPosts.add(post);
                   }
