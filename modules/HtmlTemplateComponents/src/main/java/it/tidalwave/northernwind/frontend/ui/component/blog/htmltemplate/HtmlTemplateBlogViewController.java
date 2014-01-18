@@ -264,12 +264,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                 htmlBuilder.append(String.format("<h2>%s</h2>%n", title));
               }
           }
-        catch (NotFoundException e)
+        catch (NotFoundException | IOException e)
           {
             // ok, no title
-          }
-        catch (IOException e)
-          {
           }
       }
 
