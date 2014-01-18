@@ -243,7 +243,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws IOException, NotFoundException, HttpStatusException
       {
         String pathParams = requestHolder.get().getPathParams(siteNode);
-        pathParams = pathParams.replace("/", "");
+        pathParams = pathParams.replaceFirst("^/", "");
         log.debug(">>>> pathParams: {}", pathParams);
 
         final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
