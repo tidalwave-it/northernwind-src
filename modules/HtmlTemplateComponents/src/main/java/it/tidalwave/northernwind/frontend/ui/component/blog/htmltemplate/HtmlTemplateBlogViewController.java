@@ -51,6 +51,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import java.util.Collections;
 
 /***********************************************************************************************************************
  *
@@ -355,10 +356,12 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         try
           {
+            final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).split(","));
+            Collections.sort(tags);
             final StringBuilder buffer = new StringBuilder();
             String separator = "";
 
-            for (final String tag : Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).split(",")))
+            for (final String tag : tags)
               {
                 final String link = site.createLink(siteNode.getRelativeUri()
                                                             .appendedWith(TAG_PREFIX + URLEncoder.encode(tag, "UTF-8")));
