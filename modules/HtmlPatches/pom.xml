@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>it.tidalwave.northernwind</groupId>
+        <artifactId>it-tidalwave-northernwind-modules</artifactId>
+        <version>1.1-ALPHA-28-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>it.tidalwave.northernwind</groupId>
+    <artifactId>it-tidalwave-html-patches</artifactId>
+    <version>1.1-ALPHA-28-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>NorthernWind - HTML Patches</name>
+    <description>Some patched classes for manipulating HTML.</description>
+
+    <properties>
+        <tft.javac.xlint>-Xlint:none</tft.javac.xlint> <!-- It's obsolete code with lots of warnings -->
+        <tft.javac.showDeprecation>false</tft.javac.showDeprecation>
+        <tft.javac.showWarnings>false</tft.javac.showWarnings>
+        <tft.test.skip>true</tft.test.skip> <!-- Patched files, don't count in JaCoCo -->
+    </properties>
+
+
+</project>
