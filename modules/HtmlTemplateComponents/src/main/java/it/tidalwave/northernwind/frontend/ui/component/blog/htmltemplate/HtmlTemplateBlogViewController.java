@@ -363,8 +363,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
             for (final String tag : tags)
               {
-                final String link = site.createLink(siteNode.getRelativeUri()
-                                                            .appendedWith(TAG_PREFIX + URLEncoder.encode(tag, "UTF-8")));
+                final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
+                final String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
                 buffer.append(separator).append(String.format("%n<a class='nw-tag' href='%s'>%s</a>", link, tag));
                 separator = ", ";
               }
