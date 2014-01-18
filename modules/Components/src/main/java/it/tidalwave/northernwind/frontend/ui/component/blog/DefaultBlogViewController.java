@@ -245,7 +245,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         pathParams = pathParams.replace("/", "");
         log.debug(">>>> pathParams: {}", pathParams);
 
-        final boolean index = Boolean.parseBoolean(siteNodeProperties.getProperty(PROPERTY_INDEX, "false"));
+        final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
         final List<Content> posts = new ArrayList<>();
 

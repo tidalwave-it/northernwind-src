@@ -197,10 +197,22 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public int getIntProperty (final @Nonnull Key<String> key, final @Nonnull int defaultValue)
+    public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
       throws IOException
       {
         return Integer.parseInt(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
+      throws IOException
+      {
+        return Boolean.parseBoolean(getProperty(key, "" + defaultValue));
       }
 
     /*******************************************************************************************************************

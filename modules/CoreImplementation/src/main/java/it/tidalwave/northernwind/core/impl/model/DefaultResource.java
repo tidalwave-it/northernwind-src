@@ -132,7 +132,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
               }
 
-            placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
+            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER, tmpPlaceHolder);
 
             if (log.isDebugEnabled())
               {

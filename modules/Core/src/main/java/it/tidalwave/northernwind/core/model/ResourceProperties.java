@@ -148,7 +148,22 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<Integer>
-    public int getIntProperty (@Nonnull Key<String> key, @Nonnull int defaultValue)
+    public int getIntProperty (@Nonnull Key<String> key, int defaultValue)
+      throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property, eventually returning a default value.
+     *
+     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     *
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<Boolean>
+    public boolean getBooleanProperty (@Nonnull Key<String> key, boolean defaultValue)
       throws IOException;
 
     /*******************************************************************************************************************

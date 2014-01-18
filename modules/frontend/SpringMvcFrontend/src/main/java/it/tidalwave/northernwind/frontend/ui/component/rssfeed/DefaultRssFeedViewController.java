@@ -107,7 +107,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       throws IOException, NotFoundException
       {
-        final DateTime blogDateTime = getBlogDateTime(post);
+        final DateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
 
         if (feed.getLastBuildDate() == null)
           {
