@@ -161,7 +161,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS, 99);
 
             log.debug(">>>> initializing controller for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
-                          new Object[] { view.getId(), maxFullItems, maxLeadinItems, maxItems });
+                      view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
             int currentItem = 0;
 
