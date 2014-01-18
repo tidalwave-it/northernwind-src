@@ -265,21 +265,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
             try
               {
                 final Content singlePost = findPostByExposedUri(allPosts, new ResourcePath(pathParams));
-
-                if (!index) // pathParams matches an exposedUri; thus it's not a category, so an index wants all
-                  {
-                    log.debug(">>>> found a single post matching exposed Uri");
-                    posts.add(singlePost);
-                  }
-                else
-                  {
-                    log.debug(">>>> we're an index, adding all");
-                    posts.addAll(allPosts);
-                  }
+                // pathParams matches an exposedUri; thus it's not a category, so an index wants all
+                posts.addAll(index ? allPosts : Collections.singletonList(singlePost));
               }
-            // pathParams doesn't match an exposedUri, so it's interpreted as a category to filter posts
             catch (NotFoundException e)
               {
+                // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
                 filterByCategory(allPosts, posts, pathParams);
               }
           }
