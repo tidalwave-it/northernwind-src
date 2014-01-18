@@ -31,9 +31,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -49,11 +52,14 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.PROPERTY_CATEGORY;
+import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 
 /***********************************************************************************************************************
  *
@@ -64,6 +70,14 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 @Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
+    @AllArgsConstructor @Getter @ToString
+    protected static class TagAndCount
+      {
+        public final String tag;
+        public int count;
+        public String rank;
+      }
+
     public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
 
     public static final DateTime TIME0 = new DateTime(0);
@@ -151,54 +165,24 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws Exception
       {
         // FIXME: ugly workaround for a design limitation. See NW-110.
-        if (isCalledBySitemapController()) // called at initialization
+        if (isCalledBySitemapController()) // called as a CompositeContentsController
           {
             return;
           }
 
-        // called as a CompositeContentsController
+        // called at initialization
         try
           {
-            final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
-            final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS, 99);
-            final int maxLeadinItems = componentProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS, 99);
-            final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS, 99);
+            final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
+            final boolean tagCloud = siteNodeProperties.getBooleanProperty(PROPERTY_TAG_CLOUD, false);
 
-            log.debug(">>>> initializing controller for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
-                      view.getId(), maxFullItems, maxLeadinItems, maxItems);
-
-            int currentItem = 0;
-
-            for (final Content post : findPostsInReverseDateOrder(componentProperties))
+            if (tagCloud)
               {
-                try
-                  {
-                    log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-                    post.getProperties().getProperty(PROPERTY_TITLE); // Skip folders used for categories
-
-                    if (currentItem < maxFullItems)
-                      {
-                        addFullPost(post);
-                      }
-                    else if (currentItem < maxFullItems + maxLeadinItems)
-                      {
-                        addLeadInPost(post);
-                      }
-                    else if (currentItem < maxItems)
-                      {
-                        addReference(post);
-                      }
-
-                    currentItem++;
-                  }
-                catch (NotFoundException e)
-                  {
-                    log.warn("{}", e.toString());
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("", e);
-                  }
+                generateTagCloud();
+              }
+            else
+              {
+                generateBlogPosts();
               }
 
             render();
@@ -211,6 +195,96 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             log.warn("", e);
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the blog posts.
+     *
+     ******************************************************************************************************************/
+    private void generateBlogPosts()
+      throws IOException, NotFoundException, HttpStatusException
+      {
+        final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
+        final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS, 99);
+        final int maxLeadinItems = componentProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS, 99);
+        final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS, 99);
+
+        log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
+                  view.getId(), maxFullItems, maxLeadinItems, maxItems);
+
+        int currentItem = 0;
+
+        for (final Content post : findPostsInReverseDateOrder(componentProperties))
+          {
+            try
+              {
+                log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
+                post.getProperties().getProperty(PROPERTY_TITLE); // Skip folders used for categories
+
+                if (currentItem < maxFullItems)
+                  {
+                    addFullPost(post);
+                  }
+                else if (currentItem < maxFullItems + maxLeadinItems)
+                  {
+                    addLeadInPost(post);
+                  }
+                else if (currentItem < maxItems)
+                  {
+                    addReference(post);
+                  }
+
+                currentItem++;
+              }
+            catch (NotFoundException e)
+              {
+                log.warn("{}", e.toString());
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the blog posts.
+     *
+     ******************************************************************************************************************/
+    private void generateTagCloud()
+      throws IOException, NotFoundException, HttpStatusException
+      {
+        final Map<String, TagAndCount> tagAndCountMapByTag = new TreeMap<>();
+        final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
+
+        for (final Content post : findAllPosts(siteNodeProperties))
+          {
+            try
+              {
+                for (final String tag : post.getProperties().getProperty(PROPERTY_TAGS).split(","))
+                  {
+                    TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
+
+                    if (tagAndCount == null)
+                      {
+                        tagAndCount = new TagAndCount(tag, 0, "");
+                        tagAndCountMapByTag.put(tag, tagAndCount);
+                      }
+
+                    tagAndCount.count++;
+                  }
+              }
+            catch (NotFoundException | IOException e)
+              {
+                // ok, not tag
+              }
+          }
+
+        final Collection<TagAndCount> tagsAndCount = tagAndCountMapByTag.values();
+        computeRanks(tagsAndCount);
+        addTagCloud(tagsAndCount);
       }
 
     /*******************************************************************************************************************
@@ -244,10 +318,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException, NotFoundException, HttpStatusException
       {
-        String pathParams = requestHolder.get().getPathParams(siteNode);
-        pathParams = pathParams.replaceFirst("^/", "");
-        log.debug(">>>> pathParams: {}", pathParams);
-
+        final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
         final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
         final List<Content> posts = new ArrayList<>();
@@ -416,8 +487,47 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
+    protected abstract  void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount)
+      throws IOException, NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     protected abstract void render()
       throws Exception;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void computeRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
+      {
+        final List<TagAndCount> tagsAndCountByCountDescending = new ArrayList<>(tagsAndCount);
+        Collections.sort(tagsAndCountByCountDescending, new Comparator<TagAndCount>()
+          {
+            @Override
+            public int compare (final @Nonnull TagAndCount tac1, final @Nonnull TagAndCount tac2)
+              {
+                return (int)Math.signum(tac2.count - tac1.count);
+              }
+          });
+
+        int rank = 1;
+        int previousCount = 0;
+
+        for (final TagAndCount tac : tagsAndCountByCountDescending)
+          {
+            tac.rank = (rank <= 10) ? Integer.toString(rank) : "others";
+
+            if (previousCount != tac.count)
+              {
+                rank++;
+              }
+
+            previousCount = tac.count;
+          }
+      }
 
     /*******************************************************************************************************************
      *

@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -150,6 +151,12 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+      {
+      }
+
+    @Override
+    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+      throws IOException, NotFoundException
       {
       }
 

@@ -30,6 +30,8 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -51,7 +53,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import java.util.Collections;
+import java.io.UnsupportedEncodingException;
 
 /***********************************************************************************************************************
  *
@@ -216,6 +218,35 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         htmlParts.add(htmlBuilder.toString());
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+      throws IOException, NotFoundException
+      {
+        log.debug("addTagCloud({})", tagsAndCount);
+        final StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<div class='tagCloud'>");
+
+        for (final TagAndCount tagAndCount : tagsAndCount)
+          {
+            final String tag = tagAndCount.tag;
+            final String link = createTagLink(tag);
+            htmlBuilder.append(String.format("<a href=\"%s\" class=\"tagCloudItem rank%s\" rel=\"%d\">%s</a>%n",
+                                             link, tagAndCount.rank, tagAndCount.count, tag));
+          }
+
+        htmlBuilder.append(String.format("</div>%n"));
+        htmlParts.add(htmlBuilder.toString());
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private String computeTitle (final @Nonnull Content post)
       {
@@ -264,12 +295,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                 htmlBuilder.append(String.format("<h2>%s</h2>%n", title));
               }
           }
-        catch (NotFoundException e)
+        catch (NotFoundException | IOException e)
           {
             // ok, no title
-          }
-        catch (IOException e)
-          {
           }
       }
 
@@ -363,8 +391,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
             for (final String tag : tags)
               {
-                final String link = site.createLink(siteNode.getRelativeUri()
-                                                            .appendedWith(TAG_PREFIX + URLEncoder.encode(tag, "UTF-8")));
+                final String link = createTagLink(tag);
                 buffer.append(separator).append(String.format("%n<a class='nw-tag' href='%s'>%s</a>", link, tag));
                 separator = ", ";
               }
@@ -376,6 +403,27 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           {
             // ok, no tags
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String createTagLink (final String tag)
+      throws UnsupportedEncodingException
+      {
+        final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
+        String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
+
+        // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
+        if (!link.endsWith("/"))
+          {
+            link += "/";
+          }
+
+        return link;
       }
 
     /*******************************************************************************************************************

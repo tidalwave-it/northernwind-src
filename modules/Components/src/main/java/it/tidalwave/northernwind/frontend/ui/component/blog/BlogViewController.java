@@ -49,4 +49,7 @@ public interface BlogViewController extends CompositeSiteNodeController
     public static final Key<String> PROPERTY_INDEX = new Key<>("index");
 
     public static final Key<String> PROPERTY_CATEGORY = new Key<>("category");
+
+    // FIXME: this should be Boolean
+    public static final Key<String> PROPERTY_TAG_CLOUD = new Key<>("tagCloud");
   }
