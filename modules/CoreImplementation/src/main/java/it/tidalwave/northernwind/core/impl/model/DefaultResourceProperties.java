@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -198,6 +201,35 @@ public class DefaultResourceProperties implements ResourceProperties
       throws IOException
       {
         return Integer.parseInt(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public DateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
+                                         final @Nonnull DateTime defaultValue)
+      {
+        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
+
+        for (final Key<String> key : keys)
+          {
+            try
+              {
+                return isoFormatter.parseDateTime(getProperty(key));
+              }
+            catch (NotFoundException e)
+              {
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+          }
+
+        return defaultValue;
       }
 
     /*******************************************************************************************************************

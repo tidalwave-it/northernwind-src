@@ -36,8 +36,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
@@ -65,18 +63,20 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
+    public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+
+    public static final DateTime TIME0 = new DateTime(0);
+
     private final Comparator<Content> REVERSE_DATE_COMPARATOR = new Comparator<Content>()
       {
         @Override
         public int compare (final @Nonnull Content post1, final @Nonnull Content post2)
           {
-            final DateTime dateTime1 = getBlogDateTime(post1);
-            final DateTime dateTime2 = getBlogDateTime(post2);
+            final DateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
+            final DateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
             return dateTime2.compareTo(dateTime1);
           }
       };
-
-    private static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
 
     @Nonnull
     protected final BlogView view;
@@ -358,34 +358,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     protected abstract void render()
       throws Exception;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected DateTime getBlogDateTime (final @Nonnull Content post)
-      {
-        final ResourceProperties properties = post.getProperties();
-        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
-
-        for (final Key<String> dateTimeKey : DATE_KEYS)
-          {
-            try
-              {
-                return isoFormatter.parseDateTime(properties.getProperty(dateTimeKey));
-              }
-            catch (NotFoundException e)
-              {
-              }
-            catch (IOException e)
-              {
-                log.warn("", e);
-              }
-          }
-
-        return new DateTime(0);
-      }
 
     /*******************************************************************************************************************
      *

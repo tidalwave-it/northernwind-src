@@ -43,6 +43,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -139,6 +140,8 @@ public interface ResourceProperties extends As, Identifiable
      *
      * Retrieves a property, eventually returning a default value.
      *
+     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     *
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
@@ -147,6 +150,19 @@ public interface ResourceProperties extends As, Identifiable
     @Nonnull // FIXME: should be Key<Integer>
     public int getIntProperty (@Nonnull Key<String> key, @Nonnull int defaultValue)
       throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a datetime property, searching through a sequence of keys, eventually returning a default value.
+     *
+     * @param   keys                the property keys
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<DateTime>
+    public DateTime getDateTimeProperty (@Nonnull Collection<Key<String>> keys,
+                                         @Nonnull DateTime defaultValue);
 
     /*******************************************************************************************************************
      *

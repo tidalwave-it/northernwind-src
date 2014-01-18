@@ -180,7 +180,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final ResourceProperties properties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        final DateTime blogDateTime = getBlogDateTime(post);
+        final DateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
+                                                                     DefaultBlogViewController.TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
         htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty(PROPERTY_TITLE)));
