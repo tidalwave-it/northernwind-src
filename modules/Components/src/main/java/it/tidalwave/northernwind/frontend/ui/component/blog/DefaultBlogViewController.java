@@ -518,7 +518,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         for (final TagAndCount tac : tagsAndCountByCountDescending)
           {
-            tac.rank = (rank <= 10) ? Integer.toString(rank) : "others";
+            tac.rank = (rank <= 10) ? Integer.toString(rank) : "Others";
 
             if (previousCount != tac.count)
               {
