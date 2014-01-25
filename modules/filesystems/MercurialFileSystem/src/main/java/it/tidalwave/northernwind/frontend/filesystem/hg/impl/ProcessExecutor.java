@@ -380,7 +380,7 @@ public class ProcessExecutor
       {
         for (final String line : consoleOutput.getContent())
           {
-            log.error("%s: %s", prefix, line);
+            log.error("{}: {}", prefix, line);
           }
       }
   }
