@@ -405,10 +405,11 @@
         </resources>
 
         <plugins>
+<!--
             <plugin>
               <groupId>org.owasp</groupId>
               <artifactId>dependency-check-maven</artifactId>
-              <version>1.1.2</version> <!-- FIXME -->
+              <version>1.1.2</version> FIXME 
               <executions>
                   <execution>
                       <goals>
@@ -417,7 +418,7 @@
                   </execution>
               </executions>
             </plugin>
-
+-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
