@@ -80,8 +80,8 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
             final long ifNotModifiedSince = headers.getIfNotModifiedSince(); // -1 if not present
             final long lastModified = headers.getLastModified();
             
-            log.info(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
-            log.info(">>>> ifNotModifiedSince: {} - lastModified: {}", ifNotModifiedSince, lastModified);
+            log.trace(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", ifNotModifiedSince, lastModified);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
                  ((ifNotModifiedSince != -1) && (lastModified != -1) && (ifNotModifiedSince >= lastModified)) )
