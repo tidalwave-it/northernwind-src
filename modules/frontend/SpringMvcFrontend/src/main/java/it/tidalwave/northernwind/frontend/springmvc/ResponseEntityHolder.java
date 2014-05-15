@@ -36,6 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -43,6 +44,7 @@ import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSu
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
   {
     @NotThreadSafe
@@ -76,9 +78,13 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
           {
             final String eTag = headers.getETag();
             final long ifNotModifiedSince = headers.getIfNotModifiedSince(); // -1 if not present
+            final long lastModified = headers.getLastModified();
+            
+            log.info(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.info(">>>> ifNotModifiedSince: {} - lastModified: {}", ifNotModifiedSince, lastModified);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-                 (ifNotModifiedSince >= headers.getLastModified()) )
+                 ((ifNotModifiedSince != -1) && (lastModified != -1) && (ifNotModifiedSince >= lastModified)) )
               {
                 return notModifiedResponse();
               }
