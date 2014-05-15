@@ -74,7 +74,25 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
         @Override @Nonnull
         public ResponseEntity<?> build()
           {
+            final String eTag = headers.getETag();
+            final long ifNotModifiedSince = headers.getIfNotModifiedSince(); // -1 if not present
+            
+            if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
+                 (ifNotModifiedSince >= headers.getLastModified()) )
+              {
+                return notModifiedResponse();
+              }
+            
             return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
+          }
+
+        @Nonnull
+        private ResponseEntity<?> notModifiedResponse() 
+          {
+            final HttpHeaders newHeaders = new HttpHeaders();
+            newHeaders.putAll(headers);
+            newHeaders.setContentLength(0);
+            return new ResponseEntity<>(new byte[0], newHeaders, HttpStatus.NOT_MODIFIED);
           }
       }
 

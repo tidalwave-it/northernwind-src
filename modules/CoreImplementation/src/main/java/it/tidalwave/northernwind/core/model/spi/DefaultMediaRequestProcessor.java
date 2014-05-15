@@ -127,9 +127,30 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
-        responseHolder.response().fromFile(file)
-                                 .withExpirationTime(duration)
-                                 .put();
+        
+        ResponseHolder.ResponseBuilderSupport b = 
+                responseHolder.response().fromFile(file)
+                                         .withExpirationTime(duration);
+        
+        try // FIXME: this would be definitely better with Optional
+          {
+            b = b.withRequestIfNoneMatch(request.getHeader("If-None-Match"));
+          }
+        catch (NotFoundException e)
+          {
+            // never mind  
+          }
+        
+        try // FIXME: this would be definitely better with Optional
+          {
+            b = b.withRequestIfModifiedSince(request.getHeader("If-Modified-Since"));
+          }
+        catch (NotFoundException e)
+          {
+            // never mind  
+          }
+                                         
+        b.put();
         return BREAK;
       }
   }

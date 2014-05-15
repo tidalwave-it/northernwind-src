@@ -39,6 +39,7 @@ import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -71,6 +72,12 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         protected Object body = "";
 
         protected int httpStatus = 200;
+
+        @Nullable
+        protected String requestIfNoneMatch;
+
+        @Nullable
+        protected String requestIfModifiedSince;
 
         @Nonnull
         public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
@@ -146,6 +153,21 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return this;
           }
 
+
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withRequestIfNoneMatch (final @Nullable String eTag) 
+          {
+            this.requestIfNoneMatch = eTag;
+            return this;
+          }
+
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withRequestIfModifiedSince (final @Nullable String dateTime) 
+          {
+            this.requestIfModifiedSince = dateTime;
+            return this;
+          }
+        
         @Nonnull
         public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String redirect)
           {

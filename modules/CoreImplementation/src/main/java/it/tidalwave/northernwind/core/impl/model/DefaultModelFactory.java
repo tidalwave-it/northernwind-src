@@ -29,13 +29,15 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
@@ -46,8 +48,9 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
-import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
+import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.util.NotFoundException;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -125,7 +128,10 @@ public class DefaultModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public DefaultRequest createRequest()
       {
-        return new DefaultRequest("", "", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());
+        return new DefaultRequest("", "", "", 
+                                  new HashMap<String, List<String>>(), 
+                                  new HashMap<String, List<String>>(), 
+                                  new ArrayList<Locale>());
       }
 
     /*******************************************************************************************************************
@@ -141,6 +147,7 @@ public class DefaultModelFactory extends ModelFactorySupport
         return createRequest().withBaseUrl(getBaseUrl(httpServletRequest))
                               .withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())
+                              .withHeaderMap(toMap(httpServletRequest))
                               .withPreferredLocales(Collections.list(httpServletRequest.getLocales()));
       }
 
@@ -176,5 +183,24 @@ public class DefaultModelFactory extends ModelFactorySupport
       {
         return httpServletRequest.getRequestURL().toString().replaceAll(":.*", "")
                 + "://" + httpServletRequest.getHeader("Host");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static Map<String, List<String>> toMap (final @Nonnull HttpServletRequest httpServletRequest)
+      {
+        final Map<String, List<String>> headerMap = new HashMap<>();
+        
+        for (final Enumeration<String> e = httpServletRequest.getHeaderNames(); e.hasMoreElements(); )
+          {
+            final String headerName = e.nextElement();
+            final String headerValue = httpServletRequest.getHeader(headerName); // FIXME: lacks support for multivalue
+            headerMap.put(headerName, Arrays.asList(headerValue));
+          }
+        
+        return headerMap;
       }
   }

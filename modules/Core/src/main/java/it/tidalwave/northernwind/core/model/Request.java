@@ -97,6 +97,30 @@ public interface Request
 
     /*******************************************************************************************************************
      *
+     * Returns a header value.
+     *
+     * @param  headerName     the name of the header
+     * @return                the value of the header
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getHeader (@Nonnull String headerName)
+      throws NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     * Returns a header value.
+     *
+     * @param  headerName     the name of the header
+     * @return                the value of the header
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<String> getMultiValuedHeader (@Nonnull String headerName)
+      throws NotFoundException;
+    
+    /*******************************************************************************************************************
+     *
      * Returns a parameter value.
      *
      * @param  parameterName  the name of the parameter
