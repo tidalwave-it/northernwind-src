@@ -60,8 +60,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j // FIXME: turn into an interface, move implementaton to Core Default Implementation
 public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
   {
-    protected static final int STATUS_PERMANENT_REDIRECT = 301;
-
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
     protected static final String HEADER_ETAG = "ETag";
     protected static final String HEADER_CONTENT_TYPE = "Content-Type";
@@ -361,7 +359,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
           {
             return withHeader(HEADER_LOCATION, url)
-                  .withStatus(STATUS_PERMANENT_REDIRECT);
+                  .withStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
           }
 
         /***************************************************************************************************************
