@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j // FIXME: turn into an interface, move implementaton to Core Default Implementation
 public abstract class ResponseHolder<ResponseType> implements RequestResettable
   {
     protected static final int STATUS_PERMANENT_REDIRECT = 301;
