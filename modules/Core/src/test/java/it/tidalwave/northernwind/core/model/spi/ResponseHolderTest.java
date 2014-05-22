@@ -52,6 +52,8 @@ public class ResponseHolderTest
     private ResponseHolder<?> fixture;
             
     private ResourceFile resourceFile;
+    
+    private DateTime currentTime = new DateTime(1341242353456L);
 
     /*******************************************************************************************************************
      *
@@ -60,6 +62,8 @@ public class ResponseHolderTest
     public void setupFixture()
       throws Exception
       {
+        MockResponseHolder.setCurrentTime(currentTime);
+        
         resourceFile = mock(ResourceFile.class);
         when(resourceFile.asBytes()).thenReturn("FILE CONTENT".getBytes());
         when(resourceFile.getMimeType()).thenReturn("text/plain");

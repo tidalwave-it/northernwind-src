@@ -34,6 +34,8 @@ import java.util.TreeMap;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import lombok.Getter;
+import lombok.Setter;
 import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
@@ -44,6 +46,9 @@ import org.joda.time.DateTime;
  **********************************************************************************************************************/
 public class MockResponseHolder extends ResponseHolder<byte[]>
   {
+    @Getter @Setter
+    private static DateTime currentTime;
+    
     class MockResponseBuilder extends ResponseBuilderSupport<byte[]>
       {
         private final Map<String, String> headerMap = new TreeMap<String, String>();
@@ -89,7 +94,7 @@ public class MockResponseHolder extends ResponseHolder<byte[]>
         @Override @Nonnull
         protected DateTime getTime()
           {
-            return new DateTime(1341242353456L);
+            return currentTime;
           }
       }
 
