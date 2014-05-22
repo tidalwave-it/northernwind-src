@@ -69,7 +69,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
         when(request.getOriginalRelativeUri()).thenReturn("/contextPath");
       }
 
-    @Test(enabled = false) // FIXME
+    @Test
     public void must_do_nothing_when_site_is_available()
       throws Exception
       {
