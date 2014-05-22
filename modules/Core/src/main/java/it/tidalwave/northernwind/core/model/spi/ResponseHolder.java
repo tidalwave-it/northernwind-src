@@ -50,14 +50,14 @@ import lombok.extern.slf4j.Slf4j;
  * This class holds a response object to be served. It's an abstract class: concrete descendants are supposed to 
  * create concrete responses adapting to a specific technology (e.g. Spring MVC, Jersey, etc...).
  * 
- * @param  <ResponseType> the produced response
+ * @param  <RESPONSE_TYPE> the produced response
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j // FIXME: turn into an interface, move implementaton to Core Default Implementation
-public abstract class ResponseHolder<ResponseType> implements RequestResettable
+public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
   {
     protected static final int STATUS_PERMANENT_REDIRECT = 301;
 
@@ -479,7 +479,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public abstract ResponseBuilderSupport<ResponseType> response();
+    public abstract ResponseBuilderSupport<RESPONSE_TYPE> response();
 
     /*******************************************************************************************************************
      *
@@ -487,9 +487,9 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResponseType get()
+    public RESPONSE_TYPE get()
       {
-        return (ResponseType)threadLocal.get();
+        return (RESPONSE_TYPE)threadLocal.get();
       }
 
     /*******************************************************************************************************************
