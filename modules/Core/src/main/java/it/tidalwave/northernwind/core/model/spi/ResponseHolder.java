@@ -28,18 +28,19 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -60,6 +61,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
     protected static final String HEADER_EXPIRES = "Expires";
     protected static final String HEADER_LOCATION = "Location";
+    protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since";
 
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
@@ -153,7 +155,6 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return this;
           }
 
-
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withRequestIfNoneMatch (final @Nullable String eTag) 
           {
@@ -175,6 +176,12 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withStatus(STATUS_PERMANENT_REDIRECT);
           }
 
+        @Nonnull
+        public final ResponseType build()
+          {
+            return cacheSupport().doBuild();
+          }
+        
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e)
           {
@@ -214,13 +221,50 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withBody(message)
                   .withStatus(e.getHttpStatus());
           }
-
-        @Nonnull
-        public abstract ResponseType build();
-
+        
         public void put()
           {
             threadLocal.set(build());
+          }
+        
+        @Nonnull
+        protected abstract ResponseType doBuild();
+        
+        @Nullable
+        protected abstract String getHeader (@Nonnull String header);
+          
+        @Nullable
+        protected final long getLongHeader (final @Nonnull String header)
+          {
+            final String value = getHeader(header);
+            return (value == null) ? -1 : Long.parseLong(header);
+          }
+          
+        @Nonnull
+        protected ResponseBuilderSupport<ResponseType> cacheSupport()
+          {
+            final String eTag = getHeader(HEADER_ETAG);
+            final long ifNotModifiedSince = getLongHeader(HEADER_IF_NOT_MODIFIED_SINCE); // -1 if not present
+            final long lastModified = getLongHeader(HEADER_LAST_MODIFIED);
+            
+            log.trace(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", ifNotModifiedSince, lastModified);
+            
+            if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
+                 ((ifNotModifiedSince != -1) && (lastModified != -1) && (ifNotModifiedSince >= lastModified)) )
+              {
+                return notModified();
+              }
+            
+            return this;
+          }
+
+        @Nonnull
+        private ResponseBuilderSupport<ResponseType> notModified() 
+          {
+            return withBody(new byte[0])
+                  .withContentLength(0)
+                  .withStatus(HttpServletResponse.SC_NOT_MODIFIED);
           }
       }
 

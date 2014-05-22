@@ -53,7 +53,7 @@ public class MockResponseHolder extends ResponseHolder<String>
           }
 
         @Override
-        public String build()
+        protected String doBuild()
           {
             final StringBuilder builder = new StringBuilder();
 
@@ -66,6 +66,12 @@ public class MockResponseHolder extends ResponseHolder<String>
 
             builder.append("\n").append(body);
             return builder.toString();
+          }
+
+        @Override
+        protected String getHeader (final @Nonnull String header) 
+          {
+            return headerMap.get(header);
           }
       }
 

@@ -30,6 +30,7 @@ package it.tidalwave.northernwind.frontend.springmvc;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -56,6 +57,13 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
             headers.add(header, value);
             return this;
           }
+        
+        @Override
+        protected String getHeader (final @Nonnull String header)
+          {
+            final List<String> g = headers.get(body);
+            return g.isEmpty() ? null : g.get(0);
+          }
 
         @Override @Nonnull
         public ResponseBuilder withContentType (final @Nonnull String contentType)
@@ -72,27 +80,9 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
           }
 
         @Override @Nonnull
-        public ResponseEntity<?> build()
+        protected ResponseEntity<?> doBuild()
           {
-            final String eTag = headers.getETag();
-            final long ifNotModifiedSince = headers.getIfNotModifiedSince(); // -1 if not present
-            
-            if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-                 (ifNotModifiedSince >= headers.getLastModified()) )
-              {
-                return notModifiedResponse();
-              }
-            
             return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
-          }
-
-        @Nonnull
-        private ResponseEntity<?> notModifiedResponse() 
-          {
-            final HttpHeaders newHeaders = new HttpHeaders();
-            newHeaders.putAll(headers);
-            newHeaders.setContentLength(0);
-            return new ResponseEntity<>(new byte[0], newHeaders, HttpStatus.NOT_MODIFIED);
           }
       }
 
