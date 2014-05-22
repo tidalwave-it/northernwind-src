@@ -82,7 +82,7 @@ public class ResponseHolderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void m1()
+    public void mustProperlyOutputANotFound()
       throws Exception
       {
         final NotFoundException e = new NotFoundException("foo bar");
