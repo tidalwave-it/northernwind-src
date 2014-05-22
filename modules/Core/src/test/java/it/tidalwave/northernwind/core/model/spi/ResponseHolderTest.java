@@ -118,6 +118,17 @@ public class ResponseHolderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test
+    public void mustProperlyOutputAPermanentRedirect()
+      throws Exception
+      {
+        final ResponseBuilderSupport<?> builder = fixture.response().permanentRedirect("http://acme.com");
+        assertContents(builder, "PermanentRedirectOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void assertContents (final @Nonnull ResponseBuilderSupport<?> builder, final String fileName)
       throws Exception
       {
