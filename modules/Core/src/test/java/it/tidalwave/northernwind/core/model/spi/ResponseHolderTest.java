@@ -55,7 +55,7 @@ public class ResponseHolderTest
     
     private DateTime currentTime = new DateTime(1341242353456L);
 
-    // TODO: expires header should be GMT
+    private DateTime resourceLatestModifiedTime = new DateTime(1341242553456L);
     
     /*******************************************************************************************************************
      *
@@ -69,7 +69,7 @@ public class ResponseHolderTest
         resourceFile = mock(ResourceFile.class);
         when(resourceFile.asBytes()).thenReturn("FILE CONTENT".getBytes());
         when(resourceFile.getMimeType()).thenReturn("text/plain");
-        when(resourceFile.getLatestModificationTime()).thenReturn(new DateTime(1341242553456L));
+        when(resourceFile.getLatestModificationTime()).thenReturn(resourceLatestModifiedTime);
         
         fixture = new MockResponseHolder();
       }
@@ -107,6 +107,30 @@ public class ResponseHolderTest
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                     .withRequestIfNoneMatch("\"1341242553456\"");
         assertContents(builder, "ResourceFileWithMatchingEtagOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void mustProperlyOutputAResourceFileWithNotExpiredModifiedSince()
+      throws Exception
+      {
+        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                    .withRequestIfModifiedSince(toString(resourceLatestModifiedTime));
+        assertContents(builder, "ResourceFileWithMatchingEtag2Output.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void mustProperlyOutputAResourceFileWithExpiredModifiedSince()
+      throws Exception
+      {
+        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                    .withRequestIfModifiedSince(toString(resourceLatestModifiedTime.plusSeconds(1)));
+        assertContents(builder, "ResourceFileOutputWithExpirationTime2.txt");
       }
     
     /*******************************************************************************************************************
@@ -167,5 +191,14 @@ public class ResponseHolderTest
         actualFile.getParentFile().mkdirs();
         Files.write((byte[])builder.build(), actualFile);
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String toString (final @Nonnull DateTime dateTime)
+      {
+        return ResponseBuilderSupport.createFormatter(ResponseBuilderSupport.PATTERN_RFC1123).format(dateTime.toDate());
       }
   }

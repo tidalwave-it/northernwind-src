@@ -57,28 +57,9 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j // FIXME: turn into an interface, move implementaton to Core Default Implementation
+@Slf4j 
 public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
   {
-    protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
-    protected static final String HEADER_ETAG = "ETag";
-    protected static final String HEADER_CONTENT_TYPE = "Content-Type";
-    protected static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
-    protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
-    protected static final String HEADER_EXPIRES = "Expires";
-    protected static final String HEADER_LOCATION = "Location";
-    protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since";
-    protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
-
-    protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
-
-    private static final String[] DATE_FORMATS = new String[] 
-      {
-        PATTERN_RFC1123,
-        "EEE, dd-MMM-yy HH:mm:ss zzz",
-        "EEE MMM dd HH:mm:ss yyyy"
-      };
-    
     private static final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
 
@@ -89,9 +70,28 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
      * @param <RESPONSE_TYPE>  the produced response
      * 
      ******************************************************************************************************************/
-    @NotThreadSafe
+    @NotThreadSafe // FIXME: move to Core Default Implementation
     public static abstract class ResponseBuilderSupport<RESPONSE_TYPE>
       {
+        protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
+        protected static final String HEADER_ETAG = "ETag";
+        protected static final String HEADER_CONTENT_TYPE = "Content-Type";
+        protected static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+        protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
+        protected static final String HEADER_EXPIRES = "Expires";
+        protected static final String HEADER_LOCATION = "Location";
+        protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since";
+        protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
+
+        protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
+
+        private static final String[] DATE_FORMATS = new String[] 
+          {
+            PATTERN_RFC1123,
+            "EEE, dd-MMM-yy HH:mm:ss zzz",
+            "EEE MMM dd HH:mm:ss yyyy"
+          };
+
         protected Object body = new byte[0];
 
         protected int httpStatus = HttpServletResponse.SC_OK;
@@ -490,7 +490,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        private static SimpleDateFormat createFormatter (final @Nonnull String template) 
+        /* package */ static SimpleDateFormat createFormatter (final @Nonnull String template) 
           {
             final SimpleDateFormat formatter = new SimpleDateFormat(template, Locale.US);
             formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
