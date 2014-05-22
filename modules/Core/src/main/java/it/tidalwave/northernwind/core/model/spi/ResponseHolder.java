@@ -70,6 +70,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
     protected static final String HEADER_EXPIRES = "Expires";
     protected static final String HEADER_LOCATION = "Location";
     protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since";
+    protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
@@ -181,7 +182,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
           {
             final DateTime expirationTime = getTime().plus(duration);
-            return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()));
+            return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
+                  .withHeader(HEADER_CACHE_CONTROL, String.format("public, max-age=%d", duration.toStandardSeconds().getSeconds()));
           }
 
         /***************************************************************************************************************
