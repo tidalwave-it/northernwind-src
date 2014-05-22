@@ -47,6 +47,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * This class holds a response object to be served. It's an abstract class: concrete descendants are supposed to 
+ * create concrete responses adapting to a specific technology (e.g. Spring MVC, Jersey, etc...).
+ * 
+ * @param  <ResponseType> the produced response
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -77,6 +82,13 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
 
+    /*******************************************************************************************************************
+     *
+     * A support for a builder of {@link ResponseHolder}.
+     *
+     * @param <ResponseType>  the produced response
+     * 
+     ******************************************************************************************************************/
     @NotThreadSafe
     public abstract class ResponseBuilderSupport<ResponseType>
       {
@@ -93,6 +105,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
 
+        /***************************************************************************************************************
+         *
+         * Specifies a set of headers.
+         *
+         * @param   headers             the headers
+         * @return                      itself for fluent interface style
+         * 
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withHeaders (@Nonnull Map<String, String> headers)
           {
@@ -106,24 +126,56 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return result;
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies the content type.
+         * 
+         * @param   contentType         the content type
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
           {
             return withHeader(HEADER_CONTENT_TYPE, contentType);
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies the content length.
+         * 
+         * @param  contentLength        the content length
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentLength (final @Nonnull long contentLength)
           {
             return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies the content disposition.
+         * 
+         * @param  contentDisposition   the content disposition
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withContentDisposition (final @Nonnull String contentDisposition)
           {
             return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies the expiration time.
+         * 
+         * @param  duration             the duration
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
           {
@@ -131,6 +183,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(expirationTime.toDate()));
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies the latest modified time.
+         * 
+         * @param  time                 the time
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withLatestModifiedTime (final @Nonnull DateTime time)
           {
@@ -138,13 +198,15 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
           }
 
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull byte[] body)
-          {
-            this.body = body;
-            return this;
-          }
-
+        /***************************************************************************************************************
+         *
+         * Specifies the body of the response. Accepted objects are: {@code byte[]}, {@code String}, 
+         * {@code InputStream}.
+         * 
+         * @param  body                 the body 
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
           {
@@ -154,6 +216,15 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return this;
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies the body of the response as a {@link ResourceFile}.
+         * 
+         * @param  file                 the file
+         * @return                      itself for fluent interface style
+         * @throws IOException          if an error occurs when reading the file
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull ResourceFile file)
           throws IOException
@@ -166,40 +237,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withBody(bytes);
           }
 
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> withStatus (final @Nonnull int httpStatus)
-          {
-            this.httpStatus = httpStatus;
-            return this;
-          }
-
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> withRequestIfNoneMatch (final @Nullable String eTag) 
-          {
-            this.requestIfNoneMatch = eTag;
-            return this;
-          }
-
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> withRequestIfModifiedSince (final @Nullable String dateTime) 
-          {
-            this.requestIfModifiedSince = (dateTime == null) ? null : parseDate(dateTime);
-            return this;
-          }
-        
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String redirect)
-          {
-            return withHeader(HEADER_LOCATION, redirect)
-                  .withStatus(STATUS_PERMANENT_REDIRECT);
-          }
-
-        @Nonnull
-        public final ResponseType build()
-          {
-            return cacheSupport().doBuild();
-          }
-        
+        /***************************************************************************************************************
+         *
+         * Specifies an exception to create the response from.
+         * 
+         * @param  e                    the exception
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e)
           {
@@ -207,6 +252,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return forException(new HttpStatusException(404));
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies an exception to create the response from.
+         * 
+         * @param  e                    the exception
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e)
           {
@@ -214,6 +267,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return forException(new HttpStatusException(500));
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies an exception to create the response from.
+         * 
+         * @param  e                    the exception
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e)
           {
@@ -240,17 +301,110 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withStatus(e.getHttpStatus());
           }
         
+        /***************************************************************************************************************
+         *
+         * Specifies the HTTP status.
+         * 
+         * @param  httpStatus           the status
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withStatus (final @Nonnull int httpStatus)
+          {
+            this.httpStatus = httpStatus;
+            return this;
+          }
+
+        /***************************************************************************************************************
+         *
+         * Specifies the If-None-Match header taken from the request. It's used by the caching logics.
+         * 
+         * @param  eTag                 the header value
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withRequestIfNoneMatch (final @Nullable String eTag) 
+          {
+            this.requestIfNoneMatch = eTag;
+            return this;
+          }
+
+        /***************************************************************************************************************
+         *
+         * Specifies the If-Modified header taken from the request. It's used by the caching logics.
+         * 
+         * @param  dateTime             the header value
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withRequestIfModifiedSince (final @Nullable String dateTime) 
+          {
+            this.requestIfModifiedSince = (dateTime == null) ? null : parseDate(dateTime);
+            return this;
+          }
+        
+        /***************************************************************************************************************
+         *
+         * Creates a builder for a permanent redirect.
+         * 
+         * @param  url                  the URL of the redirect       
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String url)
+          {
+            return withHeader(HEADER_LOCATION, url)
+                  .withStatus(STATUS_PERMANENT_REDIRECT);
+          }
+
+        /***************************************************************************************************************
+         *
+         * Builds the response.
+         * 
+         * @return                              the response
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public final ResponseType build()
+          {
+            return cacheSupport().doBuild();
+          }
+        
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         public void put()
           {
             threadLocal.set(build());
           }
         
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         @Nonnull
         protected abstract ResponseType doBuild();
         
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         @Nullable
         protected abstract String getHeader (@Nonnull String header);
           
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         @Nullable
         protected final DateTime getDateTimeHeader (final @Nonnull String header)
           {
@@ -258,6 +412,11 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return (value == null) ? null : parseDate(value);
           }
           
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         @Nonnull
         protected ResponseBuilderSupport<ResponseType> cacheSupport()
           {
@@ -276,6 +435,11 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return this;
           }
 
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         @Nonnull
         private ResponseBuilderSupport<ResponseType> notModified() 
           {
@@ -284,6 +448,11 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withStatus(HttpServletResponse.SC_NOT_MODIFIED);
           }
         
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         @Nonnull
         private DateTime parseDate (final @Nonnull String string)
           {
@@ -304,9 +473,19 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public abstract ResponseBuilderSupport<ResponseType> response();
 
+    /*******************************************************************************************************************
+     *
+     * 
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ResponseType get()
       {
