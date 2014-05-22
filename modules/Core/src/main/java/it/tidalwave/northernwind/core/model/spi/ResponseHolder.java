@@ -86,11 +86,11 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
      *
      * A support for a builder of {@link ResponseHolder}.
      *
-     * @param <ResponseType>  the produced response
+     * @param <RESPONSE_TYPE>  the produced response
      * 
      ******************************************************************************************************************/
     @NotThreadSafe
-    public abstract class ResponseBuilderSupport<ResponseType>
+    public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
       {
         protected Object body = new byte[0];
 
@@ -103,7 +103,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         protected DateTime requestIfModifiedSince;
 
         @Nonnull
-        public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
+        public abstract ResponseBuilderSupport<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
 
         /***************************************************************************************************************
          *
@@ -114,9 +114,9 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          * 
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withHeaders (@Nonnull Map<String, String> headers)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (@Nonnull Map<String, String> headers)
           {
-            ResponseBuilderSupport<ResponseType> result = this;
+            ResponseBuilderSupport<RESPONSE_TYPE> result = this;
 
             for (final Entry<String, String> entry : headers.entrySet())
               {
@@ -135,7 +135,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withContentType (final @Nonnull String contentType)
           {
             return withHeader(HEADER_CONTENT_TYPE, contentType);
           }
@@ -149,7 +149,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentLength (final @Nonnull long contentLength)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withContentLength (final @Nonnull long contentLength)
           {
             return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
           }
@@ -163,7 +163,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentDisposition (final @Nonnull String contentDisposition)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withContentDisposition (final @Nonnull String contentDisposition)
           {
             return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
           }
@@ -177,7 +177,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
           {
             final DateTime expirationTime = getTime().plus(duration);
             return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(expirationTime.toDate()));
@@ -192,7 +192,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withLatestModifiedTime (final @Nonnull DateTime time)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull DateTime time)
           {
             return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(time.toDate()))
                   .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
@@ -208,7 +208,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withBody (final @Nonnull Object body)
           {
             this.body = (body instanceof byte[]) ? body : 
                         (body instanceof InputStream) ? body :
@@ -226,7 +226,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull ResourceFile file)
+        public ResponseBuilderSupport<RESPONSE_TYPE> fromFile (final @Nonnull ResourceFile file)
           throws IOException
           {
             final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
@@ -246,7 +246,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e)
+        public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
           {
             log.info("NOT FOUND: {}", e.toString());
             return forException(new HttpStatusException(HttpServletResponse.SC_NOT_FOUND));
@@ -261,7 +261,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e)
+        public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull IOException e)
           {
             log.error("", e);
             return forException(new HttpStatusException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
@@ -276,7 +276,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e)
+        public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull HttpStatusException e)
           {
             String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
 
@@ -310,7 +310,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withStatus (final @Nonnull int httpStatus)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withStatus (final @Nonnull int httpStatus)
           {
             this.httpStatus = httpStatus;
             return this;
@@ -325,7 +325,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withRequestIfNoneMatch (final @Nullable String eTag) 
+        public ResponseBuilderSupport<RESPONSE_TYPE> withRequestIfNoneMatch (final @Nullable String eTag) 
           {
             this.requestIfNoneMatch = eTag;
             return this;
@@ -340,7 +340,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withRequestIfModifiedSince (final @Nullable String dateTime) 
+        public ResponseBuilderSupport<RESPONSE_TYPE> withRequestIfModifiedSince (final @Nullable String dateTime) 
           {
             this.requestIfModifiedSince = (dateTime == null) ? null : parseDate(dateTime);
             return this;
@@ -355,7 +355,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String url)
+        public ResponseBuilderSupport<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
           {
             return withHeader(HEADER_LOCATION, url)
                   .withStatus(STATUS_PERMANENT_REDIRECT);
@@ -369,7 +369,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        public final ResponseType build()
+        public final RESPONSE_TYPE build()
           {
             return cacheSupport().doBuild();
           }
@@ -390,7 +390,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        protected abstract ResponseType doBuild();
+        protected abstract RESPONSE_TYPE doBuild();
         
         /***************************************************************************************************************
          *
@@ -418,7 +418,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        protected ResponseBuilderSupport<ResponseType> cacheSupport()
+        protected ResponseBuilderSupport<RESPONSE_TYPE> cacheSupport()
           {
             final String eTag = getHeader(HEADER_ETAG);
             final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
@@ -441,7 +441,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
          *
          **************************************************************************************************************/
         @Nonnull
-        private ResponseBuilderSupport<ResponseType> notModified() 
+        private ResponseBuilderSupport<RESPONSE_TYPE> notModified() 
           {
             return withBody(new byte[0])
                   .withContentLength(0)
