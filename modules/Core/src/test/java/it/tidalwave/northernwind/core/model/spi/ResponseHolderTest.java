@@ -89,48 +89,48 @@ public class ResponseHolderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithNotMatchingEtag()
+    public void mustProperlyOutputAResourceFileWithEtagNotMatching()
       throws Exception
       {
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                     .withRequestIfNoneMatch("\"xxxx\"");
-        assertContents(builder, "ResourceFileWithNotMatchingEtagOutput.txt");
+        assertContents(builder, "ResourceFileOutput.txt");
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithMatchingEtag()
+    public void mustProperlyOutputAResourceFileWithEtagMatching()
       throws Exception
       {
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                     .withRequestIfNoneMatch("\"1341242553456\"");
-        assertContents(builder, "ResourceFileWithMatchingEtagOutput.txt");
+        assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithNotExpiredModifiedSince()
+    public void mustProperlyOutputAResourceFileWithIfModifiedSinceNotModified()
       throws Exception
       {
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                     .withRequestIfModifiedSince(toString(resourceLatestModifiedTime));
-        assertContents(builder, "ResourceFileWithMatchingEtag2Output.txt");
+        assertContents(builder, "ResourceFileOutput.txt");
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithExpiredModifiedSince()
+    public void mustProperlyOutputAResourceFileWithIfModifiedSinceModified()
       throws Exception
       {
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                     .withRequestIfModifiedSince(toString(resourceLatestModifiedTime.plusSeconds(1)));
-        assertContents(builder, "ResourceFileOutputWithExpirationTime2.txt");
+        assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
     
     /*******************************************************************************************************************

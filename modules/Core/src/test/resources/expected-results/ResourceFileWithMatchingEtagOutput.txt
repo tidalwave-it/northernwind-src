@@ -1,6 +1,0 @@
-HTTP/1.1 304
-Content-Length: 0
-Content-Type: text/plain
-ETag: "1341242553456"
-Last-Modified: Mon, 02 Jul 2012 15:22:33 GMT
-
