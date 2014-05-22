@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 //import static org.hamcrest.CoreMatchers.is;
 //import static org.hamcrest.MatcherAssert.*;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import static org.mockito.Mockito.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -77,6 +78,18 @@ public class ResponseHolderTest
       {
         final byte[] response = (byte[])(fixture.response().fromFile(resourceFile).build());
         assertContents(response, "ResourceFileOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void mustProperlyOutputAResourceFileWithExpirationTime()
+      throws Exception
+      {
+        final byte[] response = (byte[])(fixture.response().fromFile(resourceFile)
+                                                           .withExpirationTime(Duration.standardDays(7)).build());
+        assertContents(response, "ResourceFileOutputWithExpirationTime.txt");
       }
     
     /*******************************************************************************************************************
