@@ -87,6 +87,30 @@ public class ResponseHolderTest
      *
      ******************************************************************************************************************/
     @Test
+    public void mustProperlyOutputAResourceFileWithNotMatchingEtag()
+      throws Exception
+      {
+        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                    .withRequestIfNoneMatch("\"xxxx\"");
+        assertContents(builder, "ResourceFileWithNotMatchingEtagOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void mustProperlyOutputAResourceFileWithMatchingEtag()
+      throws Exception
+      {
+        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                    .withRequestIfNoneMatch("\"1341242553456\"");
+        assertContents(builder, "ResourceFileWithMatchingEtagOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
     public void mustProperlyOutputAResourceFileWithExpirationTime()
       throws Exception
       {
