@@ -32,6 +32,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.test.FileComparisonUtils;
 import java.io.File;
+import java.io.IOException;
 import javax.annotation.Nonnull;
 //import static org.hamcrest.CoreMatchers.is;
 //import static org.hamcrest.MatcherAssert.*;
@@ -88,6 +89,18 @@ public class ResponseHolderTest
         final NotFoundException e = new NotFoundException("foo bar");
         final byte[] response = (byte[])(fixture.response().forException(e).build());
         assertContents(response, "NotFoundExceptionOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void mustProperlyOutputAnInternalError()
+      throws Exception
+      {
+        final IOException e = new IOException("foo bar");
+        final byte[] response = (byte[])(fixture.response().forException(e).build());
+        assertContents(response, "InternalErrorOutput.txt");
       }
     
     /*******************************************************************************************************************
