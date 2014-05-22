@@ -31,13 +31,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.text.SimpleDateFormat;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -65,6 +69,13 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
 
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
+    private static final String[] DATE_FORMATS = new String[] 
+      {
+        PATTERN_RFC1123,
+        "EEE, dd-MMM-yy HH:mm:ss zzz",
+        "EEE MMM dd HH:mm:ss yyyy"
+      };
+        
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
 
@@ -79,7 +90,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         protected String requestIfNoneMatch;
 
         @Nullable
-        protected String requestIfModifiedSince;
+        protected DateTime requestIfModifiedSince;
 
         @Nonnull
         public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
@@ -165,7 +176,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withRequestIfModifiedSince (final @Nullable String dateTime) 
           {
-            this.requestIfModifiedSince = dateTime;
+            this.requestIfModifiedSince = (dateTime == null) ? null : parseDate(dateTime);
             return this;
           }
         
@@ -234,24 +245,23 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         protected abstract String getHeader (@Nonnull String header);
           
         @Nullable
-        protected final long getLongHeader (final @Nonnull String header)
+        protected final DateTime getDateTimeHeader (final @Nonnull String header)
           {
             final String value = getHeader(header);
-            return (value == null) ? -1 : Long.parseLong(header);
+            return (value == null) ? null : parseDate(value);
           }
           
         @Nonnull
         protected ResponseBuilderSupport<ResponseType> cacheSupport()
           {
             final String eTag = getHeader(HEADER_ETAG);
-            final long ifNotModifiedSince = getLongHeader(HEADER_IF_NOT_MODIFIED_SINCE); // -1 if not present
-            final long lastModified = getLongHeader(HEADER_LAST_MODIFIED);
+            final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
             
             log.trace(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
-            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", ifNotModifiedSince, lastModified);
+            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", requestIfModifiedSince, lastModified);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-                 ((ifNotModifiedSince != -1) && (lastModified != -1) && (ifNotModifiedSince >= lastModified)) )
+                 ((requestIfModifiedSince != null) && (lastModified != null) && requestIfModifiedSince.isAfter(lastModified)))
               {
                 return notModified();
               }
@@ -265,6 +275,28 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
             return withBody(new byte[0])
                   .withContentLength(0)
                   .withStatus(HttpServletResponse.SC_NOT_MODIFIED);
+          }
+        
+        @Nonnull
+        private DateTime parseDate (final @Nonnull String string)
+          {
+            for (final String dateFormat : DATE_FORMATS) 
+              {
+                final DateTimeFormatter dtf = DateTimeFormat.forPattern(dateFormat)
+                                                            .withLocale(Locale.US)
+                                                            .withZone(DateTimeZone.UTC);
+
+                try
+                  {
+                    return dtf.parseDateTime(string);
+                  }
+                catch (IllegalArgumentException e) 
+                  {
+                    // just try next
+                  }
+              }
+            
+            throw new IllegalArgumentException("Cannot parse date " + string);
           }
       }
 
