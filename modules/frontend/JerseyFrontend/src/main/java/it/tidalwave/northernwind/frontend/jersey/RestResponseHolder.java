@@ -43,7 +43,7 @@ import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSu
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class RestResponseHolder extends ResponseHolder<Response>
+public class RestResponseHolder extends ResponseHolder<Response> // FIXME: rename into JaxRsResponseHolder
   {
     @NotThreadSafe
     public class ResponseBuilder extends ResponseBuilderSupport<Response>
@@ -58,7 +58,7 @@ public class RestResponseHolder extends ResponseHolder<Response>
           }
 
         @Override @Nonnull
-        public Response build()
+        protected Response doBuild()
           {
             Response.ResponseBuilder builder = Response.status(httpStatus).entity(body);
 
@@ -71,6 +71,13 @@ public class RestResponseHolder extends ResponseHolder<Response>
               }
 
             return builder.build();
+          }
+
+        @Override
+        protected String getHeader (final @Nonnull String header) 
+          {
+            final List<String> list = headers.get(header);
+            return list.isEmpty() ? null : list.get(0);
           }
       }
 
