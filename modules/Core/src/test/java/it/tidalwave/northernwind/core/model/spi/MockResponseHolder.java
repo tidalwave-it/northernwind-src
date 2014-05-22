@@ -51,7 +51,7 @@ public class MockResponseHolder extends ResponseHolder<byte[]>
     
     class MockResponseBuilder extends ResponseBuilderSupport<byte[]>
       {
-        private final Map<String, String> headerMap = new TreeMap<String, String>();
+        private final Map<String, String> headerMap = new TreeMap<>();
 
         @Override
         public ResponseBuilderSupport<byte[]> withHeader (String name, String value)
