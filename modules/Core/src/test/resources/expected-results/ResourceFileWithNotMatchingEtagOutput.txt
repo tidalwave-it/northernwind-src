@@ -2,6 +2,6 @@ HTTP/1.1 200
 Content-Length: 12
 Content-Type: text/plain
 ETag: "1341242553456"
-Last-Modified: Mon, 02 Jul 2012 17:22:33 CEST
+Last-Modified: Mon, 02 Jul 2012 15:22:33 GMT
 
 FILE CONTENT

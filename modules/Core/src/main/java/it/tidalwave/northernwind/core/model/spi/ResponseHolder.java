@@ -43,6 +43,7 @@ import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -180,7 +181,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
           {
             final DateTime expirationTime = getTime().plus(duration);
-            return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(expirationTime.toDate()));
+            return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()));
           }
 
         /***************************************************************************************************************
@@ -194,7 +195,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull DateTime time)
           {
-            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(time.toDate()))
+            return withHeader(HEADER_LAST_MODIFIED, createFormatter(PATTERN_RFC1123).format(time.toDate()))
                   .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
           }
 
@@ -472,7 +473,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
                 try
                   {
                     log.debug("Parsing {} with {}...", string, dateFormat);
-                    return new DateTime(new SimpleDateFormat(dateFormat).parse(string));
+                    return new DateTime(createFormatter(dateFormat).parse(string));
                   }
                 catch (ParseException e) 
                   {
@@ -481,6 +482,19 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
               }
             
             throw new IllegalArgumentException("Cannot parse date " + string);
+          }
+        
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        private static SimpleDateFormat createFormatter (final @Nonnull String template) 
+          {
+            final SimpleDateFormat formatter = new SimpleDateFormat(template, Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            return formatter;
           }
       }
 
