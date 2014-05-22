@@ -51,6 +51,9 @@ public class ResponseHolderTest
             
     private ResourceFile resourceFile;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       throws Exception
@@ -63,6 +66,9 @@ public class ResponseHolderTest
         fixture = new MockResponseHolder();
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void mustProperlyOutputAResourceFile()
       throws Exception
@@ -71,6 +77,9 @@ public class ResponseHolderTest
         assertContents(response, "ResourceFileOutput.txt");
       }
     
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void assertContents (final @Nonnull byte[] response, final String fileName)
       throws Exception
       {
