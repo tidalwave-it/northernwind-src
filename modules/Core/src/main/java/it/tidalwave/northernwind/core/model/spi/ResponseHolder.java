@@ -94,7 +94,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
       {
         protected Object body = new byte[0];
 
-        protected int httpStatus = 200;
+        protected int httpStatus = HttpServletResponse.SC_OK;
 
         @Nullable
         protected String requestIfNoneMatch;
@@ -249,7 +249,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e)
           {
             log.info("NOT FOUND: {}", e.toString());
-            return forException(new HttpStatusException(404));
+            return forException(new HttpStatusException(HttpServletResponse.SC_NOT_FOUND));
           }
 
         /***************************************************************************************************************
@@ -264,7 +264,7 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e)
           {
             log.error("", e);
-            return forException(new HttpStatusException(500));
+            return forException(new HttpStatusException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
           }
 
         /***************************************************************************************************************
@@ -282,14 +282,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
 
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {
-                case 302:
+                case HttpServletResponse.SC_MOVED_TEMPORARILY:
                   break;
 
-                case 404:
+                case HttpServletResponse.SC_NOT_FOUND:
                   message = "<h1>Not found</h1>";
                   break;
 
-                case 500:
+                case HttpServletResponse.SC_INTERNAL_SERVER_ERROR:
                 default: // FIXME: why?
                   message = "<h1>Internal error</h1>";
                   break;
