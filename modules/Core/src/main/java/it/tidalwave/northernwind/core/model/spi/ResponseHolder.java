@@ -79,7 +79,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         "EEE MMM dd HH:mm:ss yyyy"
       };
     
-    private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
 
     /*******************************************************************************************************************
@@ -90,7 +90,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
      * 
      ******************************************************************************************************************/
     @NotThreadSafe
-    public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
+    public static abstract class ResponseBuilderSupport<RESPONSE_TYPE>
       {
         protected Object body = new byte[0];
 
@@ -435,6 +435,17 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             return this;
           }
 
+        /*******************************************************************************************************************
+         *
+         *
+         *
+         ******************************************************************************************************************/
+        @Nonnull
+        protected DateTime getTime()
+          {
+            return new DateTime();
+          }
+
         /***************************************************************************************************************
          *
          * 
@@ -501,16 +512,5 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
     public void requestReset()
       {
         threadLocal.remove();
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected DateTime getTime()
-      {
-        return new DateTime();
       }
   }

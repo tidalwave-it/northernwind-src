@@ -85,17 +85,17 @@ public class MockResponseHolder extends ResponseHolder<byte[]>
           {
             return headerMap.get(header);
           }
+
+        @Override @Nonnull
+        protected DateTime getTime()
+          {
+            return new DateTime(1341242353456L);
+          }
       }
 
     @Override
     public ResponseBuilderSupport response()
       {
         return new MockResponseBuilder();
-      }
-
-    @Override @Nonnull
-    protected DateTime getTime()
-      {
-        return new DateTime(1341242353456L);
       }
   }

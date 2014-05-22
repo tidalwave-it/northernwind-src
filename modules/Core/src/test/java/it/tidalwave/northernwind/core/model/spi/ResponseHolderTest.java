@@ -27,20 +27,19 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
-import com.google.common.io.Files;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.test.FileComparisonUtils;
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import javax.annotation.Nonnull;
-//import static org.hamcrest.CoreMatchers.is;
-//import static org.hamcrest.MatcherAssert.*;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import static org.mockito.Mockito.*;
+import com.google.common.io.Files;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.test.FileComparisonUtils;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
@@ -76,8 +75,8 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFile()
       throws Exception
       {
-        final byte[] response = (byte[])(fixture.response().fromFile(resourceFile).build());
-        assertContents(response, "ResourceFileOutput.txt");
+        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile);
+        assertContents(builder, "ResourceFileOutput.txt");
       }
     
     /*******************************************************************************************************************
@@ -87,9 +86,9 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFileWithExpirationTime()
       throws Exception
       {
-        final byte[] response = (byte[])(fixture.response().fromFile(resourceFile)
-                                                           .withExpirationTime(Duration.standardDays(7)).build());
-        assertContents(response, "ResourceFileOutputWithExpirationTime.txt");
+        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                    .withExpirationTime(Duration.standardDays(7));
+        assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
       }
     
     /*******************************************************************************************************************
@@ -100,8 +99,8 @@ public class ResponseHolderTest
       throws Exception
       {
         final NotFoundException e = new NotFoundException("foo bar");
-        final byte[] response = (byte[])(fixture.response().forException(e).build());
-        assertContents(response, "NotFoundExceptionOutput.txt");
+        final ResponseBuilderSupport<?> builder = fixture.response().forException(e);
+        assertContents(builder, "NotFoundExceptionOutput.txt");
       }
     
     /*******************************************************************************************************************
@@ -112,20 +111,20 @@ public class ResponseHolderTest
       throws Exception
       {
         final IOException e = new IOException("foo bar");
-        final byte[] response = (byte[])(fixture.response().forException(e).build());
-        assertContents(response, "InternalErrorOutput.txt");
+        final ResponseBuilderSupport<?> builder = fixture.response().forException(e);
+        assertContents(builder, "InternalErrorOutput.txt");
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertContents (final @Nonnull byte[] response, final String fileName)
+    private void assertContents (final @Nonnull ResponseBuilderSupport<?> builder, final String fileName)
       throws Exception
       {
         final File actualFile = new File("target/test-results/" + fileName);
         final File expectedFile = new File("src/test/resources/expected-results/" + fileName);
         actualFile.getParentFile().mkdirs();
-        Files.write(response, actualFile);
+        Files.write((byte[])builder.build(), actualFile);
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
   }
