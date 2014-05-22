@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import com.google.common.io.Files;
 import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.test.FileComparisonUtils;
 import java.io.File;
 import javax.annotation.Nonnull;
@@ -75,6 +76,18 @@ public class ResponseHolderTest
       {
         final byte[] response = (byte[])(fixture.response().fromFile(resourceFile).build());
         assertContents(response, "ResourceFileOutput.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void m1()
+      throws Exception
+      {
+        final NotFoundException e = new NotFoundException("foo bar");
+        final byte[] response = (byte[])(fixture.response().forException(e).build());
+        assertContents(response, "NotFoundExceptionOutput.txt");
       }
     
     /*******************************************************************************************************************
