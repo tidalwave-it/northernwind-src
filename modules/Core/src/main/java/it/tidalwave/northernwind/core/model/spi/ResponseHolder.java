@@ -30,18 +30,16 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -75,14 +73,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         "EEE, dd-MMM-yy HH:mm:ss zzz",
         "EEE MMM dd HH:mm:ss yyyy"
       };
-        
+    
     private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
 
     @NotThreadSafe
     public abstract class ResponseBuilderSupport<ResponseType>
       {
-        protected Object body = "";
+        protected Object body = new byte[0];
 
         protected int httpStatus = 200;
 
@@ -129,21 +127,30 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
           {
-            final Date expirationTime = getTime().plus(duration).toDate();
-            return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123).format(expirationTime));
+            final DateTime expirationTime = getTime().plus(duration);
+            return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(expirationTime.toDate()));
           }
 
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withLatestModifiedTime (final @Nonnull DateTime time)
           {
-            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(time.toDate()))
+            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123, Locale.US).format(time.toDate()))
                   .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
+          }
+
+        @Nonnull
+        public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull byte[] body)
+          {
+            this.body = body;
+            return this;
           }
 
         @Nonnull
         public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
           {
-            this.body = body;
+            this.body = (body instanceof byte[]) ? body : 
+                        (body instanceof InputStream) ? body :
+                         body.toString().getBytes();
             return this;
           }
 
@@ -282,17 +289,14 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
           {
             for (final String dateFormat : DATE_FORMATS) 
               {
-                final DateTimeFormatter dtf = DateTimeFormat.forPattern(dateFormat)
-                                                            .withLocale(Locale.US)
-                                                            .withZone(DateTimeZone.UTC);
-
                 try
                   {
-                    return dtf.parseDateTime(string);
+                    log.debug("Parsing {} with {}...", string, dateFormat);
+                    return new DateTime(new SimpleDateFormat(dateFormat).parse(string));
                   }
-                catch (IllegalArgumentException e) 
+                catch (ParseException e) 
                   {
-                    // just try next
+                    log.debug("{}", e.getMessage());
                   }
               }
             
