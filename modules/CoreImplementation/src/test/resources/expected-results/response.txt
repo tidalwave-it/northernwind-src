@@ -1,0 +1,16 @@
+HTTP/1.1 503
+Cache-Control: public, max-age=0
+Content-Type: text/html
+Expires: Mon, 02 Jul 2012 15:19:13 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Refresh" content="15; url=http://acme.com/contextPath"/>
+</head>
+<body>
+<div style="padding: 5% 0pt;">
+<div style="padding: 10% 0pt; text-align: center"><p style="font-family: sans-serif; font-size: 24px">Site under maintenance, please retry later.<br/>This page will reload automatically.</p></div>
+</div>
+</body>
+</html>
