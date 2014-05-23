@@ -113,14 +113,14 @@ public class ResponseHolderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithIfModifiedSinceNotModified()
+    public void mustProperlyOutputAResourceFileWhenIfModifiedSinceLessRecentThanModifiedTime()
       throws Exception
       {
         for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
           {
-            final DateTime time = resourceLatestModifiedTime.minusSeconds(deltaSeconds);
+            final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                        .withRequestIfModifiedSince(toString(time));
+                                                                        .withRequestIfModifiedSince(toString(ifModifiedSinceTime));
             assertContents(builder, "ResourceFileOutput.txt");
           }
       }
@@ -129,15 +129,15 @@ public class ResponseHolderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithIfModifiedSinceModified()
+    public void mustProperlyOutputAResourceFileWhenIfModifiedSinceMoreRecentThanOrEqualToModifiedTime()
       throws Exception
       {
         // corner case: same time should return NotModified
         for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
           {
-            final DateTime time = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                        .withRequestIfModifiedSince(toString(time));
+                                                                        .withRequestIfModifiedSince(toString(ifModifiedSinceTime));
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
           }
       }
