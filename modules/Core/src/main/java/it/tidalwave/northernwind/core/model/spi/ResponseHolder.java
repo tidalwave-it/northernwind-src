@@ -67,7 +67,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
      *
      * A support for a builder of {@link ResponseHolder}.
      *
-     * @param <RESPONSE_TYPE>  the produced response
+     * @param <RESPONSE_TYPE>  the produced response (may change in function of the technology used for serving the
+     *                         results)
      * 
      ******************************************************************************************************************/
     @NotThreadSafe // FIXME: move to Core Default Implementation
