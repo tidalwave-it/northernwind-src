@@ -28,7 +28,6 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import java.util.Collection;
-import java.util.Iterator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
@@ -39,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
         
 /***********************************************************************************************************************
  *
@@ -73,9 +72,8 @@ public class ScanningMetadataInterpolatorFactoryTest
       {
         final Collection<MetadataInterpolator> interpolators = fixture.getInterpolators();
         
-        final Iterator<MetadataInterpolator> i = interpolators.iterator();
-        assertThat(i.next(), is(instanceOf(ShootingDataInterpolator.class)));
-        assertThat(i.next(), is(instanceOf(XmpDcTitleInterpolator.class)));
-        assertThat(i.hasNext(), is(false));
+        assertThat(interpolators, hasSize(2));
+        assertThat(interpolators, hasItem(isA(ShootingDataInterpolator.class)));
+        assertThat(interpolators, hasItem(isA(XmpDcTitleInterpolator.class)));
       }
   }
