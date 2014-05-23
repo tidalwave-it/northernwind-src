@@ -116,9 +116,13 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFileWithIfModifiedSinceNotModified()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withRequestIfModifiedSince(toString(resourceLatestModifiedTime));
-        assertContents(builder, "ResourceFileOutput.txt");
+        for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
+          {
+            final DateTime time = resourceLatestModifiedTime.minusSeconds(deltaSeconds);
+            final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                        .withRequestIfModifiedSince(toString(time));
+            assertContents(builder, "ResourceFileOutput.txt");
+          }
       }
     
     /*******************************************************************************************************************
@@ -128,9 +132,14 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFileWithIfModifiedSinceModified()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withRequestIfModifiedSince(toString(resourceLatestModifiedTime.plusSeconds(1)));
-        assertContents(builder, "ResourceFileNotModifiedOutput.txt");
+        // corner case: same time should return NotModified
+        for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
+          {
+            final DateTime time = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                        .withRequestIfModifiedSince(toString(time));
+            assertContents(builder, "ResourceFileNotModifiedOutput.txt");
+          }
       }
     
     /*******************************************************************************************************************
