@@ -35,6 +35,7 @@ import it.tidalwave.util.test.FileComparisonUtils;
 import java.io.File;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import org.joda.time.DateTime;
 import static org.mockito.Mockito.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -53,14 +54,17 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
 
     private MockResponseHolder responseHolder;
 
+    private DateTime currentTime = new DateTime(1341242353456L);
+
     public AvailabilityEnforcerRequestProcessorTest()
       {
         super("AvailabilityEnforcerRequestProcessorTestBeans.xml");
       }
-
+   
     @BeforeMethod
     public void setupFixture()
       {
+        MockResponseHolder.setCurrentTime(currentTime);
         fixture = context.getBean(AvailabilityEnforcerRequestProcessor.class);
         responseHolder = context.getBean(MockResponseHolder.class);
         request = mock(Request.class);
