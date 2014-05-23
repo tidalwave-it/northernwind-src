@@ -37,8 +37,10 @@
         <slf4j.version>1.7.5</slf4j.version>
         <stringtemplate.version>4.0.2</stringtemplate.version>
         <tft.jsr305.version>2.0.1</tft.jsr305.version>
+        <tft.testng.version>6.8.8</tft.testng.version>
+        <tft.hamcrest-matchers.version>1.3</tft.hamcrest-matchers.version>
         <tft.lombok.version>1.12.4</tft.lombok.version>
-        <tft.mockito.version>1.8.5</tft.mockito.version>
+        <tft.mockito.version>1.9.5</tft.mockito.version>
         <thesefoolishthings.version>1.35</thesefoolishthings.version>
         <vaadin.version>6.6.1</vaadin.version>
 
@@ -292,6 +294,11 @@
                 <version>${tft.aspectjrt.version}</version>
             </dependency>
 
+            <dependency> <!-- FIXME: push to superpom -->
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${tft.mockito.version}</version>
+            </dependency>      
         </dependencies>
     </dependencyManagement>
 
@@ -334,18 +341,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion> <!-- Let us pick a more recent version of hamcrest -->
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>            
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -405,20 +418,20 @@
         </resources>
 
         <plugins>
-<!--
-            <plugin>
-              <groupId>org.owasp</groupId>
-              <artifactId>dependency-check-maven</artifactId>
-              <version>1.1.2</version> FIXME 
-              <executions>
-                  <execution>
-                      <goals>
-                          <goal>check</goal>
-                      </goals>
-                  </execution>
-              </executions>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                          <groupId>org.owasp</groupId>
+                          <artifactId>dependency-check-maven</artifactId>
+                          <version>1.1.2</version> FIXME 
+                          <executions>
+                              <execution>
+                                  <goals>
+                                      <goal>check</goal>
+                                  </goals>
+                              </execution>
+                          </executions>
+                        </plugin>
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
