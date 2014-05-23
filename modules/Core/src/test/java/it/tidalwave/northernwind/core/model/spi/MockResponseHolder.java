@@ -47,7 +47,7 @@ import org.joda.time.DateTime;
 public class MockResponseHolder extends ResponseHolder<byte[]>
   {
     @Getter @Setter
-    private static DateTime currentTime;
+    private static DateTime currentTime = new DateTime();
     
     class MockResponseBuilder extends ResponseBuilderSupport<byte[]>
       {
