@@ -182,7 +182,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           {
             final DateTime expirationTime = getTime().plus(duration);
             return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
-                  .withHeader(HEADER_CACHE_CONTROL, String.format("public, max-age=%d", duration.toStandardSeconds().getSeconds()));
+                  .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.toStandardSeconds().getSeconds()));
           }
 
         /***************************************************************************************************************
