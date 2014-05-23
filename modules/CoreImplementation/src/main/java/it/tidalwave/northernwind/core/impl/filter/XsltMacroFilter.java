@@ -124,7 +124,7 @@ public class XsltMacroFilter implements Filter
       {
         if (!mimeType.equals("application/xhtml+xml"))
           {
-            log.warn("Cannot filter resources not in XHTML: {}", mimeType);
+            log.debug("Cannot filter resources not in XHTML: {}", mimeType);
             return text;
           }
 

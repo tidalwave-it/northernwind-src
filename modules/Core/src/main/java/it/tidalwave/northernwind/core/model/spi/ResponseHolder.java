@@ -67,7 +67,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
      *
      * A support for a builder of {@link ResponseHolder}.
      *
-     * @param <RESPONSE_TYPE>  the produced response
+     * @param <RESPONSE_TYPE>  the produced response (may change in function of the technology used for serving the
+     *                         results)
      * 
      ******************************************************************************************************************/
     @NotThreadSafe // FIXME: move to Core Default Implementation
@@ -181,7 +182,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           {
             final DateTime expirationTime = getTime().plus(duration);
             return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
-                  .withHeader(HEADER_CACHE_CONTROL, String.format("public, max-age=%d", duration.toStandardSeconds().getSeconds()));
+                  .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.toStandardSeconds().getSeconds()));
           }
 
         /***************************************************************************************************************
@@ -424,8 +425,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             final String eTag = getHeader(HEADER_ETAG);
             final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
             
-            log.trace(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
-            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", requestIfModifiedSince, lastModified);
+            log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
                  ((requestIfModifiedSince != null) && (lastModified != null) && requestIfModifiedSince.isAfter(lastModified)))
