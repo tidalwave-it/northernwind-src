@@ -43,6 +43,7 @@ import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.Request;
 import java.util.TimeZone;
 import lombok.extern.slf4j.Slf4j;
 
@@ -81,7 +82,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
         protected static final String HEADER_EXPIRES = "Expires";
         protected static final String HEADER_LOCATION = "Location";
-        protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since";
+        protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since"; // FIXME: name
+        protected static final String HEADER_IF_NONE_MATCH = "If-None-Match";
         protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
         protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
@@ -241,6 +243,39 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
         /***************************************************************************************************************
          *
+         * Specifies the {@link Request} we're serving - this makes it possible to read some headers and other
+         * configurations needed e.g. for cache control.
+         * 
+         * @param  request              the request
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<RESPONSE_TYPE> forRequest (final @Nonnull Request request) 
+          {    
+            try // FIXME: this would be definitely better with Optional
+              {
+                this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
+              }
+            catch (NotFoundException e)
+              {
+                // never mind  
+              }
+
+            try // FIXME: this would be definitely better with Optional
+              {
+                this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_NOT_MODIFIED_SINCE));
+              }
+            catch (NotFoundException e)
+              {
+                // never mind  
+              }
+            
+            return this;
+          }
+        
+        /***************************************************************************************************************
+         *
          * Specifies an exception to create the response from.
          * 
          * @param  e                    the exception
@@ -315,36 +350,6 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> withStatus (final @Nonnull int httpStatus)
           {
             this.httpStatus = httpStatus;
-            return this;
-          }
-
-        /***************************************************************************************************************
-         *
-         * Specifies the If-None-Match header taken from the request. It's used by the caching logics.
-         * 
-         * @param  eTag                 the header value
-         * @return                      itself for fluent interface style
-         *
-         **************************************************************************************************************/
-        @Nonnull
-        public ResponseBuilderSupport<RESPONSE_TYPE> withRequestIfNoneMatch (final @Nullable String eTag) 
-          {
-            this.requestIfNoneMatch = eTag;
-            return this;
-          }
-
-        /***************************************************************************************************************
-         *
-         * Specifies the If-Modified header taken from the request. It's used by the caching logics.
-         * 
-         * @param  dateTime             the header value
-         * @return                      itself for fluent interface style
-         *
-         **************************************************************************************************************/
-        @Nonnull
-        public ResponseBuilderSupport<RESPONSE_TYPE> withRequestIfModifiedSince (final @Nullable String dateTime) 
-          {
-            this.requestIfModifiedSince = (dateTime == null) ? null : parseDate(dateTime);
             return this;
           }
         
