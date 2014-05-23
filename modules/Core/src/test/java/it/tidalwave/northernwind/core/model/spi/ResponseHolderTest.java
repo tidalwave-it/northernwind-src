@@ -27,25 +27,25 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 import com.google.common.io.Files;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
-import static it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport.*;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.test.FileComparisonUtils;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Nonnull;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport.*;
 
 /***********************************************************************************************************************
  *
