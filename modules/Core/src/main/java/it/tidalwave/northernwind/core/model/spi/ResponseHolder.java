@@ -425,8 +425,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             final String eTag = getHeader(HEADER_ETAG);
             final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
             
-            log.trace(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
-            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", requestIfModifiedSince, lastModified);
+            log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
                  ((requestIfModifiedSince != null) && (lastModified != null) && requestIfModifiedSince.isAfter(lastModified)))
