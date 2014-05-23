@@ -429,7 +429,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-                 ((requestIfModifiedSince != null) && (lastModified != null) && lastModified.isBefore(requestIfModifiedSince)))
+                 ((requestIfModifiedSince != null) && (lastModified != null) && 
+                  (lastModified.isBefore(requestIfModifiedSince) || lastModified.isEqual(requestIfModifiedSince))) )
               {
                 return notModified();
               }
