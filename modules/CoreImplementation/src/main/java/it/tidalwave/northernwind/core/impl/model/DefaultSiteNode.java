@@ -65,7 +65,7 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j @ToString(callSuper = true, of = "relativeUri")
+@Configurable(preConstruction = true) @Slf4j @ToString(callSuper = false, of = "relativeUri")
 /* package */ class DefaultSiteNode extends SiteNodeSupport
   {
     @Nonnull

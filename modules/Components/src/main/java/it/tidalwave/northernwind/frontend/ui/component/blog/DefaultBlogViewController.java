@@ -139,13 +139,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
                           }
                         catch (NotFoundException | IOException e)
                           {
-                            log.warn("", e);
+                            log.warn("While reading properties", e);
                           }
                       }
                   }
                 catch (NotFoundException | IOException e)
                   {
-                    log.warn("", e);
+                    log.warn("While reading property group", e);
                   }
 
                 log.info(">>>> returning: {}", results);
@@ -170,6 +170,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             return;
           }
 
+        log.info("Initializing for {}", siteNode);
         // called at initialization
         try
           {
@@ -187,13 +188,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
             render();
           }
-        catch (NotFoundException e)
+        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen 
+        catch (NotFoundException | IOException e)
           {
-            log.warn("{}", e.toString());
-          }
-        catch (IOException e)
-          {
-            log.warn("", e);
+            log.warn("While reading property group at initialization", e);
           }
       }
 
@@ -220,7 +218,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
             try
               {
                 log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-                post.getProperties().getProperty(PROPERTY_TITLE); // Skip folders used for categories
+                // FIXME: use hasProperty() and use PROPERTY_FULLTEXT
+                post.getProperties().getProperty(PROPERTY_TITLE); // Skip folders used for categories - this throws exception
 
                 if (currentItem < maxFullItems)
                   {
@@ -239,11 +238,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
             catch (NotFoundException e)
               {
-                log.warn("{}", e.toString());
+                log.info("While reading property group of post {}", e.toString());
               }
             catch (IOException e)
               {
-                log.warn("", e);
+                log.warn("While reading property group of post", e);
               }
           }
       }

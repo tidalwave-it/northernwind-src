@@ -94,7 +94,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
           }
         catch (IOException | NotFoundException e)
           {
-            log.info("Requested URI {} doesn't map to a library resource, continuing...", relativePath);
+            log.debug("Requested URI {} doesn't map to a library resource, continuing...", relativePath);
           }
 
         return CONTINUE;
