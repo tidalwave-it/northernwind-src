@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -60,7 +60,7 @@ public class DefaultSiteProviderTest
     private WaitingTaskExecutor executor;
 
     private ServletContext servletContext;
-    
+
     private Site.Builder.CallBack siteBuilderCallback;
 
     /*******************************************************************************************************************
@@ -73,13 +73,13 @@ public class DefaultSiteProviderTest
         executor = context.getBean(WaitingTaskExecutor.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
-        
+
         siteBuilderCallback = mock(Site.Builder.CallBack.class);
-        when(siteBuilderCallback.build(any(Site.Builder.class))).thenReturn(site);        
-        final Site.Builder builder = new Site.Builder().withCallBack(siteBuilderCallback);        
+        when(siteBuilderCallback.build(any(Site.Builder.class))).thenReturn(site);
         final ModelFactory modelFactory = context.getBean(ModelFactory.class);
-        when(modelFactory.createSite()).thenReturn(builder);        
-        
+        final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
+        when(modelFactory.createSite()).thenReturn(builder);
+
         when(servletContext.getContextPath()).thenReturn("thecontextpath");
       }
 
@@ -91,7 +91,7 @@ public class DefaultSiteProviderTest
       throws Exception
       {
         fixture = context.getBean(DefaultSiteProvider.class);
-        
+
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
                 .withContextPath("thecontextpath")
                 .withDocumentPath("testDocumentPath")
@@ -101,7 +101,7 @@ public class DefaultSiteProviderTest
                 .withConfigurationEnabled(true)
                 .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                 .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
-        
+
         verify(executor).execute(any(Runnable.class)); // FIXME: needed?
 
         assertThat(fixture.getSite(), sameInstance((Site)site));
@@ -142,9 +142,9 @@ public class DefaultSiteProviderTest
       throws Exception
       {
         ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");
-        
+
         fixture = context.getBean(DefaultSiteProvider.class);
-        
+
         assertThat(fixture.getContextPath(), is("/"));
       }
 
@@ -156,10 +156,10 @@ public class DefaultSiteProviderTest
       throws Exception
       {
         doThrow(new IOException("test")).when(site).initialize();
-        
+
         fixture = context.getBean(DefaultSiteProvider.class);
         executor.doExecute(); // emulate Site initialization in background
-        
+
         assertThat(fixture.getSite(), sameInstance((Site)site));
         assertThat(fixture.isSiteAvailable(), is(false));
       }

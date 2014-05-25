@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@DciRole(datum = Layout.class) @Configurable @Slf4j
+@DciRole(datumType = Layout.class) @Configurable @Slf4j
 public class LayoutJaxbMarshallable implements Marshallable
   {
     @Nonnull

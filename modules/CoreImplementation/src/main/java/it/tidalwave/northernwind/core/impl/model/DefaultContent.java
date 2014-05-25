@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -37,12 +37,10 @@ import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
-import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.spi.ContentSupport;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -107,22 +105,11 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction=true) @Slf4j @ToString(exclude="requestContext")
-/* package */ class DefaultContent implements Content
+@Configurable @Slf4j @ToString(callSuper = true, exclude="requestContext")
+/* package */ class DefaultContent extends ContentSupport
   {
-    interface Exclusions
-      {
-        public ResourceProperties getProperties();
-      }
-
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
-
     @Inject @Nonnull
     private RequestContext requestContext;
-
-    @Nonnull @Delegate(types=Resource.class, excludes=Exclusions.class)
-    private final Resource resource;
 
     /*******************************************************************************************************************
      *
@@ -131,9 +118,9 @@ class ResourcePropertiesDelegate implements ResourceProperties
      * @param   file   the configuration file
      *
      ******************************************************************************************************************/
-    public DefaultContent (final @Nonnull ResourceFile file)
+    public DefaultContent (final @Nonnull Content.Builder builder)
       {
-        resource = modelFactory.createResource(file);
+        super(builder);
       }
 
     /*******************************************************************************************************************
@@ -146,10 +133,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
       {
         return new FolderBasedFinderSupport<Content>(this);
       }
-
-    // FIXME: this is declared in Frontend Components. Either move some properties in this module, or this the next
-    // method can't stay here.
-    public static final Key<String> PROPERTY_TITLE = new Key<>("title");
 
     /*******************************************************************************************************************
      *
@@ -170,6 +153,9 @@ class ResourcePropertiesDelegate implements ResourceProperties
           }
       }
 
+    // FIXME: this is declared in Frontend Components. Either move some properties in this module, or the next
+    // method can't stay here.
+    public static final Key<String> PROPERTY_TITLE = new Key<>("title");
 
     /*******************************************************************************************************************
      *
@@ -180,7 +166,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     private ResourcePath getDefaultExposedUri()
       throws NotFoundException, IOException
       {
-        String title = resource.getProperties().getProperty(PROPERTY_TITLE);
+        String title = getResource().getProperties().getProperty(PROPERTY_TITLE);
         title = deAccent(title);
         title = title.replaceAll(" ", "-")
                      .replaceAll(",", "")
@@ -210,6 +196,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public ResourceProperties getProperties()
       {
-        return new ResourcePropertiesDelegate(requestContext, this, resource.getProperties());
+        return new ResourcePropertiesDelegate(requestContext, this, getResource().getProperties());
       }
   }

@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,6 +29,8 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -38,9 +40,10 @@ import it.tidalwave.role.Identifiable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -57,19 +60,30 @@ public interface ResourceProperties extends As, Identifiable
      * A builder of a {@link ResourceProperties}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
-    @Wither @Getter @ToString(exclude = "callBack")
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
         public static interface CallBack
           {
             @Nonnull
-            public ResourceProperties build (@Nonnull ResourceProperties.Builder builder);
+            public ResourceProperties build (@Nonnull Builder builder);
           }
 
-        private ResourceProperties.Builder.CallBack callBack;
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
         private Id id = new Id("");
+
+        @Wither
+        private Map<Key<?>, Object> values = Collections.emptyMap();
+
+        @Wither
         private PropertyResolver propertyResolver = PropertyResolver.DEFAULT;
 
         @Nonnull
@@ -124,6 +138,49 @@ public interface ResourceProperties extends As, Identifiable
 
     /*******************************************************************************************************************
      *
+     * Retrieves a property, eventually returning a default value.
+     *
+     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     *
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<Integer>
+    public int getIntProperty (@Nonnull Key<String> key, int defaultValue)
+      throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property, eventually returning a default value.
+     *
+     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     *
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<Boolean>
+    public boolean getBooleanProperty (@Nonnull Key<String> key, boolean defaultValue)
+      throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a datetime property, searching through a sequence of keys, eventually returning a default value.
+     *
+     * @param   keys                the property keys
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<DateTime>
+    public DateTime getDateTimeProperty (@Nonnull Collection<Key<String>> keys,
+                                         @Nonnull DateTime defaultValue);
+
+    /*******************************************************************************************************************
+     *
      * Retrieves a subgroup of properties.
      *
      * @param   id                  the id
@@ -160,6 +217,14 @@ public interface ResourceProperties extends As, Identifiable
      ******************************************************************************************************************/
     @Nonnull
     public <T> ResourceProperties withProperty (@Nonnull Key<T> key, @Nonnull T value);
+
+    /*******************************************************************************************************************
+     *
+     * Returns a new instance without a property.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ResourceProperties withoutProperty (@Nonnull Key<?> key);
 
     /*******************************************************************************************************************
      *

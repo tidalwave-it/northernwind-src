@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -28,7 +28,8 @@
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -40,6 +41,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -76,23 +78,39 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
       }
 
     @Override @Nonnull
-    public Collection<ResourceFile> getChildren()
+    public Finder findChildren()
       {
-        log.trace("getChildren() - {}", this);
-        return getChildrenMap().values();
-      }
-
-    @Override
-    public ResourceFile getChildByName (final String relativePath)
-      {
-        log.trace("getChildByName({})", relativePath);
-
-        if (relativePath.contains("/"))
+        return new ResourceFileFinderSupport()
           {
-            throw new IllegalArgumentException("relativePath: " + relativePath);
-          }
+            @Override @Nonnull
+            protected List<? extends ResourceFile> computeResults()
+              {
+                if (name != null)
+                  {
+                    if (name.contains("/"))
+                      {
+                        throw new IllegalArgumentException("relativePath: " + name);
+                      }
 
-        return getChildrenMap().get(relativePath);
+                    final ResourceFile child = getChildrenMap().get(name);
+
+                    return (child != null) ? Collections.singletonList(child) : Collections.<ResourceFile>emptyList();
+                  }
+                //
+                // FIXME: this reproduces the behaviour before the refactoring for NW-192 - but it's (and was) wrong
+                // since it doesn't consider delegates. It should be rewritten by relying on getChildrenMap() and
+                // making it eventually support recursion.
+                //
+                else if (recursive)
+                  {
+                    return delegate.findChildren().withRecursion(recursive).results();
+                  }
+                else
+                  {
+                    return new ArrayList<>(getChildrenMap().values());
+                  }
+              }
+          };
       }
 
     @Nonnull
@@ -111,7 +129,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
                     if (delegateDirectory != null)
                       {
-                        for (final ResourceFile fileObject : delegateDirectory.getChildren())
+                        for (final ResourceFile fileObject : delegateDirectory.findChildren().results())
                           {
                             if (!childrenMap.containsKey(fileObject.getName()))
                               {

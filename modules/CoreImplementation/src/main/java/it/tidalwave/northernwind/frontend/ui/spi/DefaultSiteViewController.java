@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -33,7 +33,6 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import it.tidalwave.util.NotFoundException;
@@ -55,7 +54,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value = "session") @Slf4j
+@Scope(value = "session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
     @Inject @Nonnull

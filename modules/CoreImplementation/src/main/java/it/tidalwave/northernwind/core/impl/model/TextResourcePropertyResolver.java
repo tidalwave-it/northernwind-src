@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -139,11 +139,14 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
             for (final String extension : EXTENSIONS)
               {
                 final String localizedFileName = fileName + localeSuffix + extension;
-                final ResourceFile localizedFile = folder.getChildByName(localizedFileName);
 
-                if (localizedFile != null)
+                try
                   {
-                    return localizedFile;
+                    return folder.findChildren().withName(localizedFileName).result();
+                  }
+                catch (NotFoundException e)
+                  {
+                    // continue
                   }
 
                 fileNamesNotFound.append(separator);

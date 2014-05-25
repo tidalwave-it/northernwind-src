@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-webapp</artifactId>
-        <version>1.1-ALPHA-24-SNAPSHOT</version>
+        <version>1.1-ALPHA-31-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
-    <version>1.1-ALPHA-24-SNAPSHOT</version>
+    <version>1.1-ALPHA-31-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>NorthernWind - Frontend Webapp (Jersey)</name>
     <description>A webapp containing the Jersey front end implementation.</description>

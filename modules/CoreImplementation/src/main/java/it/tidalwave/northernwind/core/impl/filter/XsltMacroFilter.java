@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -124,10 +124,11 @@ public class XsltMacroFilter implements Filter
       {
         if (!mimeType.equals("application/xhtml+xml"))
           {
-            log.warn("Cannot filter resources not in XHTML: {}", mimeType);
+            log.debug("Cannot filter resources not in XHTML: {}", mimeType);
             return text;
           }
 
+        // FIXME: buggy and cumbersome
         if (!initialized)
           {
             try

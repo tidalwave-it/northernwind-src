@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -28,12 +28,14 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import org.joda.time.DateTime;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.ExtendedFinderSupport;
+import it.tidalwave.role.Composite;
 
 /***********************************************************************************************************************
  *
@@ -45,8 +47,38 @@ import org.joda.time.DateTime;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ResourceFile
+public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.Finder>
   {
+    /*******************************************************************************************************************
+     *
+     * A {@link Finder} for retrieving children of {@link ResourceFile}.
+     *
+     ******************************************************************************************************************/
+    public static interface Finder extends ExtendedFinderSupport<ResourceFile, Finder>
+      {
+        /*******************************************************************************************************************
+         *
+         * Sets the recursion mode for search.
+         *
+         * @param  recursion  whether the search must be recursive
+         * @return            a cloned finder
+         *
+         ******************************************************************************************************************/
+        @Nonnull
+        public Finder withRecursion (boolean recursion);
+
+        /*******************************************************************************************************************
+         *
+         * Sets the name of the child to find.
+         *
+         * @param  name       the name of the file
+         * @return            a cloned finder
+         *
+         ******************************************************************************************************************/
+        @Nonnull
+        public Finder withName (@Nonnull String name);
+      }
+
     /*******************************************************************************************************************
      *
      * Returns the {@link ResourceFileSystem} this file belongs to.
@@ -163,40 +195,6 @@ public interface ResourceFile
      *
      ******************************************************************************************************************/
     public ResourceFile getParent();
-
-    /*******************************************************************************************************************
-     *
-     * Returns a child file with the given name.
-     * FIXME: make @Nonnull, throws NotFoundException when no parent
-     *
-     * @param   fileName  the child name
-     * @return  the child or null if no child with that name
-     *
-     ******************************************************************************************************************/
-    public ResourceFile getChildByName (@Nonnull String fileName);
-
-    /*******************************************************************************************************************
-     *
-     * Returns all the direct children of this file.
-     * TODO: merge with getChildren(true) using a Finder
-     *
-     * @return  the children
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Collection<ResourceFile> getChildren();
-
-    /*******************************************************************************************************************
-     *
-     * Returns all the children of this file.
-     * TODO: merge with getChildren() using a Finder
-     *
-     * @param   recursive  if false, return only the direct child, if true returns all the descendants
-     * @return  the children
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Collection<ResourceFile> getChildren (boolean recursive);
 
     /*******************************************************************************************************************
      *

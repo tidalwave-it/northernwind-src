@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -35,18 +35,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Parameters;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.role.Composite.VisitorSupport;
-import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
+import lombok.Delegate;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -56,7 +58,7 @@ import lombok.Getter;
  *
  **********************************************************************************************************************/
 @Configurable @Getter
-public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
+public class DefaultLayout implements Layout, Cloneable
   {
     @Inject @Nonnull
     private ViewFactory viewFactory;
@@ -70,6 +72,9 @@ public class DefaultLayout extends SpringAsSupport implements Layout, Cloneable
     private final List<Layout> children = new ArrayList<>();
 
     private final Map<Id, Layout> childrenMapById = new HashMap<>();
+
+    @Delegate
+    private final As asSupport = new AsSupport(this);
 
     // FIXME: make it Immutable
 

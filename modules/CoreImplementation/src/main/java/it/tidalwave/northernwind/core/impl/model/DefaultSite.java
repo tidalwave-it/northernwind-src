@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -104,8 +104,8 @@ import lombok.extern.slf4j.Slf4j;
     @Inject @Nonnull
     private RequestHolder requestHolder;
 
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
+    @Nonnull
+    private final ModelFactory modelFactory;
 
     @Inject @Named("fileSystemProvider") @Getter @Nonnull
     private ResourceFileSystemProvider fileSystemProvider;
@@ -165,6 +165,7 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     protected DefaultSite (final @Nonnull Site.Builder siteBuilder)
       {
+        this.modelFactory = siteBuilder.getModelFactory();
         this.contextPath = siteBuilder.getContextPath();
         this.documentPath = siteBuilder.getDocumentPath();
         this.mediaPath = siteBuilder.getMediaPath();
@@ -272,7 +273,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource(file));
+                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
               }
           });
 
@@ -281,7 +282,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
               {
-                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia(file));
+                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
               }
           });
 
@@ -290,7 +291,7 @@ import lombok.extern.slf4j.Slf4j;
             @Override
             public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
               {
-                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent(folder));
+                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
               }
           });
 
@@ -365,7 +366,7 @@ import lombok.extern.slf4j.Slf4j;
                            final @Nonnull FileFilter fileFilter,
                            final @Nonnull FilePredicate predicate)
       {
-        log.trace("traverse({})", file);
+        log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, predicate);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
         if (fileFilter.accept(file))
@@ -373,7 +374,7 @@ import lombok.extern.slf4j.Slf4j;
             predicate.apply(file, relativePath);
           }
 
-        for (final ResourceFile child : file.getChildren())
+        for (final ResourceFile child : file.findChildren().results())
           {
             traverse(rootPath, child, fileFilter, predicate);
           }

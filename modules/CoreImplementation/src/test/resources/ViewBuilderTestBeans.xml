@@ -6,7 +6,7 @@
   NorthernWind - lightweight CMS
   http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
   %%
-  Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
   %%
   *********************************************************************************************************************
 
@@ -48,7 +48,7 @@
     </bean>
 
     <bean class="it.tidalwave.northernwind.frontend.impl.ui.MockService1" />
-    
+
     <bean class="it.tidalwave.northernwind.frontend.impl.ui.MockService2" />
 
 </beans>

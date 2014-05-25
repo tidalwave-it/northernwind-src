@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,6 +31,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
@@ -73,8 +74,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Inject @Nonnull
     private ModelFactory modelFactory;
 
-//    @Inject @Named("taskExecutor") @Nonnull FIXME: See NW-157
-    @Getter @Setter @Nonnull
+    @Inject @Named("taskExecutor") @Nonnull
     private TaskExecutor executor;
 
     @Getter @Setter @Nonnull

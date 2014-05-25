@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -27,6 +27,14 @@
  */
 package it.tidalwave.northernwind.core.model;
 
+import javax.annotation.Nonnull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
+
 /***********************************************************************************************************************
  *
  * A {@code Media} item is a document that is served as-is, without any processing. It's typically an image or such.
@@ -37,5 +45,37 @@ package it.tidalwave.northernwind.core.model;
  **********************************************************************************************************************/
 public interface Media extends Resource
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Content}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Media build (@Nonnull Builder builder);
+          }
+
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
+        private ResourceFile file;
+
+        @Nonnull
+        public Media build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     public static final Class<Media> Media = Media.class;
   }

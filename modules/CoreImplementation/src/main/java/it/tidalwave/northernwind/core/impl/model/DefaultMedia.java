@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -28,14 +28,8 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Media;
-import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.Resource;
-import lombok.Delegate;
-import lombok.Getter;
+import it.tidalwave.northernwind.core.model.spi.MediaSupport;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,21 +42,11 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j @ToString
-/* package */ class DefaultMedia implements Media
+@Slf4j @ToString(callSuper = true)
+/* package */ class DefaultMedia extends MediaSupport
   {
-    @Nonnull @Getter @Delegate(types = Resource.class)
-    private final Resource resource;
-
-    @Inject @Nonnull
-    private ModelFactory modelFactory;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public DefaultMedia (final @Nonnull ResourceFile file)
+    public DefaultMedia (final @Nonnull Media.Builder builder)
       {
-        resource = modelFactory.createResource(file);
+        super(builder);
       }
   }

@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.ui.component;
 
 //import org.joda.time.DateTime;
 import it.tidalwave.util.Key;
+import java.util.List;
 import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.*;
 
@@ -65,4 +66,8 @@ public final class Properties
 
     public static final Key<String> PROPERTY_DATE_FORMAT = new Key<>("dateFormat");
 
+    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<>("contents");
+
+    // FIXME: should be Key<List<String>>
+    public static final Key<String> PROPERTY_TAGS = new Key<>("tags");
   }

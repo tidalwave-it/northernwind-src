@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -37,8 +37,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  *
  * A factory for creating domain objects.
  *
- * FIXME: creation of some entities uses a builder, while other entities are directly created -
- * perhaps use a builder for all?
+ * TODO: use a builder for all products
  *
  * @author  Fabrizio Giudici
  * @version $Id: $
@@ -50,34 +49,31 @@ public interface ModelFactory
      *
      * Creates a new {@link Resource}.
      *
-     * @param  file  the file for the {@code Resource}
-     * @return       the {@code Resource}
+     * @return       a builder for the {@code Resource}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Resource createResource (@Nonnull ResourceFile file);
+    public Resource.Builder createResource();
 
     /*******************************************************************************************************************
      *
      * Creates a new {@link Content}.
      *
-     * @param  file  the file for the {@code Content}
-     * @return       the {@code Content}
+     * @return       a builder for the {@code Content}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Content createContent (@Nonnull ResourceFile file);
+    public Content.Builder createContent();
 
     /*******************************************************************************************************************
      *
      * Creates a new {@link Media}.
      *
-     * @param  file  the file for the {@code Media}
-     * @return       the {@code Media}
+     * @return       a builder for the {@code Media}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Media createMedia (@Nonnull ResourceFile file);
+    public Media.Builder createMedia();
 
     /*******************************************************************************************************************
      *

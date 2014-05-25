@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -55,7 +55,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
     @Nonnull
     /* package */ final Map<String, Type> mapByRelativePath;
 
-    @Nonnull
+    @CheckForNull
     /* package */ final RegexTreeMap<Type> mapByRelativeUri;
 
     @CheckForNull
@@ -69,10 +69,16 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      ******************************************************************************************************************/
     public DefaultSiteFinder (final @Nonnull String name,
-                              final @Nonnull Map<String, Type> mapByRelativePath,
-                              final @Nonnull RegexTreeMap<Type> mapByRelativeUri)
+                              final @CheckForNull Map<String, Type> mapByRelativePath,
+                              final @CheckForNull RegexTreeMap<Type> mapByRelativeUri)
       {
         super(name);
+
+        if (mapByRelativePath == null)
+          {
+            throw new IllegalArgumentException("Searching for a relativePath, but no map - " + this);
+          }
+
         this.mapByRelativePath = mapByRelativePath;
         this.mapByRelativeUri = mapByRelativeUri;
       }
@@ -145,11 +151,6 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
 
         if (relativePath != null)
           {
-            if (mapByRelativePath == null)
-              {
-                throw new IllegalArgumentException("Illegal type: ");
-              }
-
             addResults(results, mapByRelativePath, relativePath);
           }
 
@@ -157,7 +158,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
           {
             if (mapByRelativeUri == null)
               {
-                throw new IllegalArgumentException("Illegal type");
+                throw new IllegalArgumentException("Searching for a relativeUri, but no map - " + this);
               }
 
             addResults(results, mapByRelativeUri, relativeUri);

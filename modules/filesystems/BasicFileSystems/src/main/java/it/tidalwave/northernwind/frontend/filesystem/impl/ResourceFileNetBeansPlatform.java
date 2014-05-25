@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -32,21 +32,23 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import javax.servlet.ServletContext;
 import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.MimeTypeResolver;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -78,13 +80,16 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Inject @Nonnull
-    private Provider<ServletContext> servletContext;
+    private Provider<MimeTypeResolver> mimeTypeResolver;
 
     @Getter @Nonnull
     private final ResourceFileSystemNetBeansPlatform fileSystem;
 
-    @Delegate(excludes=Exclusions.class) @Nonnull
+    @Getter @Delegate(excludes = Exclusions.class) @Nonnull
     private final FileObject delegate;
+
+    @Delegate
+    private final As asSupport = new AsSupport(this);
 
     public ResourceFileNetBeansPlatform (final @Nonnull ResourceFileSystemNetBeansPlatform fileSystem,
                                          final @Nonnull FileObject delegate)
@@ -111,12 +116,6 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         return fileSystem.createResourceFile(delegate.getParent());
       }
 
-    @Override
-    public ResourceFile getChildByName (final @Nonnull String fileName)
-      {
-        return fileSystem.createResourceFile(delegate.getFileObject(fileName));
-      }
-
     @Override @Nonnull
     public ResourceFile createFolder (@Nonnull String name)
       throws IOException
@@ -124,41 +123,42 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         return fileSystem.createResourceFile(delegate.createFolder(name));
       }
 
-    @Override
-    public Collection<ResourceFile> getChildren()
+    @Override @Nonnull
+    public Finder findChildren()
       {
-        final FileObject[] delegateChildren = delegate.getChildren();
-        final ResourceFile[] children = new ResourceFile[delegateChildren.length];
-
-        for (int i = 0; i < delegateChildren.length; i++)
+        return new ResourceFileFinderSupport(getClass().getSimpleName()+ ": " + delegate)
           {
-            children[i] = fileSystem.createResourceFile(delegateChildren[i]);
-          }
+            @Override @Nonnull
+            protected List<? extends ResourceFile> computeResults()
+              {
+                final List<ResourceFile> result = new ArrayList<>();
 
-        return Arrays.asList(children);
-      }
+                if (name != null)
+                  {
+                    final FileObject child = delegate.getFileObject(name);
 
-    @Override
-    public Collection<ResourceFile> getChildren (final boolean recursive)
-      {
-        final List<ResourceFile> result = new ArrayList<>();
+                    if (child != null)
+                      {
+                        result.add(fileSystem.createResourceFile(child));
+                      }
+                  }
+                else
+                  {
+                    for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
+                      {
+                        result.add(fileSystem.createResourceFile(child));
+                      }
+                  }
 
-        for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
-          {
-            result.add(fileSystem.createResourceFile(child));
-          }
-
-        return result;
+                return result;
+              }
+          };
       }
 
     @Override @Nonnull
     public String getMimeType()
       {
-        final String fileName = delegate.getNameExt();
-        String mimeType = servletContext.get().getMimeType(fileName);
-        mimeType = (mimeType != null) ? mimeType : "content/unknown";
-        log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
-        return mimeType;
+        return mimeTypeResolver.get().getMimeType(delegate.getNameExt());
       }
 
     @Override @Nonnull
@@ -183,5 +183,6 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       {
         FileUtil.copyFile(delegate, ((ResourceFileNetBeansPlatform)targetFolder).delegate, delegate.getName());
       }
+
     // TODO: equals and hashcode
   }

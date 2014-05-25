@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -95,7 +95,16 @@ public class DefaultSiteNodeTest
         resource = mock(Resource.class);
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
-        when(modelFactory.createResource(any(ResourceFile.class))).thenReturn(resource);
+
+        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, new Resource.Builder.CallBack()
+          {
+            @Override
+            public Resource build(Resource.Builder builder)
+              {
+                return resource;
+              }
+          }));
+
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.ENGLISH));
 
         final ResourceFile nodeFolder = MockResourceFile.folder("structure");
@@ -103,7 +112,7 @@ public class DefaultSiteNodeTest
 
         emptyPlaceHolderLayout = mock(Layout.class);
 //        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
-        when(modelFactory.createLayout()).thenReturn(new Layout.Builder().withCallBack(new Layout.Builder.CallBack()
+        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, new Layout.Builder.CallBack()
           {
             @Override
             public Layout build (final @Nonnull Layout.Builder builder)
@@ -113,7 +122,7 @@ public class DefaultSiteNodeTest
               }
           }));
 
-        fixture = new DefaultSiteNode(site, resourceFile);
+        fixture = new DefaultSiteNode(modelFactory, site, resourceFile);
       }
 
     /*******************************************************************************************************************
@@ -123,7 +132,7 @@ public class DefaultSiteNodeTest
     public void must_properly_initialize_with_no_layout()
       {
         assertThat(fixture.site, sameInstance(site));
-        assertThat(fixture.resource, sameInstance(resource));
+        assertThat(fixture.getResource(), sameInstance(resource));
         assertThat(fixture.getLayout(), sameInstance(emptyPlaceHolderLayout));
       }
 

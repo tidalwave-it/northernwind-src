@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.core.impl.model.aspect.StatisticsCollector;
+import it.tidalwave.northernwind.profiling.StatisticsCollector;
 import it.tidalwave.northernwind.core.model.Request;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -25,22 +25,41 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model.aspect;
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.AsSupport;
+import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.Delegate;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
- * FIXME: move to the Profiling module
+ * A partial implementation of (@link SiteNode}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface StatisticsCollector
+public abstract class SiteNodeSupport implements SiteNode
   {
-    public void onRequestBegin (@Nonnull Request request);
+    @Nonnull
+    protected final ModelFactory modelFactory;
 
-    public void onRequestEnd (@Nonnull Request request);
+    @Getter @Delegate(excludes = As.class) @Nonnull
+    private final Resource resource;
+
+    @Delegate
+    private final AsSupport as = new AsSupport(this);
+
+    public SiteNodeSupport (final @Nonnull ModelFactory modelFactory,
+                            final @Nonnull ResourceFile file)
+      {
+        this.modelFactory = modelFactory;
+        this.resource = modelFactory.createResource().withFile(file).build();
+      }
   }

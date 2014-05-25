@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -28,10 +28,13 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -39,7 +42,7 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public abstract class DecoratedResourceFileSupport implements ResourceFile
   {
     @Getter @Nonnull
@@ -67,6 +70,26 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
       {
 //        log.trace("createFolder({})", name);
         return fileSystem.createDecoratorFile(delegate.createFolder(name));
+      }
+
+    @Override @Nonnull
+    public Finder findChildren()
+      {
+        return new ResourceFileFinderSupport()
+          {
+            @Override @Nonnull
+            protected List<? extends ResourceFile> computeResults()
+              {
+                final List<ResourceFile> result = new ArrayList<>();
+
+                for (final ResourceFile child : delegate.findChildren().results())
+                  {
+                    result.add(fileSystem.createDecoratorFile(child));
+                  }
+
+                return result;
+              }
+          };
       }
 
     @Override

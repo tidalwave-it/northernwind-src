@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -28,8 +28,15 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -40,8 +47,40 @@ import it.tidalwave.util.Key;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Resource
+public interface Resource extends As
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Resource}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Resource build (@Nonnull Builder builder);
+          }
+
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
+        private ResourceFile file;
+
+        @Nonnull
+        public Resource build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
      *  defined, the resource uses a reasonable default. */
     public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");

@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -112,13 +112,13 @@ public class XsltTemplateTestSupport
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
         final ResourceFileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
-        final ResourceFile fileObject = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
+        final ResourceFile file = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<>();
 
-        for (final ResourceFile xsltFileObject : fileObject.getChildren())
+        for (final ResourceFile xsltFile : file.findChildren().results())
           {
             final Resource resource = mock(Resource.class);
-            when(resource.getFile()).thenReturn(xsltFileObject);
+            when(resource.getFile()).thenReturn(xsltFile);
             resources.add(resource);
           }
 

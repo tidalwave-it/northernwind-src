@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,9 +29,14 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import it.tidalwave.util.Finder;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite;
+import it.tidalwave.role.SimpleComposite;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
@@ -41,8 +46,40 @@ import it.tidalwave.role.Composite;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface Content extends Resource, Composite<Content, Finder<Content>>
+public interface Content extends Resource, SimpleComposite<Content>
   {
+    /*******************************************************************************************************************
+     *
+     * A builder of a {@link Content}.
+     *
+     ******************************************************************************************************************/
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @Getter @ToString(exclude = "callBack")
+    public final class Builder
+      {
+        // Workaround for a Lombok limitation with Wither and subclasses
+        public static interface CallBack
+          {
+            @Nonnull
+            public Content build (@Nonnull Builder builder);
+          }
+
+        @Nonnull
+        private final ModelFactory modelFactory;
+
+        @Nonnull
+        private final CallBack callBack;
+
+        @Wither
+        private ResourceFile folder;
+
+        @Nonnull
+        public Content build()
+          {
+            return callBack.build(this);
+          }
+      }
+
     public static final Class<Content> Content = Content.class;
 
     /*******************************************************************************************************************

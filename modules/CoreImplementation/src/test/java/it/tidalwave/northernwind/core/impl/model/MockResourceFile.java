@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,16 +29,18 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.Objects;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import org.joda.time.DateTime;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import lombok.Delegate;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -59,6 +61,9 @@ public class MockResourceFile implements ResourceFile
 
     @Getter @Nonnull
     private final ResourcePath path;
+
+    @Delegate
+    private final As asSupport = new AsSupport(this);
 
 //    @Nonnull
 //    public static ResourceFile file (final @Nonnull String path)
@@ -160,24 +165,6 @@ public class MockResourceFile implements ResourceFile
       }
 
     @Override
-    public ResourceFile getChildByName(String fileName)
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
-    public Collection<ResourceFile> getChildren()
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
-    public Collection<ResourceFile> getChildren(boolean recursive)
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
     public File toFile()
       {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -197,6 +184,12 @@ public class MockResourceFile implements ResourceFile
 
     @Override
     public void copyTo(ResourceFile targetFolder)
+      {
+        throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    @Override
+    public Finder findChildren()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }

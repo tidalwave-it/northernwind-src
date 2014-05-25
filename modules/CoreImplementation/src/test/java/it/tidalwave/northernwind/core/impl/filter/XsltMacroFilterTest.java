@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -72,15 +72,16 @@ public class XsltMacroFilterTest
     public void setupFixture()
       throws Exception
       {
-        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
-                                                                              "XsltMacroFilterTestBeans.xml");
+        // FIXME
+//        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
+        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
 
         final ResourceFile file = mock(ResourceFile.class);
         final String resourceName = "/it/tidalwave/northernwind/core/impl/model/Photo.xslt";
-        final String xslt = IOUtils.toString(getClass().getResourceAsStream(resourceName));
+        final String xslt = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
         when(file.getPath()).thenReturn(new ResourcePath(resourceName));
         when(file.asText(anyString())).thenReturn(xslt);
 
@@ -116,14 +117,14 @@ public class XsltMacroFilterTest
       throws IOException
       {
         final String resourceName = String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName);
-        final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName));
+        final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
         final String result = fixture.filter(text, "application/xhtml+xml");
 
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml",
                                                          fileName));
         final File actualFile = new File(String.format("target/test-artifacts/%s-filtered.xhtml", fileName));
         actualFile.getParentFile().mkdirs();
-        FileUtils.write(actualFile, result);
+        FileUtils.write(actualFile, result, "UTF-8");
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
 

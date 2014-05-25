@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -34,6 +34,8 @@ import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
+import it.tidalwave.role.ContextManager;
+import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
@@ -64,6 +66,7 @@ public class LayeredFileSystemProviderTest
     @BeforeMethod
     public void createFixture()
       {
+        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         fixture = new LayeredFileSystemProvider();
       }
 
@@ -180,7 +183,7 @@ public class LayeredFileSystemProviderTest
           }
         else
           {
-            for (final ResourceFile child : fileObject.getChildren())
+            for (final ResourceFile child : fileObject.findChildren().results())
               {
                 dump(lines, child);
               }

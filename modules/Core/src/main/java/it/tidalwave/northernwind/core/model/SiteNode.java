@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Key;
+import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
@@ -41,7 +42,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteNode extends Resource
+public interface SiteNode extends Resource, SimpleComposite<SiteNode>
   {
     public static final Class<SiteNode> SiteNode = SiteNode.class;
 

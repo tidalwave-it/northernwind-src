@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,24 +29,28 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.util.NotFoundException;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -58,7 +62,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString
-public class DefaultModelFactory implements ModelFactory
+public class DefaultModelFactory extends ModelFactorySupport
   {
     /*******************************************************************************************************************
      *
@@ -66,9 +70,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource createResource (final @Nonnull ResourceFile file)
+    public Resource build (final @Nonnull Resource.Builder builder)
       {
-        return new DefaultResource(file);
+        return new DefaultResource(builder);
       }
 
     /*******************************************************************************************************************
@@ -77,9 +81,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content createContent (final @Nonnull ResourceFile folder)
+    public Content build (final @Nonnull Content.Builder builder)
       {
-        return new DefaultContent(folder);
+        return new DefaultContent(builder);
       }
 
     /*******************************************************************************************************************
@@ -88,9 +92,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media createMedia (final @Nonnull ResourceFile file)
+    public Media build (final @Nonnull Media.Builder builder)
       {
-        return new DefaultMedia(file);
+        return new DefaultMedia(builder);
       }
 
     /*******************************************************************************************************************
@@ -102,7 +106,7 @@ public class DefaultModelFactory implements ModelFactory
     public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
       throws IOException, NotFoundException
       {
-        return new DefaultSiteNode((DefaultSite)site, folder);
+        return new DefaultSiteNode(this, (DefaultSite)site, folder);
       }
 
     /*******************************************************************************************************************
@@ -111,16 +115,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout.Builder createLayout()
+    public Layout build (final @Nonnull Layout.Builder builder)
       {
-        return new Layout.Builder().withCallBack(new Layout.Builder.CallBack()
-          {
-            @Override @Nonnull
-            public Layout build (final @Nonnull Layout.Builder builder)
-              {
-                return new DefaultLayout(builder);
-              }
-          });
+        return new DefaultLayout(builder);
       }
 
     /*******************************************************************************************************************
@@ -131,7 +128,10 @@ public class DefaultModelFactory implements ModelFactory
     @Override @Nonnull
     public DefaultRequest createRequest()
       {
-        return new DefaultRequest("", "", "", new HashMap<String, List<String>>(), new ArrayList<Locale>());
+        return new DefaultRequest("", "", "", 
+                                  new HashMap<String, List<String>>(), 
+                                  new HashMap<String, List<String>>(), 
+                                  new ArrayList<Locale>());
       }
 
     /*******************************************************************************************************************
@@ -147,6 +147,7 @@ public class DefaultModelFactory implements ModelFactory
         return createRequest().withBaseUrl(getBaseUrl(httpServletRequest))
                               .withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())
+                              .withHeaderMap(toMap(httpServletRequest))
                               .withPreferredLocales(Collections.list(httpServletRequest.getLocales()));
       }
 
@@ -156,16 +157,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties.Builder createProperties()
+    public ResourceProperties build (final @Nonnull ResourceProperties.Builder builder)
       {
-        return new ResourceProperties.Builder().withCallBack(new ResourceProperties.Builder.CallBack()
-          {
-            @Override @Nonnull
-            public ResourceProperties build (final @Nonnull ResourceProperties.Builder builder)
-              {
-                return new DefaultResourceProperties(builder);
-              }
-          });
+        return new DefaultResourceProperties(builder);
 //        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
       }
 
@@ -175,16 +169,9 @@ public class DefaultModelFactory implements ModelFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Site.Builder createSite()
+    public Site build (final @Nonnull Site.Builder builder)
       {
-        return new Site.Builder().withCallBack(new Site.Builder.CallBack()
-          {
-            @Override @Nonnull
-            public Site build (final @Nonnull Site.Builder builder)
-              {
-                return new DefaultSite(builder);
-              }
-          });
+        return new DefaultSite(builder);
       }
 
     /*******************************************************************************************************************
@@ -196,5 +183,24 @@ public class DefaultModelFactory implements ModelFactory
       {
         return httpServletRequest.getRequestURL().toString().replaceAll(":.*", "")
                 + "://" + httpServletRequest.getHeader("Host");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static Map<String, List<String>> toMap (final @Nonnull HttpServletRequest httpServletRequest)
+      {
+        final Map<String, List<String>> headerMap = new HashMap<>();
+        
+        for (final Enumeration<String> e = httpServletRequest.getHeaderNames(); e.hasMoreElements(); )
+          {
+            final String headerName = e.nextElement();
+            final String headerValue = httpServletRequest.getHeader(headerName); // FIXME: lacks support for multivalue
+            headerMap.put(headerName, Arrays.asList(headerValue));
+          }
+        
+        return headerMap;
       }
   }

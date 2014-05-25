@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.util.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -96,11 +97,14 @@ public class DefaultInheritanceHelper implements InheritanceHelper
           {
             final String fileName = prefix + propertyFileName + localeSuffix + ".xml";
             log.trace(">>>> probing {} ...", folder.getPath().asString() + "/" + fileName);
-            final ResourceFile propertyFile = folder.getChildByName(fileName);
 
-            if (propertyFile != null)
+            try
               {
-                files.add(propertyFile);
+                files.add(folder.findChildren().withName(fileName).result());
+              }
+            catch (NotFoundException e)
+              {
+                // ok. do nothing
               }
           }
 

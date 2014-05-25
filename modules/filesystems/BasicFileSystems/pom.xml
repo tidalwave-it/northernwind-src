@@ -6,17 +6,17 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-filesystem</artifactId>
-        <version>1.1-ALPHA-24-SNAPSHOT</version>
+        <version>1.1-ALPHA-31-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
-    <version>1.0.40-SNAPSHOT</version>
+    <version>1.0.47-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Filesystems, Basic</name>
     <description>The implementation of some basic filesystems.</description>
-   
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -50,6 +50,12 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-role-spring</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

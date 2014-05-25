@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -25,67 +25,41 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model.aspect;
+package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.core.model.Request;
+import javax.inject.Provider;
+import javax.servlet.ServletContext;
+import it.tidalwave.northernwind.core.model.MimeTypeResolver;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * FIXME: move to the Profiling module
+ * An implementation of {@link MimeTypeResolver} that delegates to a {@link ServletContext}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Aspect @Slf4j
-public class ProfilerAspect
+@Slf4j
+public class ServletContextMimeTypeResolver implements MimeTypeResolver
   {
-    @Inject
-    private BeanFactory factory;
+    @Inject @Nonnull
+    private Provider<ServletContext> servletContext;
 
-    private StatisticsCollector statisticsCollector;
-
-    @PostConstruct
-    public void initialize()
+    @Override @Nonnull
+    public String getMimeType (final @Nonnull String fileName)
       {
-        // FIXME: workaround as the aspect doesn't work in a separate module. When it works, you can use plain @Inject
-        try
-          {
-            statisticsCollector = factory.getBean(StatisticsCollector.class);
-          }
-        catch (NoSuchBeanDefinitionException e)
-          {
-          }
-      }
+        String mimeType = servletContext.get().getMimeType(fileName);
 
-    @Around("execution(* it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController.processRequest(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
-      throws Throwable
-      {
-        final Request request = (Request)pjp.getArgs()[0];
-
-        if (statisticsCollector != null)
+        if ((mimeType == null) && fileName.endsWith(".mp4")) // FIXME: workaround a missing config with Jetty
           {
-            statisticsCollector.onRequestBegin(request);
+            mimeType = "video/mp4";
           }
 
-        final Object result = pjp.proceed();
-
-        if (statisticsCollector != null)
-          {
-            statisticsCollector.onRequestEnd(request);
-          }
-
-        return result;
+        mimeType = (mimeType != null) ? mimeType : "content/unknown";
+        log.trace(">>>> MIME type for {} is {}", fileName, mimeType);
+        return mimeType;
       }
   }

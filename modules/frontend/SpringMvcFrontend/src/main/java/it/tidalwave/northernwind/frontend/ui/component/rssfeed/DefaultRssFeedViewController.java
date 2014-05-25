@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -49,9 +50,9 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
@@ -107,7 +108,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       throws IOException, NotFoundException
       {
-        final DateTime blogDateTime = getBlogDateTime(post);
+        final DateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
 
         if (feed.getLastBuildDate() == null)
           {
@@ -118,7 +119,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final Item item = new Item();
         final Content content = new Content();
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
-        content.setValue(postProperties.getProperty(Properties.PROPERTY_FULL_TEXT));
+        content.setValue(postProperties.getProperty(PROPERTY_FULL_TEXT));
         item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(blogDateTime.toDate());
@@ -150,6 +151,12 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+      {
+      }
+
+    @Override
+    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+      throws IOException, NotFoundException
       {
       }
 

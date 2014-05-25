@@ -6,7 +6,7 @@
   NorthernWind - lightweight CMS
   http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
   %%
-  Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
   %%
   *********************************************************************************************************************
 
@@ -58,5 +58,15 @@
     <bean id="inheritanceHelper" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="it.tidalwave.northernwind.core.impl.model.InheritanceHelper" />
     </bean>
+
+    <!-- DCI role injector -->
+    <bean id="roleManager"
+          class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
+
+    <bean id="contextManager"
+          class="it.tidalwave.role.spi.DefaultContextManager" />
+
+    <bean id="contextManagerProvider"
+          class="it.tidalwave.role.spring.spi.SpringContextManagerProvider" />
 
 </beans>

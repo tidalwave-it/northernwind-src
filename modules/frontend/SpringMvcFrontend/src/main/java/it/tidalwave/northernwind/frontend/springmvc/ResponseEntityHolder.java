@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -30,12 +30,14 @@ package it.tidalwave.northernwind.frontend.springmvc;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -43,6 +45,7 @@ import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSu
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
   {
     @NotThreadSafe
@@ -55,6 +58,13 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
           {
             headers.add(header, value);
             return this;
+          }
+        
+        @Override
+        protected String getHeader (final @Nonnull String header)
+          {
+            final List<String> g = headers.get(header);
+            return ((g == null) || g.isEmpty()) ? null : g.get(0);
           }
 
         @Override @Nonnull
@@ -72,7 +82,7 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
           }
 
         @Override @Nonnull
-        public ResponseEntity<?> build()
+        protected ResponseEntity<?> doBuild()
           {
             return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
           }
