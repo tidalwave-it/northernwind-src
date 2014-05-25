@@ -182,7 +182,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
           {
-            final DateTime expirationTime = getTime().plus(duration);
+            final DateTime expirationTime = getCurrentTime().plus(duration);
             return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
                   .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.toStandardSeconds().getSeconds()));
           }
@@ -445,11 +445,13 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
         /*******************************************************************************************************************
          *
-         *
+         * Returns the current time. This can be overridden for mocking time in tests.
+         * 
+         * @return  the current time
          *
          ******************************************************************************************************************/
         @Nonnull
-        protected DateTime getTime()
+        protected DateTime getCurrentTime()
           {
             return new DateTime();
           }
@@ -469,7 +471,9 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         
         /***************************************************************************************************************
          *
+         * Parse a date with one of the valid formats for HTTP headers.
          * 
+         * FIXME: we should try to avoid depending on this stuff...
          *
          **************************************************************************************************************/
         @Nonnull
@@ -507,15 +511,19 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
     /*******************************************************************************************************************
      *
-     * 
+     * Start creating a new response.
      *
+     * @return  a builder for creating the response
+     * 
      ******************************************************************************************************************/
     @Nonnull
     public abstract ResponseBuilderSupport<RESPONSE_TYPE> response();
 
     /*******************************************************************************************************************
      *
+     * Returns the response for the current thread. 
      * 
+     * @return  the response
      *
      ******************************************************************************************************************/
     @Nonnull
