@@ -50,7 +50,7 @@ public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
     @NotThreadSafe
     public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream>
       {
-        private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        private final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
