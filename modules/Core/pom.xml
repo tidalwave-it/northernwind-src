@@ -78,10 +78,5 @@
             <artifactId>jul-to-slf4j</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>it.tidalwave.thesefoolishthings</groupId>
-            <artifactId>it-tidalwave-util-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
