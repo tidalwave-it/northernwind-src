@@ -25,34 +25,33 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.springmvc;
+package it.tidalwave.northernwind.frontend.jersey;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.List;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import java.util.Map.Entry;
+import javax.ws.rs.core.Response;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 
 /***********************************************************************************************************************
  *
+ * An implementation of {@link ResponseHolder} for JAX-RS.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
+public class JaxRsResponseHolder extends ResponseHolder<Response> 
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>>
+    public class JaxRsResponseBuilder extends ResponseBuilderSupport<Response>
       {
-        private final HttpHeaders headers = new HttpHeaders();
+        private final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
@@ -60,38 +59,34 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
             headers.add(header, value);
             return this;
           }
-        
-        @Override @Nullable
-        protected String getHeader (final @Nonnull String header)
-          {
-            final List<String> g = headers.get(header);
-            return ((g == null) || g.isEmpty()) ? null : g.get(0);
-          }
 
         @Override @Nonnull
-        public ResponseBuilder withContentType (final @Nonnull String contentType)
+        protected Response doBuild()
           {
-            headers.setContentType(MediaType.parseMediaType(contentType));
-            return this;
+            Response.ResponseBuilder builder = Response.status(httpStatus).entity(body);
+
+            for (final Entry<String, List<String>> entry : headers.entrySet())
+              {
+                for (final String value : entry.getValue())
+                  {
+                    builder = builder.header(entry.getKey(), value);
+                  }
+              }
+
+            return builder.build();
           }
 
-        @Override @Nonnull
-        public ResponseBuilder withContentLength (final @Nonnegative long contentLenght)
+        @Override
+        protected String getHeader (final @Nonnull String header) 
           {
-            headers.setContentLength(contentLenght);
-            return this;
-          }
-
-        @Override @Nonnull
-        protected ResponseEntity<?> doBuild()
-          {
-            return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
+            final List<String> list = headers.get(header);
+            return list.isEmpty() ? null : list.get(0);
           }
       }
 
     @Override @Nonnull
     public ResponseBuilder response()
       {
-        return new ResponseBuilder();
+        return new JaxRsResponseBuilder();
       }
   }

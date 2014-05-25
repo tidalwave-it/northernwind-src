@@ -25,30 +25,35 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.jersey;
+package it.tidalwave.northernwind.frontend.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.List;
-import java.util.Map.Entry;
-import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import com.vaadin.terminal.DownloadStream;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 
 /***********************************************************************************************************************
  *
+ * An implementation of {@link ResponseHolder} for Vaadin.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class RestResponseHolder extends ResponseHolder<Response> // FIXME: rename into JaxRsResponseHolder
+public class VaadinDownloadStreamResponseHolder extends ResponseHolder<DownloadStream>
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<Response>
+    public class DownloadStreamResponseBuilder extends ResponseBuilderSupport<DownloadStream>
       {
-        private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        private final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
@@ -58,21 +63,27 @@ public class RestResponseHolder extends ResponseHolder<Response> // FIXME: renam
           }
 
         @Override @Nonnull
-        protected Response doBuild()
+        public ResponseBuilder forException (final @Nonnull NotFoundException e)
           {
-            Response.ResponseBuilder builder = Response.status(httpStatus).entity(body);
-
-            for (final Entry<String, List<String>> entry : headers.entrySet())
-              {
-                for (final String value : entry.getValue())
-                  {
-                    builder = builder.header(entry.getKey(), value);
-                  }
-              }
-
-            return builder.build();
+            return withContentType("text/plain")
+                  .withBody(e.getMessage())
+                  .withStatus(404);
           }
 
+        @Override @Nonnull
+        public ResponseBuilder forException (final @Nonnull IOException e)
+          {
+            return withContentType("text/plain")
+                  .withBody(e.getMessage())
+                  .withStatus(500);
+          }
+
+        @Override @Nonnull
+        protected DownloadStream doBuild()
+          {
+            return new DownloadStream((InputStream)body, null, headers.get("Content-Type").get(0)); // FIXME: set name?
+          }
+        
         @Override
         protected String getHeader (final @Nonnull String header) 
           {
@@ -84,6 +95,6 @@ public class RestResponseHolder extends ResponseHolder<Response> // FIXME: renam
     @Override @Nonnull
     public ResponseBuilder response()
       {
-        return new ResponseBuilder();
+        return new DownloadStreamResponseBuilder();
       }
   }

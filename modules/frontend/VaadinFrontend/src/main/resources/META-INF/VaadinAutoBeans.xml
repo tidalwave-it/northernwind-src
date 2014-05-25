@@ -49,7 +49,7 @@
        default-autowire="byType">
            
     <bean id="downloadStreamThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.vaadin.DownloadStreamHolder" />
+          class="it.tidalwave.northernwind.frontend.vaadin.VaadinDownloadStreamResponseHolder" />
     
     <bean id="mediaRequestProcessor" 
           class="it.tidalwave.northernwind.core.model.vaadin.urihandler.VaadinMediaRequestProcessor" />

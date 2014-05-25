@@ -25,32 +25,37 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.vaadin;
+package it.tidalwave.northernwind.frontend.springmvc;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.util.List;
-import java.io.IOException;
-import java.io.InputStream;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
-import com.vaadin.terminal.DownloadStream;
+import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * A Spring MVC implementation of {@link ResponseHolder}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
+@Slf4j
+public class SpringMvcResponseHolder extends ResponseHolder<ResponseEntity<?>>
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream>
+    public class SpringMvcResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>>
       {
-        private final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        private final HttpHeaders headers = new HttpHeaders();
 
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
@@ -58,40 +63,38 @@ public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
             headers.add(header, value);
             return this;
           }
-
-        @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull NotFoundException e)
-          {
-            return (ResponseBuilder)withContentType("text/plain")
-                  .withBody(e.getMessage())
-                  .withStatus(404);
-          }
-
-        @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull IOException e)
-          {
-            return (ResponseBuilder)withContentType("text/plain")
-                  .withBody(e.getMessage())
-                  .withStatus(500);
-          }
-
-        @Override @Nonnull
-        protected DownloadStream doBuild()
-          {
-            return new DownloadStream((InputStream)body, null, headers.get("Content-Type").get(0)); // FIXME: set name?
-          }
         
-        @Override
-        protected String getHeader (final @Nonnull String header) 
+        @Override @Nullable
+        protected String getHeader (final @Nonnull String header)
           {
-            final List<String> list = headers.get(header);
-            return list.isEmpty() ? null : list.get(0);
+            final List<String> g = headers.get(header);
+            return ((g == null) || g.isEmpty()) ? null : g.get(0);
+          }
+
+        @Override @Nonnull
+        public ResponseBuilder withContentType (final @Nonnull String contentType)
+          {
+            headers.setContentType(MediaType.parseMediaType(contentType));
+            return this;
+          }
+
+        @Override @Nonnull
+        public ResponseBuilder withContentLength (final @Nonnegative long contentLenght)
+          {
+            headers.setContentLength(contentLenght);
+            return this;
+          }
+
+        @Override @Nonnull
+        protected ResponseEntity<?> doBuild()
+          {
+            return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
           }
       }
 
     @Override @Nonnull
-    public ResponseBuilder response()
+    public SpringMvcResponseBuilder response()
       {
-        return new ResponseBuilder();
+        return new SpringMvcResponseBuilder();
       }
   }

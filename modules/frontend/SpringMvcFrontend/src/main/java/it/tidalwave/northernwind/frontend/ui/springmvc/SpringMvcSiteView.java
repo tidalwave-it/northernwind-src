@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
-import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder;
+import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringMvcSiteView implements SiteView
   {
     @Inject @Nonnull
-    private ResponseEntityHolder responseHolder;
+    private SpringMvcResponseHolder responseHolder;
 
     /*******************************************************************************************************************
      *

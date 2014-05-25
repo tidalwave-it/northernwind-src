@@ -48,15 +48,13 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A support for a builder of {@link ResponseHolder}.
+ * A partial implementation of {@link ResponseBuilder}.
  *
- * @param <RESPONSE_TYPE>  the produced response (may change in function of the technology used for serving the
- *                         results)
- * @author  fritz
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@NotThreadSafe @Slf4j // FIXME: move to Core Default Implementation
+@NotThreadSafe @Slf4j // FIXME: move to Core Default Implementation?
 public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseBuilder<RESPONSE_TYPE>
   {
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -99,18 +97,18 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      * 
      ******************************************************************************************************************/
-    @Nonnull
-    public abstract ResponseBuilderSupport<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
+    @Override @Nonnull
+    public abstract ResponseBuilder<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
 
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      * 
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
       {
-        ResponseBuilderSupport<RESPONSE_TYPE> result = this;
+        ResponseBuilder<RESPONSE_TYPE> result = this;
 
         for (final Map.Entry<String, String> entry : headers.entrySet())
           {
@@ -125,8 +123,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withContentType (final @Nonnull String contentType)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withContentType (final @Nonnull String contentType)
       {
         return withHeader(HEADER_CONTENT_TYPE, contentType);
       }
@@ -136,8 +134,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withContentLength (final @Nonnull long contentLength)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withContentLength (final @Nonnull long contentLength)
       {
         return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
       }
@@ -147,8 +145,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withContentDisposition (final @Nonnull String contentDisposition)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withContentDisposition (final @Nonnull String contentDisposition)
       {
         return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
       }
@@ -158,8 +156,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
       {
         final DateTime expirationTime = getCurrentTime().plus(duration);
         return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
@@ -171,8 +169,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull DateTime time)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull DateTime time)
       {
         return withHeader(HEADER_LAST_MODIFIED, createFormatter(PATTERN_RFC1123).format(time.toDate()))
               .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
@@ -183,8 +181,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withBody (final @Nonnull Object body)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withBody (final @Nonnull Object body)
       {
         this.body = (body instanceof byte[]) ? body : 
                     (body instanceof InputStream) ? body :
@@ -197,8 +195,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> fromFile (final @Nonnull ResourceFile file)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> fromFile (final @Nonnull ResourceFile file)
       throws IOException
       {
         final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
@@ -214,8 +212,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> forRequest (final @Nonnull Request request) 
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> forRequest (final @Nonnull Request request) 
       {    
         try // FIXME: this would be definitely better with Optional
           {
@@ -243,8 +241,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
       {
         log.info("NOT FOUND: {}", e.toString());
         return forException(new HttpStatusException(SC_NOT_FOUND));
@@ -255,8 +253,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull IOException e)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull IOException e)
       {
         log.error("", e);
         return forException(new HttpStatusException(SC_INTERNAL_SERVER_ERROR));
@@ -267,8 +265,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull HttpStatusException e)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull HttpStatusException e)
       {
         String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
 
@@ -298,8 +296,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> withStatus (final @Nonnull int httpStatus)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> withStatus (final @Nonnull int httpStatus)
       {
         this.httpStatus = httpStatus;
         return this;
@@ -310,8 +308,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public ResponseBuilderSupport<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
+    @Override @Nonnull
+    public ResponseBuilder<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
       {
         return withHeader(HEADER_LOCATION, url)
               .withStatus(SC_MOVED_PERMANENTLY);
@@ -322,10 +320,10 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public final RESPONSE_TYPE build()
       {
-        return cacheSupport().doBuild();
+        return ((ResponseBuilderSupport<RESPONSE_TYPE>)cacheSupport()).doBuild();
       }
 
     /*******************************************************************************************************************
@@ -333,6 +331,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Override 
     public void put()
       {
         ResponseHolder.THREAD_LOCAL.set(build());
@@ -383,7 +382,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ResponseBuilderSupport<RESPONSE_TYPE> cacheSupport()
+    protected ResponseBuilder<RESPONSE_TYPE> cacheSupport()
       {
         final String eTag = getHeader(HEADER_ETAG);
         final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
@@ -420,7 +419,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResponseBuilderSupport<RESPONSE_TYPE> notModified() 
+    private ResponseBuilder<RESPONSE_TYPE> notModified() 
       {
         return withBody(new byte[0])
               .withContentLength(0)

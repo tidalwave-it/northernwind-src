@@ -49,7 +49,7 @@
        default-autowire="byType">
            
     <bean id="responseThreadLocal" 
-          class="it.tidalwave.northernwind.frontend.jersey.RestResponseHolder" />    
+          class="it.tidalwave.northernwind.frontend.jersey.JaxRsResponseHolder" />    
     
     <bean id="mediaRequestProcessor" 
           class="it.tidalwave.northernwind.core.model.spi.DefaultMediaRequestProcessor" />
