@@ -130,26 +130,8 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         
         ResponseHolder.ResponseBuilderSupport b = 
                 responseHolder.response().fromFile(file)
-                                         .withExpirationTime(duration);
-        
-        try // FIXME: this would be definitely better with Optional
-          {
-            b = b.withRequestIfNoneMatch(request.getHeader("If-None-Match"));
-          }
-        catch (NotFoundException e)
-          {
-            // never mind  
-          }
-        
-        try // FIXME: this would be definitely better with Optional
-          {
-            b = b.withRequestIfModifiedSince(request.getHeader("If-Modified-Since"));
-          }
-        catch (NotFoundException e)
-          {
-            // never mind  
-          }
-                                         
+                                         .withExpirationTime(duration)
+                                         .forRequest(request);
         b.put();
         return BREAK;
       }

@@ -85,10 +85,11 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
             final String mimeType = file.getMimeType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText("UTF-8"), mimeType)
                                                                 : file.asBytes();
-            responseHolder.response().withContentType(mimeType)
+            responseHolder.response().forRequest(request)
+                                     .withBody(content)
+                                     .withContentType(mimeType)
                                      .withLatestModifiedTime(file.getLatestModificationTime())
                                      .withExpirationTime(duration)
-                                     .withBody(content)
                                      .put();
             return BREAK;
           }

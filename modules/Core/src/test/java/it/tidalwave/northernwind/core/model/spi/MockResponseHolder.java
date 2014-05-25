@@ -92,7 +92,7 @@ public class MockResponseHolder extends ResponseHolder<byte[]>
           }
 
         @Override @Nonnull
-        protected DateTime getTime()
+        protected DateTime getCurrentTime()
           {
             return currentTime;
           }

@@ -28,18 +28,24 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
 import java.io.IOException;
+import com.google.common.io.Files;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import com.google.common.io.Files;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.test.FileComparisonUtils;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
+import static it.tidalwave.northernwind.core.model.spi.ResponseHolder.ResponseBuilderSupport.*;
 
 /***********************************************************************************************************************
  *
@@ -52,6 +58,10 @@ public class ResponseHolderTest
     private ResponseHolder<?> fixture;
             
     private ResourceFile resourceFile;
+    
+    private Request request;
+    
+    private Map<String, String> headers;
     
     private DateTime currentTime = new DateTime(1341242353456L);
 
@@ -70,6 +80,19 @@ public class ResponseHolderTest
         when(resourceFile.asBytes()).thenReturn("FILE CONTENT".getBytes());
         when(resourceFile.getMimeType()).thenReturn("text/plain");
         when(resourceFile.getLatestModificationTime()).thenReturn(resourceLatestModifiedTime);
+        
+        headers = new HashMap<>();
+        request = mock(Request.class);
+        when(request.getHeader(anyString())).thenAnswer(new Answer<String>() 
+          {
+            @Override @Nonnull
+            public String answer (final @Nonnull InvocationOnMock invocation) 
+              throws NotFoundException 
+              {
+                final String name = (String)invocation.getArguments()[0];
+                return NotFoundException.throwWhenNull(headers.get(name), "Not found " + name);
+              }
+          });
         
         fixture = new MockResponseHolder();
       }
@@ -92,8 +115,9 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFileWithEtagNotMatching()
       throws Exception
       {
+        headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withRequestIfNoneMatch("\"xxxx\"");
+                                                                    .forRequest(request);
         assertContents(builder, "ResourceFileOutput.txt");
       }
     
@@ -104,8 +128,9 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFileWithEtagMatching()
       throws Exception
       {
+        headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
         final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withRequestIfNoneMatch("\"1341242553456\"");
+                                                                    .forRequest(request);
         assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
     
@@ -113,24 +138,35 @@ public class ResponseHolderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithIfModifiedSinceNotModified()
+    public void mustProperlyOutputAResourceFileWhenIfModifiedSinceLessRecentThanModifiedTime()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withRequestIfModifiedSince(toString(resourceLatestModifiedTime));
-        assertContents(builder, "ResourceFileOutput.txt");
+        for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
+          {
+            final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                        .forRequest(request);
+            assertContents(builder, "ResourceFileOutput.txt");
+          }
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithIfModifiedSinceModified()
+    public void mustProperlyOutputAResourceFileWhenIfModifiedSinceMoreRecentThanOrEqualToModifiedTime()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withRequestIfModifiedSince(toString(resourceLatestModifiedTime.plusSeconds(1)));
-        assertContents(builder, "ResourceFileNotModifiedOutput.txt");
+        // corner case: same time should return NotModified
+        for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
+          {
+            final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
+                                                                        .forRequest(request);
+            assertContents(builder, "ResourceFileNotModifiedOutput.txt");
+          }
       }
     
     /*******************************************************************************************************************
@@ -199,6 +235,6 @@ public class ResponseHolderTest
     @Nonnull
     private static String toString (final @Nonnull DateTime dateTime)
       {
-        return ResponseBuilderSupport.createFormatter(ResponseBuilderSupport.PATTERN_RFC1123).format(dateTime.toDate());
+        return ResponseBuilderSupport.createFormatter(PATTERN_RFC1123).format(dateTime.toDate());
       }
   }

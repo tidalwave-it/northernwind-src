@@ -63,7 +63,7 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
         @Override
         protected String getHeader (final @Nonnull String header)
           {
-            final List<String> g = headers.get(body);
+            final List<String> g = headers.get(header);
             return ((g == null) || g.isEmpty()) ? null : g.get(0);
           }
 

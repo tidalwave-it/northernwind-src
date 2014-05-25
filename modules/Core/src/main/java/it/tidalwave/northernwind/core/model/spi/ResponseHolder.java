@@ -33,18 +33,19 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.InputStream;
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import java.util.TimeZone;
+import it.tidalwave.northernwind.core.model.Request;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /***********************************************************************************************************************
  *
@@ -67,7 +68,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
      *
      * A support for a builder of {@link ResponseHolder}.
      *
-     * @param <RESPONSE_TYPE>  the produced response
+     * @param <RESPONSE_TYPE>  the produced response (may change in function of the technology used for serving the
+     *                         results)
      * 
      ******************************************************************************************************************/
     @NotThreadSafe // FIXME: move to Core Default Implementation
@@ -80,7 +82,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
         protected static final String HEADER_EXPIRES = "Expires";
         protected static final String HEADER_LOCATION = "Location";
-        protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since";
+        protected static final String HEADER_IF_MODIFIED_SINCE = "If-Modified-Since";
+        protected static final String HEADER_IF_NONE_MATCH = "If-None-Match";
         protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
         protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
@@ -92,29 +95,43 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             "EEE MMM dd HH:mm:ss yyyy"
           };
 
+        /** The body of the response. */
+        @Nonnull
         protected Object body = new byte[0];
 
-        protected int httpStatus = HttpServletResponse.SC_OK;
+        /** The HTTP status of the response. */
+        protected int httpStatus = SC_OK;
 
+        /** The If-None-Match header specified in the request we're responding to. */
         @Nullable
         protected String requestIfNoneMatch;
 
+        /** The If-Modified-Since header specified in the request we're responding to. */
         @Nullable
         protected DateTime requestIfModifiedSince;
 
+        /***************************************************************************************************************
+         *
+         * Sets a header.
+         *
+         * @param   header              the header name
+         * @param   value               the header value
+         * @return                      itself for fluent interface style
+         * 
+         **************************************************************************************************************/
         @Nonnull
         public abstract ResponseBuilderSupport<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
 
         /***************************************************************************************************************
          *
-         * Specifies a set of headers.
+         * Sets multiple headers at the same time.
          *
          * @param   headers             the headers
          * @return                      itself for fluent interface style
          * 
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (@Nonnull Map<String, String> headers)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
           {
             ResponseBuilderSupport<RESPONSE_TYPE> result = this;
 
@@ -179,9 +196,9 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         @Nonnull
         public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
           {
-            final DateTime expirationTime = getTime().plus(duration);
+            final DateTime expirationTime = getCurrentTime().plus(duration);
             return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
-                  .withHeader(HEADER_CACHE_CONTROL, String.format("public, max-age=%d", duration.toStandardSeconds().getSeconds()));
+                  .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.toStandardSeconds().getSeconds()));
           }
 
         /***************************************************************************************************************
@@ -240,6 +257,39 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
         /***************************************************************************************************************
          *
+         * Specifies the {@link Request} we're serving - this makes it possible to read some headers and other
+         * configurations needed e.g. for cache control.
+         * 
+         * @param  request              the request
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<RESPONSE_TYPE> forRequest (final @Nonnull Request request) 
+          {    
+            try // FIXME: this would be definitely better with Optional
+              {
+                this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
+              }
+            catch (NotFoundException e)
+              {
+                // never mind  
+              }
+
+            try // FIXME: this would be definitely better with Optional
+              {
+                this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_MODIFIED_SINCE));
+              }
+            catch (NotFoundException e)
+              {
+                // never mind  
+              }
+            
+            return this;
+          }
+        
+        /***************************************************************************************************************
+         *
          * Specifies an exception to create the response from.
          * 
          * @param  e                    the exception
@@ -250,7 +300,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
           {
             log.info("NOT FOUND: {}", e.toString());
-            return forException(new HttpStatusException(HttpServletResponse.SC_NOT_FOUND));
+            return forException(new HttpStatusException(SC_NOT_FOUND));
           }
 
         /***************************************************************************************************************
@@ -265,7 +315,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull Exception e)
           {
             log.error("", e);
-            return forException(new HttpStatusException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+            return forException(new HttpStatusException(SC_INTERNAL_SERVER_ERROR));
           }
 
         /***************************************************************************************************************
@@ -283,14 +333,14 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {
-                case HttpServletResponse.SC_MOVED_TEMPORARILY:
+                case SC_MOVED_TEMPORARILY:
                   break;
 
-                case HttpServletResponse.SC_NOT_FOUND:
+                case SC_NOT_FOUND:
                   message = "<h1>Not found</h1>";
                   break;
 
-                case HttpServletResponse.SC_INTERNAL_SERVER_ERROR:
+                case SC_INTERNAL_SERVER_ERROR:
                 default: // FIXME: why?
                   message = "<h1>Internal error</h1>";
                   break;
@@ -316,36 +366,6 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             this.httpStatus = httpStatus;
             return this;
           }
-
-        /***************************************************************************************************************
-         *
-         * Specifies the If-None-Match header taken from the request. It's used by the caching logics.
-         * 
-         * @param  eTag                 the header value
-         * @return                      itself for fluent interface style
-         *
-         **************************************************************************************************************/
-        @Nonnull
-        public ResponseBuilderSupport<RESPONSE_TYPE> withRequestIfNoneMatch (final @Nullable String eTag) 
-          {
-            this.requestIfNoneMatch = eTag;
-            return this;
-          }
-
-        /***************************************************************************************************************
-         *
-         * Specifies the If-Modified header taken from the request. It's used by the caching logics.
-         * 
-         * @param  dateTime             the header value
-         * @return                      itself for fluent interface style
-         *
-         **************************************************************************************************************/
-        @Nonnull
-        public ResponseBuilderSupport<RESPONSE_TYPE> withRequestIfModifiedSince (final @Nullable String dateTime) 
-          {
-            this.requestIfModifiedSince = (dateTime == null) ? null : parseDate(dateTime);
-            return this;
-          }
         
         /***************************************************************************************************************
          *
@@ -359,7 +379,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
           {
             return withHeader(HEADER_LOCATION, url)
-                  .withStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                  .withStatus(SC_MOVED_PERMANENTLY);
           }
 
         /***************************************************************************************************************
@@ -387,7 +407,9 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         
         /***************************************************************************************************************
          *
+         * This method actually builds the response and must be provided by concrete subclasses.
          * 
+         * @return  the response
          *
          **************************************************************************************************************/
         @Nonnull
@@ -395,7 +417,10 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         
         /***************************************************************************************************************
          *
+         * Returns a header response previously added.
          * 
+         * @param   header  the header name
+         * @return          the header value
          *
          **************************************************************************************************************/
         @Nullable
@@ -403,7 +428,10 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           
         /***************************************************************************************************************
          *
+         * Returns a header response previously added.
          * 
+         * @param   header  the header name
+         * @return          the header value
          *
          **************************************************************************************************************/
         @Nullable
@@ -415,7 +443,10 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           
         /***************************************************************************************************************
          *
+         * Takes care of the caching feature. If the response refers to an entity whose value has been cached by the
+         * client and it's still fresh, a "Not modified" response will be returned.
          * 
+         * @return                      itself for fluent interface style
          *
          **************************************************************************************************************/
         @Nonnull
@@ -424,11 +455,12 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             final String eTag = getHeader(HEADER_ETAG);
             final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
             
-            log.trace(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
-            log.trace(">>>> ifNotModifiedSince: {} - lastModified: {}", requestIfModifiedSince, lastModified);
+            log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
             
             if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-                 ((requestIfModifiedSince != null) && (lastModified != null) && requestIfModifiedSince.isAfter(lastModified)))
+                 ((requestIfModifiedSince != null) && (lastModified != null) && 
+                  (lastModified.isBefore(requestIfModifiedSince) || lastModified.isEqual(requestIfModifiedSince))) )
               {
                 return notModified();
               }
@@ -436,13 +468,15 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             return this;
           }
 
-        /*******************************************************************************************************************
+        /***************************************************************************************************************
          *
+         * Returns the current time. This can be overridden for mocking time in tests.
+         * 
+         * @return  the current time
          *
-         *
-         ******************************************************************************************************************/
+         **************************************************************************************************************/
         @Nonnull
-        protected DateTime getTime()
+        protected DateTime getCurrentTime()
           {
             return new DateTime();
           }
@@ -457,12 +491,14 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           {
             return withBody(new byte[0])
                   .withContentLength(0)
-                  .withStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                  .withStatus(SC_NOT_MODIFIED);
           }
         
         /***************************************************************************************************************
          *
+         * Parse a date with one of the valid formats for HTTP headers.
          * 
+         * FIXME: we should try to avoid depending on this stuff...
          *
          **************************************************************************************************************/
         @Nonnull
@@ -500,15 +536,19 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
     /*******************************************************************************************************************
      *
-     * 
+     * Start creating a new response.
      *
+     * @return  a builder for creating the response
+     * 
      ******************************************************************************************************************/
     @Nonnull
     public abstract ResponseBuilderSupport<RESPONSE_TYPE> response();
 
     /*******************************************************************************************************************
      *
+     * Returns the response for the current thread. 
      * 
+     * @return  the response
      *
      ******************************************************************************************************************/
     @Nonnull
