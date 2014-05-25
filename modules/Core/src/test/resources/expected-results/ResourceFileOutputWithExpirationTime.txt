@@ -1,0 +1,9 @@
+HTTP/1.1 200
+Cache-Control: max-age=604800
+Content-Length: 12
+Content-Type: text/plain
+ETag: "1341242553456"
+Expires: Mon, 09 Jul 2012 15:19:13 GMT
+Last-Modified: Mon, 02 Jul 2012 15:22:33 GMT
+
+FILE CONTENT

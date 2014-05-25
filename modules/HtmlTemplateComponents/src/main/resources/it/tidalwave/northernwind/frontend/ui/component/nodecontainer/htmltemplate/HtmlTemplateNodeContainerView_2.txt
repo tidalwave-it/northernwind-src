@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$titlePrefix$$title$</title>
+        <meta name="description" content="$description$" />
+        <meta http-equiv="Content-type" content="text/html;charset=$charset$" /> 
+        <meta http-equiv="Content-Language" content="$language$" />
+        $screenCssSection$
+        $printCssSection$
+        <style type="text/css" media="print">
+            div#header { display: none }
+            div#sub { display: none }
+            div#nav { display: none }
+            div#local { display: none }
+            div#breadcrumb { display: none }
+        </style>
+        $rssFeeds$
+        $inlinedScripts$
+        $scripts$
+    </head>
+
+    <body>
+        <div class="nw-page">
+            $content$
+        </div>
+    </body>
+</html>
