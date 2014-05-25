@@ -277,7 +277,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
               }
 
             try // FIXME: this would be definitely better with Optional
-                            {
+              {
                 this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_MODIFIED_SINCE));
               }
             catch (NotFoundException e)
