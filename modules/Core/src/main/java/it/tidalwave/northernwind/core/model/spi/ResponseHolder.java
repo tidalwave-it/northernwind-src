@@ -82,7 +82,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
         protected static final String HEADER_EXPIRES = "Expires";
         protected static final String HEADER_LOCATION = "Location";
-        protected static final String HEADER_IF_NOT_MODIFIED_SINCE = "If-Modified-Since"; // FIXME: name
+        protected static final String HEADER_IF_MODIFIED_SINCE = "If-Modified-Since";
         protected static final String HEADER_IF_NONE_MATCH = "If-None-Match";
         protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
@@ -95,29 +95,43 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             "EEE MMM dd HH:mm:ss yyyy"
           };
 
+        /** The body of the response. */
+        @Nonnull
         protected Object body = new byte[0];
 
+        /** The HTTP status of the response. */
         protected int httpStatus = SC_OK;
 
+        /** The If-None-Match header specified in the request we're responding to. */
         @Nullable
         protected String requestIfNoneMatch;
 
+        /** The If-Modified-Since header specified in the request we're responding to. */
         @Nullable
         protected DateTime requestIfModifiedSince;
 
+        /***************************************************************************************************************
+         *
+         * Sets a header.
+         *
+         * @param   header              the header name
+         * @param   value               the header value
+         * @return                      itself for fluent interface style
+         * 
+         **************************************************************************************************************/
         @Nonnull
         public abstract ResponseBuilderSupport<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
 
         /***************************************************************************************************************
          *
-         * Specifies a set of headers.
+         * Sets multiple headers at the same time.
          *
          * @param   headers             the headers
          * @return                      itself for fluent interface style
          * 
          **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (@Nonnull Map<String, String> headers)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
           {
             ResponseBuilderSupport<RESPONSE_TYPE> result = this;
 
@@ -263,8 +277,8 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
               }
 
             try // FIXME: this would be definitely better with Optional
-              {
-                this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_NOT_MODIFIED_SINCE));
+                            {
+                this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_MODIFIED_SINCE));
               }
             catch (NotFoundException e)
               {
