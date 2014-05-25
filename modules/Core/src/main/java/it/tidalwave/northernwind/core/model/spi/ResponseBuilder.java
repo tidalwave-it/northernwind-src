@@ -184,7 +184,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull IOException e);
+    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull HttpStatusException e);
 
     /*******************************************************************************************************************
      *
@@ -195,7 +195,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull HttpStatusException e);
+    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull Throwable e);
 
     /*******************************************************************************************************************
      *

@@ -254,7 +254,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull IOException e)
+    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull Throwable e)
       {
         log.error("", e);
         return forException(new HttpStatusException(SC_INTERNAL_SERVER_ERROR));
