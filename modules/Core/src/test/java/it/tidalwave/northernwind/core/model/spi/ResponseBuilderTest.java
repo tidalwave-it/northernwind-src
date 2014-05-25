@@ -52,7 +52,7 @@ import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class ResponseHolderTest
+public class ResponseBuilderTest
   {
     private ResponseHolder<?> fixture;
             
@@ -73,7 +73,7 @@ public class ResponseHolderTest
     public void setupFixture()
       throws Exception
       {
-        MockResponseHolder.setCurrentTime(currentTime);
+        MockResponseBuilder.setCurrentTime(currentTime);
         
         resourceFile = mock(ResourceFile.class);
         when(resourceFile.asBytes()).thenReturn("FILE CONTENT".getBytes());

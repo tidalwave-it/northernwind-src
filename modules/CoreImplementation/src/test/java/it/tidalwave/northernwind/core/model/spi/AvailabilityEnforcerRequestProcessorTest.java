@@ -27,18 +27,18 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
+import java.io.File;
 import com.google.common.io.Files;
+import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import it.tidalwave.util.test.FileComparisonUtils;
-import java.io.File;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-import org.joda.time.DateTime;
-import static org.mockito.Mockito.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
 
 /***********************************************************************************************************************
  *
@@ -64,7 +64,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
     @BeforeMethod
     public void setupFixture()
       {
-        MockResponseHolder.setCurrentTime(currentTime);
+        MockResponseBuilder.setCurrentTime(currentTime);
         fixture = context.getBean(AvailabilityEnforcerRequestProcessor.class);
         responseHolder = context.getBean(MockResponseHolder.class);
         request = mock(Request.class);
