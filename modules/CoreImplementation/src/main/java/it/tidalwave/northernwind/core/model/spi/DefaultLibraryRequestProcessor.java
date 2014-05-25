@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -85,16 +85,17 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
             final String mimeType = file.getMimeType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText("UTF-8"), mimeType)
                                                                 : file.asBytes();
-            responseHolder.response().withContentType(mimeType)
+            responseHolder.response().forRequest(request)
+                                     .withBody(content)
+                                     .withContentType(mimeType)
                                      .withLatestModifiedTime(file.getLatestModificationTime())
                                      .withExpirationTime(duration)
-                                     .withBody(content)
                                      .put();
             return BREAK;
           }
         catch (IOException | NotFoundException e)
           {
-            log.info("Requested URI {} doesn't map to a library resource, continuing...", relativePath);
+            log.debug("Requested URI {} doesn't map to a library resource, continuing...", relativePath);
           }
 
         return CONTINUE;

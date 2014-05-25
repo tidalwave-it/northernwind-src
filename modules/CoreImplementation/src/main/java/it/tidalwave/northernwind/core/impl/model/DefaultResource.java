@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -132,7 +132,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
               }
 
-            placeHolder = Boolean.parseBoolean(properties.getProperty(PROPERTY_PLACE_HOLDER, "" + tmpPlaceHolder));
+            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER, tmpPlaceHolder);
 
             if (log.isDebugEnabled())
               {

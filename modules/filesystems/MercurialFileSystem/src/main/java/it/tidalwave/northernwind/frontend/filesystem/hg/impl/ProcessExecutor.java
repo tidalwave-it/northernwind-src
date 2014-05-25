@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -32,6 +32,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -316,6 +317,19 @@ public class ProcessExecutor
       {
         if (process.waitFor() != 0)
           {
+            final List<String> environment = new ArrayList<>();
+
+            for (final Entry<String, String> e : System.getenv().entrySet())
+              {
+                environment.add(String.format("%s=%s, ", e.getKey(), e.getValue()));
+              }
+
+            log.error("Process exited with " + process.exitValue());
+            log.error(">>>> executed:          {}", arguments);
+            log.error(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
+            log.error(">>>> environment:       {}", environment);
+            log("STDOUT", stdout);
+            log("STDERR", stderr);
             throw new IOException("Process exited with " + process.exitValue());
           }
 
@@ -356,6 +370,18 @@ public class ProcessExecutor
           }
 
         throw new IOException("Can't find " + executable + " in PATH");
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private static void log (final @Nonnull String prefix, final @Nonnull ProcessExecutor.ConsoleOutput consoleOutput)
+      {
+        for (final String line : consoleOutput.getContent())
+          {
+            log.error("{}: {}", prefix, line);
+          }
       }
   }
 

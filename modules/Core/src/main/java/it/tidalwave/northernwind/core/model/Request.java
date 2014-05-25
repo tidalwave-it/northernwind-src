@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -95,6 +95,30 @@ public interface Request
     @Nonnull
     public List<Locale> getPreferredLocales();
 
+    /*******************************************************************************************************************
+     *
+     * Returns a header value.
+     *
+     * @param  headerName     the name of the header
+     * @return                the value of the header
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getHeader (@Nonnull String headerName)
+      throws NotFoundException;
+
+    /*******************************************************************************************************************
+     *
+     * Returns a header value.
+     *
+     * @param  headerName     the name of the header
+     * @return                the value of the header
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<String> getMultiValuedHeader (@Nonnull String headerName)
+      throws NotFoundException;
+    
     /*******************************************************************************************************************
      *
      * Returns a parameter value.

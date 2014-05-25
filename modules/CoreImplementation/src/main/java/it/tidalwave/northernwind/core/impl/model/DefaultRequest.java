@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -67,6 +67,9 @@ import lombok.ToString;
     private final Map<String, List<String>> parametersMap;
 
     @Nonnull
+    private final Map<String, List<String>> headersMap;
+
+    @Nonnull
     private final List<Locale> preferredLocales;
 
     /*******************************************************************************************************************
@@ -75,10 +78,34 @@ import lombok.ToString;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getParameter (final @Nonnull String parameterName)
+    public String getHeader (final @Nonnull String parameterName)
       throws NotFoundException
       {
-        return getMultiValuedParameter(parameterName).get(0);
+        return getMultiValuedHeader(parameterName).get(0);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public List<String> getMultiValuedHeader (final @Nonnull String headerName)
+      throws NotFoundException
+      {
+        return NotFoundException.throwWhenNull(headersMap.get(headerName), headerName);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String getParameter (final @Nonnull String headerName)
+      throws NotFoundException
+      {
+        return getMultiValuedParameter(headerName).get(0);
       }
 
     /*******************************************************************************************************************
@@ -105,6 +132,7 @@ import lombok.ToString;
                                   new ResourcePath(relativeUri).urlDecoded().asString(),
                                   relativeUri,
                                   parametersMap,
+                                  headersMap,
                                   preferredLocales);
       }
 
@@ -116,7 +144,7 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withBaseUrl (final @Nonnull String baseUrl)
       {
-        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, headersMap, preferredLocales);
       }
 
     /*******************************************************************************************************************
@@ -147,7 +175,17 @@ import lombok.ToString;
             parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
           }
 
-        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parameterMap, preferredLocales);
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parameterMap,  headersMap, preferredLocales);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public DefaultRequest withHeaderMap (final @Nonnull Map<String, List<String>>  headersMap) 
+      {
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap,  headersMap, preferredLocales);
       }
 
     /*******************************************************************************************************************
@@ -157,6 +195,6 @@ import lombok.ToString;
     @Nonnull
     public DefaultRequest withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
       {
-        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, preferredLocales);
+        return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap,  headersMap, preferredLocales);
       }
   }

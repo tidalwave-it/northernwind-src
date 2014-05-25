@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -127,9 +127,12 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
-        responseHolder.response().fromFile(file)
-                                 .withExpirationTime(duration)
-                                 .put();
+        
+        ResponseHolder.ResponseBuilderSupport b = 
+                responseHolder.response().fromFile(file)
+                                         .withExpirationTime(duration)
+                                         .forRequest(request);
+        b.put();
         return BREAK;
       }
   }

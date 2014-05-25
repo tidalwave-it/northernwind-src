@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -43,6 +43,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
+import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -134,6 +135,49 @@ public interface ResourceProperties extends As, Identifiable
     @Nonnull
     public <Type> Type getProperty (@Nonnull Key<Type> key, @Nonnull Type defaultValue)
       throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property, eventually returning a default value.
+     *
+     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     *
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<Integer>
+    public int getIntProperty (@Nonnull Key<String> key, int defaultValue)
+      throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property, eventually returning a default value.
+     *
+     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     *
+     * @param   key                 the property key
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<Boolean>
+    public boolean getBooleanProperty (@Nonnull Key<String> key, boolean defaultValue)
+      throws IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a datetime property, searching through a sequence of keys, eventually returning a default value.
+     *
+     * @param   keys                the property keys
+     * @param   defaultValue        the default value to return when the property doesn't exist
+     * @return                      the property value
+     *
+     ******************************************************************************************************************/
+    @Nonnull // FIXME: should be Key<DateTime>
+    public DateTime getDateTimeProperty (@Nonnull Collection<Key<String>> keys,
+                                         @Nonnull DateTime defaultValue);
 
     /*******************************************************************************************************************
      *

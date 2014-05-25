@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -65,7 +65,7 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j @ToString(callSuper = true, of = "relativeUri")
+@Configurable(preConstruction = true) @Slf4j @ToString(callSuper = false, of = "relativeUri")
 /* package */ class DefaultSiteNode extends SiteNodeSupport
   {
     @Nonnull

@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import java.util.List;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 
@@ -50,4 +49,7 @@ public interface BlogViewController extends CompositeSiteNodeController
     public static final Key<String> PROPERTY_INDEX = new Key<>("index");
 
     public static final Key<String> PROPERTY_CATEGORY = new Key<>("category");
+
+    // FIXME: this should be Boolean
+    public static final Key<String> PROPERTY_TAG_CLOUD = new Key<>("tagCloud");
   }

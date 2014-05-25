@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -29,8 +29,12 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
+import java.net.URLEncoder;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -49,6 +53,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import java.io.UnsupportedEncodingException;
 
 /***********************************************************************************************************************
  *
@@ -180,7 +185,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final ResourceProperties properties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        final DateTime blogDateTime = getBlogDateTime(post);
+        final DateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
+                                                                     DefaultBlogViewController.TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
         htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty(PROPERTY_TITLE)));
@@ -188,6 +194,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         renderDate(htmlBuilder, blogDateTime);
         renderCategory(htmlBuilder, post);
+        renderTags(htmlBuilder, post);
         renderPermalink(htmlBuilder, post);
         htmlBuilder.append("</div>");
 
@@ -211,6 +218,35 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         htmlParts.add(htmlBuilder.toString());
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+      throws IOException, NotFoundException
+      {
+        log.debug("addTagCloud({})", tagsAndCount);
+        final StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<div class='tagCloud'>");
+
+        for (final TagAndCount tagAndCount : tagsAndCount)
+          {
+            final String tag = tagAndCount.tag;
+            final String link = createTagLink(tag);
+            htmlBuilder.append(String.format("<a href=\"%s\" class=\"tagCloudItem rank%s\" rel=\"%d\">%s</a>%n",
+                                             link, tagAndCount.rank, tagAndCount.count, tag));
+          }
+
+        htmlBuilder.append(String.format("</div>%n"));
+        htmlParts.add(htmlBuilder.toString());
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private String computeTitle (final @Nonnull Content post)
       {
@@ -259,12 +295,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                 htmlBuilder.append(String.format("<h2>%s</h2>%n", title));
               }
           }
-        catch (NotFoundException e)
+        catch (NotFoundException | IOException e)
           {
             // ok, no title
-          }
-        catch (IOException e)
-          {
           }
       }
 
@@ -324,7 +357,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     /*******************************************************************************************************************
      *
-     * Renders the permalink of the blog post.
+     * Renders the category of the blog post.
      *
      ******************************************************************************************************************/
     private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
@@ -339,6 +372,58 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
           {
             // ok, no category
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the tags of the blog post.
+     *
+     ******************************************************************************************************************/
+    private void renderTags (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
+      throws IOException
+      {
+        try
+          {
+            final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).split(","));
+            Collections.sort(tags);
+            final StringBuilder buffer = new StringBuilder();
+            String separator = "";
+
+            for (final String tag : tags)
+              {
+                final String link = createTagLink(tag);
+                buffer.append(separator).append(String.format("%n<a class='nw-tag' href='%s'>%s</a>", link, tag));
+                separator = ", ";
+              }
+
+            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-tags'>Tagged as %s</span>",
+                               buffer.toString()));
+          }
+        catch (NotFoundException | IOException e)
+          {
+            // ok, no tags
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String createTagLink (final String tag)
+      throws UnsupportedEncodingException
+      {
+        final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
+        String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
+
+        // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
+        if (!link.endsWith("/"))
+          {
+            link += "/";
+          }
+
+        return link;
       }
 
     /*******************************************************************************************************************

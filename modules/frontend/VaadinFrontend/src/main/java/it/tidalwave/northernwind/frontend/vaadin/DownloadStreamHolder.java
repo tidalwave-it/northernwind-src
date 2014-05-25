@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.util.LinkedMultiValueMap;
@@ -75,9 +76,16 @@ public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
           }
 
         @Override @Nonnull
-        public DownloadStream build()
+        protected DownloadStream doBuild()
           {
             return new DownloadStream((InputStream)body, null, headers.get("Content-Type").get(0)); // FIXME: set name?
+          }
+        
+        @Override
+        protected String getHeader (final @Nonnull String header) 
+          {
+            final List<String> list = headers.get(header);
+            return list.isEmpty() ? null : list.get(0);
           }
       }
 

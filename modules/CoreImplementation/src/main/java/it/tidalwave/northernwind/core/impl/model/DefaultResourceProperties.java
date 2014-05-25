@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -186,6 +189,59 @@ public class DefaultResourceProperties implements ResourceProperties
           {
             return defaultValue;
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
+      throws IOException
+      {
+        return Integer.parseInt(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
+      throws IOException
+      {
+        return Boolean.parseBoolean(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public DateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
+                                         final @Nonnull DateTime defaultValue)
+      {
+        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
+
+        for (final Key<String> key : keys)
+          {
+            try
+              {
+                return isoFormatter.parseDateTime(getProperty(key));
+              }
+            catch (NotFoundException e)
+              {
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+          }
+
+        return defaultValue;
       }
 
     /*******************************************************************************************************************

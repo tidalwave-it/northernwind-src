@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
  * %%
- * Copyright (C) 2011 - 2013 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -107,7 +108,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       throws IOException, NotFoundException
       {
-        final DateTime blogDateTime = getBlogDateTime(post);
+        final DateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
 
         if (feed.getLastBuildDate() == null)
           {
@@ -150,6 +151,12 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+      {
+      }
+
+    @Override
+    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+      throws IOException, NotFoundException
       {
       }
 
