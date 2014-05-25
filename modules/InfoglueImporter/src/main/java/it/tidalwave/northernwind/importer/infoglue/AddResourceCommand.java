@@ -1,30 +1,36 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,23 +53,23 @@ public class AddResourceCommand
 
     @Getter
     private final byte[] contents;
-    
+
     private final String comment;
 
-    public void addAndCommit() 
+    public void addAndCommit()
       throws Exception
       {
         String fixedPath = this.path;
-        
+
         if (fixedPath.startsWith("/"))
           {
             fixedPath = "." + fixedPath;
           }
-        
+
         final File file = new File(ResourceManager.hgFolder, fixedPath);
         file.getParentFile().mkdirs();
         log.info("Adding and committing {} {} ...", dateTime, file.getAbsolutePath());
-        final OutputStream os = new FileOutputStream(file);
+        final @Cleanup OutputStream os = new FileOutputStream(file);
         os.write(contents);
         os.close();
         Utilities.exec("/bin/sh", "-c", "cd " + ResourceManager.hgFolder.getAbsolutePath() + " && /usr/bin/hg add \"" + fixedPath + "\"");

@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
 import javax.annotation.Nonnull;
@@ -36,32 +41,32 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class Main 
+public class Main
   {
     /* package */ static final Map<String, String> assetFileNameMapByKey = new HashMap<String, String>();
-    
+
     /* package */ static final ContentMap contentMap = new ContentMap();
-    
+
     /* package */ static final Map<Integer, String> contentRelativePathMapById = new HashMap<Integer, String>();
-    
+
     // blueBill Mobile
 //    /* package */ static String xmlFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/Export__blueBill_2011-08-10_0414.xml";
 //    /* package */ static String zipLibraryFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/blueBill/blueBillWebsiteLibrary.zip";
 //    /* package */ static public String contentPrefix = "^/blueBill/Mobile";
 //    /* package */ static public String siteNodePrefix = "^/blueBill/Mobile";
-    
+
     // StoppingDown
 //    /* package */ static String xmlFile = "/home/fritz/Personal/WebSites/Export__stoppingdown.net_2011-08-11_0536.xml";
 //    /* package */ static String zipLibraryFile = "/home/fritz/Personal/WebSites/StoppingDownWebsiteLibrary.zip";
 //    /* package */ static String contentPrefix = "^/Stopping Down";
 //    /* package */ static String siteNodePrefix = "^/stoppingdown\\.net";
-             
+
     // jrawio
     /* package */ static String xmlFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/jrawio/Export__jrawio_2011-08-11_0542.xml";
     /* package */ static String zipLibraryFile = "/home/fritz/Business/Tidalwave/Projects/WorkAreas/jrawio/jrawioWebsiteLibrary.zip";
     /* package */ static String contentPrefix = "^/jrawio";
     /* package */ static String siteNodePrefix = "^/jrawio";
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -75,7 +80,7 @@ public class Main
             "classpath*:/META-INF/ParameterLanguageOverrideBeans.xml",
             "classpath*:/META-INF/SimpleLocalFileSystemBeans.xml"
           );
-        
+
         new ExportConverter(new FileInputStream(xmlFile), true).process() ;
         new ExportConverter(new FileInputStream(xmlFile), false).process() ;
       }

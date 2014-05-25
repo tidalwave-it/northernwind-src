@@ -6,6 +6,7 @@
                 xmlns:str="http://exslt.org/strings"
                 xmlns:set="http://exslt.org/sets"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:java="http://xml.apache.org/xslt/java"
                 xmlns:pom="http://maven.apache.org/POM/4.0.0">
     <xsl:output method="xml" indent="no" omit-xml-declaration="yes"/>
 
@@ -40,9 +41,11 @@
         <xsl:copy> 
             <xsl:apply-templates select="@*"/> 
             <xsl:copy-of select="*"/>
-            <xsl:value-of select="'&#10;//&lt;![CDATA['"/>
-            <xsl:value-of select="."/> 
-            <xsl:value-of select="'//]]&gt;&#10;'"/>
+            <xsl:if test='string-length(.) &gt; 0'>
+                <xsl:value-of select="'&#10;//&lt;![CDATA['"/>
+                <xsl:value-of select="."/> 
+                <xsl:value-of select="'&#10;//]]&gt;&#10;'"/>
+            </xsl:if>
         </xsl:copy> 
      </xsl:template>
      

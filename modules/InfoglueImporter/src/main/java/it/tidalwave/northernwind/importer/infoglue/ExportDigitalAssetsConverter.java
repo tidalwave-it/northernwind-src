@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
 import java.io.IOException;
@@ -36,18 +41,18 @@ import lombok.extern.slf4j.Slf4j;
 public class ExportDigitalAssetsConverter extends Converter
   {
     private String assetFileName;
-    
+
     private String assetKey;
-    
+
     private byte[] assetBytes;
-    
+
     private final ExportContentsVersionConverter parent;
-    
+
     private final boolean onlyMapAssets;
-    
+
     public ExportDigitalAssetsConverter (final @Nonnull ExportContentsVersionConverter parent, final boolean onlyMapAssets)
       {
-        super(parent);        
+        super(parent);
         this.parent = parent;
         this.onlyMapAssets = onlyMapAssets;
       }
@@ -58,36 +63,36 @@ public class ExportDigitalAssetsConverter extends Converter
       {
         if ("assetFileName".equals(elementName))
           {
-            assetFileName = contentAsString();  
+            assetFileName = contentAsString();
           }
         else if ("assetKey".equals(elementName))
           {
-            assetKey = contentAsString();  
+            assetKey = contentAsString();
           }
         else if ("assetBytes".equals(elementName))
           {
-            assetBytes = contentAsBytes();  
+            assetBytes = contentAsBytes();
           }
       }
-    
+
     @Override
     public void finish()
       {
-        try 
+        try
           {
             final String fixedPath = "/content/media/" + assetFileName;
             Main.assetFileNameMapByKey.put(assetKey, assetFileName);
-            
+
             if (!onlyMapAssets)
               {
                 log.info("Converting {} ...", fixedPath);
-                ResourceManager.addCommand(new AddResourceCommand(parent.getModifiedDateTime(), 
-                                                                  fixedPath, 
+                ResourceManager.addCommand(new AddResourceCommand(parent.getModifiedDateTime(),
+                                                                  fixedPath,
                                                                   contentAsBytes(), // FIXME: assetBytes?
                                                                   parent.getVersionComment()));
               }
-          } 
-        catch (IOException e) 
+          }
+        catch (IOException e)
           {
           }
       }

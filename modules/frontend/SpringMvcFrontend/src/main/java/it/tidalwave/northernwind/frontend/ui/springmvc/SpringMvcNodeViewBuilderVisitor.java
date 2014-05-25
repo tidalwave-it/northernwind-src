@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.ui.springmvc;
 
 import javax.annotation.Nonnull;
@@ -29,24 +34,24 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitorSupport;
-import lombok.extern.slf4j.Slf4j;   
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
  * A visitor for {@link Layout} that builds a Vaadin view.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder> 
+public class SpringMvcNodeViewBuilderVisitor extends NodeViewBuilderVisitorSupport<TextHolder, TextHolder>
   {
-    public SpringMvcNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode) 
+    public SpringMvcNodeViewBuilderVisitor (final @Nonnull SiteNode siteNode)
       {
         super(siteNode);
       }
-    
+
     // TODO: this could be done in a ViewFactory subclass? Or an aspect?
     @Override @Nonnull
     protected TextHolder createPlaceHolderComponent (final @Nonnull Layout layout, final @Nonnull String message)

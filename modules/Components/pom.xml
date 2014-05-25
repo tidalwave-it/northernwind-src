@@ -6,15 +6,21 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-7-SNAPSHOT</version>
+        <version>1.1-ALPHA-31-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <properties>
+        <!-- FIXME: something in this package crashes the javadoc plugin -->
+        <tft.javadoc.excludePackageNames>it.tidalwave.northernwind.frontend.ui.component.gallery.spi</tft.javadoc.excludePackageNames>
+    </properties>
+
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
-    <version>1.0.24-SNAPSHOT</version>
+    <version>1.0.48-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Components</name>
+    <description>The definitions of page components.</description>
     
     <dependencies>
         <dependency>
@@ -24,10 +30,6 @@
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-filesystems</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -42,5 +44,4 @@
             <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
-    <description>The definitions of page components.</description>
 </project>

@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
 import java.io.IOException;
@@ -43,18 +48,18 @@ import sun.misc.BASE64Decoder;
  *
  **********************************************************************************************************************/
 @Slf4j
-public abstract class Converter 
+public abstract class Converter
   {
     private final BASE64Decoder decoder = new BASE64Decoder();
 
     protected final StringBuilder builder = new StringBuilder();
-    
+
     protected int indent;
-    
+
     protected int localLevel;
-    
+
     protected final XMLStreamReader reader;
-    
+
     private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendYear(4, 4)
                                                                                      .appendLiteral("-")
                                                                                      .appendMonthOfYear(2)
@@ -70,34 +75,34 @@ public abstract class Converter
                                                                                      .appendMillisOfSecond(3)
                                                                                      .appendTimeZoneOffset("", true, 2, 2)
                                                                                      .toFormatter();
-    
-    public Converter (final @Nonnull String contents) 
-      throws XMLStreamException 
+
+    public Converter (final @Nonnull String contents)
+      throws XMLStreamException
       {
         log.debug("Parsing {}", contents);
         reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(contents));
       }
-    
-    public Converter (final @Nonnull InputStream is) 
-      throws XMLStreamException 
+
+    public Converter (final @Nonnull InputStream is)
+      throws XMLStreamException
       {
         log.debug("Parsing {}", is);
         reader = XMLInputFactory.newInstance().createXMLStreamReader(is);
       }
-    
+
     public Converter (final @Nonnull Converter parent)
       {
         this.indent = parent.indent;
         this.reader = parent.reader;
       }
-    
-    public void process() 
+
+    public void process()
       throws Exception
       {
         log.trace("process() - {}", this);
         start();
-        
-        while (reader.hasNext()) 
+
+        while (reader.hasNext())
           {
             reader.next();
             final int eventType = reader.getEventType();
@@ -117,12 +122,12 @@ public abstract class Converter
                   break;
 
                 case XMLEvent.ATTRIBUTE:
-                  log.trace("ATTRIBUTE     {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("ATTRIBUTE     {} {}: {}", eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())));
                   processAttribute(reader.getName().getLocalPart(), reader);
                   break;
 
                 case XMLEvent.START_ELEMENT:
-                  log.trace("START ELEMENT {} {} ({})", new Object[] { eventType, reader.getName(), localLevel });
+                  log.trace("START ELEMENT {} {} ({})", eventType, reader.getName(), localLevel);
                   builder.delete(0, builder.length());
                   processStartElement(reader.getName().getLocalPart(), reader);
                   indent++;
@@ -130,11 +135,11 @@ public abstract class Converter
                   break;
 
                 case XMLEvent.END_ELEMENT:
-                  log.trace("END ELEMENT   {} {} ({}): {}", new Object[] { eventType, reader.getName(), localLevel, builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("END ELEMENT   {} {} ({}): {}", eventType, reader.getName(), localLevel, builder.substring(0, Math.min(1000, builder.length())));
                   --indent;
-                  
+
                   processEndElement(reader.getName().getLocalPart());
-                  
+
                   if (--localLevel < 0)
                     {
                       finish();
@@ -150,12 +155,12 @@ public abstract class Converter
 //                  else
 //                    {
 //                      processEndElement(reader.getName().getLocalPart());
-//                    } 
+//                    }
                   // FIXME: should reset the buffer
                   break;
 
                 default:
-                  log.trace("DEFAULT       {} {}: {}", new Object[] { eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())) });
+                  log.trace("DEFAULT       {} {}: {}", eventType, reader.getName(), builder.substring(0, Math.min(1000, builder.length())));
                   break;
               }
           }
@@ -163,17 +168,17 @@ public abstract class Converter
 
     protected void start()
       throws Exception
-      {           
+      {
       }
-    
+
     protected void processAttribute (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
       throws Exception
-      {           
+      {
       }
 
     protected void processStartElement (final @Nonnull String name, final @Nonnull XMLStreamReader reader)
       throws Exception
-      {           
+      {
       }
 
     protected abstract void processEndElement (@Nonnull String name)
@@ -181,33 +186,33 @@ public abstract class Converter
 
     protected void finish()
       throws Exception
-      {           
+      {
       }
-    
+
     @Nonnull
     protected String contentAsString()
       {
-        return builder.toString();  
+        return builder.toString();
       }
-    
+
     @Nonnull
     protected int contentAsInteger()
       {
-        return Integer.parseInt(builder.toString());  
+        return Integer.parseInt(builder.toString());
       }
-    
+
     @Nonnull
     protected boolean contentAsBoolean()
       {
-        return Boolean.parseBoolean(builder.toString());  
+        return Boolean.parseBoolean(builder.toString());
       }
-    
+
     @Nonnull
     protected DateTime contentAsDateTime()
       {
-        return FORMATTER.parseDateTime(builder.toString());  
+        return FORMATTER.parseDateTime(builder.toString());
       }
-    
+
     @Nonnull
     protected byte[] contentAsBytes()
       throws IOException

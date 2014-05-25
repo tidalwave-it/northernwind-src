@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
@@ -39,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link RequestLocaleManager}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -49,19 +54,19 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
-    private final ThreadLocal<Locale> localeHolder = new ThreadLocal<Locale>();
-    
+
+    private final ThreadLocal<Locale> localeHolder = new ThreadLocal<>();
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<Locale> getLocales() 
+    public List<Locale> getLocales()
       {
         final Locale requestLocale = localeHolder.get();
-        final List<Locale> locales = new ArrayList<Locale>(siteProvider.get().getSite().getConfiguredLocales());
+        final List<Locale> locales = new ArrayList<>(siteProvider.get().getSite().getConfiguredLocales());
 
         if (requestLocale != null)
           {
@@ -73,7 +78,26 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
 
         return locales;
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public List<String> getLocaleSuffixes()
+      {
+        final List<String> suffixes = new ArrayList<>();
+        suffixes.add("");
+
+        for (final Locale locale : getLocales())
+          {
+            suffixes.add("_" + locale.getLanguage());
+          }
+
+        return suffixes;
+      }
+
     /*******************************************************************************************************************
      *
      *
@@ -81,9 +105,9 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     public void setRequestLocale (final @Nonnull Locale locale)
       {
         log.debug("setRequestLocale({})", locale);
-        localeHolder.set(locale);            
+        localeHolder.set(locale);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -92,7 +116,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override
     public void requestReset()
       {
-        localeHolder.remove();  
+        localeHolder.remove();
       }
 
     /*******************************************************************************************************************
@@ -101,7 +125,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DateTimeFormatter getDateTimeFormatter() 
+    public DateTimeFormatter getDateTimeFormatter()
       {
         return DateTimeFormat.fullDateTime().withLocale(getLocales().get(0));
       }

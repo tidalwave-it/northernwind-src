@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-7-SNAPSHOT</version>
+        <version>1.1-ALPHA-31-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-    <version>1.0.24-SNAPSHOT</version>
+    <version>1.0.48-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Components (HTML Template)</name>
     
@@ -28,10 +28,6 @@
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-filesystems</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

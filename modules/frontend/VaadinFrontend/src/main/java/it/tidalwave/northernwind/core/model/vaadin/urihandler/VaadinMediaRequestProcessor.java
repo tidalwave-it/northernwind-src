@@ -1,30 +1,32 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model.vaadin.urihandler;
 
-import javax.annotation.Nonnull;
-import java.io.FileNotFoundException;
-import org.openide.filesystems.FileObject;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import org.springframework.context.annotation.Scope;
@@ -38,14 +40,14 @@ import static org.springframework.core.Ordered.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value="session") @Order(HIGHEST_PRECEDENCE)
+@Configurable @Scope(value = "session") @Order(HIGHEST_PRECEDENCE)
 public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<DownloadStream>
   {
-    @Override @Nonnull
-    protected void createResponse (final @Nonnull FileObject file) 
-      throws FileNotFoundException
-      {
-        //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
-        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMIMEType()).put();
-      }
+//    @Override @Nonnull
+//    protected void createResponse (final @Nonnull ResourceFile file)
+//      throws FileNotFoundException
+//      {
+//        //DownloadStream(file.getInputStream(), file.getNameExt(), file.getMIMEType()); // FIXME: set name?
+//        responseHolder.response().withBody(file.getInputStream()).withContentType(file.getMimeType()).put();
+//      }
   }

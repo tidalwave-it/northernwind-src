@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
 import java.io.BufferedReader;
@@ -42,7 +47,7 @@ import org.w3c.tidy.Tidy;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class Utilities 
+public class Utilities
   {
     private static final String REGEXP_getPageUrl = "\\$templateLogic\\.getPageUrl\\(([0-9]*),\\s*\\$templateLogic\\.languageId,\\s*-1\\)";
 //        $templateLogic.getPageUrl(180, $templateLogic.languageId,766)
@@ -56,22 +61,22 @@ public class Utilities
     private static final Pattern PATTERN_getPageUrlWithContentAndLanguage = Pattern.compile(REGEXP_getPageUrlWithContentAndLanguage);
     private static final Pattern PATTERN_getInlineAssetUrl = Pattern.compile(REGEXP_getInlineAssetUrl);
     private static final Pattern PATTERN_urlDecodeMacros = Pattern.compile(REGEXP_urlDecodeMacros);
-    
-    
+
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static void exec (final @Nonnull String ... args) 
+    public static void exec (final @Nonnull String ... args)
       throws Exception
       {
         log.debug(Arrays.toString(args));
         Runtime.getRuntime().exec(args).waitFor();
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static String formatHtml (final @Nonnull String string) 
+    public static String formatHtml (final @Nonnull String string)
       throws IOException
       {
         final Tidy tidy = new Tidy();
@@ -81,7 +86,7 @@ public class Utilities
         tidy.setLogicalEmphasis(true);
         final StringReader r = new StringReader(string);
         final StringWriter w = new StringWriter();
-        tidy.parse(r, w);                   
+        tidy.parse(r, w);
         r.close();
         w.close();
 
@@ -96,37 +101,37 @@ public class Utilities
 
             if (s == null)
               {
-                break;  
+                break;
               }
 
             if ("</body>".equals(s))
               {
-                break;  
+                break;
               }
 
             if (inBody)
               {
-                sw.write(s + "\n");  
+                sw.write(s + "\n");
               }
 
             if ("<body>".equals(s))
               {
-                inBody = true;  
+                inBody = true;
               }
           }
 
         sw.close();
         br.close();
-       
+
         return sw.getBuffer().toString();
       }
-    
+
     @Nonnull
-    public static String replaceMacros (final @Nonnull String xml) 
+    public static String replaceMacros (final @Nonnull String xml)
       throws UnsupportedEncodingException
       {
         final Matcher matcherGetPageUrl = PATTERN_getPageUrl.matcher(xml);
-        
+
         StringBuffer buffer = new StringBuffer();
 
         while (matcherGetPageUrl.find())
@@ -135,12 +140,12 @@ public class Utilities
             r = resolveSiteNode(r);
             matcherGetPageUrl.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r + "')\\$");
           }
-        
+
         matcherGetPageUrl.appendTail(buffer);
 
         final Matcher matcherGetPageUrlWithContentAndLanguage = PATTERN_getPageUrlWithContentAndLanguage.matcher(buffer.toString());
         buffer = new StringBuffer();
-        
+
         while (matcherGetPageUrlWithContentAndLanguage.find())
           {
             String r1 = URLDecoder.decode(matcherGetPageUrlWithContentAndLanguage.group(1), "UTF-8");
@@ -148,51 +153,51 @@ public class Utilities
             String i2 = URLDecoder.decode(matcherGetPageUrlWithContentAndLanguage.group(3), "UTF-8");
             r1 = resolveSiteNode(r1);
             String r2 = resolveContent(i2);
-            
+
             if (l.equals("4"))
               {
-                l = ", language='it'";  
+                l = ", language='it'";
               }
             else if (l.equals("1"))
               {
-                l = ", language='en'";  
+                l = ", language='en'";
               }
             else
               {
-                l = "";  
-              } 
-            
+                l = "";
+              }
+
             r2 = r2.replaceAll("/$", "");
-            matcherGetPageUrlWithContentAndLanguage.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r1 + 
+            matcherGetPageUrlWithContentAndLanguage.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r1 +
                                                                               "', contentRelativePath='" + r2 + "'" + l + ")\\$");
           }
-        
+
         matcherGetPageUrlWithContentAndLanguage.appendTail(buffer);
 
         final Matcher matcherGetPageUrlWithContent = PATTERN_getPageUrlWithContent.matcher(buffer.toString());
         buffer = new StringBuffer();
-        
+
         while (matcherGetPageUrlWithContent.find())
           {
             String r1 = URLDecoder.decode(matcherGetPageUrlWithContent.group(1), "UTF-8");
             String i2 = URLDecoder.decode(matcherGetPageUrlWithContent.group(2), "UTF-8");
             r1 = resolveSiteNode(r1);
             String r2 = resolveContent(i2);
-            
+
             r2 = r2.replaceAll("/$", "");
             matcherGetPageUrlWithContent.appendReplacement(buffer, "\\$nodeLink(relativePath='" + r1 + "', contentRelativePath='" + r2 + "')\\$");
           }
-        
+
         matcherGetPageUrlWithContent.appendTail(buffer);
-        
+
         final Matcher matcherGetInlineAssetUrl = PATTERN_getInlineAssetUrl.matcher(buffer.toString());
         buffer = new StringBuffer();
-        
+
         while (matcherGetInlineAssetUrl.find())
           {
             final String assetKey = matcherGetInlineAssetUrl.group(2);
             String asset = Main.assetFileNameMapByKey.get(assetKey);
-            
+
             if (asset == null)
               {
                 asset = "notfound";
@@ -201,16 +206,16 @@ public class Utilities
 
             matcherGetInlineAssetUrl.appendReplacement(buffer, "\\$mediaLink(relativePath='/" + asset + "')\\$");
           }
-        
+
         matcherGetInlineAssetUrl.appendTail(buffer);
-        
+
         return buffer.toString();
       }
 
-    private static String resolveContent (String i2) 
+    private static String resolveContent (String i2)
       {
         String r2 = Main.contentRelativePathMapById.get(Integer.parseInt(i2));
-        
+
         if (r2 == null)
           {
             switch (Integer.parseInt(i2))
@@ -222,60 +227,60 @@ public class Utilities
                 default:  r2 = "NOTFOUND_" + i2;
               }
           }
-  
+
         return r2;
       }
 
-    private static String resolveSiteNode (String siteNodeId) 
+    private static String resolveSiteNode (String siteNodeId)
       {
         String result = siteNodeId;
         siteNodeId = siteNodeId.replaceAll("^/", "");
-        
+
         if (siteNodeId.equals("159") || siteNodeId.equals("162") || siteNodeId.equals("179") || siteNodeId.equals("180") || siteNodeId.equals("181"))
           {
-            result = "/Blog";  
+            result = "/Blog";
           }
         else if (siteNodeId.equals("157"))
           {
-            result = "/Diary";  
+            result = "/Diary";
           }
         else if (siteNodeId.equals("152"))
           {
-            result = "/Travels";  
+            result = "/Travels";
           }
         else if (siteNodeId.equals("158"))
           {
-            result = "/Time lapse";  
+            result = "/Time lapse";
           }
         else if (siteNodeId.equals("154"))
           {
-            result = "/Equipment";  
+            result = "/Equipment";
           }
         if (siteNodeId.equals("164"))
           {
-            result = "/RSS Feeds/Blog RSS Feed";  
+            result = "/RSS Feeds/Blog RSS Feed";
           }
         if (siteNodeId.equals("166"))
           {
-            result = "/RSS Feeds/News RSS Feed";  
+            result = "/RSS Feeds/News RSS Feed";
           }
-      
+
         return result;
       }
-    
+
     @Nonnull
-    public static String urlDecodeMacros (final @Nonnull String xml) 
+    public static String urlDecodeMacros (final @Nonnull String xml)
       throws UnsupportedEncodingException
       {
         final Matcher matcherUrlDecodeMacros = PATTERN_urlDecodeMacros.matcher(xml);
-        
+
         StringBuffer buffer = new StringBuffer();
 
         while (matcherUrlDecodeMacros.find())
           {
             final String g2 = matcherUrlDecodeMacros.group(2);
             final String r = URLDecoder.decode(g2, "UTF-8");
-            
+
             try
               {
                 matcherUrlDecodeMacros.appendReplacement(buffer, "$1" + escape(r) + "$3");
@@ -283,31 +288,31 @@ public class Utilities
             catch (IllegalArgumentException e)
               {
 //                matcherUrlDecodeMacros.appendReplacement(buffer, "$1" + r);
-                throw new IllegalArgumentException("Buffer: *" + buffer + "* replacement: *" + "$1" + r + "$3*", e);  
+                throw new IllegalArgumentException("Buffer: *" + buffer + "* replacement: *" + "$1" + r + "$3*", e);
               }
           }
-        
+
         matcherUrlDecodeMacros.appendTail(buffer);
         return buffer.toString();
       }
-    
+
     @Nonnull
-    public static String escape (final @Nonnull String string) 
+    public static String escape (final @Nonnull String string)
       {
-        final StringBuilder builder = new StringBuilder();  
-      
+        final StringBuilder builder = new StringBuilder();
+
         for (int i = 0; i < string.length(); i++)
           {
             final char c = string.charAt(i);
-            
+
             if ("[\\^$.|?*+()".contains("" + c))
               {
                 builder.append('\\');
               }
-            
+
             builder.append(c);
           }
-        
+
         return builder.toString();
       }
   }

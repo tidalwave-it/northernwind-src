@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.util;
 
 import java.util.Collections;
@@ -36,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * Dumps system properties at startup.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -52,33 +57,33 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
     @Override
     public void contextInitialized (final @Nonnull ServletContextEvent event)
       {
-        log.info("System properties:");
-        
-        for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(System.getProperties()).entrySet())
+        log.info("**************** System properties:");
+
+        for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
           {
-            log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
+            log.info("{} = {}", entry.getKey(), entry.getValue());
           }
 
         try
           {
             final InitialContext context = new InitialContext();
-            log.info("JNDI Environment:");
+            log.info("**************** JNDI Environment:");
 
-            for (final Entry<Object, Object> entry : new TreeMap<Object, Object>(context.getEnvironment()).entrySet())
+            for (final Entry<Object, Object> entry : new TreeMap<>(context.getEnvironment()).entrySet())
               {
-                log.info(">>>> {} = {}", entry.getKey(), entry.getValue());
+                log.info("{} = {}", entry.getKey(), entry.getValue());
               }
-            
-            log.info("JNDI Bindings:");
-            
+
+            log.info("**************** JNDI Bindings:");
+
             for (final Binding binding : Collections.list(context.listBindings("")))
               {
-                log.info(">>>> {} = {}", binding.getNameInNamespace(), binding.getObject());
+                log.info("{} = {}", binding.getNameInNamespace(), binding.getObject());
               }
           }
         catch (NamingException e)
-          { 
-            log.warn("", e);               
+          {
+            log.warn("No JNDI: {}", e.toString());
           }
       }
 
@@ -88,7 +93,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event) 
+    public void contextDestroyed (final @Nonnull ServletContextEvent event)
       {
       }
   }

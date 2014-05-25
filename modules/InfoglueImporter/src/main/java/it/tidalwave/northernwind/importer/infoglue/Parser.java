@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,15 +18,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
-import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties.PropertyResolver;
+import it.tidalwave.northernwind.core.impl.model.DefaultModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.role.Marshallable;
 import it.tidalwave.role.Unmarshallable;
@@ -40,6 +45,7 @@ import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import lombok.extern.slf4j.Slf4j;
@@ -56,17 +62,18 @@ public abstract class Parser extends Converter
   {
     private static final Map<String, DateTime> creationTimeByPath = new HashMap<String, DateTime>();
     private static final Map<String, DateTime> publishingTimeByPath = new HashMap<String, DateTime>();
-    
+
     protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
-    protected final DateTime modifiedDateTime;        
+    protected final DateTime modifiedDateTime;
     private final DateTime publishDateTime;
+    private final ModelFactory modelFactory = new DefaultModelFactory();
 
-    public Parser (final @Nonnull String contents, 
-                   final @Nonnull String path, 
+    public Parser (final @Nonnull String contents,
+                   final @Nonnull String path,
                    final @Nonnull DateTime modifiedDateTime,
-                   final @Nonnull DateTime publishedDateTime) 
-      throws XMLStreamException 
+                   final @Nonnull DateTime publishedDateTime)
+      throws XMLStreamException
       {
         super(contents);
         this.path = path;
@@ -79,23 +86,24 @@ public abstract class Parser extends Converter
       {
         dumpProperties(properties, path, fileName);
       }
-        
+
     protected void dumpProperties (final @Nonnull SortedMap<Key<?>, Object> properties, final @Nonnull String path, final @Nonnull String fileName)
       throws IOException
       {
         String resourcePropertiesPath = path + fileName + ".xml";
-                
+
         if (resourcePropertiesPath.contains("OverrideProperties_"))
           {
             final String nonOverridePath = resourcePropertiesPath.replaceAll("OverrideProperties_", "Properties_");
 
             try
-              { 
+              {
                 final byte[] nonOverridePropertiesBytes  = ResourceManager.findRecentContents(nonOverridePath);
                 log.info("Patching {} with {} ...", nonOverridePath, resourcePropertiesPath);
                 final @Cleanup InputStream is = new ByteArrayInputStream(nonOverridePropertiesBytes);
-                ResourceProperties nonOverrideProperties = new DefaultResourceProperties((PropertyResolver)null).as(Unmarshallable.class).unmarshal(is);
-                final DefaultResourceProperties resourceProperties2 = new DefaultResourceProperties(new Id(""), properties, null);
+                ResourceProperties nonOverrideProperties = modelFactory.createProperties().build().as(Unmarshallable.class).unmarshal(is);
+                final DefaultResourceProperties resourceProperties2 =
+                        new DefaultResourceProperties(new Id(""), properties, null);
                 nonOverrideProperties = resourceProperties2.merged(nonOverrideProperties);
                 final ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
                 nonOverrideProperties.as(Marshallable.class).marshal(baos2);
@@ -106,10 +114,10 @@ public abstract class Parser extends Converter
               {
                 log.warn(e.toString());
               }
-          }       
-        
+          }
+
         DateTime creationTime = creationTimeByPath.get(path);
-        
+
         if (creationTime == null)
           {
             creationTime = modifiedDateTime;
@@ -120,14 +128,14 @@ public abstract class Parser extends Converter
           {
             publishingTimeByPath.put(path, publishDateTime);
           }
-        
+
         final DateTime pdt = publishingTimeByPath.get(path);
 
         if (pdt != null)
           {
-            properties.put(new Key<Object>("publishingDateTime"), pdt);  
+            properties.put(new Key<Object>("publishingDateTime"), pdt);
           }
-        
+
         properties.put(new Key<Object>("creationDateTime"), creationTime);
         properties.put(new Key<Object>("latestModificationDateTime"), modifiedDateTime);
         final DefaultResourceProperties resourceProperties = new DefaultResourceProperties(new Id(""), properties, null);
@@ -136,10 +144,10 @@ public abstract class Parser extends Converter
         baos.close();
         ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, resourcePropertiesPath, baos.toByteArray(), "No comment"));
       }
-    
+
     @Nonnull
     public static String toLower (final @Nonnull String string)
       {
-        return "".equals(string) ? "" : string.substring(0, 1).toLowerCase() + string.substring(1);  
+        return "".equals(string) ? "" : string.substring(0, 1).toLowerCase() + string.substring(1);
       }
   }

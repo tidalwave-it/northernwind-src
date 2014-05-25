@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +44,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * A default implementation of {@link HtmlFragmentViewController}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -49,13 +54,13 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
   {
     @Nonnull
     private final HtmlFragmentView view;
-    
+
     @Nonnull
     private final SiteNode siteNode;
-    
+
     @Nonnull
     private final Site site;
-    
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -66,12 +71,12 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
       {
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        try 
+        try
           {
             for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
-                
+
                 try
                   {
                     htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
@@ -92,17 +97,17 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
             htmlBuilder.append(e.toString());
             log.error("", e);
           }
-            
+
         view.setContent(htmlBuilder.toString());
-        
+
         try
-          {  
+          {
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (IOException e)
           {
-            // ok  
-          } 
+            // ok
+          }
       }
   }

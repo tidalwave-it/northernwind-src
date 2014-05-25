@@ -6,15 +6,46 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind</artifactId>
-        <version>1.1-ALPHA-7-SNAPSHOT</version>
+        <version>1.1-ALPHA-31-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-modules</artifactId>
-    <version>1.1-ALPHA-7-SNAPSHOT</version>
+    <version>1.1-ALPHA-31-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (modules)</name>
+    <description>The parent POM for modules.</description>
+
+    <properties>
+        <cglib.version>2.2.2</cglib.version>
+        <commons-io.version>2.0.1</commons-io.version>
+        <commons-math.version>3.0</commons-math.version>
+        <guava.version>14.0.1</guava.version>
+        <javax-persistence.version>1.0</javax-persistence.version>
+        <javax-servlet-api.version>2.5</javax-servlet-api.version>
+        <javax-validation-api.version>1.0.0.GA</javax-validation-api.version>
+        <javax-ws-rs.version>1.1.1</javax-ws-rs.version>
+        <jersey.version>1.8</jersey.version>
+        <jetty.version>6.1.26</jetty.version>
+        <joda-time.version>1.6.2</joda-time.version>
+        <logback.version>1.0.12</logback.version>
+        <mistral.version>1.0-ALPHA-2</mistral.version>
+        <netbeans.version>RELEASE72</netbeans.version>
+        <openbluesky.version>0.16</openbluesky.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <stringtemplate.version>4.0.2</stringtemplate.version>
+        <tft.jsr305.version>2.0.1</tft.jsr305.version>
+        <tft.testng.version>6.8.8</tft.testng.version>
+        <tft.hamcrest-matchers.version>1.3</tft.hamcrest-matchers.version>
+        <tft.lombok.version>1.12.4</tft.lombok.version>
+        <tft.mockito.version>1.9.5</tft.mockito.version>
+        <thesefoolishthings.version>1.35</thesefoolishthings.version>
+        <vaadin.version>6.6.1</vaadin.version>
+
+        <tft.maven-dependency-plugin.version>2.8</tft.maven-dependency-plugin.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -43,130 +74,141 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aspects</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-oxm</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${spring.version}</version>
             </dependency>
-                    
+
+            <dependency>
+                <groupId>org.imajine.image</groupId>
+                <artifactId>org-imajine-image-core</artifactId>
+                <version>${mistral.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>1.6.2</version>
+                <version>${joda-time.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.0.1</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-util</artifactId>
-                <version>6.1.26</version>
+                <version>${jetty.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
-                <version>1.0</version>
+                <version>${javax-persistence.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
+                <version>${javax-servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
-                <version>${javax.validation-api.version}</version> 
+                <version>${javax-validation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
-                <version>${javax.validation-api.version}</version> 
+                <version>${javax-validation-api.version}</version>
                 <classifier>sources</classifier>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin</artifactId>
                 <version>${vaadin.version}</version>
             </dependency>
 
-<!--            <dependency>
-                <groupId>org.vaadin.addons</groupId>
-                <artifactId>refresher</artifactId>
-                <version>1.1.0</version>
-            </dependency>-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commons-math.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
-                <version>1.3.7</version>
-                <!-- WARNING: don't use 1.3.8, it has got a broken pom which brings is tons of useless stuff! -->
+                <version>${tft.jsr305.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
@@ -192,7 +234,7 @@
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>jsr311-api</artifactId>
@@ -223,22 +265,22 @@
                 <artifactId>jersey-spring</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
-                <version>2.2.2</version>
+                <version>${cglib.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.antlr</groupId>
                 <artifactId>stringtemplate</artifactId>
-                <version>4.0.2</version>
+                <version>${stringtemplate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty</artifactId>
-                <version>6.1.26</version>
+                <version>${jetty.version}</version>
             </dependency>
 
             <dependency>
@@ -246,7 +288,17 @@
                 <artifactId>aspectjrt</artifactId>
                 <version>${tft.aspectjrt.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${tft.aspectjrt.version}</version>
+            </dependency>
+
+            <dependency> <!-- FIXME: push to superpom -->
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${tft.mockito.version}</version>
+            </dependency>      
         </dependencies>
     </dependencyManagement>
 
@@ -271,6 +323,16 @@
             <artifactId>slf4j-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- TEST DEPENDENCIES -->
         <dependency>
@@ -279,18 +341,24 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion> <!-- Let us pick a more recent version of hamcrest -->
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>            
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -309,13 +377,13 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
+
     <profiles>
     <!--================================================================================================================
 
     This profile adds some required dependencies when AspectJ is used.
 
-    =================================================================================================================-->
+        =================================================================================================================-->
         <profile>
             <id>aspectj-bbstats</id>
             <activation>
@@ -337,33 +405,58 @@
                     <artifactId>aspectjrt</artifactId>
                 </dependency>
             </dependencies>
-        </profile>    
+        </profile>
     </profiles>
-    
+
     <build>
+        <!-- FIXME: push to superpom -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <plugins>
+            <!--
+                        <plugin>
+                          <groupId>org.owasp</groupId>
+                          <artifactId>dependency-check-maven</artifactId>
+                          <version>1.1.2</version> FIXME 
+                          <executions>
+                              <execution>
+                                  <goals>
+                                      <goal>check</goal>
+                                  </goals>
+                              </execution>
+                          </executions>
+                        </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <escapeString>\</escapeString>
+                </configuration>
+            </plugin>
+        </plugins>
+
     </build>
 
     <modules>
         <module>Marshalling</module>
-        <module>SpringRoles</module>
 
         <module>Core</module>
         <module>CoreImplementation</module>
-        <module>BasicFileSystems</module>
         <module>Components</module>
+        <module>HtmlPatches</module>
+        <module>HtmlTemplateComponents</module>
+        <module>Profiling</module>
+        <module>VaadinComponents</module>
         <module>InfoglueImporter</module>
 
-        <module>HtmlTemplateComponents</module>
-        <module>VaadinComponents</module>
-
+        <module>filesystems</module>
         <module>frontend</module>
         <module>webapp</module>
     </modules>
-    <description>The parent POM for modules.</description>
 </project>
