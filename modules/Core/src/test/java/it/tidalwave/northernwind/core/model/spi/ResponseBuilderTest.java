@@ -100,7 +100,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFile()
+    public void must_properly_output_a_ResourceFile()
       throws Exception
       {
         final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile);
@@ -111,7 +111,19 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithEtagNotMatching()
+    public void must_properly_output_a_ResourceFile_with_ExpirationTime()
+      throws Exception
+      {
+        final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
+                                                             .withExpirationTime(Duration.standardDays(7));
+        assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_output_a_ResourceFile_when_Etag_not_Matching()
       throws Exception
       {
         headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
@@ -124,7 +136,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithEtagMatching()
+    public void must_output_NotModified_when_Etag_Matching()
       throws Exception
       {
         headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
@@ -137,7 +149,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWhenIfModifiedSinceLessRecentThanModifiedTime()
+    public void must_output_a_ResourceFile_when_IfModifiedSince_less_recent_than_ModifiedTime()
       throws Exception
       {
         for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
@@ -154,7 +166,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWhenIfModifiedSinceMoreRecentThanOrEqualToModifiedTime()
+    public void must_output_NotModified_when_IfModifiedSince_more_recent_than_or_equal_to_ModifiedTime()
       throws Exception
       {
         // corner case: same time should return NotModified
@@ -172,19 +184,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAResourceFileWithExpirationTime()
-      throws Exception
-      {
-        final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
-                                                             .withExpirationTime(Duration.standardDays(7));
-        assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
-      }
-    
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void mustProperlyOutputANotFound()
+    public void must_roperly_output_NotFound()
       throws Exception
       {
         final NotFoundException e = new NotFoundException("foo bar");
@@ -196,7 +196,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAnInternalError()
+    public void must_properly_output_an_internal_error()
       throws Exception
       {
         final IOException e = new IOException("foo bar");
@@ -208,7 +208,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void mustProperlyOutputAPermanentRedirect()
+    public void must_properly_output_a_PermanentRedirect()
       throws Exception
       {
         final ResponseBuilder<?> builder = fixture.response().permanentRedirect("http://acme.com");

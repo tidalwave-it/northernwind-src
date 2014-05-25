@@ -32,7 +32,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
-import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import it.tidalwave.util.NotFoundException;
@@ -44,6 +43,7 @@ import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
@@ -75,7 +75,7 @@ public class DefaultSiteViewController implements SiteViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public <ResponseType> ResponseType processRequest (final @Nonnull Request request)
+    public <RESPONSE_TYPE> RESPONSE_TYPE processRequest (final @Nonnull Request request)
       {
         try
           {
@@ -93,26 +93,26 @@ public class DefaultSiteViewController implements SiteViewController
                   }
               }
 
-            return (ResponseType)responseHolder.get();
+            return (RESPONSE_TYPE)responseHolder.get();
           }
         catch (NotFoundException e)
           {
             log.warn("processing: {} - {}", request, e.toString());
-            return (ResponseType)responseHolder.response().forException(e).build();
-          }
-        catch (IOException e)
-          {
-            log.warn("processing: " + request, e);
-            return (ResponseType)responseHolder.response().forException(e).build();
+            return (RESPONSE_TYPE)responseHolder.response().forException(e).build();
           }
         catch (HttpStatusException e)
           {
-            if (e.getHttpStatus() != 302) //
+            if (e.getHttpStatus() != SC_FOUND)
               {
                 log.warn("processing: " + request, e);
               }
 
-            return (ResponseType)responseHolder.response().forException(e).build();
+            return (RESPONSE_TYPE)responseHolder.response().forException(e).build();
+          }
+        catch (Exception e)
+          {
+            log.error("processing: " + request, e);
+            return (RESPONSE_TYPE)responseHolder.response().forException(e).build();
           }
         finally
           {

@@ -71,7 +71,7 @@ public class VaadinDownloadStreamResponseHolder extends ResponseHolder<DownloadS
           }
 
         @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull IOException e)
+        public ResponseBuilder forException (final @Nonnull Throwable e)
           {
             return withContentType("text/plain")
                   .withBody(e.getMessage())
