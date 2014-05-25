@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,72 +18,70 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 
 /***********************************************************************************************************************
  *
- * A factory for domain objects.
- * 
+ * A factory for creating domain objects.
+ *
+ * TODO: use a builder for all products
+ *
  * @author  Fabrizio Giudici
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public interface ModelFactory 
+public interface ModelFactory
   {
     /*******************************************************************************************************************
      *
      * Creates a new {@link Resource}.
-     * 
-     * @param  file  the file for the {@code Resource}
-     * @return       the {@code Resource}
+     *
+     * @return       a builder for the {@code Resource}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Resource createResource (@Nonnull ResourceFile file);
+    public Resource.Builder createResource();
 
     /*******************************************************************************************************************
      *
      * Creates a new {@link Content}.
-     * 
-     * @param  file  the file for the {@code Content}
-     * @return       the {@code Content}
+     *
+     * @return       a builder for the {@code Content}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Content createContent (@Nonnull ResourceFile folder);
+    public Content.Builder createContent();
 
     /*******************************************************************************************************************
      *
      * Creates a new {@link Media}.
-     * 
-     * @param  file  the file for the {@code Media}
-     * @return       the {@code Media}
+     *
+     * @return       a builder for the {@code Media}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Media createMedia (@Nonnull ResourceFile file);
+    public Media.Builder createMedia();
 
     /*******************************************************************************************************************
      *
      * Creates a new {@link SiteNode}.
-     * 
-     * @param  file  the file for the {@code SiteNode}
-     * @return       the {@code SiteNode}
+     *
+     * @param  site    the {@code Site} that the {@code SiteNode} belongs to
+     * @param  folder  the folder representing the {@code SiteNode}
+     * @return         the {@code SiteNode}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -89,54 +91,50 @@ public interface ModelFactory
     /*******************************************************************************************************************
      *
      * Creates a new {@link Layout}.
-     * 
+     *
      * @param  id    the id
      * @param  type  the type
      * @return       the {@code Layout}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Layout createLayout (@Nonnull Id id, @Nonnull String type);
-    
+    public Layout.Builder createLayout();
+
     /*******************************************************************************************************************
      *
      * Creates a new {@link Request}.
-     * 
+     *
      * @return       the {@code Request}
      *
      ******************************************************************************************************************/
     @Nonnull
     public Request createRequest();
-    
+
     /*******************************************************************************************************************
      *
      * Creates a new {@link Request} from a given {@link HttpServletRequest}.
-     * 
+     *
      * @param        httpServletRequest   the {@code HttpServletRequest}
      * @return                            the {@code Request}
      *
      ******************************************************************************************************************/
     @Nonnull
     public Request createRequestFrom (@Nonnull HttpServletRequest httpServletRequest);
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public ResourceProperties createProperties (@Nonnull Id id);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @Nonnull // FIXME: use a SiteCreationParameters bean instead of so many arguments
-    public Site createSite (@Nonnull String contextPath, 
-                            @Nonnull String documentPath, 
-                            @Nonnull String mediaPath, 
-                            @Nonnull String libraryPath,
-                            @Nonnull String nodePath,
-                            boolean logConfigurationEnabled,
-                            @Nonnull List<Locale> configuredLocales, 
-                            @Nonnull List<String> ignoredFolders);
+    @Nonnull
+    public ResourceProperties.Builder createProperties();
+
+    /*******************************************************************************************************************
+     *
+     * Creates a new {@link Site}.
+     *
+     * @return  a builder for the new {@code Site}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Site.Builder createSite();
   }

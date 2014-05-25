@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,116 +18,233 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.Request;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /***********************************************************************************************************************
  *
+ * This class holds a response object to be served. It's an abstract class: concrete descendants are supposed to 
+ * create concrete responses adapting to a specific technology (e.g. Spring MVC, Jersey, etc...).
+ * 
+ * @param  <RESPONSE_TYPE> the produced response
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public abstract class ResponseHolder<ResponseType> implements RequestResettable
-  { 
-    protected static final int STATUS_PERMANENT_REDIRECT = 301;
-    
-    protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
-    protected static final String HEADER_ETAG = "ETag";
-    protected static final String HEADER_CONTENT_TYPE = "Content-Type";
-    protected static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
-    protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
-    protected static final String HEADER_EXPIRES = "Expires";
-    protected static final String HEADER_LOCATION = "Location";
-        
-    protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
-
-    private final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
+@Slf4j 
+public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
+  {
+    private static final ThreadLocal<Object> threadLocal = new ThreadLocal<>();
 //    private final ThreadLocal<ResponseType> threadLocal = new ThreadLocal<ResponseType>();
-    
-    @NotThreadSafe
-    public abstract class ResponseBuilderSupport<ResponseType>
+
+    /*******************************************************************************************************************
+     *
+     * A support for a builder of {@link ResponseHolder}.
+     *
+     * @param <RESPONSE_TYPE>  the produced response (may change in function of the technology used for serving the
+     *                         results)
+     * 
+     ******************************************************************************************************************/
+    @NotThreadSafe // FIXME: move to Core Default Implementation
+    public static abstract class ResponseBuilderSupport<RESPONSE_TYPE>
       {
-        protected Object body = "";
-        
-        protected int httpStatus = 200;
-        
-        @Nonnull
-        public abstract ResponseBuilderSupport<ResponseType> withHeader (@Nonnull String header, @Nonnull String value);
-        
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> withHeaders (@Nonnull Map<String, String> headers)
+        protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
+        protected static final String HEADER_ETAG = "ETag";
+        protected static final String HEADER_CONTENT_TYPE = "Content-Type";
+        protected static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+        protected static final String HEADER_LAST_MODIFIED = "Last-Modified";
+        protected static final String HEADER_EXPIRES = "Expires";
+        protected static final String HEADER_LOCATION = "Location";
+        protected static final String HEADER_IF_MODIFIED_SINCE = "If-Modified-Since";
+        protected static final String HEADER_IF_NONE_MATCH = "If-None-Match";
+        protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
+
+        protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
+
+        private static final String[] DATE_FORMATS = new String[] 
           {
-            ResponseBuilderSupport<ResponseType> result = this;
-            
+            PATTERN_RFC1123,
+            "EEE, dd-MMM-yy HH:mm:ss zzz",
+            "EEE MMM dd HH:mm:ss yyyy"
+          };
+
+        /** The body of the response. */
+        @Nonnull
+        protected Object body = new byte[0];
+
+        /** The HTTP status of the response. */
+        protected int httpStatus = SC_OK;
+
+        /** The If-None-Match header specified in the request we're responding to. */
+        @Nullable
+        protected String requestIfNoneMatch;
+
+        /** The If-Modified-Since header specified in the request we're responding to. */
+        @Nullable
+        protected DateTime requestIfModifiedSince;
+
+        /***************************************************************************************************************
+         *
+         * Sets a header.
+         *
+         * @param   header              the header name
+         * @param   value               the header value
+         * @return                      itself for fluent interface style
+         * 
+         **************************************************************************************************************/
+        @Nonnull
+        public abstract ResponseBuilderSupport<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
+
+        /***************************************************************************************************************
+         *
+         * Sets multiple headers at the same time.
+         *
+         * @param   headers             the headers
+         * @return                      itself for fluent interface style
+         * 
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
+          {
+            ResponseBuilderSupport<RESPONSE_TYPE> result = this;
+
             for (final Entry<String, String> entry : headers.entrySet())
               {
                 result = result.withHeader(entry.getKey(), entry.getValue());
               }
-            
+
             return result;
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the content type.
+         * 
+         * @param   contentType         the content type
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentType (final @Nonnull String contentType)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withContentType (final @Nonnull String contentType)
           {
             return withHeader(HEADER_CONTENT_TYPE, contentType);
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the content length.
+         * 
+         * @param  contentLength        the content length
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentLength (final @Nonnull long contentLength)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withContentLength (final @Nonnull long contentLength)
           {
             return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the content disposition.
+         * 
+         * @param  contentDisposition   the content disposition
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withContentDisposition (final @Nonnull String contentDisposition)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withContentDisposition (final @Nonnull String contentDisposition)
           {
             return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the expiration time.
+         * 
+         * @param  duration             the duration
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withExpirationTime (final @Nonnull Duration duration)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
           {
-            final Date expirationTime = getTime().plus(duration).toDate();
-            return withHeader(HEADER_EXPIRES, new SimpleDateFormat(PATTERN_RFC1123).format(expirationTime));
+            final DateTime expirationTime = getCurrentTime().plus(duration);
+            return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
+                  .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.toStandardSeconds().getSeconds()));
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the latest modified time.
+         * 
+         * @param  time                 the time
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withLatestModifiedTime (final @Nonnull DateTime time)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull DateTime time)
           {
-            return withHeader(HEADER_LAST_MODIFIED, new SimpleDateFormat(PATTERN_RFC1123).format(time.toDate()))
+            return withHeader(HEADER_LAST_MODIFIED, createFormatter(PATTERN_RFC1123).format(time.toDate()))
                   .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the body of the response. Accepted objects are: {@code byte[]}, {@code String}, 
+         * {@code InputStream}.
+         * 
+         * @param  body                 the body 
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withBody (final @Nonnull Object body)
+        public ResponseBuilderSupport<RESPONSE_TYPE> withBody (final @Nonnull Object body)
           {
-            this.body = body;
+            this.body = (body instanceof byte[]) ? body : 
+                        (body instanceof InputStream) ? body :
+                         body.toString().getBytes();
             return this;
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the body of the response as a {@link ResourceFile}.
+         * 
+         * @param  file                 the file
+         * @return                      itself for fluent interface style
+         * @throws IOException          if an error occurs when reading the file
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> fromFile (final @Nonnull ResourceFile file)
+        public ResponseBuilderSupport<RESPONSE_TYPE> fromFile (final @Nonnull ResourceFile file)
           throws IOException
           {
             final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
@@ -133,79 +254,309 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
                   .withLatestModifiedTime(file.getLatestModificationTime())
                   .withBody(bytes);
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies the {@link Request} we're serving - this makes it possible to read some headers and other
+         * configurations needed e.g. for cache control.
+         * 
+         * @param  request              the request
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> withStatus (final @Nonnull int httpStatus)
-          {
-            this.httpStatus = httpStatus;
+        public ResponseBuilderSupport<RESPONSE_TYPE> forRequest (final @Nonnull Request request) 
+          {    
+            try // FIXME: this would be definitely better with Optional
+              {
+                this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
+              }
+            catch (NotFoundException e)
+              {
+                // never mind  
+              }
+
+            try // FIXME: this would be definitely better with Optional
+              {
+                this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_MODIFIED_SINCE));
+              }
+            catch (NotFoundException e)
+              {
+                // never mind  
+              }
+            
             return this;
           }
-
+        
+        /***************************************************************************************************************
+         *
+         * Specifies an exception to create the response from.
+         * 
+         * @param  e                    the exception
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> permanentRedirect (final @Nonnull String redirect) 
-          {
-            return withHeader(HEADER_LOCATION, redirect)
-                  .withStatus(STATUS_PERMANENT_REDIRECT);
-          }
-
-        @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull NotFoundException e) 
+        public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
           {
             log.info("NOT FOUND: {}", e.toString());
-            return forException(new HttpStatusException(404));
+            return forException(new HttpStatusException(SC_NOT_FOUND));
           }
 
+        /***************************************************************************************************************
+         *
+         * Specifies an exception to create the response from.
+         * 
+         * @param  e                    the exception
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull IOException e) 
+        public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull IOException e)
           {
             log.error("", e);
-            return forException(new HttpStatusException(500));
+            return forException(new HttpStatusException(SC_INTERNAL_SERVER_ERROR));
           }
-        
+
+        /***************************************************************************************************************
+         *
+         * Specifies an exception to create the response from.
+         * 
+         * @param  e                    the exception
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public ResponseBuilderSupport<ResponseType> forException (final @Nonnull HttpStatusException e) 
+        public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull HttpStatusException e)
           {
             String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
-            
+
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {
-                case 302:
+                case SC_MOVED_TEMPORARILY:
                   break;
-                    
-                case 404:
+
+                case SC_NOT_FOUND:
                   message = "<h1>Not found</h1>";
                   break;
-                    
-                case 500:
+
+                case SC_INTERNAL_SERVER_ERROR:
                 default: // FIXME: why?
                   message = "<h1>Internal error</h1>";
                   break;
               }
-            
+
             return withContentType("text/html")
                   .withHeaders(e.getHeaders())
-                  .withBody(message) 
+                  .withBody(message)
                   .withStatus(e.getHttpStatus());
           }
         
+        /***************************************************************************************************************
+         *
+         * Specifies the HTTP status.
+         * 
+         * @param  httpStatus           the status
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
         @Nonnull
-        public abstract ResponseType build();
+        public ResponseBuilderSupport<RESPONSE_TYPE> withStatus (final @Nonnull int httpStatus)
+          {
+            this.httpStatus = httpStatus;
+            return this;
+          }
         
+        /***************************************************************************************************************
+         *
+         * Creates a builder for a permanent redirect.
+         * 
+         * @param  url                  the URL of the redirect       
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public ResponseBuilderSupport<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
+          {
+            return withHeader(HEADER_LOCATION, url)
+                  .withStatus(SC_MOVED_PERMANENTLY);
+          }
+
+        /***************************************************************************************************************
+         *
+         * Builds the response.
+         * 
+         * @return                              the response
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public final RESPONSE_TYPE build()
+          {
+            return cacheSupport().doBuild();
+          }
+        
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
         public void put()
           {
-            threadLocal.set(build()); 
+            threadLocal.set(build());
+          }
+        
+        /***************************************************************************************************************
+         *
+         * This method actually builds the response and must be provided by concrete subclasses.
+         * 
+         * @return  the response
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        protected abstract RESPONSE_TYPE doBuild();
+        
+        /***************************************************************************************************************
+         *
+         * Returns a header response previously added.
+         * 
+         * @param   header  the header name
+         * @return          the header value
+         *
+         **************************************************************************************************************/
+        @Nullable
+        protected abstract String getHeader (@Nonnull String header);
+          
+        /***************************************************************************************************************
+         *
+         * Returns a header response previously added.
+         * 
+         * @param   header  the header name
+         * @return          the header value
+         *
+         **************************************************************************************************************/
+        @Nullable
+        protected final DateTime getDateTimeHeader (final @Nonnull String header)
+          {
+            final String value = getHeader(header);
+            return (value == null) ? null : parseDate(value);
+          }
+          
+        /***************************************************************************************************************
+         *
+         * Takes care of the caching feature. If the response refers to an entity whose value has been cached by the
+         * client and it's still fresh, a "Not modified" response will be returned.
+         * 
+         * @return                      itself for fluent interface style
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        protected ResponseBuilderSupport<RESPONSE_TYPE> cacheSupport()
+          {
+            final String eTag = getHeader(HEADER_ETAG);
+            final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
+            
+            log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
+            log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
+            
+            if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
+                 ((requestIfModifiedSince != null) && (lastModified != null) && 
+                  (lastModified.isBefore(requestIfModifiedSince) || lastModified.isEqual(requestIfModifiedSince))) )
+              {
+                return notModified();
+              }
+            
+            return this;
+          }
+
+        /***************************************************************************************************************
+         *
+         * Returns the current time. This can be overridden for mocking time in tests.
+         * 
+         * @return  the current time
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        protected DateTime getCurrentTime()
+          {
+            return new DateTime();
+          }
+
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        private ResponseBuilderSupport<RESPONSE_TYPE> notModified() 
+          {
+            return withBody(new byte[0])
+                  .withContentLength(0)
+                  .withStatus(SC_NOT_MODIFIED);
+          }
+        
+        /***************************************************************************************************************
+         *
+         * Parse a date with one of the valid formats for HTTP headers.
+         * 
+         * FIXME: we should try to avoid depending on this stuff...
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        private DateTime parseDate (final @Nonnull String string)
+          {
+            for (final String dateFormat : DATE_FORMATS) 
+              {
+                try
+                  {
+                    log.debug("Parsing {} with {}...", string, dateFormat);
+                    return new DateTime(createFormatter(dateFormat).parse(string));
+                  }
+                catch (ParseException e) 
+                  {
+                    log.debug("{}", e.getMessage());
+                  }
+              }
+            
+            throw new IllegalArgumentException("Cannot parse date " + string);
+          }
+        
+        /***************************************************************************************************************
+         *
+         * 
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        /* package */ static SimpleDateFormat createFormatter (final @Nonnull String template) 
+          {
+            final SimpleDateFormat formatter = new SimpleDateFormat(template, Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            return formatter;
           }
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     * Start creating a new response.
+     *
+     * @return  a builder for creating the response
+     * 
+     ******************************************************************************************************************/
     @Nonnull
-    public abstract ResponseBuilderSupport<ResponseType> response();
-    
+    public abstract ResponseBuilderSupport<RESPONSE_TYPE> response();
+
+    /*******************************************************************************************************************
+     *
+     * Returns the response for the current thread. 
+     * 
+     * @return  the response
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public ResponseType get()
-      {  
-        return (ResponseType)threadLocal.get();   
+    public RESPONSE_TYPE get()
+      {
+        return (RESPONSE_TYPE)threadLocal.get();
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -214,17 +565,6 @@ public abstract class ResponseHolder<ResponseType> implements RequestResettable
     @Override
     public void requestReset()
       {
-        threadLocal.remove(); 
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected DateTime getTime()
-      {
-        return new DateTime();  
+        threadLocal.remove();
       }
   }

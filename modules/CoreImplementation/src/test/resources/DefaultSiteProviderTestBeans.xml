@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--********************************************************************************************************************
- *
- * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- ********************************************************************************************************************-->
+<!--
+  #%L
+  *********************************************************************************************************************
+
+  NorthernWind - lightweight CMS
+  http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+  %%
+  Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+  %%
+  *********************************************************************************************************************
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+  the License. You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations under the License.
+
+  *********************************************************************************************************************
+
+  $Id$
+
+*********************************************************************************************************************
+#L%
+-->
+
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -33,35 +39,25 @@
 
     <!-- Turns on @Autowired, @PostConstruct, etc. -->
     <context:annotation-config />
-   
+
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
     <bean id="taskExecutor" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
             <bean class="it.tidalwave.northernwind.core.impl.model.WaitingTaskExecutor" />
-       </constructor-arg>
+        </constructor-arg>
     </bean>
 
-    <bean id="modelFactory" class="org.mockito.Mockito" factory-method="spy">
-        <constructor-arg>
-            <bean class="it.tidalwave.northernwind.core.impl.model.MockModelFactory" />
-       </constructor-arg>
-    </bean>
-    
-<!--
     <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />
     </bean>
--->
 
     <bean id="servletContext" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="javax.servlet.ServletContext" />
     </bean>
 
-    <bean id="fixture" 
-          class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider"
-          lazy-init="true">
+    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider" lazy-init="true">
         <property name="documentPath" value="testDocumentPath" />
         <property name="mediaPath" value="testMediaPath" />
         <property name="nodePath" value="testNodePath" />
@@ -69,7 +65,6 @@
         <property name="logConfigurationEnabled" value="true" />
         <property name="localesAsString" value="en,it,fr" />
         <property name="ignoredFoldersAsString" value="ignored1:ignored2" />
-        <property name="executor" ref="taskExecutor"/>
     </bean>
 
 </beans>

@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
 import javax.annotation.Nonnull;
@@ -42,64 +47,65 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A provider for the {@link NwFileSystem} that clones a source provider into a local NwFileSystem for performance 
+ * A provider for the {@link NwFileSystem} that clones a source provider into a local NwFileSystem for performance
  * purposes...
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(of={"rootPath"})
+@Slf4j @ToString(of = { "rootPath" })
 public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
     private ResourceFileSystemProvider sourceProvider;
-    
+
     @Getter @Setter @Nonnull
     private String rootPath = "";
-    
+
     private LocalFileSystemProvider targetProvider = new LocalFileSystemProvider();
-    
+
     @Inject @Named("applicationMessageBus") @Nonnull
     private MessageBus messageBus;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener = new Listener<ResourceFileSystemChangedEvent>() 
+    private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener =
+            new Listener<ResourceFileSystemChangedEvent>()
       {
         @Override
-        public void notify (final @Nonnull ResourceFileSystemChangedEvent event) 
+        public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
           {
             if (event.getFileSystemProvider() == sourceProvider)
               {
-                try 
+                try
                   {
                     log.info("Detected file change, regenerating local file system...");
                     generateLocalFileSystem();
                     messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
                   }
-                catch (IOException e) 
+                catch (IOException e)
                   {
                     log.error("While resetting site: ", e);
                   }
               }
           }
       };
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized ResourceFileSystem getFileSystem() 
+    public synchronized ResourceFileSystem getFileSystem()
       throws IOException
       {
         return targetProvider.getFileSystem();
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -110,9 +116,9 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       {
         log.info("initialize()");
         generateLocalFileSystem();
-        messageBus.subscribe(ResourceFileSystemChangedEvent.class, sourceProviderChangeListener);            
+        messageBus.subscribe(ResourceFileSystemChangedEvent.class, sourceProviderChangeListener);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -121,39 +127,39 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       throws IOException
       {
         log.info("generateLocalFileSystem()");
-        
+
         if (!new File(rootPath).mkdirs()) // TODO: use NwFileSystem API
           {
             throw new IOException("Cannot create dirs for " + rootPath);
           }
-        
+
         // FIXME: shouldn't be needed, but otherwise after a second call to this method won't find files
-        targetProvider = new LocalFileSystemProvider(); 
+        targetProvider = new LocalFileSystemProvider();
         targetProvider.setRootPath(rootPath);
         final ResourceFile targetRoot = targetProvider.getFileSystem().getRoot();
         final String path = targetRoot.toFile().getAbsolutePath();
         log.info(">>>> scratching {} ...", path);
         emptyFolder(targetRoot);
         log.info(">>>> copying files to {} ...", path);
-        copyFolder(sourceProvider.getFileSystem().getRoot(), targetRoot);           
+        copyFolder(sourceProvider.getFileSystem().getRoot(), targetRoot);
 //                    targetProvider.getFileSystem().refresh(true);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    private void emptyFolder (final @Nonnull ResourceFile folder) 
+    private void emptyFolder (final @Nonnull ResourceFile folder)
       throws IOException
       {
         log.trace("emptyFolder({}, {}", folder);
-        
-        for (final ResourceFile child : folder.getChildren())
+
+        for (final ResourceFile child : folder.findChildren().results())
           {
             child.delete();
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -162,20 +168,20 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       throws IOException
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
-        
-        for (final ResourceFile sourceChild : sourceFolder.getChildren())
+
+        for (final ResourceFile sourceChild : sourceFolder.findChildren().results())
           {
             if (!sourceChild.isFolder())
-              { 
+              {
                 log.trace(">>>> copying {} into {} ...", sourceChild, targetFolder);
                 sourceChild.copyTo(targetFolder);
               }
           }
-        
-        for (final ResourceFile sourceChild : sourceFolder.getChildren())
+
+        for (final ResourceFile sourceChild : sourceFolder.findChildren().results())
           {
             if (sourceChild.isFolder())
-              { 
+              {
                 copyFolder(sourceChild, targetFolder.createFolder(sourceChild.getName()));
               }
           }

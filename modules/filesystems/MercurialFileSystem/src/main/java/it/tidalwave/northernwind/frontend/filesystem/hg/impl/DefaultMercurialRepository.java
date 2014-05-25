@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
@@ -47,7 +52,7 @@ public class DefaultMercurialRepository implements MercurialRepository
   {
     @Getter @Nonnull
     private final Path workArea;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -56,16 +61,16 @@ public class DefaultMercurialRepository implements MercurialRepository
     @Override
     public boolean isEmpty()
       {
-        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);  
+        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void clone (final @Nonnull URI uri) 
+    public void clone (final @Nonnull URI uri)
       throws IOException
       {
         try
@@ -74,20 +79,20 @@ public class DefaultMercurialRepository implements MercurialRepository
 
             if (!workArea.toFile().exists())
               {
-                throw new IOException("Cannot mkdirs " + workArea);  
+                throw new IOException("Cannot mkdirs " + workArea);
               }
-            
-            final Executor executor = Executor.forExecutable("hg").withArgument("clone")
-                                                                  .withArgument("--noupdate")
-                                                                  .withArgument(uri.toASCIIString())
-                                                                  .withArgument(".")
-                                                                  .withWorkingDirectory(workArea)
-                                                                  .start()
-                                                                  .waitForCompletion();
+
+            ProcessExecutor.forExecutable("hg").withArgument("clone")
+                                        .withArgument("--noupdate")
+                                        .withArgument(uri.toASCIIString())
+                                        .withArgument(".")
+                                        .withWorkingDirectory(workArea)
+                                        .start()
+                                        .waitForCompletion();
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
 
@@ -97,12 +102,12 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Tag getCurrentTag() 
+    public Tag getCurrentTag()
       throws IOException, NotFoundException
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("id")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("id")
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
@@ -112,11 +117,11 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (NoSuchElementException e)
           {
-            throw new NotFoundException();  
+            throw new NotFoundException();
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
 
@@ -131,7 +136,7 @@ public class DefaultMercurialRepository implements MercurialRepository
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("tags")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("tags")
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
@@ -141,31 +146,7 @@ public class DefaultMercurialRepository implements MercurialRepository
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
-          }
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void updateTo (final @Nonnull Tag tag) 
-      throws IOException
-      {
-        try
-          {
-            final Executor executor = Executor.forExecutable("hg").withArgument("update")
-                                                                  .withArgument("-C")
-                                                                  .withArgument(tag.getName())
-                                                                  .withWorkingDirectory(workArea)
-                                                                  .start()
-                                                                  .waitForCompletion();
-          }
-        catch (InterruptedException e)
-          {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
       }
 
@@ -175,20 +156,67 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override
-    public void pull() 
+    public void updateTo (final @Nonnull Tag tag)
       throws IOException
       {
         try
           {
-            final Executor executor = Executor.forExecutable("hg").withArgument("pull")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("update")
+                                                                  .withArgument("-C")
+                                                                  .withArgument(tag.getName())
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
           }
         catch (InterruptedException e)
           {
-            throw new IOException(e);  
+            throw new IOException(e);
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void pull()
+      throws IOException
+      {
+        try
+          {
+            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("pull")
+                                                                  .withWorkingDirectory(workArea)
+                                                                  .start()
+                                                                  .waitForCompletion();
+          }
+        catch (InterruptedException e)
+          {
+            throw new IOException(e);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Tag getLatestTagMatching (final @Nonnull String regexp)
+      throws IOException, NotFoundException
+      {
+        final List<Tag> tags = getTags();
+        Collections.reverse(tags);
+
+        for (final Tag tag : tags)
+          {
+            if (tag.getName().matches(regexp))
+              {
+                return tag;
+              }
+          }
+
+        throw new NotFoundException();
       }
     
     /*******************************************************************************************************************
@@ -197,15 +225,15 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<Tag> toTagList (final @Nonnull List<String> strings) 
+    private List<Tag> toTagList (final @Nonnull List<String> strings)
       {
         final List<Tag> tags = new ArrayList<>();
-        
+
         for (final String string : strings)
           {
             tags.add(new Tag(string));
           }
-        
+
         return tags;
       }
   }

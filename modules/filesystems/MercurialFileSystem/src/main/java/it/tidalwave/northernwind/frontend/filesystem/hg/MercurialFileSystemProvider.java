@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import javax.annotation.Nonnull;
@@ -27,8 +32,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
-import java.util.Collections;
-import java.util.List;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
@@ -45,6 +48,7 @@ import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetB
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +56,17 @@ import org.springframework.beans.factory.BeanFactory;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * The implementation relies upon two alternate repositories to perform atomic changes:
+ *
+ * <ol>
+ *     <li>the <code>exposedRepository</code> is the one whose contents are used for publishing, and it's never touched
+ *     </li>
+ *     <li>the <code>alternateRepository</code> is kept behind the scenes and it's used for updates</li>
+ * </ol>
+ *
+ * When there are changes in the <code>alternateRepository</code>, the two repositories are swapped.
+ *
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
@@ -61,64 +75,66 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter
     private String remoteRepositoryUrl;
-    
+
     @Getter @Setter
     private String workAreaFolder;
-    
-    private final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
-   
+
+    /* package */ final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
+
     @Getter
     private final ResourceFileSystem fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
-    
+
     @Inject
     private BeanFactory beanFactory;
-    
+
 //    @Inject @Named("applicationMessageBus") FIXME doesn't work in the test
     private MessageBus messageBus;
-    
+
     private Path workArea;
-        
+
     private final MercurialRepository[] repositories = new MercurialRepository[2];
-    
-    private MercurialRepository exposedRepository;
-    
-    private MercurialRepository alternateRepository;
-    
+
+    /* package */ MercurialRepository exposedRepository;
+
+    /* package */ MercurialRepository alternateRepository;
+
     private int repositorySelector;
-    
+
     /* package */ int swapCounter;
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     * Makes sure both repository repositories are populated and activates one of them.
      *
      ******************************************************************************************************************/
     @PostConstruct
-    public void initialize() 
+    public void initialize()
       throws IOException, PropertyVetoException, URISyntaxException
       {
         workArea = new File(workAreaFolder).toPath();
-        
+
         for (int i = 0; i < 2; i++)
           {
-            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));  
-            
+            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));
+
             if (repositories[i].isEmpty())
               {
-                // FIXME: this is inefficient, clones both from the remote repo
-                repositories[i].clone(new URI(remoteRepositoryUrl));  
+                // FIXME: this is inefficient, since it clones both from the remote repo
+                repositories[i].clone(new URI(remoteRepositoryUrl));
               }
           }
-        
-        messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class);
-        
+
+        messageBus = beanFactory.getBean("applicationMessageBus", MessageBus.class); // FIXME
+
         swapRepositories(); // initialization
         swapCounter = 0;
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     * Checks whether there are incoming changes. Changes are detected when there's a new tag whose name follows the
+     * pattern 'published-<version>'. Changes are pulled in the alternate repository, then repositories are swapped, at
+     * last the alternateRepository is updated too.
      *
      ******************************************************************************************************************/
     public void checkForUpdates()
@@ -126,7 +142,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
         try
           {
             final Tag newTag = findNewTag();
-            log.info(">>>> new tag seen: {}", newTag);
+            log.info(">>>> new tag: {}", newTag);
             alternateRepository.updateTo(newTag);
             swapRepositories();
             messageBus.publish(new ResourceFileSystemChangedEvent(this, new DateTime()));
@@ -139,97 +155,80 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
           }
         catch (Exception e)
           {
-            log.warn(">>>> error when checking for updates", e);
+            log.warn(">>>> error when checking for updates in " + alternateRepository.getWorkArea(), e);
           }
-      }        
-    
+      }
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ Tag getCurrentTag() 
+    /* package */ Tag getCurrentTag()
       throws IOException, NotFoundException
       {
-        return exposedRepository.getCurrentTag();  
+        return exposedRepository.getCurrentTag();
       }
-    
+
     @Nonnull
-    /* package */ Path getCurrentWorkArea() 
+    /* package */ Path getCurrentWorkArea()
       {
-        return exposedRepository.getWorkArea();  
+        return exposedRepository.getWorkArea();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     * Swaps the repositories.
+     *
+     * @throws IOException in case of error
+     * @throws PropertyVetoException in case of error
      *
      ******************************************************************************************************************/
     private void swapRepositories()
       throws IOException, PropertyVetoException
       {
-        exposedRepository = repositories[repositorySelector];  
-        alternateRepository = repositories[(repositorySelector + 1) % 2]; 
+        exposedRepository = repositories[repositorySelector];
         repositorySelector = (repositorySelector + 1) % 2;
+        alternateRepository = repositories[repositorySelector];
         fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
         swapCounter++;
-        
+
         log.info("New exposed repository:   {}", exposedRepository.getWorkArea());
         log.info("New alternate repository: {}", alternateRepository.getWorkArea());
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     * Finds a new tag.
+     *
+     * @return  the new tag
+     * @throws NotFoundException if no new tag is found
+     * @throws IOException in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Tag findNewTag() 
+    private Tag findNewTag()
       throws NotFoundException, IOException
       {
-        log.info("Checking for updates...");
-        
+        log.info("Checking for updates in {}...", alternateRepository.getWorkArea());
+
         alternateRepository.pull();
-        // would throw NotFoundException if no publishing tag
-        final Tag latestTag = getLatestPublishingTag(alternateRepository);
-        
+        final Tag latestTag = alternateRepository.getLatestTagMatching("^published-.*"); // NotFoundException if no tag
+
         try
           {
             if (!latestTag.equals(exposedRepository.getCurrentTag()))
               {
                 return latestTag;
-              } 
+              }
           }
-        catch (NotFoundException e) 
+        catch (NotFoundException e) // exposedRepository not initialized
           {
             log.info(">>>> repo must be initialized");
             return latestTag;
           }
 
-        throw new NotFoundException();  
-      }
-    
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static Tag getLatestPublishingTag (final @Nonnull MercurialRepository repository)
-      throws IOException, NotFoundException            
-      {
-        final List<Tag> tags = repository.getTags();
-        Collections.reverse(tags);
-        
-        for (final Tag tag : tags)
-          {
-            if (tag.getName().startsWith("published-"))
-              {
-                return tag;
-              } 
-          }
-        
         throw new NotFoundException();
       }
   }

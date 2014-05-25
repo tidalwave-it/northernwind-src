@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
@@ -49,14 +54,14 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  *
  **********************************************************************************************************************/
 @Configurable @Order(HIGHEST_PRECEDENCE + 1) @Slf4j
-public class DefaultLibraryRequestProcessor implements RequestProcessor 
+public class DefaultLibraryRequestProcessor implements RequestProcessor
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Inject @Nonnull
     private Provider<FilterSetExpander> macroExpander;
-    
+
     @Inject @Nonnull
     private ResponseHolder<?> responseHolder;
 
@@ -69,7 +74,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request) 
+    public Status process (final @Nonnull Request request)
       {
         final String relativePath = request.getRelativeUri();
 
@@ -80,18 +85,19 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
             final String mimeType = file.getMimeType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText("UTF-8"), mimeType)
                                                                 : file.asBytes();
-            responseHolder.response().withContentType(mimeType)
+            responseHolder.response().forRequest(request)
+                                     .withBody(content)
+                                     .withContentType(mimeType)
                                      .withLatestModifiedTime(file.getLatestModificationTime())
                                      .withExpirationTime(duration)
-                                     .withBody(content)
-                                     .put();  
+                                     .put();
             return BREAK;
           }
         catch (IOException | NotFoundException e)
           {
-            log.info("Requested URI {} doesn't map to a library resource, continuing...", relativePath);  
+            log.debug("Requested URI {} doesn't map to a library resource, continuing...", relativePath);
           }
-        
+
         return CONTINUE;
       }
   }

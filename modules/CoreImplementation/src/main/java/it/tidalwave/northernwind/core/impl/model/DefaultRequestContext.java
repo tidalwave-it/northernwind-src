@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,56 +18,63 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
  * A default implementation of {@link FilterContext}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
+@Configurable @Slf4j
 public class DefaultRequestContext implements RequestContext
   {
+    @Inject @Nonnull
+    private ModelFactory modelFactory;
+
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();
-    
+
     private final ThreadLocal<SiteNode> nodeHolder = new ThreadLocal<>();
-    
+
     private final ThreadLocal<ResourceProperties> dynamicNodePropertiesHolder = new ThreadLocal<>();
 
     @Override @Nonnull
-    public ResourceProperties getContentProperties() 
+    public ResourceProperties getContentProperties()
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
             log.warn("NO CONTENT IN CONTEXT");
 //            Thread.dumpStack(); // FIXME
-            return DefaultResourceProperties.DEFAULT;
+            return modelFactory.createProperties().build();
           }
 
         return contentHolder.get().getProperties();
       }
 
     @Override @Nonnull
-    public ResourceProperties getNodeProperties() 
+    public ResourceProperties getNodeProperties()
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
@@ -76,16 +87,16 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override
-    public void setContent (final @Nonnull Content content) 
+    public void setContent (final @Nonnull Content content)
       {
         contentHolder.set(content);
       }
 
     @Override
-    public void setNode (final @Nonnull SiteNode node) 
+    public void setNode (final @Nonnull SiteNode node)
       {
         nodeHolder.set(node);
-        dynamicNodePropertiesHolder.set(DefaultResourceProperties.DEFAULT); // FIXME: use ModelFactory
+        dynamicNodePropertiesHolder.set(modelFactory.createProperties().build());
       }
 
     @Override
@@ -95,35 +106,35 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override
-    public void clearNode() 
+    public void clearNode()
       {
         nodeHolder.remove();
         dynamicNodePropertiesHolder.remove();
       }
-    
+
     @Override
-    public void requestReset() 
+    public void requestReset()
       {
         clearNode();
         clearContent();
       }
 
     @Override
-    public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value) 
+    public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value)
       {
         ResourceProperties properties = dynamicNodePropertiesHolder.get();
         dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
       }
-    
+
     @Override @Nonnull
     public String toString()
       {
-        return String.format("RequestContext[content: %s, node: %s]", toString(contentHolder.get()), toString(nodeHolder.get()));  
+        return String.format("RequestContext[content: %s, node: %s]", toString(contentHolder.get()), toString(nodeHolder.get()));
       }
-    
+
     @Nonnull
     private static String toString (final @CheckForNull Resource resource)
       {
-        return (resource == null) ? "null" : resource.getFile().getPath();
+        return (resource == null) ? "null" : resource.getFile().getPath().asString();
       }
   }

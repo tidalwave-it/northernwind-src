@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,16 +18,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -33,7 +39,9 @@ import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
+import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -48,11 +56,11 @@ import lombok.extern.slf4j.Slf4j;
 class DecoratorResourceFolder extends DecoratedResourceFileSupport
   {
     @Nonnull
-    private final String path;
+    private final ResourcePath path;
 
     @Nonnull
     private final List<? extends ResourceFileSystemProvider> delegates;
-    
+
     @Delegate(types=ResourceFile.class, excludes=FolderDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
@@ -60,7 +68,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
     public DecoratorResourceFolder (final @Nonnull LayeredResourceFileSystem fileSystem,
                                     final @Nonnull List<? extends ResourceFileSystemProvider> delegates,
-                                    final @Nonnull String path, 
+                                    final @Nonnull ResourcePath path,
                                     final @Nonnull ResourceFile delegate)
       {
         super(fileSystem, delegate);
@@ -68,25 +76,41 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
         this.delegate = delegate;
         this.delegates = delegates;
       }
-    
+
     @Override @Nonnull
-    public Collection<ResourceFile> getChildren() 
+    public Finder findChildren()
       {
-        log.trace("getChildren() - {}", this);
-        return getChildrenMap().values();
-      }
-
-    @Override
-    public ResourceFile getChildByName (final String relativePath)
-      {
-        log.trace("getChildByName({})", relativePath);
-
-        if (relativePath.contains("/"))
+        return new ResourceFileFinderSupport()
           {
-            throw new IllegalArgumentException("relativePath: " + relativePath);  
-          }
+            @Override @Nonnull
+            protected List<? extends ResourceFile> computeResults()
+              {
+                if (name != null)
+                  {
+                    if (name.contains("/"))
+                      {
+                        throw new IllegalArgumentException("relativePath: " + name);
+                      }
 
-        return getChildrenMap().get(relativePath);
+                    final ResourceFile child = getChildrenMap().get(name);
+
+                    return (child != null) ? Collections.singletonList(child) : Collections.<ResourceFile>emptyList();
+                  }
+                //
+                // FIXME: this reproduces the behaviour before the refactoring for NW-192 - but it's (and was) wrong
+                // since it doesn't consider delegates. It should be rewritten by relying on getChildrenMap() and
+                // making it eventually support recursion.
+                //
+                else if (recursive)
+                  {
+                    return delegate.findChildren().withRecursion(recursive).results();
+                  }
+                else
+                  {
+                    return new ArrayList<>(getChildrenMap().values());
+                  }
+              }
+          };
       }
 
     @Nonnull
@@ -95,17 +119,17 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
         if (childrenMap == null)
           {
             childrenMap = new TreeMap<>();
-            
+
             for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
               {
                 try
                   {
                     final ResourceFileSystem fileSystem = i.previous().getFileSystem();
-                    final ResourceFile delegateDirectory = fileSystem.findFileByPath(path);
+                    final ResourceFile delegateDirectory = fileSystem.findFileByPath(path.asString());
 
                     if (delegateDirectory != null)
                       {
-                        for (final ResourceFile fileObject : delegateDirectory.getChildren())
+                        for (final ResourceFile fileObject : delegateDirectory.findChildren().results())
                           {
                             if (!childrenMap.containsKey(fileObject.getName()))
                               {
@@ -113,7 +137,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
                               }
                           }
                       }
-                  } 
+                  }
                 catch (IOException e)
                   {
                     log.warn("", e);
@@ -122,7 +146,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
             log.trace(">>>> childrenMap: {}", childrenMap);
           }
-    
+
         return childrenMap;
       }
   }

@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.io;
 
 import javax.annotation.Nonnull;
@@ -30,9 +35,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.role.annotation.RoleImplementation;
-import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.Unmarshallable;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
@@ -46,12 +51,12 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RoleImplementation(ownerClass=Layout.class) @ToString @Slf4j
-public class LayoutJaxbUnmarshallable implements Unmarshallable 
+@Configurable @DciRole(datumType = Layout.class) @ToString @Slf4j
+public class LayoutJaxbUnmarshallable implements Unmarshallable
   {
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
+
     @Inject @Nonnull
     private Unmarshaller unmarshaller;
 
@@ -59,34 +64,34 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      *
      ******************************************************************************************************************/
-    public LayoutJaxbUnmarshallable (final @Nonnull Layout layout) 
+    public LayoutJaxbUnmarshallable (final @Nonnull Layout layout)
       {
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public Layout unmarshal (final @Nonnull InputStream is) 
+    @Override @Nonnull @SuppressWarnings("unchecked")
+    public Layout unmarshal (final @Nonnull InputStream is)
       throws IOException
       {
         try
           {
             final ComponentsJaxb componentsJaxb = ((JAXBElement<ComponentsJaxb>)unmarshaller.unmarshal(is)).getValue();
-            
+
             if (!"1.0".equals(componentsJaxb.getVersion()))
               {
-                throw new IOException("Unexpected version: " + componentsJaxb.getVersion());  
+                throw new IOException("Unexpected version: " + componentsJaxb.getVersion());
               }
-            
+
             return unmarshal(componentsJaxb.getComponent());
           }
-        catch (JAXBException | IOException e)
+        catch (JAXBException e)
           {
             throw new IOException("", e);
-          }         
+          }
       }
 
     /*******************************************************************************************************************
@@ -94,15 +99,17 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Layout unmarshal (final @Nonnull ComponentJaxb componentJaxb) 
+    private Layout unmarshal (final @Nonnull ComponentJaxb componentJaxb)
       {
-        Layout layout = modelFactory.createLayout(new Id(componentJaxb.getId()), componentJaxb.getType());
-        
+        Layout layout = modelFactory.createLayout().withId(new Id(componentJaxb.getId()))
+                                                   .withType(componentJaxb.getType())
+                                                   .build();
+
         for (final ComponentJaxb childComponentJaxb : componentJaxb.getComponent())
           {
-            layout = layout.withLayout(unmarshal(childComponentJaxb));
+            layout = layout.withChild(unmarshal(childComponentJaxb));
           }
-        
+
         return layout;
-      }  
+      }
   }

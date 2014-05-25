@@ -1,29 +1,35 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.vaadin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.util.LinkedMultiValueMap;
@@ -42,19 +48,19 @@ import com.vaadin.terminal.DownloadStream;
 public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
   {
     @NotThreadSafe
-    public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream> 
+    public class ResponseBuilder extends ResponseBuilderSupport<DownloadStream>
       {
         private MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-        
+
         @Override @Nonnull
         public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
           {
-            headers.add(header, value);        
+            headers.add(header, value);
             return this;
           }
-        
+
         @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull NotFoundException e) 
+        public ResponseBuilder forException (final @Nonnull NotFoundException e)
           {
             return (ResponseBuilder)withContentType("text/plain")
                   .withBody(e.getMessage())
@@ -62,23 +68,30 @@ public class DownloadStreamHolder extends ResponseHolder<DownloadStream>
           }
 
         @Override @Nonnull
-        public ResponseBuilder forException (final @Nonnull IOException e) 
+        public ResponseBuilder forException (final @Nonnull IOException e)
           {
             return (ResponseBuilder)withContentType("text/plain")
                   .withBody(e.getMessage())
                   .withStatus(500);
           }
-        
+
         @Override @Nonnull
-        public DownloadStream build()
+        protected DownloadStream doBuild()
           {
             return new DownloadStream((InputStream)body, null, headers.get("Content-Type").get(0)); // FIXME: set name?
           }
+        
+        @Override
+        protected String getHeader (final @Nonnull String header) 
+          {
+            final List<String> list = headers.get(header);
+            return list.isEmpty() ? null : list.get(0);
+          }
       }
-    
+
     @Override @Nonnull
     public ResponseBuilder response()
       {
-        return new ResponseBuilder();  
+        return new ResponseBuilder();
       }
   }

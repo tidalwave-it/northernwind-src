@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,19 +18,23 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -34,18 +42,18 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
-public abstract class DecoratedResourceFileSupport implements ResourceFile 
+@RequiredArgsConstructor @Slf4j
+public abstract class DecoratedResourceFileSupport implements ResourceFile
   {
     @Getter @Nonnull
     protected final DecoratedResourceFileSystem fileSystem;
-    
+
     @Nonnull
     private final ResourceFile delegate;
 
     @Override
     public void delete()
-      throws IOException 
+      throws IOException
       {
         delegate.delete();
       }
@@ -62,6 +70,26 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
       {
 //        log.trace("createFolder({})", name);
         return fileSystem.createDecoratorFile(delegate.createFolder(name));
+      }
+
+    @Override @Nonnull
+    public Finder findChildren()
+      {
+        return new ResourceFileFinderSupport()
+          {
+            @Override @Nonnull
+            protected List<? extends ResourceFile> computeResults()
+              {
+                final List<ResourceFile> result = new ArrayList<>();
+
+                for (final ResourceFile child : delegate.findChildren().results())
+                  {
+                    result.add(fileSystem.createDecoratorFile(child));
+                  }
+
+                return result;
+              }
+          };
       }
 
     @Override

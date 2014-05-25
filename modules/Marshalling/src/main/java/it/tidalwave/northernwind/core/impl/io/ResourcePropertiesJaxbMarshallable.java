@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.io;
 
 import javax.annotation.Nonnull;
@@ -33,8 +38,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.Marshallable;
-import it.tidalwave.role.annotation.RoleImplementation;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
@@ -49,42 +54,42 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RoleImplementation(ownerClass=ResourceProperties.class) @Configurable @Slf4j
+@DciRole(datumType = ResourceProperties.class) @Configurable @Slf4j
 public class ResourcePropertiesJaxbMarshallable implements Marshallable
   {
     @Nonnull
     private final ResourceProperties resourceProperties;
-    
+
     @Inject @Nonnull
     private ObjectFactory objectFactory;
 
     @Inject @Nonnull
     private Marshaller marshaller;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties) 
+    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties)
       {
         this.resourceProperties = resourceProperties;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void marshal (final @Nonnull OutputStream os) 
+    public void marshal (final @Nonnull OutputStream os)
       throws IOException
       {
-        try 
+        try
           {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
             marshaller.marshal(objectFactory.createProperties(marshal(resourceProperties)), os);
           }
-        catch (IOException | JAXBException e) 
+        catch (JAXBException e)
           {
             throw new IOException("", e);
           }
@@ -95,12 +100,12 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties) 
+    private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties)
       throws IOException
       {
-        final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();        
+        final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();
         final Id id = properties.getId();
-        
+
         if (id.stringValue().equals(""))
           {
             propertiesJaxb.setVersion("1.0");
@@ -109,7 +114,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
           {
             propertiesJaxb.setId(id.stringValue());
           }
-        
+
         for (final Key<?> key : new TreeSet<>(properties.getKeys()))
           {
             try
@@ -117,13 +122,13 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
                 final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
                 propertyJaxb.setName(key.stringValue());
                 final Object value = properties.getProperty(key);
-                
+
                 if (value instanceof Collection)
-                  { 
+                  {
                     final ValuesJaxb valuesJaxb = objectFactory.createValuesJaxb();
                     propertyJaxb.setValues(valuesJaxb);
-                    
-                    for (final Object valueItem : (Collection<Object>)value)
+
+                    for (final Object valueItem : (Collection<?>)value)
                       {
                         valuesJaxb.getValue().add(valueItem.toString());
                       }
@@ -132,21 +137,21 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
                   {
                     propertyJaxb.setValue(value.toString());
                   }
-                
+
                 propertiesJaxb.getProperty().add(propertyJaxb);
               }
             catch (NotFoundException e)
               {
-                // never occurs  
+                // never occurs
                 log.error("", e);
               }
           }
-        
+
         for (final Id groupId : new TreeSet<>(properties.getGroupIds()))
           {
             propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
           }
-        
+
         return propertiesJaxb;
      }
   }

@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,18 +18,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.role.Marshallable;
-import it.tidalwave.role.Unmarshallable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -61,12 +65,12 @@ public class LayoutConverter extends Parser
     private static final String CALENDAR = "http://northernwind.tidalwave.it/component/Calendar/#v1.0";
 
     private static final List<String> PATH_PARAMS_COMPONENTS = Arrays.asList(BLOG, CALENDAR);
-    
+
     private static final List<String> PROPERTIES_REFERRING_RELATIVE_PATHS = Arrays.asList
       (
         "styleSheets", "items", "content", "contents", "rssFeeds", "inlinedScripts"
       );
-    
+
     private static final Map<String, String> TYPE_MAP = new HashMap<String, String>()
       {{
         put(  "7", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0");
@@ -82,7 +86,7 @@ public class LayoutConverter extends Parser
         put("883", "http://northernwind.tidalwave.it/component/HtmlFragment/#v1.0");
 
         put("509", "http://northernwind.tidalwave.it/component/StoppingDownCSS/#v1.0"); // StoppingDown CSS
-        put("513", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0"); 
+        put("513", "http://northernwind.tidalwave.it/component/StatCounter/#v1.0");
         put("544", "http://northernwind.tidalwave.it/component/NodeContainer/#v1.0"); // Splash
         put("547", CALENDAR);
         put("572", CONTAINER); // Categories header
@@ -91,18 +95,18 @@ public class LayoutConverter extends Parser
         put("603", "http://northernwind.tidalwave.it/component/Unknown603/#v1.0");
         put("764", "http://northernwind.tidalwave.it/component/LightBoxCSS/#v1.0"); // LightBox CSS
       }};
-            
+
     private final SortedMap<Key<?>, Object> properties;
     private Id componentId;
     private DefaultLayout rootComponent;
     private final Stack<DefaultLayout> componentStack = new Stack<DefaultLayout>();
     private final Map<String, DefaultLayout> wrapperLayouts = new HashMap<String, DefaultLayout>();
 
-    public LayoutConverter (final @Nonnull String xml, 
-                            final @Nonnull DateTime modifiedDateTime, 
+    public LayoutConverter (final @Nonnull String xml,
+                            final @Nonnull DateTime modifiedDateTime,
                             final @Nonnull String path,
-                            final @Nonnull SortedMap<Key<?>, Object> properties) 
-      throws XMLStreamException 
+                            final @Nonnull SortedMap<Key<?>, Object> properties)
+      throws XMLStreamException
       {
         super(xml, path, modifiedDateTime, null);
         this.properties = properties;
@@ -113,49 +117,49 @@ public class LayoutConverter extends Parser
       throws Exception
       {
         log.trace("processStartElement({})", elementName);
-        
+
         if ("component".equals(elementName))
           {
             final String attrNameValue = reader.getAttributeValue("", "name");
             final String attrIdValue = reader.getAttributeValue("", "id");
             final String contentId = reader.getAttributeValue("", "contentId");
             final String attrTypeValue = TYPE_MAP.get(contentId);
-            
+
             if (attrTypeValue == null)
               {
-                log.error("No component for {}", contentId);  
+                log.error("No component for {}", contentId);
               }
-            
+
 //            // FIXME: for StoppingDown
 //            if ("544".equals(contentId))
 //              {
 //                properties.put(new Key<Object>("base.template"), "/Splash");
 //              }
 //            // END FIXME: for StoppingDown
-            
+
             if (PATH_PARAMS_COMPONENTS.contains(attrTypeValue))
               {
                 properties.put(new Key<Object>("managesPathParams"), "true");
               }
-            
+
             if (componentStack.isEmpty())
               {
                 componentId = new Id(attrNameValue);
                 final DefaultLayout newComponent = new DefaultLayout(componentId, attrTypeValue);
                 componentStack.push(newComponent);
-                rootComponent = newComponent;  
+                rootComponent = newComponent;
               }
             else
               {
                 DefaultLayout parentLayout = wrapperLayouts.get(attrNameValue);
-                
+
                 if (parentLayout == null)
                   {
-                    parentLayout = new DefaultLayout(new Id(attrNameValue), CONTAINER); 
+                    parentLayout = new DefaultLayout(new Id(attrNameValue), CONTAINER);
                     wrapperLayouts.put(attrNameValue, parentLayout);
                     componentStack.peek().add(parentLayout);
                   }
-                
+
                 // We can't rearrange ids, as subfolders might override this stuff with non-rearranged ids
 //                componentName = attrNameValue + "-" + (parentLayout.getChildren().size() + 1);
                 componentId = new Id(attrNameValue + "-" + attrIdValue);
@@ -170,22 +174,22 @@ public class LayoutConverter extends Parser
             String propertyName = toLower(reader.getAttributeValue("", "name"));
             Object propertyValue = reader.getAttributeValue("", "path");
 //            Object propertyType = reader.getAttributeValue("", "type");
-            
+
             // TODO: if type == contentBinding, you should rather read entityIds from the binding elements as below.
-//<property name="styleSheets" path="Layout.css, Typography.css, Forms.css, Tools.css, Horizontal Navigation.css, Layout (Navigation Top, Local Left).css, Tidalwave defaults.css" path_en="Layout.css, Typography.css, Forms.css, Tools.css, Horizontal Navigation.css, Layout (Navigation Top, Local Left).css, Tidalwave defaults.css" type="contentBinding" > 
-//    <binding assetKey="" entity="SiteNode" entityId="5" > </binding > 
-//    <binding assetKey="" entity="SiteNode" entityId="6" > </binding > 
-//    <binding assetKey="" entity="SiteNode" entityId="8" > </binding > 
-//    <binding assetKey="" entity="SiteNode" entityId="7" > </binding > 
-//    <binding assetKey="" entity="SiteNode" entityId="9" > </binding > 
-//    <binding assetKey="" entity="SiteNode" entityId="10" > </binding > 
-//    <binding assetKey="" entity="SiteNode" entityId="50" > </binding > 
+//<property name="styleSheets" path="Layout.css, Typography.css, Forms.css, Tools.css, Horizontal Navigation.css, Layout (Navigation Top, Local Left).css, Tidalwave defaults.css" path_en="Layout.css, Typography.css, Forms.css, Tools.css, Horizontal Navigation.css, Layout (Navigation Top, Local Left).css, Tidalwave defaults.css" type="contentBinding" >
+//    <binding assetKey="" entity="SiteNode" entityId="5" > </binding >
+//    <binding assetKey="" entity="SiteNode" entityId="6" > </binding >
+//    <binding assetKey="" entity="SiteNode" entityId="8" > </binding >
+//    <binding assetKey="" entity="SiteNode" entityId="7" > </binding >
+//    <binding assetKey="" entity="SiteNode" entityId="9" > </binding >
+//    <binding assetKey="" entity="SiteNode" entityId="10" > </binding >
+//    <binding assetKey="" entity="SiteNode" entityId="50" > </binding >
 //</property >
-            
+
             if (propertyValue == null)
               {
                 propertyValue = reader.getAttributeValue("", "path_en");
-                
+
                 if ("--".equals(propertyValue.toString()))
                   {
                     propertyValue = "";
@@ -195,7 +199,7 @@ public class LayoutConverter extends Parser
               {
                 propertyValue = propertyValue.toString().replace("Top, No Local", "Top No Local");
                 propertyValue = propertyValue.toString().replace("Top, Local", "Top Local");
-                
+
                 // FIXME: for blueBill Mobile
 //                propertyValue = propertyValue.toString().replace("blueBill Mobile CSS", "blueBill Mobile.css");
 //                propertyValue = propertyValue.toString().replace("blueBill Mobile Main CSS", "blueBill Mobile Main.css");
@@ -213,8 +217,9 @@ public class LayoutConverter extends Parser
                 propertyValue = propertyValue.toString().replace("Blog RSS Feed", "RSS Feeds/Blog RSS Feed");
                 propertyValue = propertyValue.toString().replace("News RSS Feed", "RSS Feeds/News RSS Feed");
 //                propertyValue = propertyValue.toString().replace("News RSS Feed", "Resources/Feed Panel");
-                propertyValue = propertyValue.toString().replace("Nikonian WebRing badge", "Resources/Nikonian WebRing badge");
-                
+                propertyValue = propertyValue.toString().replace("Nikonian WebRing badge",
+                                                                 "Resources/Nikonian WebRing badge");
+
                 if (PROPERTIES_REFERRING_RELATIVE_PATHS.contains(propertyName))
                   {
                     final List<Object> values = new ArrayList<Object>();
@@ -223,28 +228,28 @@ public class LayoutConverter extends Parser
                       {
                         if ("styleSheets".equals(propertyName))
                           {
-                            spl = "css/" + spl.trim();  
+                            spl = "css/" + spl.trim();
                           }
 
                         spl = "/" + spl.trim();
 //                        spl = spl.replaceAll("/Mobile", "/"); // blueBill Mobile
-                        
+
                         if ("content3-3".equals(componentId.stringValue())) // StoppingDown
                           {
-                            spl = "/Blog" + spl;  
+                            spl = "/Blog" + spl;
                           }
 
                         if ("styleSheets".equals(propertyName))
                           {
                             spl = spl.replace(" ", "-").replace("(", "").replace(")", "");
                           }
-                        
+
                         values.add(spl);
                       }
 
                     propertyValue = values;
                   }
-                
+
                 // FIXME: for StoppingDown
 //                if (!componentId.stringValue().contains("main") && path.contains("/Blog") && !path.contains("/Blog/"))
 //                  {
@@ -278,29 +283,29 @@ public class LayoutConverter extends Parser
 
                 if ("styleSheets".equals(propertyName))
                   {
-                    propertyName = "screenStyleSheets";  
+                    propertyName = "screenStyleSheets";
                   }
 
                 if ("items".equals(propertyName))
                   {
-                    propertyName = "links";  
+                    propertyName = "links";
                   }
 
                 if ("content".equals(propertyName))
                   {
-                    propertyName = "contents";  
+                    propertyName = "contents";
                   }
               }
 
             if (!StructureParser.IGNORED_PROPERTIES.contains(propertyName))
-              { 
+              {
                 // FIXME: for StoppingDown
                 if ("content1-6".equals(componentId.stringValue()) && "contents".equals(propertyName))
                   {
-                    propertyValue = Arrays.asList("/Resources/Feed Panel");  
+                    propertyValue = Arrays.asList("/Resources/Feed Panel");
                   }
                 // END FIXME
-                
+
                 properties.put(new Key<Object>(componentId + "." + propertyName), propertyValue);
               }
           }
@@ -311,7 +316,7 @@ public class LayoutConverter extends Parser
       throws Exception
       {
         log.trace("processEndElement({})", name);
-        
+
         if ("component".equals(name))
           {
             componentStack.pop();
@@ -319,7 +324,7 @@ public class LayoutConverter extends Parser
       }
 
     @Override
-    protected void finish() 
+    protected void finish()
       throws Exception
       {
           // TODO: Infoglue generates a sub-layout even when just properties are changed. We put properties in a
@@ -329,22 +334,22 @@ public class LayoutConverter extends Parser
           //   DefaultLayout thisLayout = ...
           //   DefaultLayout subLayout = parentLayout.withOverride(thisLayout);
           //   if (parentLayout.equals(subLayout)) then do not produce subLayout
-          
+
         if (rootComponent != null) // might be empty
           {
             // blueBill Mobile
 //            try
-//              {                
+//              {
 //                rootComponent.findSubComponentById(new Id("main"))
 //                             .findSubComponentById(new Id("main-8"));
 //                properties.put(new Key<Object>("main-8.contents"), Arrays.asList("/Resources/Top 1000 Ranking"));
 //              }
 //            catch (NotFoundException e)
 //              {
-//                // ok  
+//                // ok
 //              }
 //            try
-//              {                
+//              {
 //                rootComponent.findSubComponentById(new Id("main"))
 //                             .findSubComponentById(new Id("main-9"));
 //                properties.put(new Key<Object>("main-9.url"), "http://bluebill.tidalwave.it/mobile/");
@@ -352,10 +357,10 @@ public class LayoutConverter extends Parser
 //              }
 //            catch (NotFoundException e)
 //              {
-//                // ok  
+//                // ok
 //              }
 //            try
-//              {                
+//              {
 //                rootComponent.findSubComponentById(new Id("footer"))
 //                             .findSubComponentById(new Id("footer-7"));
 //                properties.put(new Key<Object>("footer-7.project"), "5834368");
@@ -363,16 +368,16 @@ public class LayoutConverter extends Parser
 //              }
 //            catch (NotFoundException e)
 //              {
-//                // ok  
+//                // ok
 //              }
             // end blueBill Mobile
 
             try
-              {                
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-5"))
-                             .findSubComponentById(new Id("content1"))
-                             .findSubComponentById(new Id("content1-9"));
+              {
+                rootComponent.findChildren().withId(new Id("local")).result()
+                             .findChildren().withId(new Id("local-5")).result()
+                             .findChildren().withId(new Id("content1")).result()
+                             .findChildren().withId(new Id("content1-9"));
                 properties.put(new Key<Object>("content1-9.project"), "4204333");
                 properties.put(new Key<Object>("content1-9.security"), "b11c31c8");
                 properties.put(new Key<Object>("content1-9.invisible"), "false");
@@ -383,34 +388,34 @@ public class LayoutConverter extends Parser
               }
             catch (NotFoundException e)
               {
-                // ok  
+                // ok
               }
             try
-              {                
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-2"))
-                             .findSubComponentById(new Id("content5"))
-                             .findSubComponentById(new Id("content5-7"));
+              {
+                rootComponent.findChildren().withId(new Id("local")).result()
+                             .findChildren().withId(new Id("local-2")).result()
+                             .findChildren().withId(new Id("content5")).result()
+                             .findChildren().withId(new Id("content5-7"));
                 properties.put(new Key<Object>("content5-7.title"), "Post index");
               }
             catch (NotFoundException e)
               {
-                // ok  
+                // ok
               }
             try
-              {                
-                rootComponent.findSubComponentById(new Id("local"))
-                             .findSubComponentById(new Id("local-2"))
-                             .findSubComponentById(new Id("content3"))
-                             .findSubComponentById(new Id("content3-3"));
+              {
+                rootComponent.findChildren().withId(new Id("local")).result()
+                             .findChildren().withId(new Id("local-2")).result()
+                             .findChildren().withId(new Id("content3")).result()
+                             .findChildren().withId(new Id("content3-3"));
                 properties.put(new Key<Object>("content3-3.title"), "Categories");
               }
             catch (NotFoundException e)
               {
-                // ok  
+                // ok
               }
 //            try
-//              {                
+//              {
 //                rootComponent.findSubComponentById(new Id("local"))
 //                             .findSubComponentById(new Id("local-5"))
 //                             .findSubComponentById(new Id("content6"))
@@ -419,11 +424,11 @@ public class LayoutConverter extends Parser
 //              }
 //            catch (NotFoundException e)
 //              {
-//                // ok  
+//                // ok
 //              }
             try // move footer at the bottom of base
-              {                
-                final Layout footer = rootComponent.findSubComponentById(new Id("footer"));
+              {
+                final Layout footer = rootComponent.findChildren().withId(new Id("footer")).result();
                 final Field children = DefaultLayout.class.getDeclaredField("children");
                 final Field childrenMapById = DefaultLayout.class.getDeclaredField("childrenMapById");
                 children.setAccessible(true);
@@ -434,25 +439,25 @@ public class LayoutConverter extends Parser
               }
             catch (NotFoundException e)
               {
-                // ok  
+                // ok
               }
-            
+
             if (path.contains("/Blog/"))
               {
                 return;
-              }  
-            
+              }
+
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rootComponent.as(Marshallable.class).marshal(baos);
             baos.close();
             ResourceManager.addCommand(new AddResourceCommand(modifiedDateTime, path, baos.toByteArray(), "No comment"));
-            
+
             if (path.contains("OverrideComponents_"))
               {
                 final String nonOverridePath = path.replaceAll("OverrideComponents_", "Components_");
-    
+
                 try
-                  { 
+                  {
                     final byte[] nonOverrideComponents  = ResourceManager.findRecentContents(nonOverridePath);
                     log.info("Patching {} with {} ...", nonOverridePath, path);
                     final @Cleanup InputStream is = new ByteArrayInputStream(nonOverrideComponents);

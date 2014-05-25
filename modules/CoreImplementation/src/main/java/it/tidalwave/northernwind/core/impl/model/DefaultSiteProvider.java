@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,18 +18,21 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +44,6 @@ import javax.servlet.ServletContext;
 import org.openide.util.NbBundle;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -56,61 +62,65 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString
 public class DefaultSiteProvider implements SiteProvider
   {
+    private static final String DEFAULT_DOCUMENT_PATH = "/content/document";
+    private static final String DEFAULT_MEDIA_PATH = "/content/media";
+    private static final String DEFAULT_LIBRARY_PATH = "/content/library";
+    private static final String DEFAULT_NODE_PATH = "/structure";
+    public static final String DEFAULT_CONTEXT_PATH = "/";
+
     @Inject @Nonnull
-    private ApplicationContext applicationContext;
-    
-    @Getter @Setter 
+    private Provider<ServletContext> servletContext;
+
     @Inject @Nonnull
     private ModelFactory modelFactory;
-    
-//    @Inject @Named("taskExecutor") @Nonnull
-    @Getter @Setter @Nonnull
+
+    @Inject @Named("taskExecutor") @Nonnull
     private TaskExecutor executor;
-    
-    @Getter @Setter @Nonnull
-    private String documentPath = "content/document";
 
     @Getter @Setter @Nonnull
-    private String mediaPath = "content/media";
+    private String documentPath = DEFAULT_DOCUMENT_PATH;
 
     @Getter @Setter @Nonnull
-    private String libraryPath = "content/library";
+    private String mediaPath = DEFAULT_MEDIA_PATH;
 
     @Getter @Setter @Nonnull
-    private String nodePath = "structure";
+    private String libraryPath = DEFAULT_LIBRARY_PATH;
+
+    @Getter @Setter @Nonnull
+    private String nodePath = DEFAULT_NODE_PATH;
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
-    
+
     @Getter @Setter @Nonnull
     private String localesAsString;
-            
+
     @Getter @Setter @Nonnull
     private String ignoredFoldersAsString = "";
-    
+
     private final List<String> ignoredFolders = new ArrayList<>();
-    
+
     private final List<Locale> configuredLocales = new ArrayList<>();
-    
+
     @CheckForNull
     private DefaultSite site;
-    
+
     @Getter
     private boolean siteAvailable = false;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Site getSite() 
+    public Site getSite()
       {
-        if (site == null) // FIXME: rather create a NullObject site
+        if (site == null) // must never occur, since site is created during initialize()
           {
-            throw new IllegalStateException("site not created yet");   
+            throw new IllegalStateException("Initialization internal error - @PostConstruct not called?");
           }
-        
+
         return site;
       }
 
@@ -124,22 +134,22 @@ public class DefaultSiteProvider implements SiteProvider
       {
         log.info("reload()");
         siteAvailable = false;
-        
-        site = (DefaultSite)modelFactory.createSite(getContextPath(), 
-                                                    documentPath,
-                                                    mediaPath, 
-                                                    libraryPath,
-                                                    nodePath,
-                                                    logConfigurationEnabled, 
-                                                    configuredLocales, 
-                                                    ignoredFolders);
-        
-        executor.execute(new Runnable() 
+
+        site = (DefaultSite)modelFactory.createSite().withContextPath(getContextPath())
+                                                     .withDocumentPath(documentPath)
+                                                     .withMediaPath(mediaPath)
+                                                     .withLibraryPath(libraryPath)
+                                                     .withNodePath(nodePath)
+                                                     .withLogConfigurationEnabled(logConfigurationEnabled)
+                                                     .withConfiguredLocales(configuredLocales)
+                                                     .withIgnoredFolders(ignoredFolders)
+                                                     .build();
+        executor.execute(new Runnable()
           {
             @Override
-            public void run() 
+            public void run()
               {
-                try 
+                try
                   {
                     final long time = System.currentTimeMillis();
                     site.initialize();
@@ -150,8 +160,10 @@ public class DefaultSiteProvider implements SiteProvider
                   }
                 catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
                   {
-                    log.error("While initializing site", e);
-                  } 
+                    log.error("****************************************");
+                    log.error("SITE INITIALIZATION FAILED!", e);
+                    log.error("****************************************");
+                  }
               }
           });
       }
@@ -166,10 +178,10 @@ public class DefaultSiteProvider implements SiteProvider
       {
         return NbBundle.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @PostConstruct
@@ -177,31 +189,31 @@ public class DefaultSiteProvider implements SiteProvider
       {
         log.info("initialize()");
         ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
-        
+
         for (final String localeAsString : localesAsString.split(","))
           {
-            configuredLocales.add(new Locale(localeAsString.trim()));  
+            configuredLocales.add(new Locale(localeAsString.trim()));
           }
-        
+
         reload();
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ String getContextPath() 
+    /* package */ String getContextPath()
       {
         try
           {
-            return applicationContext.getBean(ServletContext.class).getContextPath();
+            return servletContext.get().getContextPath();
           }
         catch (NoSuchBeanDefinitionException e)
           {
-            log.warn("Running in a non-web environment, set contextPath = /");
-            return "/";
+            log.warn("Running in a non-web environment, set contextPath = {}", DEFAULT_CONTEXT_PATH);
+            return DEFAULT_CONTEXT_PATH;
           }
       }
   }

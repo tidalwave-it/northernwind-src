@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
@@ -29,11 +34,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import lombok.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -41,81 +50,60 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link ResourceProperties}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(exclude={"propertyResolver"})
-public class DefaultResourceProperties extends SpringAsSupport implements ResourceProperties 
+// FIXME: this is a patched copy, needs public constructor for builder - see NW-180
+@Slf4j @ToString(exclude={"propertyResolver", "asSupport"})
+public class DefaultResourceProperties implements ResourceProperties
   {
-    public static interface PropertyResolver // FIXME: drop this
-      {
-        public static PropertyResolver DEFAULT = new PropertyResolver() 
-          {
-            @Override
-            public <Type> Type resolveProperty(Id propertyGroupId, Key<Type> key) 
-              throws NotFoundException, IOException 
-              {
-                throw new NotFoundException();
-              }
-          };
-        
-        @Nonnull
-        public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
-          throws NotFoundException, IOException;
-      }
-    
-    public static ResourceProperties DEFAULT = new DefaultResourceProperties(PropertyResolver.DEFAULT);
-    
     @Nonnull @Getter
     private final Id id;
-    
+
     private final Map<Key<?>, Object> propertyMap = new HashMap<>();
 
     private final Map<Id, DefaultResourceProperties> groupMap = new HashMap<>();
-    
+
     @Nonnull
     private final PropertyResolver propertyResolver;
-    
-    // TODO: clean up constructors, then use ModelFactory.
-    
+
+    @Delegate
+    private final AsSupport asSupport = new AsSupport(this);
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull PropertyResolver propertyResolver) 
+    public DefaultResourceProperties (final @Nonnull ResourceProperties.Builder builder)
       {
-        this.id = new Id("");
-        this.propertyResolver = propertyResolver;
+        this.id = builder.getId();
+        this.propertyResolver = builder.getPropertyResolver();
+        this.propertyMap.putAll(builder.getValues());
+//        for (final Entry<Key<?>, Object> entry : builder.getValues().entrySet())
+//          {
+//            final String s = entry.getKey().stringValue();
+//            final Object value = entry.getValue();
+//            propertyMap.put(new Key<>(s), value);
+//          }
       }
-    
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull Id id,
-                                      final @Nonnull PropertyResolver propertyResolver) 
-      {
-        this.id = id;
-        this.propertyResolver = propertyResolver;
-      }
-    
+
     /*******************************************************************************************************************
      *
      * Deep clone constructor.
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull DefaultResourceProperties otherProperties) 
+    public DefaultResourceProperties (final @Nonnull DefaultResourceProperties otherProperties)
       {
         this.id = otherProperties.id;
         this.propertyResolver = otherProperties.propertyResolver;
-        
+
         for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
           {
-            propertyMap.put(entry.getKey(), entry.getValue()); // FIXME: clone the property 
+            propertyMap.put(entry.getKey(), entry.getValue()); // FIXME: clone the property
           }
-        
+
         for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
           {
             final Id groupId = entry.getKey();
@@ -123,59 +111,60 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
             groupMap.put(groupId, propertyGroup);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
-     * Legacy code for converting from flat-style properties.
+     * Legacy code for converting from flat-style properties. This is different than passing from() in the Builder,
+     * since that approach doesn't support nested groups.
      *
      ******************************************************************************************************************/
     public DefaultResourceProperties (final @Nonnull Id id,
                                       final @Nonnull Map<Key<?>, Object> map,
-                                      final @Nonnull PropertyResolver propertyResolver) 
+                                      final @Nonnull PropertyResolver propertyResolver)
       {
         this.id = id;
         this.propertyResolver = propertyResolver;
-        
+
         final Map<Id, Map<Key<?>, Object>> othersMap = new HashMap<>();
-        
+
         for (final Entry<Key<?>, Object> entry : map.entrySet())
           {
             final String s = entry.getKey().stringValue();
             final Object value = entry.getValue();
-            
+
             if (!s.contains("."))
               {
-                propertyMap.put(new Key<>(s), value);  
+                propertyMap.put(new Key<>(s), value);
               }
             else
               {
                 final String[] x = s.split("\\.");
                 final Id groupId = new Id(x[0]);
-                
+
                 Map<Key<?>, Object> otherMap = othersMap.get(groupId);
-                
+
                 if (otherMap == null)
                   {
                     otherMap = new HashMap<>();
-                    othersMap.put(groupId, otherMap);  
+                    othersMap.put(groupId, otherMap);
                   }
-                
+
                 otherMap.put(new Key<>(x[1]), value);
               }
           }
-        
+
         for (final Entry<Id, Map<Key<?>, Object>> entry : othersMap.entrySet())
           {
             groupMap.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override @Nonnull @SuppressWarnings("unchecked")
     public <Type> Type getProperty (@Nonnull Key<Type> key)
       throws NotFoundException, IOException
       {
@@ -193,7 +182,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
       throws IOException
       {
         try
-          { 
+          {
             return getProperty(key);
           }
         catch (NotFoundException e)
@@ -201,7 +190,60 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
             return defaultValue;
           }
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
+      throws IOException
+      {
+        return Integer.parseInt(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
+      throws IOException
+      {
+        return Boolean.parseBoolean(getProperty(key, "" + defaultValue));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public DateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
+                                         final @Nonnull DateTime defaultValue)
+      {
+        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
+
+        for (final Key<String> key : keys)
+          {
+            try
+              {
+                return isoFormatter.parseDateTime(getProperty(key));
+              }
+            catch (NotFoundException e)
+              {
+              }
+            catch (IOException e)
+              {
+                log.warn("", e);
+              }
+          }
+
+        return defaultValue;
+      }
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -210,32 +252,33 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     @Override @Nonnull
     public ResourceProperties getGroup (final @Nonnull Id id)
       {
-        final DefaultResourceProperties properties = groupMap.get(id);        
-        return properties != null ? properties : new DefaultResourceProperties(id, propertyResolver);
+        final DefaultResourceProperties properties = groupMap.get(id);
+        return properties != null ? properties : new DefaultResourceProperties(this);
+//                                  : new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Collection<Key<?>> getKeys() 
+    public Collection<Key<?>> getKeys()
       {
         return new CopyOnWriteArrayList<>(propertyMap.keySet());
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Collection<Id> getGroupIds() 
+    public Collection<Id> getGroupIds()
       {
         return new CopyOnWriteArrayList<>(groupMap.keySet());
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -248,7 +291,20 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
         result.propertyMap.put(key, value); // FIXME: clone property
         return result;
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public DefaultResourceProperties withoutProperty (final @Nonnull Key<?> key)
+      {
+        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        result.propertyMap.remove(key);
+        return result;
+      }
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -261,7 +317,7 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
         result.groupMap.put(properties.getId(), new DefaultResourceProperties((DefaultResourceProperties)properties));
         return result;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -271,38 +327,39 @@ public class DefaultResourceProperties extends SpringAsSupport implements Resour
     public ResourceProperties merged (@Nonnull ResourceProperties properties)
       {
         final DefaultResourceProperties otherProperties = (DefaultResourceProperties)properties;
-        
+
         if (!id.equals(otherProperties.id))
           {
             throw new IllegalArgumentException("Id mismatch " + id + " vs " + otherProperties.id);
           }
-        
+
         ResourceProperties result = new DefaultResourceProperties(this);
-        
+
         for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
           {
-            result = result.withProperty((Key<Object>)entry.getKey(), entry.getValue());  
+            result = result.withProperty((Key<Object>)entry.getKey(), entry.getValue());
           }
-        
+
         for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
           {
             final Id groupId = entry.getKey();
             final ResourceProperties propertyGroup = entry.getValue();
             result = (!groupMap.containsKey(groupId)) ? result.withProperties(propertyGroup)
-                                                      : result.withProperties(groupMap.get(groupId).merged(propertyGroup));   
+                                                      : result.withProperties(groupMap.get(groupId).merged(propertyGroup));
           }
-        
+
         return result;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties withId (final @Nonnull Id id) 
+    public ResourceProperties withId (final @Nonnull Id id)
       {
-        return new DefaultResourceProperties(id, propertyResolver);
+        return new DefaultResourceProperties(this);
+//        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
   }

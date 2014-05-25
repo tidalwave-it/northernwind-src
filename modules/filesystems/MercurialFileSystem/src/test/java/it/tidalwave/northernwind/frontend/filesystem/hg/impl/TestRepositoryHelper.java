@@ -1,28 +1,35 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,58 +46,98 @@ import static org.hamcrest.CoreMatchers.*;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class TestRepositoryHelper 
+public class TestRepositoryHelper
   {
-    public enum Option { STRIP, DONT_STRIP }
-    
-    public static final List<Tag> EXPECTED_TAGS_1 = new ArrayList<>();
-    
-    public static final List<Tag> EXPECTED_TAGS_2 = new ArrayList<>();
-    
+    public enum Option
+      { 
+        UPDATE_TO_PUBLISHED_0_9
+          {
+            @Override
+            public void apply()
+              {
+		// do nothing, already to published-0.9
+              }
+          },
+        
+        UPDATE_TO_PUBLISHED_0_8
+          {
+            @Override
+            public void apply()
+              throws Exception
+              {
+                ProcessExecutor.forExecutable("hg")
+                        .withArgument("strip")
+                        .withArgument("published-0.9")
+                        .withWorkingDirectory(sourceRepository)
+                        .start()
+                        .waitForCompletion();
+              }
+          };
+        
+        public abstract void apply()
+          throws Exception;
+      }
+
+    public static final List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_8 = new ArrayList<>();
+
+    public static final List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_9 = new ArrayList<>();
+
     public static final Path sourceRepository;
-    
+
     private static final Path sourceBundle;
-    
+
     static
       {
-        sourceRepository = new File("target/source-repository").toPath();
+        try 
+          {
+            // FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
+            // the project sources
+            // sourceRepository = new File("target/source-repository").toPath();
+            sourceRepository = Files.createTempDirectory("hg-source-repository");
+          } 
+        catch (IOException e)
+          {
+            throw new RuntimeException(e);
+          }
+        
         sourceBundle = new File("./src/test/resources/hg.bundle").toPath();
-        
-        EXPECTED_TAGS_1.add(new Tag("published-0.1"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.2"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.3"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.4"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.5"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.6"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.7"));
-        EXPECTED_TAGS_1.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_1.add(new Tag("tip"));  
-        
-        EXPECTED_TAGS_2.add(new Tag("published-0.1"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.2"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.3"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.4"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.5"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.6"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.7"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.8"));
-        EXPECTED_TAGS_2.add(new Tag("published-0.9"));
-        EXPECTED_TAGS_2.add(new Tag("tip"));       
+
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.1"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.2"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.3"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.4"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.5"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.6"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.7"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("published-0.8"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("tip"));
+
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.1"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.2"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.3"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.4"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.5"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.6"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.7"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.8"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("published-0.9"));
+        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("tip"));
       }
-    
+
     public static void prepareSourceRepository (final @Nonnull Option option)
       throws Exception
       {
-        log.info("======== Preparing source repository at {}", sourceRepository.toFile().getCanonicalPath());
-        
+        log.info("======== Preparing source repository at {} with {}", 
+                sourceRepository.toFile().getCanonicalPath(), option);
+
         if (sourceRepository.toFile().exists())
           {
-            FileUtils.deleteDirectory(sourceRepository.toFile());  
+            FileUtils.deleteDirectory(sourceRepository.toFile());
           }
-        
+
         assertThat(sourceRepository.toFile().mkdirs(), is(true));
-        
-        Executor.forExecutable("hg")
+
+        ProcessExecutor.forExecutable("hg")
                 .withArgument("clone")
                 .withArgument("--noupdate")
                 .withArgument(sourceBundle.toFile().getCanonicalPath())
@@ -98,17 +145,9 @@ public class TestRepositoryHelper
                 .withWorkingDirectory(sourceRepository)
                 .start()
                 .waitForCompletion();
-        
-        if (option == Option.STRIP)
-          {
-            Executor.forExecutable("hg")
-                    .withArgument("strip")
-                    .withArgument("published-0.9")
-                    .withWorkingDirectory(sourceRepository)
-                    .start()
-                    .waitForCompletion();
-          }
-        
+
+        option.apply();
+
         log.info("======== Source repository prepared ========");
       }
   }

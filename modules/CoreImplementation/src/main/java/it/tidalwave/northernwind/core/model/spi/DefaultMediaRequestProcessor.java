@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * %%
+ * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,13 +18,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
-package it.tidalwave.northernwind.core.model.spi; 
+ * *********************************************************************************************************************
+ * #L%
+ */
+package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.util.ModifiableRelativeUri;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -53,48 +58,55 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
   {
     @Inject @Nonnull
     private Provider<SiteProvider> siteProvider;
-    
+
     @Inject @Nonnull
     protected ResponseHolder<ResponseType> responseHolder;
 
     @Getter @Setter
     private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationDuration
-    
+
     @Getter @Setter
-    private String uriPrefix = "media";
+    private String uriPrefix = "media"; // FIXME
 
     @Override @Nonnull
-    public Status process (final @Nonnull Request request) 
+    public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException
       {
-        final ModifiableRelativeUri mediaUri = new ModifiableRelativeUri(request.getRelativeUri());
-        
-        if (!mediaUri.popLeading().equals(uriPrefix))
+        ResourcePath mediaUri = new ResourcePath(request.getRelativeUri());
+
+        if (!mediaUri.startsWith(uriPrefix))
           {
             return CONTINUE;
           }
+
+        mediaUri = mediaUri.withoutLeading(); // media
         //
         // Media that can be served at different sizes are mapped to URLs such as:
         //
         //     /media/stillimages/<media-id>/<size>/image.jpg
+        //     /media/movies/<media-id>/<size>/movie.jpg
         //
         // TODO: perhaps this logic should be moved to the media finder? Such as:
         //     find(Media).withSize(1920).withRelativePath(uri).result()
         //
         if (mediaUri.startsWith("stillimages") || mediaUri.startsWith("movies"))
           {
-            // 
+            //
             // TODO: retrocompatibility with StoppingDown and Bluette
             // http://stoppingdown.net/media/stillimages/1920/20120802-0010.jpg
             // Should be dealt with a specific redirector in the website and removed from here.
             //
-            if (mediaUri.getPartsCount() == 3)
+            if (mediaUri.getSegmentCount() == 3)
               {
                 final String extension = mediaUri.getExtension();
-                final String fileName = mediaUri.popTrailing(); // 20120802-0010.jpg
-                final String size = mediaUri.popTrailing();     // 1920
-                mediaUri.append(fileName.replaceAll("\\..*$", ""), size, "image." + extension);
-                mediaUri.prepend(uriPrefix);
+                final String fileName = mediaUri.getTrailing(); // 20120802-0010.jpg
+                mediaUri = mediaUri.withoutTrailing();
+                final String size = mediaUri.getTrailing();     // 1920
+                mediaUri = mediaUri.withoutTrailing();
+                mediaUri = mediaUri.appendedWith(fileName.replaceAll("\\..*$", ""))
+                                   .appendedWith("" + size)
+                                   .appendedWith("image." + extension);
+                mediaUri = mediaUri.prependedWith(uriPrefix);
                 final String redirect = mediaUri.asString();
                 log.info(">>>> permanently redirecting to {}", redirect);
                 responseHolder.response().permanentRedirect(redirect).put();
@@ -102,19 +114,25 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
               }
             // END TODO
 
-            final String extension = mediaUri.getExtension();
-            final String fileName = mediaUri.popTrailing(); // image.jpg
-            final String size = mediaUri.popTrailing();     // 1920
-            final String mediaId = mediaUri.popTrailing();  // 20120802-0010
-            mediaUri.append(size, mediaId + "." + extension);
+            final String extension = mediaUri.getExtension(); // jpg
+            final String fileName = mediaUri.getTrailing();   // image.jpg
+            mediaUri = mediaUri.withoutTrailing();
+            final String size = mediaUri.getTrailing();       // 1920
+            mediaUri = mediaUri.withoutTrailing();
+            final String mediaId = mediaUri.getTrailing();    // 20120802-0010
+            mediaUri = mediaUri.withoutTrailing();
+            mediaUri = mediaUri.appendedWith(size).appendedWith(mediaId + "." + extension);
           }
 
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
         final ResourceFile file = media.getFile();
-        log.info(">>>> serving contents of /{} ...", file.getPath());
-        responseHolder.response().fromFile(file)
-                                 .withExpirationTime(duration)
-                                 .put();
-        return BREAK;        
+        log.info(">>>> serving contents of {} ...", file.getPath().asString());
+        
+        ResponseHolder.ResponseBuilderSupport b = 
+                responseHolder.response().fromFile(file)
+                                         .withExpirationTime(duration)
+                                         .forRequest(request);
+        b.put();
+        return BREAK;
       }
   }

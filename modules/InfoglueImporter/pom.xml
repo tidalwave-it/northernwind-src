@@ -5,19 +5,20 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-20-SNAPSHOT</version>
+        <version>1.1-ALPHA-31-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-importer-infoglue</artifactId>
-    <version>1.37-SNAPSHOT</version>
+    <version>1.48-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Infoglue Importer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tft.mainClass>it.tidalwave.northernwind.importer.infoglue.Main</tft.mainClass>    
+        <tft.test.skip>true</tft.test.skip>
     </properties>
     
     <dependencies>
