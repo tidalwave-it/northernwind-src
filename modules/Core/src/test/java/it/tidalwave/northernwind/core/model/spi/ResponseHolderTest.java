@@ -144,7 +144,7 @@ public class ResponseHolderTest
         for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
           {
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
-            headers.put(HEADER_IF_NOT_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
             final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                         .forRequest(request);
             assertContents(builder, "ResourceFileOutput.txt");
@@ -162,7 +162,7 @@ public class ResponseHolderTest
         for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
           {
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
-            headers.put(HEADER_IF_NOT_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
             final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
                                                                         .forRequest(request);
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
