@@ -393,7 +393,9 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         
         /***************************************************************************************************************
          *
+         * This method actually builds the response and must be provided by concrete subclasses.
          * 
+         * @return  the response
          *
          **************************************************************************************************************/
         @Nonnull
@@ -401,7 +403,10 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         
         /***************************************************************************************************************
          *
+         * Returns a header response previously added.
          * 
+         * @param   header  the header name
+         * @return          the header value
          *
          **************************************************************************************************************/
         @Nullable
@@ -409,7 +414,10 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           
         /***************************************************************************************************************
          *
+         * Returns a header response previously added.
          * 
+         * @param   header  the header name
+         * @return          the header value
          *
          **************************************************************************************************************/
         @Nullable
@@ -421,7 +429,10 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           
         /***************************************************************************************************************
          *
+         * Takes care of the caching feature. If the response refers to an entity whose value has been cached by the
+         * client and it's still fresh, a "Not modified" response will be returned.
          * 
+         * @return                      itself for fluent interface style
          *
          **************************************************************************************************************/
         @Nonnull
@@ -443,13 +454,13 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
             return this;
           }
 
-        /*******************************************************************************************************************
+        /***************************************************************************************************************
          *
          * Returns the current time. This can be overridden for mocking time in tests.
          * 
          * @return  the current time
          *
-         ******************************************************************************************************************/
+         **************************************************************************************************************/
         @Nonnull
         protected DateTime getCurrentTime()
           {
