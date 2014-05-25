@@ -54,7 +54,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
 
     private MockResponseHolder responseHolder;
 
-    private DateTime currentTime = new DateTime(1341242353456L);
+    private final DateTime currentTime = new DateTime(1341242353456L);
 
     public AvailabilityEnforcerRequestProcessorTest()
       {
