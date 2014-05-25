@@ -15,6 +15,7 @@
     <version>1.0.48-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Core</name>
+    <description>Contains the interfaces of the Core.</description>
 
     <dependencies>
         <dependency>
@@ -83,5 +84,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <description>Contains the interfaces of the Core.</description>
 </project>
