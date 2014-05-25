@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.springmvc;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +38,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
-import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
