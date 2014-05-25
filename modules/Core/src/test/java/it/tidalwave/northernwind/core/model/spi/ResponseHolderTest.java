@@ -62,9 +62,9 @@ public class ResponseHolderTest
     
     private Map<String, String> headers;
     
-    private DateTime currentTime = new DateTime(1341242353456L);
+    private final DateTime currentTime = new DateTime(1341242353456L);
 
-    private DateTime resourceLatestModifiedTime = new DateTime(1341242553456L);
+    private final DateTime resourceLatestModifiedTime = new DateTime(1341242553456L);
     
     /*******************************************************************************************************************
      *
@@ -103,7 +103,7 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFile()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile);
+        final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile);
         assertContents(builder, "ResourceFileOutput.txt");
       }
     
@@ -115,8 +115,8 @@ public class ResponseHolderTest
       throws Exception
       {
         headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .forRequest(request);
+        final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
+                                                             .forRequest(request);
         assertContents(builder, "ResourceFileOutput.txt");
       }
     
@@ -128,8 +128,8 @@ public class ResponseHolderTest
       throws Exception
       {
         headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .forRequest(request);
+        final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
+                                                             .forRequest(request);
         assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
     
@@ -144,8 +144,8 @@ public class ResponseHolderTest
           {
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
-            final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                        .forRequest(request);
+            final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
+                                                                 .forRequest(request);
             assertContents(builder, "ResourceFileOutput.txt");
           }
       }
@@ -162,8 +162,8 @@ public class ResponseHolderTest
           {
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
-            final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                        .forRequest(request);
+            final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
+                                                                 .forRequest(request);
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
           }
       }
@@ -175,8 +175,8 @@ public class ResponseHolderTest
     public void mustProperlyOutputAResourceFileWithExpirationTime()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().fromFile(resourceFile)
-                                                                    .withExpirationTime(Duration.standardDays(7));
+        final ResponseBuilder<?> builder = fixture.response().fromFile(resourceFile)
+                                                             .withExpirationTime(Duration.standardDays(7));
         assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
       }
     
@@ -188,7 +188,7 @@ public class ResponseHolderTest
       throws Exception
       {
         final NotFoundException e = new NotFoundException("foo bar");
-        final ResponseBuilderSupport<?> builder = fixture.response().forException(e);
+        final ResponseBuilder<?> builder = fixture.response().forException(e);
         assertContents(builder, "NotFoundExceptionOutput.txt");
       }
     
@@ -200,7 +200,7 @@ public class ResponseHolderTest
       throws Exception
       {
         final IOException e = new IOException("foo bar");
-        final ResponseBuilderSupport<?> builder = fixture.response().forException(e);
+        final ResponseBuilder<?> builder = fixture.response().forException(e);
         assertContents(builder, "InternalErrorOutput.txt");
       }
     
@@ -211,14 +211,14 @@ public class ResponseHolderTest
     public void mustProperlyOutputAPermanentRedirect()
       throws Exception
       {
-        final ResponseBuilderSupport<?> builder = fixture.response().permanentRedirect("http://acme.com");
+        final ResponseBuilder<?> builder = fixture.response().permanentRedirect("http://acme.com");
         assertContents(builder, "PermanentRedirectOutput.txt");
       }
     
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertContents (final @Nonnull ResponseBuilderSupport<?> builder, final String fileName)
+    private void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
         final File actualFile = new File("target/test-results/" + fileName);

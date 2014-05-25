@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j // FIXME: move to Core Default Implementation
-public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
+public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseBuilder<RESPONSE_TYPE>
   {
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
     protected static final String HEADER_ETAG = "ETag";
@@ -96,11 +96,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Sets a header.
-     *
-     * @param   header              the header name
-     * @param   value               the header value
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      * 
      ******************************************************************************************************************/
     @Nonnull
@@ -108,10 +104,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Sets multiple headers at the same time.
-     *
-     * @param   headers             the headers
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      * 
      ******************************************************************************************************************/
     @Nonnull
@@ -129,10 +122,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the content type.
-     * 
-     * @param   contentType         the content type
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -143,10 +133,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the content length.
-     * 
-     * @param  contentLength        the content length
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -157,10 +144,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the content disposition.
-     * 
-     * @param  contentDisposition   the content disposition
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -171,10 +155,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the expiration time.
-     * 
-     * @param  duration             the duration
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -187,10 +168,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the latest modified time.
-     * 
-     * @param  time                 the time
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -202,11 +180,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the body of the response. Accepted objects are: {@code byte[]}, {@code String}, 
-     * {@code InputStream}.
-     * 
-     * @param  body                 the body 
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -220,11 +194,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the body of the response as a {@link ResourceFile}.
-     * 
-     * @param  file                 the file
-     * @return                      itself for fluent interface style
-     * @throws IOException          if an error occurs when reading the file
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -241,11 +211,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the {@link Request} we're serving - this makes it possible to read some headers and other
-     * configurations needed e.g. for cache control.
-     * 
-     * @param  request              the request
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -274,10 +240,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies an exception to create the response from.
-     * 
-     * @param  e                    the exception
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -289,10 +252,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies an exception to create the response from.
-     * 
-     * @param  e                    the exception
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -304,10 +264,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies an exception to create the response from.
-     * 
-     * @param  e                    the exception
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -338,10 +295,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Specifies the HTTP status.
-     * 
-     * @param  httpStatus           the status
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -353,10 +307,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Creates a builder for a permanent redirect.
-     * 
-     * @param  url                  the URL of the redirect       
-     * @return                      itself for fluent interface style
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -368,9 +319,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * Builds the response.
-     * 
-     * @return                              the response
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -381,7 +330,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * 
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     public void put()

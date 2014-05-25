@@ -55,7 +55,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
      * 
      ******************************************************************************************************************/
     @Nonnull
-    public abstract ResponseBuilderSupport<RESPONSE_TYPE> response();
+    public abstract ResponseBuilder<RESPONSE_TYPE> response();
 
     /*******************************************************************************************************************
      *
