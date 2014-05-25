@@ -37,6 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -60,7 +61,7 @@ public class ResponseEntityHolder extends ResponseHolder<ResponseEntity<?>>
             return this;
           }
         
-        @Override
+        @Override @Nullable
         protected String getHeader (final @Nonnull String header)
           {
             final List<String> g = headers.get(header);
