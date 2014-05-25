@@ -38,7 +38,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.InputStream;
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
@@ -46,6 +45,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /***********************************************************************************************************************
  *
@@ -97,7 +97,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
         protected Object body = new byte[0];
 
-        protected int httpStatus = HttpServletResponse.SC_OK;
+        protected int httpStatus = SC_OK;
 
         @Nullable
         protected String requestIfNoneMatch;
@@ -286,7 +286,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
           {
             log.info("NOT FOUND: {}", e.toString());
-            return forException(new HttpStatusException(HttpServletResponse.SC_NOT_FOUND));
+            return forException(new HttpStatusException(SC_NOT_FOUND));
           }
 
         /***************************************************************************************************************
@@ -301,7 +301,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> forException (final @Nonnull IOException e)
           {
             log.error("", e);
-            return forException(new HttpStatusException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+            return forException(new HttpStatusException(SC_INTERNAL_SERVER_ERROR));
           }
 
         /***************************************************************************************************************
@@ -319,14 +319,14 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
 
             switch (e.getHttpStatus()) // FIXME: get from a resource bundle
               {
-                case HttpServletResponse.SC_MOVED_TEMPORARILY:
+                case SC_MOVED_TEMPORARILY:
                   break;
 
-                case HttpServletResponse.SC_NOT_FOUND:
+                case SC_NOT_FOUND:
                   message = "<h1>Not found</h1>";
                   break;
 
-                case HttpServletResponse.SC_INTERNAL_SERVER_ERROR:
+                case SC_INTERNAL_SERVER_ERROR:
                 default: // FIXME: why?
                   message = "<h1>Internal error</h1>";
                   break;
@@ -365,7 +365,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
         public ResponseBuilderSupport<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
           {
             return withHeader(HEADER_LOCATION, url)
-                  .withStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                  .withStatus(SC_MOVED_PERMANENTLY);
           }
 
         /***************************************************************************************************************
@@ -477,7 +477,7 @@ public abstract class ResponseHolder<RESPONSE_TYPE> implements RequestResettable
           {
             return withBody(new byte[0])
                   .withContentLength(0)
-                  .withStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                  .withStatus(SC_NOT_MODIFIED);
           }
         
         /***************************************************************************************************************
