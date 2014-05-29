@@ -1,0 +1,6 @@
+<div id="lightboxFB">
+    <div id="thumbnails">
+        $content$
+    </div>
+    <div id="copyright">$copyright$</div>
+</div>
