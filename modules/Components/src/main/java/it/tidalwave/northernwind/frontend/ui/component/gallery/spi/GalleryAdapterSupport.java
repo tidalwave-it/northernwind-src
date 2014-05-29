@@ -83,7 +83,8 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
     protected String loadTemplate (final @Nonnull String templateName)
       throws IOException
       {
-        final Resource resource = new ClassPathResource("/" + getClass().getPackage().getName().replace('.', '/') + "/" + templateName);
+        final String packagePath = getClass().getPackage().getName().replace('.', '/');
+        final Resource resource = new ClassPathResource("/" + packagePath + "/" + templateName);
         final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
         final char[] buffer = new char[(int)resource.contentLength()];
         r.read(buffer);
