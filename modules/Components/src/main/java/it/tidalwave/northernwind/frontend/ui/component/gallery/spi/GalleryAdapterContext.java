@@ -28,7 +28,9 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 
 /***********************************************************************************************************************
  *
@@ -51,5 +53,21 @@ public interface GalleryAdapterContext
      *
      ******************************************************************************************************************/
     @Nonnull
+    public Site getSite();
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     public SiteNode getSiteNode();
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public GalleryView getView();
   }
