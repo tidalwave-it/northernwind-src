@@ -84,9 +84,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
       throws IOException
       {
         this.context = context;
-        galleryTemplate = loadTemplate("Bluette.txt");
-        fallbackTemplate = loadTemplate("BluetteFallback.txt");
-        lightboxFallbackTemplate = loadTemplate("BluetteLightboxFallback.txt");
+        galleryTemplate = loadTemplate(context, "bluette");
+        fallbackTemplate = loadTemplate(context, "bluetteFallback");
+        lightboxFallbackTemplate = loadTemplate(context, "bluetteLightboxFallback");
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
         copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT, "");
       }
