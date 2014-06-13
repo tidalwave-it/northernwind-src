@@ -57,7 +57,7 @@
         <constructor-arg value="javax.servlet.ServletContext" />
     </bean>
 
-    <bean id="fixture" class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider" lazy-init="true">
+    <bean id="underTest" class="it.tidalwave.northernwind.core.impl.model.DefaultSiteProvider" lazy-init="true">
         <property name="documentPath" value="testDocumentPath" />
         <property name="mediaPath" value="testMediaPath" />
         <property name="nodePath" value="testNodePath" />

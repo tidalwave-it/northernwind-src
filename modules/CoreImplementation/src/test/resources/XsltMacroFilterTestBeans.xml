@@ -55,7 +55,7 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.Site" />
     </bean>
 
-    <bean id="fixture"
+    <bean id="underTest"
           class="it.tidalwave.northernwind.core.impl.filter.XsltMacroFilter"
           lazy-init="true"/>
 

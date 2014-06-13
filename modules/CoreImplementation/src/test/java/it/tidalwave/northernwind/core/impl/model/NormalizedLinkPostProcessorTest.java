@@ -42,19 +42,19 @@ import static org.hamcrest.CoreMatchers.is;
  **********************************************************************************************************************/
 public class NormalizedLinkPostProcessorTest
   {
-    private NormalizedLinkPostProcessor fixture;
+    private NormalizedLinkPostProcessor underTest;
 
     @BeforeMethod
     public void setUp()
       {
-        fixture = new NormalizedLinkPostProcessor();
+        underTest = new NormalizedLinkPostProcessor();
       }
 
     @Test(dataProvider = "links")
     public void must_create_correct_links (final @Nonnull String link, final @Nonnull String expectedResult)
       throws Exception
       {
-        final String result = fixture.postProcess(link);
+        final String result = underTest.postProcess(link);
 
         assertThat(result, is(expectedResult));
       }

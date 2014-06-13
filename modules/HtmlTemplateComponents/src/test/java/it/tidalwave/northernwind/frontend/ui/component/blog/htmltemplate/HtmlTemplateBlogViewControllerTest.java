@@ -59,7 +59,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class HtmlTemplateBlogViewControllerTest
   {
-    private HtmlTemplateBlogViewController fixture;
+    private HtmlTemplateBlogViewController underTest;
     
     private BlogView view;
     
@@ -85,7 +85,7 @@ public class HtmlTemplateBlogViewControllerTest
         requestHolder = mock(RequestHolder.class);
         requestContext = mock(RequestContext.class);
         requestLocaleManager = mock(RequestLocaleManager.class);
-        fixture = new HtmlTemplateBlogViewController(view, node, site, requestHolder, requestContext, requestLocaleManager);  
+        underTest = new HtmlTemplateBlogViewController(view, node, site, requestHolder, requestContext, requestLocaleManager);  
       }
     
     /*******************************************************************************************************************
@@ -100,7 +100,7 @@ public class HtmlTemplateBlogViewControllerTest
         mockNodeProperty(viewId, PROPERTY_TITLE, title);
         
         final StringBuilder builder = new StringBuilder();
-        fixture.renderMainTitle(builder);
+        underTest.renderMainTitle(builder);
         
         assertThat(builder.toString(), is(expectedRendering));
       }
@@ -122,7 +122,7 @@ public class HtmlTemplateBlogViewControllerTest
         mockNodeProperty(viewId, PROPERTY_DATE_FORMAT, dateFormat);   
         
         final StringBuilder builder = new StringBuilder();
-        fixture.renderDate(builder, dateTime);
+        underTest.renderDate(builder, dateTime);
         
         assertThat(builder.toString(), is(expectedRendering));
       }

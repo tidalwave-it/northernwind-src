@@ -83,7 +83,7 @@ public abstract class FileSystemTestSupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public abstract void performAssertions (@Nonnull DefaultSite fixture);
+    public abstract void performAssertions (@Nonnull DefaultSite underTest);
 
     /*******************************************************************************************************************
      *

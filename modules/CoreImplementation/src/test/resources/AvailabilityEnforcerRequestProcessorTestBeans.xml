@@ -57,7 +57,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="fixture" 
+    <bean id="underTest" 
           class="it.tidalwave.northernwind.core.model.spi.AvailabilityEnforcerRequestProcessor" 
           lazy-init="true">
         <property name="responseHolder" ref="responseHolder"/>

@@ -48,7 +48,7 @@ import static org.hamcrest.MatcherAssert.*;
  **********************************************************************************************************************/
 public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSupport
   {
-    private AvailabilityEnforcerRequestProcessor fixture;
+    private AvailabilityEnforcerRequestProcessor underTest;
 
     private Request request;
 
@@ -65,7 +65,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
     public void setupFixture()
       {
         MockResponseBuilder.setCurrentTime(currentTime);
-        fixture = context.getBean(AvailabilityEnforcerRequestProcessor.class);
+        underTest = context.getBean(AvailabilityEnforcerRequestProcessor.class);
         responseHolder = context.getBean(MockResponseHolder.class);
         request = mock(Request.class);
 
@@ -79,7 +79,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
       {
         when(siteProvider.isSiteAvailable()).thenReturn(true);
 
-        final Status result = fixture.process(request);
+        final Status result = underTest.process(request);
 
         assertThat(result, is(Status.CONTINUE));
 //        verifyZeroInteractions(responseHolder); FIXME
@@ -91,7 +91,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
       {
         when(siteProvider.isSiteAvailable()).thenReturn(false);
 
-        final Status result = fixture.process(request);
+        final Status result = underTest.process(request);
         final File actualFile = new File("target/test-artifacts/response.txt");
         final File expectedFile = new File("src/test/resources/expected-results/response.txt");
         actualFile.getParentFile().mkdirs();

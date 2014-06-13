@@ -43,7 +43,7 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
-    <bean id="fixture" 
+    <bean id="underTest" 
           class="it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider"
           lazy-init="true">
     </bean>

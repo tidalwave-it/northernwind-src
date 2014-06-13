@@ -52,7 +52,7 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideRequestProcessor" />
     </bean>
 
-    <bean id="fixture"
+    <bean id="underTest"
           class="it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor"
           lazy-init="true">
     </bean>

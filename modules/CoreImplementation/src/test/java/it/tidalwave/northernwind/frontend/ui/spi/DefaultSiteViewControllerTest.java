@@ -61,7 +61,7 @@ import static org.mockito.Mockito.any;
  **********************************************************************************************************************/
 public class DefaultSiteViewControllerTest 
   {
-    private DefaultSiteViewController fixture;
+    private DefaultSiteViewController underTest;
     
     private RequestHolder requestHolder;
 
@@ -98,7 +98,7 @@ public class DefaultSiteViewControllerTest
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteViewControllerTestBeans.xml");
         
-        fixture = context.getBean(DefaultSiteViewController.class);
+        underTest = context.getBean(DefaultSiteViewController.class);
         
         request = mock(Request.class);
         response = mock(Object.class);
@@ -128,7 +128,7 @@ public class DefaultSiteViewControllerTest
     public void must_call_all_RequestProcessors_in_normal_scenario()
       throws Exception 
       {
-        Object result = fixture.processRequest(request);
+        Object result = underTest.processRequest(request);
         assertThat(result, sameInstance(response));
         
         final InOrder inOrder = createInOrder();
@@ -158,7 +158,7 @@ public class DefaultSiteViewControllerTest
       {
         mockRequestProcessor3.setStatus(Status.BREAK);
         
-        Object result = fixture.processRequest(request);
+        Object result = underTest.processRequest(request);
         assertThat(result, sameInstance(response));
         
         final InOrder inOrder = createInOrder();
@@ -253,7 +253,7 @@ public class DefaultSiteViewControllerTest
     protected void commonExceptionTestSequence() 
       throws HttpStatusException, IOException, NotFoundException 
       {
-        final Object result = fixture.processRequest(request);
+        final Object result = underTest.processRequest(request);
         assertThat(result, sameInstance(response));
         
         final InOrder inOrder = createInOrder();

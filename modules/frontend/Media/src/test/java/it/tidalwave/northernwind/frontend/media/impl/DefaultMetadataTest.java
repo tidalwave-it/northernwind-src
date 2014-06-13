@@ -83,9 +83,9 @@ public class DefaultMetadataTest
                                                            final @Nonnull String expectedResult)
       throws Exception
       {
-        final Metadata fixture = metadataBuilder.build();
+        final Metadata underTest = metadataBuilder.build();
 
-        final String result = fixture.interpolateString(template, properties);
+        final String result = underTest.interpolateString(template, properties);
 
         assertThat(result, is(expectedResult));
       }

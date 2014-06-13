@@ -63,7 +63,7 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSyste
  **********************************************************************************************************************/
 public class MercurialFileSystemProviderTest
   {
-    private MercurialFileSystemProvider fixture;
+    private MercurialFileSystemProvider underTest;
 
     private GenericXmlApplicationContext context;
 
@@ -81,7 +81,7 @@ public class MercurialFileSystemProviderTest
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
         properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath());
         context = createContextWithProperties(properties);
-        fixture = context.getBean(MercurialFileSystemProvider.class);
+        underTest = context.getBean(MercurialFileSystemProvider.class);
         messageBus = context.getBean(MessageBus.class);
       }
 
@@ -93,11 +93,11 @@ public class MercurialFileSystemProviderTest
       throws Exception
       {
         assertInvariantPostConditions();
-        assertThat(fixture.exposedRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(fixture.alternateRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThatHasNoCurrentTag(fixture.exposedRepository);
-        assertThatHasNoCurrentTag(fixture.alternateRepository);
-        assertThat(fixture.swapCounter, is(0));
+        assertThat(underTest.exposedRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThat(underTest.alternateRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThatHasNoCurrentTag(underTest.exposedRepository);
+        assertThatHasNoCurrentTag(underTest.alternateRepository);
+        assertThat(underTest.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
 
@@ -108,14 +108,14 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
       {
-        updateWorkAreaTo(fixture.getCurrentWorkArea(), new Tag("published-0.8"));
-        final int previousSwapCounter = fixture.swapCounter;
+        updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
+        final int previousSwapCounter = underTest.swapCounter;
 
-        fixture.checkForUpdates();
+        underTest.checkForUpdates();
 
         assertInvariantPostConditions();
-        assertThat(fixture.getCurrentTag().getName(), is("published-0.8"));
-        assertThat(fixture.swapCounter, is(previousSwapCounter));
+        assertThat(underTest.getCurrentTag().getName(), is("published-0.8"));
+        assertThat(underTest.swapCounter, is(previousSwapCounter));
         verifyZeroInteractions(messageBus);
       }
 
@@ -126,18 +126,18 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
       throws Exception
       {
-        updateWorkAreaTo(fixture.getCurrentWorkArea(), new Tag("published-0.8"));
-        final int previousSwapCounter = fixture.swapCounter;
+        updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
+        final int previousSwapCounter = underTest.swapCounter;
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
         final DateTime now = new DateTime();
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        fixture.checkForUpdates();
+        underTest.checkForUpdates();
 
         assertInvariantPostConditions();
-        assertThat(fixture.getCurrentTag().getName(), is("published-0.9"));
-        assertThat(fixture.swapCounter, is(previousSwapCounter + 1));
-        verify(messageBus).publish(is(argThat(fileSystemChangedEvent().withResourceFileSystemProvider(fixture))));
+        assertThat(underTest.getCurrentTag().getName(), is("published-0.9"));
+        assertThat(underTest.swapCounter, is(previousSwapCounter + 1));
+        verify(messageBus).publish(is(argThat(fileSystemChangedEvent().withResourceFileSystemProvider(underTest))));
       }
 
     /*******************************************************************************************************************
@@ -154,8 +154,8 @@ public class MercurialFileSystemProviderTest
      ******************************************************************************************************************/
     private void assertInvariantPostConditions()
       {
-        assertThat(fixture.exposedRepository.getWorkArea(), is(not(fixture.alternateRepository.getWorkArea())));
-        assertThat(fixture.fileSystemDelegate.getRootDirectory().toPath(), is(fixture.exposedRepository.getWorkArea()));
+        assertThat(underTest.exposedRepository.getWorkArea(), is(not(underTest.alternateRepository.getWorkArea())));
+        assertThat(underTest.fileSystemDelegate.getRootDirectory().toPath(), is(underTest.exposedRepository.getWorkArea()));
       }
 
     /*******************************************************************************************************************

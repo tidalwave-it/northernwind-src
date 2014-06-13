@@ -59,10 +59,10 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
     @Test
     public void must_find_the_correct_matches()
       {
-        final NodeLinkMacroExpanderFixture fixture = new NodeLinkMacroExpanderFixture();
+        final NodeLinkMacroExpanderFixture underTest = new NodeLinkMacroExpanderFixture();
         final String text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
-        fixture.filter(text, "text/html");
-        final List<List<String>> matches = fixture.getHelper().getMatches();
+        underTest.filter(text, "text/html");
+        final List<List<String>> matches = underTest.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(Arrays.asList("/Blog")));
       }
@@ -70,8 +70,8 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
     @Test(dataProvider = "textProvider")
     public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
       {
-        final NodeLinkMacroFilter fixture = context.getBean(NodeLinkMacroFilter.class);
-        final String filtered = fixture.filter(text, "text/html");
+        final NodeLinkMacroFilter underTest = context.getBean(NodeLinkMacroFilter.class);
+        final String filtered = underTest.filter(text, "text/html");
 
         assertThat(filtered, is(expected));
       }

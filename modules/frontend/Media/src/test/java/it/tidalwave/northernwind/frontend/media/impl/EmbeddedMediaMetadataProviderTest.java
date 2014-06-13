@@ -51,7 +51,7 @@ public class EmbeddedMediaMetadataProviderTest
   {
     private ApplicationContext context;
 
-    private EmbeddedMediaMetadataProvider fixture;
+    private EmbeddedMediaMetadataProvider underTest;
     
     private MetadataCache metadataCache;
     
@@ -67,7 +67,7 @@ public class EmbeddedMediaMetadataProviderTest
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("EmbeddedMediaMetadataProviderTestBeans.xml");
-        fixture = context.getBean(EmbeddedMediaMetadataProvider.class);
+        underTest = context.getBean(EmbeddedMediaMetadataProvider.class);
         metadataCache = context.getBean(MetadataCache.class);
         siteNodeProperties = mock(ResourceProperties.class);
         mediaId = new Id("mediaId");
@@ -84,7 +84,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadata.interpolateString(anyString(), same(siteNodeProperties))).thenReturn("result");
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties))).thenReturn(metadata);
         
-        final String result = fixture.getMetadataString(mediaId, "template", siteNodeProperties);
+        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
         
         assertThat(result, is("result"));
       }
@@ -99,7 +99,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
                 .thenThrow(new NotFoundException("Media not found"));
         
-        final String result = fixture.getMetadataString(mediaId, "template", siteNodeProperties);
+        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
 
         assertThat(result, is(""));
       }
@@ -114,7 +114,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
                 .thenThrow(new IOException("Cannot open file"));
         
-        final String result = fixture.getMetadataString(mediaId, "template", siteNodeProperties);
+        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
 
         assertThat(result, is(""));
       }
