@@ -117,15 +117,15 @@ public class DefaultViewFactoryTest
      ******************************************************************************************************************/
     @Test(enabled = false, // FIXME: often, but not always, fails
           expectedExceptions = NotFoundException.class,
-          expectedExceptionsMessageRegExp = "\\QCannot find type3: available: [type1]\\E")
+          expectedExceptionsMessageRegExp = "\\QCannot find unregisteredType: available: [registeredType]\\E")
     public void createViewAndController_must_throw_exception_when_type_is_not_registered()
       throws Exception
       {
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
         final SiteNode siteNode = mock(SiteNode.class);
         final Id id = new Id("theId");
-        underTest.viewBuilderMapByTypeUri.put("type1", viewBuilder);
+        underTest.viewBuilderMapByTypeUri.put("registeredType", viewBuilder);
 
-        final ViewAndController vac = underTest.createViewAndController("type3", id, siteNode);
+        final ViewAndController vac = underTest.createViewAndController("unregisteredType", id, siteNode);
       }
   }
