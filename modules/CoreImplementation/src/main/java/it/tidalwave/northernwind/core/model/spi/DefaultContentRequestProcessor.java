@@ -36,7 +36,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
@@ -100,6 +99,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     /*******************************************************************************************************************
      *
      * If relativeUri doesn't end with a trailing slash, send a redirect to the proper Uri.
+     * FIXME: could be dropped and replaced with a configurable redirect?
      *
      ******************************************************************************************************************/
     private void enforceTrailingSlash (final @Nonnull String relativeUri, final @Nonnull Site site)
@@ -109,7 +109,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
 
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
           {
-            throw new HttpStatusException(302).withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
+            throw HttpStatusException.temporaryRedirect(site, relativeUri); // TODO: temporary or permanent?
           }
       }
   }
