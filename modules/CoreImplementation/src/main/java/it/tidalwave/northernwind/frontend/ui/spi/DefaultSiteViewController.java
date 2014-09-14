@@ -102,7 +102,7 @@ public class DefaultSiteViewController implements SiteViewController
           }
         catch (HttpStatusException e)
           {
-            if (e.getHttpStatus() != SC_FOUND)
+            if (e.isError())
               {
                 log.warn("processing: " + request, e);
               }
