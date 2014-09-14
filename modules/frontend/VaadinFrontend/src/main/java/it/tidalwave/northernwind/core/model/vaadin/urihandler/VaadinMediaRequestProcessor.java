@@ -40,7 +40,7 @@ import static org.springframework.core.Ordered.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value = "session") @Order(HIGHEST_PRECEDENCE)
+@Configurable @Scope(value = "session") @Order(HIGHEST_PRECEDENCE+1)
 public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<DownloadStream>
   {
 //    @Override @Nonnull

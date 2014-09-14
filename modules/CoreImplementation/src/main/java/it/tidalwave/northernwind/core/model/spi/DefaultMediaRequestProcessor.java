@@ -53,7 +53,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @Order(HIGHEST_PRECEDENCE)
+@Slf4j @Order(HIGHEST_PRECEDENCE+2)
 public class DefaultMediaRequestProcessor<ResponseType> implements RequestProcessor
   {
     @Inject @Nonnull

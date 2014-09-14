@@ -170,6 +170,10 @@
           class="it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager" >
     </bean>
 
+    <bean id="redirectProcessor"
+          class="it.tidalwave.northernwind.core.model.spi.DefaultRedirectProcessor" >
+    </bean>
+
     <bean id="viewFactory"
           class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
