@@ -66,8 +66,10 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
       {
         try
           {
+            // FIXME: should be pushed into @PostConstruct, but can't - see NW-224
             final Site site = siteProvider.get().getSite();
-            final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result();
+            final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result(); // See NW-223
+            // END FIXME
             final String propertyName = matcher.group(1);
             return rootSiteNode.getProperties().getProperty(new Key<String>(propertyName), "");
           }
