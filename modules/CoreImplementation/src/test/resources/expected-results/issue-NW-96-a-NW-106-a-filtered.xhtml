@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  </head>
+  <body>
+      <div class="images">
+        <div><img src="$mediaLink(relativePath='/screenshots/hero/blueshadesScreenSnapz002.png')$" /></div>
+        <div><img src="$mediaLink(relativePath='/screenshots/hero/blueshadesScreenSnapz003.png')$" /></div>
+      </div>
+      <div class="slidetabs"><a href="#"></a> <a href="#"></a></div>
+      <div><p>Open source color management. <a class="btn primary" href="$nodeLink(relativePath='/About')$" style="margin-left: 20px">More ...</a> </p></div>
+
+<script language="JavaScript">
+//<![CDATA[
+$(function()
+  {
+    $(".slidetabs").tabs(".images > div",
+      {
+        effect:       'fade',
+        fadeOutSpeed: 'slow',
+        rotate:       true
+      }).slideshow({ autoplay: true });
+  });
+
+//]]>
+</script>
+
+  </body>
+</html>
