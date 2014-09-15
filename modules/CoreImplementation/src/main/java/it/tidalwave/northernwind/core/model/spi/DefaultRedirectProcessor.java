@@ -107,20 +107,27 @@ public class DefaultRedirectProcessor implements RequestProcessor
      ******************************************************************************************************************/
 //    @PostConstruct // FIXME: see NW-224
     @VisibleForTesting void initialize()
-      throws NotFoundException, IOException
+      throws IOException, NotFoundException
       {
         site = siteProvider.get().getSite();
         final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result();
         final ResourceProperties rootSiteNodeProperties = rootSiteNode.getProperties();
         final ResourceProperties properties = rootSiteNodeProperties.getGroup(PROPERTY_GROUP_ID);
         
-        for (final String permanentRedirectConfig : properties.getProperty(PROPERTY_PERMANENT_REDIRECTS))
+        try
           {
-            permanentMappings.add(new Mapping(permanentRedirectConfig));  
+            for (final String permanentRedirectConfig : properties.getProperty(PROPERTY_PERMANENT_REDIRECTS))
+              {
+                permanentMappings.add(new Mapping(permanentRedirectConfig));  
+              }
           }
-        
+        catch (NotFoundException e)
+          {
+            // ok, no PROPERTY_PERMANENT_REDIRECTS
+          }
+
         log.info("Permanent redirect mappings:");
-        
+
         for (final Mapping mapping : permanentMappings)
           {
             log.info(">>>> {}", mapping.toString());
