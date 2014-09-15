@@ -30,7 +30,7 @@
         <jetty.version>6.1.26</jetty.version>
         <joda-time.version>1.6.2</joda-time.version>
         <logback.version>1.0.12</logback.version>
-        <mistral.version>1.0-ALPHA-2</mistral.version>
+        <mistral.version>1.0-ALPHA-3</mistral.version>
         <netbeans.version>RELEASE72</netbeans.version>
         <openbluesky.version>0.16</openbluesky.version>
         <spring.version>3.2.3.RELEASE</spring.version>
