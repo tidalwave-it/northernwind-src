@@ -47,3 +47,6 @@ IPTC [622] null: Fabrizio Giudici
 IPTC [627] null: Fabrizio Giudici
 IPTC [628] null: © Copyright by Fabrizio Giudici. All rights reserved.
 IPTC [634] null: Fabrizio Giudici
+XMP  [6] null: 1800/10 1800/10 28/10 28/10
+XMP  [7] null: 180.0 mm f/2.8
+XMP  [8] null: 6147706
