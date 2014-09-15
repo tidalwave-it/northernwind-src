@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.util.test.FileComparisonUtils.*;
 import java.util.Arrays;
 import org.imajine.image.Rational;
+import org.imajine.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
@@ -59,8 +60,10 @@ public class DefaultMetadataProviderTest
         log.info("IMAGE: {}", image);
         final IPTC iptc = image.getMetadata(IPTC.class);
         final EXIF exif = image.getMetadata(EXIF.class);
+        final XMP xmp = image.getMetadata(XMP.class);
         log.info("IPTC: {}", iptc);
         log.info("EXIF: {}", exif);
+        log.info("XMP: {}", xmp);
 
         final File expectedFile = new File(String.format("src/test/resources/expected-results/MetadataDump-%s.txt", "20100102-0001"));
         final File actualFile = new File(String.format("target/test-artifacts/MetadataDump-%s.txt", "20100102-0001"));
@@ -69,6 +72,7 @@ public class DefaultMetadataProviderTest
         final PrintWriter pw = new PrintWriter(actualFile);
         dumpTags(pw, "EXIF", exif);
         dumpTags(pw, "IPTC", iptc);
+        dumpTags(pw, "XMP ", xmp);
         pw.close();
 
         assertSameContents(expectedFile, actualFile);
