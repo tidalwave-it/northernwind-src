@@ -32,6 +32,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Iterator;
 import java.io.IOException;
+import org.imajine.image.EditableImage;
+import org.imajine.image.op.ReadOp;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
@@ -39,8 +41,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import org.imajine.image.EditableImage;
-import org.imajine.image.op.ReadOp;
+import lombok.extern.slf4j.Slf4j;
 import static org.imajine.image.op.ReadOp.Type.METADATA;
 import static it.tidalwave.northernwind.core.model.Media.Media;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
@@ -53,6 +54,7 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class DefaultMetadataLoader implements MetadataLoader
   {
     @Inject @Nonnull
@@ -81,6 +83,7 @@ public class DefaultMetadataLoader implements MetadataLoader
     public Metadata loadMetadata (final @Nonnull ResourceFile file) 
       throws IOException 
       {
+        log.info("loadMetadata({})", file.getPath());
         final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
         return new DefaultMetadata(file.getName(), image);
       }
