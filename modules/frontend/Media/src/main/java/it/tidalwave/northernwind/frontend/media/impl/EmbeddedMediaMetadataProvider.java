@@ -77,12 +77,12 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
         catch (NotFoundException e)
           {
-            log.warn("Cannot find media for id: " + mediaId, e);
+            log.warn("Cannot find media for id {}: {}", mediaId, e.toString());
             return "";
           }
         catch (IOException e)
           {
-            log.warn("Unexpected I/O error for id: " + mediaId, e);
+            log.warn("Unexpected I/O error for id {}: {}", mediaId, e.toString());
             return "";
           }
       }
