@@ -95,8 +95,6 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
               {
                 final Node node = nodes.item(i);
                 final String src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("_", "-").replaceAll("\\.jpg$", "");
-//                final String title = node.getAttributes().getNamedItem("title").getNodeValue();
-//                final String caption = node.getAttributes().getNamedItem("caption").getNodeValue();
                 items.add(createItem(new Id(src)));
               }
           }
