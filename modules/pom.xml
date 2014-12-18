@@ -31,7 +31,7 @@
         <joda-time.version>1.6.2</joda-time.version>
         <logback.version>1.0.12</logback.version>
         <mistral.version>1.0-ALPHA-3</mistral.version>
-        <netbeans.version>RELEASE72</netbeans.version>
+        <netbeans.version>RELEASE80</netbeans.version>
         <openbluesky.version>0.16</openbluesky.version>
         <spring.version>3.2.3.RELEASE</spring.version>
         <slf4j.version>1.7.5</slf4j.version>
