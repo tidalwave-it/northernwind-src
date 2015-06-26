@@ -108,7 +108,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 @Configurable @Slf4j @ToString(callSuper = true, exclude="requestContext")
 /* package */ class DefaultContent extends ContentSupport
   {
-    @Inject @Nonnull
+    @Inject
     private RequestContext requestContext;
 
     /*******************************************************************************************************************

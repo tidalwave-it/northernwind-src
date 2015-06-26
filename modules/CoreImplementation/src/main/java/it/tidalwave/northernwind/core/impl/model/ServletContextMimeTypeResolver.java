@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServletContextMimeTypeResolver implements MimeTypeResolver
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<ServletContext> servletContext;
 
     @Override @Nonnull

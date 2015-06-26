@@ -56,7 +56,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
     public final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 
-    @Inject @Nonnull
+    @Inject
     private MetadataCache metadataCache;
 
     /*******************************************************************************************************************

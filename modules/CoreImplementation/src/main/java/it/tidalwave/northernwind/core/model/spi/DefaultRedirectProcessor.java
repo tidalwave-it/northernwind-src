@@ -92,7 +92,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
     
     @VisibleForTesting final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
     
     private Site site;

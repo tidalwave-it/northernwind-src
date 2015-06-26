@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class DefaultRequestLocaleManager implements RequestLocaleManager, RequestResettable
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     private final ThreadLocal<Locale> localeHolder = new ThreadLocal<>();

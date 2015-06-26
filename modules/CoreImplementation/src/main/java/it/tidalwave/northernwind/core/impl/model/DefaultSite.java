@@ -98,10 +98,10 @@ import lombok.extern.slf4j.Slf4j;
           }
       };
 
-    @Inject @Nonnull
+    @Inject
     private List<LinkPostProcessor> linkPostProcessors;
 
-    @Inject @Nonnull
+    @Inject
     private RequestHolder requestHolder;
 
     @Nonnull

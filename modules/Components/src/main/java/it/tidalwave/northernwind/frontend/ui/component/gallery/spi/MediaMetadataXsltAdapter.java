@@ -51,10 +51,10 @@ public class MediaMetadataXsltAdapter
   {
     private static MediaMetadataXsltAdapter instance;
 
-    @Inject @Nonnull
+    @Inject
     private ApplicationContext context;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     @Nonnull

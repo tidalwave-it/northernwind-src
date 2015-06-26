@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value = "session") @Slf4j
 public class VaadinSiteView extends Window implements SiteView
   {
-    @Inject @Nonnull
+    @Inject
     private transient Provider<SiteProvider> siteProvider;
 
     /*******************************************************************************************************************

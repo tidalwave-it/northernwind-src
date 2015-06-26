@@ -60,10 +60,10 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
     @Nonnull
     private final ResourceProperties resourceProperties;
 
-    @Inject @Nonnull
+    @Inject
     private ObjectFactory objectFactory;
 
-    @Inject @Nonnull
+    @Inject
     private Marshaller marshaller;
 
     /*******************************************************************************************************************

@@ -68,10 +68,10 @@ public class DefaultSiteProvider implements SiteProvider
     private static final String DEFAULT_NODE_PATH = "/structure";
     public static final String DEFAULT_CONTEXT_PATH = "/";
 
-    @Inject @Nonnull
+    @Inject
     private Provider<ServletContext> servletContext;
 
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     @Inject @Named("taskExecutor") @Nonnull

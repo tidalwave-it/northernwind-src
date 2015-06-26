@@ -51,7 +51,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable @Slf4j
 public class DefaultRequestContext implements RequestContext
   {
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();

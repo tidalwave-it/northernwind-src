@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
  **********************************************************************************************************************/
 public class LibraryLinkMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     public LibraryLinkMacroFilter()

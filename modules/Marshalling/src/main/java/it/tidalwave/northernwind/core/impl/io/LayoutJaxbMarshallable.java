@@ -54,10 +54,10 @@ public class LayoutJaxbMarshallable implements Marshallable
     @Nonnull
     private final Layout ownerLayout;
 
-    @Inject @Nonnull
+    @Inject
     private ObjectFactory objectFactory;
 
-    @Inject @Nonnull
+    @Inject
     private Marshaller marshaller;
 
     /*******************************************************************************************************************

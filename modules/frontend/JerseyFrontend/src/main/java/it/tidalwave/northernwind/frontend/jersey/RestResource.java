@@ -47,10 +47,10 @@ import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 @Configurable @Path("/")
 public class RestResource
   {
-    @Inject @Nonnull
+    @Inject
     private SiteViewController siteViewController;
 
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     @Context

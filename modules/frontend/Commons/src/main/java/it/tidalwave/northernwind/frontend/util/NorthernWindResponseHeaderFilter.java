@@ -50,7 +50,7 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
   {
     private static final String HEADER_NORTHERNWIND_VERSION = "X-NorthernWind-Version";
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     /*******************************************************************************************************************

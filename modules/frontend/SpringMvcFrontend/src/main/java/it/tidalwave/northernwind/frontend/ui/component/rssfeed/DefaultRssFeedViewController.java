@@ -63,7 +63,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Configurable @Slf4j
 public class DefaultRssFeedViewController extends DefaultBlogViewController implements RssFeedViewController
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     @Nonnull

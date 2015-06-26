@@ -63,7 +63,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private static final List<Class<?>> ALLOWED_TYPES =
             Arrays.<Class<?>>asList(Content.class, SiteNode.class, Media.class);
 
-    @Inject @Nonnull
+    @Inject
     private transient Provider<SiteProvider> siteProvider;
 
     @Nonnull

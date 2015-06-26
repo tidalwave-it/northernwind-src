@@ -54,10 +54,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @DciRole(datumType = Layout.class) @ToString @Slf4j
 public class LayoutJaxbUnmarshallable implements Unmarshallable
   {
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
-    @Inject @Nonnull
+    @Inject
     private Unmarshaller unmarshaller;
 
     /*******************************************************************************************************************

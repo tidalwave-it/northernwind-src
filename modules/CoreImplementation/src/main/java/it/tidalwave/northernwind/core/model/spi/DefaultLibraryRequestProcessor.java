@@ -56,13 +56,13 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Configurable @Order(HIGHEST_PRECEDENCE + 2) @Slf4j
 public class DefaultLibraryRequestProcessor implements RequestProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<FilterSetExpander> macroExpander;
 
-    @Inject @Nonnull
+    @Inject
     private ResponseHolder<?> responseHolder;
 
     @Getter @Setter

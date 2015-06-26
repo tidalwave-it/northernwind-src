@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value = "session") @Slf4j
 public class SpringMvcSiteView implements SiteView
   {
-    @Inject @Nonnull
+    @Inject
     private SpringMvcResponseHolder responseHolder;
 
     /*******************************************************************************************************************
