@@ -50,10 +50,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value = "session") @Slf4j
 public class VaadinSiteViewController extends DefaultSiteViewController
   {
-    @Inject @Nonnull
+    @Inject
     private VaadinSiteView siteView;
 
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     /*******************************************************************************************************************

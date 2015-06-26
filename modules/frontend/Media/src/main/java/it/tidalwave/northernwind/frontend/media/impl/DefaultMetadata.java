@@ -67,7 +67,7 @@ class DefaultMetadata implements Metadata
     @Nonnull
     private final EditableImage image;
     
-    @Inject @Nonnull
+    @Inject
     private MetadataInterpolatorFactory interpolatorFactory;
 
     /*******************************************************************************************************************

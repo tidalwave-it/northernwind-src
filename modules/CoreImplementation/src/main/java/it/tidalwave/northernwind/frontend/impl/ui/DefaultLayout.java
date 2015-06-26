@@ -60,7 +60,7 @@ import lombok.Getter;
 @Configurable @Getter
 public class DefaultLayout implements Layout, Cloneable
   {
-    @Inject @Nonnull
+    @Inject
     private ViewFactory viewFactory;
 
     @Nonnull

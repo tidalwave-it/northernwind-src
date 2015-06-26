@@ -47,10 +47,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Configurable @Controller
 public class SpringMvcRestController
   {
-    @Inject @Nonnull
+    @Inject
     private SiteViewController siteViewController;
 
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     @RequestMapping(value = "/**", method = GET) @Nonnull

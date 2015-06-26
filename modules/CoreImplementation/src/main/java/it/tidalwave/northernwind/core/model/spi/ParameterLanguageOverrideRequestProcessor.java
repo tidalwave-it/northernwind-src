@@ -53,7 +53,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
     @Getter @Setter @Nonnull
     private String parameterName = "l";
 
-    @Inject @Nonnull
+    @Inject
     private DefaultRequestLocaleManager requestLocaleManager;
 
     private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<String>();

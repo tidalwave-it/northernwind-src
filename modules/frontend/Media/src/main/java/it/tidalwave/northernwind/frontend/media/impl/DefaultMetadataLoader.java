@@ -57,7 +57,7 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
 @Slf4j
 public class DefaultMetadataLoader implements MetadataLoader
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
     
     /*******************************************************************************************************************

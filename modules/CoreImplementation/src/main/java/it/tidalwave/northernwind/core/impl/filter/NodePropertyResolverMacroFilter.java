@@ -47,7 +47,7 @@ import static org.springframework.core.Ordered.*;
 @Configurable @Order(HIGHEST_PRECEDENCE)
 public class NodePropertyResolverMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<RequestContext> context;
 
     public NodePropertyResolverMacroFilter()

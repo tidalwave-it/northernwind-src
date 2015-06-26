@@ -48,7 +48,7 @@ import static org.springframework.core.Ordered.*;
 @Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class ContentPropertyResolverMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<RequestContext> requestContext;
 
     public ContentPropertyResolverMacroFilter()

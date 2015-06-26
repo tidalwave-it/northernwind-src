@@ -64,7 +64,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Nonnull
     private final GalleryAdapterContext context;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     private final String galleryTemplate;

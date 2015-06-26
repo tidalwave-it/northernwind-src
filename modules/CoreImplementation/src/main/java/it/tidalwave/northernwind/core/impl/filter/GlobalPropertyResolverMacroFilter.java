@@ -53,7 +53,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 @Configurable @Order(HIGHEST_PRECEDENCE)
 public class GlobalPropertyResolverMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     public GlobalPropertyResolverMacroFilter()

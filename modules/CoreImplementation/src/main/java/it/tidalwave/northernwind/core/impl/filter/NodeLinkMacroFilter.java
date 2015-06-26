@@ -50,7 +50,7 @@ public class NodeLinkMacroFilter extends MacroFilter
   {
     /* package */ static final int ORDER = 20;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     public NodeLinkMacroFilter()

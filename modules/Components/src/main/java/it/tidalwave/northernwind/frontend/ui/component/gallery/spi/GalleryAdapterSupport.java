@@ -57,7 +57,7 @@ import static it.tidalwave.northernwind.core.model.Content.Content;
 @Configurable
 public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
-    @Inject @Nonnull
+    @Inject
     protected ModelFactory modelFactory;
 
     /*******************************************************************************************************************

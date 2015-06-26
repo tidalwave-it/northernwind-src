@@ -59,7 +59,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j @ToString(exclude = "beanFactory")
 /* package */ class ViewBuilder
   {
-    @Inject @Nonnull
+    @Inject
     private BeanFactory beanFactory;
 
     @Nonnull

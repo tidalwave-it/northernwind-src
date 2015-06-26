@@ -77,10 +77,10 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
   {
     private static final ImmutableList<String> EXTENSIONS = ImmutableList.of(".xhtml", ".html", ".xml", ".txt");
 
-    @Inject @Nonnull
+    @Inject
     private RequestLocaleManager localeRequestManager;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<FilterSetExpander> filterSetExpander;
 
     @Nonnull

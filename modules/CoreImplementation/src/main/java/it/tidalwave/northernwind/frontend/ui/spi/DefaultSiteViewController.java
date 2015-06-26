@@ -57,16 +57,16 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Scope(value = "session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
-    @Inject @Nonnull
+    @Inject
     private List<RequestResettable> requestResettables;
 
-    @Inject @Nonnull
+    @Inject
     private List<RequestProcessor> requestProcessors;
 
-    @Inject @Nonnull
+    @Inject
     private RequestHolder requestHolder;
 
-    @Inject @Nonnull
+    @Inject
     private ResponseHolder<?> responseHolder;
 
     /*******************************************************************************************************************

@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class FilterSetExpander implements Filter
   {
-    @Inject @Nonnull
+    @Inject
     private List<Filter> filters;
 
     @PostConstruct

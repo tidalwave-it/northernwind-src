@@ -54,10 +54,10 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 @DciRole(datumType = ResourceProperties.class) @Configurable
 public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
   {
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
-    @Inject @Nonnull
+    @Inject
     private Unmarshaller unmarshaller;
 
     /*******************************************************************************************************************

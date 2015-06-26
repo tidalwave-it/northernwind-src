@@ -43,7 +43,7 @@ import it.tidalwave.util.NotFoundException;
 @Configurable
 public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private ParameterLanguageOverrideRequestProcessor parameterLanguageOverrideRequestProcessor;
 
     /*******************************************************************************************************************

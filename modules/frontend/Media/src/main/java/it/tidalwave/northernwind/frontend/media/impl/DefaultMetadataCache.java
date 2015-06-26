@@ -88,7 +88,7 @@ public class DefaultMetadataCache implements MetadataCache
     @Getter @Setter @Nonnegative
     private int medatataExpirationTime = DEFAULT_METADATA_EXPIRATION_TIME;
     
-    @Inject @Nonnull
+    @Inject
     private MetadataLoader metadataLoader;
 
     /* package */ final Map<Id, ExpirableMetadata> metadataMapById = new HashMap<>();

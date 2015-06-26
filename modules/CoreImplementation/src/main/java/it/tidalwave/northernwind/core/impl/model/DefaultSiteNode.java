@@ -74,10 +74,10 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
     @Nonnull
     /* package */ InternalSite site;
 
-    @Inject @Nonnull
+    @Inject
     private InheritanceHelper inheritanceHelper;
 
-    @Inject @Nonnull
+    @Inject
     private RequestLocaleManager localeRequestManager;
 
     @CheckForNull

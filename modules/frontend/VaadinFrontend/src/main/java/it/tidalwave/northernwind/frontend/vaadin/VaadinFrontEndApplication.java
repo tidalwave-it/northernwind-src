@@ -49,7 +49,7 @@ public class VaadinFrontEndApplication extends Application
   {
     private static final long serialVersionUID = 5346346324236215L;
 
-    @Inject @Nonnull
+    @Inject
     private SiteView siteView;
 
     /*******************************************************************************************************************

@@ -56,16 +56,16 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Configurable @Scope(value = "session") @Order(LOWEST_PRECEDENCE)
 public class DefaultContentRequestProcessor implements RequestProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
-    @Inject @Nonnull
+    @Inject
     private SiteView siteView;
 
-    @Inject @Nonnull
+    @Inject
     private RequestHolder requestHolder;
 
-    @Inject @Nonnull
+    @Inject
     private RequestContext requestContext;
 
     /*******************************************************************************************************************

@@ -56,11 +56,11 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Order(NodeLinkMacroFilter.ORDER - 1) @Slf4j
 public class NodeLinkWithContentMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     // FIXME: what about @AutoWired(required=false)?
-    @Inject @Nonnull
+    @Inject
     private ApplicationContext context;
 
     @CheckForNull

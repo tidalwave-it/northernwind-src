@@ -57,11 +57,11 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     @Getter @Setter // TODO: required for test, try to drop
-    @Inject @Nonnull
+    @Inject
     private ResponseHolder<?> responseHolder;
 
     @Override @Nonnull

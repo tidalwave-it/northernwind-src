@@ -62,10 +62,10 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 @Configurable @Slf4j @ToString(callSuper = true, of = "placeHolder")
 /* package */ class DefaultResource extends ResourceSupport
   {
-    @Inject @Nonnull
+    @Inject
     private InheritanceHelper inheritanceHelper;
 
-    @Inject @Nonnull
+    @Inject
     private RequestLocaleManager localeRequestManager;
 
     private final Map<Locale, ResourceProperties> propertyMapByLocale = new HashMap<>();

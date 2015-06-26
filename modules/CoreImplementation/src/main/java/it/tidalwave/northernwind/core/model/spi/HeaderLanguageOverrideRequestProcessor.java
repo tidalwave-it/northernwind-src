@@ -50,10 +50,10 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Configurable @Order(1000) @Slf4j
 public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private DefaultRequestLocaleManager requestLocaleManager;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     /*******************************************************************************************************************

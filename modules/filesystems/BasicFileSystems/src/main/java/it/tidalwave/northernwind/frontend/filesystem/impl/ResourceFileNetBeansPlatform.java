@@ -79,7 +79,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         public Date lastModified();
       }
 
-    @Inject @Nonnull
+    @Inject
     private Provider<MimeTypeResolver> mimeTypeResolver;
 
     @Getter @Nonnull
