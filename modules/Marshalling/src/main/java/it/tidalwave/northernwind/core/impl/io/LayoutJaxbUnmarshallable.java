@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -54,10 +54,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @DciRole(datumType = Layout.class) @ToString @Slf4j
 public class LayoutJaxbUnmarshallable implements Unmarshallable
   {
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
-    @Inject @Nonnull
+    @Inject
     private Unmarshaller unmarshaller;
 
     /*******************************************************************************************************************

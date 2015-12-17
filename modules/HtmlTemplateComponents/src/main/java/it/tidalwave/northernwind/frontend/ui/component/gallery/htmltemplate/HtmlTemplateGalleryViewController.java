@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -67,26 +67,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     
     /*******************************************************************************************************************
      *
-     * 
-     *
-     ******************************************************************************************************************/
-    private final GalleryAdapterContext context = new GalleryAdapterContext()
-      {
-        @Override
-        public void addAttribute (final @Nonnull String name, final @Nonnull String value) 
-          {
-            ((TextHolder)view).addAttribute(name, value);
-          }
-
-        @Override @Nonnull
-        public SiteNode getSiteNode() 
-          {
-            return siteNode;
-          }
-      };
-    
-    /*******************************************************************************************************************
-     *
      *
      *
      ******************************************************************************************************************/
@@ -101,7 +81,35 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         this.view = view;
         this.siteNode = siteNode;
         this.requestHolder = requestHolder;
-        galleryAdapter = new BluetteGalleryAdapter(context); // FIXME: get from configuration
+        
+        final GalleryAdapterContext context = new GalleryAdapterContext()
+          {
+            @Override
+            public void addAttribute (final @Nonnull String name, final @Nonnull String value) 
+              {
+                ((TextHolder)view).addAttribute(name, value);
+              }
+
+            @Override @Nonnull
+            public Site getSite() 
+              {
+                return site;
+              }
+
+            @Override @Nonnull
+            public SiteNode getSiteNode() 
+              {
+                return siteNode;
+              }
+
+            @Override @Nonnull
+            public GalleryView getView() 
+              {
+                return view;
+              }
+          };
+    
+        galleryAdapter = new BluetteGalleryAdapter(context); // FIXME: get implementation from configuration
       }
     
     /*******************************************************************************************************************

@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -56,7 +56,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
 
     public final static Id PROPERTY_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 
-    @Inject @Nonnull
+    @Inject
     private MetadataCache metadataCache;
 
     /*******************************************************************************************************************
@@ -77,12 +77,12 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
           }
         catch (NotFoundException e)
           {
-            log.warn("Cannot find media for id: " + mediaId, e);
+            log.warn("Cannot find media for id {}: {}", mediaId, e.toString());
             return "";
           }
         catch (IOException e)
           {
-            log.warn("Unexpected I/O error for id: " + mediaId, e);
+            log.warn("Unexpected I/O error for id {}: {}", mediaId, e.toString());
             return "";
           }
       }

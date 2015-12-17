@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -62,10 +62,10 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 @Configurable @Slf4j @ToString(callSuper = true, of = "placeHolder")
 /* package */ class DefaultResource extends ResourceSupport
   {
-    @Inject @Nonnull
+    @Inject
     private InheritanceHelper inheritanceHelper;
 
-    @Inject @Nonnull
+    @Inject
     private RequestLocaleManager localeRequestManager;
 
     private final Map<Locale, ResourceProperties> propertyMapByLocale = new HashMap<>();

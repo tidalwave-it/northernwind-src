@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -47,10 +47,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Configurable @Controller
 public class SpringMvcRestController
   {
-    @Inject @Nonnull
+    @Inject
     private SiteViewController siteViewController;
 
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     @RequestMapping(value = "/**", method = GET) @Nonnull

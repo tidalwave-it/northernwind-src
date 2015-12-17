@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -60,9 +60,9 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
     public void must_find_the_correct_matches (final @Nonnull String text,
                                                final @Nonnull List<String> expectedMatches)
       {
-        final NodeLinkWithContentMacroFilterFixture fixture = new NodeLinkWithContentMacroFilterFixture();
-        fixture.filter(text, "text/html");
-        final List<List<String>> matches = fixture.getHelper().getMatches();
+        final NodeLinkWithContentMacroFilterFixture underTest = new NodeLinkWithContentMacroFilterFixture();
+        underTest.filter(text, "text/html");
+        final List<List<String>> matches = underTest.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(expectedMatches));
       }
@@ -70,8 +70,8 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
     @Test(dataProvider = "textProvider")
     public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
       {
-        final NodeLinkWithContentMacroFilter fixture = context.getBean(NodeLinkWithContentMacroFilter.class);
-        final String filtered = fixture.filter(text, "text/html");
+        final NodeLinkWithContentMacroFilter underTest = context.getBean(NodeLinkWithContentMacroFilter.class);
+        final String filtered = underTest.filter(text, "text/html");
 
         assertThat(filtered, is(expected));
       }

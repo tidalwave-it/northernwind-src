@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -51,7 +51,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable @Slf4j
 public class DefaultRequestContext implements RequestContext
   {
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     private final ThreadLocal<Content> contentHolder = new ThreadLocal<>();

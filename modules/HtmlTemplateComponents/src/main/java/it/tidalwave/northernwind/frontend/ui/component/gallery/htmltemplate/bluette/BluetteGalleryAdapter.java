@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -64,7 +64,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Nonnull
     private final GalleryAdapterContext context;
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     private final String galleryTemplate;
@@ -84,9 +84,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
       throws IOException
       {
         this.context = context;
-        galleryTemplate = loadTemplate("Bluette.txt");
-        fallbackTemplate = loadTemplate("BluetteFallback.txt");
-        lightboxFallbackTemplate = loadTemplate("BluetteLightboxFallback.txt");
+        galleryTemplate = loadTemplate(context, "bluette");
+        fallbackTemplate = loadTemplate(context, "bluetteFallback");
+        lightboxFallbackTemplate = loadTemplate(context, "bluetteLightboxFallback");
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
         copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT, "");
       }

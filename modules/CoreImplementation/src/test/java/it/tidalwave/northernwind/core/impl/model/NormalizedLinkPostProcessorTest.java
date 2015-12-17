@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -42,19 +42,19 @@ import static org.hamcrest.CoreMatchers.is;
  **********************************************************************************************************************/
 public class NormalizedLinkPostProcessorTest
   {
-    private NormalizedLinkPostProcessor fixture;
+    private NormalizedLinkPostProcessor underTest;
 
     @BeforeMethod
     public void setUp()
       {
-        fixture = new NormalizedLinkPostProcessor();
+        underTest = new NormalizedLinkPostProcessor();
       }
 
     @Test(dataProvider = "links")
     public void must_create_correct_links (final @Nonnull String link, final @Nonnull String expectedResult)
       throws Exception
       {
-        final String result = fixture.postProcess(link);
+        final String result = underTest.postProcess(link);
 
         assertThat(result, is(expectedResult));
       }

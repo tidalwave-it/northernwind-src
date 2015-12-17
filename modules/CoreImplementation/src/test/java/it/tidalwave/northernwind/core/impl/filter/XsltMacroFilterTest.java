@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -59,7 +59,7 @@ import static org.hamcrest.CoreMatchers.*;
  **********************************************************************************************************************/
 public class XsltMacroFilterTest
   {
-    private XsltMacroFilter fixture;
+    private XsltMacroFilter underTest;
 
     private SiteProvider siteProvider;
 
@@ -93,7 +93,7 @@ public class XsltMacroFilterTest
         when(site.find(eq(Resource.class))).thenReturn(
                 new DefaultSiteFinder<>("name", map, new RegexTreeMap<Resource>()));
 
-        fixture = context.getBean(XsltMacroFilter.class);
+        underTest = context.getBean(XsltMacroFilter.class);
       }
 
     /*******************************************************************************************************************
@@ -104,7 +104,7 @@ public class XsltMacroFilterTest
       {
         final String text = "foo bar";
 
-        final String result = fixture.filter(text, "text/html");
+        final String result = underTest.filter(text, "text/html");
 
         assertThat(result, is(text));
       }
@@ -118,7 +118,7 @@ public class XsltMacroFilterTest
       {
         final String resourceName = String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName);
         final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
-        final String result = fixture.filter(text, "application/xhtml+xml");
+        final String result = underTest.filter(text, "application/xhtml+xml");
 
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml",
                                                          fileName));
@@ -136,8 +136,15 @@ public class XsltMacroFilterTest
       {
         return new Object[][]
           {
-            { "file1" }, { "file2" }, { "issue-NW-96-a-NW-106-a" }, { "issue-NW-96-b" }, { "issue-NW-97-a" }, { "issue-NW-100" },
-            { "issue-NW-102-a" }, { "issue-NW-104-a" }, { "issue-NW-114-a" }
+            { "file1" }, 
+            { "file2" }, 
+            { "issue-NW-96-a-NW-106-a" }, 
+            { "issue-NW-96-b" }, 
+            { "issue-NW-97-a" }, 
+            { "issue-NW-100" },
+            { "issue-NW-102-a" }, 
+            { "issue-NW-104-a" }, 
+            { "issue-NW-114-a" }
           };
       }
   }

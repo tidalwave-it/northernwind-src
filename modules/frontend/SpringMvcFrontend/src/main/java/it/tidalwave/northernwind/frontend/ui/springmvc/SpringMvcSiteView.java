@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
-import it.tidalwave.northernwind.frontend.springmvc.ResponseEntityHolder;
+import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -53,8 +53,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Scope(value = "session") @Slf4j
 public class SpringMvcSiteView implements SiteView
   {
-    @Inject @Nonnull
-    private ResponseEntityHolder responseHolder;
+    @Inject
+    private SpringMvcResponseHolder responseHolder;
 
     /*******************************************************************************************************************
      *

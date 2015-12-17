@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -40,7 +40,7 @@ import static org.springframework.core.Ordered.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value = "session") @Order(HIGHEST_PRECEDENCE)
+@Configurable @Scope(value = "session") @Order(HIGHEST_PRECEDENCE+1)
 public class VaadinMediaRequestProcessor extends DefaultMediaRequestProcessor<DownloadStream>
   {
 //    @Override @Nonnull

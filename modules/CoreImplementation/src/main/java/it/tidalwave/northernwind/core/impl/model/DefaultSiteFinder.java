@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -128,11 +128,13 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
 
             if (relativePath != null)
               {
-                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet());
+                message = String.format("relativePath: %s", relativePath);
+//                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet());
               }
             else if (relativeUri != null)
               {
-                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet());
+                message = String.format("relativeUri: %s", relativeUri);
+//                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet());
               }
 
             throw new NotFoundException(message);
