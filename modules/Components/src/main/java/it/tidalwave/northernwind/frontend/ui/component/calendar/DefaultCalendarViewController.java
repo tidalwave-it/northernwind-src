@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -161,10 +161,20 @@ public class DefaultCalendarViewController implements CalendarViewController
 
             for (int i = 0; i < nodes.getLength(); i++)
               {
+                // FIXME: verbose XML code below
                 final Node node = nodes.item(i);
                 final String link = site.createLink(new ResourcePath(node.getAttributes().getNamedItem("link").getNodeValue()));
+                
+                String linkClass = "";
+                Node typeNode = node.getAttributes().getNamedItem("type");
+                
+                if (typeNode != null)
+                  {
+                    linkClass = String.format(" class='nw-calendar-table-link-%s'", typeNode.getNodeValue()); 
+                  }
+                
                 final String name = node.getAttributes().getNamedItem("name").getNodeValue();
-                builder.append(String.format("<li><a href='%s'/>%s</a></li>%n", link, name));
+                builder.append(String.format("<li><a href='%s'%s/>%s</a></li>%n", link, linkClass, name));
               }
 
             builder.append("</ul>\n</td>\n");

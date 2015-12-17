@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -44,7 +44,7 @@ import static org.hamcrest.MatcherAssert.*;
  **********************************************************************************************************************/
 public class ParameterLanguageOverrideLinkPostProcessorTest
   {
-    private ParameterLanguageOverrideLinkPostProcessor fixture;
+    private ParameterLanguageOverrideLinkPostProcessor underTest;
 
     private ClassPathXmlApplicationContext context;
 
@@ -56,7 +56,7 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
         context = new ClassPathXmlApplicationContext("ParameterLanguageOverrideLinkPostProcessorTestBeans.xml");
         plorp = context.getBean(ParameterLanguageOverrideRequestProcessor.class);
         when(plorp.getParameterName()).thenReturn("lang");
-        fixture = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
+        underTest = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
       }
 
     @Test(dataProvider = "linkProvider")
@@ -64,7 +64,7 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
                                            final @Nonnull String parameterValue,
                                            final @Nonnull String expectedResult)
       {
-        final String result = fixture.postProcess(link, parameterValue);
+        final String result = underTest.postProcess(link, parameterValue);
 
         assertThat(result, is(expectedResult));
       }

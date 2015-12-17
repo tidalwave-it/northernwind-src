@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -48,6 +48,8 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.model.SiteNode.*;
+import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
 /***********************************************************************************************************************
  *
@@ -89,7 +91,13 @@ public class DefaultSitemapViewController implements SitemapViewController
                     // Prevents infinite recursion
                     if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
                       {
+                        // FIXME: should probably skip children of sitenodes with managePathParams
+                        // FIXME: for instance, Calendar would benefit
+                        // FIXME: Would Blog benefit? It should, as it manages its own children
+                        // FIXME: Places and Themes should move managePathParams=true to each children
+                        // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
                         log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
+
                         appendUrl(builder, siteNode, null);
 
                         layout.accept(new VisitorSupport<Layout, Void>()
@@ -115,7 +123,7 @@ public class DefaultSitemapViewController implements SitemapViewController
                                   }
                                 catch (Exception e)
                                   {
-                                    log.warn("", e);
+                                    log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
                                   }
                               }
 
@@ -199,5 +207,16 @@ public class DefaultSitemapViewController implements SitemapViewController
           }
 
         return new DateTime(0);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static Throwable rootCause (final @Nonnull Throwable t)
+      {
+        final Throwable cause = t.getCause();
+        return (cause != null) ? rootCause(cause) : t;
       }
   }

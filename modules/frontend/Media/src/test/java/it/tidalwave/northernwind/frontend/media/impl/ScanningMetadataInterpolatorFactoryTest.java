@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -51,7 +51,7 @@ public class ScanningMetadataInterpolatorFactoryTest
   {
     private ApplicationContext context;
 
-    private MetadataInterpolatorFactory fixture;
+    private MetadataInterpolatorFactory underTest;
     
     /*******************************************************************************************************************
      *
@@ -61,7 +61,7 @@ public class ScanningMetadataInterpolatorFactoryTest
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("ScanningMetadataInterpolatorFactoryTestBeans.xml");
-        fixture = context.getBean(MetadataInterpolatorFactory.class);
+        underTest = context.getBean(MetadataInterpolatorFactory.class);
       }
     
     /*******************************************************************************************************************
@@ -70,7 +70,7 @@ public class ScanningMetadataInterpolatorFactoryTest
     @Test
     public void must_find_all_the_interpolators()
       {
-        final Collection<MetadataInterpolator> interpolators = fixture.getInterpolators();
+        final Collection<MetadataInterpolator> interpolators = underTest.getInterpolators();
         
         assertThat(interpolators, hasSize(2));
         assertThat(interpolators, hasItem(isA(ShootingDataInterpolator.class)));

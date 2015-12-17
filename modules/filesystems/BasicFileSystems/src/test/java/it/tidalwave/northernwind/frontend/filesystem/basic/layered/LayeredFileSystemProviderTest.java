@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -56,7 +56,7 @@ public class LayeredFileSystemProviderTest
   {
     private static final String FS_BASE = "target/filesystems/";
 
-    private LayeredFileSystemProvider fixture;
+    private LayeredFileSystemProvider underTest;
 
     /*******************************************************************************************************************
      *
@@ -67,7 +67,7 @@ public class LayeredFileSystemProviderTest
     public void createFixture()
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
-        fixture = new LayeredFileSystemProvider();
+        underTest = new LayeredFileSystemProvider();
       }
 
     /*******************************************************************************************************************
@@ -127,12 +127,12 @@ public class LayeredFileSystemProviderTest
             fileSystemProviders.add(fs1);
           }
 
-        fixture.setDelegates(fileSystemProviders);
+        underTest.setDelegates(fileSystemProviders);
 
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s.txt", testCase));
         final File actualFile = new File(String.format("target/test-artifacts/%s.txt", testCase));
         actualFile.getParentFile().mkdirs();
-        dump(actualFile, fixture.getFileSystem());
+        dump(actualFile, underTest.getFileSystem());
 
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
@@ -163,7 +163,7 @@ public class LayeredFileSystemProviderTest
       throws IOException
       {
         final List<String> lines = new ArrayList<String>();
-        dump(lines, fixture.getFileSystem().getRoot());
+        dump(lines, underTest.getFileSystem().getRoot());
         Collections.sort(lines);
 
         FileUtils.writeLines(file, lines, "\n");

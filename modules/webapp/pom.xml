@@ -6,15 +6,15 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-31-SNAPSHOT</version>
+        <version>1.1-ALPHA-35-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-webapp</artifactId>
-    <version>1.1-ALPHA-31-SNAPSHOT</version>
+    <version>1.1-ALPHA-35-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>NorthernWind (webapps)</name>
+    <name>NorthernWind - Frontend Webapp</name>
     <description>The parent POM for all webapps, it declares the common dependencies.</description>
 
     <properties>
@@ -81,7 +81,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
-        </dependency>    
+        </dependency>
     </dependencies>
 
     <!-- The default configuration would create jar and test-jar, with the jar contents overriding
@@ -103,7 +103,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>activate-web-fragments-profile</id>
@@ -164,15 +164,14 @@
                         <configuration>
                             <webXml>target/generated-resources/xml/xslt/web.xml</webXml>
                         </configuration>
-                    </plugin>            
+                    </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
-    
+
     <modules>
         <module>Commons</module>
-        <module>JerseyWebApp</module>
         <module>SpringMvcWebApp</module>
         <module>SpringMvcMediaWebApp</module>
         <module>VaadinWebApp</module>

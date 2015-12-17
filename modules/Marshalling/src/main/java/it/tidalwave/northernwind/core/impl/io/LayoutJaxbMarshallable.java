@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -54,10 +54,10 @@ public class LayoutJaxbMarshallable implements Marshallable
     @Nonnull
     private final Layout ownerLayout;
 
-    @Inject @Nonnull
+    @Inject
     private ObjectFactory objectFactory;
 
-    @Inject @Nonnull
+    @Inject
     private Marshaller marshaller;
 
     /*******************************************************************************************************************

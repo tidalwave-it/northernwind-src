@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -30,11 +30,10 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import com.google.common.collect.ImmutableList;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -45,7 +44,7 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Immutable @ToString @EqualsAndHashCode
+@Immutable @EqualsAndHashCode
 public class ResourcePath
   {
     @Nonnull
@@ -320,6 +319,24 @@ public class ResourcePath
         return buffer.toString();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public String toString() 
+      {
+        try
+          {
+            return asString();
+          }
+        catch (RuntimeException e)
+          {
+            return segments.toString();  
+          }
+      }
+    
     /*******************************************************************************************************************
      *
      *

@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -83,9 +83,9 @@ public class DefaultMetadataTest
                                                            final @Nonnull String expectedResult)
       throws Exception
       {
-        final Metadata fixture = metadataBuilder.build();
+        final Metadata underTest = metadataBuilder.build();
 
-        final String result = fixture.interpolateString(template, properties);
+        final String result = underTest.interpolateString(template, properties);
 
         assertThat(result, is(expectedResult));
       }

@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -52,11 +52,11 @@ public class ResourcePathTest
     @Test
     public void must_properly_create_an_empty_path()
       {
-        final ResourcePath fixture = new ResourcePath();
+        final ResourcePath underTest = new ResourcePath();
 
-        assertThat(fixture.segments, is(not(nullValue())));
-        assertThat(fixture.segments.isEmpty(), is(true));
-        assertThat(fixture.asString(), is("/"));
+        assertThat(underTest.segments, is(not(nullValue())));
+        assertThat(underTest.segments.isEmpty(), is(true));
+        assertThat(underTest.asString(), is("/"));
       }
 
     /*******************************************************************************************************************
@@ -65,7 +65,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = NullPointerException.class)
     public void must_reject_null_segments()
       {
-        final ResourcePath fixture = new ResourcePath(of("a", null, "/c"));
+        final ResourcePath underTest = new ResourcePath(of("a", null, "/c"));
       }
 
     /*******************************************************************************************************************
@@ -74,7 +74,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_empty_segments()
       {
-        final ResourcePath fixture = new ResourcePath(of("a", "", "/c"));
+        final ResourcePath underTest = new ResourcePath(of("a", "", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -83,7 +83,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_segments_containing_slash()
       {
-        final ResourcePath fixture = new ResourcePath(of("a", "b", "/c"));
+        final ResourcePath underTest = new ResourcePath(of("a", "b", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -95,11 +95,11 @@ public class ResourcePathTest
                                                                 final @Nonnull String expectedAsString,
                                                                 final @Nonnull List<String> expectedSegments)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.segments, is(not(nullValue())));
-        assertThat(fixture.segments, is(expectedSegments));
-        assertThat(fixture.asString(), is(expectedAsString));
+        assertThat(underTest.segments, is(not(nullValue())));
+        assertThat(underTest.segments, is(expectedSegments));
+        assertThat(underTest.asString(), is(expectedAsString));
       }
 
     /*******************************************************************************************************************
@@ -111,7 +111,7 @@ public class ResourcePathTest
           expectedExceptionsMessageRegExp = "\\QResourcePath can't hold a URL\\E")
     public void must_reject_invalid_paths (final @Nonnull String invalidPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(invalidPathAsString);
+        final ResourcePath underTest = new ResourcePath(invalidPathAsString);
       }
 
     /*******************************************************************************************************************
@@ -122,9 +122,9 @@ public class ResourcePathTest
     public void must_properly_compute_asString (final @Nonnull ImmutableList<String> segments,
                                                 final @Nonnull String expectedAsString)
       {
-        final ResourcePath fixture = new ResourcePath(segments);
+        final ResourcePath underTest = new ResourcePath(segments);
 
-        assertThat(fixture.asString(), is(expectedAsString));
+        assertThat(underTest.asString(), is(expectedAsString));
       }
 
     /*******************************************************************************************************************
@@ -136,9 +136,9 @@ public class ResourcePathTest
                                                       final @Nonnull String parentPathAsString,
                                                       final @Nonnull String expectedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
         final ResourcePath parentPath = new ResourcePath(parentPathAsString);
-        final ResourcePath relativePath = fixture.relativeTo(parentPath);
+        final ResourcePath relativePath = underTest.relativeTo(parentPath);
 
         assertThat(relativePath.asString(), is(expectedPathAsString));
       }
@@ -152,9 +152,9 @@ public class ResourcePathTest
     public void must_properly_reject_non_relative_paths (final @Nonnull String pathAsString,
                                                          final @Nonnull String parentPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
         final ResourcePath parentPath = new ResourcePath(parentPathAsString);
-        fixture.relativeTo(parentPath);
+        underTest.relativeTo(parentPath);
       }
 
     /*******************************************************************************************************************
@@ -165,9 +165,9 @@ public class ResourcePathTest
                                                        final @Nonnull String expectedLeadingSegment,
                                                        final @Nonnull String expectedTrailingSegment)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.getLeading(), is(expectedLeadingSegment));
+        assertThat(underTest.getLeading(), is(expectedLeadingSegment));
       }
 
     /*******************************************************************************************************************
@@ -178,9 +178,9 @@ public class ResourcePathTest
                                                         final @Nonnull String expectedLeadingSegment,
                                                         final @Nonnull String expectedTrailingSegment)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.getTrailing(), is(expectedTrailingSegment));
+        assertThat(underTest.getTrailing(), is(expectedTrailingSegment));
       }
 
     /*******************************************************************************************************************
@@ -192,9 +192,9 @@ public class ResourcePathTest
                                                        final @Nonnull String expectedPathWithoutLeadingAsString,
                                                        final @Nonnull String expectedPathWithoutTrailingAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.withoutLeading().asString(), is(expectedPathWithoutLeadingAsString));
+        assertThat(underTest.withoutLeading().asString(), is(expectedPathWithoutLeadingAsString));
       }
 
     /*******************************************************************************************************************
@@ -206,9 +206,9 @@ public class ResourcePathTest
                                                         final @Nonnull String expectedPathWithoutLeadingAsString,
                                                         final @Nonnull String expectedPathWithoutTrailingAsString)
       {
-        final ResourcePath fixture = new ResourcePath(path);
+        final ResourcePath underTest = new ResourcePath(path);
 
-        assertThat(fixture.withoutTrailing().asString(), is(expectedPathWithoutTrailingAsString));
+        assertThat(underTest.withoutTrailing().asString(), is(expectedPathWithoutTrailingAsString));
       }
 
     /*******************************************************************************************************************
@@ -219,9 +219,9 @@ public class ResourcePathTest
                                                   final @Nonnull String leadingSegment,
                                                   final @Nonnull boolean expectedResult)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.startsWith(leadingSegment), is(expectedResult));
+        assertThat(underTest.startsWith(leadingSegment), is(expectedResult));
       }
 
     /*******************************************************************************************************************
@@ -234,10 +234,10 @@ public class ResourcePathTest
                                            final @Nonnull String expectedAppendedPathAsString,
                                            final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
         final ResourcePath appendingPath = new ResourcePath(secondPathAsString);
 
-        assertThat(fixture.appendedWith(appendingPath).asString(), is(expectedAppendedPathAsString));
+        assertThat(underTest.appendedWith(appendingPath).asString(), is(expectedAppendedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -250,9 +250,9 @@ public class ResourcePathTest
                                              final @Nonnull String expectedAppendedPathAsString,
                                              final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.appendedWith(secondPathAsString).asString(), is(expectedAppendedPathAsString));
+        assertThat(underTest.appendedWith(secondPathAsString).asString(), is(expectedAppendedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -265,10 +265,10 @@ public class ResourcePathTest
                                             final @Nonnull String expectedAppendedPathAsString,
                                             final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
         final ResourcePath prependingPath = new ResourcePath(secondPathAsString);
 
-        assertThat(fixture.prependedWith(prependingPath).asString(), is(expectedPrependedPathAsString));
+        assertThat(underTest.prependedWith(prependingPath).asString(), is(expectedPrependedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -281,9 +281,9 @@ public class ResourcePathTest
                                               final @Nonnull String expectedAppendedPathAsString,
                                               final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.prependedWith(secondPathAsString).asString(), is(expectedPrependedPathAsString));
+        assertThat(underTest.prependedWith(secondPathAsString).asString(), is(expectedPrependedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -295,9 +295,9 @@ public class ResourcePathTest
                                               final @Nonnull String expectedAsString,
                                               final @Nonnull List<String> expectedSegments)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.getSegmentCount(), is(expectedSegments.size()));
+        assertThat(underTest.getSegmentCount(), is(expectedSegments.size()));
       }
 
     /*******************************************************************************************************************
@@ -307,9 +307,9 @@ public class ResourcePathTest
     public void must_properly_compute_extension (final @Nonnull String pathAsString,
                                                  final @Nonnull String expectedExtension)
       {
-        final ResourcePath fixture = new ResourcePath(pathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
 
-        assertThat(fixture.getExtension(), is(expectedExtension));
+        assertThat(underTest.getExtension(), is(expectedExtension));
       }
 
     /*******************************************************************************************************************
@@ -320,9 +320,9 @@ public class ResourcePathTest
     public void must_properly_url_decode (final @Nonnull String plainPathAsString,
                                           final @Nonnull String encodedPathAsString)
       {
-        final ResourcePath fixture = new ResourcePath(encodedPathAsString);
+        final ResourcePath underTest = new ResourcePath(encodedPathAsString);
 
-        assertThat(fixture.urlDecoded().asString(), is(plainPathAsString));
+        assertThat(underTest.urlDecoded().asString(), is(plainPathAsString));
       }
 
     /*******************************************************************************************************************

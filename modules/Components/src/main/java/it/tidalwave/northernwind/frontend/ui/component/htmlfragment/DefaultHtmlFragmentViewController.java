@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -90,12 +90,12 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
         catch (NotFoundException e)
           {
             htmlBuilder.append(e.toString().replaceAll("\\[.*\\]", ""));
-            log.error("", e.toString());
+            log.error("NotFoundException", e.toString());
           }
         catch (IOException e)
           {
             htmlBuilder.append(e.toString());
-            log.error("", e);
+            log.error("IOException", e);
           }
 
         view.setContent(htmlBuilder.toString());

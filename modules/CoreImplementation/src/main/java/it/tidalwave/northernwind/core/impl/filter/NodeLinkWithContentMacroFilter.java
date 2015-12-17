@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -56,11 +56,11 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Order(NodeLinkMacroFilter.ORDER - 1) @Slf4j
 public class NodeLinkWithContentMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     // FIXME: what about @AutoWired(required=false)?
-    @Inject @Nonnull
+    @Inject
     private ApplicationContext context;
 
     @CheckForNull

@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -61,7 +61,7 @@ public class DefaultMetadataCacheTest
   {
     private ApplicationContext context;
 
-    private DefaultMetadataCache fixture;
+    private DefaultMetadataCache underTest;
     
     private MetadataLoader metadataLoader;
     
@@ -91,7 +91,7 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("DefaultMetadataCacheTestBeans.xml");
-        fixture = context.getBean(DefaultMetadataCache.class);
+        underTest = context.getBean(DefaultMetadataCache.class);
         metadataLoader = context.getBean(MetadataLoader.class);
         mediaFile = mock(ResourceFile.class);
         tiff = new TIFF();
@@ -118,7 +118,7 @@ public class DefaultMetadataCacheTest
               }
           });
         
-        assertThat(fixture.getMedatataExpirationTime(), is(DefaultMetadataCache.DEFAULT_METADATA_EXPIRATION_TIME));
+        assertThat(underTest.getMedatataExpirationTime(), is(DefaultMetadataCache.DEFAULT_METADATA_EXPIRATION_TIME));
         initialTime = new DateTime(1369080000000L);
         setTime(initialTime);
       }
@@ -130,16 +130,16 @@ public class DefaultMetadataCacheTest
     public void must_correctly_load_medatada_when_not_in_cache()
       throws Exception
       {
-        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
         
-        final DateTime expectedExpirationTime = initialTime.plusSeconds(fixture.getMedatataExpirationTime());
+        final DateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
         // FIXME: the validity of loaded data must be moved to the loader test
         assertThat(metadata.getDirectory(TIFF.class), sameInstance(tiff));
         assertThat(metadata.getDirectory(EXIF.class), sameInstance(exif));
         assertThat(metadata.getDirectory(IPTC.class), sameInstance(iptc));
         assertThat(metadata.getDirectory(XMP.class),  sameInstance(xmp));
         
-        final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+        final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
         assertThat(expirableMetadata, is(notNullValue()));
         assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata));
         assertThat(expirableMetadata.getCreationTime(),   is(initialTime));
@@ -155,21 +155,21 @@ public class DefaultMetadataCacheTest
     public void must_cache_the_same_instance_within_expiration_time_without_checking_for_file_modification()
       throws Exception
       {
-        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
         
-        final DateTime expectedExpirationTime = initialTime.plusSeconds(fixture.getMedatataExpirationTime());
+        final DateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
         
         for (DateTime now = initialTime; 
              now.isBefore(expectedExpirationTime);
-             now = now.plusSeconds(fixture.getMedatataExpirationTime() / 100))
+             now = now.plusSeconds(underTest.getMedatataExpirationTime() / 100))
           {
             setTime(now);
             
-            final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(sameInstance(metadata)));
             
-            final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+            final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
             assertThat(expirableMetadata.getCreationTime(),   is(initialTime));
@@ -188,22 +188,22 @@ public class DefaultMetadataCacheTest
     public void must_check_file_modification_after_expiration_time_and_still_keep_in_cache_when_no_modifications()
       throws Exception
       {
-        DateTime nextExpectedExpirationTime = initialTime.plusSeconds(fixture.getMedatataExpirationTime());
+        DateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
         when(mediaFile.getLatestModificationTime()).thenReturn(initialTime.minusMillis(1));
         
-        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
         
         for (int count = 1; count <= 10; count++)
           {
             final DateTime now = nextExpectedExpirationTime.plusMillis(1);
             setTime(now);
-            nextExpectedExpirationTime = now.plusSeconds(fixture.getMedatataExpirationTime());
+            nextExpectedExpirationTime = now.plusSeconds(underTest.getMedatataExpirationTime());
             
-            final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(sameInstance(metadata)));
             
-            final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+            final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
             assertThat(expirableMetadata.getCreationTime(),   is(initialTime));
@@ -222,21 +222,21 @@ public class DefaultMetadataCacheTest
     public void must_reload_metadata_after_expiration_time_when_file_has_been_changed()
       throws Exception
       {
-        DateTime nextExpectedExpirationTime = initialTime.plusSeconds(fixture.getMedatataExpirationTime());        
-        final Metadata metadata = fixture.findMetadataById(mediaId, siteNodeProperties);
+        DateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());        
+        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
         
         for (int count = 1; count < 10; count++)
           {
             final DateTime now = nextExpectedExpirationTime.plusMillis(1);
             setTime(now);
             when(mediaFile.getLatestModificationTime()).thenReturn(now.plusMillis(1));
-            nextExpectedExpirationTime = now.plusSeconds(fixture.getMedatataExpirationTime());
+            nextExpectedExpirationTime = now.plusSeconds(underTest.getMedatataExpirationTime());
             
-            final Metadata metadata2 = fixture.findMetadataById(mediaId, siteNodeProperties);
+            final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
             
             assertThat(metadata2, is(not(sameInstance(metadata))));
             
-            final ExpirableMetadata expirableMetadata = fixture.metadataMapById.get(mediaId);
+            final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
             assertThat(expirableMetadata.getCreationTime(),   is(now));

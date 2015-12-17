@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -67,7 +67,7 @@ public class ViewBuilderTest
         public final MockService2 service2;
       }
 
-    private ViewBuilder fixture;
+    private ViewBuilder underTest;
 
     private ClassPathXmlApplicationContext context;
 
@@ -100,7 +100,7 @@ public class ViewBuilderTest
 
         id = new Id("theId");
 
-        fixture = new ViewBuilder(MockView.class, MockController.class);
+        underTest = new ViewBuilder(MockView.class, MockController.class);
       }
 
     /*******************************************************************************************************************
@@ -110,7 +110,7 @@ public class ViewBuilderTest
     public void must_properly_instantiate_view_and_controller()
       throws Exception
       {
-        final ViewAndController viewAndController = fixture.createViewAndController(id, siteNode);
+        final ViewAndController viewAndController = underTest.createViewAndController(id, siteNode);
 
         final Object oController = viewAndController.getController();
         final Object oView = viewAndController.getView();

@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -68,10 +68,10 @@ public class DefaultSiteProvider implements SiteProvider
     private static final String DEFAULT_NODE_PATH = "/structure";
     public static final String DEFAULT_CONTEXT_PATH = "/";
 
-    @Inject @Nonnull
+    @Inject
     private Provider<ServletContext> servletContext;
 
-    @Inject @Nonnull
+    @Inject
     private ModelFactory modelFactory;
 
     @Inject @Named("taskExecutor") @Nonnull
