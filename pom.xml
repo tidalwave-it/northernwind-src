@@ -24,8 +24,8 @@
         <netbeans.hint.jdkPlatform>JDK_1.7.0</netbeans.hint.jdkPlatform>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
 
-        <scm.repo.url>ssh://hg@bitbucket.org/tidalwave/northernwind-src</scm.repo.url>
-        <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src</scm.repo.readonly.url>
+        <scm.repo.url>git@bitbucket.org:tidalwave/northernwind-src.git</scm.repo.url>
+        <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
         <tidalwave.issues>NW</tidalwave.issues>
@@ -210,8 +210,8 @@
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
     <scm>
-        <connection>scm:hg:${scm.repo.readonly.url}</connection>
-        <developerConnection>scm:hg:${scm.repo.effective.url}</developerConnection>
+        <connection>scm:git:${scm.repo.readonly.url}</connection>
+        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
         <url>${scm.repo.browse.url}</url>
         <tag>HEAD</tag>
     </scm>
