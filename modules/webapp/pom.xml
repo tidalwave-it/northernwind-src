@@ -172,7 +172,6 @@
 
     <modules>
         <module>Commons</module>
-        <module>JerseyWebApp</module>
         <module>SpringMvcWebApp</module>
         <module>SpringMvcMediaWebApp</module>
         <module>VaadinWebApp</module>
