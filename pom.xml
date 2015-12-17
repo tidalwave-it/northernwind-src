@@ -47,12 +47,13 @@
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
     </properties>
 
-    <distributionManagement>
-        <site>
-            <id>website-northernwind.java.net</id>
-            <url>dav:https://java.net/website/northernwind/site/</url>
-        </site>
-    </distributionManagement>
+    <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
+    <scm>
+        <connection>scm:git:${scm.repo.readonly.url}</connection>
+        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
+        <url>${scm.repo.browse.url}</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <mailingLists>
         <mailingList>
@@ -207,14 +208,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
-    <scm>
-        <connection>scm:git:${scm.repo.readonly.url}</connection>
-        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
-        <url>${scm.repo.browse.url}</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <build>
         <plugins>
