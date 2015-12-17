@@ -178,16 +178,6 @@
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-jersey</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-jersey-webapp</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
                 <version>1.1-ALPHA-35-SNAPSHOT</version>
             </dependency>
