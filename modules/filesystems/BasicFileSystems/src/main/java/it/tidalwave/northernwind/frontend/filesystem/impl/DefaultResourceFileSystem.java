@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
- * PROJECT NAME
- * PROJECT COPYRIGHT
- *
- ***********************************************************************************************************************
+ * NorthernWind - lightweight CMS
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: PROJECT URL
- * SCM: PROJECT SCM
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
@@ -28,6 +33,9 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.As;
+import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -40,12 +48,15 @@ import lombok.RequiredArgsConstructor;
 public class DefaultResourceFileSystem implements ResourceFileSystem
   {
     private final IdentityHashMap<Path, ResourceFile> delegateLightWeightMap = new IdentityHashMap<>();
-    
+
     @Nonnull
     private final FileSystem fileSystem;
-    
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
+
     @Override @Nonnull
-    public ResourceFile getRoot() 
+    public ResourceFile getRoot()
       {
         return createResourceFile(fileSystem.getRootDirectories().iterator().next());
       }
@@ -55,24 +66,24 @@ public class DefaultResourceFileSystem implements ResourceFileSystem
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
-    
+
     /* package */ synchronized ResourceFile createResourceFile (final @Nonnull Path path)
       {
         if (path == null)
           {
-            return null;  
+            return null;
           }
-        
+
         ResourceFile decorator = delegateLightWeightMap.get(path);
-        
+
         if (decorator == null)
           {
             decorator = new DefaultResourceFile(this, path);
             delegateLightWeightMap.put(path, decorator);
           }
-        
+
         return decorator;
       }
-    
+
     // TODO: equals and hashcode
   }

@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
- * PROJECT NAME
- * PROJECT COPYRIGHT
- *
- ***********************************************************************************************************************
+ * NorthernWind - lightweight CMS
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,16 +18,16 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: PROJECT URL
- * SCM: PROJECT SCM
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.filesystem.impl;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,7 +35,11 @@ import java.io.InputStream;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.role.spring.SpringAsSupport;
+import it.tidalwave.util.As;
 import java.nio.file.Path;
+import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -46,24 +54,27 @@ public class DefaultResourceFile implements ResourceFile
   {
     @Getter @Nonnull
     private final ResourceFileSystem fileSystem;
-    
+
     @Nonnull
     private final Path delegate;
-    
+
+    @Delegate
+    private final As asSupport = new SpringAsSupport(this);
+
     @Override @Nonnull
-    public String getName() 
+    public String getName()
       {
         return delegate.getFileName().toString();
       }
 
     @Override @Nonnull
-    public String getPath() 
+    public ResourcePath getPath()
       {
-        return delegate.toAbsolutePath().toString();
-      } 
+        return new ResourcePath(delegate.toAbsolutePath().toString());
+      }
 
     @Override
-    public boolean isFolder() 
+    public boolean isFolder()
       {
         return delegate.toFile().isDirectory();
       }
@@ -75,85 +86,73 @@ public class DefaultResourceFile implements ResourceFile
       }
 
     @Override
-    public String getMimeType() 
+    public Finder findChildren()
+      {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      }
+
+    @Override
+    public String getMimeType()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
     public InputStream getInputStream()
-      throws FileNotFoundException 
+      throws FileNotFoundException
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
     public String asText(String encoding)
-      throws IOException 
+      throws IOException
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
     public byte[] asBytes()
-      throws IOException 
+      throws IOException
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public DateTime getLatestModificationTime() 
+    public DateTime getLatestModificationTime()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public ResourceFile getParent() 
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
-    public ResourceFile getChildByName(String fileName) 
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }  
-
-    @Override
-    public Collection<ResourceFile> getChildren() 
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
-
-    @Override
-    public Collection<ResourceFile> getChildren(boolean recursive)
+    public ResourceFile getParent()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override @Nonnull
-    public File toFile() 
+    public File toFile()
       {
         return delegate.toFile();
       }
 
     @Override
-    public void delete() 
-      throws IOException 
+    public void delete()
+      throws IOException
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public ResourceFile createFolder(String name) 
-      throws IOException 
+    public ResourceFile createFolder(String name)
+      throws IOException
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public void copyTo(ResourceFile targetFolder) 
-      throws IOException 
+    public void copyTo(ResourceFile targetFolder)
+      throws IOException
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
