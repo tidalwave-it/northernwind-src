@@ -12,7 +12,7 @@
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-    <version>1.0.25-SNAPSHOT</version>
+    <version>1.1-ALPHA-35-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Media Extensions</name>
     <description>Media Extensions.</description>
@@ -65,7 +65,6 @@
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>xmpcore-patched</artifactId>
-            <version>5.1.0</version> <!-- FIXME -->
         </dependency>
     </dependencies>
 </project>

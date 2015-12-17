@@ -2,27 +2,27 @@
 <!--
   #%L
   *********************************************************************************************************************
-  
+
   NorthernWind - lightweight CMS
-  http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+  http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
   %%
   Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
   %%
   *********************************************************************************************************************
-  
+
   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
   the License. You may obtain a copy of the License at
-  
+
       http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
   an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
   specific language governing permissions and limitations under the License.
-  
+
   *********************************************************************************************************************
-  
+
   $Id$
-  
+
   *********************************************************************************************************************
   #L%
   -->
@@ -42,31 +42,16 @@
     <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.Slf4JJulBrigdeInstallerServletContextListener</listener-class>
     </listener>
-    
+
     <!-- Spring configuration for webapps -->
     <listener>
         <listener-class>it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator</listener-class>
     </listener>
-    
+
     <!-- Spring configuration for session-scoped beans -->
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-    
-    <!-- Jersey (REST) configuration -->
-<!--    <servlet>
-        <servlet-name>JerseyServlet</servlet-name>
-        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-        <init-param>
-            <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>it.tidalwave.bluebill.stats.rest.v1</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>JerseyServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>    
-    </servlet-mapping>-->
 
     <!-- Vaadin configuration -->
     <!-- TODO: use the InitializationDispatcherServletDelegate when it's able to run with an arbitrary delegate -->
@@ -91,7 +76,7 @@
         <param-name>productionMode</param-name>
         <param-value>false</param-value>
     </context-param>
-    
+
     <!-- LogBack status viewer -->
     <servlet>
         <servlet-name>LogBackViewStatusMessages</servlet-name>
@@ -101,7 +86,7 @@
         <servlet-name>LogBackViewStatusMessages</servlet-name>
         <url-pattern>/admin/logback</url-pattern>
     </servlet-mapping>
-    
+
     <!--  -->
     <filter>
         <filter-name>jetty-gzip</filter-name>
@@ -120,5 +105,5 @@
     <filter-mapping>
         <filter-name>NorthernWindResponseHeaderFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>       
+    </filter-mapping>
 </web-app>
