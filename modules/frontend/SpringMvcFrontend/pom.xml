@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend (Spring MVC)</name>
     <description>An implementation of the front end based on Spring MVC.</description>
-    
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
@@ -55,7 +55,6 @@
         <dependency>
             <groupId>net.java.dev.rome</groupId>
             <artifactId>rome</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
