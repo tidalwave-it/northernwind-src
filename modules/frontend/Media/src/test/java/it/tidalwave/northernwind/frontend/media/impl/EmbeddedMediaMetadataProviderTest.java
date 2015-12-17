@@ -1,39 +1,44 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import org.imajine.image.EditableImage;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.metadata.XMP;
-import org.imajine.image.op.ReadOp;
+import java.io.IOException;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import lombok.extern.slf4j.Slf4j;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 /***********************************************************************************************************************
  *
@@ -41,49 +46,76 @@ import org.testng.annotations.Test;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Slf4j
 public class EmbeddedMediaMetadataProviderTest
   {
-    @Test
-    public void test1()
+    private ApplicationContext context;
+
+    private EmbeddedMediaMetadataProvider underTest;
+    
+    private MetadataCache metadataCache;
+    
+    private Id mediaId;
+    
+    private ResourceProperties siteNodeProperties;
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @BeforeMethod
+    public void setupFixture()
       throws Exception
       {
-        final File file = new File("/Users/fritz/Personal/WebSites/StoppingDown.net/ExternalMedia/stillimages/100/20100102-0001.jpg");
-        final EditableImage image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
-        System.err.println("IMAGE: " + image);
-        final IPTC iptc = image.getMetadata(IPTC.class);
-        final EXIF exif = image.getMetadata(EXIF.class);
-        final XMP xmp = image.getMetadata(XMP.class);
-//          System.err.println("IPTC: " + iptc + " " + Arrays.toString(iptc.getTagCodes()) + " / " + iptc.getByline());
-//          System.err.println("EXIF: " + exif);
+        context = new ClassPathXmlApplicationContext("EmbeddedMediaMetadataProviderTestBeans.xml");
+        underTest = context.getBean(EmbeddedMediaMetadataProvider.class);
+        metadataCache = context.getBean(MetadataCache.class);
+        siteNodeProperties = mock(ResourceProperties.class);
+        mediaId = new Id("mediaId");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_the_interpolated_string_when_metadata_is_found() 
+      throws Exception
+      {
+        final Metadata metadata = mock(Metadata.class);
+        when(metadata.interpolateString(anyString(), same(siteNodeProperties))).thenReturn("result");
+        when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties))).thenReturn(metadata);
+        
+        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
+        
+        assertThat(result, is("result"));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_empty_string_when_media_not_found()
+      throws Exception
+      {
+        when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
+                .thenThrow(new NotFoundException("Media not found"));
+        
+        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
 
-        System.err.println("EXIF");
-          
-        for (int exifTag : exif.getTagCodes())
-          {
-            System.err.printf("[%d] %s: %s%n", exifTag, exif.getTagName(exifTag), exif.getObject(exifTag));  
-          }
-          
-        System.err.println("IPTC");
-          
-        for (int iptcTag : iptc.getTagCodes())
-          {
-            System.err.printf("[%d] %s: %s%n", iptcTag, iptc.getTagName(iptcTag), iptc.getObject(iptcTag));  
-          }
-          
-        System.err.println("XMP");
-          
-        for (int xmpTag : xmp.getTagCodes())
-          {
-            System.err.printf("[%d] %s: %s%n", xmpTag, xmp.getTagName(xmpTag), xmp.getObject(xmpTag));  
-          }
+        assertThat(result, is(""));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_empty_string_when_io_error()
+      throws Exception
+      {
+        when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
+                .thenThrow(new IOException("Cannot open file"));
         
-        System.err.println("XMP 2");
-        
-        final Map<String, String> map = new TreeMap<String, String>(xmp.getXmpProperties());
-        
-        for (final Entry<String, String> e : map.entrySet())
-          {
-            System.err.printf("%s: %s%n", e.getKey(), e.getValue());  
-          }
-      }  
+        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
+
+        assertThat(result, is(""));
+      }
   }

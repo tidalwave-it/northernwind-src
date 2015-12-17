@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,111 +18,30 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
-import java.io.IOException;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.openide.filesystems.FileObject;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.Request;
-import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.Layout;
-import lombok.Setter;
+import java.io.IOException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.*;
-import static org.mockito.Mockito.*;
-
-// FIXME: should be useless with Mockito, but there's a section which throws NPE
-class MockModelFactory implements ModelFactory
-  {
-    @Setter
-    private DefaultSite site;
-    
-    @Override
-    public Site createSite (String contextPath, 
-                            String documentPath, 
-                            String mediaPath,
-                            String libraryPath,
-                            String nodePath, 
-                            boolean logConfigurationEnabled,
-                            List<Locale> configuredLocales, 
-                            List<String> ignoredFolders)
-      {
-        return site;
-      }
-
-    @Override
-    public Resource createResource(FileObject file) 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public Content createContent(FileObject folder) 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public Media createMedia(FileObject file) 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public SiteNode createSiteNode(Site site, FileObject folder)
-      throws IOException, NotFoundException 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public Layout createLayout(Id id, String type) 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public Request createRequest() 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public Request createRequestFrom(HttpServletRequest httpServletRequest) 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-
-    @Override
-    public ResourceProperties createProperties(Id id) 
-      {
-        throw new UnsupportedOperationException("Not supported.");
-      }
-  }
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 /***********************************************************************************************************************
  *
@@ -126,78 +49,118 @@ class MockModelFactory implements ModelFactory
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultSiteProviderTest 
+public class DefaultSiteProviderTest
   {
-    private ApplicationContext context;
-    
-    private DefaultSiteProvider fixture;
+    private ClassPathXmlApplicationContext context;
 
-    private MockModelFactory modelFactory;
-    
+    private DefaultSiteProvider underTest;
+
     private DefaultSite site;
-    
+
     private WaitingTaskExecutor executor;
-    
+
     private ServletContext servletContext;
-            
+
+    private Site.Builder.CallBack siteBuilderCallback;
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteProviderTestBeans.xml");
-        modelFactory = context.getBean(MockModelFactory.class);
         executor = context.getBean(WaitingTaskExecutor.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
-        modelFactory.setSite(site);
+
+        siteBuilderCallback = mock(Site.Builder.CallBack.class);
+        when(siteBuilderCallback.build(any(Site.Builder.class))).thenReturn(site);
+        final ModelFactory modelFactory = context.getBean(ModelFactory.class);
+        final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
+        when(modelFactory.createSite()).thenReturn(builder);
+
         when(servletContext.getContextPath()).thenReturn("thecontextpath");
-        reset(modelFactory);
-//        when(modelFactory.createSite(anyString(), FIXME: throws NPE
-//                                     anyString(), 
-//                                     anyString(), 
-//                                     anyString(), 
-//                                     anyString(), 
-//                                     any(Boolean.class), 
-//                                     any(List.class), 
-//                                     any(List.class)))
-//                         .thenReturn(site);
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
       {
-        fixture = context.getBean(DefaultSiteProvider.class);
-        verify(modelFactory).createSite(eq("thecontextpath"), 
-                                        eq("testDocumentPath"), 
-                                        eq("testMediaPath"), 
-                                        eq("testLibraryPath"), 
-                                        eq("testNodePath"),
-                                        eq(true), 
-                                        eq(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))), 
-                                        eq(Arrays.asList("ignored1", "ignored2"))); 
-        verify(executor).execute(any(Runnable.class));
-        
-        assertThat(fixture.getSite(), sameInstance((Site)site));
-        assertThat(fixture.isSiteAvailable(), is(false));
-        
-        executor.doExecute();
-        
+        underTest = context.getBean(DefaultSiteProvider.class);
+
+        verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
+                .withContextPath("thecontextpath")
+                .withDocumentPath("testDocumentPath")
+                .withMediaPath("testMediaPath")
+                .withLibraryPath("testLibraryPath")
+                .withNodePath("testNodePath")
+                .withConfigurationEnabled(true)
+                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
+                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
+
+        verify(executor).execute(any(Runnable.class)); // FIXME: needed?
+
+        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.isSiteAvailable(), is(false));
+
+        executor.doExecute(); // emulate Site initialization in background
+
         verify(site).initialize();
-        assertThat(fixture.getSite(), sameInstance((Site)site));
-        assertThat(fixture.isSiteAvailable(), is(true));
+        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.isSiteAvailable(), is(true));
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_return_the_correct_version_string()
       {
-        fixture = context.getBean(DefaultSiteProvider.class);
-        assertThat(fixture.getVersionString(), is(notNullValue()));  
+        underTest = context.getBean(DefaultSiteProvider.class);
+        assertThat(underTest.getVersionString(), is(notNullValue()));
       }
-    
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_return_the_correct_context_path_in_a_web_environment()
       {
-        fixture = context.getBean(DefaultSiteProvider.class);
-        assertThat(fixture.getContextPath(), is("thecontextpath"));
+        underTest = context.getBean(DefaultSiteProvider.class);
+        assertThat(underTest.getContextPath(), is("thecontextpath"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_use_no_context_path_when_ServletContext_is_not_available()
+      throws Exception
+      {
+        ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");
+
+        underTest = context.getBean(DefaultSiteProvider.class);
+
+        assertThat(underTest.getContextPath(), is("/"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_return_non_null_site_even_in_cause_of_initialization_failure()
+      throws Exception
+      {
+        doThrow(new IOException("test")).when(site).initialize();
+
+        underTest = context.getBean(DefaultSiteProvider.class);
+        executor.doExecute(); // emulate Site initialization in background
+
+        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.isSiteAvailable(), is(false));
       }
   }

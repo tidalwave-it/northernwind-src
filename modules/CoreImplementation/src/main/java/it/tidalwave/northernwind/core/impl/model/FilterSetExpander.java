@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
@@ -29,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -36,10 +42,10 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@Configurable @Slf4j
 public class FilterSetExpander implements Filter
   {
-    @Inject @Nonnull 
+    @Inject
     private List<Filter> filters;
 
     @PostConstruct
@@ -47,9 +53,9 @@ public class FilterSetExpander implements Filter
       {
         Collections.sort(filters, new AnnotationAwareOrderComparator());
       }
-    
+
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType) 
+    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
 //        // FIXME: do this with StringTemplate - remember to escape $'s in the source
 //        final String c = site.getContextPath();
@@ -57,12 +63,13 @@ public class FilterSetExpander implements Filter
 //                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
 //                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
         String result = text;
-        
+
         for (final Filter filter : filters)
           {
+            log.debug(">>>> filtering with {}", filter);
             result = filter.filter(result, mimeType);
           }
-        
+
         return result;
       }
   }

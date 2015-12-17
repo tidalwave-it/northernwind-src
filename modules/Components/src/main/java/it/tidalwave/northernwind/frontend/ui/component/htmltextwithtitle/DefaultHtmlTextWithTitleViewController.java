@@ -1,25 +1,30 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 import javax.annotation.Nonnull;
@@ -40,7 +45,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * A default implementation of {@link HtmlTextWithTitleViewController}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -50,13 +55,13 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
   {
     @Nonnull
     private final HtmlTextWithTitleView view;
-    
+
     @Nonnull
     private final SiteNode siteNode;
-    
+
     @Nonnull
     private final Site site;
-    
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -71,21 +76,21 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             final StringBuilder htmlBuilder = new StringBuilder();
             final String template = getTemplate(viewProperties);
-            
+
             log.debug(">>>> template: {}", template);
-            
+
             for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS))
               {
                 final StringBuilder htmlFragmentBuilder = new StringBuilder();
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
                 final ResourceProperties contentProperties = content.getProperties();
-                appendTitle(contentProperties, htmlFragmentBuilder, "h" + titleLevel++);                
+                appendTitle(contentProperties, htmlFragmentBuilder, "h" + titleLevel++);
                 appendText(contentProperties, htmlFragmentBuilder);
                 final ST t = new ST(template, '$', '$').add("content", htmlFragmentBuilder.toString());
                 htmlBuilder.append(t.render());
               }
-            
-            view.setText(htmlBuilder.toString());            
+
+            view.setText(htmlBuilder.toString());
             view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (NotFoundException e)
@@ -106,14 +111,14 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     private void appendTitle (final @Nonnull ResourceProperties contentProperties,
-                              final @Nonnull StringBuilder htmlBuilder, 
-                              final @Nonnull String titleMarkup) 
-      throws IOException 
+                              final @Nonnull StringBuilder htmlBuilder,
+                              final @Nonnull String titleMarkup)
+      throws IOException
       {
         try
           {
             final String title = contentProperties.getProperty(PROPERTY_TITLE);
-            htmlBuilder.append(String.format("<%s>%s</%s>\n", titleMarkup, title, titleMarkup));
+            htmlBuilder.append(String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup));
           }
         catch (NotFoundException e)
           {
@@ -127,8 +132,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     private void appendText (final @Nonnull ResourceProperties contentProperties,
-                             final @Nonnull StringBuilder htmlBuilder) 
-      throws IOException 
+                             final @Nonnull StringBuilder htmlBuilder)
+      throws IOException
       {
         try
           {
@@ -147,8 +152,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getTemplate (final @Nonnull ResourceProperties viewProperties) 
-      throws IOException 
+    private String getTemplate (final @Nonnull ResourceProperties viewProperties)
+      throws IOException
       {
         try
           {

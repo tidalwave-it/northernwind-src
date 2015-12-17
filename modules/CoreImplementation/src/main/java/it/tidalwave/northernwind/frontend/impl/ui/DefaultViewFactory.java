@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
@@ -29,7 +34,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
@@ -46,9 +50,9 @@ import static it.tidalwave.util.NotFoundException.*;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link ViewFactory}.
- * 
+ *
  * @stereotype  Factory
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -56,41 +60,40 @@ import static it.tidalwave.util.NotFoundException.*;
 @Configurable @Slf4j @ToString
 public class DefaultViewFactory implements ViewFactory
   {
-    private final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<String, ViewBuilder>();
-    
+    /* package */ final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
+
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull String viewTypeUri, 
-                                                      final @Nonnull Id viewId, 
+    public ViewAndController createViewAndController (final @Nonnull String viewTypeUri,
+                                                      final @Nonnull Id viewId,
                                                       final @Nonnull SiteNode siteNode)
       throws NotFoundException, HttpStatusException
-      {        
+      {
         final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
-                                                      String.format("Cannot find %s: available: %s", 
+                                                      String.format("Cannot find %s: available: %s",
                                                                     viewTypeUri, viewBuilderMapByTypeUri.keySet()));
         return viewBuilder.createViewAndController(viewId, siteNode);
       }
-     
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct 
+    @PostConstruct
     /* package */ void initialize() // FIXME: gets called twice
-      throws IOException, 
-             NoSuchMethodException, InvocationTargetException, InstantiationException, 
-             IllegalArgumentException, IllegalAccessException, SecurityException 
+      throws IOException,
+             NoSuchMethodException, InvocationTargetException, InstantiationException,
+             IllegalArgumentException, IllegalAccessException, SecurityException
       {
-        final ClassScanner classScanner = new ClassScanner();
-        classScanner.addIncludeFilter(new AnnotationTypeFilter(ViewMetadata.class));
-        
+        final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
+
         for (final Class<?> viewClass : classScanner.findClasses())
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
@@ -98,13 +101,13 @@ public class DefaultViewFactory implements ViewFactory
             final ViewBuilder viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
             viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
-        
+
         if (logConfigurationEnabled)
           {
             logConfiguration();
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -112,10 +115,10 @@ public class DefaultViewFactory implements ViewFactory
     private void logConfiguration()
       {
         log.info("View definitions:");
-        
-        for (final ViewBuilder viewDefinition : viewBuilderMapByTypeUri.values())
+
+        for (final ViewBuilder viewBuilder : viewBuilderMapByTypeUri.values())
           {
-            log.info(">>>> {}", viewDefinition);
+            log.info(">>>> {}", viewBuilder);
           }
       }
   }

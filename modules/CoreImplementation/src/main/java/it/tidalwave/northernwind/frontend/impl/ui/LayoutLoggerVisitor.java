@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
@@ -46,58 +51,58 @@ public class LayoutLoggerVisitor implements Visitor<Layout, Object>
           {
             @Override
             protected void log (final @Nonnull Logger log,
-                                final @Nonnull String template, 
-                                final @Nonnull Object arg1, 
+                                final @Nonnull String template,
+                                final @Nonnull Object arg1,
                                 final @Nonnull Object arg2)
               {
-                log.debug(template, arg1, arg2);                    
+                log.debug(template, arg1, arg2);
               }
           },
         INFO
           {
             @Override
             protected void log (final @Nonnull Logger log,
-                                final @Nonnull String template, 
-                                final @Nonnull Object arg1, 
+                                final @Nonnull String template,
+                                final @Nonnull Object arg1,
                                 final @Nonnull Object arg2)
               {
-                log.info(template, arg1, arg2);                    
+                log.info(template, arg1, arg2);
               }
           };
-        
+
         protected abstract void log (@Nonnull Logger log,
-                                     @Nonnull String template, 
-                                     @Nonnull Object arg1, 
+                                     @Nonnull String template,
+                                     @Nonnull Object arg1,
                                      @Nonnull Object arg2);
       }
-    
+
     private static final String SPACES = "                                                               ";
-    
+
     private int indent = 0;
-    
+
     @Nonnull
     private final Level logLevel;
-    
+
     @Override
-    public void preVisit (final @Nonnull Layout layout) 
+    public void preVisit (final @Nonnull Layout layout)
       {
         logLevel.log(log, "{}{}", SPACES.substring(0, indent++ * 2), layout);
       }
 
     @Override
-    public void visit (final @Nonnull Layout layout) 
+    public void visit (final @Nonnull Layout layout)
       {
-      }  
+      }
 
     @Override
-    public void postVisit (final @Nonnull Layout layout) 
+    public void postVisit (final @Nonnull Layout layout)
       {
         indent--;
       }
 
     @Override
-    public Object getValue() 
-      throws NotFoundException 
+    public Object getValue()
+      throws NotFoundException
       {
         return new Object();
       }

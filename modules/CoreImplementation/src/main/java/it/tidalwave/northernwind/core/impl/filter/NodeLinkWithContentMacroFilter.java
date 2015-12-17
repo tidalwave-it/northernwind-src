@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.CheckForNull;
@@ -35,6 +40,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -50,22 +56,22 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Order(NodeLinkMacroFilter.ORDER - 1) @Slf4j
 public class NodeLinkWithContentMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
-    
+
     // FIXME: what about @AutoWired(required=false)?
-    @Inject @Nonnull
+    @Inject
     private ApplicationContext context;
-    
+
     @CheckForNull
     private ParameterLanguageOverrideLinkPostProcessor postProcessor;
-    
+
     // FIXME: merge with NodeLinkMacroFilter, using an optional block for contentRelativePath
     public NodeLinkWithContentMacroFilter()
       {
         super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException, IOException
@@ -76,17 +82,18 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final String link = siteNode.getRelativeUri() + (content.getExposedUri().startsWith("/") ? "" : "/") + content.getExposedUri();
-        
-        return site.createLink(((language == null) || (postProcessor == null)) ? link : postProcessor.postProcess(link, language));
+        final ResourcePath path = siteNode.getRelativeUri().appendedWith(content.getExposedUri());
+        final String link = site.createLink(path);
+
+        return ((language == null) || (postProcessor == null)) ? link : postProcessor.postProcess(link, language);
       }
-    
+
     @PostConstruct
     private void initialize()
       {
         try
           {
-            postProcessor = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class); 
+            postProcessor = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
           }
         catch (NoSuchBeanDefinitionException e)
           {

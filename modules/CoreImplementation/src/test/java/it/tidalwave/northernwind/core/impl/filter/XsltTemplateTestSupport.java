@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
@@ -27,34 +32,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import com.google.common.base.Predicate;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
-import it.tidalwave.northernwind.core.filesystem.FileSystemProvider;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor
-class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> implements SiteFinder<Resource> 
+class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> implements SiteFinder<Resource>
   {
     @Nonnull
     private final List<? extends Resource> results;
 
-    public MockResourceFinder(List<? extends Resource> results) 
+    public MockResourceFinder(List<? extends Resource> results)
       {
         this.results = results;
       }
-    
+
     @Override
-    public MockResourceFinder withRelativePath(String relativePath) 
+    public MockResourceFinder withRelativePath(String relativePath)
       {
         return this;
       }
@@ -66,12 +72,12 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
       }
 
     @Override
-    public void doWithResults(Predicate predicate) 
+    public void doWithResults(Predicate<Resource> predicate)
       {
       }
 
     @Override
-    protected List<? extends Resource> computeResults() 
+    protected List<? extends Resource> computeResults()
       {
         return results;
       }
@@ -83,40 +89,42 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class XsltTemplateTestSupport 
+public class XsltTemplateTestSupport
   {
     private XsltMacroFilter filter;
-    
+
     @BeforeMethod
-    public void setup() 
+    public void setup()
       throws Exception
       {
-        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml", 
-                                                                                          "META-INF/XsltTemplateTestBeans.xml",
-                                                                                          "META-INF/CachedUriResolverBeans.xml");
+        final ClassPathXmlApplicationContext context =
+                new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
+                                                   "META-INF/XsltTemplateTestBeans.xml",
+                                                   "META-INF/CachedUriResolverBeans.xml");
         filter = context.getBean(XsltMacroFilter.class);
         context.getBean(CachedURIResolver.class).setCacheFolderPath("target/CachedUriResolver");
         final SiteProvider siteProvider = context.getBean(SiteProvider.class);
         final Site site = mock(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
-        
-        final FileSystemProvider fileSystemProvider = mock(FileSystemProvider.class);
+
+        final ResourceFileSystemProvider fileSystemProvider = mock(ResourceFileSystemProvider.class);
         when(site.getFileSystemProvider()).thenReturn(fileSystemProvider);
 
         final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
-        final FileObject fileObject = FileUtil.toFileObject(root);
-        final List<Resource> resources = new ArrayList<Resource>();
-        
-        for (final FileObject xsltFileObject : fileObject.getChildren())
+        final ResourceFileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
+        final ResourceFile file = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
+        final List<Resource> resources = new ArrayList<>();
+
+        for (final ResourceFile xsltFile : file.findChildren().results())
           {
             final Resource resource = mock(Resource.class);
-            when(resource.getFile()).thenReturn(xsltFileObject);
+            when(resource.getFile()).thenReturn(xsltFile);
             resources.add(resource);
           }
-        
-        when(site.find(eq(Resource.class))).thenReturn(new MockResourceFinder(resources)); 
+
+        when(site.find(eq(Resource.class))).thenReturn(new MockResourceFinder(resources));
       }
-    
+
     protected void test (final @Nonnull String sourceFileName)
       throws IOException
       {

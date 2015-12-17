@@ -1,28 +1,32 @@
-/***********************************************************************************************************************
- *
+/*
+ * #%L
+ * *********************************************************************************************************************
+ * 
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
- *
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- *
- ***********************************************************************************************************************
- *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
- *
- **********************************************************************************************************************/
+ * 
+ * *********************************************************************************************************************
+ * 
+ * $Id$
+ * 
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.importer.infoglue;
 
-import it.tidalwave.northernwind.core.impl.util.UriUtilities;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamReader;
 import lombok.Getter;
@@ -40,30 +44,30 @@ class ExportContentsVersionConverter extends Converter
   {
     private int stateId;
 
-    @Getter 
+    @Getter
     private DateTime modifiedDateTime;
- 
-    @Getter 
+
+    @Getter
     private String versionComment;
-    
+
     private boolean checkedOut;
-    
+
     private boolean active;
-    
-    @Getter 
+
+    @Getter
     private String versionModifier;
-    
+
     private String escapedVersionValue;
-    
+
     private String languageCode;
-    
+
     private final ExportContentConverter parent;
-    
+
     private final boolean onlyMapAssets;
-    
+
     public ExportContentsVersionConverter (final @Nonnull ExportContentConverter parent, final boolean onlyMapAssets)
       {
-        super(parent);        
+        super(parent);
         this.parent = parent;
         this.onlyMapAssets = onlyMapAssets;
       }
@@ -74,11 +78,11 @@ class ExportContentsVersionConverter extends Converter
       {
         if ("digitalAssets".equals(elementName))
           {
-            new ExportDigitalAssetsConverter(this, onlyMapAssets).process();  
+            new ExportDigitalAssetsConverter(this, onlyMapAssets).process();
             localLevel--; // FIXME: doesn't properly receive the endElement for this
           }
       }
-    
+
     @Override
     protected void processEndElement (final @Nonnull String elementName)
       throws Exception
@@ -87,65 +91,65 @@ class ExportContentsVersionConverter extends Converter
           {
             if ("stateId".equals(elementName))
               {
-                stateId = contentAsInteger();  
+                stateId = contentAsInteger();
               }
             else if ("modifiedDateTime".equals(elementName))
               {
-                modifiedDateTime = contentAsDateTime();  
+                modifiedDateTime = contentAsDateTime();
               }
             else if ("versionComment".equals(elementName))
               {
-                versionComment = contentAsString();  
+                versionComment = contentAsString();
               }
             else if ("isCheckedOut".equals(elementName))
               {
-                checkedOut = contentAsBoolean();  
+                checkedOut = contentAsBoolean();
               }
             else if ("isActive".equals(elementName))
               {
-                active = contentAsBoolean();  
+                active = contentAsBoolean();
               }
             else if ("versionModifier".equals(elementName))
               {
-                versionModifier = contentAsString();  
+                versionModifier = contentAsString();
               }
             else if ("escapedVersionValue".equals(elementName))
               {
-                escapedVersionValue = contentAsString();  
+                escapedVersionValue = contentAsString();
               }
             else if ("languageCode".equals(elementName))
               {
-                languageCode = contentAsString();  
+                languageCode = contentAsString();
               }
           }
       }
 
     @Override
-    protected void finish() throws Exception 
+    protected void finish() throws Exception
       {
         if (!onlyMapAssets)
           {
-            log.info("Now process {} stateId: {}, checkedOut: {}, active: {}, {} {}", 
+            log.info("Now process {} stateId: {}, checkedOut: {}, active: {}, {} {}",
                     new Object[] { parent.getPath(), stateId, checkedOut, active, modifiedDateTime, versionComment });
             String path = parent.getPath() + "/";
 
             // FIXME for blueBill Mobile, put in configuration
     //        if (path.equals("/blueBill/License/"))
     //          {
-    //            path = "/blueBill/Mobile/License/";   
+    //            path = "/blueBill/Mobile/License/";
     //          }
     //        else if (path.equals("/blueBill/Mobile/Contact/"))
     //          {
-    //            path = "/blueBill/Mobile/Contacts/";   
+    //            path = "/blueBill/Mobile/Contacts/";
     //          }
     //        else if (path.equals("/blueBill/Meta info folder/blueBill/_Standard Pages/Contacts Metainfo/"))
     //          {
-    //            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";   
+    //            path = "/blueBill/Meta info folder/blueBill/Mobile/_Standard Pages/Contacts Metainfo/";
     //          }
             // END FIXME for blueBill Mobile, put in configuration
 
             String content = escapedVersionValue.replace("cdataEnd", "]]>");
-            
+
 //            // FIXME: for StoppingDown
 //            if (path.equals("/Stopping Down/Splash/"))
 //              {
@@ -156,13 +160,13 @@ class ExportContentsVersionConverter extends Converter
 //                content = content.replace("/diary.html", "$nodeLink(relativePath='/Diary')$");
 //                content = content.replace("/travels.html", "$nodeLink(relativePath='/Travels')$");
 //              }
-//            
+//
 //            content = content.replaceAll("=\"http://stoppingdown.net/media/stillimages([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
 //            content = content.replaceAll("=\"http://stoppingdown.net/media/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
 //            content = content.replaceAll("=\"http://www.timelesswanderings.net/photos([^\"]*)\"", "=\"\\$mediaLink(relativePath='/stillimages$1')\\$\"");
 //            content = content.replaceAll("=\"http://stoppingdown.net/media/movies([^\"]*)\"", "=\"\\$mediaLink(relativePath='/movies$1')\\$\"");
 //            // END FIXME: for StoppingDown
-            
+
             Main.contentMap.put(parent.getId(), modifiedDateTime, languageCode, content);
 
             if (!path.matches(Main.contentPrefix + ".*") || path.contains("Meta info folder"))
@@ -179,10 +183,10 @@ class ExportContentsVersionConverter extends Converter
 
                 if (!"".equals(content))
                   {
-                    new ContentParser(content, 
-                                      modifiedDateTime, 
+                    new ContentParser(content,
+                                      modifiedDateTime,
                                       parent.getPublishDateTime(),
-                                      UriUtilities.urlEncodedPath(path) + "/", 
+                                      UriUtilities.urlEncodedPath(path) + "/",
                                       languageCode,
                                       versionComment)
                             .process();
@@ -192,7 +196,7 @@ class ExportContentsVersionConverter extends Converter
       }
 
     @Override @Nonnull
-    public String toString() 
+    public String toString()
       {
         return String.format("ExportContentsVersionConverter(%s)", parent.getPath());
       }

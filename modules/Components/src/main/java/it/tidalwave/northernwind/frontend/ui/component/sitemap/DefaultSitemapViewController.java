@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,18 +18,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -37,12 +43,13 @@ import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteFinder.Predicate;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.model.SiteNode.*;
+import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
 /***********************************************************************************************************************
  *
@@ -58,7 +65,7 @@ public class DefaultSitemapViewController implements SitemapViewController
 
     @Nonnull
     private final Site site;
-    
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -72,19 +79,25 @@ public class DefaultSitemapViewController implements SitemapViewController
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         builder.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
-        site.find(SiteNode.class).doWithResults(new Predicate<SiteNode>() 
+        site.find(SiteNode.class).doWithResults(new Predicate<SiteNode>()
           {
             @Override
-            public boolean apply (final @Nonnull SiteNode siteNode) 
+            public boolean apply (final @Nonnull SiteNode siteNode)
               {
                 try
                   {
                     final Layout layout = siteNode.getLayout();
-                    
+
                     // Prevents infinite recursion
                     if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
                       {
+                        // FIXME: should probably skip children of sitenodes with managePathParams
+                        // FIXME: for instance, Calendar would benefit
+                        // FIXME: Would Blog benefit? It should, as it manages its own children
+                        // FIXME: Places and Themes should move managePathParams=true to each children
+                        // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
                         log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
+
                         appendUrl(builder, siteNode, null);
 
                         layout.accept(new VisitorSupport<Layout, Void>()
@@ -110,12 +123,12 @@ public class DefaultSitemapViewController implements SitemapViewController
                                   }
                                 catch (Exception e)
                                   {
-                                    log.warn("", e);
+                                    log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
                                   }
                               }
 
                             @Override
-                            public Void getValue() 
+                            public Void getValue()
                               {
                                 return null;
                               }
@@ -131,20 +144,20 @@ public class DefaultSitemapViewController implements SitemapViewController
                     log.warn("", e);
                   }
 
-                return false; 
+                return false;
               }
           });
-        
+
         builder.append("</urlset>\n");
         view.setContent(builder.toString());
-        view.setMimeType("application/xml");        
+        view.setMimeType("application/xml");
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    private void appendUrl (final @Nonnull StringBuilder builder, 
+    private void appendUrl (final @Nonnull StringBuilder builder,
                             final @Nonnull SiteNode siteNode,
                             final @Nullable SiteNode childSiteNode)
       throws IOException
@@ -158,18 +171,20 @@ public class DefaultSitemapViewController implements SitemapViewController
         final Key<String> priorityKey = (childSiteNode == null) ? PROPERTY_SITEMAP_PRIORITY
                                                                 : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
         final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty(priorityKey, "0.5"));
-        
+
         if (sitemapPriority > 0)
           {
             builder.append("  <url>\n");
-            builder.append(String.format("    <loc>%s</loc>\n", site.createLink(n.getRelativeUri())));
-            builder.append(String.format("    <lastmod>%s</lastmod>\n", dateTimeFormatter.print(getSiteNodeDateTime(properties))));
-            builder.append(String.format("    <changefreq>%s</changefreq>\n", properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
-            builder.append(String.format("    <priority>%s</priority>\n", Float.toString(sitemapPriority)));
+            builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
+            builder.append(String.format("    <lastmod>%s</lastmod>%n",
+                                         dateTimeFormatter.print(getSiteNodeDateTime(properties))));
+            builder.append(String.format("    <changefreq>%s</changefreq>%n",
+                                         properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
+            builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
             builder.append("  </url>\n");
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -178,10 +193,10 @@ public class DefaultSitemapViewController implements SitemapViewController
     private DateTime getSiteNodeDateTime (final @Nonnull ResourceProperties properties)
       {
         final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
-        
+
         try
           {
-            return isoFormatter.parseDateTime(properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE));   
+            return isoFormatter.parseDateTime(properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE));
           }
         catch (NotFoundException e)
           {
@@ -190,7 +205,18 @@ public class DefaultSitemapViewController implements SitemapViewController
           {
             log.warn("", e);
           }
-   
+
         return new DateTime(0);
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static Throwable rootCause (final @Nonnull Throwable t)
+      {
+        final Throwable cause = t.getCause();
+        return (cause != null) ? rootCause(cause) : t;
       }
   }

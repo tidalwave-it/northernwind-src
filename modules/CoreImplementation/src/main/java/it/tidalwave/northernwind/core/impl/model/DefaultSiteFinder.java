@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
@@ -29,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import com.google.common.base.Predicate;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteFinder;
@@ -41,15 +47,17 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(callSuper=true, exclude="mapByRelativePath")
-public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>    
+@ToString(callSuper = true, exclude = "mapByRelativePath")
+public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFinder<Type>> implements SiteFinder<Type>
   {
+    private final static long serialVersionUID = 3242345356779345L;
+
     @Nonnull
-    private final Map<String, Type> mapByRelativePath;
-    
-    @Nonnull
-    private final RegexTreeMap<Type> mapByRelativeUri;
-    
+    /* package */ final Map<String, Type> mapByRelativePath;
+
+    @CheckForNull
+    /* package */ final RegexTreeMap<Type> mapByRelativeUri;
+
     @CheckForNull
     private String relativePath;
 
@@ -60,22 +68,28 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      *
      ******************************************************************************************************************/
-    public DefaultSiteFinder (final @Nonnull String name, 
-                              final @Nonnull Map<String, Type> mapByRelativePath, 
-                              final @Nonnull RegexTreeMap<Type> mapByRelativeUri) 
+    public DefaultSiteFinder (final @Nonnull String name,
+                              final @CheckForNull Map<String, Type> mapByRelativePath,
+                              final @CheckForNull RegexTreeMap<Type> mapByRelativeUri)
       {
         super(name);
+
+        if (mapByRelativePath == null)
+          {
+            throw new IllegalArgumentException("Searching for a relativePath, but no map - " + this);
+          }
+
         this.mapByRelativePath = mapByRelativePath;
         this.mapByRelativeUri = mapByRelativeUri;
-      }    
-    
+      }
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteFinder<Type> withRelativePath (final @Nonnull String relativePath) 
+    public SiteFinder<Type> withRelativePath (final @Nonnull String relativePath)
       {
         final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
         clone.relativePath = relativePath;
@@ -88,7 +102,7 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri) 
+    public SiteFinder<Type> withRelativeUri (final @Nonnull String relativeUri)
       {
         final DefaultSiteFinder<Type> clone = (DefaultSiteFinder<Type>)clone();
         clone.relativeUri = relativeUri;
@@ -101,8 +115,8 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Type result() 
-      throws NotFoundException 
+    public Type result()
+      throws NotFoundException
       {
         try
           {
@@ -111,20 +125,22 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
         catch (NotFoundException e)
           {
             String message = "????";
-            
+
             if (relativePath != null)
               {
-                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet()); 
+                message = String.format("relativePath: %s", relativePath);
+//                message = String.format("relativePath: %s, set: %s", relativePath, mapByRelativePath.keySet());
               }
             else if (relativeUri != null)
               {
-                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet()); 
+                message = String.format("relativeUri: %s", relativeUri);
+//                message = String.format("relativeUri: %s, set: %s", relativeUri, mapByRelativeUri.keySet());
               }
-            
+
             throw new NotFoundException(message);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -133,36 +149,31 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
     @Override @Nonnull
     protected List<? extends Type> computeResults()
       {
-        final List<Type> results = new ArrayList<Type>();
+        final List<Type> results = new ArrayList<>();
 
         if (relativePath != null)
           {
-            if (mapByRelativePath == null)
-              {
-                throw new IllegalArgumentException("Illegal type: ");  
-              }
-        
             addResults(results, mapByRelativePath, relativePath);
           }
-        
+
         else if (relativeUri != null)
           {
             if (mapByRelativeUri == null)
               {
-                throw new IllegalArgumentException("Illegal type");  
+                throw new IllegalArgumentException("Searching for a relativeUri, but no map - " + this);
               }
-        
+
             addResults(results, mapByRelativeUri, relativeUri);
           }
-        
+
         else
           {
-            results.addAll(mapByRelativePath.values());  
+            results.addAll(mapByRelativePath.values());
           }
-        
+
         return results;
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -173,41 +184,41 @@ public class DefaultSiteFinder<Type> extends FinderSupport<Type, DefaultSiteFind
       {
         for (final Type object : results())
           {
-            predicate.apply(object);    
+            predicate.apply(object);
           }
       }
-    
+
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static <Type> void addResults (final @Nonnull List<Type> results, 
+    private static <Type> void addResults (final @Nonnull List<Type> results,
                                            final @Nonnull Map<String, Type> map,
-                                           final @Nonnull String string)
+                                           final @Nonnull String relativePath)
       {
-        if (!string.contains("*")) // FIXME: better way to guess a regexp
+        if (!relativePath.contains("*")) // FIXME: better way to guess a regexp?
           {
-            final Type result = map.get(string);
+            final Type result = map.get(relativePath);
 
             if (result != null)
               {
-                results.add(result);  
+                results.add(result);
               }
           }
-        
+
         else
           {
-            final Pattern pattern = Pattern.compile(string);
+            final Pattern pattern = Pattern.compile(relativePath);
 
             for (final Entry<String, Type> entry : map.entrySet())
               {
                 if (pattern.matcher(entry.getKey()).matches())
                   {
-                    results.add(entry.getValue());  
+                    results.add(entry.getValue());
                   }
-              }   
+              }
           }
       }
   }

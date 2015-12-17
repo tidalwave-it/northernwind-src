@@ -6,20 +6,21 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-12-SNAPSHOT</version>
+        <version>1.1-ALPHA-35-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-    <version>1.0.29-SNAPSHOT</version>
+    <version>1.1-ALPHA-35-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Core Default Implementation</name>
+    <description>A default implementation of the Core.</description>
 
     <properties>
          <NorthernWind.version>${project.parent.parent.version}</NorthernWind.version>
     </properties>
-   
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -27,7 +28,15 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-html-patches</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
@@ -50,16 +59,16 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-filesystems</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
@@ -79,6 +88,34 @@
             <artifactId>jul-to-slf4j</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-    <description>A default implementation of the Core.</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <configuration>
+                    <aspectLibraries combine.children="append">
+                        <dependency>
+                            <groupId>it.tidalwave.northernwind</groupId>
+                            <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
+                        </dependency>
+                    </aspectLibraries>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

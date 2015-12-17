@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,21 +18,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
+import com.google.common.base.Predicate;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import static org.mockito.Mockito.*;
 
@@ -38,14 +45,17 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>> implements SiteFinder<Content>
+public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>>
+                                   implements SiteFinder<Content>
   {
+    private final static long serialVersionUID = 1L;
+
     private String relativePath;
-    
+
     private String relativeUri;
-    
+
     @Override @Nonnull
-    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath) 
+    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath)
       {
         this.relativePath = relativePath;
         return this;
@@ -59,7 +69,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
       }
 
     @Override @Nonnull
-    protected List<? extends Content> computeResults() 
+    protected List<? extends Content> computeResults()
       {
         try
           {
@@ -67,27 +77,29 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
 
             if (relativePath.equals("/"))
               {
-                when(content.getExposedUri()).thenReturn("");
+                when(content.getExposedUri()).thenReturn(new ResourcePath());
               }
             else
               {
-                when(content.getExposedUri()).thenReturn("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
+                when(content.getExposedUri()).thenReturn(new ResourcePath("EXPOSED-" + relativePath.substring(1)
+                                                                                  .replace('/', '-')
+                                                                                  .replace(' ', '-')));
               }
-            
+
             return Arrays.asList(content);
-          } 
-        catch (NotFoundException e) 
-          { 
-            throw new RuntimeException(e);  
           }
-        catch (IOException e) 
+        catch (NotFoundException e)
           {
-            throw new RuntimeException(e);  
+            throw new RuntimeException(e);
+          }
+        catch (IOException e)
+          {
+            throw new RuntimeException(e);
           }
       }
 
     @Override
-    public void doWithResults (final @Nonnull Predicate<Content> predicate) 
+    public void doWithResults (final @Nonnull Predicate<Content> predicate)
       {
         throw new UnsupportedOperationException("Not supported.");
       }

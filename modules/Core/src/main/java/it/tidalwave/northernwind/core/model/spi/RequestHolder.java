@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
@@ -31,12 +36,12 @@ import it.tidalwave.northernwind.core.model.Request;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class RequestHolder implements RequestResettable
+public class RequestHolder implements RequestResettable // FIXME: consider merging with RequestContext
   {
-    private final ThreadLocal<Request> requestHolder = new ThreadLocal<Request>();
-    
+    private final ThreadLocal<Request> requestHolder = new ThreadLocal<>();
+
     @Override
-    public void requestReset() 
+    public void requestReset()
       {
         requestHolder.remove();
       }
@@ -45,10 +50,10 @@ public class RequestHolder implements RequestResettable
       {
         requestHolder.set(request);
       }
-    
+
     @Nonnull
     public Request get()
       {
-        return requestHolder.get();  
+        return requestHolder.get();
       }
   }

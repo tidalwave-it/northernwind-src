@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,18 +18,20 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 
 /***********************************************************************************************************************
@@ -36,18 +42,18 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
  **********************************************************************************************************************/
 public class MediaLinkMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
-    
+
     public MediaLinkMacroFilter()
       {
         super("\\$mediaLink\\(relativePath='([^']*)'\\)\\$");
-      } 
-    
+      }
+
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        final String relativePath = matcher.group(1);
-        return siteProvider.get().getSite().createLink("/media" + relativePath);
+        final ResourcePath relativePath = new ResourcePath(matcher.group(1)).prependedWith("media");
+        return siteProvider.get().getSite().createLink(relativePath);
       }
   }

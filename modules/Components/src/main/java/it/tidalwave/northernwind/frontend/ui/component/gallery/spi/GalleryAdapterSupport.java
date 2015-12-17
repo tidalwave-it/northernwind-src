@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,12 +18,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
 import javax.annotation.Nonnull;
@@ -31,9 +36,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import lombok.Cleanup;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_TEMPLATE;
+import static it.tidalwave.northernwind.core.model.Content.Content;
 
 /***********************************************************************************************************************
  *
@@ -44,18 +57,18 @@ import lombok.Cleanup;
 @Configurable
 public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
-    @Inject @Nonnull
+    @Inject
     protected ModelFactory modelFactory;
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId) 
+    public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId)
       {
-        return modelFactory.createProperties(viewId);
+        return modelFactory.createProperties().withId(viewId).build();
       }
 
     /*******************************************************************************************************************
@@ -64,24 +77,50 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getInlinedScript() 
+    public String getInlinedScript()
       {
         return "";
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String loadTemplate (final @Nonnull GalleryAdapterContext context, final @Nonnull String templateName)
+      throws IOException
+      {
+        try
+          {
+            final SiteNode siteNode = context.getSiteNode();
+            final GalleryView view = context.getView();
+            final Site site = context.getSite();
+            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+            final String templateRelativePath = viewProperties.getProperty(new Key<String>(templateName + "Path"));
+            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
+            return template.getProperties().getProperty(PROPERTY_TEMPLATE);
+          }
+        catch (NotFoundException e)
+          {
+            return loadDefaultTemplate(templateName + ".txt");
+          }
       }
     
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected String loadTemplate (final @Nonnull String templateName) 
+    private String loadDefaultTemplate (final @Nonnull String templateName)
       throws IOException
       {
-        final Resource resource = new ClassPathResource("/" + getClass().getPackage().getName().replace('.', '/') + "/" + templateName);
+        final String packagePath = getClass().getPackage().getName().replace('.', '/');
+        final Resource resource = new ClassPathResource("/" + packagePath + "/" + templateName);
         final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
-        final char[] buffer = new char[(int)resource.contentLength()]; 
+        final char[] buffer = new char[(int)resource.contentLength()];
         r.read(buffer);
-        return new String(buffer);        
+        return new String(buffer);
       }
   }

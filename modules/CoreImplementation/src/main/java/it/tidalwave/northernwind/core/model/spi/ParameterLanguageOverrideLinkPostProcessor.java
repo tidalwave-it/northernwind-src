@@ -1,9 +1,13 @@
-/***********************************************************************************************************************
+/*
+ * #%L
+ * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * Copyright (C) 2011-2012 by Tidalwave s.a.s. (http://www.tidalwave.it)
- *
- ***********************************************************************************************************************
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
+ * %%
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * %%
+ * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,16 +18,19 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
  *
- ***********************************************************************************************************************
+ * *********************************************************************************************************************
  *
- * WWW: http://northernwind.tidalwave.it
- * SCM: https://bitbucket.org/tidalwave/northernwind-src
+ * $Id$
  *
- **********************************************************************************************************************/
+ * *********************************************************************************************************************
+ * #L%
+ */
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 
@@ -34,9 +41,9 @@ import it.tidalwave.util.NotFoundException;
  *
  **********************************************************************************************************************/
 @Configurable
-public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor 
+public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private ParameterLanguageOverrideRequestProcessor parameterLanguageOverrideRequestProcessor;
 
     /*******************************************************************************************************************
@@ -47,46 +54,57 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
     @Override @Nonnull
     public String postProcess (final @Nonnull String link)
       {
-        try 
+        try
           {
             final String parameterValue = parameterLanguageOverrideRequestProcessor.getParameterValue();
             return postProcess(link, parameterValue);
-          } 
-        catch (NotFoundException e) 
+          }
+        catch (NotFoundException e)
           {
             return link;
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Nonnull
     public String postProcess (final @Nonnull String link, final @Nonnull String parameterValue)
       {
         final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
-        final StringBuilder builder = new StringBuilder(link);
-        
-        if (!link.matches(".*[\\?&]" + parameterName + "=.*")) // might have been previously explicitly set
+        final String regexp = "([\\?&])(" + parameterName + "=[a-z,0-9]*)";
+
+        final Matcher matcher = Pattern.compile(regexp).matcher(link);
+
+        if (matcher.find()) // replace a parameter already present
           {
-            if (link.contains("?"))
+            final StringBuffer buffer = new StringBuffer();
+            matcher.appendReplacement(buffer, matcher.group(1) + parameterName + "=" + parameterValue);
+            matcher.appendTail(buffer);
+
+            return buffer.toString();
+          }
+
+        final StringBuilder builder = new StringBuilder(link);
+
+        if (link.contains("?"))
+          {
+            builder.append("&");
+          }
+        else
+          {
+            if (!builder.toString().endsWith("/") && !builder.toString().contains(".")) // FIXME: check . only in trailing
               {
-                builder.append("&");
-              }
-            else
-              {
-                if (!builder.toString().endsWith("/"))
-                  {
-                    builder.append("/");
-                  }
-                
-                builder.append("?");
+                builder.append("/");
               }
 
-            builder.append(parameterName).append("=").append(parameterValue);
+            builder.append("?");
           }
+
+        builder.append(parameterName).append("=").append(parameterValue);
 
         return builder.toString();
       }
-  }    
+  }
