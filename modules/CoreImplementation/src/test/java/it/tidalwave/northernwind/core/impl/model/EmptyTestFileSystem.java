@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -72,19 +72,19 @@ public class EmptyTestFileSystem extends FileSystemTestSupport
       }
 
     @Override
-    public void performAssertions (final @Nonnull DefaultSite fixture)
+    public void performAssertions (final @Nonnull DefaultSite underTest)
       {
-        assertThat(fixture.documentMapByRelativePath.size(), is(1));
-        assertItem(fixture.documentMapByRelativePath, "/", "Content(path=/content/document)");
+        assertThat(underTest.documentMapByRelativePath.size(), is(1));
+        assertItem(underTest.documentMapByRelativePath, "/", "Content(path=/content/document)");
 
-        assertThat(fixture.libraryMapByRelativePath.isEmpty(), is(true));
+        assertThat(underTest.libraryMapByRelativePath.isEmpty(), is(true));
 
-        assertThat(fixture.mediaMapByRelativePath.isEmpty(), is(true));
+        assertThat(underTest.mediaMapByRelativePath.isEmpty(), is(true));
 
-        assertThat(fixture.nodeMapByRelativePath.size(), is(1));
-        assertItem(fixture.nodeMapByRelativePath, "/", "Node(path=/structure)");
+        assertThat(underTest.nodeMapByRelativePath.size(), is(1));
+        assertItem(underTest.nodeMapByRelativePath, "/", "Node(path=/structure)");
 
-        assertThat(fixture.nodeMapByRelativeUri.size(), is(1));
-        assertItem(fixture.nodeMapByRelativeUri, "/relativeUriFor:/structure", "Node(path=/structure)");
+        assertThat(underTest.nodeMapByRelativeUri.size(), is(1));
+        assertItem(underTest.nodeMapByRelativeUri, "/relativeUriFor:/structure", "Node(path=/structure)");
       }
   }

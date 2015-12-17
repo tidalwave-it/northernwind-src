@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -63,7 +63,7 @@ public class DefaultSiteNodeTest
   {
     private ClassPathXmlApplicationContext context;
 
-    private DefaultSiteNode fixture;
+    private DefaultSiteNode underTest;
 
     private InternalSite site;
 
@@ -122,7 +122,7 @@ public class DefaultSiteNodeTest
               }
           }));
 
-        fixture = new DefaultSiteNode(modelFactory, site, resourceFile);
+        underTest = new DefaultSiteNode(modelFactory, site, resourceFile);
       }
 
     /*******************************************************************************************************************
@@ -131,9 +131,9 @@ public class DefaultSiteNodeTest
     @Test
     public void must_properly_initialize_with_no_layout()
       {
-        assertThat(fixture.site, sameInstance(site));
-        assertThat(fixture.getResource(), sameInstance(resource));
-        assertThat(fixture.getLayout(), sameInstance(emptyPlaceHolderLayout));
+        assertThat(underTest.site, sameInstance(site));
+        assertThat(underTest.getResource(), sameInstance(resource));
+        assertThat(underTest.getLayout(), sameInstance(emptyPlaceHolderLayout));
       }
 
 //    /*******************************************************************************************************************
@@ -142,9 +142,9 @@ public class DefaultSiteNodeTest
 //    @Test
 //    public void must_properly_initialize_with_layout()
 //      {
-//        assertThat(fixture.site, sameInstance(site));
-//        assertThat(fixture.resource, sameInstance(resource));
-//        assertThat(fixture.getLayout(), sameInstance(emptyPlaceHolderLayout));
+//        assertThat(underTest.site, sameInstance(site));
+//        assertThat(underTest.resource, sameInstance(resource));
+//        assertThat(underTest.getLayout(), sameInstance(emptyPlaceHolderLayout));
 //      }
 
     /*******************************************************************************************************************
@@ -160,7 +160,7 @@ public class DefaultSiteNodeTest
       {
         prepareMocksForGetRelativeUri(exposedUri, fileName, parentUri, parentPath);
 
-        final ResourcePath relativeUri = fixture.getRelativeUri();
+        final ResourcePath relativeUri = underTest.getRelativeUri();
 
         assertThat(relativeUri.asString(), is(expectedResult));
       }
@@ -174,14 +174,14 @@ public class DefaultSiteNodeTest
       {
         prepareMocksForGetRelativeUri("exposedUri1", "file1", "/parentUri1", "structure/parent1");
 
-        final int previousUriComputationCounter = fixture.uriComputationCounter;
+        final int previousUriComputationCounter = underTest.uriComputationCounter;
 
         for (int i = 0; i < 10; i++)
           {
-            fixture.getRelativeUri();
+            underTest.getRelativeUri();
           }
 
-        assertThat(fixture.uriComputationCounter, is(previousUriComputationCounter + 1));
+        assertThat(underTest.uriComputationCounter, is(previousUriComputationCounter + 1));
       }
 
     /*******************************************************************************************************************

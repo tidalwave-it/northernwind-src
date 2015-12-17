@@ -6,17 +6,17 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-31-SNAPSHOT</version>
+        <version>1.1-ALPHA-35-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend</artifactId>
-    <version>1.1-ALPHA-31-SNAPSHOT</version>
+    <version>1.1-ALPHA-35-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>NorthernWind (frontends)</name>
+    <name>NorthernWind - Frontend</name>
 
-    <dependencies> 
+    <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-frontend-commons</artifactId>
@@ -29,13 +29,13 @@
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- Redirect JUL and JCL to SFL4J -->
         <dependency> <!-- FIXME: should be only runtime, but we have sources in this module. Move sources into a separate module. -->
             <groupId>org.slf4j</groupId>
@@ -51,13 +51,12 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>    
+        </dependency>
     </dependencies>
 
     <modules>
         <module>Commons</module>
         <module>Media</module>
-        <module>JerseyFrontend</module>
         <module>SpringMvcFrontend</module>
         <module>SpringMvcMediaFrontend</module>
         <module>VaadinFrontend</module>

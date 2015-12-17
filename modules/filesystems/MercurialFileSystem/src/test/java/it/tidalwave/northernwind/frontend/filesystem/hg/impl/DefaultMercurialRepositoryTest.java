@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -54,7 +54,7 @@ import java.io.File;
 @Slf4j
 public class DefaultMercurialRepositoryTest
   {
-    private MercurialRepository fixture;
+    private MercurialRepository underTest;
 
     private Path workArea;
 
@@ -82,7 +82,7 @@ public class DefaultMercurialRepositoryTest
       {
         FileUtils.deleteDirectory(sourceRepository.toFile());
         FileUtils.deleteDirectory(workArea.toFile());
-        fixture = new DefaultMercurialRepository(workArea);
+        underTest = new DefaultMercurialRepository(workArea);
       }
 
     /*******************************************************************************************************************
@@ -94,7 +94,7 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
 
-        fixture.clone(sourceRepository.toUri());
+        underTest.clone(sourceRepository.toUri());
 
         assertThat(new File(workArea.toFile(), ".hg").exists(), is(true));
         assertThat(new File(workArea.toFile(), ".hg").isDirectory(), is(true));
@@ -110,11 +110,11 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
 
-        fixture.clone(sourceRepository.toUri());
+        underTest.clone(sourceRepository.toUri());
 
-        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
-        assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.8"));
+        assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThat(underTest.getLatestTagMatching(".*").getName(), is("tip"));
+        assertThat(underTest.getLatestTagMatching("p.*").getName(), is("published-0.8"));
       }
 
     /*******************************************************************************************************************
@@ -127,9 +127,9 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
 
-        fixture.clone(sourceRepository.toUri());
+        underTest.clone(sourceRepository.toUri());
 
-        fixture.getCurrentTag();
+        underTest.getCurrentTag();
       }
 
     /*******************************************************************************************************************
@@ -142,10 +142,10 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
 
-        fixture.clone(sourceRepository.toUri());
-        fixture.updateTo(tag);
+        underTest.clone(sourceRepository.toUri());
+        underTest.updateTo(tag);
 
-        assertThat(fixture.getCurrentTag(), is(tag));
+        assertThat(underTest.getCurrentTag(), is(tag));
         // TODO: assert contents
       }
 
@@ -161,9 +161,9 @@ public class DefaultMercurialRepositoryTest
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
 
-        fixture.clone(sourceRepository.toUri());
+        underTest.clone(sourceRepository.toUri());
 
-        fixture.updateTo(tag);
+        underTest.updateTo(tag);
       }
 
     /*******************************************************************************************************************
@@ -174,21 +174,21 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-        fixture.clone(sourceRepository.toUri());
+        underTest.clone(sourceRepository.toUri());
 
-        fixture.pull();
+        underTest.pull();
 
-        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
-        assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.8"));
+        assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThat(underTest.getLatestTagMatching(".*").getName(), is("tip"));
+        assertThat(underTest.getLatestTagMatching("p.*").getName(), is("published-0.8"));
 
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
 
-        fixture.pull();
+        underTest.pull();
 
-        assertThat(fixture.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
-        assertThat(fixture.getLatestTagMatching(".*").getName(), is("tip"));
-        assertThat(fixture.getLatestTagMatching("p.*").getName(), is("published-0.9"));
+        assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
+        assertThat(underTest.getLatestTagMatching(".*").getName(), is("tip"));
+        assertThat(underTest.getLatestTagMatching("p.*").getName(), is("published-0.9"));
       }
 
     /*******************************************************************************************************************

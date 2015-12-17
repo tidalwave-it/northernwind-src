@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -27,18 +27,18 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
+import java.io.File;
 import com.google.common.io.Files;
+import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import it.tidalwave.util.test.FileComparisonUtils;
-import java.io.File;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-import org.joda.time.DateTime;
-import static org.mockito.Mockito.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
 
 /***********************************************************************************************************************
  *
@@ -48,13 +48,13 @@ import org.testng.annotations.Test;
  **********************************************************************************************************************/
 public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSupport
   {
-    private AvailabilityEnforcerRequestProcessor fixture;
+    private AvailabilityEnforcerRequestProcessor underTest;
 
     private Request request;
 
     private MockResponseHolder responseHolder;
 
-    private DateTime currentTime = new DateTime(1341242353456L);
+    private final DateTime currentTime = new DateTime(1341242353456L);
 
     public AvailabilityEnforcerRequestProcessorTest()
       {
@@ -64,8 +64,8 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
     @BeforeMethod
     public void setupFixture()
       {
-        MockResponseHolder.setCurrentTime(currentTime);
-        fixture = context.getBean(AvailabilityEnforcerRequestProcessor.class);
+        MockResponseBuilder.setCurrentTime(currentTime);
+        underTest = context.getBean(AvailabilityEnforcerRequestProcessor.class);
         responseHolder = context.getBean(MockResponseHolder.class);
         request = mock(Request.class);
 
@@ -79,7 +79,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
       {
         when(siteProvider.isSiteAvailable()).thenReturn(true);
 
-        final Status result = fixture.process(request);
+        final Status result = underTest.process(request);
 
         assertThat(result, is(Status.CONTINUE));
 //        verifyZeroInteractions(responseHolder); FIXME
@@ -91,7 +91,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
       {
         when(siteProvider.isSiteAvailable()).thenReturn(false);
 
-        final Status result = fixture.process(request);
+        final Status result = underTest.process(request);
         final File actualFile = new File("target/test-artifacts/response.txt");
         final File expectedFile = new File("src/test/resources/expected-results/response.txt");
         actualFile.getParentFile().mkdirs();

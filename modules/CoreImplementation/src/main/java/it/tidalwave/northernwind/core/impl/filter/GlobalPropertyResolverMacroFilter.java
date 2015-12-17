@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -53,7 +53,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 @Configurable @Order(HIGHEST_PRECEDENCE)
 public class GlobalPropertyResolverMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     public GlobalPropertyResolverMacroFilter()
@@ -66,8 +66,10 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
       {
         try
           {
+            // FIXME: should be pushed into @PostConstruct, but can't - see NW-224
             final Site site = siteProvider.get().getSite();
-            final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result();
+            final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result(); // See NW-223
+            // END FIXME
             final String propertyName = matcher.group(1);
             return rootSiteNode.getProperties().getProperty(new Key<String>(propertyName), "");
           }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-Metrics</actionName>
+        <displayName>Metrics</displayName>
+        <activatedProfiles>
+            <activatedProfile>it.tidalwave-metrics-v2</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Convergence Report</actionName>
+        <displayName>Dependency Convergence Report</displayName>
+        <goals>
+            <goal>project-info-reports:dependency-convergence</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency List</actionName>
+        <displayName>Dependency List</displayName>
+        <goals>
+            <goal>dependency:list</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Management Report</actionName>
+        <displayName>Dependency Management Report</displayName>
+        <goals>
+            <goal>project-info-reports:dependency-management</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Management Report 2</actionName>
+        <displayName>Dependency Management Report 2</displayName>
+        <goals>
+            <goal>dependency:analyze-dep-mgt</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Tree</actionName>
+        <displayName>Dependency Tree</displayName>
+        <goals>
+            <goal>dependency:Tree</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dependency Updates</actionName>
+        <displayName>Dependency Updates</displayName>
+        <goals>
+            <goal>versions:display-dependency-updates</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Deploy</actionName>
+        <displayName>Deploy</displayName>
+        <goals>
+            <goal>deploy</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Effective POM</actionName>
+        <displayName>Effective POM</displayName>
+        <goals>
+            <goal>-N</goal>
+            <goal>help:effective-pom</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Dowmload all dependencies so can work offline</actionName>
+        <displayName>Go Offline</displayName>
+        <goals>
+            <goal>dependency:go-offline</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Plugin - Create Management Report</actionName>
+        <displayName>Plugin Management Report</displayName>
+        <goals>
+            <goal>project-info-reports:plugin-management</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Plugin - Show Updates</actionName>
+        <displayName>Plugin Updates</displayName>
+        <goals>
+            <goal>versions:display-plugin-updates</goal>
+        </goals>
+    </action>
+
+</actions>

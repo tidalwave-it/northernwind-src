@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -63,7 +63,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private static final List<Class<?>> ALLOWED_TYPES =
             Arrays.<Class<?>>asList(Content.class, SiteNode.class, Media.class);
 
-    @Inject @Nonnull
+    @Inject
     private transient Provider<SiteProvider> siteProvider;
 
     @Nonnull

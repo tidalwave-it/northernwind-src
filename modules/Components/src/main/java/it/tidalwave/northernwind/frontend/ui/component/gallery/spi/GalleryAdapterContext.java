@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -28,7 +28,9 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 
 /***********************************************************************************************************************
  *
@@ -51,5 +53,21 @@ public interface GalleryAdapterContext
      *
      ******************************************************************************************************************/
     @Nonnull
+    public Site getSite();
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
     public SiteNode getSiteNode();
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public GalleryView getView();
   }

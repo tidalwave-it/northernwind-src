@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -28,11 +28,14 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.ToString;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /***********************************************************************************************************************
  *
@@ -47,12 +50,49 @@ import lombok.ToString;
 @ToString
 public class HttpStatusException extends Exception
   {
+    /** Status codes that don't imply an error. */
+    private static final List<Integer> GOOD_CODES = Arrays.asList(SC_FOUND, SC_MOVED_PERMANENTLY, SC_MOVED_TEMPORARILY);
+    
     @Getter
     private final int httpStatus;
 
     @Getter
     private final Map<String, String> headers;
 
+    /*******************************************************************************************************************
+     *
+     * Creates an exception representing a temporary redirect.
+     * 
+     * @param  site         the {@link Site}
+     * @param  relativeUri  the relativeUri to redirect to
+     * @return              the exception
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static HttpStatusException temporaryRedirect (final @Nonnull Site site, final @Nonnull String relativeUri) 
+      {
+        // FIXME: inject Site
+        return new HttpStatusException(SC_MOVED_TEMPORARILY)
+                  .withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
+      }
+    
+    /*******************************************************************************************************************
+     *
+     * Creates an exception representing a permanent redirect.
+     * 
+     * @param  site         the {@link Site}
+     * @param  relativeUri  the relativeUri to redirect to
+     * @return              the exception
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static HttpStatusException permanentRedirect (final @Nonnull Site site, final @Nonnull String relativeUri) 
+      {
+        // FIXME: inject Site
+        return new HttpStatusException(SC_MOVED_PERMANENTLY)
+                  .withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
+      }
+    
     /*******************************************************************************************************************
      *
      * Creates an instance with the given HTTP status.
@@ -90,5 +130,17 @@ public class HttpStatusException extends Exception
         final Map<String, String> newHeaders = new HashMap<>(headers);
         newHeaders.put(name, value);
         return new HttpStatusException(httpStatus, newHeaders);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Return {@code true} whether this exception represents an error.
+     * 
+     * @return  {@code true} in case of error
+     *
+     ******************************************************************************************************************/
+    public boolean isError() 
+      {
+        return !GOOD_CODES.contains(httpStatus);
       }
   }

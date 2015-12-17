@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -74,10 +74,10 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
     @Nonnull
     /* package */ InternalSite site;
 
-    @Inject @Nonnull
+    @Inject
     private InheritanceHelper inheritanceHelper;
 
-    @Inject @Nonnull
+    @Inject
     private RequestLocaleManager localeRequestManager;
 
     @CheckForNull

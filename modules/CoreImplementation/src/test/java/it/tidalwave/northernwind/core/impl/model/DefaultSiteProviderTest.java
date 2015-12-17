@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -53,7 +53,7 @@ public class DefaultSiteProviderTest
   {
     private ClassPathXmlApplicationContext context;
 
-    private DefaultSiteProvider fixture;
+    private DefaultSiteProvider underTest;
 
     private DefaultSite site;
 
@@ -90,7 +90,7 @@ public class DefaultSiteProviderTest
     public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
       {
-        fixture = context.getBean(DefaultSiteProvider.class);
+        underTest = context.getBean(DefaultSiteProvider.class);
 
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
                 .withContextPath("thecontextpath")
@@ -104,14 +104,14 @@ public class DefaultSiteProviderTest
 
         verify(executor).execute(any(Runnable.class)); // FIXME: needed?
 
-        assertThat(fixture.getSite(), sameInstance((Site)site));
-        assertThat(fixture.isSiteAvailable(), is(false));
+        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.isSiteAvailable(), is(false));
 
         executor.doExecute(); // emulate Site initialization in background
 
         verify(site).initialize();
-        assertThat(fixture.getSite(), sameInstance((Site)site));
-        assertThat(fixture.isSiteAvailable(), is(true));
+        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.isSiteAvailable(), is(true));
       }
 
     /*******************************************************************************************************************
@@ -120,8 +120,8 @@ public class DefaultSiteProviderTest
     @Test
     public void must_return_the_correct_version_string()
       {
-        fixture = context.getBean(DefaultSiteProvider.class);
-        assertThat(fixture.getVersionString(), is(notNullValue()));
+        underTest = context.getBean(DefaultSiteProvider.class);
+        assertThat(underTest.getVersionString(), is(notNullValue()));
       }
 
     /*******************************************************************************************************************
@@ -130,8 +130,8 @@ public class DefaultSiteProviderTest
     @Test
     public void must_return_the_correct_context_path_in_a_web_environment()
       {
-        fixture = context.getBean(DefaultSiteProvider.class);
-        assertThat(fixture.getContextPath(), is("thecontextpath"));
+        underTest = context.getBean(DefaultSiteProvider.class);
+        assertThat(underTest.getContextPath(), is("thecontextpath"));
       }
 
     /*******************************************************************************************************************
@@ -143,9 +143,9 @@ public class DefaultSiteProviderTest
       {
         ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");
 
-        fixture = context.getBean(DefaultSiteProvider.class);
+        underTest = context.getBean(DefaultSiteProvider.class);
 
-        assertThat(fixture.getContextPath(), is("/"));
+        assertThat(underTest.getContextPath(), is("/"));
       }
 
     /*******************************************************************************************************************
@@ -157,10 +157,10 @@ public class DefaultSiteProviderTest
       {
         doThrow(new IOException("test")).when(site).initialize();
 
-        fixture = context.getBean(DefaultSiteProvider.class);
+        underTest = context.getBean(DefaultSiteProvider.class);
         executor.doExecute(); // emulate Site initialization in background
 
-        assertThat(fixture.getSite(), sameInstance((Site)site));
-        assertThat(fixture.isSiteAvailable(), is(false));
+        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.isSiteAvailable(), is(false));
       }
   }

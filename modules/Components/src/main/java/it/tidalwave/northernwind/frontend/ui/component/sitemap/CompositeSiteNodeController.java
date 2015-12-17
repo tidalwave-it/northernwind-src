@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -39,7 +39,6 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.Delegate;
 
 /***********************************************************************************************************************
@@ -59,7 +58,7 @@ public interface CompositeSiteNodeController
      * Since findChildrenSiteNodes() returns "virtual" nodes, that is nodes mapped to parameterized URIs, they can't be
      * found inside the Site. A special implementation is provided.
      */
-    @RequiredArgsConstructor @ToString
+    @RequiredArgsConstructor
     public static class ChildSiteNode implements SiteNode
       {
         @Nonnull
@@ -104,6 +103,12 @@ public interface CompositeSiteNodeController
         public Finder<SiteNode> findChildren()
           {
             throw new UnsupportedOperationException("Not supported.");
+          }
+
+        @Override
+        public String toString()
+          {
+            return "ChildSiteNode(" + relativeUri + ')';
           }
       }
 

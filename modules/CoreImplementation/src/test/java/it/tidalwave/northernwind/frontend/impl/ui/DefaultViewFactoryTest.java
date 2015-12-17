@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -52,7 +52,7 @@ import static org.hamcrest.CoreMatchers.*;
  **********************************************************************************************************************/
 public class DefaultViewFactoryTest
   {
-    private DefaultViewFactory fixture;
+    private DefaultViewFactory underTest;
 
     /*******************************************************************************************************************
      *
@@ -61,7 +61,7 @@ public class DefaultViewFactoryTest
     public void setupFixture()
       throws Exception
       {
-        fixture = new DefaultViewFactory();
+        underTest = new DefaultViewFactory();
       }
 
     /*******************************************************************************************************************
@@ -71,22 +71,22 @@ public class DefaultViewFactoryTest
     public void must_discover_and_properly_register_annotated_views()
       throws Exception
       {
-        fixture.setLogConfigurationEnabled(true);
-        fixture.initialize();
+        underTest.setLogConfigurationEnabled(true);
+        underTest.initialize();
 
-        assertThat(fixture.viewBuilderMapByTypeUri.size(), is(3));
+        assertThat(underTest.viewBuilderMapByTypeUri.size(), is(3));
 
-        final ViewBuilder viewBuilder1 = fixture.viewBuilderMapByTypeUri.get("type1");
+        final ViewBuilder viewBuilder1 = underTest.viewBuilderMapByTypeUri.get("type1");
         assertThat(viewBuilder1, is(not(nullValue())));
         assertThat(viewBuilder1.viewConstructor,           is((Constructor)MockView1.class.getConstructors()[0]));
         assertThat(viewBuilder1.viewControllerConstructor, is((Constructor)MockController1.class.getConstructors()[0]));
 
-        final ViewBuilder viewBuilder2 = fixture.viewBuilderMapByTypeUri.get("type2");
+        final ViewBuilder viewBuilder2 = underTest.viewBuilderMapByTypeUri.get("type2");
         assertThat(viewBuilder2, is(not(nullValue())));
         assertThat(viewBuilder2.viewConstructor,           is((Constructor)MockView2.class.getConstructors()[0]));
         assertThat(viewBuilder2.viewControllerConstructor, is((Constructor)MockController2.class.getConstructors()[0]));
 
-        final ViewBuilder viewBuilder3 = fixture.viewBuilderMapByTypeUri.get("type3");
+        final ViewBuilder viewBuilder3 = underTest.viewBuilderMapByTypeUri.get("type3");
         assertThat(viewBuilder3, is(not(nullValue())));
         assertThat(viewBuilder3.viewConstructor,           is((Constructor)MockView3.class.getConstructors()[0]));
         assertThat(viewBuilder3.viewControllerConstructor, is((Constructor)MockController3.class.getConstructors()[0]));
@@ -104,9 +104,9 @@ public class DefaultViewFactoryTest
         final Id id = new Id("theId");
         final ViewAndController viewAndController = mock(ViewAndController.class);
         when(viewBuilder.createViewAndController(eq(id), same(siteNode))).thenReturn(viewAndController);
-        fixture.viewBuilderMapByTypeUri.put("type1", viewBuilder);
+        underTest.viewBuilderMapByTypeUri.put("type1", viewBuilder);
 
-        final ViewAndController vac = fixture.createViewAndController("type1", id, siteNode);
+        final ViewAndController vac = underTest.createViewAndController("type1", id, siteNode);
 
         verify(viewBuilder).createViewAndController(eq(id), same(siteNode));
         assertThat(vac, is(sameInstance(viewAndController)));
@@ -117,15 +117,15 @@ public class DefaultViewFactoryTest
      ******************************************************************************************************************/
     @Test(enabled = false, // FIXME: often, but not always, fails
           expectedExceptions = NotFoundException.class,
-          expectedExceptionsMessageRegExp = "\\QCannot find type3: available: [type1]\\E")
+          expectedExceptionsMessageRegExp = "\\QCannot find unregisteredType: available: [registeredType]\\E")
     public void createViewAndController_must_throw_exception_when_type_is_not_registered()
       throws Exception
       {
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
         final SiteNode siteNode = mock(SiteNode.class);
         final Id id = new Id("theId");
-        fixture.viewBuilderMapByTypeUri.put("type1", viewBuilder);
+        underTest.viewBuilderMapByTypeUri.put("registeredType", viewBuilder);
 
-        final ViewAndController vac = fixture.createViewAndController("type3", id, siteNode);
+        final ViewAndController vac = underTest.createViewAndController("unregisteredType", id, siteNode);
       }
   }

@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -53,13 +53,13 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j @Order(HIGHEST_PRECEDENCE)
+@Slf4j @Order(HIGHEST_PRECEDENCE+2)
 public class DefaultMediaRequestProcessor<ResponseType> implements RequestProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
-    @Inject @Nonnull
+    @Inject
     protected ResponseHolder<ResponseType> responseHolder;
 
     @Getter @Setter
@@ -128,11 +128,10 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
         
-        ResponseHolder.ResponseBuilderSupport b = 
-                responseHolder.response().fromFile(file)
-                                         .withExpirationTime(duration)
-                                         .forRequest(request);
-        b.put();
+        responseHolder.response().fromFile(file)
+                                 .withExpirationTime(duration)
+                                 .forRequest(request)
+                                 .put();
         return BREAK;
       }
   }

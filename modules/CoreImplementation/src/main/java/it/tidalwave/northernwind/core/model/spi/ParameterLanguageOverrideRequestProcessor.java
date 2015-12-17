@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -53,7 +53,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
     @Getter @Setter @Nonnull
     private String parameterName = "l";
 
-    @Inject @Nonnull
+    @Inject
     private DefaultRequestLocaleManager requestLocaleManager;
 
     private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<String>();

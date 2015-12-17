@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  * 
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  * 
@@ -55,7 +55,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
   {
     private static final Key<String> PROPERTY_MEDIA_METADATA_PROVIDER = new Key<>("mediaMetadataProvider");
 
-    @Inject @Nonnull
+    @Inject
     private ApplicationContext context;
 
     @Nonnull
