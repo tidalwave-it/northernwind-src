@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -57,11 +57,11 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Configurable @Order(HIGHEST_PRECEDENCE) @Slf4j
 public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     @Getter @Setter // TODO: required for test, try to drop
-    @Inject @Nonnull
+    @Inject
     private ResponseHolder<?> responseHolder;
 
     @Override @Nonnull

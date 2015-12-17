@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -57,16 +57,16 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 @Scope(value = "session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
-    @Inject @Nonnull
+    @Inject
     private List<RequestResettable> requestResettables;
 
-    @Inject @Nonnull
+    @Inject
     private List<RequestProcessor> requestProcessors;
 
-    @Inject @Nonnull
+    @Inject
     private RequestHolder requestHolder;
 
-    @Inject @Nonnull
+    @Inject
     private ResponseHolder<?> responseHolder;
 
     /*******************************************************************************************************************

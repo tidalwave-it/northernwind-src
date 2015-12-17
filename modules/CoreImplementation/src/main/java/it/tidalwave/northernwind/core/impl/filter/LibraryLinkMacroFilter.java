@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
  **********************************************************************************************************************/
 public class LibraryLinkMacroFilter extends MacroFilter
   {
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
 
     public LibraryLinkMacroFilter()

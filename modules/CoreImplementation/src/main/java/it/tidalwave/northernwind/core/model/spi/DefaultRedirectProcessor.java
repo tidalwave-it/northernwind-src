@@ -3,9 +3,9 @@
  * *********************************************************************************************************************
  *
  * NorthernWind - lightweight CMS
- * http://northernwind.tidalwave.it - hg clone https://bitbucket.org/tidalwave/northernwind-src
+ * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -92,7 +92,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
     
     @VisibleForTesting final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
 
-    @Inject @Nonnull
+    @Inject
     private Provider<SiteProvider> siteProvider;
     
     private Site site;
