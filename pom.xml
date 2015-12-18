@@ -24,7 +24,7 @@
         <netbeans.hint.jdkPlatform>JDK_1.7.0</netbeans.hint.jdkPlatform>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
 
-        <scm.repo.url>git@bitbucket.org:tidalwave/northernwind-src.git</scm.repo.url>
+        <scm.repo.url>ssh://git@bitbucket.org/tidalwave/northernwind-src.git</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
