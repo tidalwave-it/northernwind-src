@@ -18,7 +18,6 @@
     <description>The parent POM for modules.</description>
 
     <properties>
-        <cglib.version>2.2.2</cglib.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
         <guava.version>14.0.1</guava.version>
@@ -32,7 +31,7 @@
         <rome.version>1.0.0</rome.version>
         <spring.version>3.2.3.RELEASE</spring.version>
         <slf4j.version>1.7.12</slf4j.version>
-        <stringtemplate.version>4.0.2</stringtemplate.version>
+        <stringtemplate.version>4.0.8</stringtemplate.version>
         <tft.aspectjrt.version>1.8.6</tft.aspectjrt.version>
         <tft.jsr305.version>3.0.0</tft.jsr305.version>
         <thesefoolishthings.version>1.35</thesefoolishthings.version> <!-- TODO: upgrade to 2.x requires Finder change -->
@@ -221,14 +220,8 @@
             </dependency>
 
             <dependency>
-                <groupId>cglib</groupId>
-                <artifactId>cglib</artifactId>
-                <version>${cglib.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.antlr</groupId>
-                <artifactId>stringtemplate</artifactId>
+                <artifactId>ST4</artifactId>
                 <version>${stringtemplate.version}</version>
             </dependency>
             <dependency>

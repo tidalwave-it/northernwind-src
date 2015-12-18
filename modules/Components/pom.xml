@@ -21,7 +21,7 @@
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Components</name>
     <description>The definitions of page components.</description>
-    
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
-            <artifactId>stringtemplate</artifactId>
+            <artifactId>ST4</artifactId>
         </dependency>
     </dependencies>
 </project>
