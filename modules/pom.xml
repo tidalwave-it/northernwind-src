@@ -179,7 +179,7 @@
             <dependency>
                 <groupId>com.drewnoakes</groupId>
                 <artifactId>xmpcore-patched</artifactId>
-                <version>${xmpcore.version}</version> <!-- FIXME -->
+                <version>${xmpcore.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.rome</groupId>
@@ -239,12 +239,6 @@
     </dependencyManagement>
 
     <dependencies>
-<!--
-        <dependency>
-            <groupId>com.kenai.nbpwr</groupId>
-            <artifactId>javax-annotation</artifactId>
-        </dependency>
--->
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
