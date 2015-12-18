@@ -45,6 +45,9 @@
         <log.file>target/nw.log</log.file>
 
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
+
+        <tft.versions-maven-plugin.version>2.2</tft.versions-maven-plugin.version>
+        <!--<tft.jacoco-maven-plugin.version>0.7.5.201505241946</tft.jacoco-maven-plugin.version>-->
     </properties>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
@@ -159,11 +162,6 @@
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-vaadin</artifactId>
                 <version>1.1-ALPHA-35-SNAPSHOT</version>
             </dependency>
             <dependency>

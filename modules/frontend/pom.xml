@@ -59,7 +59,6 @@
         <module>Media</module>
         <module>SpringMvcFrontend</module>
         <module>SpringMvcMediaFrontend</module>
-        <module>VaadinFrontend</module>
     </modules>
     <description>The parent POM for all front end implementations.</description>
 </project>
