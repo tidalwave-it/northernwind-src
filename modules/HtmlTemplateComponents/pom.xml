@@ -14,8 +14,8 @@
     <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
     <version>1.1-ALPHA-35-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Frontend Components (HTML Template)</name>
-    
+    <name>NorthernWind - Frontend Components, HTML Template</name>
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -33,7 +33,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
-        
+
         <!-- Without this, javadoc crashes -->
         <dependency>
             <groupId>javax.servlet</groupId>
