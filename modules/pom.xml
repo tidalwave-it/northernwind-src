@@ -31,7 +31,7 @@
         <rome.version>1.0.0</rome.version>
         <spring.version>3.2.3.RELEASE</spring.version>
         <slf4j.version>1.7.12</slf4j.version>
-        <stringtemplate.version>4.0.2</stringtemplate.version>
+        <stringtemplate.version>4.0.8</stringtemplate.version>
         <tft.aspectjrt.version>1.8.6</tft.aspectjrt.version>
         <tft.jsr305.version>3.0.0</tft.jsr305.version>
         <thesefoolishthings.version>1.35</thesefoolishthings.version> <!-- TODO: upgrade to 2.x requires Finder change -->
@@ -221,7 +221,7 @@
 
             <dependency>
                 <groupId>org.antlr</groupId>
-                <artifactId>stringtemplate</artifactId>
+                <artifactId>ST4</artifactId>
                 <version>${stringtemplate.version}</version>
             </dependency>
             <dependency>
@@ -233,11 +233,6 @@
             <dependency>
                 <groupId>aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
-                <version>${tft.aspectjrt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
                 <version>${tft.aspectjrt.version}</version>
             </dependency>
 
@@ -335,27 +330,35 @@
     <!--================================================================================================================
 
     This profile adds some required dependencies when AspectJ is used.
+    FIXME: push to Superpom, merge to tidalwave-aspectj-springaop-v1-profile
 
         =================================================================================================================-->
         <profile>
-            <id>aspectj-bbstats</id>
+            <id>tidalwave-aspectj-springaop-v1-supplement-profile</id>
             <activation>
                 <file>
-                    <exists>src/config/activate-aspectj-profile</exists>
+                    <exists>src/config/activate-it.tidalwave-aspectj-springaop-v1-profile</exists>
                 </file>
             </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-aspects</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-tx</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-test</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjweaver</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
                 <dependency>
                     <groupId>org.aspectj</groupId>
                     <artifactId>aspectjrt</artifactId>
+                    <!--<scope>runtime</scope>-->
                 </dependency>
             </dependencies>
         </profile>
