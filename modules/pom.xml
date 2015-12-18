@@ -242,11 +242,6 @@
                 <artifactId>aspectjrt</artifactId>
                 <version>${tft.aspectjrt.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
-                <version>${tft.aspectjrt.version}</version>
-            </dependency>
 
             <dependency> <!-- FIXME: push to superpom -->
                 <groupId>org.mockito</groupId>
@@ -342,27 +337,35 @@
     <!--================================================================================================================
 
     This profile adds some required dependencies when AspectJ is used.
+    FIXME: push to Superpom, merge to tidalwave-aspectj-springaop-v1-profile
 
         =================================================================================================================-->
         <profile>
-            <id>aspectj-bbstats</id>
+            <id>tidalwave-aspectj-springaop-v1-supplement-profile</id>
             <activation>
                 <file>
-                    <exists>src/config/activate-aspectj-profile</exists>
+                    <exists>src/config/activate-it.tidalwave-aspectj-springaop-v1-profile</exists>
                 </file>
             </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-aspects</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-tx</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-test</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjweaver</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
                 <dependency>
                     <groupId>org.aspectj</groupId>
                     <artifactId>aspectjrt</artifactId>
+                    <!--<scope>runtime</scope>-->
                 </dependency>
             </dependencies>
         </profile>
