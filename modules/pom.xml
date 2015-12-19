@@ -32,9 +32,12 @@
         <spring.version>3.2.3.RELEASE</spring.version>
         <slf4j.version>1.7.12</slf4j.version>
         <stringtemplate.version>4.0.8</stringtemplate.version>
-        <tft.aspectjrt.version>1.8.6</tft.aspectjrt.version>
-        <tft.jsr305.version>3.0.0</tft.jsr305.version>
-        <thesefoolishthings.version>1.35</thesefoolishthings.version> <!-- TODO: upgrade to 2.x requires Finder change -->
+        <tft.lombok.version>1.16.4</tft.lombok.version>
+        <tft.jsr305.version>3.0.1</tft.jsr305.version>
+        <tft.jsr330.version>1</tft.jsr330.version>
+        <tft.junit.version>4.12</tft.junit.version>
+        <tft.testng.version>6.9.10</tft.testng.version>
+        <thesefoolishthings.version>1.39</thesefoolishthings.version> <!-- TODO: upgrade to 2.x requires Finder change -->
         <xmpcore.version>5.1.0</xmpcore.version>
     </properties>
 
@@ -167,7 +170,7 @@
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
+                <artifactId>annotations</artifactId>
                 <version>${tft.jsr305.version}</version>
             </dependency>
 
@@ -190,7 +193,7 @@
             <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
-                <version>1</version>
+                <version>${tft.jsr330.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -245,7 +248,7 @@
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <dependency>
