@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
     <name>NorthernWind - Core Default Marshalling</name>
     <description>The default implementation of marshalling for some Core classes.</description>
-   
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -33,9 +33,15 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
-   
+
     <build>
         <plugins>
             <plugin>

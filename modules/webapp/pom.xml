@@ -50,10 +50,14 @@
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-messagebus-spring</artifactId>
-            <exclusions>
+            <exclusions> <!-- TODO: drop this when the dependency is removed from messagebus-spring -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
