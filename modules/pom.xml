@@ -344,7 +344,6 @@
                 <dependency>
                     <groupId>org.aspectj</groupId>
                     <artifactId>aspectjrt</artifactId>
-                    <!--<scope>runtime</scope>-->
                 </dependency>
             </dependencies>
         </profile>
