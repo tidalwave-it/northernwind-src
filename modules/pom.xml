@@ -32,9 +32,12 @@
         <spring.version>3.2.3.RELEASE</spring.version>
         <slf4j.version>1.7.12</slf4j.version>
         <stringtemplate.version>4.0.8</stringtemplate.version>
-        <tft.aspectjrt.version>1.8.6</tft.aspectjrt.version>
-        <tft.jsr305.version>3.0.0</tft.jsr305.version>
-        <thesefoolishthings.version>1.35</thesefoolishthings.version> <!-- TODO: upgrade to 2.x requires Finder change -->
+        <tft.lombok.version>1.16.4</tft.lombok.version>
+        <tft.jsr305.version>3.0.1</tft.jsr305.version>
+        <tft.jsr330.version>1</tft.jsr330.version>
+        <tft.junit.version>4.12</tft.junit.version>
+        <tft.testng.version>6.9.10</tft.testng.version>
+        <thesefoolishthings.version>1.39</thesefoolishthings.version> <!-- TODO: upgrade to 2.x requires Finder change -->
         <xmpcore.version>5.1.0</xmpcore.version>
     </properties>
 
@@ -167,7 +170,7 @@
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
+                <artifactId>annotations</artifactId>
                 <version>${tft.jsr305.version}</version>
             </dependency>
 
@@ -190,7 +193,7 @@
             <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
-                <version>1</version>
+                <version>${tft.jsr330.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -245,7 +248,7 @@
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <artifactId>annotations</artifactId>
         </dependency>
 
         <dependency>
@@ -264,7 +267,34 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- TEST DEPENDENCIES -->
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-test</artifactId>
+            <scope>test</scope>
+            <exclusions> <!-- FIXME -->
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -279,38 +309,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion> <!-- Let us pick a more recent version of hamcrest -->
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.tidalwave.thesefoolishthings</groupId>
-            <artifactId>it-tidalwave-util-test</artifactId>
-            <scope>test</scope>
-            <exclusions> <!-- FIXME -->
-                <exclusion>
-                    <artifactId>junit</artifactId>
-                    <groupId>junit</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -346,7 +344,6 @@
                 <dependency>
                     <groupId>org.aspectj</groupId>
                     <artifactId>aspectjrt</artifactId>
-                    <!--<scope>runtime</scope>-->
                 </dependency>
             </dependencies>
         </profile>
@@ -375,6 +372,30 @@
                           </executions>
                         </plugin>
             -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-banned-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>commons-logging:commons-logging</exclude>
+                                        <exclude>org.aspectj:aspectjweaver</exclude>
+                                        <exclude>com.kenai.nbpwr:org-slf4j-jdk14</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
