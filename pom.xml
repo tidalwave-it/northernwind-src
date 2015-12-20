@@ -48,7 +48,7 @@
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
 
         <tft.versions-maven-plugin.version>2.2</tft.versions-maven-plugin.version>
-        <!--<tft.jacoco-maven-plugin.version>0.7.5.201505241946</tft.jacoco-maven-plugin.version>-->
+        <tft.jacoco-maven-plugin.version>0.7.5.201505241946</tft.jacoco-maven-plugin.version>
     </properties>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
