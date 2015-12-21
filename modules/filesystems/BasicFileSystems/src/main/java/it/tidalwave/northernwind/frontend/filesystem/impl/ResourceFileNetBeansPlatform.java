@@ -10,7 +10,7 @@
  * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * the License. You may obtain a copy withComputeResults the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -42,6 +42,7 @@ import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
+import com.google.common.base.Function;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -126,11 +127,15 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new ResourceFileFinderSupport(getClass().getSimpleName()+ ": " + delegate)
+        return ResourceFileFinderSupport.withComputeResults(getClass().getSimpleName(),
+                new Function<Finder, List<ResourceFile>>()
           {
-            @Override @Nonnull
-            protected List<? extends ResourceFile> computeResults()
+            @Override
+            public List<ResourceFile> apply (final @Nonnull Finder f)
               {
+                final String name = f.getName();
+                final boolean recursive = f.isRecursive();
+
                 final List<ResourceFile> result = new ArrayList<>();
 
                 if (name != null)
@@ -152,7 +157,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
 
                 return result;
               }
-          };
+          });
       }
 
     @Override @Nonnull

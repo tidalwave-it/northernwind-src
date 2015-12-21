@@ -87,14 +87,14 @@
     </bean>
 
     <bean id="applicationMessageBus"
-          class="it.tidalwave.messagebus.impl.spring.SpringMessageBus">
-        <property name="taskExecutor" ref="applicationMessageBusTaskExecutor"/>
+          class="it.tidalwave.messagebus.spi.SimpleMessageBus">
+        <constructor-arg ref="applicationMessageBusTaskExecutor"/>
     </bean>
 
     <bean id="sessionMessageBus"
-          class="it.tidalwave.messagebus.impl.spring.SpringMessageBus"
+          class="it.tidalwave.messagebus.spi.SimpleMessageBus"
           scope="session">
-        <property name="taskExecutor" ref="sessionMessageBusTaskExecutor"/>
+        <constructor-arg ref="sessionMessageBusTaskExecutor"/>
     </bean>
 
     <!-- Core objects -->

@@ -10,7 +10,7 @@
  * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * the License. You may obtain a copy withComputeResults the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.IOException;
+import com.google.common.base.Function;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -80,11 +81,14 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new ResourceFileFinderSupport()
+        return ResourceFileFinderSupport.withComputeResults(new Function<Finder, List<ResourceFile>>()
           {
-            @Override @Nonnull
-            protected List<? extends ResourceFile> computeResults()
+            @Override
+            public List<ResourceFile> apply (final @Nonnull Finder f)
               {
+                final String name = f.getName();
+                final boolean recursive = f.isRecursive();
+
                 if (name != null)
                   {
                     if (name.contains("/"))
@@ -103,14 +107,14 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
                 //
                 else if (recursive)
                   {
-                    return delegate.findChildren().withRecursion(recursive).results();
+                    return (List)delegate.findChildren().withRecursion(recursive).results();
                   }
                 else
                   {
                     return new ArrayList<>(getChildrenMap().values());
                   }
               }
-          };
+        });
       }
 
     @Nonnull
