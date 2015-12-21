@@ -1,4 +1,4 @@
-NorthernWind (master)
+NorthernWind
 ================================
 
 [![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)

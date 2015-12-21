@@ -14,7 +14,7 @@
     <artifactId>northernwind</artifactId>
     <version>1.1-ALPHA-36-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>NorthernWind (master)</name>
+    <name>NorthernWind</name>
     <inceptionYear>2011</inceptionYear>
     <description>
 [![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)
