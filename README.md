@@ -1,7 +1,18 @@
 NorthernWind (master)
 ================================
 
-Tidalwave Super POM
+[![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)
+
+NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
+a distributed SCM such as Git or Mercurial.
+
+Please see the project website for more information: http://northernwind.tidalwave.it
+
+A few examples of website running on NorthernWind:
+
+* http://stoppingdown.net
+* http://northernwind.tidalwave.it
+* http://tidalwave.it
 
 
 Bootstrapping
