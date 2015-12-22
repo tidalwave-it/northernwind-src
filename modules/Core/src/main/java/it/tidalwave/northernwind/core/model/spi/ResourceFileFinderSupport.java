@@ -10,7 +10,7 @@
  * *********************************************************************************************************************
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * the License. You may obtain a copy withComputeResults the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -29,9 +29,15 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import java.util.List;
+import java.util.Objects;
+import com.google.common.base.Function;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -40,37 +46,127 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString(callSuper = true)
-public class ResourceFileFinderSupport extends FinderSupport<ResourceFile, Finder> implements Finder
+@Immutable
+@RequiredArgsConstructor @ToString(callSuper = true)
+public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile, Finder> implements Finder
   {
-    protected boolean recursive = false;
+    private static final long serialVersionUID = -1393470412002725841L;
 
-    @CheckForNull
-    protected String name;
+    protected final Function<Finder, List<ResourceFile>> computeResults;
 
-    protected ResourceFileFinderSupport()
+    @Getter
+    protected final boolean recursive;
+
+    @Getter @CheckForNull
+    protected final String name;
+
+    /*******************************************************************************************************************
+     *
+     * Create a new implementation of {@link Finder} with the given {@link Function} to compute results.
+     *
+     * TODO: with Java 8, move to a default method of Finder
+     *
+     * @param   computeResults  the producer of results
+     * @return                  the {@code Finder}
+     *
+     ******************************************************************************************************************/
+    public static Finder withComputeResults (final Function<Finder, List<ResourceFile>> computeResults)
       {
+        return new ResourceFileFinderSupport(computeResults);
       }
 
-    protected ResourceFileFinderSupport (final @Nonnull String name)
+    /*******************************************************************************************************************
+     *
+     * Create a new implementation of {@link Finder} with the given {@link Function} to compute results.
+     *
+     * TODO: with Java 8, move to a default method of Finder
+     *
+     * @param   finderName      the name of the {@code Finder} (for logging purpose)
+     * @param   computeResults  the producer of results
+     * @return                  the {@code Finder}
+     *
+     ******************************************************************************************************************/
+    public static Finder withComputeResults (final @Nonnull String finderName,
+                                             final Function<Finder, List<ResourceFile>> computeResults)
       {
-        super(name);
+        return new ResourceFileFinderSupport(finderName, computeResults);
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private ResourceFileFinderSupport (final Function<Finder, List<ResourceFile>> computeResults)
+      {
+        this.computeResults = computeResults;
+        this.recursive = false;
+        this.name = null;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private ResourceFileFinderSupport (final @Nonnull String finderName,
+                                       final Function<Finder, List<ResourceFile>> computeResults)
+      {
+        super(finderName);
+        this.computeResults = computeResults;
+        this.recursive = false;
+        this.name = null;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Clone constructor. See documentation withComputeResults {@link FinderSupport} for more information.
+     *
+     * @param other     the {@code Finder} to clone
+     * @param override  the override object
+     *
+     ******************************************************************************************************************/
+    // FIXME: should be protected
+    public ResourceFileFinderSupport (final @Nonnull ResourceFileFinderSupport other, final @Nonnull Object override)
+      {
+        super(other, override);
+        final ResourceFileFinderSupport source = getSource(ResourceFileFinderSupport.class, other, override);
+        this.computeResults = source.computeResults;
+        this.recursive = source.recursive;
+        this.name = source.name;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Finder withRecursion (final boolean recursive)
       {
-        final ResourceFileFinderSupport clone = (ResourceFileFinderSupport)clone();
-        clone.recursive = recursive;
-        return clone;
+        return clone(new ResourceFileFinderSupport(computeResults, recursive, name));
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public Finder withName (final @Nonnull String name)
       {
-        final ResourceFileFinderSupport clone = (ResourceFileFinderSupport)clone();
-        clone.name = name;
-        return clone;
+        return clone(new ResourceFileFinderSupport(computeResults, recursive, name));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    protected List<? extends ResourceFile> computeResults()
+      {
+        return Objects.requireNonNull(computeResults.apply(this));
       }
   }
 
