@@ -29,12 +29,6 @@
         <dependency>
             <artifactId>it-tidalwave-util</artifactId>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.kenai.nbpwr</groupId>
-                    <artifactId>org-slf4j-jdk14</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 </project>
