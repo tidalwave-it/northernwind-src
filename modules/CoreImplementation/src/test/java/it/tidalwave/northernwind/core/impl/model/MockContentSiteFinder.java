@@ -54,6 +54,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
 
     private String relativeUri;
 
+
     @Override @Nonnull
     public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath)
       {
@@ -88,11 +89,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
 
             return Arrays.asList(content);
           }
-        catch (NotFoundException e)
-          {
-            throw new RuntimeException(e);
-          }
-        catch (IOException e)
+        catch (NotFoundException | IOException e)
           {
             throw new RuntimeException(e);
           }
