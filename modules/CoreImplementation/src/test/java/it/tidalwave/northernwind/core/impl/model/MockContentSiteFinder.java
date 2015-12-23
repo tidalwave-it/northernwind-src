@@ -37,6 +37,7 @@ import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
+import lombok.RequiredArgsConstructor;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -45,28 +46,40 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@RequiredArgsConstructor
 public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>>
                                    implements SiteFinder<Content>
   {
     private final static long serialVersionUID = 1L;
 
-    private String relativePath;
+    private final String relativePath;
 
-    private String relativeUri;
+    private final String relativeUri;
 
+    public MockContentSiteFinder()
+      {
+        this.relativePath = null;
+        this.relativeUri = null;
+      }
+
+    public MockContentSiteFinder (final @Nonnull MockContentSiteFinder other, final @Nonnull Object override)
+      {
+        super(other, override);
+        final MockContentSiteFinder source = getSource(MockContentSiteFinder.class, other, override);
+        this.relativePath = source.relativePath;
+        this.relativeUri = source.relativeUri;
+      }
 
     @Override @Nonnull
     public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath)
       {
-        this.relativePath = relativePath;
-        return this;
+        return clone(new MockContentSiteFinder(relativePath, relativeUri));
       }
 
     @Override @Nonnull
     public SiteFinder<Content> withRelativeUri (final @Nonnull String relativeUri)
       {
-        this.relativeUri = relativeUri;
-        return this;
+        return clone(new MockContentSiteFinder(relativePath, relativeUri));
       }
 
     @Override @Nonnull

@@ -33,12 +33,6 @@
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-messagebus-spring</artifactId>
-            <exclusions>
-                <exclusion> <!-- TODO: put this exclusion in messagebus-spring -->
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>

@@ -85,7 +85,8 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
      * @param override  the override object
      *
      ******************************************************************************************************************/
-    protected DefaultLayoutFinder (final @Nonnull DefaultLayoutFinder other, final @Nonnull Object override)
+    // FIXME: should be protected
+    public DefaultLayoutFinder (final @Nonnull DefaultLayoutFinder other, final @Nonnull Object override)
       {
         super(other, override);
         final DefaultLayoutFinder source = getSource(DefaultLayoutFinder.class, other, override);
@@ -123,7 +124,6 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
               {
                 result.add(child);
               }
-
           }
         else
           {

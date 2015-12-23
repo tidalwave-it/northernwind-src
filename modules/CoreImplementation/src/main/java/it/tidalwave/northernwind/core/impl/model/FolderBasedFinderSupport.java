@@ -97,32 +97,45 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
 
     /*******************************************************************************************************************
      *
+     * Clone constructor.
+     *
+     ******************************************************************************************************************/
+    public FolderBasedFinderSupport (final @Nonnull FolderBasedFinderSupport<Type> other, final @Nonnull Object override)
+      {
+        super(other, override);
+        this.typeClass = other.typeClass;
+        this.parentFile = other.parentFile;
+        this.resourceRootPath = other.resourceRootPath;
+      }
+
+    /*******************************************************************************************************************
+     *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    protected List<? extends Type> computeResults()
-      {
+    @Override
+    @Nonnull
+    protected List<? extends Type> computeResults() {
         final List<Type> result = new ArrayList<>();
 
         for (final ResourceFile childFile : parentFile.findChildren().withRecursion(true).results())
-          {
+        {
             if (childFile.isFolder())
-              {
+            {
                 try
-                  {
+                {
                     final String relativeUri = childFile.getPath().relativeTo(resourceRootPath).urlDecoded().asString();
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
-                  }
+                }
                 catch (NotFoundException e)
-                  {
+                {
                     log.error("", e);
-                  }
-              }
-          }
+                }
+            }
+        }
 
         return result;
-      }
+    }
 
     /*******************************************************************************************************************
      *

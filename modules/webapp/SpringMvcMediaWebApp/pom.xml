@@ -29,12 +29,6 @@
         <dependency>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
             <groupId>it.tidalwave.northernwind</groupId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>org-slf4j-jdk14</artifactId>
-                    <groupId>com.kenai.nbpwr</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 </project>

@@ -30,7 +30,7 @@
         <rome.version>1.0.0</rome.version>
         <tft.spring.version>3.2.3.RELEASE</tft.spring.version>
         <stringtemplate.version>4.0.8</stringtemplate.version>
-        <thesefoolishthings.version>2.4</thesefoolishthings.version>
+        <thesefoolishthings.version>3.0-ALPHA-1</thesefoolishthings.version>
         <xmpcore.version>5.1.0</xmpcore.version>
     </properties>
 
