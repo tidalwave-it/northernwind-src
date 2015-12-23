@@ -115,27 +115,28 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
      ******************************************************************************************************************/
     @Override
     @Nonnull
-    protected List<? extends Type> computeResults() {
+    protected List<? extends Type> computeResults()
+      {
         final List<Type> result = new ArrayList<>();
 
         for (final ResourceFile childFile : parentFile.findChildren().withRecursion(true).results())
-        {
+          {
             if (childFile.isFolder())
-            {
+              {
                 try
-                {
+                  {
                     final String relativeUri = childFile.getPath().relativeTo(resourceRootPath).urlDecoded().asString();
                     result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
-                }
+                  }
                 catch (NotFoundException e)
-                {
+                  {
                     log.error("", e);
-                }
-            }
-        }
+                  }
+              }
+          }
 
         return result;
-    }
+      }
 
     /*******************************************************************************************************************
      *
