@@ -42,6 +42,7 @@ import com.sun.org.apache.xml.internal.serialize.Serializer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
 
@@ -325,7 +326,8 @@ public class HTMLSerializer
             if ( addNSAttr ) {
                 Enumeration keys;
 
-                keys = _prefixes.keys();
+//                keys = _prefixes.keys();
+                keys = Collections.enumeration(_prefixes.keySet());
                 while ( keys.hasMoreElements() ) {
                     _printer.printSpace();
                     value = (String) keys.nextElement();
