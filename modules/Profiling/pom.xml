@@ -26,10 +26,6 @@
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
         </dependency>
-<!--        <dependency>
-            <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
