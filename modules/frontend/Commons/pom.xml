@@ -44,6 +44,12 @@
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency> <!-- FIXME: to prevent a javadoc crash -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <description>Utilities used by the front end implementations.</description>
 </project>
