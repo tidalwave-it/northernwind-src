@@ -78,23 +78,9 @@
         <property name="queueCapacity" value="${nw.eventBus.context.queueCapacity}" />
     </bean>
 
-    <bean id="sessionMessageBusTaskExecutor"
-          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
-          autowire-candidate="false">
-        <property name="corePoolSize" value="${nw.eventBus.session.corePoolSize}" />
-        <property name="maxPoolSize" value="${nw.eventBus.session.maxPoolSize}" />
-        <property name="queueCapacity" value="${nw.eventBus.session.queueCapacity}" />
-    </bean>
-
     <bean id="applicationMessageBus"
           class="it.tidalwave.messagebus.spi.SimpleMessageBus">
         <constructor-arg ref="applicationMessageBusTaskExecutor"/>
-    </bean>
-
-    <bean id="sessionMessageBus"
-          class="it.tidalwave.messagebus.spi.SimpleMessageBus"
-          scope="session">
-        <constructor-arg ref="sessionMessageBusTaskExecutor"/>
     </bean>
 
     <!-- Core objects -->
