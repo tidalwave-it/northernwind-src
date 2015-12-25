@@ -6,25 +6,44 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>2.16</version>
+        <version>3.2</version>
         <relativePath />
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>northernwind</artifactId>
-    <version>1.1-ALPHA-35-SNAPSHOT</version>
+    <version>1.1-ALPHA-37-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>NorthernWind (master)</name>
+    <name>NorthernWind</name>
     <inceptionYear>2011</inceptionYear>
+    <description>
+[![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)
+
+NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
+a distributed SCM such as Git or Mercurial.
+
+Please see the project website for more information: http://northernwind.tidalwave.it
+
+A few examples of websites running on NorthernWind:
+
+* http://stoppingdown.net
+* http://northernwind.tidalwave.it
+* http://tidalwave.it
+    </description>
 
     <properties>
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
         <tft.project.description>NorthernWind - lightweight CMS</tft.project.description>
 
-        <netbeans.hint.jdkPlatform>JDK_1.7.0</netbeans.hint.jdkPlatform>
+        <tft.maven.requiredJdk>[1.8.0-0,1.8.0-99)</tft.maven.requiredJdk>
+        <tft.javac.source>1.7</tft.javac.source>
+        <tft.javac.target>1.7</tft.javac.target>
+
+        <netbeans.hint.jdkPlatform>JDK_1.8.0</netbeans.hint.jdkPlatform>
+        <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
 
-        <scm.repo.url>git@bitbucket.org:tidalwave/northernwind-src.git</scm.repo.url>
+        <scm.repo.url>ssh://git@bitbucket.org/tidalwave/northernwind-src.git</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
@@ -32,10 +51,6 @@
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
-        <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
-
-        <!-- disables javancss since it's broken with JDK 1.7 -->
-        <tft.profile.metrics.defaultGoal>install findbugs:findbugs pmd:cpd pmd:pmd checkstyle:checkstyle clirr:clirr dependency:analyze</tft.profile.metrics.defaultGoal>
 
         <tft.UmlGraphDoc.version>5.4</tft.UmlGraphDoc.version>
         <tft.UmlGraphDoc.additionalParam>-views -attributes -operations -types -postfixpackage -nodefontpackagesize 6 -nodefontclasssize 8 -nodefontsize 7 -edgefontsize 7 -nodesep 0.05 -ranksep 0.1 -visibility -inferdep -inferrel -inferdepinpackage -hide java.*|javax.*|android.*</tft.UmlGraphDoc.additionalParam>
@@ -43,11 +58,6 @@
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
         <log.file>target/nw.log</log.file>
-
-        <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
-
-        <tft.versions-maven-plugin.version>2.2</tft.versions-maven-plugin.version>
-        <!--<tft.jacoco-maven-plugin.version>0.7.5.201505241946</tft.jacoco-maven-plugin.version>-->
     </properties>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
@@ -95,109 +105,94 @@
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-html-patches</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core</artifactId>
                 <classifier>tests</classifier>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-default</artifactId>
                 <classifier>tests</classifier>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-marshalling-default</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-filesystem-hg</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-components-vaadin</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-commons</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-vaadin</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-webapp-commons</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>it.tidalwave.northernwind</groupId>
-                <artifactId>it-tidalwave-northernwind-frontend-vaadin-webapp</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media-springmvc</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-springmvc-webapp</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.northernwind</groupId>
                 <artifactId>it-tidalwave-northernwind-frontend-media-springmvc-webapp</artifactId>
-                <version>1.1-ALPHA-35-SNAPSHOT</version>
+                <version>1.1-ALPHA-37-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

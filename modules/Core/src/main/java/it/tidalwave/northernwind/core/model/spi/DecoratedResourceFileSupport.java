@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import com.google.common.base.Function;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -75,10 +76,10 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return new ResourceFileFinderSupport()
+        return ResourceFileFinderSupport.withComputeResults(new Function<Finder, List<ResourceFile>>()
           {
-            @Override @Nonnull
-            protected List<? extends ResourceFile> computeResults()
+            @Override
+            public List<ResourceFile> apply (final @Nonnull Finder f)
               {
                 final List<ResourceFile> result = new ArrayList<>();
 
@@ -89,7 +90,7 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
 
                 return result;
               }
-          };
+          });
       }
 
     @Override
