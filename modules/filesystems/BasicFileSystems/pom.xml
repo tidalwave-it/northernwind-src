@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-filesystem</artifactId>
-        <version>1.1-ALPHA-35-SNAPSHOT</version>
+        <version>1.1-ALPHA-37-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
-    <version>1.1-ALPHA-35-SNAPSHOT</version>
+    <version>1.1-ALPHA-37-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Filesystems, Basic</name>
     <description>The implementation of some basic filesystems.</description>
@@ -21,26 +21,20 @@
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>org-slf4j-jdk14</artifactId>
-                    <groupId>com.kenai.nbpwr</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>org-slf4j-jdk14</artifactId>
-                    <groupId>com.kenai.nbpwr</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
