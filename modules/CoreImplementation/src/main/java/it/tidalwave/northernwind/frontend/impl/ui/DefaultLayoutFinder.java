@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import lombok.RequiredArgsConstructor;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@Immutable
 @RequiredArgsConstructor
 public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> implements LayoutFinder
   {
@@ -58,7 +60,40 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
     private final Map<Id, Layout> childrenMapById;
 
     @CheckForNull
-    private Id id;
+    private final Id id;
+
+    /*******************************************************************************************************************
+     *
+     * Constructor used to create an instance with the given data.
+     *
+     * @param children          the list of children
+     * @param childrenMapById   the map of children indexed by their id
+     *
+     ******************************************************************************************************************/
+    public DefaultLayoutFinder (final @Nonnull List<Layout> children, final @Nonnull Map<Id, Layout> childrenMapById)
+      {
+        this.children = children;
+        this.childrenMapById = childrenMapById;
+        this.id = null;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Clone constructor. See documentation of {@link FinderSupport} for more information.
+     *
+     * @param other     the {@code Finder} to clone
+     * @param override  the override object
+     *
+     ******************************************************************************************************************/
+    // FIXME: should be protected
+    public DefaultLayoutFinder (final @Nonnull DefaultLayoutFinder other, final @Nonnull Object override)
+      {
+        super(other, override);
+        final DefaultLayoutFinder source = getSource(DefaultLayoutFinder.class, other, override);
+        this.children = source.children;
+        this.childrenMapById = source.childrenMapById;
+        this.id = source.id;
+      }
 
     /*******************************************************************************************************************
      *
@@ -68,9 +103,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
     @Override @Nonnull
     public LayoutFinder withId (final @Nonnull Id id)
       {
-        final DefaultLayoutFinder clone = (DefaultLayoutFinder)super.clone();
-        clone.id = id;
-        return clone;
+        return clone(new DefaultLayoutFinder(children, childrenMapById, id));
       }
 
     /*******************************************************************************************************************
@@ -91,7 +124,6 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
               {
                 result.add(child);
               }
-
           }
         else
           {

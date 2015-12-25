@@ -39,8 +39,13 @@ import org.testng.annotations.Test;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.util.test.FileComparisonUtils.*;
 import java.util.Arrays;
+import java.util.Date;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.XMP;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 /***********************************************************************************************************************
  *
@@ -78,7 +83,7 @@ public class DefaultMetadataProviderTest
         assertSameContents(expectedFile, actualFile);
       }
 
-    private void dumpTags (final PrintWriter pw, 
+    private void dumpTags (final PrintWriter pw,
                            final @Nonnull String directoryName,
                            final @Nonnull Directory directory)
       {
@@ -97,6 +102,10 @@ public class DefaultMetadataProviderTest
             else if (value instanceof Object[])
               {
                 value = Arrays.toString((Object[])value);
+              }
+            else if (value instanceof Date)
+              {
+                value = new LocalDateTime(value).toString(ISODateTimeFormat.dateTime());
               }
 
             final String s = String.format("%s [%d] %s: %s", directoryName, tag, directory.getTagName(tag), value);

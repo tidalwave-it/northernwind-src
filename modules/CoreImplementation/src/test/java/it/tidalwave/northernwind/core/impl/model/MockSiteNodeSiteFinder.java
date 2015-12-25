@@ -27,14 +27,15 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import com.google.common.base.Predicate;
 import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.RequiredArgsConstructor;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -43,27 +44,40 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@RequiredArgsConstructor
 public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>>
                                     implements SiteFinder<SiteNode>
   {
     private final static long serialVersionUID = 1L;
 
-    private String relativePath;
+    private final String relativePath;
 
-    private String relativeUri;
+    private final String relativeUri;
+
+    public MockSiteNodeSiteFinder()
+      {
+        this.relativePath = null;
+        this.relativeUri = null;
+      }
+
+    public MockSiteNodeSiteFinder (final @Nonnull MockSiteNodeSiteFinder other, final @Nonnull Object override)
+      {
+        super(other, override);
+        final MockSiteNodeSiteFinder source = getSource(MockSiteNodeSiteFinder.class, other, override);
+        this.relativePath = source.relativePath;
+        this.relativeUri = source.relativeUri;
+      }
 
     @Override @Nonnull
     public SiteFinder<SiteNode> withRelativePath (final @Nonnull String relativePath)
       {
-        this.relativePath = relativePath;
-        return this;
+        return clone(new MockSiteNodeSiteFinder(relativePath, relativeUri));
       }
 
     @Override @Nonnull
     public SiteFinder<SiteNode> withRelativeUri (final @Nonnull String relativeUri)
       {
-        this.relativeUri = relativeUri;
-        return this;
+        return clone(new MockSiteNodeSiteFinder(relativePath, relativeUri));
       }
 
     @Override @Nonnull
