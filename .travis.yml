@@ -1,4 +1,5 @@
 language: java
 jdk:
   - oraclejdk8
-script: mvn -B
+before_script: sh .prepare.sh
+script: mvn install -B
