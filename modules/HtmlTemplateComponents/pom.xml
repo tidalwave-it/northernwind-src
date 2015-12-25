@@ -6,16 +6,16 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-35-SNAPSHOT</version>
+        <version>1.1-ALPHA-37-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-components-htmltemplate</artifactId>
-    <version>1.1-ALPHA-35-SNAPSHOT</version>
+    <version>1.1-ALPHA-37-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Frontend Components (HTML Template)</name>
-    
+    <name>NorthernWind - Frontend Components, HTML Template</name>
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -32,8 +32,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        
+
         <!-- Without this, javadoc crashes -->
         <dependency>
             <groupId>javax.servlet</groupId>

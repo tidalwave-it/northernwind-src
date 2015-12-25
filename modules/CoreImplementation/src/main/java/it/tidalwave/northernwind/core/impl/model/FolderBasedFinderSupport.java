@@ -97,10 +97,24 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
 
     /*******************************************************************************************************************
      *
+     * Clone constructor.
+     *
+     ******************************************************************************************************************/
+    public FolderBasedFinderSupport (final @Nonnull FolderBasedFinderSupport<Type> other, final @Nonnull Object override)
+      {
+        super(other, override);
+        this.typeClass = other.typeClass;
+        this.parentFile = other.parentFile;
+        this.resourceRootPath = other.resourceRootPath;
+      }
+
+    /*******************************************************************************************************************
+     *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
+    @Override
+    @Nonnull
     protected List<? extends Type> computeResults()
       {
         final List<Type> result = new ArrayList<>();

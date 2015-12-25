@@ -77,6 +77,10 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
          ******************************************************************************************************************/
         @Nonnull
         public Finder withName (@Nonnull String name);
+
+        public String getName();
+
+        public boolean isRecursive();
       }
 
     /*******************************************************************************************************************
