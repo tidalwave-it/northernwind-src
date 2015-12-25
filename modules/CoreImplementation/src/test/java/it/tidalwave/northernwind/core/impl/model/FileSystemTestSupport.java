@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import com.google.common.base.Function;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
@@ -58,17 +60,15 @@ import static org.mockito.Mockito.when;
 @RequiredArgsConstructor @ToString
 public abstract class FileSystemTestSupport
   {
-    @RequiredArgsConstructor
-    static class ListFinder extends ResourceFileFinderSupport
+    private static Finder listFinder (final @Nonnull Collection<ResourceFile> results)
       {
-        @Nonnull
-        final Collection<ResourceFile> results;
-
-        @Override
-        protected List<? extends ResourceFile> computeResults()
-          {
-            return new ArrayList<>(results);
-          }
+        return ResourceFileFinderSupport.withComputeResults(new Function<ResourceFile.Finder, List<ResourceFile>>() {
+            @Override
+            public List<ResourceFile> apply(ResourceFile.Finder input)
+              {
+                return new ArrayList<>(results);
+              }
+        });
       }
 
     @Nonnull
@@ -115,7 +115,7 @@ public abstract class FileSystemTestSupport
 
         final Collection<ResourceFile> children = new ArrayList<>(parentFolder.findChildren().results());
         children.add(folder);
-        when(parentFolder.findChildren()).thenReturn(new ListFinder(children));
+        when(parentFolder.findChildren()).thenReturn(listFinder(children));
 
         return folder;
       }
@@ -138,7 +138,7 @@ public abstract class FileSystemTestSupport
 
         final Collection<ResourceFile> children = new ArrayList<>(parentFolder.findChildren().results());
         children.add(file);
-        when(parentFolder.findChildren()).thenReturn(new ListFinder(children));
+        when(parentFolder.findChildren()).thenReturn(listFinder(children));
 
         return file;
       }
@@ -154,7 +154,7 @@ public abstract class FileSystemTestSupport
         when(folder.getPath()).thenReturn(new ResourcePath(name));
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
-        when(folder.findChildren()).thenReturn(new ListFinder(new ArrayList<ResourceFile>()));
+        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
         when(folder.toString()).thenReturn(name);
 
         return folder;
@@ -172,7 +172,7 @@ public abstract class FileSystemTestSupport
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(true);
         when(folder.isFolder()).thenReturn(false);
-        when(folder.findChildren()).thenReturn(new ListFinder(new ArrayList<ResourceFile>()));
+        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
 
         return folder;
       }

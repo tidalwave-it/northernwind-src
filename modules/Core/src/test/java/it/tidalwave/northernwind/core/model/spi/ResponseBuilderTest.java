@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
  * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -55,17 +55,17 @@ import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
 public class ResponseBuilderTest
   {
     private ResponseHolder<?> underTest;
-            
+
     private ResourceFile resourceFile;
-    
+
     private Request request;
-    
+
     private Map<String, String> headers;
-    
+
     private final DateTime currentTime = new DateTime(1341242353456L);
 
     private final DateTime resourceLatestModifiedTime = new DateTime(1341242553456L);
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -74,25 +74,25 @@ public class ResponseBuilderTest
       throws Exception
       {
         MockResponseBuilder.setCurrentTime(currentTime);
-        
+
         resourceFile = mock(ResourceFile.class);
         when(resourceFile.asBytes()).thenReturn("FILE CONTENT".getBytes());
         when(resourceFile.getMimeType()).thenReturn("text/plain");
         when(resourceFile.getLatestModificationTime()).thenReturn(resourceLatestModifiedTime);
-        
+
         headers = new HashMap<>();
         request = mock(Request.class);
-        when(request.getHeader(anyString())).thenAnswer(new Answer<String>() 
+        when(request.getHeader(anyString())).thenAnswer(new Answer<String>()
           {
             @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation) 
-              throws NotFoundException 
+            public String answer (final @Nonnull InvocationOnMock invocation)
+              throws NotFoundException
               {
                 final String name = (String)invocation.getArguments()[0];
                 return NotFoundException.throwWhenNull(headers.get(name), "Not found " + name);
               }
           });
-        
+
         underTest = new MockResponseHolder();
       }
 
@@ -106,7 +106,7 @@ public class ResponseBuilderTest
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile);
         assertContents(builder, "ResourceFileOutput.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -115,10 +115,10 @@ public class ResponseBuilderTest
       throws Exception
       {
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                             .withExpirationTime(Duration.standardDays(7));
+                                                               .withExpirationTime(Duration.standardDays(7));
         assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -128,10 +128,10 @@ public class ResponseBuilderTest
       {
         headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                             .forRequest(request);
+                                                               .forRequest(request);
         assertContents(builder, "ResourceFileOutput.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -141,10 +141,10 @@ public class ResponseBuilderTest
       {
         headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                             .forRequest(request);
+                                                               .forRequest(request);
         assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -157,11 +157,11 @@ public class ResponseBuilderTest
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
             final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                                 .forRequest(request);
+                                                                   .forRequest(request);
             assertContents(builder, "ResourceFileOutput.txt");
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -175,23 +175,23 @@ public class ResponseBuilderTest
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
             final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                                 .forRequest(request);
+                                                                   .forRequest(request);
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test
-    public void must_roperly_output_NotFound()
+    public void must_properly_output_NotFound()
       throws Exception
       {
         final NotFoundException e = new NotFoundException("foo bar");
         final ResponseBuilder<?> builder = underTest.response().forException(e);
         assertContents(builder, "NotFoundExceptionOutput.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -203,7 +203,7 @@ public class ResponseBuilderTest
         final ResponseBuilder<?> builder = underTest.response().forException(e);
         assertContents(builder, "InternalErrorOutput.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -214,7 +214,7 @@ public class ResponseBuilderTest
         final ResponseBuilder<?> builder = underTest.response().permanentRedirect("http://acme.com");
         assertContents(builder, "PermanentRedirectOutput.txt");
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -227,7 +227,7 @@ public class ResponseBuilderTest
         Files.write((byte[])builder.build(), actualFile);
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
