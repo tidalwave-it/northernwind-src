@@ -31,10 +31,17 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import it.tidalwave.util.test.FileComparisonUtils;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
@@ -45,6 +52,38 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 @RequiredArgsConstructor
 public class TestHelper
   {
+    @RequiredArgsConstructor(access = PRIVATE)
+    public class TestResource
+      {
+        @Nonnull
+        private final String name;
+
+        @Nonnull
+        private final Path actualFile;
+
+        @Nonnull
+        private final Path expectedFile;
+
+        public void assertActualFileContentSameAsExpected()
+          throws IOException
+          {
+            FileComparisonUtils.assertSameContents(expectedFile.toFile(), actualFile.toFile());
+          }
+
+        public void writeToActualFile (final @Nonnull String ... strings)
+          throws IOException
+          {
+            Files.write(actualFile, Arrays.asList(strings), UTF_8);
+          }
+
+        @Nonnull
+        public String readStringFromResource()
+          throws IOException
+          {
+            return TestHelper.this.readStringFromResource(name);
+          }
+      }
+
     @NonNull
     private final Object test;
 
@@ -59,5 +98,35 @@ public class TestHelper
       {
         configurationFiles.add(test.getClass().getSimpleName() + "/TestBeans.xml");
         return new ClassPathXmlApplicationContext(configurationFiles.toArray(new String[0]));
+      }
+
+    @Nonnull
+    public String readStringFromResource (final @Nonnull String resourceName)
+      throws IOException
+      {
+        final String testName = test.getClass().getSimpleName();
+        final Path path = Paths.get("target/test-classes", testName, "test-resources", resourceName);
+        final StringBuilder buffer = new StringBuilder();
+        String separator = "";
+
+        for (final String string : Files.readAllLines(path, UTF_8))
+          {
+            buffer.append(separator).append(string);
+            separator = "\n";
+          }
+
+        return buffer.toString();
+//            return String.join("\n", Files.readAllLines(path, UTF_8)); TODO JDK 8
+      }
+
+    @Nonnull
+    public TestResource testResourceFor (final @Nonnull String name)
+      throws IOException
+      {
+        final String testName = test.getClass().getSimpleName();
+        final Path expectedFile = Paths.get("target/test-classes", testName, "expected-results", name);
+        final Path actualFile = Paths.get("target", testName, "test-artifacts", name);
+        Files.createDirectories(actualFile.getParent());
+        return new TestResource(name, actualFile, expectedFile);
       }
   }
