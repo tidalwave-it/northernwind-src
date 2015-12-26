@@ -25,8 +25,9 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.impl.ui.mocks;
+package it.tidalwave.northernwind.frontend.impl.ui.mock;
 
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -35,7 +36,8 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@ViewMetadata(controlledBy = MockController1.class, typeUri = "type1")
 @ToString
-public class MockController2
+public class MockView1
   {
   }

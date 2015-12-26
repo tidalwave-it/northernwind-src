@@ -25,9 +25,10 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.spi.mocks;
+package it.tidalwave.northernwind.frontend.impl.ui.mock;
 
-import org.springframework.core.annotation.Order;
+import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -35,7 +36,8 @@ import org.springframework.core.annotation.Order;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Order(3)
-public class MockRequestProcessor3 extends MockRequestProcessorSupport
+@ViewMetadata(controlledBy = MockController3.class, typeUri = "type3")
+@ToString
+public class MockView3
   {
   }

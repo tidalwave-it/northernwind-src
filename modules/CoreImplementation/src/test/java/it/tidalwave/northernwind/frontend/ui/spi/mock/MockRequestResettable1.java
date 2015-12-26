@@ -25,10 +25,10 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
-import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
-import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.spi.RequestResettable;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -36,11 +36,12 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockLinkPostProcessor2 implements LinkPostProcessor
+@Slf4j
+public class MockRequestResettable1 implements RequestResettable
   {
-    @Override @Nonnull
-    public String postProcess (final @Nonnull String link) 
+    @Override
+    public void requestReset() 
       {
-        return String.format("lpp2-%s", link);
+        log.info("Reset");
       }
   }

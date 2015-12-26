@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.spi.mocks;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
 import org.springframework.core.annotation.Order;
 
@@ -35,7 +35,7 @@ import org.springframework.core.annotation.Order;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Order(2)
-public class MockRequestProcessor2 extends MockRequestProcessorSupport
+@Order(5)
+public class MockRequestProcessor5 extends MockRequestProcessorSupport
   {
   }

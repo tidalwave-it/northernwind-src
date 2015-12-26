@@ -25,9 +25,10 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.impl.ui.mocks;
+package it.tidalwave.northernwind.core.impl.model.mock;
 
-import lombok.ToString;
+import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
+import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
@@ -35,7 +36,11 @@ import lombok.ToString;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@ToString
-public class MockController3
+public class MockLinkPostProcessor2 implements LinkPostProcessor
   {
+    @Override @Nonnull
+    public String postProcess (final @Nonnull String link) 
+      {
+        return String.format("lpp2-%s", link);
+      }
   }

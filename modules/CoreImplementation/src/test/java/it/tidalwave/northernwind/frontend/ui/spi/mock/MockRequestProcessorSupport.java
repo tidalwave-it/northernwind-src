@@ -25,10 +25,16 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
-import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestProcessor;
+import lombok.Setter;
+import lombok.SneakyThrows;
 
 /***********************************************************************************************************************
  *
@@ -36,11 +42,24 @@ import javax.annotation.Nonnull;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockLinkPostProcessor3 implements LinkPostProcessor
+public class MockRequestProcessorSupport implements RequestProcessor
   {
-    @Override @Nonnull
-    public String postProcess (final @Nonnull String link) 
+    @Setter
+    private Status status = Status.CONTINUE;
+    
+    @Setter
+    private Throwable throwable;
+    
+    @Override
+    @SneakyThrows
+    public Status process (final @Nonnull Request request)
+      throws NotFoundException, IOException, HttpStatusException
       {
-        return String.format("lpp3-%s", link);
+        if (throwable != null) 
+          {
+            throw throwable;  
+          }
+        
+        return status;
       }
   }

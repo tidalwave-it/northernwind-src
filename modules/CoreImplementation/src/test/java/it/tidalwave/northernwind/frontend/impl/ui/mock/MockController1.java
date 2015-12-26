@@ -25,16 +25,9 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.spi.mocks;
+package it.tidalwave.northernwind.frontend.impl.ui.mock;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.Request;
-import it.tidalwave.northernwind.core.model.RequestProcessor;
-import lombok.Setter;
-import lombok.SneakyThrows;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -42,24 +35,7 @@ import lombok.SneakyThrows;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockRequestProcessorSupport implements RequestProcessor
+@ToString
+public class MockController1
   {
-    @Setter
-    private Status status = Status.CONTINUE;
-    
-    @Setter
-    private Throwable throwable;
-    
-    @Override
-    @SneakyThrows
-    public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException
-      {
-        if (throwable != null) 
-          {
-            throw throwable;  
-          }
-        
-        return status;
-      }
   }

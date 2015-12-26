@@ -25,10 +25,9 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.spi.mocks;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
-import it.tidalwave.northernwind.core.model.spi.RequestResettable;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 
 /***********************************************************************************************************************
  *
@@ -36,12 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Slf4j
-public class MockRequestResettable1 implements RequestResettable
+@Order(3)
+public class MockRequestProcessor3 extends MockRequestProcessorSupport
   {
-    @Override
-    public void requestReset() 
-      {
-        log.info("Reset");
-      }
   }

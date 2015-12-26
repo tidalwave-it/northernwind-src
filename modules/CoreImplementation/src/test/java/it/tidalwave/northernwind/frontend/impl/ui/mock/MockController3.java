@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.impl.ui.mocks;
+package it.tidalwave.northernwind.frontend.impl.ui.mock;
 
 import lombok.ToString;
 
@@ -36,6 +36,6 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString
-public class MockController1
+public class MockController3
   {
   }

@@ -52,8 +52,8 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.ResourceFileSystemProvider" />
     </bean>
 
-    <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor1"/>
-    <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor2"/>
-    <bean class="it.tidalwave.northernwind.core.impl.model.MockLinkPostProcessor3"/>
+    <bean class="it.tidalwave.northernwind.core.impl.model.mock.MockLinkPostProcessor1"/>
+    <bean class="it.tidalwave.northernwind.core.impl.model.mock.MockLinkPostProcessor2"/>
+    <bean class="it.tidalwave.northernwind.core.impl.model.mock.MockLinkPostProcessor3"/>
 
 </beans>

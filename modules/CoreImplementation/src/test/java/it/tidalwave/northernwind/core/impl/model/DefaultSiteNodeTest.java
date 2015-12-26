@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;

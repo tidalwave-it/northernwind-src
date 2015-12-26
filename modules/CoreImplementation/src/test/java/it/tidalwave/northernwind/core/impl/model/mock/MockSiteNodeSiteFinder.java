@@ -25,12 +25,13 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import com.google.common.base.Predicate;
+import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
