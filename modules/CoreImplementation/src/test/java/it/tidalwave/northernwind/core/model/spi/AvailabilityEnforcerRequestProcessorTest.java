@@ -61,7 +61,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
      ******************************************************************************************************************/
     public AvailabilityEnforcerRequestProcessorTest()
       {
-        super("AvailabilityEnforcerRequestProcessorTestBeans.xml");
+        super("AvailabilityEnforcerRequestProcessorTest/TestBeans.xml");
       }
 
     /*******************************************************************************************************************

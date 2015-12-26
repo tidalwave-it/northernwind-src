@@ -56,7 +56,7 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
     @BeforeMethod
     public void setup()
       {
-        context = new ClassPathXmlApplicationContext("ParameterLanguageOverrideLinkPostProcessorTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("ParameterLanguageOverrideLinkPostProcessorTest/TestBeans.xml");
         plorp = context.getBean(ParameterLanguageOverrideRequestProcessor.class);
         when(plorp.getParameterName()).thenReturn("lang");
         underTest = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);

@@ -53,7 +53,7 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
   {
     public NodeLinkWithContentMacroFilterTest()
       {
-        super("NodeLinkWithContentMacroFilterTestBeans.xml");
+        super("NodeLinkWithContentMacroFilterTest/TestBeans.xml");
       }
 
     /*******************************************************************************************************************

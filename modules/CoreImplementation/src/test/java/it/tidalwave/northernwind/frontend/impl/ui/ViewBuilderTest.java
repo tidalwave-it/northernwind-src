@@ -90,7 +90,7 @@ public class ViewBuilderTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("ViewBuilderTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("ViewBuilderTest/TestBeans.xml");
         siteProvider = context.getBean(SiteProvider.class);
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);

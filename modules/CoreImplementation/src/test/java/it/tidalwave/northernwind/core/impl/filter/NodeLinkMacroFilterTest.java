@@ -53,7 +53,7 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
   {
     public NodeLinkMacroFilterTest()
       {
-        super("NodeLinkMacroFilterTestBeans.xml");
+        super("NodeLinkMacroFilterTest/TestBeans.xml");
       }
 
     /*******************************************************************************************************************

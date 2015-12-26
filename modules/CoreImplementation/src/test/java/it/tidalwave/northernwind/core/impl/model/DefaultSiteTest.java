@@ -82,7 +82,7 @@ public class DefaultSiteTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteTest/TestBeans.xml");
         modelFactory = context.getBean(MockModelFactory.class);
 
         final Request request = mock(Request.class);

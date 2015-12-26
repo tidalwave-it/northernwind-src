@@ -74,7 +74,7 @@ public class XsltMacroFilterTest
       {
         // FIXME
 //        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
-        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
+        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTest/TestBeans.xml");
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);

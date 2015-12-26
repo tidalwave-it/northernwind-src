@@ -96,7 +96,7 @@ public class DefaultSiteViewControllerTest
     public void setUp()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteViewControllerTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteViewControllerTest/TestBeans.xml");
 
         underTest = context.getBean(DefaultSiteViewController.class);
 

@@ -87,7 +87,7 @@ public class DefaultSiteNodeTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteNodeTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteNodeTest/TestBeans.xml");
         site = context.getBean(InternalSite.class);
         modelFactory = context.getBean(ModelFactory.class);
         inheritanceHelper = context.getBean(InheritanceHelper.class);

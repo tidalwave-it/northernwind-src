@@ -69,7 +69,7 @@ public class DefaultSiteProviderTest
     @BeforeMethod
     public void setup()
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteProviderTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteProviderTest/TestBeans.xml");
         executor = context.getBean(WaitingTaskExecutor.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
