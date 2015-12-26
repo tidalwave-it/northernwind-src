@@ -47,6 +47,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import it.tidalwave.util.test.FileComparisonUtils;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -69,7 +70,7 @@ public class XsltMacroFilterTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         // FIXME
@@ -102,10 +103,11 @@ public class XsltMacroFilterTest
     @Test
     public void must_not_filter_resources_that_are_not_XHTML()
       {
+        // given
         final String text = "foo bar";
-
+        // when
         final String result = underTest.filter(text, "text/html");
-
+        // then
         assertThat(result, is(text));
       }
 
@@ -116,34 +118,36 @@ public class XsltMacroFilterTest
     public void must_filter_XHTML_resources (final @Nonnull String fileName)
       throws IOException
       {
+        // given
         final String resourceName = String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName);
         final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
+        // when
         final String result = underTest.filter(text, "application/xhtml+xml");
-
+        // then
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml",
                                                          fileName));
         final File actualFile = new File(String.format("target/test-artifacts/%s-filtered.xhtml", fileName));
         actualFile.getParentFile().mkdirs();
         FileUtils.write(actualFile, result, "UTF-8");
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+        assertSameContents(expectedFile, actualFile);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "fileNames")
-    public Object[][] fileNamesProvider()
+    @DataProvider
+    public Object[][] fileNames()
       {
         return new Object[][]
           {
-            { "file1" }, 
-            { "file2" }, 
-            { "issue-NW-96-a-NW-106-a" }, 
-            { "issue-NW-96-b" }, 
-            { "issue-NW-97-a" }, 
+            { "file1" },
+            { "file2" },
+            { "issue-NW-96-a-NW-106-a" },
+            { "issue-NW-96-b" },
+            { "issue-NW-97-a" },
             { "issue-NW-100" },
-            { "issue-NW-102-a" }, 
-            { "issue-NW-104-a" }, 
+            { "issue-NW-102-a" },
+            { "issue-NW-104-a" },
             { "issue-NW-114-a" }
           };
       }

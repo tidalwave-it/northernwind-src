@@ -60,19 +60,15 @@ public class LayeredFileSystemProviderTest
 
     /*******************************************************************************************************************
      *
-     *
-     *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void createFixture()
+    public void setup()
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         underTest = new LayeredFileSystemProvider();
       }
 
     /*******************************************************************************************************************
-     *
-     *
      *
      ******************************************************************************************************************/
     @BeforeMethod
@@ -110,25 +106,24 @@ public class LayeredFileSystemProviderTest
 
     /*******************************************************************************************************************
      *
-     *
-     *
      ******************************************************************************************************************/
     @Test(dataProvider = "testCases")
     public void must_navigate_through_the_whole_filesystem (final @Nonnull String testCase,
                                                             final @Nonnull String[] fileSystemNames)
       throws IOException
       {
+        // given
         final List<LocalFileSystemProvider> fileSystemProviders = new ArrayList<>();
 
         for (final String fileSystemName : fileSystemNames)
           {
-            LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
+            final LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
             fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
           }
-
+        // when
         underTest.setDelegates(fileSystemProviders);
-
+        // then
         final File expectedFile = new File(String.format("src/test/resources/expected-results/%s.txt", testCase));
         final File actualFile = new File(String.format("target/test-artifacts/%s.txt", testCase));
         actualFile.getParentFile().mkdirs();
@@ -139,11 +134,9 @@ public class LayeredFileSystemProviderTest
 
     /*******************************************************************************************************************
      *
-     *
-     *
      ******************************************************************************************************************/
-    @DataProvider(name = "testCases")
-    public Object[][] getTestCases()
+    @DataProvider
+    public Object[][] testCases()
       {
         return new Object[][]
           {
@@ -156,13 +149,11 @@ public class LayeredFileSystemProviderTest
 
     /*******************************************************************************************************************
      *
-     *
-     *
      ******************************************************************************************************************/
     private void dump (final @Nonnull File file, final @Nonnull ResourceFileSystem fileSystem)
       throws IOException
       {
-        final List<String> lines = new ArrayList<String>();
+        final List<String> lines = new ArrayList<>();
         dump(lines, underTest.getFileSystem().getRoot());
         Collections.sort(lines);
 
@@ -170,8 +161,6 @@ public class LayeredFileSystemProviderTest
       }
 
     /*******************************************************************************************************************
-     *
-     *
      *
      ******************************************************************************************************************/
     private static void dump (final @Nonnull List<String> lines, final @Nonnull ResourceFile fileObject)
@@ -191,8 +180,6 @@ public class LayeredFileSystemProviderTest
       }
 
     /*******************************************************************************************************************
-     *
-     *
      *
      ******************************************************************************************************************/
     private static void createFile (final @Nonnull String testCase,

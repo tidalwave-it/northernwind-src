@@ -25,13 +25,9 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.filter;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import lombok.Getter;
+import org.springframework.core.annotation.Order;
 
 /***********************************************************************************************************************
  *
@@ -39,23 +35,7 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroFilterTestHelper
+@Order(3)
+public class MockRequestProcessor3 extends MockRequestProcessorSupport
   {
-    @Getter
-    private final List<List<String>> matches = new ArrayList<>();
-
-    @Nonnull
-    public String filter (final @Nonnull Matcher matcher)
-      {
-        final List<String> match = new ArrayList<>();
-
-        for (int i = 1; i <= matcher.groupCount(); i++)
-          {
-            match.add(matcher.group(i));
-          }
-
-        matches.add(match);
-
-        return "";
-      }
   }

@@ -43,8 +43,6 @@ import java.util.Date;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.XMP;
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 /***********************************************************************************************************************
@@ -56,20 +54,25 @@ import org.joda.time.format.ISODateTimeFormat;
 @Slf4j
 public class DefaultMetadataProviderTest
   {
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_properly_read_metadata()
       throws Exception
       {
+        // given
         final File file = new File("src/test/resources/images/20100102-0001.jpg");
         final EditableImage image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
         log.info("IMAGE: {}", image);
+        // when
         final IPTC iptc = image.getMetadata(IPTC.class);
         final EXIF exif = image.getMetadata(EXIF.class);
         final XMP xmp = image.getMetadata(XMP.class);
+        // then
         log.info("IPTC: {}", iptc);
         log.info("EXIF: {}", exif);
         log.info("XMP: {}", xmp);
-
         final File expectedFile = new File(String.format("src/test/resources/expected-results/MetadataDump-%s.txt", "20100102-0001"));
         final File actualFile = new File(String.format("target/test-artifacts/MetadataDump-%s.txt", "20100102-0001"));
         actualFile.getParentFile().mkdirs();
@@ -83,7 +86,10 @@ public class DefaultMetadataProviderTest
         assertSameContents(expectedFile, actualFile);
       }
 
-    private void dumpTags (final PrintWriter pw,
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void dumpTags (final @Nonnull PrintWriter pw,
                            final @Nonnull String directoryName,
                            final @Nonnull Directory directory)
       {

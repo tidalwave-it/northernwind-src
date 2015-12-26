@@ -67,7 +67,7 @@ public class DefaultSiteProviderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteProviderTestBeans.xml");
         executor = context.getBean(WaitingTaskExecutor.class);
@@ -90,8 +90,8 @@ public class DefaultSiteProviderTest
     public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
       {
+        // given
         underTest = context.getBean(DefaultSiteProvider.class);
-
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
                 .withContextPath("thecontextpath")
                 .withDocumentPath("testDocumentPath")
@@ -106,9 +106,9 @@ public class DefaultSiteProviderTest
 
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(false));
-
+        // when
         executor.doExecute(); // emulate Site initialization in background
-
+        // then
         verify(site).initialize();
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(true));
@@ -120,7 +120,9 @@ public class DefaultSiteProviderTest
     @Test
     public void must_return_the_correct_version_string()
       {
+        // given
         underTest = context.getBean(DefaultSiteProvider.class);
+        // then
         assertThat(underTest.getVersionString(), is(notNullValue()));
       }
 
@@ -130,7 +132,9 @@ public class DefaultSiteProviderTest
     @Test
     public void must_return_the_correct_context_path_in_a_web_environment()
       {
+        // given
         underTest = context.getBean(DefaultSiteProvider.class);
+        // then
         assertThat(underTest.getContextPath(), is("thecontextpath"));
       }
 
@@ -141,10 +145,10 @@ public class DefaultSiteProviderTest
     public void must_use_no_context_path_when_ServletContext_is_not_available()
       throws Exception
       {
+        // given
         ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");
-
         underTest = context.getBean(DefaultSiteProvider.class);
-
+        // then
         assertThat(underTest.getContextPath(), is("/"));
       }
 
@@ -155,11 +159,12 @@ public class DefaultSiteProviderTest
     public void must_return_non_null_site_even_in_cause_of_initialization_failure()
       throws Exception
       {
+        // given
         doThrow(new IOException("test")).when(site).initialize();
-
+        // when
         underTest = context.getBean(DefaultSiteProvider.class);
         executor.doExecute(); // emulate Site initialization in background
-
+        // then
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(false));
       }

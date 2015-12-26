@@ -44,43 +44,43 @@
 
     <bean id="requestResettable1" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestResettable1" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable1" />
         </constructor-arg>
     </bean>
 
     <bean id="requestResettable2" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestResettable2" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable2" />
         </constructor-arg>
     </bean>
 
     <bean id="requestProcessor1" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor1" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor1" />
         </constructor-arg>
     </bean>
 
     <bean id="requestProcessor2" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor2" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor2" />
         </constructor-arg>
     </bean>
 
     <bean id="requestProcessor3" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor3" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor3" />
         </constructor-arg>
     </bean>
 
     <bean id="requestProcessor4" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor4" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor4" />
         </constructor-arg>
     </bean>
 
     <bean id="requestProcessor5" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor5" />
+            <bean class="it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor5" />
         </constructor-arg>
     </bean>
 

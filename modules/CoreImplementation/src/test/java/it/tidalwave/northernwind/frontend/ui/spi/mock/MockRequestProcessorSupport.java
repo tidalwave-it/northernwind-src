@@ -25,13 +25,16 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.filter;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import lombok.Getter;
+import java.io.IOException;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestProcessor;
+import lombok.Setter;
+import lombok.SneakyThrows;
 
 /***********************************************************************************************************************
  *
@@ -39,23 +42,24 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroFilterTestHelper
+public class MockRequestProcessorSupport implements RequestProcessor
   {
-    @Getter
-    private final List<List<String>> matches = new ArrayList<>();
-
-    @Nonnull
-    public String filter (final @Nonnull Matcher matcher)
+    @Setter
+    private Status status = Status.CONTINUE;
+    
+    @Setter
+    private Throwable throwable;
+    
+    @Override
+    @SneakyThrows
+    public Status process (final @Nonnull Request request)
+      throws NotFoundException, IOException, HttpStatusException
       {
-        final List<String> match = new ArrayList<>();
-
-        for (int i = 1; i <= matcher.groupCount(); i++)
+        if (throwable != null) 
           {
-            match.add(matcher.group(i));
+            throw throwable;  
           }
-
-        matches.add(match);
-
-        return "";
+        
+        return status;
       }
   }

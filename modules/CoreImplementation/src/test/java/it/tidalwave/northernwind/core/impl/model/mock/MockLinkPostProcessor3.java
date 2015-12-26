@@ -25,13 +25,10 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.filter;
+package it.tidalwave.northernwind.core.impl.model.mock;
 
+import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -39,23 +36,11 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroFilterTestHelper
+public class MockLinkPostProcessor3 implements LinkPostProcessor
   {
-    @Getter
-    private final List<List<String>> matches = new ArrayList<>();
-
-    @Nonnull
-    public String filter (final @Nonnull Matcher matcher)
+    @Override @Nonnull
+    public String postProcess (final @Nonnull String link) 
       {
-        final List<String> match = new ArrayList<>();
-
-        for (int i = 1; i <= matcher.groupCount(); i++)
-          {
-            match.add(matcher.group(i));
-          }
-
-        matches.add(match);
-
-        return "";
+        return String.format("lpp3-%s", link);
       }
   }

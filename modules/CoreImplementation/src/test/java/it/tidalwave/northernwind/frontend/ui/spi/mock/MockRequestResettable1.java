@@ -25,13 +25,10 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.filter;
+package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import lombok.Getter;
+import it.tidalwave.northernwind.core.model.spi.RequestResettable;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -39,23 +36,12 @@ import lombok.Getter;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroFilterTestHelper
+@Slf4j
+public class MockRequestResettable1 implements RequestResettable
   {
-    @Getter
-    private final List<List<String>> matches = new ArrayList<>();
-
-    @Nonnull
-    public String filter (final @Nonnull Matcher matcher)
+    @Override
+    public void requestReset() 
       {
-        final List<String> match = new ArrayList<>();
-
-        for (int i = 1; i <= matcher.groupCount(); i++)
-          {
-            match.add(matcher.group(i));
-          }
-
-        matches.add(match);
-
-        return "";
+        log.info("Reset");
       }
   }

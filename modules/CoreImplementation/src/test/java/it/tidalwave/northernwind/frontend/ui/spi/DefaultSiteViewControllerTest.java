@@ -36,13 +36,13 @@ import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor1;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor2;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor3;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor4;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestProcessor5;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestResettable1;
-import it.tidalwave.northernwind.frontend.ui.spi.mocks.MockRequestResettable2;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor1;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor2;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor3;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor4;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor5;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable1;
+import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable2;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.mockito.InOrder;
 import org.testng.annotations.BeforeMethod;
@@ -59,47 +59,47 @@ import static org.mockito.Mockito.any;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DefaultSiteViewControllerTest 
+public class DefaultSiteViewControllerTest
   {
     private DefaultSiteViewController underTest;
-    
+
     private RequestHolder requestHolder;
 
     private ResponseHolder<Object> responseHolder;
-    
+
     private ResponseBuilder<Object> responseBuilder;
-    
+
     private Request request;
-    
+
     private Object response;
-    
+
     private ClassPathXmlApplicationContext context;
-    
+
     private MockRequestResettable1 mockRequestResettable1;
-    
+
     private MockRequestResettable2 mockRequestResettable2;
-    
+
     private MockRequestProcessor1 mockRequestProcessor1;
-    
+
     private MockRequestProcessor2 mockRequestProcessor2;
-    
+
     private MockRequestProcessor3 mockRequestProcessor3;
-    
+
     private MockRequestProcessor4 mockRequestProcessor4;
-    
+
     private MockRequestProcessor5 mockRequestProcessor5;
-    
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setUpFixture()
-      throws Exception 
+    public void setUp()
+      throws Exception
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteViewControllerTestBeans.xml");
-        
+
         underTest = context.getBean(DefaultSiteViewController.class);
-        
+
         request = mock(Request.class);
         response = mock(Object.class);
         requestHolder = context.getBean(RequestHolder.class);
@@ -111,7 +111,7 @@ public class DefaultSiteViewControllerTest
         when(responseBuilder.forException(any(HttpStatusException.class))).thenReturn(responseBuilder);
         when(responseBuilder.forException(any(Throwable.class))).thenReturn(responseBuilder);
         when(responseBuilder.build()).thenReturn(response);
-        
+
         mockRequestResettable1 = context.getBean(MockRequestResettable1.class);
         mockRequestResettable2 = context.getBean(MockRequestResettable2.class);
         mockRequestProcessor1 = context.getBean(MockRequestProcessor1.class);
@@ -126,26 +126,28 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_all_RequestProcessors_in_normal_scenario()
-      throws Exception 
+      throws Exception
       {
+        // when
         Object result = underTest.processRequest(request);
+        // then
         assertThat(result, sameInstance(response));
-        
+
         final InOrder inOrder = createInOrder();
-        
+
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
         inOrder.verify(requestHolder).set(same(request));
-        
+
         inOrder.verify(mockRequestProcessor1).process(same(request));
         inOrder.verify(mockRequestProcessor2).process(same(request));
         inOrder.verify(mockRequestProcessor3).process(same(request));
         inOrder.verify(mockRequestProcessor4).process(same(request));
         inOrder.verify(mockRequestProcessor5).process(same(request));
-        
+
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
-        
+
 //        inOrder.verifyNoMoreInteractions();
       }
 
@@ -154,79 +156,85 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_one_breaks()
-      throws Exception 
+      throws Exception
       {
+        // given
         mockRequestProcessor3.setStatus(Status.BREAK);
-        
+        // when
         Object result = underTest.processRequest(request);
+        // then
         assertThat(result, sameInstance(response));
-        
+
         final InOrder inOrder = createInOrder();
-                
+
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
         inOrder.verify(requestHolder).set(same(request));
         verifyZeroInteractions(mockRequestProcessor4);
         verifyZeroInteractions(mockRequestProcessor5);
-        
+
         inOrder.verify(mockRequestProcessor1).process(same(request));
         inOrder.verify(mockRequestProcessor2).process(same(request));
         inOrder.verify(mockRequestProcessor3).process(same(request));
-        
+
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
-        
+
 //        inOrder.verifyNoMoreInteractions();
       }
-    
+
+    // TODO: merge the 4 tests below into a single test parameterized by exception
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test 
+    @Test
     public void must_call_some_RequestProcessors_when_NotFoundException()
-      throws Exception 
+      throws Exception
       {
+        // given
         final NotFoundException e = new NotFoundException();
         mockRequestProcessor3.setThrowable(e);
-        
+        // when
         commonExceptionTestSequence();
-        
+        // then
         verify(responseBuilder).forException(same(e));
-        
+
 //        inOrder.verifyNoMoreInteractions();
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test 
+    @Test
     public void must_call_some_RequestProcessors_when_HttpStatusException_with_SC_FOUND()
-      throws Exception 
+      throws Exception
       {
+        // given
         final HttpStatusException e = new HttpStatusException(SC_FOUND);
         mockRequestProcessor3.setThrowable(e);
-        
+        // when
         commonExceptionTestSequence();
-        
+        // then
         verify(responseBuilder).forException(same(e));
-        
+
 //        inOrder.verifyNoMoreInteractions();
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test 
+    @Test
     public void must_call_some_RequestProcessors_when_HttpStatusException_with_generic_Http_status()
-      throws Exception 
+      throws Exception
       {
+        // given
         final HttpStatusException e = new HttpStatusException(SC_NOT_ACCEPTABLE);
         mockRequestProcessor3.setThrowable(e);
-        
+        // when
         commonExceptionTestSequence();
-        
+        // then
         verify(responseBuilder).forException(same(e));
-        
+
 //        inOrder.verifyNoMoreInteractions();
       }
 
@@ -235,39 +243,40 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_RuntimeException()
-      throws Exception 
+      throws Exception
       {
+        // given
         final RuntimeException e = new RuntimeException("Purportedly thrown exception");
         mockRequestProcessor3.setThrowable(e);
-        
+        // when
         commonExceptionTestSequence();
-        
+        // then
         verify(responseBuilder).forException(same(e));
-        
+
 //        inOrder.verifyNoMoreInteractions();
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    protected void commonExceptionTestSequence() 
-      throws HttpStatusException, IOException, NotFoundException 
+    protected void commonExceptionTestSequence()
+      throws HttpStatusException, IOException, NotFoundException
       {
         final Object result = underTest.processRequest(request);
         assertThat(result, sameInstance(response));
-        
+
         final InOrder inOrder = createInOrder();
-        
+
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
         inOrder.verify(requestHolder).set(same(request));
-        
+
         inOrder.verify(mockRequestProcessor1).process(same(request));
         inOrder.verify(mockRequestProcessor2).process(same(request));
         inOrder.verify(mockRequestProcessor3).process(same(request));
         verifyZeroInteractions(mockRequestProcessor4);
         verifyZeroInteractions(mockRequestProcessor5);
-        
+
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
       }
@@ -276,7 +285,7 @@ public class DefaultSiteViewControllerTest
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected InOrder createInOrder() 
+    protected InOrder createInOrder()
       {
         return inOrder(requestHolder,
                        mockRequestResettable1, mockRequestResettable2,
