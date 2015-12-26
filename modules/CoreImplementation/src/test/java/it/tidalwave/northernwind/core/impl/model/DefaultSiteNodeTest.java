@@ -27,10 +27,11 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Locale;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -41,14 +42,13 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import java.util.Arrays;
-import java.util.Locale;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
