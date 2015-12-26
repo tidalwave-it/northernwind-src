@@ -29,18 +29,17 @@ package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.model.MockContentSiteFinder;
-import it.tidalwave.northernwind.core.impl.model.MockSiteNodeSiteFinder;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
+import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeClass;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import lombok.RequiredArgsConstructor;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -49,11 +48,9 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
 public class MacroFilterTestSupport
   {
-    @Nonnull
-    private final String contextName;
+    protected final TestHelper helper = new TestHelper(this);
 
     protected ApplicationContext context;
 
@@ -64,7 +61,7 @@ public class MacroFilterTestSupport
     @BeforeClass // FIXME: should be BeforeMethod?
     public void setUp()
       {
-        context = new ClassPathXmlApplicationContext(contextName);
+        context = helper.createSpringContext();
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);

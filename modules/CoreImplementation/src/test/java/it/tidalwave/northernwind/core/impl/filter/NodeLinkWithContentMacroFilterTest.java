@@ -51,32 +51,41 @@ class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilt
  **********************************************************************************************************************/
 public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
   {
-    public NodeLinkWithContentMacroFilterTest()
-      {
-        super("NodeLinkWithContentMacroFilterTestBeans.xml");
-      }
-
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "matchesDataProvider")
     public void must_find_the_correct_matches (final @Nonnull String text,
                                                final @Nonnull List<String> expectedMatches)
       {
+        // given
         final NodeLinkWithContentMacroFilterFixture underTest = new NodeLinkWithContentMacroFilterFixture();
+        // when
         underTest.filter(text, "text/html");
+        // then
         final List<List<String>> matches = underTest.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(expectedMatches));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "textProvider")
     public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
       {
+        // given
         final NodeLinkWithContentMacroFilter underTest = context.getBean(NodeLinkWithContentMacroFilter.class);
+        // when
         final String filtered = underTest.filter(text, "text/html");
-
+        // then
         assertThat(filtered, is(expected));
       }
 
-    @DataProvider(name = "matchesDataProvider")
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
     public Object[][] matchesDataProvider()
       {
         return new Object[][]
@@ -92,7 +101,10 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
           };
       }
 
-    @DataProvider(name = "textProvider")
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
     public Object[][] textProvider()
       {
         return new Object[][]

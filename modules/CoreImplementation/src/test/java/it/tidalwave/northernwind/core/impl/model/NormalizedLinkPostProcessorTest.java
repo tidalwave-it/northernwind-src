@@ -44,23 +44,33 @@ public class NormalizedLinkPostProcessorTest
   {
     private NormalizedLinkPostProcessor underTest;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setUp()
       {
         underTest = new NormalizedLinkPostProcessor();
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "links")
     public void must_create_correct_links (final @Nonnull String link, final @Nonnull String expectedResult)
       throws Exception
       {
+        // when
         final String result = underTest.postProcess(link);
-
+        // then
         assertThat(result, is(expectedResult));
       }
 
-    @DataProvider(name = "links")
-    public Object[][] linksDataProvider()
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
+    public Object[][] links()
       {
         return new Object[][]
           {

@@ -29,19 +29,21 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.io.IOException;
 import javax.servlet.ServletContext;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
-import java.io.IOException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
+import it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 /***********************************************************************************************************************
  *
@@ -67,9 +69,9 @@ public class DefaultSiteProviderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteProviderTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteProviderTest/TestBeans.xml");
         executor = context.getBean(WaitingTaskExecutor.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
@@ -90,8 +92,8 @@ public class DefaultSiteProviderTest
     public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
       throws Exception
       {
+        // given
         underTest = context.getBean(DefaultSiteProvider.class);
-
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
                 .withContextPath("thecontextpath")
                 .withDocumentPath("testDocumentPath")
@@ -106,9 +108,9 @@ public class DefaultSiteProviderTest
 
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(false));
-
+        // when
         executor.doExecute(); // emulate Site initialization in background
-
+        // then
         verify(site).initialize();
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(true));
@@ -120,7 +122,9 @@ public class DefaultSiteProviderTest
     @Test
     public void must_return_the_correct_version_string()
       {
+        // given
         underTest = context.getBean(DefaultSiteProvider.class);
+        // then
         assertThat(underTest.getVersionString(), is(notNullValue()));
       }
 
@@ -130,7 +134,9 @@ public class DefaultSiteProviderTest
     @Test
     public void must_return_the_correct_context_path_in_a_web_environment()
       {
+        // given
         underTest = context.getBean(DefaultSiteProvider.class);
+        // then
         assertThat(underTest.getContextPath(), is("thecontextpath"));
       }
 
@@ -141,10 +147,10 @@ public class DefaultSiteProviderTest
     public void must_use_no_context_path_when_ServletContext_is_not_available()
       throws Exception
       {
+        // given
         ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");
-
         underTest = context.getBean(DefaultSiteProvider.class);
-
+        // then
         assertThat(underTest.getContextPath(), is("/"));
       }
 
@@ -155,11 +161,12 @@ public class DefaultSiteProviderTest
     public void must_return_non_null_site_even_in_cause_of_initialization_failure()
       throws Exception
       {
+        // given
         doThrow(new IOException("test")).when(site).initialize();
-
+        // when
         underTest = context.getBean(DefaultSiteProvider.class);
         executor.doExecute(); // emulate Site initialization in background
-
+        // then
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(false));
       }
