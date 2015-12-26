@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString
-public class FolderBasedFinderSupport<T extends Resource> extends SimpleFinderSupport<T>
+public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T>
   {
     private static final long serialVersionUID = 2345536092354546452L;
 
@@ -80,7 +80,7 @@ public class FolderBasedFinderSupport<T extends Resource> extends SimpleFinderSu
      *
      ******************************************************************************************************************/
     @SuppressWarnings("unchecked")
-    public FolderBasedFinderSupport (final @Nonnull T parentResource)
+    public PathFinderSupport (final @Nonnull T parentResource)
       {
         try
           {
@@ -100,10 +100,10 @@ public class FolderBasedFinderSupport<T extends Resource> extends SimpleFinderSu
      * Clone constructor.
      *
      ******************************************************************************************************************/
-    public FolderBasedFinderSupport (final @Nonnull FolderBasedFinderSupport<T> other, final @Nonnull Object override)
+    public PathFinderSupport (final @Nonnull PathFinderSupport<T> other, final @Nonnull Object override)
       {
         super(other, override);
-        final FolderBasedFinderSupport<T> source = getSource(FolderBasedFinderSupport.class, other, override);
+        final PathFinderSupport<T> source = getSource(PathFinderSupport.class, other, override);
         this.typeClass = source.typeClass;
         this.parentFile = source.parentFile;
         this.resourceRootPath = source.resourceRootPath;
