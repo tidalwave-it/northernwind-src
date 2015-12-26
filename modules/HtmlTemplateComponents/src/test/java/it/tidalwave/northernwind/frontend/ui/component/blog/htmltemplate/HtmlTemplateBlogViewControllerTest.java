@@ -79,7 +79,7 @@ public class HtmlTemplateBlogViewControllerTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         view = mock(BlogView.class);
         node = mock(SiteNode.class);
@@ -99,11 +99,12 @@ public class HtmlTemplateBlogViewControllerTest
                                                      final @Nonnull String expectedRendering)
       throws Exception
       {
+        // given
         mockNodeProperty(viewId, PROPERTY_TITLE, title);
-
+        // when
         final StringBuilder builder = new StringBuilder();
         underTest.renderMainTitle(builder);
-
+        // then
         assertThat(builder.toString(), is(expectedRendering));
       }
 
@@ -118,15 +119,16 @@ public class HtmlTemplateBlogViewControllerTest
                                                final @Nonnull String expectedRendering)
       throws Exception
       {
+        // given
         final Locale locale = new Locale(localeCode);
         final DateTimeFormatter dtf = DateTimeFormat.fullDateTime().withLocale(locale).withZone(DateTimeZone.forID("CET"));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockNodeProperty(viewId, PROPERTY_DATE_FORMAT, dateFormat);
-
+        // when
         final StringBuilder builder = new StringBuilder();
         underTest.renderDate(builder, dateTime);
-
+        // then
         assertThat(builder.toString(), is(expectedRendering));
       }
 
@@ -156,7 +158,7 @@ public class HtmlTemplateBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name="mainTitleTestDataProvider")
+    @DataProvider
     private Object[][] mainTitleTestDataProvider()
       {
         return new Object[][]
@@ -171,7 +173,7 @@ public class HtmlTemplateBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name="dateTestDataProvider")
+    @DataProvider
     private Object[][] dateTestDataProvider()
       {
         final DateTime dateTime = new DateTime(1344353463985L);

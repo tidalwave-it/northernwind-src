@@ -58,7 +58,7 @@ public class DefaultViewFactoryTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         underTest = new DefaultViewFactory();
@@ -71,9 +71,10 @@ public class DefaultViewFactoryTest
     public void must_discover_and_properly_register_annotated_views()
       throws Exception
       {
+        // when
         underTest.setLogConfigurationEnabled(true);
         underTest.initialize();
-
+        // then
         assertThat(underTest.viewBuilderMapByTypeUri.size(), is(3));
 
         final ViewBuilder viewBuilder1 = underTest.viewBuilderMapByTypeUri.get("type1");
@@ -99,15 +100,16 @@ public class DefaultViewFactoryTest
     public void createViewAndController_must_delegate_to_the_proper_ViewBuilder()
       throws Exception
       {
+        // given
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
         final SiteNode siteNode = mock(SiteNode.class);
         final Id id = new Id("theId");
         final ViewAndController viewAndController = mock(ViewAndController.class);
         when(viewBuilder.createViewAndController(eq(id), same(siteNode))).thenReturn(viewAndController);
         underTest.viewBuilderMapByTypeUri.put("type1", viewBuilder);
-
+        // when
         final ViewAndController vac = underTest.createViewAndController("type1", id, siteNode);
-
+        // then
         verify(viewBuilder).createViewAndController(eq(id), same(siteNode));
         assertThat(vac, is(sameInstance(viewAndController)));
       }
@@ -121,11 +123,12 @@ public class DefaultViewFactoryTest
     public void createViewAndController_must_throw_exception_when_type_is_not_registered()
       throws Exception
       {
+        // given
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
         final SiteNode siteNode = mock(SiteNode.class);
         final Id id = new Id("theId");
         underTest.viewBuilderMapByTypeUri.put("registeredType", viewBuilder);
-
+        // then
         final ViewAndController vac = underTest.createViewAndController("unregisteredType", id, siteNode);
       }
   }

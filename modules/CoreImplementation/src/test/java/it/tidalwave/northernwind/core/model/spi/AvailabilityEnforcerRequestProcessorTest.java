@@ -56,13 +56,19 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
 
     private final DateTime currentTime = new DateTime(1341242353456L);
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     public AvailabilityEnforcerRequestProcessorTest()
       {
         super("AvailabilityEnforcerRequestProcessorTestBeans.xml");
       }
-   
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         MockResponseBuilder.setCurrentTime(currentTime);
         underTest = context.getBean(AvailabilityEnforcerRequestProcessor.class);
@@ -73,31 +79,40 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
         when(request.getOriginalRelativeUri()).thenReturn("/contextPath");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_do_nothing_when_site_is_available()
       throws Exception
       {
+        // given
         when(siteProvider.isSiteAvailable()).thenReturn(true);
-
+        // when
         final Status result = underTest.process(request);
-
+        // then
         assertThat(result, is(Status.CONTINUE));
 //        verifyZeroInteractions(responseHolder); FIXME
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_return_status_503_when_site_is_not_available()
       throws Exception
       {
+        // given
         when(siteProvider.isSiteAvailable()).thenReturn(false);
-
+        // when
         final Status result = underTest.process(request);
+        // then
+        assertThat(result, is(Status.BREAK));
+
         final File actualFile = new File("target/test-artifacts/response.txt");
         final File expectedFile = new File("src/test/resources/expected-results/response.txt");
         actualFile.getParentFile().mkdirs();
         Files.write(responseHolder.get(), actualFile);
-
-        assertThat(result, is(Status.BREAK));
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }
   }

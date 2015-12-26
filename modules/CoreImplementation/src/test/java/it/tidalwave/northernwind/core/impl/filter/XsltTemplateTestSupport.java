@@ -51,6 +51,8 @@ import static org.mockito.Mockito.*;
 //@RequiredArgsConstructor
 class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> implements SiteFinder<Resource>
   {
+    private static final long serialVersionUID = 1692141469939523431L;
+
     @Nonnull
     private final List<? extends Resource> results;
 
@@ -93,6 +95,9 @@ public class XsltTemplateTestSupport
   {
     private XsltMacroFilter filter;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
       throws Exception
@@ -125,6 +130,9 @@ public class XsltTemplateTestSupport
         when(site.find(eq(Resource.class))).thenReturn(new MockResourceFinder(resources));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     protected void test (final @Nonnull String sourceFileName)
       throws IOException
       {

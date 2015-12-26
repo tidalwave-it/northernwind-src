@@ -70,7 +70,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         MockResponseBuilder.setCurrentTime(currentTime);
@@ -103,7 +103,9 @@ public class ResponseBuilderTest
     public void must_properly_output_a_ResourceFile()
       throws Exception
       {
+        // when
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile);
+        // then
         assertContents(builder, "ResourceFileOutput.txt");
       }
 
@@ -114,8 +116,10 @@ public class ResponseBuilderTest
     public void must_properly_output_a_ResourceFile_with_ExpirationTime()
       throws Exception
       {
+        // when
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
                                                                .withExpirationTime(Duration.standardDays(7));
+        // then
         assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
       }
 
@@ -126,9 +130,12 @@ public class ResponseBuilderTest
     public void must_output_a_ResourceFile_when_Etag_not_Matching()
       throws Exception
       {
+        // given
         headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
+        // when
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
                                                                .forRequest(request);
+        // then
         assertContents(builder, "ResourceFileOutput.txt");
       }
 
@@ -139,9 +146,12 @@ public class ResponseBuilderTest
     public void must_output_NotModified_when_Etag_Matching()
       throws Exception
       {
+        // given
         headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
+        // when
         final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
                                                                .forRequest(request);
+        // then
         assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
 
@@ -154,10 +164,13 @@ public class ResponseBuilderTest
       {
         for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
           {
+            // given
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            // when
             final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
                                                                    .forRequest(request);
+            // then
             assertContents(builder, "ResourceFileOutput.txt");
           }
       }
@@ -172,13 +185,18 @@ public class ResponseBuilderTest
         // corner case: same time should return NotModified
         for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
           {
+            // given
             final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            // when
             final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
                                                                    .forRequest(request);
+            // then
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
           }
       }
+
+    // FIXME: refactor the two tests above into a single parameterized one: (delta, expectedResult)
 
     /*******************************************************************************************************************
      *
@@ -187,8 +205,11 @@ public class ResponseBuilderTest
     public void must_properly_output_NotFound()
       throws Exception
       {
+        // given
         final NotFoundException e = new NotFoundException("foo bar");
+        // when
         final ResponseBuilder<?> builder = underTest.response().forException(e);
+        // then
         assertContents(builder, "NotFoundExceptionOutput.txt");
       }
 
@@ -199,8 +220,11 @@ public class ResponseBuilderTest
     public void must_properly_output_an_internal_error()
       throws Exception
       {
+        // given
         final IOException e = new IOException("foo bar");
+        // when
         final ResponseBuilder<?> builder = underTest.response().forException(e);
+        // then
         assertContents(builder, "InternalErrorOutput.txt");
       }
 
@@ -211,7 +235,9 @@ public class ResponseBuilderTest
     public void must_properly_output_a_PermanentRedirect()
       throws Exception
       {
+        // when
         final ResponseBuilder<?> builder = underTest.response().permanentRedirect("http://acme.com");
+        // then
         assertContents(builder, "PermanentRedirectOutput.txt");
       }
 

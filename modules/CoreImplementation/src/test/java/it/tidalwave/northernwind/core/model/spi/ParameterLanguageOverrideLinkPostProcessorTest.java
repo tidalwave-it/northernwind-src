@@ -50,8 +50,11 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
 
     private ParameterLanguageOverrideRequestProcessor plorp;
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         context = new ClassPathXmlApplicationContext("ParameterLanguageOverrideLinkPostProcessorTestBeans.xml");
         plorp = context.getBean(ParameterLanguageOverrideRequestProcessor.class);
@@ -59,17 +62,24 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
         underTest = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "linkProvider")
     public void must_properly_postProcess (final @Nonnull String link,
                                            final @Nonnull String parameterValue,
                                            final @Nonnull String expectedResult)
       {
+        // when
         final String result = underTest.postProcess(link, parameterValue);
-
+        // then
         assertThat(result, is(expectedResult));
       }
 
-    @DataProvider(name = "linkProvider") @Nonnull
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
     private Object[][] linkProvider()
       {
         return new Object[][]

@@ -83,7 +83,7 @@ public class DefaultSiteNodeTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteNodeTestBeans.xml");
@@ -131,6 +131,8 @@ public class DefaultSiteNodeTest
     @Test
     public void must_properly_initialize_with_no_layout()
       {
+        // given the initialization
+        // then
         assertThat(underTest.site, sameInstance(site));
         assertThat(underTest.getResource(), sameInstance(resource));
         assertThat(underTest.getLayout(), sameInstance(emptyPlaceHolderLayout));
@@ -158,10 +160,11 @@ public class DefaultSiteNodeTest
                                                             final @Nonnull String expectedResult)
       throws Exception
       {
+        // given
         prepareMocksForGetRelativeUri(exposedUri, fileName, parentUri, parentPath);
-
+        // when
         final ResourcePath relativeUri = underTest.getRelativeUri();
-
+        // then
         assertThat(relativeUri.asString(), is(expectedResult));
       }
 
@@ -172,15 +175,15 @@ public class DefaultSiteNodeTest
     public void getRelativeUri_must_be_called_only_once()
       throws Exception
       {
+        // given
         prepareMocksForGetRelativeUri("exposedUri1", "file1", "/parentUri1", "structure/parent1");
-
         final int previousUriComputationCounter = underTest.uriComputationCounter;
-
+        // when
         for (int i = 0; i < 10; i++)
           {
             underTest.getRelativeUri();
           }
-
+        // then
         assertThat(underTest.uriComputationCounter, is(previousUriComputationCounter + 1));
       }
 
@@ -231,7 +234,7 @@ public class DefaultSiteNodeTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "uriProvider")
+    @DataProvider
     private Object[][] uriProvider()
       {
         return new Object[][]

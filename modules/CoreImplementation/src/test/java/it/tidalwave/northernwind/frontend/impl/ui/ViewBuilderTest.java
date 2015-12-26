@@ -87,7 +87,7 @@ public class ViewBuilderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("ViewBuilderTestBeans.xml");
@@ -110,8 +110,9 @@ public class ViewBuilderTest
     public void must_properly_instantiate_view_and_controller()
       throws Exception
       {
+        // when
         final ViewAndController viewAndController = underTest.createViewAndController(id, siteNode);
-
+        // then
         final Object oController = viewAndController.getController();
         final Object oView = viewAndController.getView();
 

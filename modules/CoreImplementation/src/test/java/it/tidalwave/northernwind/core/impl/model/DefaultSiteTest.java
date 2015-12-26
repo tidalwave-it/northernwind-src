@@ -79,7 +79,7 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteTestBeans.xml");
@@ -113,8 +113,9 @@ public class DefaultSiteTest
     public void must_properly_construct()
       throws Exception
       {
+        // when
         underTest = new DefaultSite(siteBuilder);
-
+        // then
         assertThat(underTest.getContextPath(), is("/contextpath"));
         assertThat(underTest.documentPath, is("/content/document"));
         assertThat(underTest.mediaPath, is("/content/media"));
@@ -132,11 +133,12 @@ public class DefaultSiteTest
     public void must_properly_initialize (final @Nonnull FileSystemTestSupport fsTestSupport)
       throws Exception
       {
+        // given
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
-
+        // when
         underTest.initialize();
-
+        // then
         fsTestSupport.performAssertions(underTest);
       }
 
@@ -147,13 +149,14 @@ public class DefaultSiteTest
     public void must_properly_create_a_Finder_for_Content()
       throws Exception
       {
+        // given
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
-
+        // when
         final DefaultSiteFinder<Content> finder = (DefaultSiteFinder<Content>)underTest.find(Content.class);
-
+        // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.documentMapByRelativePath)));
         assertThat(finder.mapByRelativeUri,  is(nullValue()));
@@ -166,13 +169,14 @@ public class DefaultSiteTest
     public void must_properly_create_a_Finder_for_Resource()
       throws Exception
       {
+        // given
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
-
+        // when
         final DefaultSiteFinder<Resource> finder = (DefaultSiteFinder<Resource>)underTest.find(Resource.class);
-
+        // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.libraryMapByRelativePath)));
         assertThat(finder.mapByRelativeUri,  is(nullValue()));
@@ -185,13 +189,14 @@ public class DefaultSiteTest
     public void must_properly_create_a_Finder_for_Media()
       throws Exception
       {
+        // given
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
-
+        // when
         final DefaultSiteFinder<Media> finder = (DefaultSiteFinder<Media>)underTest.find(Media.class);
-
+        // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.mediaMapByRelativePath)));
         assertThat(finder.mapByRelativeUri,  is(nullValue()));
@@ -204,13 +209,14 @@ public class DefaultSiteTest
     public void must_properly_create_a_Finder_for_SiteNode()
       throws Exception
       {
+        // given
         final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
-
+        // when
         final DefaultSiteFinder<SiteNode> finder = (DefaultSiteFinder<SiteNode>)underTest.find(SiteNode.class);
-
+        // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.nodeMapByRelativePath)));
         assertThat(finder.mapByRelativeUri,  is(sameInstance(underTest.nodeMapByRelativeUri)));
@@ -223,18 +229,19 @@ public class DefaultSiteTest
     public void must_create_correct_links()
       throws Exception
       {
+        // given
         underTest = new DefaultSite(siteBuilder);
-
+        // when
         final String result = underTest.createLink(new ResourcePath("link"));
-
+        // given
         assertThat(result, is("lpp3-lpp2-lpp1-/baseUrl/contextpath/link"));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "fileSystems")
-    public Object[][] fileSystemsDataProvider()
+    @DataProvider
+    public Object[][] fileSystems()
       {
         return new Object[][]
           {
