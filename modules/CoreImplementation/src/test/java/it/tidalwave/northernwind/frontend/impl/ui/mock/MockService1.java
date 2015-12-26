@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.impl.ui;
+package it.tidalwave.northernwind.frontend.impl.ui.mock;
 
 /***********************************************************************************************************************
  *
@@ -33,6 +33,6 @@ package it.tidalwave.northernwind.frontend.impl.ui;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MockService2
+public class MockService1
   {
   }

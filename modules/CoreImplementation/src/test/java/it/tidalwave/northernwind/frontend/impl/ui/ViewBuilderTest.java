@@ -37,6 +37,8 @@ import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
