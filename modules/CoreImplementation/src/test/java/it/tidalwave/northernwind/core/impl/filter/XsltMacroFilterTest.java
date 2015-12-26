@@ -46,7 +46,6 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.util.test.FileComparisonUtils;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
