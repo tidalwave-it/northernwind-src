@@ -43,15 +43,16 @@ import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor4;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor5;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable1;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable2;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.mockito.InOrder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
 
 /***********************************************************************************************************************
  *
@@ -61,6 +62,8 @@ import static org.mockito.Mockito.any;
  **********************************************************************************************************************/
 public class DefaultSiteViewControllerTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private DefaultSiteViewController underTest;
 
     private RequestHolder requestHolder;
@@ -73,7 +76,7 @@ public class DefaultSiteViewControllerTest
 
     private Object response;
 
-    private ClassPathXmlApplicationContext context;
+    private ApplicationContext context;
 
     private MockRequestResettable1 mockRequestResettable1;
 
@@ -96,7 +99,7 @@ public class DefaultSiteViewControllerTest
     public void setUp()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteViewControllerTestBeans.xml");
+        context = helper.createSpringContext();
 
         underTest = context.getBean(DefaultSiteViewController.class);
 

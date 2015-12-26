@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString
-public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinderSupport<Type>
+public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T>
   {
     private static final long serialVersionUID = 2345536092354546452L;
 
@@ -67,7 +67,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     private transient Provider<SiteProvider> siteProvider;
 
     @Nonnull
-    private final Class<Type> typeClass;
+    private final Class<T> typeClass;
 
     @Nonnull
     private final ResourceFile parentFile;
@@ -80,7 +80,7 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
      *
      ******************************************************************************************************************/
     @SuppressWarnings("unchecked")
-    public FolderBasedFinderSupport (final @Nonnull Type parentResource)
+    public PathFinderSupport (final @Nonnull T parentResource)
       {
         try
           {
@@ -100,12 +100,13 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
      * Clone constructor.
      *
      ******************************************************************************************************************/
-    public FolderBasedFinderSupport (final @Nonnull FolderBasedFinderSupport<Type> other, final @Nonnull Object override)
+    public PathFinderSupport (final @Nonnull PathFinderSupport<T> other, final @Nonnull Object override)
       {
         super(other, override);
-        this.typeClass = other.typeClass;
-        this.parentFile = other.parentFile;
-        this.resourceRootPath = other.resourceRootPath;
+        final PathFinderSupport<T> source = getSource(PathFinderSupport.class, other, override);
+        this.typeClass = source.typeClass;
+        this.parentFile = source.parentFile;
+        this.resourceRootPath = source.resourceRootPath;
       }
 
     /*******************************************************************************************************************
@@ -115,9 +116,9 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
      ******************************************************************************************************************/
     @Override
     @Nonnull
-    protected List<? extends Type> computeResults()
+    protected List<? extends T> computeResults()
       {
-        final List<Type> result = new ArrayList<>();
+        final List<T> result = new ArrayList<>();
 
         for (final ResourceFile childFile : parentFile.findChildren().withRecursion(true).results())
           {
@@ -143,19 +144,19 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Class<Type> getInterface (final @Nonnull Type parentResource)
+    private Class<T> getInterface (final @Nonnull T resource)
       {
-        for (Class<?> type = parentResource.getClass(); type != null; type = type.getSuperclass())
+        for (Class<?> type = resource.getClass(); type != null; type = type.getSuperclass())
           {
-            for (final Class<?> i : type.getInterfaces())
+            for (final Class<?> interface_ : type.getInterfaces())
               {
-                if (ALLOWED_TYPES.contains(i))
+                if (ALLOWED_TYPES.contains(interface_))
                   {
-                    return (Class<Type>)i;
+                    return (Class<T>)interface_;
                   }
               }
           }
 
-        throw new IllegalArgumentException("Illegal type: " + parentResource + "; allowed must implement " + ALLOWED_TYPES);
+        throw new IllegalArgumentException("Illegal type: " + resource + "; allowed must implement " + ALLOWED_TYPES);
       }
   }

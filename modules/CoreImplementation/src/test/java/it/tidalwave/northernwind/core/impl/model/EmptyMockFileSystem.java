@@ -27,11 +27,10 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import static it.tidalwave.northernwind.core.impl.model.FileSystemTestSupport.assertItem;
 import javax.annotation.Nonnull;
+import java.util.Map;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -41,7 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class EmptyMockFileSystem extends FileSystemTestSupport
+public class EmptyMockFileSystem extends MockFileSystemSupport
   {
     // FIXME: these values are not thread-safe, the same instance is reused...
     protected ResourceFile contentFolder;

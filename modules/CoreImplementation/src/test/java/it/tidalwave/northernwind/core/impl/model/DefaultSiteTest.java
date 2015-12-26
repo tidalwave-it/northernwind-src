@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Locale;
@@ -46,23 +45,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 
@@ -96,7 +82,7 @@ public class DefaultSiteTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteTest/TestBeans.xml");
         modelFactory = context.getBean(MockModelFactory.class);
 
         final Request request = mock(Request.class);
@@ -144,7 +130,7 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "fileSystems")
-    public void must_properly_initialize (final @Nonnull FileSystemTestSupport fsTestSupport)
+    public void must_properly_initialize (final @Nonnull MockFileSystemSupport fsTestSupport)
       throws Exception
       {
         // given
@@ -164,7 +150,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -184,7 +170,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -204,7 +190,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -224,7 +210,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();

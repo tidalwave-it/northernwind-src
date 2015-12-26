@@ -51,11 +51,6 @@ class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
  **********************************************************************************************************************/
 public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
   {
-    public NodeLinkMacroFilterTest()
-      {
-        super("NodeLinkMacroFilterTestBeans.xml");
-      }
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -65,8 +60,8 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
         // given
         final NodeLinkMacroExpanderFixture underTest = new NodeLinkMacroExpanderFixture();
         final String text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
-        underTest.filter(text, "text/html");
         // when
+        underTest.filter(text, "text/html");
         final List<List<String>> matches = underTest.getHelper().getMatches();
         // then
         assertThat(matches.size(), is(1));

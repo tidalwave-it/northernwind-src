@@ -28,10 +28,11 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -44,9 +45,11 @@ import static org.hamcrest.MatcherAssert.*;
  **********************************************************************************************************************/
 public class ParameterLanguageOverrideLinkPostProcessorTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private ParameterLanguageOverrideLinkPostProcessor underTest;
 
-    private ClassPathXmlApplicationContext context;
+    private ApplicationContext context;
 
     private ParameterLanguageOverrideRequestProcessor plorp;
 
@@ -56,7 +59,7 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
     @BeforeMethod
     public void setup()
       {
-        context = new ClassPathXmlApplicationContext("ParameterLanguageOverrideLinkPostProcessorTestBeans.xml");
+        context = helper.createSpringContext();
         plorp = context.getBean(ParameterLanguageOverrideRequestProcessor.class);
         when(plorp.getParameterName()).thenReturn("lang");
         underTest = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);

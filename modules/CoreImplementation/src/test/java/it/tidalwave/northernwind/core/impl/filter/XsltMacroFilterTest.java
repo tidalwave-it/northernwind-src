@@ -30,12 +30,8 @@ package it.tidalwave.northernwind.core.impl.filter;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.File;
 import java.io.IOException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
@@ -46,8 +42,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.util.test.FileComparisonUtils;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
+import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -60,6 +56,10 @@ import static org.hamcrest.CoreMatchers.*;
  **********************************************************************************************************************/
 public class XsltMacroFilterTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
+    private ApplicationContext context;
+
     private XsltMacroFilter underTest;
 
     private SiteProvider siteProvider;
@@ -73,26 +73,13 @@ public class XsltMacroFilterTest
     public void setup()
       throws Exception
       {
-        // FIXME
-//        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
-        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTestBeans.xml");
+        context = helper.createSpringContext();
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
 
-        final ResourceFile file = mock(ResourceFile.class);
-        final String resourceName = "/it/tidalwave/northernwind/core/impl/model/Photo.xslt";
-        final String xslt = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
-        when(file.getPath()).thenReturn(new ResourcePath(resourceName));
-        when(file.asText(anyString())).thenReturn(xslt);
-
-        final Resource resource = mock(Resource.class);
-        when(resource.getFile()).thenReturn(file);
-
-        final Map<String, Resource> map = new HashMap<>();
-        map.put("/XsltTemplates/Photo.xlst", resource);
-        when(site.find(eq(Resource.class))).thenReturn(
-                new DefaultSiteFinder<>("name", map, new RegexTreeMap<Resource>()));
+        final String xslt = helper.readStringFromResource("Photo.xslt");
+        createMockResource(site, createMockTextFileOfPathAndContent("/XsltTemplates/Photo.xlst", xslt));
 
         underTest = context.getBean(XsltMacroFilter.class);
       }
@@ -119,17 +106,13 @@ public class XsltMacroFilterTest
       throws IOException
       {
         // given
-        final String resourceName = String.format("/it/tidalwave/northernwind/core/impl/model/%s.xhtml", fileName);
-        final String text = IOUtils.toString(getClass().getResourceAsStream(resourceName), "UTF-8");
+        final TestResource tr = helper.testResourceFor(fileName);
+        final String text = tr.readStringFromResource();
         // when
-        final String result = underTest.filter(text, "application/xhtml+xml");
+        final String filteredText = underTest.filter(text, "application/xhtml+xml");
         // then
-        final File expectedFile = new File(String.format("src/test/resources/expected-results/%s-filtered.xhtml",
-                                                         fileName));
-        final File actualFile = new File(String.format("target/test-artifacts/%s-filtered.xhtml", fileName));
-        actualFile.getParentFile().mkdirs();
-        FileUtils.write(actualFile, result, "UTF-8");
-        assertSameContents(expectedFile, actualFile);
+        tr.writeToActualFile(filteredText);
+        tr.assertActualFileContentSameAsExpected();
       }
 
     /*******************************************************************************************************************
@@ -140,15 +123,42 @@ public class XsltMacroFilterTest
       {
         return new Object[][]
           {
-            { "file1" },
-            { "file2" },
-            { "issue-NW-96-a-NW-106-a" },
-            { "issue-NW-96-b" },
-            { "issue-NW-97-a" },
-            { "issue-NW-100" },
-            { "issue-NW-102-a" },
-            { "issue-NW-104-a" },
-            { "issue-NW-114-a" }
+            { "file1.xhtml" },
+            { "file2.xhtml" },
+            { "issue-NW-96-a-NW-106-a.xhtml" },
+            { "issue-NW-96-b.xhtml" },
+            { "issue-NW-97-a.xhtml" },
+            { "issue-NW-100.xhtml" },
+            { "issue-NW-102-a.xhtml" },
+            { "issue-NW-104-a.xhtml" },
+            { "issue-NW-114-a.xhtml" }
           };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static ResourceFile createMockTextFileOfPathAndContent (final @Nonnull String path, final @Nonnull String content)
+      throws IOException
+      {
+        final ResourceFile file = mock(ResourceFile.class);
+        when(file.getPath()).thenReturn(new ResourcePath(path));
+        when(file.asText(anyString())).thenReturn(content);
+        return file;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private static void createMockResource (final @Nonnull Site site, final @Nonnull ResourceFile file)
+      {
+        final Resource resource = mock(Resource.class);
+        when(resource.getFile()).thenReturn(file);
+
+        final Map<String, Resource> map = new HashMap<>();
+        map.put(file.getPath().asString(), resource);
+        when(site.find(eq(Resource.class))).thenReturn(
+                new DefaultSiteFinder<>("mockFinder", map, new RegexTreeMap<Resource>()));
       }
   }

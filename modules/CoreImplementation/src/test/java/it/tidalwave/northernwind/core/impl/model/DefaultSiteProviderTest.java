@@ -29,19 +29,21 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.io.IOException;
 import javax.servlet.ServletContext;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
-import java.io.IOException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
+import it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 /***********************************************************************************************************************
  *
@@ -69,7 +71,7 @@ public class DefaultSiteProviderTest
     @BeforeMethod
     public void setup()
       {
-        context = new ClassPathXmlApplicationContext("DefaultSiteProviderTestBeans.xml");
+        context = new ClassPathXmlApplicationContext("DefaultSiteProviderTest/TestBeans.xml");
         executor = context.getBean(WaitingTaskExecutor.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);

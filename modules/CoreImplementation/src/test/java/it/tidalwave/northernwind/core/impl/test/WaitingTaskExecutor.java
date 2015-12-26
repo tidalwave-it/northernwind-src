@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.model;
+package it.tidalwave.northernwind.core.impl.test;
 
 import javax.annotation.Nonnull;
 import org.springframework.core.task.TaskExecutor;
