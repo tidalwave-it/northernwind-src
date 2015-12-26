@@ -103,9 +103,10 @@ public class FolderBasedFinderSupport<Type extends Resource> extends SimpleFinde
     public FolderBasedFinderSupport (final @Nonnull FolderBasedFinderSupport<Type> other, final @Nonnull Object override)
       {
         super(other, override);
-        this.typeClass = other.typeClass;
-        this.parentFile = other.parentFile;
-        this.resourceRootPath = other.resourceRootPath;
+        final FolderBasedFinderSupport<Type> source = getSource(FolderBasedFinderSupport.class, other, override);
+        this.typeClass = source.typeClass;
+        this.parentFile = source.parentFile;
+        this.resourceRootPath = source.resourceRootPath;
       }
 
     /*******************************************************************************************************************
