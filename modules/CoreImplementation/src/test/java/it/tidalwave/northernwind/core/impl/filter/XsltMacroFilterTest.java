@@ -33,7 +33,6 @@ import java.util.Map;
 import java.io.File;
 import java.io.IOException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -46,10 +45,14 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
  *
@@ -59,6 +62,8 @@ import static org.hamcrest.CoreMatchers.*;
  **********************************************************************************************************************/
 public class XsltMacroFilterTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private XsltMacroFilter underTest;
 
     private SiteProvider siteProvider;
@@ -74,7 +79,7 @@ public class XsltMacroFilterTest
       {
         // FIXME
 //        final ApplicationContext context = new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
-        final ApplicationContext context = new ClassPathXmlApplicationContext("XsltMacroFilterTest/TestBeans.xml");
+        final ApplicationContext context = helper.createSpringContext();
         siteProvider = context.getBean(SiteProvider.class);
         site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);

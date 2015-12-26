@@ -35,7 +35,7 @@ import java.io.IOException;
 import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -46,6 +46,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor
@@ -87,12 +88,16 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
 
 /***********************************************************************************************************************
  *
+ * FIXME: it seems this class is not used.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 public class XsltTemplateTestSupport
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private XsltMacroFilter filter;
 
     /*******************************************************************************************************************
@@ -102,10 +107,10 @@ public class XsltTemplateTestSupport
     public void setup()
       throws Exception
       {
-        final ClassPathXmlApplicationContext context =
-                new ClassPathXmlApplicationContext("META-INF/CommonsAutoBeans.xml",
-                                                   "META-INF/XsltTemplateTestBeans.xml",
-                                                   "META-INF/CachedUriResolverBeans.xml");
+        final ApplicationContext context = helper.createSpringContext(
+                "META-INF/CommonsAutoBeans.xml",
+                "XsltTemplateTest/TestBeans.xml",
+                "META-INF/CachedUriResolverBeans.xml");
         filter = context.getBean(XsltMacroFilter.class);
         context.getBean(CachedURIResolver.class).setCacheFolderPath("target/CachedUriResolver");
         final SiteProvider siteProvider = context.getBean(SiteProvider.class);

@@ -51,11 +51,6 @@ class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilt
  **********************************************************************************************************************/
 public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
   {
-    public NodeLinkWithContentMacroFilterTest()
-      {
-        super("NodeLinkWithContentMacroFilterTest/TestBeans.xml");
-      }
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/

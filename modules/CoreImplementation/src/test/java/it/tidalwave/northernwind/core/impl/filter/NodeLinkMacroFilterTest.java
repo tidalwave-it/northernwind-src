@@ -51,11 +51,6 @@ class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
  **********************************************************************************************************************/
 public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
   {
-    public NodeLinkMacroFilterTest()
-      {
-        super("NodeLinkMacroFilterTest/TestBeans.xml");
-      }
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
