@@ -50,7 +50,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class MacroFilterTestSupport
   {
-    private final TestHelper helper = new TestHelper(this);
+    protected final TestHelper helper = new TestHelper(this);
 
     protected ApplicationContext context;
 

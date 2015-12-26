@@ -100,6 +100,20 @@ public class TestHelper
 
         /***************************************************************************************************************
          *
+         * Writes the given bytes to the actual file.
+         *
+         * @param   bytes           the bytes
+         * @throws  IOException     in case of error
+         *
+         **************************************************************************************************************/
+        public void writeToActualFile (final @Nonnull byte[] bytes)
+          throws IOException
+          {
+            Files.write(actualFile, bytes);
+          }
+
+        /***************************************************************************************************************
+         *
          * Reads the content from the resource file as a single string.
          *
          * @return                  the string

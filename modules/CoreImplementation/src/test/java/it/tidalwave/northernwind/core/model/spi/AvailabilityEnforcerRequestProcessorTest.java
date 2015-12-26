@@ -27,15 +27,13 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
-import java.io.File;
-import com.google.common.io.Files;
 import org.joda.time.DateTime;
-import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
-import it.tidalwave.util.test.FileComparisonUtils;
+import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -101,10 +99,8 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
         // then
         assertThat(result, is(Status.BREAK));
 
-        final File actualFile = new File("target/test-artifacts/response.txt");
-        final File expectedFile = new File("src/test/resources/expected-results/response.txt");
-        actualFile.getParentFile().mkdirs();
-        Files.write(responseHolder.get(), actualFile);
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+        final TestResource tr = helper.testResourceFor("response.txt");
+        tr.writeToActualFile(responseHolder.get());
+        tr.assertActualFileContentSameAsExpected();
       }
   }
