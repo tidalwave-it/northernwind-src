@@ -44,7 +44,7 @@
 
     <bean id="taskExecutor" class="org.mockito.Mockito" factory-method="spy">
         <constructor-arg>
-            <bean class="it.tidalwave.northernwind.core.impl.model.WaitingTaskExecutor" />
+            <bean class="it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor" />
         </constructor-arg>
     </bean>
 

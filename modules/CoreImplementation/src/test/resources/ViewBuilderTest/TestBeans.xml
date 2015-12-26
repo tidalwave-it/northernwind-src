@@ -46,8 +46,8 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.SiteProvider" />
     </bean>
 
-    <bean class="it.tidalwave.northernwind.frontend.impl.ui.MockService1" />
+    <bean class="it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1" />
 
-    <bean class="it.tidalwave.northernwind.frontend.impl.ui.MockService2" />
+    <bean class="it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2" />
 
 </beans>
