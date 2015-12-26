@@ -51,6 +51,20 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 /***********************************************************************************************************************
  *
@@ -150,7 +164,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -170,7 +184,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -190,7 +204,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -210,7 +224,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyTestFileSystem();
+        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -245,9 +259,9 @@ public class DefaultSiteTest
       {
         return new Object[][]
           {
-            { new EmptyTestFileSystem()                },
-            { new TestFileSystemWithOnlyIgnoredFiles() },
-            { new TestFileSystemWithAFewStuff1()       }
+            { new EmptyMockFileSystem()                },
+            { new MockFileSystemWithOnlyIgnoredFiles() },
+            { new MockFileSystemWithAFewStuff1()       }
                 // TODO: add more filesystem configurations
           };
       }

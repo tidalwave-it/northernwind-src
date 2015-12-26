@@ -34,6 +34,12 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -41,9 +47,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class TestFileSystemWithAFewStuff1 extends EmptyTestFileSystem
+public class MockFileSystemWithAFewStuff1 extends EmptyMockFileSystem
   {
-    public TestFileSystemWithAFewStuff1()
+    public MockFileSystemWithAFewStuff1()
       {
         super("File system with a few stuff 1");
       }
