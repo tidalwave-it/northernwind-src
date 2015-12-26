@@ -30,21 +30,19 @@ package it.tidalwave.northernwind.frontend.media.impl;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import org.imajine.image.Rational;
-import it.tidalwave.util.Id;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /***********************************************************************************************************************
  *
@@ -83,18 +81,19 @@ public class DefaultMetadataTest
                                                            final @Nonnull String expectedResult)
       throws Exception
       {
+        // given
         final Metadata underTest = metadataBuilder.build();
-
+        // when
         final String result = underTest.interpolateString(template, properties);
-
+        // then
         assertThat(result, is(expectedResult));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "metadataProvider") @Nonnull
-    private Object[][] dataProvider()
+    @DataProvider
+    private Object[][] metadataProvider()
       {
         return new Object[][]
           {
