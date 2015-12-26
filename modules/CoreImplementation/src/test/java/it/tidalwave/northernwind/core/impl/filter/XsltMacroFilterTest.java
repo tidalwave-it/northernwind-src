@@ -46,12 +46,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.TestHelper;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
