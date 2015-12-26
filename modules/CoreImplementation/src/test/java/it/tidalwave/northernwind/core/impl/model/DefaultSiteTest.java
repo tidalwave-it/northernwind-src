@@ -65,6 +65,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 /***********************************************************************************************************************
  *
@@ -144,7 +160,7 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "fileSystems")
-    public void must_properly_initialize (final @Nonnull FileSystemTestSupport fsTestSupport)
+    public void must_properly_initialize (final @Nonnull MockFileSystemSupport fsTestSupport)
       throws Exception
       {
         // given
@@ -164,7 +180,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -184,7 +200,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -204,7 +220,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
@@ -224,7 +240,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        final FileSystemTestSupport fsTestSupport = new EmptyMockFileSystem();
+        final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
         fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();

@@ -48,6 +48,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 
 /***********************************************************************************************************************
  *
@@ -58,7 +64,7 @@ import static org.mockito.Mockito.when;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @ToString
-public abstract class FileSystemTestSupport
+public abstract class MockFileSystemSupport
   {
     private static Finder listFinder (final @Nonnull Collection<ResourceFile> results)
       {
