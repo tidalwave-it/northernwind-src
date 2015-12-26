@@ -27,7 +27,7 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -36,6 +36,9 @@ import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
@@ -67,9 +70,11 @@ public class ViewBuilderTest
         public final MockService2 service2;
       }
 
+    private final TestHelper helper = new TestHelper(this);
+
     private ViewBuilder underTest;
 
-    private ClassPathXmlApplicationContext context;
+    private ApplicationContext context;
 
     private SiteNode siteNode;
 
@@ -87,10 +92,10 @@ public class ViewBuilderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("ViewBuilderTestBeans.xml");
+        context = helper.createSpringContext();
         siteProvider = context.getBean(SiteProvider.class);
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);
@@ -110,8 +115,9 @@ public class ViewBuilderTest
     public void must_properly_instantiate_view_and_controller()
       throws Exception
       {
+        // when
         final ViewAndController viewAndController = underTest.createViewAndController(id, siteNode);
-
+        // then
         final Object oController = viewAndController.getController();
         final Object oView = viewAndController.getView();
 

@@ -27,15 +27,13 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
-import java.io.File;
-import com.google.common.io.Files;
 import org.joda.time.DateTime;
-import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
-import it.tidalwave.util.test.FileComparisonUtils;
+import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -56,13 +54,11 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
 
     private final DateTime currentTime = new DateTime(1341242353456L);
 
-    public AvailabilityEnforcerRequestProcessorTest()
-      {
-        super("AvailabilityEnforcerRequestProcessorTestBeans.xml");
-      }
-   
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         MockResponseBuilder.setCurrentTime(currentTime);
         underTest = context.getBean(AvailabilityEnforcerRequestProcessor.class);
@@ -73,31 +69,38 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
         when(request.getOriginalRelativeUri()).thenReturn("/contextPath");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_do_nothing_when_site_is_available()
       throws Exception
       {
+        // given
         when(siteProvider.isSiteAvailable()).thenReturn(true);
-
+        // when
         final Status result = underTest.process(request);
-
+        // then
         assertThat(result, is(Status.CONTINUE));
 //        verifyZeroInteractions(responseHolder); FIXME
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test
     public void must_return_status_503_when_site_is_not_available()
       throws Exception
       {
+        // given
         when(siteProvider.isSiteAvailable()).thenReturn(false);
-
+        // when
         final Status result = underTest.process(request);
-        final File actualFile = new File("target/test-artifacts/response.txt");
-        final File expectedFile = new File("src/test/resources/expected-results/response.txt");
-        actualFile.getParentFile().mkdirs();
-        Files.write(responseHolder.get(), actualFile);
-
+        // then
         assertThat(result, is(Status.BREAK));
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+
+        final TestResource tr = helper.testResourceFor("response.txt");
+        tr.writeToActualFile(responseHolder.get());
+        tr.assertActualFileContentSameAsExpected();
       }
   }
