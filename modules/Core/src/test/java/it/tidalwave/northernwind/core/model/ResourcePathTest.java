@@ -52,8 +52,9 @@ public class ResourcePathTest
     @Test
     public void must_properly_create_an_empty_path()
       {
+        // when
         final ResourcePath underTest = new ResourcePath();
-
+        // then
         assertThat(underTest.segments, is(not(nullValue())));
         assertThat(underTest.segments.isEmpty(), is(true));
         assertThat(underTest.asString(), is("/"));
@@ -95,8 +96,9 @@ public class ResourcePathTest
                                                                 final @Nonnull String expectedAsString,
                                                                 final @Nonnull List<String> expectedSegments)
       {
+        // when
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
+        // then
         assertThat(underTest.segments, is(not(nullValue())));
         assertThat(underTest.segments, is(expectedSegments));
         assertThat(underTest.asString(), is(expectedAsString));
@@ -122,9 +124,12 @@ public class ResourcePathTest
     public void must_properly_compute_asString (final @Nonnull ImmutableList<String> segments,
                                                 final @Nonnull String expectedAsString)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(segments);
-
-        assertThat(underTest.asString(), is(expectedAsString));
+        // when
+        final String asString = underTest.asString();
+        // then
+        assertThat(asString, is(expectedAsString));
       }
 
     /*******************************************************************************************************************
@@ -136,10 +141,12 @@ public class ResourcePathTest
                                                       final @Nonnull String parentPathAsString,
                                                       final @Nonnull String expectedPathAsString)
       {
-        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // given
         final ResourcePath parentPath = new ResourcePath(parentPathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // when
         final ResourcePath relativePath = underTest.relativeTo(parentPath);
-
+        // then
         assertThat(relativePath.asString(), is(expectedPathAsString));
       }
 
@@ -152,8 +159,10 @@ public class ResourcePathTest
     public void must_properly_reject_non_relative_paths (final @Nonnull String pathAsString,
                                                          final @Nonnull String parentPathAsString)
       {
-        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // given
         final ResourcePath parentPath = new ResourcePath(parentPathAsString);
+        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // when
         underTest.relativeTo(parentPath);
       }
 
@@ -165,9 +174,12 @@ public class ResourcePathTest
                                                        final @Nonnull String expectedLeadingSegment,
                                                        final @Nonnull String expectedTrailingSegment)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.getLeading(), is(expectedLeadingSegment));
+        // when
+        final String leading = underTest.getLeading();
+        // then
+        assertThat(leading, is(expectedLeadingSegment));
       }
 
     /*******************************************************************************************************************
@@ -178,9 +190,12 @@ public class ResourcePathTest
                                                         final @Nonnull String expectedLeadingSegment,
                                                         final @Nonnull String expectedTrailingSegment)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.getTrailing(), is(expectedTrailingSegment));
+        // when
+        final String trailing = underTest.getTrailing();
+        // then
+        assertThat(trailing, is(expectedTrailingSegment));
       }
 
     /*******************************************************************************************************************
@@ -192,9 +207,12 @@ public class ResourcePathTest
                                                        final @Nonnull String expectedPathWithoutLeadingAsString,
                                                        final @Nonnull String expectedPathWithoutTrailingAsString)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.withoutLeading().asString(), is(expectedPathWithoutLeadingAsString));
+        // when
+        final ResourcePath withoutLeading = underTest.withoutLeading();
+        // then
+        assertThat(withoutLeading.asString(), is(expectedPathWithoutLeadingAsString));
       }
 
     /*******************************************************************************************************************
@@ -206,9 +224,12 @@ public class ResourcePathTest
                                                         final @Nonnull String expectedPathWithoutLeadingAsString,
                                                         final @Nonnull String expectedPathWithoutTrailingAsString)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(path);
-
-        assertThat(underTest.withoutTrailing().asString(), is(expectedPathWithoutTrailingAsString));
+        // when
+        final ResourcePath withoutTrailing = underTest.withoutTrailing();
+        // then
+        assertThat(withoutTrailing.asString(), is(expectedPathWithoutTrailingAsString));
       }
 
     /*******************************************************************************************************************
@@ -219,9 +240,12 @@ public class ResourcePathTest
                                                   final @Nonnull String leadingSegment,
                                                   final @Nonnull boolean expectedResult)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.startsWith(leadingSegment), is(expectedResult));
+        // when
+        final boolean startsWith = underTest.startsWith(leadingSegment);
+        // then
+        assertThat(startsWith, is(expectedResult));
       }
 
     /*******************************************************************************************************************
@@ -234,10 +258,13 @@ public class ResourcePathTest
                                            final @Nonnull String expectedAppendedPathAsString,
                                            final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // given
         final ResourcePath appendingPath = new ResourcePath(secondPathAsString);
-
-        assertThat(underTest.appendedWith(appendingPath).asString(), is(expectedAppendedPathAsString));
+        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // when
+        final ResourcePath appendedWith = underTest.appendedWith(appendingPath);
+        // then
+        assertThat(appendedWith.asString(), is(expectedAppendedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -250,9 +277,12 @@ public class ResourcePathTest
                                              final @Nonnull String expectedAppendedPathAsString,
                                              final @Nonnull String expectedPrependedPathAsString)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.appendedWith(secondPathAsString).asString(), is(expectedAppendedPathAsString));
+        // when
+        final ResourcePath appendedWith = underTest.appendedWith(secondPathAsString);
+        // then
+        assertThat(appendedWith.asString(), is(expectedAppendedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -265,10 +295,13 @@ public class ResourcePathTest
                                             final @Nonnull String expectedAppendedPathAsString,
                                             final @Nonnull String expectedPrependedPathAsString)
       {
-        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // given
         final ResourcePath prependingPath = new ResourcePath(secondPathAsString);
-
-        assertThat(underTest.prependedWith(prependingPath).asString(), is(expectedPrependedPathAsString));
+        final ResourcePath underTest = new ResourcePath(pathAsString);
+        // when
+        final ResourcePath prependedWith = underTest.prependedWith(prependingPath);
+        // then
+        assertThat(prependedWith.asString(), is(expectedPrependedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -281,9 +314,12 @@ public class ResourcePathTest
                                               final @Nonnull String expectedAppendedPathAsString,
                                               final @Nonnull String expectedPrependedPathAsString)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.prependedWith(secondPathAsString).asString(), is(expectedPrependedPathAsString));
+        // when
+        final ResourcePath prependedWith = underTest.prependedWith(secondPathAsString);
+        // then
+        assertThat(prependedWith.asString(), is(expectedPrependedPathAsString));
       }
 
     /*******************************************************************************************************************
@@ -295,9 +331,12 @@ public class ResourcePathTest
                                               final @Nonnull String expectedAsString,
                                               final @Nonnull List<String> expectedSegments)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.getSegmentCount(), is(expectedSegments.size()));
+        // when
+        final int segmentCount = underTest.getSegmentCount();
+        // then
+        assertThat(segmentCount, is(expectedSegments.size()));
       }
 
     /*******************************************************************************************************************
@@ -307,9 +346,12 @@ public class ResourcePathTest
     public void must_properly_compute_extension (final @Nonnull String pathAsString,
                                                  final @Nonnull String expectedExtension)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(pathAsString);
-
-        assertThat(underTest.getExtension(), is(expectedExtension));
+        // when
+        final String extension = underTest.getExtension();
+        // then
+        assertThat(extension, is(expectedExtension));
       }
 
     /*******************************************************************************************************************
@@ -320,15 +362,18 @@ public class ResourcePathTest
     public void must_properly_url_decode (final @Nonnull String plainPathAsString,
                                           final @Nonnull String encodedPathAsString)
       {
+        // given
         final ResourcePath underTest = new ResourcePath(encodedPathAsString);
-
-        assertThat(underTest.urlDecoded().asString(), is(plainPathAsString));
+        // when
+        final ResourcePath urlDecoded = underTest.urlDecoded();
+        // then
+        assertThat(urlDecoded.asString(), is(plainPathAsString));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "segmentProvider")
+    @DataProvider
     private Object[][] segmentProvider()
       {
         return new Object[][]
@@ -349,7 +394,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "invalidPathsProvider")
+    @DataProvider
     private Object[][] invalidPathsProvider()
       {
         return new Object[][]
@@ -362,7 +407,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "relativePathProvider")
+    @DataProvider
     private Object[][] relativePathProvider()
       {
         return new Object[][]
@@ -375,7 +420,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "nonRelativePathProvider")
+    @DataProvider
     private Object[][] nonRelativePathProvider()
       {
         return new Object[][]
@@ -388,7 +433,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "leadingAndTrailingProvider")
+    @DataProvider
     private Object[][] leadingAndTrailingProvider()
       {
         return new Object[][]
@@ -404,7 +449,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "withoutLeadingAndTrailingProvider")
+    @DataProvider
     private Object[][] withoutLeadingAndTrailingProvider()
       {
         return new Object[][]
@@ -420,7 +465,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "startsWithProvider")
+    @DataProvider
     private Object[][] startsWithProvider()
       {
         return new Object[][]
@@ -440,7 +485,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "asStringProvider")
+    @DataProvider
     private Object[][] asStringProvider()
       {
         return new Object[][]
@@ -455,7 +500,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "appendPrependProvider")
+    @DataProvider
     private Object[][] appendPrependProvider()
       {
         return new Object[][]
@@ -476,7 +521,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "extensionProvider")
+    @DataProvider
     private Object[][] extensionProvider()
       {
         return new Object[][]
@@ -495,7 +540,7 @@ public class ResourcePathTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @DataProvider(name = "urlEncodedPathProvider")
+    @DataProvider
     private Object[][] urlEncodedPathProvider()
       {
         return new Object[][]

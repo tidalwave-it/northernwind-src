@@ -73,7 +73,7 @@ public class MercurialFileSystemProviderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       throws Exception
       {
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
@@ -92,6 +92,8 @@ public class MercurialFileSystemProviderTest
     public void must_properly_initialize()
       throws Exception
       {
+        // given the initialization
+        // then
         assertInvariantPostConditions();
         assertThat(underTest.exposedRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(underTest.alternateRepository.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
@@ -108,11 +110,12 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
       throws Exception
       {
+        // given
         updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
         final int previousSwapCounter = underTest.swapCounter;
-
+        // when
         underTest.checkForUpdates();
-
+        // then
         assertInvariantPostConditions();
         assertThat(underTest.getCurrentTag().getName(), is("published-0.8"));
         assertThat(underTest.swapCounter, is(previousSwapCounter));
@@ -126,14 +129,15 @@ public class MercurialFileSystemProviderTest
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
       throws Exception
       {
+        // given
         updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
         final int previousSwapCounter = underTest.swapCounter;
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
         final DateTime now = new DateTime();
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
-
+        // when
         underTest.checkForUpdates();
-
+        // then
         assertInvariantPostConditions();
         assertThat(underTest.getCurrentTag().getName(), is("published-0.9"));
         assertThat(underTest.swapCounter, is(previousSwapCounter + 1));
