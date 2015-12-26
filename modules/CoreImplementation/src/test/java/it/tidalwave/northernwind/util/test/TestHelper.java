@@ -39,11 +39,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import it.tidalwave.util.test.FileComparisonUtils;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static lombok.AccessLevel.PRIVATE;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
+ *
+ * A facility that provides some common tasks for testing, such as creating a Spring context and manipulating files.
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id$
@@ -52,6 +54,11 @@ import static lombok.AccessLevel.PRIVATE;
 @RequiredArgsConstructor
 public class TestHelper
   {
+    /*******************************************************************************************************************
+     *
+     * A manipulator of a pair of (actual file, expected file).
+     *
+     ******************************************************************************************************************/
     @RequiredArgsConstructor(access = PRIVATE)
     public class TestResource
       {
@@ -64,18 +71,41 @@ public class TestHelper
         @Nonnull
         private final Path expectedFile;
 
+        /***************************************************************************************************************
+         *
+         * Assert that the content of the actual file are the same as the expected file.
+         *
+         * @throws  IOException     in case of error
+         *
+         **************************************************************************************************************/
         public void assertActualFileContentSameAsExpected()
           throws IOException
           {
-            FileComparisonUtils.assertSameContents(expectedFile.toFile(), actualFile.toFile());
+            assertSameContents(expectedFile.toFile(), actualFile.toFile());
           }
 
+        /***************************************************************************************************************
+         *
+         * Writes the given strings to the actual file.
+         *
+         * @param   strings         the strings
+         * @throws  IOException     in case of error
+         *
+         **************************************************************************************************************/
         public void writeToActualFile (final @Nonnull String ... strings)
           throws IOException
           {
             Files.write(actualFile, Arrays.asList(strings), UTF_8);
           }
 
+        /***************************************************************************************************************
+         *
+         * Reads the content from the resource file as a single string.
+         *
+         * @return                  the string
+         * @throws  IOException     in case of error
+         *
+         **************************************************************************************************************/
         @Nonnull
         public String readStringFromResource()
           throws IOException
@@ -87,12 +117,24 @@ public class TestHelper
     @NonNull
     private final Object test;
 
+    /*******************************************************************************************************************
+     *
+     * Creates a Spring context configured with the given files. A further configuration file is appended, named
+     * {@code test-class-simple-name/TestBeans.xml}.
+     *
+     * @param   configurationFiles  the configuration files
+     * @return                      the Spring {@link ApplicationContext}
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public ApplicationContext createSpringContext (final @Nonnull String ... configurationFiles)
       {
         return createSpringContext(new ArrayList<>(Arrays.asList(configurationFiles)));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private ApplicationContext createSpringContext (final @Nonnull Collection<String> configurationFiles)
       {
@@ -100,6 +142,17 @@ public class TestHelper
         return new ClassPathXmlApplicationContext(configurationFiles.toArray(new String[0]));
       }
 
+    /*******************************************************************************************************************
+     *
+     * Reads the content from the resource file as a single string. The resource should be placed under
+     * {@code src/test/resources/test-class-simple-name/test-resources/resource-name}. Note that the file actually
+     * loaded is the one under {@code target/test-classes} copied there (and eventually filtered) by Maven.
+     *
+     * @param   resourceName    the resource name
+     * @return                  the string
+     * @throws  IOException     in case of error
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String readStringFromResource (final @Nonnull String resourceName)
       throws IOException
@@ -119,14 +172,26 @@ public class TestHelper
 //            return String.join("\n", Files.readAllLines(path, UTF_8)); TODO JDK 8
       }
 
+    /*******************************************************************************************************************
+     *
+     * Create a {@link TestResource} for the given name. The actual file will be created under
+     * {@code target/test-artifacts/test-class-simple-name/resourceName}. The expected file should be
+     * placed in {@code src/test/resources/test-class-simple-name/expected-resoults/resource-name}. Note that the file
+     * actually loaded is the one under {@code target/test-classes} copied there (and eventually filtered) by Maven.
+     *
+     * @param   resourceName    the name
+     * @return                  the {@code TestResource}
+     * @throws  IOException     in case of error
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public TestResource testResourceFor (final @Nonnull String name)
+    public TestResource testResourceFor (final @Nonnull String resourceName)
       throws IOException
       {
         final String testName = test.getClass().getSimpleName();
-        final Path expectedFile = Paths.get("target/test-classes", testName, "expected-results", name);
-        final Path actualFile = Paths.get("target", testName, "test-artifacts", name);
+        final Path expectedFile = Paths.get("target/test-classes", testName, "expected-results", resourceName);
+        final Path actualFile = Paths.get("target/test-artifacts", testName, resourceName);
         Files.createDirectories(actualFile.getParent());
-        return new TestResource(name, actualFile, expectedFile);
+        return new TestResource(resourceName, actualFile, expectedFile);
       }
   }
