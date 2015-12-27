@@ -38,6 +38,7 @@ import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import it.tidalwave.util.test.FileComparisonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -113,10 +114,11 @@ public class LayeredFileSystemProviderTest
       throws IOException
       {
         // given
-        final List<LocalFileSystemProvider> fileSystemProviders = new ArrayList<>();
+        final List<ResourceFileSystemProvider> fileSystemProviders = new ArrayList<>();
 
         for (final String fileSystemName : fileSystemNames)
           {
+            // TODO: should mock a ResourceFileSystemProvider instead of using a LocalFileSystemProvider
             final LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
             fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
