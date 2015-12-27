@@ -46,6 +46,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
+import java.io.File;
 import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
@@ -190,7 +191,7 @@ public class TestHelper
                                                     final @Nonnull Collection<String> configurationFiles)
       {
         configurationFiles.add(test.getClass().getSimpleName() + "/TestBeans.xml");
-        
+
         if (properties.isEmpty())
           {
             return new ClassPathXmlApplicationContext(configurationFiles.toArray(new String[0]));
@@ -209,9 +210,25 @@ public class TestHelper
 
     /*******************************************************************************************************************
      *
-     * Reads the content from the resource file as a single string. The resource should be placed under
+     * Returns a {@link Path} for a resource file. The resource should be placed under
      * {@code src/test/resources/test-class-simple-name/test-resources/resource-name}. Note that the file actually
      * loaded is the one under {@code target/test-classes} copied there (and eventually filtered) by Maven.
+     *
+     * @param   resourceName    the resource name
+     * @return                  the {@code Path}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Path resourceFileFor (final @Nonnull String resourceName)
+      {
+        final String testName = test.getClass().getSimpleName();
+        return Paths.get("target/test-classes", testName, "test-resources", resourceName);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Reads the content from the resource file as a single string. See {@link #resourceFileFor(java.lang.String)} for
+     * further info.
      *
      * @param   resourceName    the resource name
      * @return                  the string
@@ -222,12 +239,11 @@ public class TestHelper
     public String readStringFromResource (final @Nonnull String resourceName)
       throws IOException
       {
-        final String testName = test.getClass().getSimpleName();
-        final Path path = Paths.get("target/test-classes", testName, "test-resources", resourceName);
+        final Path file = resourceFileFor(resourceName);
         final StringBuilder buffer = new StringBuilder();
         String separator = "";
 
-        for (final String string : Files.readAllLines(path, UTF_8))
+        for (final String string : Files.readAllLines(file, UTF_8))
           {
             buffer.append(separator).append(string);
             separator = "\n";
