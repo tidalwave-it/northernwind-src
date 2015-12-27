@@ -30,19 +30,18 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.File;
 import java.io.IOException;
-import com.google.common.io.Files;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
 
@@ -54,6 +53,8 @@ import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
  **********************************************************************************************************************/
 public class ResponseBuilderTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private ResponseHolder<?> underTest;
 
     private ResourceFile resourceFile;
@@ -247,11 +248,9 @@ public class ResponseBuilderTest
     private void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
-        final File actualFile = new File("target/test-results/" + fileName);
-        final File expectedFile = new File("src/test/resources/expected-results/" + fileName);
-        actualFile.getParentFile().mkdirs();
-        Files.write((byte[])builder.build(), actualFile);
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+        final TestResource tr = helper.testResourceFor(fileName);
+        tr.writeToActualFile((byte[])builder.build());
+        tr.assertActualFileContentSameAsExpected();
       }
 
     /*******************************************************************************************************************
