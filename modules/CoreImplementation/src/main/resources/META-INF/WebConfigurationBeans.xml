@@ -33,11 +33,8 @@
                            http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="byType">
 
-    <!--    <context:property-placeholder  location="classpath:datasource.properties"/>-->
-    <bean id="propertyConfigurer" class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+    <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="ignoreResourceNotFound" value="true"/>
-        <property name="contextOverride" value="true"/>
-        <property name="searchContextAttributes" value="true"/>
         <property name="locations">
             <list>
                 <value>classpath:META-INF/configuration.properties</value>
