@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import java.util.Collection;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
@@ -37,6 +36,7 @@ import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmpDcTitleInte
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -49,6 +49,8 @@ import static org.hamcrest.Matchers.*;
 @Slf4j
 public class ScanningMetadataInterpolatorFactoryTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private ApplicationContext context;
 
     private MetadataInterpolatorFactory underTest;
@@ -60,7 +62,7 @@ public class ScanningMetadataInterpolatorFactoryTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("ScanningMetadataInterpolatorFactoryTestBeans.xml");
+        context = helper.createSpringContext();
         underTest = context.getBean(MetadataInterpolatorFactory.class);
       }
 
