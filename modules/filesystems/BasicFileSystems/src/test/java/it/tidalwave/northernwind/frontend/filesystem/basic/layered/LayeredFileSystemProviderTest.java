@@ -124,6 +124,7 @@ public class LayeredFileSystemProviderTest
         for (final String fileSystemName : fileSystemNames)
           {
             // TODO: should mock a ResourceFileSystemProvider instead of using a LocalFileSystemProvider
+            //       Otherwise, declare this an integration test.
             final LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
             fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
@@ -171,7 +172,7 @@ public class LayeredFileSystemProviderTest
       {
         if (file.isData())
           {
-            lines.add(String.format("%s: %s", file.getPath().asString(), file.asText("UTF-8").replace("\n", "")));
+            lines.add(String.format("path: %s; content: %s", file.getPath().asString(), file.asText("UTF-8").replace("\n", "")));
           }
         else
           {
