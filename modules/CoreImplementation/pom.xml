@@ -98,6 +98,11 @@
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-common-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
