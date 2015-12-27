@@ -1,0 +1,5 @@
+path: /dir1/dir2/file1.txt; content: fs1: /dir1/dir2/file1.txt
+path: /dir1/dir2/file2.txt; content: fs1: /dir1/dir2/file2.txt
+path: /dir1/dir2/file3.txt; content: fs1: /dir1/dir2/file3.txt
+path: /dir1/dir2/file4.txt; content: fs1: /dir1/dir2/file4.txt
+path: /dir4/dir3/file5.txt; content: fs2: /dir4/dir3/file5.txt
