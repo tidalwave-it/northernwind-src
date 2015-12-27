@@ -82,7 +82,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
         final Status result = underTest.process(request);
         // then
         assertThat(result, is(Status.CONTINUE));
-//        verifyZeroInteractions(responseHolder); FIXME
+//        verifyZeroInteractions(responseHolder); FIXME would require a spy(), but it breaks DI
       }
 
     /*******************************************************************************************************************
