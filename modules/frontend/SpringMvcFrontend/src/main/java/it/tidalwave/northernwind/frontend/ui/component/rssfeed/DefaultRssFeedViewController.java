@@ -109,7 +109,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
       throws IOException, NotFoundException
       {
         final DateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
-
+        // FIXME: compute the latest date, which is not necessarily the first
         if (feed.getLastBuildDate() == null)
           {
             feed.setLastBuildDate(blogDateTime.toDate());
@@ -118,6 +118,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final ResourceProperties postProperties = post.getProperties();
         final Item item = new Item();
         final Content content = new Content();
+        // FIXME: text/xhtml?
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
         content.setValue(postProperties.getProperty(PROPERTY_FULL_TEXT));
         item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));
@@ -127,8 +128,8 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
         try
           {
-            final String link = site.createLink(post.getExposedUri());
-//            final String link = linkBase + getExposedUri(post).asString() + "/";
+            // FIXME: manipulate through site.createLink()
+            final String link = linkBase.replaceAll("/$", "") + post.getExposedUri().asString() + "/";
             final Guid guid = new Guid();
             guid.setPermaLink(true);
             guid.setValue(link);
@@ -142,7 +143,6 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
         items.add(item);
       }
-
 
     @Override
     protected void addLeadInPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
