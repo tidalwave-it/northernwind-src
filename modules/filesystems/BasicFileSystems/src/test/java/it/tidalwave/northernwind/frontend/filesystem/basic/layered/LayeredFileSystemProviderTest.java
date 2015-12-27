@@ -29,21 +29,25 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.io.File;
 import java.io.IOException;
-import org.apache.commons.io.FileUtils;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
-import it.tidalwave.util.test.FileComparisonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 
 /***********************************************************************************************************************
  *
@@ -55,6 +59,8 @@ import org.testng.annotations.Test;
 public class LayeredFileSystemProviderTest
   {
     private static final String FS_BASE = "target/filesystems/";
+
+    private final TestHelper helper = new TestHelper(this);
 
     private LayeredFileSystemProvider underTest;
 
@@ -113,10 +119,12 @@ public class LayeredFileSystemProviderTest
       throws IOException
       {
         // given
-        final List<LocalFileSystemProvider> fileSystemProviders = new ArrayList<>();
+        final List<ResourceFileSystemProvider> fileSystemProviders = new ArrayList<>();
 
         for (final String fileSystemName : fileSystemNames)
           {
+            // TODO: should mock a ResourceFileSystemProvider instead of using a LocalFileSystemProvider
+            //       Otherwise, declare this an integration test.
             final LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
             fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
@@ -124,12 +132,9 @@ public class LayeredFileSystemProviderTest
         // when
         underTest.setDelegates(fileSystemProviders);
         // then
-        final File expectedFile = new File(String.format("src/test/resources/expected-results/%s.txt", testCase));
-        final File actualFile = new File(String.format("target/test-artifacts/%s.txt", testCase));
-        actualFile.getParentFile().mkdirs();
-        dump(actualFile, underTest.getFileSystem());
-
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+        final TestResource tr = helper.testResourceFor(testCase + ".txt");
+        dump(underTest.getFileSystem(), tr);
+        tr.assertActualFileContentSameAsExpected();
       }
 
     /*******************************************************************************************************************
@@ -150,31 +155,30 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void dump (final @Nonnull File file, final @Nonnull ResourceFileSystem fileSystem)
+    private void dump (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull TestResource tr)
       throws IOException
       {
         final List<String> lines = new ArrayList<>();
-        dump(lines, underTest.getFileSystem().getRoot());
+        dump(fileSystem.getRoot(), lines);
         Collections.sort(lines);
-
-        FileUtils.writeLines(file, lines, "\n");
+        tr.writeToActualFile(lines);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void dump (final @Nonnull List<String> lines, final @Nonnull ResourceFile fileObject)
+    private static void dump (final @Nonnull ResourceFile file, final @Nonnull List<String> lines)
       throws IOException
       {
-        if (fileObject.isData())
+        if (file.isData())
           {
-            lines.add(String.format("%s: %s", fileObject.getPath().asString(), fileObject.asText("UTF-8")));
+            lines.add(String.format("path: %s; content: %s", file.getPath().asString(), file.asText("UTF-8").replace("\n", "")));
           }
         else
           {
-            for (final ResourceFile child : fileObject.findChildren().results())
+            for (final ResourceFile child : file.findChildren().results())
               {
-                dump(lines, child);
+                dump(child, lines);
               }
           }
       }
@@ -187,9 +191,9 @@ public class LayeredFileSystemProviderTest
                                     final @Nonnull String path)
       throws IOException
       {
-        final File file = new File(FS_BASE + testCase + fileSystemName + path);
-        file.getParentFile().mkdirs();
-        FileUtils.write(file, fileSystemName + ": " + path);
+        final Path file = Paths.get(FS_BASE, testCase + fileSystemName, path);
+        Files.createDirectories(file.getParent());
+        Files.write(file, Arrays.asList(fileSystemName + ": " + path));
         log.info("Created {} - {}:{}", testCase, fileSystemName, path);
       }
   }
