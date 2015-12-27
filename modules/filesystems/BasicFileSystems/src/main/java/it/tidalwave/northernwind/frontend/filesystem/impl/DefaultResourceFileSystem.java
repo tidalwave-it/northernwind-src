@@ -31,10 +31,10 @@ import javax.annotation.Nonnull;
 import java.util.IdentityHashMap;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import it.tidalwave.role.spring.SpringAsSupport;
-import it.tidalwave.util.As;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 
@@ -53,7 +53,7 @@ public class DefaultResourceFileSystem implements ResourceFileSystem
     private final FileSystem fileSystem;
 
     @Delegate
-    private final As asSupport = new SpringAsSupport(this);
+    private final As asSupport = new AsSupport(this);
 
     @Override @Nonnull
     public ResourceFile getRoot()

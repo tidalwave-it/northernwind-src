@@ -32,13 +32,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.role.spring.SpringAsSupport;
 import it.tidalwave.util.As;
-import java.nio.file.Path;
+import it.tidalwave.util.spi.AsSupport;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class DefaultResourceFile implements ResourceFile
     private final Path delegate;
 
     @Delegate
-    private final As asSupport = new SpringAsSupport(this);
+    private final As asSupport = new AsSupport(this);
 
     @Override @Nonnull
     public String getName()
