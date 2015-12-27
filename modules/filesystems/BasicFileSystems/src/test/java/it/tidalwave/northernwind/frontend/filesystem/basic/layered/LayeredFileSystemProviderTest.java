@@ -29,11 +29,13 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.io.File;
 import java.io.IOException;
-import org.apache.commons.io.FileUtils;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -156,7 +158,7 @@ public class LayeredFileSystemProviderTest
       throws IOException
       {
         final List<String> lines = new ArrayList<>();
-        dump(lines, fileSystem.getRoot());
+        dump(fileSystem.getRoot(), lines);
         Collections.sort(lines);
         tr.writeToActualFile(lines);
       }
@@ -164,18 +166,18 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void dump (final @Nonnull List<String> lines, final @Nonnull ResourceFile fileObject)
+    private static void dump (final @Nonnull ResourceFile file, final @Nonnull List<String> lines)
       throws IOException
       {
-        if (fileObject.isData())
+        if (file.isData())
           {
-            lines.add(String.format("%s: %s", fileObject.getPath().asString(), fileObject.asText("UTF-8")));
+            lines.add(String.format("%s: %s", file.getPath().asString(), file.asText("UTF-8").replace("\n", "")));
           }
         else
           {
-            for (final ResourceFile child : fileObject.findChildren().results())
+            for (final ResourceFile child : file.findChildren().results())
               {
-                dump(lines, child);
+                dump(child, lines);
               }
           }
       }
@@ -188,9 +190,9 @@ public class LayeredFileSystemProviderTest
                                     final @Nonnull String path)
       throws IOException
       {
-        final File file = new File(FS_BASE + testCase + fileSystemName + path);
-        file.getParentFile().mkdirs();
-        FileUtils.write(file, fileSystemName + ": " + path);
+        final Path file = Paths.get(FS_BASE, testCase + fileSystemName, path);
+        Files.createDirectories(file.getParent());
+        Files.write(file, Arrays.asList(fileSystemName + ": " + path));
         log.info("Created {} - {}:{}", testCase, fileSystemName, path);
       }
   }
