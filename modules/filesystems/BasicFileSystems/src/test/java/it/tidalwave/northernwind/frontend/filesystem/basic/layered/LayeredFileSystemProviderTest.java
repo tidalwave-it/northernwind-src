@@ -40,11 +40,12 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
-import it.tidalwave.util.test.FileComparisonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 
 /***********************************************************************************************************************
  *
@@ -56,6 +57,8 @@ import org.testng.annotations.Test;
 public class LayeredFileSystemProviderTest
   {
     private static final String FS_BASE = "target/filesystems/";
+
+    private final TestHelper helper = new TestHelper(this);
 
     private LayeredFileSystemProvider underTest;
 
@@ -126,12 +129,9 @@ public class LayeredFileSystemProviderTest
         // when
         underTest.setDelegates(fileSystemProviders);
         // then
-        final File expectedFile = new File(String.format("src/test/resources/expected-results/%s.txt", testCase));
-        final File actualFile = new File(String.format("target/test-artifacts/%s.txt", testCase));
-        actualFile.getParentFile().mkdirs();
-        dump(actualFile, underTest.getFileSystem());
-
-        FileComparisonUtils.assertSameContents(expectedFile, actualFile);
+        final TestResource tr = helper.testResourceFor(testCase + ".txt");
+        dump(underTest.getFileSystem(), tr);
+        tr.assertActualFileContentSameAsExpected();
       }
 
     /*******************************************************************************************************************
@@ -152,14 +152,13 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void dump (final @Nonnull File file, final @Nonnull ResourceFileSystem fileSystem)
+    private void dump (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull TestResource tr)
       throws IOException
       {
         final List<String> lines = new ArrayList<>();
         dump(lines, fileSystem.getRoot());
         Collections.sort(lines);
-
-        FileUtils.writeLines(file, lines, "\n");
+        tr.writeToActualFile(lines);
       }
 
     /*******************************************************************************************************************

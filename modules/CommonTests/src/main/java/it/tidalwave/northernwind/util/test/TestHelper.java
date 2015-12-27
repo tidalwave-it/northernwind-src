@@ -95,7 +95,21 @@ public class TestHelper
         public void writeToActualFile (final @Nonnull String ... strings)
           throws IOException
           {
-            Files.write(actualFile, Arrays.asList(strings), UTF_8);
+            writeToActualFile(Arrays.asList(strings));
+          }
+
+        /***************************************************************************************************************
+         *
+         * Writes the given strings to the actual file.
+         *
+         * @param   strings         the strings
+         * @throws  IOException     in case of error
+         *
+         **************************************************************************************************************/
+        public void writeToActualFile (final @Nonnull Iterable<String> strings)
+          throws IOException
+          {
+            Files.write(actualFile, strings, UTF_8);
           }
 
         /***************************************************************************************************************
