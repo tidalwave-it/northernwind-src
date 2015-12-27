@@ -35,10 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.context.support.GenericXmlApplicationContext;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.StandardEnvironment;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
@@ -48,6 +45,7 @@ import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -63,9 +61,11 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSyste
  **********************************************************************************************************************/
 public class MercurialFileSystemProviderTest
   {
-    private MercurialFileSystemProvider underTest;
+    private final TestHelper helper = new TestHelper(this);
 
-    private GenericXmlApplicationContext context;
+    private ApplicationContext context;
+
+    private MercurialFileSystemProvider underTest;
 
     private MessageBus messageBus;
 
@@ -76,11 +76,12 @@ public class MercurialFileSystemProviderTest
     public void setup()
       throws Exception
       {
+        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", sourceRepository.toUri().toASCIIString());
         properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath());
-        context = createContextWithProperties(properties);
+        context = helper.createSpringContext(properties);
         underTest = context.getBean(MercurialFileSystemProvider.class);
         messageBus = context.getBean(MessageBus.class);
       }
@@ -177,23 +178,5 @@ public class MercurialFileSystemProviderTest
           {
             // ok
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private GenericXmlApplicationContext createContextWithProperties (final @Nonnull Map<String, Object> properties)
-      throws IllegalStateException, BeansException
-      {
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
-        final StandardEnvironment environment = new StandardEnvironment();
-        environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
-        context = new GenericXmlApplicationContext();
-        context.setEnvironment(environment);
-        context.load("/MercurialFileSystemTestBeans.xml");
-        context.refresh();
-
-        return context;
       }
   }
