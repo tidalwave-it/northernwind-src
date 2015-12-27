@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
  * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -34,7 +34,6 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.naming.InitialContext;
@@ -42,12 +41,11 @@ import javax.naming.NameNotFoundException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import lombok.Cleanup;
-import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
 
 /***********************************************************************************************************************
  *
- * A {@link ServletContextListener} that reads a configuration from a number of external sources.
+ * A {@link ServletContextListener} that reads a configuration from a number of external sources and copy them to
+ * the {@link ServletContext} as attributes.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -55,6 +53,8 @@ import static it.tidalwave.northernwind.frontend.util.BootLogger.*;
  **********************************************************************************************************************/
 public class ExternalConfigurationServletContextListener implements ServletContextListener
   {
+    private final static BootLogger log = new BootLogger(ExternalConfigurationServletContextListener.class);
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -65,7 +65,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
       {
         final ServletContext servletContext = event.getServletContext();
         final String configurationPath = getConfigurationPath(servletContext) + "/configuration.properties";
-        log(">>>> configurationPath: " + configurationPath);
+        log.log("configurationPath: " + configurationPath);
         loadProperties(servletContext, configurationPath);
       }
 
@@ -83,57 +83,33 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      *
      ******************************************************************************************************************/
-    protected void loadProperties (final @Nonnull ServletContext servletContext, final @Nonnull String configurationFile)
+    protected void loadProperties (final @Nonnull ServletContext servletContext,
+                                   final @Nonnull String configurationFile)
       {
         final File file = new File(configurationFile);
+        final Properties properties = new Properties();
 
         if (Boolean.getBoolean("nw.useSystemProperties"))
           {
-            log("Using system properties, ignoring any configuration file");
-
-            final Properties properties = new Properties();
-
-            for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
-              {
-                final Object propertyName = entry.getKey();
-                final Object propertyValue = entry.getValue();
-
-                if (((String)propertyName).startsWith("nw."))
-                  {
-                    properties.put(propertyName, propertyValue);
-                  }
-
-                loadProperties(servletContext, properties);
-              }
+            loadPropertiesFromSystemProperties(properties);
           }
         else if (file.exists())
           {
-            log("Loading properties from " + file.getAbsolutePath());
-
             try
               {
-                final Properties properties = loadProperties(configurationFile);
-                loadProperties(servletContext, properties);
+                loadProperties(properties, file);
               }
             catch (IOException e)
               {
-                log(e);
+                log.log(e);
               }
           }
         else
           {
-            log(file.getAbsolutePath() + " does not exist");
+            log.log(file.getAbsolutePath() + " does not exist");
           }
-      }
 
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    protected void loadProperties (final @Nonnull ServletContext servletContext, final @Nonnull Properties properties)
-      {
-        copyPropertiesToServletContextAttributes(properties, servletContext);
-        servletContext.setAttribute("nwcontextConfigLocation", computeConfigLocation(properties));
+        putPropertiesIntoServletContext(servletContext, properties);
       }
 
     /*******************************************************************************************************************
@@ -190,11 +166,11 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           }
         catch (NameNotFoundException e)
           {
-            BootLogger.log("JNDI name not found: " + jndiName);
+            log.log("JNDI name not found: " + jndiName);
           }
         catch (Exception e)
           {
-            BootLogger.log(e);
+            log.log(e);
           }
 
         return System.getProperty("user.home") + "/.nw";
@@ -202,17 +178,58 @@ public class ExternalConfigurationServletContextListener implements ServletConte
 
     /*******************************************************************************************************************
      *
+     * Loads properties from the system properties.
      *
      ******************************************************************************************************************/
-    @Nonnull
-    private Properties loadProperties(final String configurationFile) throws FileNotFoundException, IOException
+    private static void loadPropertiesFromSystemProperties (final @Nonnull Properties properties)
       {
-        log(">>>> reading properties from " + configurationFile);
-        final Properties properties = new Properties();
-        final @Cleanup InputStream is = new FileInputStream(configurationFile);
-        properties.load(is);
-        is.close();
-        return properties;
+        log.log("using system properties");
+
+        for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
+          {
+            final Object propertyName = entry.getKey();
+            final Object propertyValue = entry.getValue();
+
+            if (((String)propertyName).startsWith("nw."))
+              {
+                properties.put(propertyName, propertyValue);
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Loads properties from a file.
+     *
+     ******************************************************************************************************************/
+    private static void loadProperties (final @Nonnull Properties properties, final File file)
+      throws IOException
+      {
+        log.log("reading properties from " + file);
+
+        try (final InputStream is = new FileInputStream(file))
+          {
+            properties.load(is);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Puts the properties into the ServletContext, as attributes.
+     *
+     ******************************************************************************************************************/
+    private static void putPropertiesIntoServletContext (final @Nonnull ServletContext servletContext,
+                                                         final @Nonnull Properties properties)
+      {
+        log.log("Copying properties to servlet context as attributes");
+        final String nwcontextConfigLocation = computeConfigLocation(properties);
+        properties.put("nw.contextConfigLocation", nwcontextConfigLocation);
+
+        for (final Entry<Object, Object> entry : new TreeMap<>(properties).entrySet())
+          {
+            log.log(">>>> " + entry.getKey() + " = " + entry.getValue());
+            servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());
+          }
       }
 
     /*******************************************************************************************************************
@@ -221,10 +238,9 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String computeConfigLocation (final Properties properties)
+    private static String computeConfigLocation (final Properties properties)
       {
         final String nwBeans = properties.getProperty("nw.beans", "");
-        log(">>>> nw.beans: " + nwBeans);
         final StringBuilder builder = new StringBuilder();
         String separator = "";
 
@@ -237,23 +253,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
               }
           }
 
-        final String contextConfigLocation = "classpath*:/META-INF/*AutoBeans.xml,classpath*:/META-INF/WebConfigurationBeans.xml," + builder.toString();
-        log(">>>> contextConfigLocation: " + contextConfigLocation);
-
-        return contextConfigLocation;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    private void copyPropertiesToServletContextAttributes (final @Nonnull Properties properties,
-                                                           final @Nonnull ServletContext servletContext)
-      {
-        for (final Entry<Object, Object> entry : new TreeMap<>(properties).entrySet())
-          {
-            log(">>>> " + entry.getKey() + " = " + entry.getValue());
-            servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());
-          }
+        return "classpath*:/META-INF/*AutoBeans.xml,"
+             + "classpath*:/META-INF/WebConfigurationBeans.xml," + builder.toString();
       }
   }
