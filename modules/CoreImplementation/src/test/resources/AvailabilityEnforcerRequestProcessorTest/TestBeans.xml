@@ -50,11 +50,7 @@
         <constructor-arg value="it.tidalwave.northernwind.core.model.Site" />
     </bean>
 
-    <bean id="responseHolder" class="org.mockito.Mockito" factory-method="spy">
-        <constructor-arg>
-            <bean class="it.tidalwave.northernwind.core.model.spi.MockResponseHolder" />
-        </constructor-arg>
-    </bean>
+    <bean id="responseHolder" class="it.tidalwave.northernwind.core.model.spi.MockResponseHolder" />
 
     <bean id="underTest"
           class="it.tidalwave.northernwind.core.model.spi.AvailabilityEnforcerRequestProcessor"
