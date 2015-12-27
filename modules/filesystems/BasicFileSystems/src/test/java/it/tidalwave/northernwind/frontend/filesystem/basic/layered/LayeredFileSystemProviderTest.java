@@ -156,7 +156,7 @@ public class LayeredFileSystemProviderTest
       throws IOException
       {
         final List<String> lines = new ArrayList<>();
-        dump(lines, underTest.getFileSystem().getRoot());
+        dump(lines, fileSystem.getRoot());
         Collections.sort(lines);
 
         FileUtils.writeLines(file, lines, "\n");
