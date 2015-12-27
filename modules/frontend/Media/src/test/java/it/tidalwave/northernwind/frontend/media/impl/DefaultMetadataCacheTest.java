@@ -36,7 +36,6 @@ import org.imajine.image.metadata.XMP;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -46,6 +45,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -59,6 +59,8 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class DefaultMetadataCacheTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private ApplicationContext context;
 
     private DefaultMetadataCache underTest;
@@ -90,7 +92,7 @@ public class DefaultMetadataCacheTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultMetadataCacheTestBeans.xml");
+        context = helper.createSpringContext();
         underTest = context.getBean(DefaultMetadataCache.class);
         metadataLoader = context.getBean(MetadataLoader.class);
         mediaFile = mock(ResourceFile.class);

@@ -31,13 +31,13 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import org.imajine.image.Rational;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS;
 import static org.mockito.Mockito.*;
@@ -53,6 +53,8 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class DefaultMetadataTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private ApplicationContext context;
 
     private ResourceProperties properties;
@@ -64,7 +66,7 @@ public class DefaultMetadataTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("DefaultMetadataTestBeans.xml");
+        context = helper.createSpringContext();
         context.getBean(MetadataInterpolatorFactory.class); // initialize it
         properties = mock(ResourceProperties.class);
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
