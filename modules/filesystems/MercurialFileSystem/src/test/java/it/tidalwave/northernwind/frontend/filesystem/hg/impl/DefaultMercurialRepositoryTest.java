@@ -30,10 +30,10 @@ package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 import it.tidalwave.util.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
@@ -43,7 +43,7 @@ import org.testng.annotations.DataProvider;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
-import java.io.File;
+import org.apache.commons.io.FileUtils;
 
 /***********************************************************************************************************************
  *
@@ -80,6 +80,7 @@ public class DefaultMercurialRepositoryTest
     public void setup()
       throws Exception
       {
+        // Unfortuately java.nio doesn't provide recursive deletion
         FileUtils.deleteDirectory(sourceRepository.toFile());
         FileUtils.deleteDirectory(workArea.toFile());
         underTest = new DefaultMercurialRepository(workArea);

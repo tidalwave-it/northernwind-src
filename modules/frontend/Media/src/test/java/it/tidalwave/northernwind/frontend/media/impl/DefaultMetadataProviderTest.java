@@ -29,21 +29,23 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.imajine.image.EditableImage;
+import org.imajine.image.Rational;
+import org.imajine.image.metadata.XMP;
 import org.imajine.image.metadata.Directory;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.op.ReadOp;
-import org.testng.annotations.Test;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.util.test.FileComparisonUtils.*;
-import java.util.Arrays;
-import java.util.Date;
-import org.imajine.image.Rational;
-import org.imajine.image.metadata.XMP;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.ISODateTimeFormat;
+import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 
 /***********************************************************************************************************************
  *
@@ -54,6 +56,8 @@ import org.joda.time.format.ISODateTimeFormat;
 @Slf4j
 public class DefaultMetadataProviderTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -62,7 +66,7 @@ public class DefaultMetadataProviderTest
       throws Exception
       {
         // given
-        final File file = new File("src/test/resources/images/20100102-0001.jpg");
+        final File file = helper.resourceFileFor("20100102-0001.jpg").toFile();
         final EditableImage image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
         log.info("IMAGE: {}", image);
         // when
@@ -73,23 +77,20 @@ public class DefaultMetadataProviderTest
         log.info("IPTC: {}", iptc);
         log.info("EXIF: {}", exif);
         log.info("XMP: {}", xmp);
-        final File expectedFile = new File(String.format("src/test/resources/expected-results/MetadataDump-%s.txt", "20100102-0001"));
-        final File actualFile = new File(String.format("target/test-artifacts/MetadataDump-%s.txt", "20100102-0001"));
-        actualFile.getParentFile().mkdirs();
-
-        final PrintWriter pw = new PrintWriter(actualFile);
-        dumpTags(pw, "EXIF", exif);
-        dumpTags(pw, "IPTC", iptc);
-        dumpTags(pw, "XMP ", xmp);
-        pw.close();
-
-        assertSameContents(expectedFile, actualFile);
+        final String resourceName = String.format("MetadataDump-%s.txt", "20100102-0001");
+        final TestResource tr = helper.testResourceFor(resourceName);
+        final List<String> strings = new ArrayList<>();
+        dumpTags(strings, "EXIF", exif);
+        dumpTags(strings, "IPTC", iptc);
+        dumpTags(strings, "XMP ", xmp);
+        tr.writeToActualFile(strings);
+        tr.assertActualFileContentSameAsExpected();
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void dumpTags (final @Nonnull PrintWriter pw,
+    private void dumpTags (final @Nonnull List<String> strings,
                            final @Nonnull String directoryName,
                            final @Nonnull Directory directory)
       {
@@ -116,7 +117,7 @@ public class DefaultMetadataProviderTest
 
             final String s = String.format("%s [%d] %s: %s", directoryName, tag, directory.getTagName(tag), value);
             log.info("{}", s);
-            pw.println(s);
+            strings.add(s);
           }
       }
   }
