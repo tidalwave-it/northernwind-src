@@ -359,7 +359,7 @@
 
     <modules>
         <module>Marshalling</module>
-
+        <module>CommonTests</module>
         <module>Core</module>
         <module>CoreImplementation</module>
         <module>Components</module>

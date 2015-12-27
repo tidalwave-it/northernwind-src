@@ -49,31 +49,31 @@ import lombok.experimental.Wither;
 @ToString
 public class ResourceFileSystemChangedEventMatcher extends BaseMatcher<ResourceFileSystemChangedEvent>
   {
-	@Wither
-	private ResourceFileSystemProvider resourceFileSystemProvider;
+    @Wither
+    private ResourceFileSystemProvider resourceFileSystemProvider;
 
-	@Wither
-	private DateTime latestModificationTime;
+    @Wither
+    private DateTime latestModificationTime;
 
     @Override
     public boolean matches (final @Nonnull Object item)
       {
         if (! (item instanceof ResourceFileSystemChangedEvent))
-		  {
-	        return false;
-	      }
+          {
+            return false;
+          }
 
-		final ResourceFileSystemChangedEvent event = (ResourceFileSystemChangedEvent)item;
+        final ResourceFileSystemChangedEvent event = (ResourceFileSystemChangedEvent)item;
 
-		if ((resourceFileSystemProvider != null) && (resourceFileSystemProvider != event.getFileSystemProvider()))
-		  {
-		    return false;
-		  }
+        if ((resourceFileSystemProvider != null) && (resourceFileSystemProvider != event.getFileSystemProvider()))
+          {
+            return false;
+          }
 
-		if ((latestModificationTime != null) && (!latestModificationTime.equals(event.getLatestModificationTime())))
-		  {
-		    return false;
-		  }
+        if ((latestModificationTime != null) && (!latestModificationTime.equals(event.getLatestModificationTime())))
+          {
+            return false;
+          }
 
         return true;
       }
@@ -81,8 +81,8 @@ public class ResourceFileSystemChangedEventMatcher extends BaseMatcher<ResourceF
     @Override
     public void describeTo (final @Nonnull Description description)
       {
-		final ResourceFileSystemChangedEvent event = new ResourceFileSystemChangedEvent(resourceFileSystemProvider,
-																						latestModificationTime);
+        final ResourceFileSystemChangedEvent event =
+                new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
         description.appendText(event.toString());
       }
   }
