@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.DispatcherServlet;
-import static it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator.*;
+import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.*;
 
 /***********************************************************************************************************************
  *

@@ -31,7 +31,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
-import static it.tidalwave.northernwind.frontend.util.InitializationDiagnosticsServletContextListenerDecorator.*;
+import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.*;
 
 /***********************************************************************************************************************
  *
