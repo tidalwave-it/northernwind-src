@@ -32,10 +32,10 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.TestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -49,6 +49,8 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class EmbeddedMediaMetadataProviderTest
   {
+    private final TestHelper helper = new TestHelper(this);
+
     private ApplicationContext context;
 
     private EmbeddedMediaMetadataProvider underTest;
@@ -66,7 +68,7 @@ public class EmbeddedMediaMetadataProviderTest
     public void setup()
       throws Exception
       {
-        context = new ClassPathXmlApplicationContext("EmbeddedMediaMetadataProviderTestBeans.xml");
+        context = helper.createSpringContext();
         underTest = context.getBean(EmbeddedMediaMetadataProvider.class);
         metadataCache = context.getBean(MetadataCache.class);
         siteNodeProperties = mock(ResourceProperties.class);
