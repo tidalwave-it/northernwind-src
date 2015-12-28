@@ -18,6 +18,7 @@
     <inceptionYear>2011</inceptionYear>
     <description>
 [![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)
+![Maven Central](https://maven-badges.herokuapp.com/maven-central/it.tidalwave.northernwind/northernwind/badge.png)
 
 NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
 a distributed SCM such as Git or Mercurial.
