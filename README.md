@@ -1,8 +1,10 @@
+![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.northernwind/northernwind.svg)
+[![Build Status](https://img.shields.io/jenkins/s/http/services.tidalwave.it/ci/NorthernWind_Build_from_Scratch.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
+[![Test Status](https://img.shields.io/jenkins/t/http/services.tidalwave.it/ci/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
+[![Coverage](https://img.shields.io/jenkins/c/http/services.tidalwave.it/ci/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
+
 NorthernWind
 ================================
-
-[![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)
-![Maven Central](https://maven-badges.herokuapp.com/maven-central/it.tidalwave.northernwind/northernwind/badge.png)
 
 NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
 a distributed SCM such as Git or Mercurial.
@@ -50,7 +52,7 @@ Alternatively you can pull it from the central Maven repositories:
 Contributing
 ------------
 
-We accept pull requests via BitBucket or GitHub.
+We accept pull requests via Bitbucket or GitHub.
 
 There are some guidelines which will make applying pull requests easier for us:
 
@@ -75,4 +77,4 @@ Additional Resources
 
 * [Tidalwave Homepage](http://tidalwave.it)
 * [Project Issue Tracker (Jira)](http://services.tidalwave.it/jira/browse/NW)
-* [Project Continuous Integration (hudson)](http://ci.tidalwave.it/ci/view/NorthernWind)
+* [Project Continuous Integration (Jenkins)](http://services.tidalwave.it/ci/view/NorthernWind)
