@@ -31,11 +31,10 @@ A few examples of websites running on NorthernWind:
 
     <properties>
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
-        <tft.project.description>NorthernWind - lightweight CMS</tft.project.description>
 
         <tft.maven.requiredJdk>[1.8.0-0,1.8.0-99)</tft.maven.requiredJdk>
-        <tft.javac.source>1.7</tft.javac.source>
-        <tft.javac.target>1.7</tft.javac.target>
+        <tft.javac.source>1.8</tft.javac.source>
+        <tft.javac.target>1.8</tft.javac.target>
 
         <netbeans.hint.jdkPlatform>JDK_1.8.0</netbeans.hint.jdkPlatform>
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
@@ -47,11 +46,7 @@ A few examples of websites running on NorthernWind:
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
         <tidalwave.issues>NW</tidalwave.issues>
 
-        <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
-
-        <tft.UmlGraphDoc.version>5.4</tft.UmlGraphDoc.version>
-        <tft.UmlGraphDoc.additionalParam>-views -attributes -operations -types -postfixpackage -nodefontpackagesize 6 -nodefontclasssize 8 -nodefontsize 7 -edgefontsize 7 -nodesep 0.05 -ranksep 0.1 -visibility -inferdep -inferrel -inferdepinpackage -hide java.*|javax.*|android.*</tft.UmlGraphDoc.additionalParam>
 
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
@@ -84,17 +79,6 @@ A few examples of websites running on NorthernWind:
             <id>releases-oss.sonatype.org</id>
             <name>Sonatype Releases Repository</name>
             <url>http://oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>snapshots-oss.sonatype.org</id>
-            <name>Sonatype Snapshots Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
     </repositories>
 
