@@ -136,7 +136,7 @@ public class HtmlTemplateBlogViewControllerTest
      *
      ******************************************************************************************************************/
     private void mockNodeProperty (final @Nonnull String viewId,
-                                   final @Nonnull Key<?> propertyKey,
+                                   final @Nonnull Key<String> propertyKey,
                                    final @CheckForNull String propertyValue)
       throws Exception
       {
