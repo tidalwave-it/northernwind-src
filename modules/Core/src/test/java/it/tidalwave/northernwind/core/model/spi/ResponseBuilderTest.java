@@ -30,9 +30,13 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -55,7 +59,11 @@ public class ResponseBuilderTest
   {
     private final TestHelper helper = new TestHelper(this);
 
-    private ResponseHolder<?> underTest;
+    private final ZonedDateTime currentTime = Instant.ofEpochMilli(1341242353456L).atZone(ZoneId.of("GMT"));
+
+    private final ZonedDateTime resourceLatestModifiedTime = Instant.ofEpochMilli(1341242553456L).atZone(ZoneId.of("GMT"));
+
+    private MockResponseHolder responseHolder;
 
     private ResourceFile resourceFile;
 
@@ -63,9 +71,7 @@ public class ResponseBuilderTest
 
     private Map<String, String> headers;
 
-    private final DateTime currentTime = new DateTime(1341242353456L);
-
-    private final DateTime resourceLatestModifiedTime = new DateTime(1341242553456L);
+    private ResponseBuilder<?> underTest;
 
     /*******************************************************************************************************************
      *
@@ -74,8 +80,6 @@ public class ResponseBuilderTest
     public void setup()
       throws Exception
       {
-        MockResponseBuilder.setCurrentTime(currentTime);
-
         resourceFile = mock(ResourceFile.class);
         when(resourceFile.asBytes()).thenReturn("FILE CONTENT".getBytes());
         when(resourceFile.getMimeType()).thenReturn("text/plain");
@@ -94,7 +98,9 @@ public class ResponseBuilderTest
               }
           });
 
-        underTest = new MockResponseHolder();
+        responseHolder = new MockResponseHolder();
+        responseHolder.setClockSupplier(() -> Clock.fixed(currentTime.toInstant(), currentTime.getZone()));
+        underTest = responseHolder.response();
       }
 
     /*******************************************************************************************************************
@@ -105,7 +111,7 @@ public class ResponseBuilderTest
       throws Exception
       {
         // when
-        final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile);
+        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile);
         // then
         assertContents(builder, "ResourceFileOutput.txt");
       }
@@ -118,8 +124,7 @@ public class ResponseBuilderTest
       throws Exception
       {
         // when
-        final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                               .withExpirationTime(Duration.standardDays(7));
+        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).withExpirationTime(Duration.ofDays(7));
         // then
         assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
       }
@@ -134,8 +139,7 @@ public class ResponseBuilderTest
         // given
         headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
         // when
-        final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                               .forRequest(request);
+        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
         // then
         assertContents(builder, "ResourceFileOutput.txt");
       }
@@ -150,8 +154,7 @@ public class ResponseBuilderTest
         // given
         headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
         // when
-        final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                               .forRequest(request);
+        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
         // then
         assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
@@ -166,11 +169,10 @@ public class ResponseBuilderTest
         for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
           {
             // given
-            final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
-            headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            final ZonedDateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            headers.put(HEADER_IF_MODIFIED_SINCE, toRfc1123String(ifModifiedSinceTime));
             // when
-            final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                                   .forRequest(request);
+            final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
             // then
             assertContents(builder, "ResourceFileOutput.txt");
           }
@@ -187,11 +189,10 @@ public class ResponseBuilderTest
         for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
           {
             // given
-            final DateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
-            headers.put(HEADER_IF_MODIFIED_SINCE, toString(ifModifiedSinceTime));
+            final ZonedDateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            headers.put(HEADER_IF_MODIFIED_SINCE, toRfc1123String(ifModifiedSinceTime));
             // when
-            final ResponseBuilder<?> builder = underTest.response().fromFile(resourceFile)
-                                                                   .forRequest(request);
+            final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
             // then
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
           }
@@ -209,7 +210,7 @@ public class ResponseBuilderTest
         // given
         final NotFoundException e = new NotFoundException("foo bar");
         // when
-        final ResponseBuilder<?> builder = underTest.response().forException(e);
+        final ResponseBuilder<?> builder = underTest.forException(e);
         // then
         assertContents(builder, "NotFoundExceptionOutput.txt");
       }
@@ -224,7 +225,7 @@ public class ResponseBuilderTest
         // given
         final IOException e = new IOException("foo bar");
         // when
-        final ResponseBuilder<?> builder = underTest.response().forException(e);
+        final ResponseBuilder<?> builder = underTest.forException(e);
         // then
         assertContents(builder, "InternalErrorOutput.txt");
       }
@@ -237,7 +238,7 @@ public class ResponseBuilderTest
       throws Exception
       {
         // when
-        final ResponseBuilder<?> builder = underTest.response().permanentRedirect("http://acme.com");
+        final ResponseBuilder<?> builder = underTest.permanentRedirect("http://acme.com");
         // then
         assertContents(builder, "PermanentRedirectOutput.txt");
       }
@@ -257,8 +258,8 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String toString (final @Nonnull DateTime dateTime)
+    private static String toRfc1123String (final @Nonnull ZonedDateTime dateTime)
       {
-        return ResponseBuilderSupport.createFormatter(PATTERN_RFC1123).format(dateTime.toDate());
+        return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
       }
   }

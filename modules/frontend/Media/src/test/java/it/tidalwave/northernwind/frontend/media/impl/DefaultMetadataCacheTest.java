@@ -28,13 +28,15 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -83,7 +85,9 @@ public class DefaultMetadataCacheTest
 
     private ResourceFile mediaFile;
 
-    private DateTime initialTime;
+    private ZonedDateTime initialTime;
+
+    private Clock mockClock;
 
     /*******************************************************************************************************************
      *
@@ -94,6 +98,7 @@ public class DefaultMetadataCacheTest
       {
         context = helper.createSpringContext();
         underTest = context.getBean(DefaultMetadataCache.class);
+        underTest.setClock(() -> mockClock);
         metadataLoader = context.getBean(MetadataLoader.class);
         mediaFile = mock(ResourceFile.class);
         tiff = new TIFF();
@@ -121,7 +126,7 @@ public class DefaultMetadataCacheTest
           });
 
         assertThat(underTest.getMedatataExpirationTime(), is(DefaultMetadataCache.DEFAULT_METADATA_EXPIRATION_TIME));
-        initialTime = new DateTime(1369080000000L);
+        initialTime = Instant.ofEpochMilli(1369080000000L).atZone(ZoneId.of("GMT"));
         setTime(initialTime);
       }
 
@@ -135,7 +140,7 @@ public class DefaultMetadataCacheTest
         // when
         final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
         // then
-        final DateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
+        final ZonedDateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
         // FIXME: the validity of loaded data must be moved to the loader test
         assertThat(metadata.getDirectory(TIFF.class), sameInstance(tiff));
         assertThat(metadata.getDirectory(EXIF.class), sameInstance(exif));
@@ -160,9 +165,9 @@ public class DefaultMetadataCacheTest
       {
         // given
         final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
-        final DateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
+        final ZonedDateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
 
-        for (DateTime now = initialTime;
+        for (ZonedDateTime now = initialTime;
              now.isBefore(expectedExpirationTime);
              now = now.plusSeconds(underTest.getMedatataExpirationTime() / 100))
           {
@@ -192,14 +197,14 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         // given
-        DateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
-        when(mediaFile.getLatestModificationTime()).thenReturn(initialTime.minusMillis(1));
+        ZonedDateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
+        when(mediaFile.getLatestModificationTime()).thenReturn(initialTime.minusNanos(1));
 
         final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
 
         for (int count = 1; count <= 10; count++)
           {
-            final DateTime now = nextExpectedExpirationTime.plusMillis(1);
+            final ZonedDateTime now = nextExpectedExpirationTime.plusNanos(1);
             setTime(now);
             nextExpectedExpirationTime = now.plusSeconds(underTest.getMedatataExpirationTime());
             // when
@@ -227,14 +232,14 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         // given
-        DateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
+        ZonedDateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMedatataExpirationTime());
         final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
 
         for (int count = 1; count < 10; count++)
           {
-            final DateTime now = nextExpectedExpirationTime.plusMillis(1);
+            final ZonedDateTime now = nextExpectedExpirationTime.plusNanos(1);
             setTime(now);
-            when(mediaFile.getLatestModificationTime()).thenReturn(now.plusMillis(1));
+            when(mediaFile.getLatestModificationTime()).thenReturn(now.plusNanos(1));
             nextExpectedExpirationTime = now.plusSeconds(underTest.getMedatataExpirationTime());
             // when
             final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
@@ -256,9 +261,9 @@ public class DefaultMetadataCacheTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void setTime (final @Nonnull DateTime dateTime)
+    private void setTime (final @Nonnull ZonedDateTime dateTime)
       {
-        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
-        log.info("==== Time set to           {}", new DateTime());
+        mockClock = Clock.fixed(dateTime.toInstant(), dateTime.getZone());
+        log.info("==== Time set to           {}", ZonedDateTime.now(mockClock));
       }
   }

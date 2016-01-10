@@ -33,8 +33,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.ISODateTimeFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import org.imajine.image.EditableImage;
 import org.imajine.image.Rational;
 import org.imajine.image.metadata.XMP;
@@ -46,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.TestHelper;
 import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import java.time.format.FormatStyle;
 
 /***********************************************************************************************************************
  *
@@ -112,7 +114,8 @@ public class DefaultMetadataProviderTest
               }
             else if (value instanceof Date)
               {
-                value = new LocalDateTime(value).toString(ISODateTimeFormat.dateTime());
+                value = ((Date)value).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                                     .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
               }
 
             final String s = String.format("%s [%d] %s: %s", directoryName, tag, directory.getTagName(tag), value);

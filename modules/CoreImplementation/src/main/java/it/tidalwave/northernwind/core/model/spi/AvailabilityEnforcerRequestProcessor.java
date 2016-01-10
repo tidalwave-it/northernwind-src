@@ -30,8 +30,8 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.time.Duration;
 import java.io.IOException;
-import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
@@ -92,7 +92,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
                 + "</html>", request.getBaseUrl(), request.getOriginalRelativeUri());
         responseHolder.response().withContentType("text/html")
                                  .withStatus(503)
-                                 .withExpirationTime(new Duration(0))
+                                 .withExpirationTime(Duration.ZERO)
                                  .withBody(page)
                                  .put();
         return BREAK;

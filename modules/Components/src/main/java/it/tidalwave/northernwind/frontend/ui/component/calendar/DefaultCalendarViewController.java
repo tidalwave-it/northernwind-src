@@ -32,9 +32,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.Locale;
 import java.text.DateFormatSymbols;
+import java.time.ZonedDateTime;
 import java.io.IOException;
 import java.io.StringReader;
-import org.joda.time.DateTime;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
@@ -164,15 +164,15 @@ public class DefaultCalendarViewController implements CalendarViewController
                 // FIXME: verbose XML code below
                 final Node node = nodes.item(i);
                 final String link = site.createLink(new ResourcePath(node.getAttributes().getNamedItem("link").getNodeValue()));
-                
+
                 String linkClass = "";
                 Node typeNode = node.getAttributes().getNamedItem("type");
-                
+
                 if (typeNode != null)
                   {
-                    linkClass = String.format(" class='nw-calendar-table-link-%s'", typeNode.getNodeValue()); 
+                    linkClass = String.format(" class='nw-calendar-table-link-%s'", typeNode.getNodeValue());
                   }
-                
+
                 final String name = node.getAttributes().getNamedItem("name").getNodeValue();
                 builder.append(String.format("<li><a href='%s'%s/>%s</a></li>%n", link, linkClass, name));
               }
@@ -254,9 +254,9 @@ public class DefaultCalendarViewController implements CalendarViewController
       {
         try
           {
-            return "".equals(pathParams) ? new DateTime().getYear()
+            return "".equals(pathParams) ? ZonedDateTime.now().getYear()
                                          : Integer.parseInt(pathParams.replaceAll("/$", "").replaceAll("^/", ""));
-//            return "".equals(pathParams) ? new DateTime().getYear() : Integer.parseInt(pathParams.replaceAll("/", ""));
+//            return "".equals(pathParams) ? new ZonedDateTime().getYear() : Integer.parseInt(pathParams.replaceAll("/", ""));
           }
         catch (NumberFormatException e)
           {

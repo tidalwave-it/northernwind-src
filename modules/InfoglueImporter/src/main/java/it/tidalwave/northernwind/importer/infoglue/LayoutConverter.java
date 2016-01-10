@@ -44,12 +44,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.Stack;
+import java.time.ZonedDateTime;
 import javax.annotation.Nonnull;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -103,7 +103,7 @@ public class LayoutConverter extends Parser
     private final Map<String, DefaultLayout> wrapperLayouts = new HashMap<String, DefaultLayout>();
 
     public LayoutConverter (final @Nonnull String xml,
-                            final @Nonnull DateTime modifiedDateTime,
+                            final @Nonnull ZonedDateTime modifiedDateTime,
                             final @Nonnull String path,
                             final @Nonnull SortedMap<Key<?>, Object> properties)
       throws XMLStreamException

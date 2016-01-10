@@ -1,43 +1,43 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
  * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.importer.infoglue;
 
+import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.annotation.Nonnull;
+import java.io.StringReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
-import java.io.StringReader;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 import lombok.extern.slf4j.Slf4j;
 import sun.misc.BASE64Decoder;
 
@@ -60,21 +60,22 @@ public abstract class Converter
 
     protected final XMLStreamReader reader;
 
-    private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendYear(4, 4)
-                                                                                     .appendLiteral("-")
-                                                                                     .appendMonthOfYear(2)
-                                                                                     .appendLiteral("-")
-                                                                                     .appendDayOfMonth(2)
-                                                                                     .appendLiteral("T")
-                                                                                     .appendHourOfDay(2)
-                                                                                     .appendLiteral(":")
-                                                                                     .appendMinuteOfHour(2)
-                                                                                     .appendLiteral(":")
-                                                                                     .appendSecondOfMinute(2)
-                                                                                     .appendLiteral(".")
-                                                                                     .appendMillisOfSecond(3)
-                                                                                     .appendTimeZoneOffset("", true, 2, 2)
-                                                                                     .toFormatter();
+    private static final DateTimeFormatter FORMATTER = null;
+//            new DateTimeFormatterBuilder().appendYear(4, 4)
+//                                                                                     .appendLiteral("-")
+//                                                                                     .appendMonthOfYear(2)
+//                                                                                     .appendLiteral("-")
+//                                                                                     .appendDayOfMonth(2)
+//                                                                                     .appendLiteral("T")
+//                                                                                     .appendHourOfDay(2)
+//                                                                                     .appendLiteral(":")
+//                                                                                     .appendMinuteOfHour(2)
+//                                                                                     .appendLiteral(":")
+//                                                                                     .appendSecondOfMinute(2)
+//                                                                                     .appendLiteral(".")
+//                                                                                     .appendMillisOfSecond(3)
+//                                                                                     .appendTimeZoneOffset("", true, 2, 2)
+//                                                                                     .toFormatter();
 
     public Converter (final @Nonnull String contents)
       throws XMLStreamException
@@ -208,9 +209,9 @@ public abstract class Converter
       }
 
     @Nonnull
-    protected DateTime contentAsDateTime()
+    protected ZonedDateTime contentAsDateTime()
       {
-        return FORMATTER.parseDateTime(builder.toString());
+        return null; //  FORMATTER.parseDateTime(builder.toString());
       }
 
     @Nonnull

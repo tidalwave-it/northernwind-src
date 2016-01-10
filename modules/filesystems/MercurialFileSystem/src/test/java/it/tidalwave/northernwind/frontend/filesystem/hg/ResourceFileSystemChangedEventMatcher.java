@@ -28,9 +28,9 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import org.joda.time.DateTime;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import lombok.AccessLevel;
@@ -53,7 +53,7 @@ public class ResourceFileSystemChangedEventMatcher extends BaseMatcher<ResourceF
     private ResourceFileSystemProvider resourceFileSystemProvider;
 
     @Wither
-    private DateTime latestModificationTime;
+    private ZonedDateTime latestModificationTime;
 
     @Override
     public boolean matches (final @Nonnull Object item)
