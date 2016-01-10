@@ -30,21 +30,25 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
+import java.util.function.Supplier;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.io.IOException;
 import java.io.InputStream;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import static javax.servlet.http.HttpServletResponse.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /***********************************************************************************************************************
  *
@@ -70,11 +74,12 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
 
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
-    private static final String[] DATE_FORMATS = new String[] 
+    private static final String[] DATE_FORMATS = new String[]
       {
         PATTERN_RFC1123,
-        "EEE, dd-MMM-yy HH:mm:ss zzz",
-        "EEE MMM dd HH:mm:ss yyyy"
+        "EEE, d MMM yyyy HH:mm:ss zzz",
+        "EEE, d-MMM-yy HH:mm:ss zzz",
+        "EEE MMM d HH:mm:ss yyyy"
       };
 
     /** The body of the response. */
@@ -90,12 +95,15 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
 
     /** The If-Modified-Since header specified in the request we're responding to. */
     @Nullable
-    protected DateTime requestIfModifiedSince;
+    protected ZonedDateTime requestIfModifiedSince;
+
+    @Getter @Setter @Nonnull
+    private Supplier<Clock> clockSupplier = Clock::systemDefaultZone;
 
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public abstract ResponseBuilder<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
@@ -103,7 +111,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
-     * 
+     *
      ******************************************************************************************************************/
     @Override @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
@@ -159,9 +167,9 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Override @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
       {
-        final DateTime expirationTime = getCurrentTime().plus(duration);
-        return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime.toDate()))
-              .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.toStandardSeconds().getSeconds()));
+        final ZonedDateTime expirationTime = ZonedDateTime.now(clockSupplier.get()).plus(duration);
+        return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime))
+              .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.getSeconds()));
       }
 
     /*******************************************************************************************************************
@@ -170,10 +178,10 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull DateTime time)
+    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull ZonedDateTime time)
       {
-        return withHeader(HEADER_LAST_MODIFIED, createFormatter(PATTERN_RFC1123).format(time.toDate()))
-              .withHeader(HEADER_ETAG, String.format("\"%d\"", time.getMillis()));
+        return withHeader(HEADER_LAST_MODIFIED, createFormatter(PATTERN_RFC1123).format(time))
+              .withHeader(HEADER_ETAG, String.format("\"%d\"", time.toInstant().toEpochMilli()));
       }
 
     /*******************************************************************************************************************
@@ -184,7 +192,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Override @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withBody (final @Nonnull Object body)
       {
-        this.body = (body instanceof byte[]) ? body : 
+        this.body = (body instanceof byte[]) ? body :
                     (body instanceof InputStream) ? body :
                      body.toString().getBytes();
         return this;
@@ -213,15 +221,15 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forRequest (final @Nonnull Request request) 
-      {    
+    public ResponseBuilder<RESPONSE_TYPE> forRequest (final @Nonnull Request request)
+      {
         try // FIXME: this would be definitely better with Optional
           {
             this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
           }
         catch (NotFoundException e)
           {
-            // never mind  
+            // never mind
           }
 
         try // FIXME: this would be definitely better with Optional
@@ -230,7 +238,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
           }
         catch (NotFoundException e)
           {
-            // never mind  
+            // never mind
           }
 
         return this;
@@ -331,7 +339,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override 
+    @Override
     public void put()
       {
         ResponseHolder.THREAD_LOCAL.set(build());
@@ -340,7 +348,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     /*******************************************************************************************************************
      *
      * This method actually builds the response and must be provided by concrete subclasses.
-     * 
+     *
      * @return  the response
      *
      ******************************************************************************************************************/
@@ -350,7 +358,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     /*******************************************************************************************************************
      *
      * Returns a header response previously added.
-     * 
+     *
      * @param   header  the header name
      * @return          the header value
      *
@@ -361,13 +369,13 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     /*******************************************************************************************************************
      *
      * Returns a header response previously added.
-     * 
+     *
      * @param   header  the header name
      * @return          the header value
      *
      ******************************************************************************************************************/
     @Nullable
-    protected final DateTime getDateTimeHeader (final @Nonnull String header)
+    protected final ZonedDateTime getDateTimeHeader (final @Nonnull String header)
       {
         final String value = getHeader(header);
         return (value == null) ? null : parseDate(value);
@@ -377,7 +385,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      * Takes care of the caching feature. If the response refers to an entity whose value has been cached by the
      * client and it's still fresh, a "Not modified" response will be returned.
-     * 
+     *
      * @return                      itself for fluent interface style
      *
      ******************************************************************************************************************/
@@ -385,13 +393,13 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     protected ResponseBuilder<RESPONSE_TYPE> cacheSupport()
       {
         final String eTag = getHeader(HEADER_ETAG);
-        final DateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
+        final ZonedDateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
 
         log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
         log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
 
         if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-             ((requestIfModifiedSince != null) && (lastModified != null) && 
+             ((requestIfModifiedSince != null) && (lastModified != null) &&
               (lastModified.isBefore(requestIfModifiedSince) || lastModified.isEqual(requestIfModifiedSince))) )
           {
             return notModified();
@@ -402,24 +410,11 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
 
     /*******************************************************************************************************************
      *
-     * Returns the current time. This can be overridden for mocking time in tests.
-     * 
-     * @return  the current time
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected DateTime getCurrentTime()
-      {
-        return new DateTime();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * 
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ResponseBuilder<RESPONSE_TYPE> notModified() 
+    private ResponseBuilder<RESPONSE_TYPE> notModified()
       {
         return withBody(new byte[0])
               .withContentLength(0)
@@ -429,40 +424,38 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     /*******************************************************************************************************************
      *
      * Parse a date with one of the valid formats for HTTP headers.
-     * 
+     *
      * FIXME: we should try to avoid depending on this stuff...
      *
      ******************************************************************************************************************/
     @Nonnull
-    private DateTime parseDate (final @Nonnull String string)
+    private ZonedDateTime parseDate (final @Nonnull String string)
       {
-        for (final String dateFormat : DATE_FORMATS) 
+        for (final String dateFormat : DATE_FORMATS)
           {
             try
               {
                 log.debug("Parsing {} with {}...", string, dateFormat);
-                return new DateTime(createFormatter(dateFormat).parse(string));
+                return ZonedDateTime.parse(string, createFormatter(dateFormat));
               }
-            catch (ParseException e) 
+            catch (DateTimeParseException e)
               {
                 log.debug("{}", e.getMessage());
               }
           }
 
-        throw new IllegalArgumentException("Cannot parse date " + string);
+        throw new IllegalArgumentException("Cannot parse date (see previous logs) " + string);
       }
 
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ static SimpleDateFormat createFormatter (final @Nonnull String template) 
+    /* package */ static DateTimeFormatter createFormatter (final @Nonnull String template)
       {
-        final SimpleDateFormat formatter = new SimpleDateFormat(template, Locale.US);
-        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return formatter;
+        return DateTimeFormatter.ofPattern(template, Locale.US).withZone(ZoneId.of("GMT"));
       }
   }
 

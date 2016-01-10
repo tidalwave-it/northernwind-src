@@ -27,9 +27,8 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component;
 
-//import org.joda.time.DateTime;
-import it.tidalwave.util.Key;
 import java.util.List;
+import it.tidalwave.util.Key;
 import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.*;
 
@@ -56,11 +55,11 @@ public final class Properties
 
     public static final Key<String> PROPERTY_WRAPPER_TEMPLATE_RESOURCE = new Key<>("wrapperTemplate");
 
-    public static final Key<String> PROPERTY_CREATION_DATE = new Key<>("creationDateTime");// FIXME: those should be Key<DateTime>
+    public static final Key<String> PROPERTY_CREATION_DATE = new Key<>("creationDateTime");// FIXME: those should be Key<ZonedDateTime>
 
-    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<>("publishingDateTime");// FIXME: those should be Key<DateTime>
+    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<>("publishingDateTime");// FIXME: those should be Key<ZonedDateTime>
 
-    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<>("latestModificationDateTime");// FIXME: those should be Key<DateTime>
+    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<>("latestModificationDateTime");// FIXME: those should be Key<ZonedDateTime>
 
     public static final Key<String> PROPERTY_CLASS = new Key<>("class");
 

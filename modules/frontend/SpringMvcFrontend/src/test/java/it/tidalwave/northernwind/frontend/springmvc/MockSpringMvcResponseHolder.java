@@ -27,25 +27,18 @@
  */
 package it.tidalwave.northernwind.frontend.springmvc;
 
-import javax.annotation.Nonnull;
-import org.springframework.http.ResponseEntity;
-import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.model.spi.MockResponseHolder;
 
 /***********************************************************************************************************************
  *
- * A Spring MVC implementation of {@link ResponseHolder}.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: Class.java,v 631568052e17 2013/02/19 15:45:02 fabrizio $
  *
  **********************************************************************************************************************/
-@Slf4j
-public class SpringMvcResponseHolder extends ResponseHolder<ResponseEntity<?>>
+public class MockSpringMvcResponseHolder extends MockResponseHolder
   {
-    @Override @Nonnull
-    public SpringMvcResponseBuilder response()
+    public MockSpringMvcResponseHolder()
       {
-        return new SpringMvcResponseBuilder();
+        super(SpringMvcResponseBuilder::new);
       }
   }

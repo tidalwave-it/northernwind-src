@@ -43,7 +43,7 @@ import java.util.TreeMap;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.xml.stream.XMLStreamException;
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
 import it.tidalwave.northernwind.core.impl.model.DefaultResourceProperties;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.util.Id;
@@ -60,19 +60,19 @@ import static it.tidalwave.role.Marshallable.Marshallable;
 @Slf4j
 public abstract class Parser extends Converter
   {
-    private static final Map<String, DateTime> creationTimeByPath = new HashMap<String, DateTime>();
-    private static final Map<String, DateTime> publishingTimeByPath = new HashMap<String, DateTime>();
+    private static final Map<String, ZonedDateTime> creationTimeByPath = new HashMap<String, ZonedDateTime>();
+    private static final Map<String, ZonedDateTime> publishingTimeByPath = new HashMap<String, ZonedDateTime>();
 
     protected final SortedMap<Key<?>, Object> properties = new TreeMap<Key<?>, Object>();
     protected final String path;
-    protected final DateTime modifiedDateTime;
-    private final DateTime publishDateTime;
+    protected final ZonedDateTime modifiedDateTime;
+    private final ZonedDateTime publishDateTime;
     private final ModelFactory modelFactory = new DefaultModelFactory();
 
     public Parser (final @Nonnull String contents,
                    final @Nonnull String path,
-                   final @Nonnull DateTime modifiedDateTime,
-                   final @Nonnull DateTime publishedDateTime)
+                   final @Nonnull ZonedDateTime modifiedDateTime,
+                   final @Nonnull ZonedDateTime publishedDateTime)
       throws XMLStreamException
       {
         super(contents);
@@ -116,7 +116,7 @@ public abstract class Parser extends Converter
               }
           }
 
-        DateTime creationTime = creationTimeByPath.get(path);
+        ZonedDateTime creationTime = creationTimeByPath.get(path);
 
         if (creationTime == null)
           {
@@ -129,7 +129,7 @@ public abstract class Parser extends Converter
             publishingTimeByPath.put(path, publishDateTime);
           }
 
-        final DateTime pdt = publishingTimeByPath.get(path);
+        final ZonedDateTime pdt = publishingTimeByPath.get(path);
 
         if (pdt != null)
           {
