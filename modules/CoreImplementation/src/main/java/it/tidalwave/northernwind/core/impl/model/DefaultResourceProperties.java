@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -33,10 +33,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -221,16 +220,14 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
-                                         final @Nonnull DateTime defaultValue)
+    public ZonedDateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
+                                              final @Nonnull ZonedDateTime defaultValue)
       {
-        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
-
         for (final Key<String> key : keys)
           {
             try
               {
-                return isoFormatter.parseDateTime(getProperty(key));
+                return ZonedDateTime.parse(getProperty(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
               }
             catch (NotFoundException e)
               {

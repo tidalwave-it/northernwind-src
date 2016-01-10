@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -46,7 +46,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
@@ -259,6 +263,10 @@ public class TestHelper
      * {@code target/test-artifacts/test-class-simple-name/resourceName}. The expected file should be
      * placed in {@code src/test/resources/test-class-simple-name/expected-resoults/resource-name}. Note that the file
      * actually loaded is the one under {@code target/test-classes} copied there (and eventually filtered) by Maven.
+     * The {@code test-class-simple-name} is tried first with the current test, and then with its eventual
+     * super-classes; this allows to extend existing test suites. Note that if the resource files for a super class are
+     * not in the current project module, they should be explicitly copied here (for instance, by means of the
+     * Maven dependency plugin).
      *
      * @param   resourceName    the name
      * @return                  the {@code TestResource}
@@ -270,9 +278,29 @@ public class TestHelper
       throws IOException
       {
         final String testName = test.getClass().getSimpleName();
-        final Path expectedFile = Paths.get("target/test-classes", testName, "expected-results", resourceName);
+        final Path expectedFile = findExpectedFilePath(resourceName);
         final Path actualFile = Paths.get("target/test-artifacts", testName, resourceName);
         Files.createDirectories(actualFile.getParent());
         return new TestResource(resourceName, actualFile, expectedFile);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Path findExpectedFilePath (final @Nonnull String resourceName)
+      throws IOException
+      {
+        for (Class<?> testClass = test.getClass(); testClass != null; testClass = testClass.getSuperclass())
+          {
+            final Path expectedFile = Paths.get("target/test-classes", testClass.getSimpleName(), "expected-results", resourceName);
+
+            if (Files.exists(expectedFile))
+              {
+                return expectedFile;
+              }
+          }
+
+        throw new FileNotFoundException("Expected file for test " + resourceName);
       }
   }
