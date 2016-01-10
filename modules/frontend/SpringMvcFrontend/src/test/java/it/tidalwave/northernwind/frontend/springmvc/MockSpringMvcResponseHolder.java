@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -25,42 +25,20 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.model.spi;
+package it.tidalwave.northernwind.frontend.springmvc;
 
-import javax.annotation.Nonnull;
-import java.util.function.Supplier;
-import java.time.Clock;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import it.tidalwave.northernwind.core.model.spi.MockResponseHolder;
 
 /***********************************************************************************************************************
  *
- * A mock {@link ResponseHolder} that allows to use a mock clock for testing.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: Class.java,v 631568052e17 2013/02/19 15:45:02 fabrizio $
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
-public class MockResponseHolder extends ResponseHolder<byte[]>
+public class MockSpringMvcResponseHolder extends MockResponseHolder
   {
-    @Nonnull
-    private final Supplier<ResponseBuilderSupport<?>> responseBuilderSupplier;
-
-    @Getter @Setter
-    private Supplier<Clock> clockSupplier = Clock::systemDefaultZone;
-
-    public MockResponseHolder()
+    public MockSpringMvcResponseHolder()
       {
-        this(ResponseBuilderTestable::new);
-      }
-
-    @Override
-    public ResponseBuilder response()
-      {
-        final ResponseBuilderSupport responseBuilder = responseBuilderSupplier.get();
-        responseBuilder.setClockSupplier(clockSupplier);
-        return responseBuilder;
+        super(SpringMvcResponseBuilder::new);
       }
   }

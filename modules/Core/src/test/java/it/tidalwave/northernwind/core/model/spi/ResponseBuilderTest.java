@@ -30,6 +30,7 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -48,6 +49,7 @@ import it.tidalwave.northernwind.util.test.TestHelper;
 import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -55,15 +57,19 @@ import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
+@RequiredArgsConstructor
 public class ResponseBuilderTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    protected final TestHelper helper = new TestHelper(this);
 
     private final ZonedDateTime currentTime = Instant.ofEpochMilli(1341242353456L).atZone(ZoneId.of("GMT"));
 
     private final ZonedDateTime resourceLatestModifiedTime = Instant.ofEpochMilli(1341242553456L).atZone(ZoneId.of("GMT"));
 
     private MockResponseHolder responseHolder;
+
+    @Nonnull
+    private final Supplier<? extends MockResponseHolder> responseHolderFactory;
 
     private ResourceFile resourceFile;
 
@@ -72,6 +78,14 @@ public class ResponseBuilderTest
     private Map<String, String> headers;
 
     private ResponseBuilder<?> underTest;
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public ResponseBuilderTest()
+      {
+        responseHolderFactory = MockResponseHolder::new;
+      }
 
     /*******************************************************************************************************************
      *
@@ -98,7 +112,7 @@ public class ResponseBuilderTest
               }
           });
 
-        responseHolder = new MockResponseHolder();
+        responseHolder = responseHolderFactory.get();
         responseHolder.setClockSupplier(() -> Clock.fixed(currentTime.toInstant(), currentTime.getZone()));
         underTest = responseHolder.response();
       }
@@ -246,7 +260,7 @@ public class ResponseBuilderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
+    protected void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
         final TestResource tr = helper.testResourceFor(fileName);
