@@ -6,7 +6,7 @@
   NorthernWind - lightweight CMS
   http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
   %%
-  Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
   %%
   *********************************************************************************************************************
   
@@ -32,7 +32,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>\${nw.logFile}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>\${nw.logFile}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>        

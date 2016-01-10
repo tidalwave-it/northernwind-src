@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -30,11 +30,10 @@ package it.tidalwave.northernwind.frontend.filesystem.hg;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.ZonedDateTime;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ContextManager;
@@ -134,8 +133,8 @@ public class MercurialFileSystemProviderTest
         updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
         final int previousSwapCounter = underTest.swapCounter;
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
-        final DateTime now = new DateTime();
-        DateTimeUtils.setCurrentMillisFixed(now.getMillis());
+        final ZonedDateTime now = ZonedDateTime.now();
+//        DateTimeUtils.setCurrentMillisFixed(now.getMillis());
         // when
         underTest.checkForUpdates();
         // then

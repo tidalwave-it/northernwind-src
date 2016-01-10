@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,11 +31,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import com.google.common.base.Predicate;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -48,7 +48,6 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
 /***********************************************************************************************************************
@@ -163,7 +162,7 @@ public class DefaultSitemapViewController implements SitemapViewController
       throws IOException
       {
         final SiteNode n = (childSiteNode != null) ? childSiteNode : siteNode;
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         final ResourceProperties properties = n.getProperties();
         //
         // FIXME: if you put the sitemap property straightly into the child site node, you can simplify a lot,
@@ -177,7 +176,7 @@ public class DefaultSitemapViewController implements SitemapViewController
             builder.append("  <url>\n");
             builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
             builder.append(String.format("    <lastmod>%s</lastmod>%n",
-                                         dateTimeFormatter.print(getSiteNodeDateTime(properties))));
+                                         getSiteNodeDateTime(properties).format(dateTimeFormatter)));
             builder.append(String.format("    <changefreq>%s</changefreq>%n",
                                          properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
             builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
@@ -190,13 +189,12 @@ public class DefaultSitemapViewController implements SitemapViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private DateTime getSiteNodeDateTime (final @Nonnull ResourceProperties properties)
+    private ZonedDateTime getSiteNodeDateTime (final @Nonnull ResourceProperties properties)
       {
-        final DateTimeFormatter isoFormatter = ISODateTimeFormat.dateTime();
-
         try
           {
-            return isoFormatter.parseDateTime(properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE));
+            final String string = properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE);
+            return ZonedDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
           }
         catch (NotFoundException e)
           {
@@ -206,9 +204,9 @@ public class DefaultSitemapViewController implements SitemapViewController
             log.warn("", e);
           }
 
-        return new DateTime(0);
+        return Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
       }
-    
+
     /*******************************************************************************************************************
      *
      *

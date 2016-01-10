@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -37,8 +37,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.io.IOException;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
@@ -80,7 +82,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
 
-    public static final DateTime TIME0 = new DateTime(0);
+    public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
     protected static final String TAG_PREFIX = "tag/";
 
@@ -89,8 +91,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
         @Override
         public int compare (final @Nonnull Content post1, final @Nonnull Content post2)
           {
-            final DateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
-            final DateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
+            final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
+            final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
             return dateTime2.compareTo(dateTime1);
           }
       };
@@ -188,7 +190,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
             render();
           }
-        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen 
+        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen
         catch (NotFoundException | IOException e)
           {
             log.warn("While reading property group at initialization", e);

@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.File;
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
@@ -84,7 +84,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
                   {
                     log.info("Detected file change, regenerating local file system...");
                     generateLocalFileSystem();
-                    messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this, new DateTime()));
+                    messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this, ZonedDateTime.now()));
                   }
                 catch (IOException e)
                   {
