@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -30,8 +30,8 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.time.Duration;
 import java.io.IOException;
-import org.joda.time.Duration;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -66,7 +66,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
     private ResponseHolder<?> responseHolder;
 
     @Getter @Setter
-    private Duration duration = Duration.standardDays(7);
+    private Duration duration = Duration.ofDays(7);
 
     /*******************************************************************************************************************
      *

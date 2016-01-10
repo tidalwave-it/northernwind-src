@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -36,9 +36,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.io.File;
 import java.io.IOException;
-import org.joda.time.DateTime;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -167,13 +169,13 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Override @Nonnull
-    public DateTime getLatestModificationTime()
+    public ZonedDateTime getLatestModificationTime()
       {
         // See NW-154
         final File file = toFile();
 
-        return (file != null) ? new DateTime(file.lastModified())
-                              : new DateTime(delegate.lastModified());
+        final long millis = (file != null) ? file.lastModified() : delegate.lastModified().getTime();
+        return Instant.ofEpochMilli(millis).atZone(ZoneId.of("GMT"));
       }
 
     @Override @CheckForNull

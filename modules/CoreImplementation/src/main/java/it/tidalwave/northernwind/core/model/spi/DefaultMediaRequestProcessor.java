@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
-import org.joda.time.Duration;
+import java.time.Duration;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
@@ -63,7 +63,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     protected ResponseHolder<ResponseType> responseHolder;
 
     @Getter @Setter
-    private Duration duration = Duration.standardDays(7); // FIXME: rename to expirationDuration
+    private Duration duration = Duration.ofDays(7); // FIXME: rename to expirationDuration
 
     @Getter @Setter
     private String uriPrefix = "media"; // FIXME
@@ -127,7 +127,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
         final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
-        
+
         responseHolder.response().fromFile(file)
                                  .withExpirationTime(duration)
                                  .forRequest(request)

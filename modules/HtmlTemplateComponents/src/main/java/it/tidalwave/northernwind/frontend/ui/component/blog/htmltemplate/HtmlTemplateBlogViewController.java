@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -33,11 +33,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -53,7 +55,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import java.io.UnsupportedEncodingException;
+import java.time.format.FormatStyle;
 
 /***********************************************************************************************************************
  *
@@ -68,6 +70,16 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private final static Key<String> PROP_ADD_TITLE = new Key<>("@title");
     private final static Key<String> PROP_ADD_URL = new Key<>("@url");
     private final static Key<String> PROP_ADD_ID = new Key<>("@id");
+
+    private final static Map<String, DateTimeFormatter> STYLE_MAP = new HashMap<>();
+
+    static
+      {
+        STYLE_MAP.put("S-", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+        STYLE_MAP.put("M-", DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+        STYLE_MAP.put("L-", DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
+        STYLE_MAP.put("F-", DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+      }
 
     @Nonnull
     private final SiteNode siteNode;
@@ -160,7 +172,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         log.debug("addReference()");
 
-//        final DateTime blogDateTime = getBlogDateTime(post);
+//        final ZonedDateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
 
         if (!referencesRendered)
@@ -185,11 +197,11 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final ResourceProperties properties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        final DateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
-                                                                     DefaultBlogViewController.TIME0);
-        final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toDate().getTime();
         final String title = properties.getProperty(PROPERTY_TITLE);
         view.setTitle(title);
+        final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
+                                                                          DefaultBlogViewController.TIME0);
+        final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
         htmlBuilder.append(String.format("<h3>%s</h3>%n", title));
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
@@ -308,10 +320,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * Renders the date of the blog post.
      *
      ******************************************************************************************************************/
-    /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull DateTime blogDateTime)
+    /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime blogDateTime)
       {
         htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>%n",
-                           getDateTimeFormatter().print(blogDateTime)));
+                                         blogDateTime.format(getDateTimeFormatter())));
       }
 
     /*******************************************************************************************************************
@@ -438,9 +450,11 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         try
           {
-            final String pattern = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DATE_FORMAT);
-            return ((pattern.length() == 2) ? DateTimeFormat.forStyle(pattern)
-                                            : DateTimeFormat.forPattern(pattern)).withLocale(requestLocaleManager.getLocales().get(0));
+            final String pattern = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DATE_FORMAT)
+                                           .replaceAll("EEEEE+", "EEEE")
+                                           .replaceAll("MMMMM+", "MMMM");
+            return ((pattern.length() == 2) ? STYLE_MAP.get(pattern)
+                                            : DateTimeFormatter.ofPattern(pattern)).withLocale(requestLocaleManager.getLocales().get(0));
           }
         catch (NotFoundException | IOException e)
           {

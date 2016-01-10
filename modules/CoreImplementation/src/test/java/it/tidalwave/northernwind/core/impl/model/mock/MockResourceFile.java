@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -30,11 +30,11 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.time.ZonedDateTime;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import org.joda.time.DateTime;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -159,7 +159,7 @@ public class MockResourceFile implements ResourceFile
       }
 
     @Override
-    public DateTime getLatestModificationTime()
+    public ZonedDateTime getLatestModificationTime()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
