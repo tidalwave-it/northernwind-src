@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.time.ZonedDateTime;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -43,7 +44,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
-import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -175,9 +175,9 @@ public interface ResourceProperties extends As, Identifiable
      * @return                      the property value
      *
      ******************************************************************************************************************/
-    @Nonnull // FIXME: should be Key<DateTime>
-    public DateTime getDateTimeProperty (@Nonnull Collection<Key<String>> keys,
-                                         @Nonnull DateTime defaultValue);
+    @Nonnull // FIXME: should be Key<ZonedDateTime>
+    public ZonedDateTime getDateTimeProperty (@Nonnull Collection<Key<String>> keys,
+                                              @Nonnull ZonedDateTime defaultValue);
 
     /*******************************************************************************************************************
      *

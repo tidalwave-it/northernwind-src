@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -30,8 +30,8 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.time.Duration;
 import java.io.IOException;
-import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
@@ -92,7 +92,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
                 + "</html>", request.getBaseUrl(), request.getOriginalRelativeUri());
         responseHolder.response().withContentType("text/html")
                                  .withStatus(503)
-                                 .withExpirationTime(new Duration(0))
+                                 .withExpirationTime(Duration.ZERO)
                                  .withBody(page)
                                  .put();
         return BREAK;
