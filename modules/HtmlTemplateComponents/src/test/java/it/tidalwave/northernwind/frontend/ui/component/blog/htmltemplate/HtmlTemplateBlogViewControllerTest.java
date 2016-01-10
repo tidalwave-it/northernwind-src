@@ -31,8 +31,11 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Locale;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -49,8 +52,6 @@ import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.*;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -115,13 +116,14 @@ public class HtmlTemplateBlogViewControllerTest
     public void must_properly_render_the_date (final @Nonnull String viewId,
                                                final @Nonnull String localeCode,
                                                final @CheckForNull String dateFormat,
-                                               final @Nonnull DateTime dateTime,
+                                               final @Nonnull ZonedDateTime dateTime,
                                                final @Nonnull String expectedRendering)
       throws Exception
       {
         // given
         final Locale locale = new Locale(localeCode);
-        final DateTimeFormatter dtf = DateTimeFormat.fullDateTime().withLocale(locale).withZone(DateTimeZone.forID("CET"));
+        // default of RequestLocaleManager
+        final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(locale).withZone(ZoneId.of("CET"));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockNodeProperty(viewId, PROPERTY_DATE_FORMAT, dateFormat);
@@ -176,7 +178,7 @@ public class HtmlTemplateBlogViewControllerTest
     @DataProvider
     private Object[][] dateTestDataProvider()
       {
-        final DateTime dateTime = new DateTime(1344353463985L);
+        final ZonedDateTime dateTime = Instant.ofEpochMilli(1344353463985L).atZone(ZoneId.of("GMT"));
 
         return new Object[][]
           {

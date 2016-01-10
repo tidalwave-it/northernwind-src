@@ -27,25 +27,61 @@
  */
 package it.tidalwave.northernwind.frontend.springmvc;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
+import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
 
 /***********************************************************************************************************************
  *
- * A Spring MVC implementation of {@link ResponseHolder}.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: Class.java,v 631568052e17 2013/02/19 15:45:02 fabrizio $
  *
  **********************************************************************************************************************/
-@Slf4j
-public class SpringMvcResponseHolder extends ResponseHolder<ResponseEntity<?>>
+@NotThreadSafe
+public class SpringMvcResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>>
   {
+    private final HttpHeaders headers = new HttpHeaders();
+
     @Override @Nonnull
-    public SpringMvcResponseBuilder response()
+    public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
       {
-        return new SpringMvcResponseBuilder();
+        headers.add(header, value);
+        return this;
+      }
+
+    @Override @Nullable
+    protected String getHeader (final @Nonnull String header)
+      {
+        final List<String> g = headers.get(header);
+        return ((g == null) || g.isEmpty()) ? null : g.get(0);
+      }
+
+    @Override @Nonnull
+    public ResponseBuilder withContentType (final @Nonnull String contentType)
+      {
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        return this;
+      }
+
+    @Override @Nonnull
+    public ResponseBuilder withContentLength (final @Nonnegative long contentLenght)
+      {
+        headers.setContentLength(contentLenght);
+        return this;
+      }
+
+    @Override @Nonnull
+    protected ResponseEntity<?> doBuild()
+      {
+        return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
       }
   }
+

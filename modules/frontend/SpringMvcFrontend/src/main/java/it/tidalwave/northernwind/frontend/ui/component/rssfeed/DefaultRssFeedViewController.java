@@ -32,9 +32,10 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.time.ZonedDateTime;
 import java.io.IOException;
-import org.joda.time.DateTime;
 import com.sun.syndication.feed.rss.Channel;
 import com.sun.syndication.feed.rss.Content;
 import com.sun.syndication.feed.rss.Guid;
@@ -108,11 +109,11 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       throws IOException, NotFoundException
       {
-        final DateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
+        final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
         if (feed.getLastBuildDate() == null)
           {
-            feed.setLastBuildDate(blogDateTime.toDate());
+            feed.setLastBuildDate(Date.from(blogDateTime.toInstant()));
           }
 
         final ResourceProperties postProperties = post.getProperties();
@@ -123,7 +124,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         content.setValue(postProperties.getProperty(PROPERTY_FULL_TEXT));
         item.setTitle(postProperties.getProperty(PROPERTY_TITLE, ""));
 //        item.setAuthor("author " + i); TODO
-        item.setPubDate(blogDateTime.toDate());
+        item.setPubDate(Date.from(blogDateTime.toInstant()));
         item.setContent(content);
 
         try

@@ -28,7 +28,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -48,5 +48,5 @@ public class ResourceFileSystemChangedEvent
     private final ResourceFileSystemProvider fileSystemProvider;
 
     @Getter @Nonnull
-    private final DateTime latestModificationTime;
+    private final ZonedDateTime latestModificationTime;
   }

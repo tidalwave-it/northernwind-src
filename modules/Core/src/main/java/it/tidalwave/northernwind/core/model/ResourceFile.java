@@ -28,11 +28,11 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import org.joda.time.DateTime;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.ExtendedFinderSupport;
 import it.tidalwave.role.Composite;
@@ -188,7 +188,7 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
      *
      ******************************************************************************************************************/
     @Nonnull
-    public DateTime getLatestModificationTime();
+    public ZonedDateTime getLatestModificationTime();
 
     /*******************************************************************************************************************
      *

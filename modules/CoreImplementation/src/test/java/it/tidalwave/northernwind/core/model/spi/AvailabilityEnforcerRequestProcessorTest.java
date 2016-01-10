@@ -27,13 +27,16 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
-import org.joda.time.DateTime;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import java.time.Clock;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -52,7 +55,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
 
     private MockResponseHolder responseHolder;
 
-    private final DateTime currentTime = new DateTime(1341242353456L);
+    private final ZonedDateTime currentTime = Instant.ofEpochMilli(1341242353456L).atZone(ZoneId.of("GMT"));
 
     /*******************************************************************************************************************
      *
@@ -60,9 +63,9 @@ public class AvailabilityEnforcerRequestProcessorTest extends MacroFilterTestSup
     @BeforeMethod
     public void setup()
       {
-        MockResponseBuilder.setCurrentTime(currentTime);
         underTest = context.getBean(AvailabilityEnforcerRequestProcessor.class);
         responseHolder = context.getBean(MockResponseHolder.class);
+        responseHolder.setClockSupplier(() -> Clock.fixed(currentTime.toInstant(), currentTime.getZone()));
         request = mock(Request.class);
 
         when(request.getBaseUrl()).thenReturn("http://acme.com");

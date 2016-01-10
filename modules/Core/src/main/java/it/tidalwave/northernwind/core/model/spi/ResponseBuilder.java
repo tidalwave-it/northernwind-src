@@ -29,9 +29,9 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.io.IOException;
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -56,7 +56,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      * @param   header              the header name
      * @param   value               the header value
      * @return                      itself for fluent interface style
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withHeader (@Nonnull String header, @Nonnull String value);
@@ -67,7 +67,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      *
      * @param   headers             the headers
      * @return                      itself for fluent interface style
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withHeaders (@Nonnull Map<String, String> headers);
@@ -75,7 +75,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies the content type.
-     * 
+     *
      * @param   contentType         the content type
      * @return                      itself for fluent interface style
      *
@@ -86,7 +86,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies the content length.
-     * 
+     *
      * @param  contentLength        the content length
      * @return                      itself for fluent interface style
      *
@@ -97,18 +97,18 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies the content disposition.
-     * 
+     *
      * @param  contentDisposition   the content disposition
      * @return                      itself for fluent interface style
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withContentDisposition (@Nonnull String contentDisposition);
-    
+
     /*******************************************************************************************************************
      *
      * Specifies the expiration time.
-     * 
+     *
      * @param  duration             the duration
      * @return                      itself for fluent interface style
      *
@@ -119,20 +119,20 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies the latest modified time.
-     * 
+     *
      * @param  time                 the time
      * @return                      itself for fluent interface style
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (@Nonnull DateTime time);
+    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (@Nonnull ZonedDateTime time);
 
     /*******************************************************************************************************************
      *
-     * Specifies the body of the response. Accepted objects are: {@code byte[]}, {@code String}, 
+     * Specifies the body of the response. Accepted objects are: {@code byte[]}, {@code String},
      * {@code InputStream}.
-     * 
-     * @param  body                 the body 
+     *
+     * @param  body                 the body
      * @return                      itself for fluent interface style
      *
      ******************************************************************************************************************/
@@ -142,7 +142,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies the body of the response as a {@link ResourceFile}.
-     * 
+     *
      * @param  file                 the file
      * @return                      itself for fluent interface style
      * @throws IOException          if an error occurs when reading the file
@@ -156,7 +156,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      *
      * Specifies the {@link Request} we're serving - this makes it possible to read some headers and other
      * configurations needed e.g. for cache control.
-     * 
+     *
      * @param  request              the request
      * @return                      itself for fluent interface style
      *
@@ -167,18 +167,18 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies an exception to create the response from.
-     * 
+     *
      * @param  e                    the exception
      * @return                      itself for fluent interface style
      *
      ******************************************************************************************************************/
     @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull NotFoundException e);
-    
+
     /*******************************************************************************************************************
      *
      * Specifies an exception to create the response from.
-     * 
+     *
      * @param  e                    the exception
      * @return                      itself for fluent interface style
      *
@@ -189,7 +189,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies an exception to create the response from.
-     * 
+     *
      * @param  e                    the exception
      * @return                      itself for fluent interface style
      *
@@ -200,7 +200,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Specifies the HTTP status.
-     * 
+     *
      * @param  httpStatus           the status
      * @return                      itself for fluent interface style
      *
@@ -211,8 +211,8 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Creates a builder for a permanent redirect.
-     * 
-     * @param  url                  the URL of the redirect       
+     *
+     * @param  url                  the URL of the redirect
      * @return                      itself for fluent interface style
      *
      ******************************************************************************************************************/
@@ -222,7 +222,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
     /*******************************************************************************************************************
      *
      * Builds the response.
-     * 
+     *
      * @return                              the response
      *
      ******************************************************************************************************************/
@@ -231,7 +231,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
 
     /*******************************************************************************************************************
      *
-     * 
+     *
      *
      ******************************************************************************************************************/
     public void put();

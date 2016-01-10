@@ -32,12 +32,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
+import java.time.ZonedDateTime;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
-import org.joda.time.DateTime;
 import org.openide.filesystems.LocalFileSystem;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.messagebus.MessageBus;
@@ -48,7 +48,6 @@ import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetB
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -145,7 +144,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
             log.info(">>>> new tag: {}", newTag);
             alternateRepository.updateTo(newTag);
             swapRepositories();
-            messageBus.publish(new ResourceFileSystemChangedEvent(this, new DateTime()));
+            messageBus.publish(new ResourceFileSystemChangedEvent(this, ZonedDateTime.now()));
             alternateRepository.pull();
             alternateRepository.updateTo(newTag);
           }

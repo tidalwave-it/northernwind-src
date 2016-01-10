@@ -27,17 +27,17 @@
  */
 package it.tidalwave.northernwind.importer.infoglue;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
-import it.tidalwave.util.Key;
+import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nonnull;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import it.tidalwave.util.Key;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import static it.tidalwave.northernwind.importer.infoglue.Utilities.*;
 
 /***********************************************************************************************************************
@@ -58,8 +58,8 @@ public class ContentParser extends Parser
     private boolean inAttributes = false;
 
     public ContentParser (final @Nonnull String xml,
-                          final @Nonnull DateTime latestModificationTime,
-                          final @Nonnull DateTime publishedDateTime,
+                          final @Nonnull ZonedDateTime latestModificationTime,
+                          final @Nonnull ZonedDateTime publishedDateTime,
                           final @Nonnull String path,
                           final @Nonnull String language,
                           final @Nonnull String comment)

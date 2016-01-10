@@ -1,40 +1,40 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
  * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.importer.infoglue;
 
-import it.tidalwave.util.NotFoundException;
-import java.io.File;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import javax.annotation.Nonnull;
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
+import java.io.File;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -46,7 +46,7 @@ public class ResourceManager
   {
     public static final File hgFolder = new File("target/root");
 
-    private static final SortedMap<DateTime, List<AddResourceCommand>> commandMapByDateTime = new TreeMap<DateTime, List<AddResourceCommand>>();
+    private static final SortedMap<ZonedDateTime, List<AddResourceCommand>> commandMapByDateTime = new TreeMap<ZonedDateTime, List<AddResourceCommand>>();
 
     /*******************************************************************************************************************
      *
@@ -103,7 +103,7 @@ public class ResourceManager
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static DateTime getTimeBase()
+    public static ZonedDateTime getTimeBase()
       {
         return commandMapByDateTime.firstKey();
       }
