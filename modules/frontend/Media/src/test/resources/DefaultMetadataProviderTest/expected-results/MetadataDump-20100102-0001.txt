@@ -37,7 +37,7 @@ EXIF [42036] null: 180.0 mm f/2.8
 IPTC [346] null: %G
 IPTC [512] null: 4
 IPTC [517] null: Moutons autour de l'Île Saint-Honorat
-IPTC [567] null: 2010-01-02T00:00:00.000
+IPTC [567] null: 2010-01-02T00:00:00
 IPTC [572] null: 125359+0100
 IPTC [574] null: 20100102
 IPTC [575] null: 125359+0100

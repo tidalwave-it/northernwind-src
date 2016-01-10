@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -33,8 +33,9 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -127,6 +128,6 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override @Nonnull
     public DateTimeFormatter getDateTimeFormatter()
       {
-        return DateTimeFormat.fullDateTime().withLocale(getLocales().get(0));
+        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(getLocales().get(0)).withZone(ZoneId.systemDefault());
       }
   }

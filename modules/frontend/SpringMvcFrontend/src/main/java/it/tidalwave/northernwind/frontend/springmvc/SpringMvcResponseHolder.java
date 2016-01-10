@@ -1,50 +1,41 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.frontend.springmvc;
 
-import java.util.List;
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
-import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
  * A Spring MVC implementation of {@link ResponseHolder}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -52,46 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SpringMvcResponseHolder extends ResponseHolder<ResponseEntity<?>>
   {
-    @NotThreadSafe
-    public class SpringMvcResponseBuilder extends ResponseBuilderSupport<ResponseEntity<?>>
-      {
-        private final HttpHeaders headers = new HttpHeaders();
-
-        @Override @Nonnull
-        public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
-          {
-            headers.add(header, value);
-            return this;
-          }
-        
-        @Override @Nullable
-        protected String getHeader (final @Nonnull String header)
-          {
-            final List<String> g = headers.get(header);
-            return ((g == null) || g.isEmpty()) ? null : g.get(0);
-          }
-
-        @Override @Nonnull
-        public ResponseBuilder withContentType (final @Nonnull String contentType)
-          {
-            headers.setContentType(MediaType.parseMediaType(contentType));
-            return this;
-          }
-
-        @Override @Nonnull
-        public ResponseBuilder withContentLength (final @Nonnegative long contentLenght)
-          {
-            headers.setContentLength(contentLenght);
-            return this;
-          }
-
-        @Override @Nonnull
-        protected ResponseEntity<?> doBuild()
-          {
-            return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpStatus));
-          }
-      }
-
     @Override @Nonnull
     public SpringMvcResponseBuilder response()
       {

@@ -1,14 +1,17 @@
+![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.northernwind/northernwind.svg)
+[![Build Status](https://img.shields.io/jenkins/s/http/services.tidalwave.it/ci/NorthernWind_Build_from_Scratch.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
+[![Test Status](https://img.shields.io/jenkins/t/http/services.tidalwave.it/ci/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
+[![Coverage](https://img.shields.io/jenkins/c/http/services.tidalwave.it/ci/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
+
 NorthernWind
 ================================
-
-[![Build Status](https://drone.io/bitbucket.org/tidalwave/northernwind-src/status.png)](https://drone.io/bitbucket.org/tidalwave/northernwind-src/latest)
 
 NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
 a distributed SCM such as Git or Mercurial.
 
 Please see the project website for more information: http://northernwind.tidalwave.it
 
-A few examples of website running on NorthernWind:
+A few examples of websites running on NorthernWind:
 
 * http://stoppingdown.net
 * http://northernwind.tidalwave.it
@@ -28,7 +31,7 @@ The project can be opened and built by a recent version of the NetBeans, Eclipse
 Documentation
 -------------
 
-More information can be found on the [homepage](http://tidalwave.kenai.com/northernwind) of the project.
+More information can be found on the [homepage](http://tidalwave.tidalwave.it/northernwind) of the project.
 
 
 Where can I get the latest release?
@@ -49,7 +52,7 @@ Alternatively you can pull it from the central Maven repositories:
 Contributing
 ------------
 
-We accept pull requests via BitBucket or GitHub.
+We accept pull requests via Bitbucket or GitHub.
 
 There are some guidelines which will make applying pull requests easier for us:
 
@@ -74,4 +77,4 @@ Additional Resources
 
 * [Tidalwave Homepage](http://tidalwave.it)
 * [Project Issue Tracker (Jira)](http://services.tidalwave.it/jira/browse/NW)
-* [Project Continuous Integration (hudson)](http://ci.tidalwave.it/ci/view/NorthernWind)
+* [Project Continuous Integration (Jenkins)](http://services.tidalwave.it/ci/view/NorthernWind)

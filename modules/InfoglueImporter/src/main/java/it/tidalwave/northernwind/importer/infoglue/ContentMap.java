@@ -1,40 +1,40 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
+ *
  * $Id$
- * 
+ *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.importer.infoglue;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 
 /***********************************************************************************************************************
  *
@@ -45,11 +45,11 @@ import org.joda.time.DateTime;
 @Slf4j
 public class ContentMap
   {
-    private Map<Integer, SortedMap<DateTime, Map<String, String>>> map =
-            new HashMap<Integer, SortedMap<DateTime, Map<String, String>>>();
+    private Map<Integer, SortedMap<ZonedDateTime, Map<String, String>>> map =
+            new HashMap<Integer, SortedMap<ZonedDateTime, Map<String, String>>>();
 
     public void put (final int id,
-                     final @Nonnull DateTime dateTime,
+                     final @Nonnull ZonedDateTime dateTime,
                      final @Nonnull String language,
                      final @Nonnull String content)
       {
@@ -57,19 +57,19 @@ public class ContentMap
       }
 
     @Nonnull
-    public Map<String, String> get (final int id, final @Nonnull DateTime dateTime)
+    public Map<String, String> get (final int id, final @Nonnull ZonedDateTime dateTime)
       {
         return getLanguageMap(id, dateTime, false);
       }
 
     @Nonnull
-    private Map<String, String> getLanguageMap (final int id, final @Nonnull DateTime dateTime, final boolean exactDateTime)
+    private Map<String, String> getLanguageMap (final int id, final @Nonnull ZonedDateTime dateTime, final boolean exactDateTime)
       {
-        SortedMap<DateTime, Map<String, String>> dateTimeMap = map.get(id);
+        SortedMap<ZonedDateTime, Map<String, String>> dateTimeMap = map.get(id);
 
         if (dateTimeMap == null)
           {
-            map.put(id, dateTimeMap = new TreeMap<DateTime, Map<String, String>>());
+            map.put(id, dateTimeMap = new TreeMap<ZonedDateTime, Map<String, String>>());
           }
 
         Map<String, String> languageMap = dateTimeMap.get(dateTime);
@@ -82,7 +82,7 @@ public class ContentMap
               }
             else
               {
-                for (final Entry<DateTime, Map<String, String>> entry : dateTimeMap.entrySet())
+                for (final Entry<ZonedDateTime, Map<String, String>> entry : dateTimeMap.entrySet())
                   {
                     if (entry.getKey().isAfter(dateTime))
                       {

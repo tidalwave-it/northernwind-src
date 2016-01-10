@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-frontend</artifactId>
-        <version>1.1-ALPHA-38-SNAPSHOT</version>
+        <version>1.1-ALPHA-39-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-springmvc</artifactId>
-    <version>1.1-ALPHA-38-SNAPSHOT</version>
+    <version>1.1-ALPHA-39-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend, Spring MVC</name>
     <description>An implementation of the front end based on Spring MVC.</description>
@@ -49,5 +49,49 @@
             <artifactId>jetty-util</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-common-tests</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>it.tidalwave.northernwind</groupId>
+                                    <artifactId>it-tidalwave-northernwind-core</artifactId>
+                                    <classifier>tests</classifier>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.basedir}/target/test-classes</outputDirectory>
+                                    <includes>ResponseBuilderTest/expected-results/**/*</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
