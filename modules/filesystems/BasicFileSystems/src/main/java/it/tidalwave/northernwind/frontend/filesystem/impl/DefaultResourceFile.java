@@ -33,12 +33,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import org.joda.time.DateTime;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.AsSupport;
+import java.time.ZonedDateTime;
 import lombok.Delegate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -119,7 +119,7 @@ public class DefaultResourceFile implements ResourceFile
       }
 
     @Override
-    public DateTime getLatestModificationTime()
+    public ZonedDateTime getLatestModificationTime()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
