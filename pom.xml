@@ -51,6 +51,8 @@ A few examples of websites running on NorthernWind:
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
         <log.file>target/nw.log</log.file>
+
+        <tft.clirr.skip>true</tft.clirr.skip> <!-- Clirr is not compatible with JDK 8 -->
     </properties>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
