@@ -174,7 +174,7 @@ public class DefaultCalendarViewController implements CalendarViewController
                   }
 
                 final String name = node.getAttributes().getNamedItem("name").getNodeValue();
-                builder.append(String.format("<li><a href='%s'%s/>%s</a></li>%n", link, linkClass, name));
+                builder.append(String.format("<li><a href='%s'%s>%s</a></li>%n", link, linkClass, name));
               }
 
             builder.append("</ul>\n</td>\n");
