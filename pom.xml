@@ -65,10 +65,11 @@ A few examples of websites running on NorthernWind:
     </scm>
 
     <repositories>
+        <!-- Until we depend on the NetBeans Platform FileSystem -->
         <repository>
-            <id>releases-oss.sonatype.org</id>
-            <name>Sonatype Releases Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/releases/</url>
+            <id>netbeans</id>
+            <name>NetBeans Platform Maven Repository</name>
+            <url>http://bits.netbeans.org/maven2/</url>
         </repository>
     </repositories>
 
