@@ -41,12 +41,12 @@ import java.util.Locale;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletContext;
-import org.openide.util.NbBundle;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.util.BundleHelper;
 import it.tidalwave.util.NotFoundException;
 import lombok.Getter;
 import lombok.Setter;
@@ -176,7 +176,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Override @Nonnull
     public String getVersionString()
       {
-        return NbBundle.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
+        return BundleHelper.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
       }
 
     /*******************************************************************************************************************
