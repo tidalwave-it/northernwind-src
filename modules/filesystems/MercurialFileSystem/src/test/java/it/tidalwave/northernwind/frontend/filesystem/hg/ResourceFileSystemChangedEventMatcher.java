@@ -28,16 +28,15 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.time.ZonedDateTime;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.Wither;
+import org.mockito.ArgumentMatcher;
 
 /***********************************************************************************************************************
  *
@@ -46,8 +45,7 @@ import lombok.experimental.Wither;
  *
  **********************************************************************************************************************/
 @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor(staticName = "fileSystemChangedEvent")
-@ToString
-public class ResourceFileSystemChangedEventMatcher extends BaseMatcher<ResourceFileSystemChangedEvent>
+public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<ResourceFileSystemChangedEvent>
   {
     @Wither
     private ResourceFileSystemProvider resourceFileSystemProvider;
@@ -56,14 +54,12 @@ public class ResourceFileSystemChangedEventMatcher extends BaseMatcher<ResourceF
     private ZonedDateTime latestModificationTime;
 
     @Override
-    public boolean matches (final @Nonnull Object item)
+    public boolean matches (final @Nullable ResourceFileSystemChangedEvent event)
       {
-        if (! (item instanceof ResourceFileSystemChangedEvent))
+        if (event == null)
           {
             return false;
           }
-
-        final ResourceFileSystemChangedEvent event = (ResourceFileSystemChangedEvent)item;
 
         if ((resourceFileSystemProvider != null) && (resourceFileSystemProvider != event.getFileSystemProvider()))
           {
@@ -78,11 +74,11 @@ public class ResourceFileSystemChangedEventMatcher extends BaseMatcher<ResourceF
         return true;
       }
 
-    @Override
-    public void describeTo (final @Nonnull Description description)
+    @Override @Nonnull
+    public String toString()
       {
         final ResourceFileSystemChangedEvent event =
                 new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
-        description.appendText(event.toString());
+        return event.toString();
       }
   }
