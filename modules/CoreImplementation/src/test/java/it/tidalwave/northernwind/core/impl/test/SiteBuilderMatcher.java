@@ -27,29 +27,30 @@
  */
 package it.tidalwave.northernwind.core.impl.test;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import it.tidalwave.northernwind.core.model.Site;
+import javax.annotation.Nonnull;
+import org.hamcrest.Matcher;
+import org.mockito.ArgumentMatcher;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 
 /***********************************************************************************************************************
  *
  * A test {@link Matcher} for {@link Site.Builder}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Wither @ToString
-public class SiteBuilderMatcher extends BaseMatcher<Site.Builder>
+@Wither
+public class SiteBuilderMatcher implements ArgumentMatcher<Site.Builder>
   {
     private String contextPath;
     private String documentPath;
@@ -59,14 +60,14 @@ public class SiteBuilderMatcher extends BaseMatcher<Site.Builder>
     private boolean configurationEnabled;
     private List<Locale> configuredLocales;
     private List<String> ignoredFolders;
-    
+
     @Override
-    public boolean matches (final @Nonnull Object item) 
+    public boolean matches (final @Nullable Site.Builder siteBuilder)
       {
         // Test properties set in the Spring beans file
-        final Site.Builder siteBuilder = (Site.Builder)item;
-
-        return siteBuilder.getContextPath().equals(contextPath)
+//        final Site.Builder siteBuilder = (Site.Builder)item;
+        return (siteBuilder != null)
+            && siteBuilder.getContextPath().equals(contextPath)
             && siteBuilder.getDocumentPath().equals(documentPath)
             && siteBuilder.getMediaPath().equals(mediaPath)
             && siteBuilder.getLibraryPath().equals(libraryPath)
@@ -74,11 +75,20 @@ public class SiteBuilderMatcher extends BaseMatcher<Site.Builder>
             && siteBuilder.isLogConfigurationEnabled() == configurationEnabled
             && siteBuilder.getConfiguredLocales().equals(configuredLocales)
             && siteBuilder.getIgnoredFolders().equals(ignoredFolders);
-        }
+      }
 
-      @Override
-      public void describeTo (final @Nonnull Description description) 
-        {
-          description.appendText(this.toString());
-        }
-    }
+    @Override @Nonnull
+    public String toString()
+      {
+        return String.format("Site.Builder(contextPath=%s, documentPath=%s, mediaPath=%s, libraryPath=%s, notePath=%s, "
+                           + "configurationEnabled=%s, configuredLocales=%s, ignoredFolders=%s)",
+                             contextPath,
+                             documentPath,
+                             mediaPath,
+                             libraryPath,
+                             nodePath,
+                             configurationEnabled,
+                             configuredLocales,
+                             ignoredFolders);
+      }
+  }

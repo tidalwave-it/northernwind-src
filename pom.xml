@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>3.3</version>
+        <version>4.0.1</version>
         <relativePath />
     </parent>
 
@@ -30,9 +30,13 @@ A few examples of websites running on NorthernWind:
     </description>
 
     <properties>
+        <scm.repo.url>ssh://git@bitbucket.org/tidalwave/northernwind-src.git</scm.repo.url>
+        <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src.git</scm.repo.readonly.url>
+        <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
+
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
 
-        <tft.maven.requiredJdk>[1.8.0-0,1.8.0-99)</tft.maven.requiredJdk>
+        <tft.maven.requiredJdk>[1.8.0-0,)</tft.maven.requiredJdk>
         <tft.javac.source>1.8</tft.javac.source>
         <tft.javac.target>1.8</tft.javac.target>
 
@@ -40,9 +44,6 @@ A few examples of websites running on NorthernWind:
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
 
-        <scm.repo.url>ssh://git@bitbucket.org/tidalwave/northernwind-src.git</scm.repo.url>
-        <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src.git</scm.repo.readonly.url>
-        <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tidalwave.ci.view>NorthernWind</tidalwave.ci.view>
         <tidalwave.issues>NW</tidalwave.issues>
 
@@ -63,24 +64,12 @@ A few examples of websites running on NorthernWind:
         <tag>HEAD</tag>
     </scm>
 
-    <mailingLists>
-        <mailingList>
-            <name>Continuous Integration</name>
-            <post>ci@northernwind.java.net</post>
-            <archive>http://java.net/projects/northernwind/lists/ci/archive</archive>
-        </mailingList>
-        <mailingList>
-            <name>Developers</name>
-            <post>dev@northernwind.java.net</post>
-            <archive>http://java.net/projects/northernwind/lists/dev/archive</archive>
-        </mailingList>
-    </mailingLists>
-
     <repositories>
+        <!-- Until we depend on the NetBeans Platform FileSystem -->
         <repository>
-            <id>releases-oss.sonatype.org</id>
-            <name>Sonatype Releases Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/releases/</url>
+            <id>netbeans</id>
+            <name>NetBeans Platform Maven Repository</name>
+            <url>http://bits.netbeans.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -188,13 +177,6 @@ A few examples of websites running on NorthernWind:
 
     <build>
         <plugins>
-            <plugin>
-                <!--  FIX for SUP-12  -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>nbm-maven-plugin</artifactId>
-                <extensions>false</extensions>
-            </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
