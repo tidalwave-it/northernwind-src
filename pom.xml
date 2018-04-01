@@ -192,6 +192,12 @@ A few examples of websites running on NorthernWind:
         </plugins>
     </build>
 
+    <profiles> 
+        <profile> 
+            <id>installers</id>
+        </profile> 
+    </profiles>
+
     <modules>
         <module>modules</module>
     </modules>
