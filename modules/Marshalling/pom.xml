@@ -17,6 +17,11 @@
     <name>NorthernWind - Core Default Marshalling</name>
     <description>The default implementation of marshalling for some Core classes.</description>
 
+    <properties>
+        <!-- Otherwise can't be released because of missing javadocs -->
+        <tft.javadoc.excludePackageNames />
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
