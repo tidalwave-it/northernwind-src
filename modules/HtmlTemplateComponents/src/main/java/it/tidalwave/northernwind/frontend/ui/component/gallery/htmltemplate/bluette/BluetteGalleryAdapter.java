@@ -201,6 +201,8 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final String previousUrl = site.createLink(baseUrl.appendedWith(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get((index + 1) % itemCount).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
+        final String imageId     = item.getId().stringValue();
+        final String imageUrl    = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: with imageId, this is probably useless, drop it
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
@@ -211,12 +213,15 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                                                        .add("next", nextUrl)
                                                        .add("lightbox", lightboxUrl)
                                                        .add("home", "/blog") // FIXME
-                                                       .add("imageUrl", "/media/stillimages/800/" + item.getId().stringValue() + ".jpg")
+                                                       .add("imageId", imageId)
+                                                       .add("imageUrl", imageUrl)
                                                        .add("copyright", copyright);
         textHolder.addAttribute("content", t.render());
         // FIXME: it would be better to change the properties rather than directly touch the template attributes
         textHolder.addAttribute("description", item.getDescription());
         textHolder.addAttribute("inlinedScripts", redirectScript);
+        textHolder.addAttribute("imageId", imageId);
+        textHolder.addAttribute("imageUrl", imageUrl);
         textHolder.addAttribute("scripts", "");
       }
 
