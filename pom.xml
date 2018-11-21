@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>4.1</version>
+        <version>4.4</version>
         <relativePath />
     </parent>
 
@@ -192,10 +192,10 @@ A few examples of websites running on NorthernWind:
         </plugins>
     </build>
 
-    <profiles> 
-        <profile> 
+    <profiles>
+        <profile>
             <id>installers</id>
-        </profile> 
+        </profile>
     </profiles>
 
     <modules>
