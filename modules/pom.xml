@@ -30,6 +30,9 @@
         <stringtemplate.version>4.0.8</stringtemplate.version>
         <thesefoolishthings.version>3.1-ALPHA-1</thesefoolishthings.version>
         <xmpcore.version>5.1.0</xmpcore.version>
+
+        <tft.lombok.version>1.18.4</tft.lombok.version>
+        <tft.aspectjrt.version>1.9.2</tft.aspectjrt.version>
     </properties>
 
     <dependencyManagement>
@@ -182,6 +185,19 @@
         </resources>
 
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun</groupId>
+                        <artifactId>tools</artifactId>
+                        <version>${java.version}</version>
+                        <scope>system</scope>
+                        <systemPath>${project.basedir}/pom.xml</systemPath>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <!--
                         <plugin>
                           <groupId>org.owasp</groupId>

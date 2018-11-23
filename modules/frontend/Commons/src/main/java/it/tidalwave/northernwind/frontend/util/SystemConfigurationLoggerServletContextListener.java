@@ -69,7 +69,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
             final InitialContext context = new InitialContext();
             log.info("**************** JNDI Environment:");
 
-            for (final Entry<Object, Object> entry : new TreeMap<>(context.getEnvironment()).entrySet())
+            for (final Entry<?, ?> entry : new TreeMap<>(context.getEnvironment()).entrySet())
               {
                 log.info("{} = {}", entry.getKey(), entry.getValue());
               }
