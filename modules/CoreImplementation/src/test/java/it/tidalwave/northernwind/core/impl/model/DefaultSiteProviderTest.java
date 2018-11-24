@@ -65,6 +65,8 @@ public class DefaultSiteProviderTest
 
     private Site.Builder.CallBack siteBuilderCallback;
 
+    private static final String SERVLET_CONTEXT_PATH = "thecontextpath";
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -82,7 +84,7 @@ public class DefaultSiteProviderTest
         final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
         when(modelFactory.createSite()).thenReturn(builder);
 
-        when(servletContext.getContextPath()).thenReturn("thecontextpath");
+        when(servletContext.getContextPath()).thenReturn(SERVLET_CONTEXT_PATH);
       }
 
     /*******************************************************************************************************************
@@ -96,7 +98,7 @@ public class DefaultSiteProviderTest
         underTest = context.getBean(DefaultSiteProvider.class);
         // then
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
-                .withContextPath("thecontextpath")
+                .withContextPath(SERVLET_CONTEXT_PATH)
                 .withDocumentPath("testDocumentPath")
                 .withMediaPath("testMediaPath")
                 .withLibraryPath("testLibraryPath")
@@ -104,8 +106,8 @@ public class DefaultSiteProviderTest
                 .withConfigurationEnabled(true)
                 .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                 .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
-
-        assertThat(underTest.getSite(), sameInstance((Site)site));
+        // the executor that initializes Site hasn't started here
+        assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
       }
 
@@ -113,16 +115,16 @@ public class DefaultSiteProviderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_create_and_initialize_the_Site_when_DefaultSiteProvider_is_initialized()
+    public void must_properly_create_and_initialize_the_Site()
       throws Exception
       {
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
         // when
-        executor.doExecute(); // emulate Site initialization in background
+        executor.doExecute(); // initializes Site
         // then
         verify(site).initialize();
-        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(true));
       }
 
@@ -147,7 +149,7 @@ public class DefaultSiteProviderTest
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
         // then
-        assertThat(underTest.getContextPath(), is("thecontextpath"));
+        assertThat(underTest.getContextPath(), is(SERVLET_CONTEXT_PATH));
       }
 
     /*******************************************************************************************************************
@@ -172,12 +174,12 @@ public class DefaultSiteProviderTest
       throws Exception
       {
         // given
-        doThrow(new IOException("test")).when(site).initialize();
-        // when
         underTest = context.getBean(DefaultSiteProvider.class);
+        doThrow(new IOException("Simulated error in initialization")).when(site).initialize();
+        // when
         executor.doExecute(); // emulate Site initialization in background
         // then
-        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
       }
   }
