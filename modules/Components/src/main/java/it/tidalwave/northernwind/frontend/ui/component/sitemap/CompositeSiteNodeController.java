@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *

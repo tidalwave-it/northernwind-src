@@ -48,11 +48,15 @@ import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.is;
@@ -66,7 +70,7 @@ import static org.hamcrest.CoreMatchers.is;
  **********************************************************************************************************************/
 public class DefaultSiteNodeTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ApplicationContext context;
 

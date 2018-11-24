@@ -32,7 +32,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.springframework.web.context.ContextLoaderListener;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************

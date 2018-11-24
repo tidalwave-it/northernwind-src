@@ -35,6 +35,8 @@ import lombok.Getter;
 
 /***********************************************************************************************************************
  *
+ * An helper class for testing {@link MacroFilter}, accumulates and returns all the groups in a {@link Matcher}.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
