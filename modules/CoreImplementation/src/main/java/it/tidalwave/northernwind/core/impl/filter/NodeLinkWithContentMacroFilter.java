@@ -74,16 +74,18 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
     // FIXME: merge with NodeLinkMacroFilter, using an optional block for contentRelativePath
     public NodeLinkWithContentMacroFilter()
       {
-        super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
+        super("\\$nodeLink\\(relativePath='(?<relativePath>[^']*)', "
+                          + "contentRelativePath='(?<contentRelativePath>[^']*)'"
+                          + "(, language='(?<language>[^']*)')?\\)\\$");
       }
 
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException, IOException
       {
-        final String relativePath = matcher.group(1);
-        final String contentRelativePath = matcher.group(2);
-        final Optional<String> language = Optional.ofNullable(matcher.group(4));
+        final String relativePath = matcher.group("relativePath");
+        final String contentRelativePath = matcher.group("contentRelativePath");
+        final Optional<String> language = Optional.ofNullable(matcher.group("language"));
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
