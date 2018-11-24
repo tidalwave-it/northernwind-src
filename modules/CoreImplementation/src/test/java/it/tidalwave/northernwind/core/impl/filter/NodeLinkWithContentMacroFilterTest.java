@@ -30,7 +30,7 @@ package it.tidalwave.northernwind.core.impl.filter;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.Getter;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
