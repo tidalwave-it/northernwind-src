@@ -91,8 +91,8 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
         return new Object[][]
           {
             {
-              "href=\"$nodeLink(relativePath='/Blog')$\">1</a>",
-              "href=\"/LINK/URI-Blog\">1</a>"
+              // INPUT                                                EXPECTED
+              "href=\"$nodeLink(relativePath='/Blog')$\">1</a>",      "href=\"/LINK/URI-Blog\">1</a>"
             }
           };
       }
