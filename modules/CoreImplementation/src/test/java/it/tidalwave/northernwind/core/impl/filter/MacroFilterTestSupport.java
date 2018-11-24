@@ -76,7 +76,7 @@ public class MacroFilterTestSupport
         setup(ctx -> {});
       }
 
-    protected void setup (final @Nonnull Consumer<GenericApplicationContext>  modifier)
+    protected void setup (final @Nonnull Consumer<GenericApplicationContext> modifier)
       {
         context      = helper.createSpringContext(modifier);
         siteProvider = context.getBean(SiteProvider.class);
