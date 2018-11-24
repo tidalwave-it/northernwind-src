@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.spi.ContentSupport;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;

@@ -45,8 +45,8 @@ import org.imajine.image.metadata.IPTC;
 import org.imajine.image.op.ReadOp;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
-import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import java.time.format.FormatStyle;
 
 /***********************************************************************************************************************
@@ -58,7 +58,7 @@ import java.time.format.FormatStyle;
 @Slf4j
 public class DefaultMetadataProviderTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     /*******************************************************************************************************************
      *

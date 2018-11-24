@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
+ * A text manipulator that performs some kind of transformation of an input string.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -39,6 +41,15 @@ public interface Filter
   {
     public static final Class<Filter> Filter = Filter.class;
 
+    /*******************************************************************************************************************
+     *
+     * Filters an input text.
+     *
+     * @param   text        the input text
+     * @param   mimeType    the MIME type of the input text
+     * @return              the filtered text
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public String filter (@Nonnull String text, @Nonnull String mimeType);
   }

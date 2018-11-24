@@ -39,21 +39,36 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * An implementation of {@link Filter} based on regular expressions. Each instance of text which matches a given regular
+ * expression is replaced with the result of the call to {@link #doFilter(Matcher)}.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction=true) @ThreadSafe @Slf4j
-public class MacroFilter implements Filter
+public class MacroFilter implements Filter // FIXME: rename to RegexFilter
   {
     @Nonnull
     private final Pattern pattern;
 
-    public MacroFilter (final @Nonnull String regexp)
+    /*******************************************************************************************************************
+     *
+     * Creates an instance with the given regular expression.
+     *
+     * @param   regex     the regular expression
+     *
+     ******************************************************************************************************************/
+    public MacroFilter (final @Nonnull String regex)
       {
-        pattern = Pattern.compile(regexp);
+        pattern = Pattern.compile(regex);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
     public String filter (final @Nonnull String text, final @Nonnull String mimeType)
       {
@@ -79,6 +94,14 @@ public class MacroFilter implements Filter
         return buffer.toString();
       }
 
+    /*******************************************************************************************************************
+     *
+     * Apply the filtering given an instance of {@link Matcher}.
+     *
+     * @param   matcher   the {@code Matcher}
+     * return             the filtered string
+     *
+     ******************************************************************************************************************/
     @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException, IOException
@@ -86,6 +109,11 @@ public class MacroFilter implements Filter
         return "";
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private String doFilter (final @Nonnull Matcher matcher)
       {
