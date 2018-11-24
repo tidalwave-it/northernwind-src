@@ -25,32 +25,44 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.filter;
+package it.tidalwave.northernwind.util.test;
 
 import javax.annotation.Nonnull;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.northernwind.core.model.Content;
+import java.util.function.Consumer;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import org.testng.annotations.BeforeClass;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.testng.annotations.BeforeMethod;
+import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
+ *
+ * A support class for testing. It:
+ *
+ * <ul>
+ *     <li>creates a Spring {@link ApplicationContext} out of a Spring Beans file, which should contain at least mock
+ *         implementations of {@link SiteProvider} and {@link Site};</li>
+ *     <li>binds the {@code Site} instance to {@code SiteProvider};</li>
+ *     <li>provides a {@link MockContentSiteFinder} for any {@code site.find(Content}};</li>
+ *     <li>provides a {@link MockSiteNodeSiteFinder} for any {@code site.find(SiteNode}};</li>
+ *     <li>provides a mock implementation of {@code site.createLink(resource)} which returns a string
+ *     {@code "/LINK<resource.toString()"}</li>
+ * </ul>
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroFilterTestSupport
+public class NorthernWindTestSupport
   {
-    protected final TestHelper helper = new TestHelper(this);
+    protected final SpringTestHelper helper = new SpringTestHelper(this);
 
     protected ApplicationContext context;
 
@@ -58,24 +70,24 @@ public class MacroFilterTestSupport
 
     protected Site site;
 
-    @BeforeClass // FIXME: should be BeforeMethod?
-    public void setUp()
+    @BeforeMethod
+    protected final void setupContext()
       {
-        context = helper.createSpringContext();
+        setupContext(ctx -> {});
+      }
+
+    protected void setupContext (final @Nonnull Consumer<GenericApplicationContext> modifier)
+      {
+        context      = helper.createSpringContext(modifier);
         siteProvider = context.getBean(SiteProvider.class);
-        site = context.getBean(Site.class);
+        site         = context.getBean(Site.class);
+
         when(siteProvider.getSite()).thenReturn(site);
 
-        when(site.find(eq(Content.class))).thenReturn(new MockContentSiteFinder());
-        when(site.find(eq(SiteNode.class))).thenReturn(new MockSiteNodeSiteFinder());
-        when(site.createLink(any(ResourcePath.class))).thenAnswer(new Answer<String>()
-          {
-            @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation)
-              {
-                return "/LINK" + ((ResourcePath)invocation.getArguments()[0]).asString();
+        when(site.find(eq(Content))).thenReturn(new MockContentSiteFinder());
+        when(site.find(eq(SiteNode))).thenReturn(new MockSiteNodeSiteFinder());
+        when(site.createLink(any(ResourcePath.class))).thenAnswer(
+                invocation -> "/LINK" + ((ResourcePath)invocation.getArguments()[0]).asString());
 //                return ((ResourcePath)invocation.getArguments()[0]).prepend("LINK").asString();
-              }
-          });
       }
   }

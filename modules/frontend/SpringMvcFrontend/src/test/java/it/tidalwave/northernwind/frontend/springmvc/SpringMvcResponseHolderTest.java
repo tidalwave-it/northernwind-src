@@ -35,7 +35,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderTest;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
@@ -61,7 +62,7 @@ public class SpringMvcResponseHolderTest extends ResponseBuilderTest
     protected void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
-        final TestHelper.TestResource tr = helper.testResourceFor(fileName);
+        final SpringTestHelper.TestResource tr = helper.testResourceFor(fileName);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final ResponseEntity<byte[]> responseEntity = (ResponseEntity<byte[]>)builder.build();
         final HttpHeaders headers = responseEntity.getHeaders();

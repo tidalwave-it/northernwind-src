@@ -46,8 +46,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
-import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 
 /***********************************************************************************************************************
  *
@@ -60,7 +60,7 @@ public class LayeredFileSystemProviderTest
   {
     private static final String FS_BASE = "target/filesystems/";
 
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private LayeredFileSystemProvider underTest;
 

@@ -42,8 +42,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
-import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -56,7 +56,7 @@ import static org.hamcrest.CoreMatchers.*;
  **********************************************************************************************************************/
 public class XsltMacroFilterTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ApplicationContext context;
 

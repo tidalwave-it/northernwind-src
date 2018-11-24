@@ -45,8 +45,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
-import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +60,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ResponseBuilderTest
   {
-    protected final TestHelper helper = new TestHelper(this);
+    protected final SpringTestHelper helper = new SpringTestHelper(this);
 
     private final ZonedDateTime currentTime = Instant.ofEpochMilli(1341242353456L).atZone(ZoneId.of("GMT"));
 

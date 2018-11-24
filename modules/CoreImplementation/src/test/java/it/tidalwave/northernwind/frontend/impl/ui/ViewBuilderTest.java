@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
 import static org.hamcrest.MatcherAssert.*;
@@ -70,7 +70,7 @@ public class ViewBuilderTest
         public final MockService2 service2;
       }
 
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ViewBuilder underTest;
 
