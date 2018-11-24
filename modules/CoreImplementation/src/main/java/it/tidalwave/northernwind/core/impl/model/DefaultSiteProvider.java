@@ -57,6 +57,8 @@ import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
+ * The default implementation of {@link SiteProvider}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *

@@ -31,7 +31,8 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
- * A provider for a {@link Site}.
+ * A provider for a {@link Site}. It handles the initial configuration and boot, in background. It also exposes a
+ * {@link #reload()} method to reload the contents.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
