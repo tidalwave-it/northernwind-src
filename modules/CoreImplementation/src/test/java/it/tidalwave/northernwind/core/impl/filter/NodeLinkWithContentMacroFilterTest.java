@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
+import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,7 @@ class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilt
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
+public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
   {
     private final static Consumer<GenericApplicationContext> NO_CHANGES = context -> {};
 

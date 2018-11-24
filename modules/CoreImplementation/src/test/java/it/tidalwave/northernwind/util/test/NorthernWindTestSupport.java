@@ -25,7 +25,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.impl.filter;
+package it.tidalwave.northernwind.util.test;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -34,9 +34,9 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import org.testng.annotations.BeforeMethod;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
- * A support class for testing {@link MacroFilter} and its subclasses. It:
+ * A support class for testing. It:
  *
  * <ul>
  *     <li>creates a Spring {@link ApplicationContext} out of a Spring Beans file, which should contain at least mock
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.*;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class MacroFilterTestSupport
+public class NorthernWindTestSupport
   {
     protected final SpringTestHelper helper = new SpringTestHelper(this);
 
