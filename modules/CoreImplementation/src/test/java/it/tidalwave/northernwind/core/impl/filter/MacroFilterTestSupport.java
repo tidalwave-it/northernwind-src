@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import org.testng.annotations.BeforeMethod;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
@@ -62,7 +62,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class MacroFilterTestSupport
   {
-    protected final TestHelper helper = new TestHelper(this);
+    protected final SpringTestHelper helper = new SpringTestHelper(this);
 
     protected ApplicationContext context;
 

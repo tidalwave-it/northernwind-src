@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import it.tidalwave.northernwind.core.impl.filter.MacroFilterTestSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper.TestResource;
+import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import java.time.Clock;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;

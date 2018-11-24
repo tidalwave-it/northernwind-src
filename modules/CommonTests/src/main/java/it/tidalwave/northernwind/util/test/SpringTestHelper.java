@@ -47,8 +47,8 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static lombok.AccessLevel.PRIVATE;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
  *
@@ -59,7 +59,7 @@ import static lombok.AccessLevel.PRIVATE;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class TestHelper
+public class SpringTestHelper
   {
     /*******************************************************************************************************************
      *
@@ -145,7 +145,7 @@ public class TestHelper
         public String readStringFromResource()
           throws IOException
           {
-            return TestHelper.this.readStringFromResource(name);
+            return SpringTestHelper.this.readStringFromResource(name);
           }
       }
 
