@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2018 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -31,7 +31,8 @@ import javax.annotation.Nonnull;
 
 /***********************************************************************************************************************
  *
- * A provider for a {@link Site}.
+ * A provider for a {@link Site}. It handles the initial configuration and boot, in background. It also exposes a
+ * {@link #reload()} method to reload the contents.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
