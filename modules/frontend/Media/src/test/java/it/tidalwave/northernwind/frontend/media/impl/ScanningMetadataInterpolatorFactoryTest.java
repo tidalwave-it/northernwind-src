@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmpDcTitleInte
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -49,7 +49,7 @@ import static org.hamcrest.Matchers.*;
 @Slf4j
 public class ScanningMetadataInterpolatorFactoryTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ApplicationContext context;
 

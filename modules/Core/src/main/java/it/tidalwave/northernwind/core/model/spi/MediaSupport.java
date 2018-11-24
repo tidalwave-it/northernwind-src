@@ -33,7 +33,7 @@ import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.Getter;
 
 /***********************************************************************************************************************

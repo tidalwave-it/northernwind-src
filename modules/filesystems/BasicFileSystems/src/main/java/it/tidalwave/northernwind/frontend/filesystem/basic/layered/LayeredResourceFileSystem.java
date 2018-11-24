@@ -40,7 +40,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

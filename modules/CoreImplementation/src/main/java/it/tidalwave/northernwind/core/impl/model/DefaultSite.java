@@ -107,7 +107,7 @@ import lombok.extern.slf4j.Slf4j;
     @Nonnull
     private final ModelFactory modelFactory;
 
-    @Inject @Named("fileSystemProvider") @Getter @Nonnull
+    @Inject @Named("fileSystemProvider") @Getter
     private ResourceFileSystemProvider fileSystemProvider;
 
     @Nonnull

@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>4.1</version>
+        <version>4.5</version>
         <relativePath />
     </parent>
 
@@ -36,7 +36,7 @@ A few examples of websites running on NorthernWind:
 
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
 
-        <tft.maven.requiredJdk>[1.8.0-0,)</tft.maven.requiredJdk>
+        <tft.maven.requiredJdk>[1.8.0,12)</tft.maven.requiredJdk>
         <tft.javac.source>1.8</tft.javac.source>
         <tft.javac.target>1.8</tft.javac.target>
 
@@ -192,10 +192,10 @@ A few examples of websites running on NorthernWind:
         </plugins>
     </build>
 
-    <profiles> 
-        <profile> 
+    <profiles>
+        <profile>
             <id>installers</id>
-        </profile> 
+        </profile>
     </profiles>
 
     <modules>

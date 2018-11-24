@@ -53,7 +53,7 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
     @Inject
     private Provider<SiteProvider> siteProvider;
 
-    @Inject @Named("applicationMessageBus") @Nonnull
+    @Inject @Named("applicationMessageBus")
     private MessageBus messageBus;
 
     private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<ResourceFileSystemChangedEvent>()
