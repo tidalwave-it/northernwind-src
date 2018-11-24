@@ -65,7 +65,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
 
     private LocalFileSystemProvider targetProvider = new LocalFileSystemProvider();
 
-    @Inject @Named("applicationMessageBus") @Nonnull
+    @Inject @Named("applicationMessageBus")
     private MessageBus messageBus;
 
     /*******************************************************************************************************************
