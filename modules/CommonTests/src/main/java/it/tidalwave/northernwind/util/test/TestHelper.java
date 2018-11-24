@@ -33,24 +33,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
@@ -61,7 +58,7 @@ import static lombok.AccessLevel.PRIVATE;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class TestHelper
   {
     /*******************************************************************************************************************
@@ -152,7 +149,7 @@ public class TestHelper
           }
       }
 
-    @NonNull
+    @Nonnull
     private final Object test;
 
     /*******************************************************************************************************************
@@ -167,7 +164,7 @@ public class TestHelper
     @Nonnull
     public ApplicationContext createSpringContext (final @Nonnull String ... configurationFiles)
       {
-        return createSpringContext(Collections.<String, Object>emptyMap(), configurationFiles);
+        return createSpringContext(Collections.emptyMap(), configurationFiles);
       }
 
     /*******************************************************************************************************************
@@ -184,7 +181,43 @@ public class TestHelper
     public ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
                                                    final @Nonnull String ... configurationFiles)
       {
-        return createSpringContext(properties, new ArrayList<>(Arrays.asList(configurationFiles)));
+        return createSpringContext(properties, context -> {}, new ArrayList<>(Arrays.asList(configurationFiles)));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a Spring context configured with the given files. A further configuration file is appended, named
+     * {@code test-class-simple-name/TestBeans.xml}.
+     *
+     * @param   configurationFiles  the configuration files
+     * @param   modifier            a processor to modify the contents of the context
+     * @return                      the Spring {@link ApplicationContext}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ApplicationContext createSpringContext (final @Nonnull Consumer<GenericApplicationContext> modifier,
+                                                   final @Nonnull String ... configurationFiles)
+      {
+        return createSpringContext(Collections.emptyMap(), modifier, configurationFiles);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a Spring context configured with the given files. A further configuration file is appended, named
+     * {@code test-class-simple-name/TestBeans.xml}.
+     *
+     * @param   properties          the properties
+     * @param   modifier            a processor to modify the contents of the context
+     * @param   configurationFiles  the configuration files
+     * @return                      the Spring {@link ApplicationContext}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
+                                                   final @Nonnull Consumer<GenericApplicationContext> modifier,
+                                                   final @Nonnull String ... configurationFiles)
+      {
+        return createSpringContext(properties, modifier, new ArrayList<>(Arrays.asList(configurationFiles)));
       }
 
     /*******************************************************************************************************************
@@ -192,24 +225,21 @@ public class TestHelper
      ******************************************************************************************************************/
     @Nonnull
     private ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
+                                                    final @Nonnull Consumer<GenericApplicationContext> modifier,
                                                     final @Nonnull Collection<String> configurationFiles)
       {
         configurationFiles.add(test.getClass().getSimpleName() + "/TestBeans.xml");
 
-        if (properties.isEmpty())
-          {
-            return new ClassPathXmlApplicationContext(configurationFiles.toArray(new String[0]));
-          }
-        else
-          {
-            final StandardEnvironment environment = new StandardEnvironment();
-            environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
-            final GenericXmlApplicationContext context = new GenericXmlApplicationContext();
-            context.setEnvironment(environment);
-            context.load(configurationFiles.toArray(new String[0]));
-            context.refresh();
-            return context;
-          }
+        final StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
+        final GenericXmlApplicationContext context = new GenericXmlApplicationContext();
+        context.setEnvironment(environment);
+        context.load(configurationFiles.toArray(new String[0]));
+        modifier.accept(context);
+        context.refresh();
+        log.info("Beans: {}", Arrays.asList(context.getBeanFactory().getBeanDefinitionNames()));
+
+        return context;
       }
 
     /*******************************************************************************************************************
