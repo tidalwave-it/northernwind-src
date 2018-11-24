@@ -35,14 +35,13 @@ import it.tidalwave.util.Finder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
- * The model for the whole site, it contains a collection of {@link Content}s, {@link Media} items and
+ * The model for the container of the whole site, it contains a collection of {@link Content}s, {@link Media} items and
  * {@link SiteNode}s.
  *
  * @author  Fabrizio Giudici
@@ -75,18 +74,25 @@ public interface Site
 
         @Wither
         private String contextPath;
+
         @Wither
         private String documentPath;
+
         @Wither
         private String mediaPath;
+
         @Wither
         private String libraryPath;
+
         @Wither
         private String nodePath;
+
         @Wither
         private boolean logConfigurationEnabled;
+
         @Wither
         private List<Locale> configuredLocales;
+
         @Wither
         private List<String> ignoredFolders;
 
@@ -120,12 +126,13 @@ public interface Site
      *
      * Finds something.
      *
-     * @param  type  the type of thing to find
-     * @return       the {@link Finder} for that thing.
+     * @param <TYPE>    the static type of the thing to find
+     * @param  type     the dynamic type of thing to find
+     * @return          the {@link Finder} for that thing.
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <Type> SiteFinder<Type> find (@Nonnull Class<Type> type);
+    public <TYPE> SiteFinder<TYPE> find (@Nonnull Class<TYPE> type);
 
     /*******************************************************************************************************************
      *
