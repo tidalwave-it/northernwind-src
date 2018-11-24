@@ -27,16 +27,17 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.northernwind.core.model.Content;
+import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import org.testng.annotations.BeforeClass;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import it.tidalwave.northernwind.util.test.TestHelper;
+import org.testng.annotations.BeforeMethod;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static org.mockito.Mockito.*;
@@ -69,10 +70,15 @@ public class MacroFilterTestSupport
 
     protected Site site;
 
-    @BeforeClass // FIXME: should be BeforeMethod?
-    public void setUp()
+    @BeforeMethod
+    public void setup()
       {
-        context      = helper.createSpringContext();
+        setup(ctx -> {});
+      }
+
+    protected void setup (final @Nonnull Consumer<GenericApplicationContext>  modifier)
+      {
+        context      = helper.createSpringContext(modifier);
         siteProvider = context.getBean(SiteProvider.class);
         site         = context.getBean(Site.class);
 
@@ -80,7 +86,8 @@ public class MacroFilterTestSupport
 
         when(site.find(eq(Content))).thenReturn(new MockContentSiteFinder());
         when(site.find(eq(SiteNode))).thenReturn(new MockSiteNodeSiteFinder());
-        when(site.createLink(any(ResourcePath.class))).thenAnswer(invocation -> "/LINK" + ((ResourcePath)invocation.getArguments()[0]).asString());
+        when(site.createLink(any(ResourcePath.class))).thenAnswer(
+                invocation -> "/LINK" + ((ResourcePath)invocation.getArguments()[0]).asString());
 //                return ((ResourcePath)invocation.getArguments()[0]).prepend("LINK").asString();
       }
   }
