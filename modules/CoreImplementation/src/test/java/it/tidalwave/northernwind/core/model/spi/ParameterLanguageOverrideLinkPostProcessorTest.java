@@ -32,7 +32,7 @@ import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -45,7 +45,7 @@ import static org.hamcrest.MatcherAssert.*;
  **********************************************************************************************************************/
 public class ParameterLanguageOverrideLinkPostProcessorTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ParameterLanguageOverrideLinkPostProcessor underTest;
 

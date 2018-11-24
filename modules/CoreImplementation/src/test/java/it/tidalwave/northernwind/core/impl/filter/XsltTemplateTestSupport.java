@@ -46,7 +46,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor
@@ -96,7 +96,7 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
  **********************************************************************************************************************/
 public class XsltTemplateTestSupport
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private XsltMacroFilter filter;
 

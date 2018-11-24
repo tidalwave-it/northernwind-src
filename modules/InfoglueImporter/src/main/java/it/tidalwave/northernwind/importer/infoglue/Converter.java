@@ -28,6 +28,7 @@
 package it.tidalwave.northernwind.importer.infoglue;
 
 import javax.annotation.Nonnull;
+import java.util.Base64;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -39,7 +40,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import lombok.extern.slf4j.Slf4j;
-import sun.misc.BASE64Decoder;
 
 /***********************************************************************************************************************
  *
@@ -50,7 +50,8 @@ import sun.misc.BASE64Decoder;
 @Slf4j
 public abstract class Converter
   {
-    private final BASE64Decoder decoder = new BASE64Decoder();
+    private final Base64.Decoder decoder = Base64.getMimeDecoder();
+
 
     protected final StringBuilder builder = new StringBuilder();
 
@@ -218,6 +219,6 @@ public abstract class Converter
     protected byte[] contentAsBytes()
       throws IOException
       {
-        return decoder.decodeBuffer(builder.toString());
+        return decoder.decode(builder.toString());
       }
   }
