@@ -40,10 +40,10 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
 import it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 
 /***********************************************************************************************************************
  *
@@ -89,11 +89,12 @@ public class DefaultSiteProviderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
+    public void must_properly_create_the_Site()
       throws Exception
       {
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
+        // then
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
                 .withContextPath("thecontextpath")
                 .withDocumentPath("testDocumentPath")
@@ -104,10 +105,19 @@ public class DefaultSiteProviderTest
                 .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                 .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
 
-        verify(executor).execute(any(Runnable.class)); // FIXME: needed?
-
         assertThat(underTest.getSite(), sameInstance((Site)site));
         assertThat(underTest.isSiteAvailable(), is(false));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_create_and_initialize_the_Site_when_DefaultSiteProvider_is_initialized()
+      throws Exception
+      {
+        // given
+        underTest = context.getBean(DefaultSiteProvider.class);
         // when
         executor.doExecute(); // emulate Site initialization in background
         // then
