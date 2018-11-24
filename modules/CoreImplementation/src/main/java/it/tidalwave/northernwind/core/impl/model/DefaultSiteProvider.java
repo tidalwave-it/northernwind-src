@@ -196,6 +196,9 @@ public class DefaultSiteProvider implements SiteProvider
       {
         try
           {
+            log.info("****************************************");
+            log.info("SITE INITIALIZATION STARTED");
+            log.info("****************************************");
             final long time = System.currentTimeMillis();
             site.initialize();
             siteAvailable.set(true);
