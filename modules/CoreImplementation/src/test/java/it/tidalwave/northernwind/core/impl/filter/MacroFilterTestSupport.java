@@ -71,12 +71,12 @@ public class MacroFilterTestSupport
     protected Site site;
 
     @BeforeMethod
-    public void setup()
+    protected final void setupContext()
       {
-        setup(ctx -> {});
+        setupContext(ctx -> {});
       }
 
-    protected void setup (final @Nonnull Consumer<GenericApplicationContext> modifier)
+    protected void setupContext (final @Nonnull Consumer<GenericApplicationContext> modifier)
       {
         context      = helper.createSpringContext(modifier);
         siteProvider = context.getBean(SiteProvider.class);

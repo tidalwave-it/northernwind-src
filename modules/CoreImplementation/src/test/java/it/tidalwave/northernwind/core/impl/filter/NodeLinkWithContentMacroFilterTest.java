@@ -87,7 +87,7 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
                                                        final @Nonnull String expected)
       {
         // given
-        setup(config);
+        setupContext(config);
         final NodeLinkWithContentMacroFilter underTest = context.getBean(NodeLinkWithContentMacroFilter.class);
         // when
         final String filtered = underTest.filter(text, "text/html");
