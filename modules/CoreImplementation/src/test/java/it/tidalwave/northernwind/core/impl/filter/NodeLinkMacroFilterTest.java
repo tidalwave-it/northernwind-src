@@ -27,6 +27,7 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
+import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,7 @@ class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
+public class NodeLinkMacroFilterTest extends NorthernWindTestSupport
   {
     /*******************************************************************************************************************
      *
@@ -91,8 +92,8 @@ public class NodeLinkMacroFilterTest extends MacroFilterTestSupport
         return new Object[][]
           {
             {
-              "href=\"$nodeLink(relativePath='/Blog')$\">1</a>",
-              "href=\"/LINK/URI-Blog\">1</a>"
+              // INPUT                                                EXPECTED
+              "href=\"$nodeLink(relativePath='/Blog')$\">1</a>",      "href=\"/LINK/URI-Blog\">1</a>"
             }
           };
       }

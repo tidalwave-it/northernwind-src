@@ -27,17 +27,14 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.io.IOException;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -49,6 +46,18 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * Implements the filter which expands the macro {@code nodeLink} into a link.
+ *
+ * <pre>
+ * $nodeLink(relativePath='path1' contentRelativePath='path2' language='lang')$
+ * </pre>
+ *
+ * <ul>
+ * <li>{@code relativePath} must point to a node;</li>
+ * <li>{@code contentRelativePath} must point to a content path inside that node;</li>
+ * <li>{@code language} (optional) represents a language.</li>
+ * </ul>
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -59,45 +68,30 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
     @Inject
     private Provider<SiteProvider> siteProvider;
 
-    // FIXME: what about @AutoWired(required=false)?
     @Inject
-    private ApplicationContext context;
-
-    @CheckForNull
-    private ParameterLanguageOverrideLinkPostProcessor postProcessor;
+    private Optional<ParameterLanguageOverrideLinkPostProcessor> postProcessor;
 
     // FIXME: merge with NodeLinkMacroFilter, using an optional block for contentRelativePath
     public NodeLinkWithContentMacroFilter()
       {
-        super("\\$nodeLink\\(relativePath='([^']*)', contentRelativePath='([^']*)'(, language='([^']*)')?\\)\\$");
+        super("\\$nodeLink\\(relativePath='(?<relativePath>[^']*)', "
+                          + "contentRelativePath='(?<contentRelativePath>[^']*)'"
+                          + "(, language='(?<language>[^']*)')?\\)\\$");
       }
 
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       throws NotFoundException, IOException
       {
-        final String relativePath = matcher.group(1);
-        final String contentRelativePath = matcher.group(2);
-        final String language = matcher.group(4);
+        final String relativePath = matcher.group("relativePath");
+        final String contentRelativePath = matcher.group("contentRelativePath");
+        final Optional<String> language = Optional.ofNullable(matcher.group("language"));
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
         final ResourcePath path = siteNode.getRelativeUri().appendedWith(content.getExposedUri());
         final String link = site.createLink(path);
 
-        return ((language == null) || (postProcessor == null)) ? link : postProcessor.postProcess(link, language);
-      }
-
-    @PostConstruct
-    private void initialize()
-      {
-        try
-          {
-            postProcessor = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
-          }
-        catch (NoSuchBeanDefinitionException e)
-          {
-            // ok, it's optional
-          }
+        return language.flatMap(l -> postProcessor.map(pp -> pp.postProcess(link, l))).orElse(link);
       }
   }

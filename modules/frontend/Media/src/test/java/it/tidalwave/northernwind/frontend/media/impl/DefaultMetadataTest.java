@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS;
 import static org.mockito.Mockito.*;
@@ -53,7 +53,7 @@ import static org.hamcrest.CoreMatchers.*;
 @Slf4j
 public class DefaultMetadataTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ApplicationContext context;
 

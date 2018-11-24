@@ -47,7 +47,7 @@ import org.springframework.context.ApplicationContext;
 import org.mockito.InOrder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -62,7 +62,7 @@ import static org.mockito.Matchers.any;
  **********************************************************************************************************************/
 public class DefaultSiteViewControllerTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private DefaultSiteViewController underTest;
 
