@@ -48,6 +48,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.util.BundleHelper;
 import it.tidalwave.util.NotFoundException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -106,8 +107,7 @@ public class DefaultSiteProvider implements SiteProvider
     @CheckForNull
     private DefaultSite site;
 
-    @Getter
-    private boolean siteAvailable = false;
+    private final AtomicBoolean siteAvailable = new AtomicBoolean();
 
     /*******************************************************************************************************************
      *
@@ -131,10 +131,21 @@ public class DefaultSiteProvider implements SiteProvider
      *
      ******************************************************************************************************************/
     @Override
+    public boolean isSiteAvailable()
+      {
+        return siteAvailable.get();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
     public void reload()
       {
         log.info("reload()");
-        siteAvailable = false;
+        siteAvailable.set(false);
 
         site = (DefaultSite)modelFactory.createSite().withContextPath(getContextPath())
                                                      .withDocumentPath(documentPath)
@@ -187,7 +198,7 @@ public class DefaultSiteProvider implements SiteProvider
           {
             final long time = System.currentTimeMillis();
             site.initialize();
-            siteAvailable = true;
+            siteAvailable.set(true);
             log.info("****************************************");
             log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
             log.info("****************************************");
