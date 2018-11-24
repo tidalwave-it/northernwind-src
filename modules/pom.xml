@@ -34,6 +34,7 @@
         <xmpcore.version>5.1.0</xmpcore.version>
 
         <tft.mockito.version>2.23.4</tft.mockito.version>
+        <tft.maven-surefire-plugin.version>3.0.0-M1</tft.maven-surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
