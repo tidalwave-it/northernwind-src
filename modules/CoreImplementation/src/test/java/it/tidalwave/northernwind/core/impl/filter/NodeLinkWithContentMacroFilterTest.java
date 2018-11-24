@@ -30,10 +30,12 @@ package it.tidalwave.northernwind.core.impl.filter;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import lombok.experimental.Delegate;
+import java.util.function.Consumer;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.springframework.context.support.GenericApplicationContext;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
@@ -51,6 +53,14 @@ class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilt
  **********************************************************************************************************************/
 public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
   {
+    private final static Consumer<GenericApplicationContext> NO_CHANGES = context -> {};
+
+    private final static Consumer<GenericApplicationContext> REMOVE_LANGUAGE_POST_PROCESSORS = context ->
+      {
+        context.removeBeanDefinition("parameterLanguageOverrideRequestProcessor");
+        context.removeBeanDefinition("parameterLanguageOverrideLinkPostProcessor");
+      };
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -72,9 +82,12 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "textProvider")
-    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
+    public void must_perform_the_proper_substitutions (final @Nonnull String text,
+                                                       final @Nonnull Consumer<GenericApplicationContext> config,
+                                                       final @Nonnull String expected)
       {
         // given
+        setup(config);
         final NodeLinkWithContentMacroFilter underTest = context.getBean(NodeLinkWithContentMacroFilter.class);
         // when
         final String filtered = underTest.filter(text, "text/html");
@@ -91,11 +104,11 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
         return new Object[][]
           {
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
               Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null)
             },
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
               Arrays.asList("/Blog", "/Blog/Equipment/The title", ", language='it'", "it")
             }
           };
@@ -110,20 +123,45 @@ public class NodeLinkWithContentMacroFilterTest extends MacroFilterTestSupport
         return new Object[][]
           {
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/')$\">1</a>",
-              "href=\"/LINK/URI-Blog\">1</a>"
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/')$\">1</a>",
+              NO_CHANGES,
+              "<a href=\"/LINK/URI-Blog\">1</a>" // FIXME: missing leading / ?
             },
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
-              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>"
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
+              NO_CHANGES,
+              "<a href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>" // FIXME: missing leading / ?
             },
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
-              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=it\">1</a>"
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
+              NO_CHANGES,
+              "<a href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=it\">1</a>"
             },
             {
-              "href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='fr')$\">1</a>",
-              "href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=fr\">1</a>"
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='fr')$\">1</a>",
+              NO_CHANGES,
+              "<a href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title/?l=fr\">1</a>"
+            },
+
+            {
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/')$\">1</a>",
+              REMOVE_LANGUAGE_POST_PROCESSORS,
+              "<a href=\"/LINK/URI-Blog\">1</a>" // FIXME: missing leading / ?
+            },
+            {
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
+              REMOVE_LANGUAGE_POST_PROCESSORS,
+              "<a href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>" // FIXME: missing leading / ?
+            },
+            {
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
+              REMOVE_LANGUAGE_POST_PROCESSORS,
+              "<a href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>" // FIXME: missing leading / ?
+            },
+            {
+              "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='fr')$\">1</a>",
+              REMOVE_LANGUAGE_POST_PROCESSORS,
+              "<a href=\"/LINK/URI-Blog/EXPOSED-Blog-Equipment-The-title\">1</a>" // FIXME: missing leading / ?
             }
           };
       }
