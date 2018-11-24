@@ -52,7 +52,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.MimeTypeResolver;
 import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
