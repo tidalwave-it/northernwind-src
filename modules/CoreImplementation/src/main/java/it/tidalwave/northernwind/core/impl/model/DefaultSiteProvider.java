@@ -32,17 +32,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Stream;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletContext;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -52,6 +52,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -69,7 +70,7 @@ public class DefaultSiteProvider implements SiteProvider
     public static final String DEFAULT_CONTEXT_PATH = "/";
 
     @Inject
-    private Provider<ServletContext> servletContext;
+    private Optional<ServletContext> servletContext;
 
     @Inject
     private ModelFactory modelFactory;
@@ -144,28 +145,7 @@ public class DefaultSiteProvider implements SiteProvider
                                                      .withConfiguredLocales(configuredLocales)
                                                      .withIgnoredFolders(ignoredFolders)
                                                      .build();
-        executor.execute(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                try
-                  {
-                    final long time = System.currentTimeMillis();
-                    site.initialize();
-                    siteAvailable = true;
-                    log.info("****************************************");
-                    log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
-                    log.info("****************************************");
-                  }
-                catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
-                  {
-                    log.error("****************************************");
-                    log.error("SITE INITIALIZATION FAILED!", e);
-                    log.error("****************************************");
-                  }
-              }
-          });
+        executor.execute(() -> initialize(site));
       }
 
     /*******************************************************************************************************************
@@ -189,13 +169,35 @@ public class DefaultSiteProvider implements SiteProvider
       {
         log.info("initialize()");
         ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
-
-        for (final String localeAsString : localesAsString.split(","))
-          {
-            configuredLocales.add(new Locale(localeAsString.trim()));
-          }
-
+        configuredLocales.addAll(Stream.of(localesAsString.split(","))
+                                       .map(String::trim)
+                                       .map(Locale::new)
+                                       .collect(toList()));
         reload();
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void initialize (final @Nonnull DefaultSite site)
+      {
+        try
+          {
+            final long time = System.currentTimeMillis();
+            site.initialize();
+            siteAvailable = true;
+            log.info("****************************************");
+            log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
+            log.info("****************************************");
+          }
+        catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
+          {
+            log.error("****************************************");
+            log.error("SITE INITIALIZATION FAILED!", e);
+            log.error("****************************************");
+          }
       }
 
     /*******************************************************************************************************************
@@ -206,14 +208,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Nonnull
     /* package */ String getContextPath()
       {
-        try
-          {
-            return servletContext.get().getContextPath();
-          }
-        catch (NoSuchBeanDefinitionException e)
-          {
-            log.warn("Running in a non-web environment, set contextPath = {}", DEFAULT_CONTEXT_PATH);
-            return DEFAULT_CONTEXT_PATH;
-          }
+        return servletContext.map(ctx -> ctx.getContextPath()).orElse(DEFAULT_CONTEXT_PATH);
+//            log.warn("Running in a non-web environment, set contextPath = {}", DEFAULT_CONTEXT_PATH);
       }
   }
