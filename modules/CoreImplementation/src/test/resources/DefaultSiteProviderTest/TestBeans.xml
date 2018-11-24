@@ -42,7 +42,7 @@
     <!-- Enables AOP-based injection of classes that are instantiated outside of the Spring bean factory -->
     <context:spring-configured />
 
-    <bean id="taskExecutor" class="it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor" />
+    <bean id="taskExecutor" class="it.tidalwave.northernwind.core.impl.test.TaskExecutorMock" />
 
     <bean id="modelFactory" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="it.tidalwave.northernwind.core.model.ModelFactory" />

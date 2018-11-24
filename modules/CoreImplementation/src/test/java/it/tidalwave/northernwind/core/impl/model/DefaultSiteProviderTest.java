@@ -38,12 +38,18 @@ import it.tidalwave.northernwind.core.model.Site;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
-import it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor;
+import it.tidalwave.northernwind.core.impl.test.TaskExecutorMock;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 /***********************************************************************************************************************
  *
@@ -59,7 +65,7 @@ public class DefaultSiteProviderTest
 
     private DefaultSite site;
 
-    private WaitingTaskExecutor executor;
+    private TaskExecutorMock executor;
 
     private ServletContext servletContext;
 
@@ -74,7 +80,7 @@ public class DefaultSiteProviderTest
     public void setup()
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteProviderTest/TestBeans.xml");
-        executor = context.getBean(WaitingTaskExecutor.class);
+        executor = context.getBean(TaskExecutorMock.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
 
@@ -106,7 +112,7 @@ public class DefaultSiteProviderTest
                 .withConfigurationEnabled(true)
                 .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                 .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
-        // the executor that initializes Site hasn't started here
+        // the executor that initializes Site hasn't been started here
         assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
       }
@@ -121,7 +127,7 @@ public class DefaultSiteProviderTest
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
         // when
-        executor.doExecute(); // initializes Site
+        executor.start(); // initializes Site
         // then
         verify(site).initialize();
         assertThat(underTest.getSite(), sameInstance(site));
@@ -177,7 +183,7 @@ public class DefaultSiteProviderTest
         underTest = context.getBean(DefaultSiteProvider.class);
         doThrow(new IOException("Simulated error in initialization")).when(site).initialize();
         // when
-        executor.doExecute(); // emulate Site initialization in background
+        executor.start(); // emulate Site initialization in background
         // then
         assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
