@@ -74,7 +74,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Inject
     private ModelFactory modelFactory;
 
-    @Inject @Named("taskExecutor") @Nonnull
+    @Inject @Named("taskExecutor")
     private TaskExecutor executor;
 
     @Getter @Setter @Nonnull

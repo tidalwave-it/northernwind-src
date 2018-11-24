@@ -48,7 +48,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.Getter;
 
 /***********************************************************************************************************************

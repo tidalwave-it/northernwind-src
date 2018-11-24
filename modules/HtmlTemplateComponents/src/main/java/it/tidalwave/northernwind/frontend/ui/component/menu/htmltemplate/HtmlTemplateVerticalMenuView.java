@@ -33,7 +33,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.Getter;
 
 /***********************************************************************************************************************

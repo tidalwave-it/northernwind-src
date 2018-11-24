@@ -44,7 +44,7 @@ import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository
 import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.TestHelper;
+import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -60,7 +60,7 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.ResourceFileSyste
  **********************************************************************************************************************/
 public class MercurialFileSystemProviderTest
   {
-    private final TestHelper helper = new TestHelper(this);
+    private final SpringTestHelper helper = new SpringTestHelper(this);
 
     private ApplicationContext context;
 
