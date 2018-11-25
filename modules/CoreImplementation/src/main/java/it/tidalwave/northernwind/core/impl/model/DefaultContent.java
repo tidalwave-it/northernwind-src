@@ -113,9 +113,9 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     /*******************************************************************************************************************
      *
-     * Creates a new {@code DefaultContent} with the given configuration file.
+     * Creates a new {@code DefaultContent} with the given {@link Content.Builder}.
      *
-     * @param   file   the configuration file
+     * @param   builder   the builder
      *
      ******************************************************************************************************************/
     public DefaultContent (final @Nonnull Content.Builder builder)
