@@ -27,7 +27,6 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -58,7 +57,7 @@ import static java.util.stream.Collectors.toList;
 /***********************************************************************************************************************
  *
  * The default implementation of {@link SiteProvider}.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -97,7 +96,7 @@ public class DefaultSiteProvider implements SiteProvider
     private boolean logConfigurationEnabled = false;
 
     @Getter @Setter @Nonnull
-    private String localesAsString;
+    private String localesAsString = "";
 
     @Getter @Setter @Nonnull
     private String ignoredFoldersAsString = "";
@@ -106,8 +105,7 @@ public class DefaultSiteProvider implements SiteProvider
 
     private final List<Locale> configuredLocales = new ArrayList<>();
 
-    @CheckForNull
-    private DefaultSite site;
+    private Optional<DefaultSite> site = Optional.empty();
 
     private final AtomicBoolean siteAvailable = new AtomicBoolean();
 
@@ -119,12 +117,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Override @Nonnull
     public Site getSite()
       {
-        if (site == null) // must never occur, since site is created during initialize()
-          {
-            throw new IllegalStateException("Initialization internal error - @PostConstruct not called?");
-          }
-
-        return site;
+        return site.orElseThrow(() -> new IllegalStateException("Initialization error - @PostConstruct not called?"));
       }
 
     /*******************************************************************************************************************
@@ -149,16 +142,16 @@ public class DefaultSiteProvider implements SiteProvider
         log.info("reload()");
         siteAvailable.set(false);
 
-        site = (DefaultSite)modelFactory.createSite().withContextPath(getContextPath())
-                                                     .withDocumentPath(documentPath)
-                                                     .withMediaPath(mediaPath)
-                                                     .withLibraryPath(libraryPath)
-                                                     .withNodePath(nodePath)
-                                                     .withLogConfigurationEnabled(logConfigurationEnabled)
-                                                     .withConfiguredLocales(configuredLocales)
-                                                     .withIgnoredFolders(ignoredFolders)
-                                                     .build();
-        executor.execute(() -> initialize(site));
+        site = Optional.of((DefaultSite)modelFactory.createSite().withContextPath(getContextPath())
+                                                                 .withDocumentPath(documentPath)
+                                                                 .withMediaPath(mediaPath)
+                                                                 .withLibraryPath(libraryPath)
+                                                                 .withNodePath(nodePath)
+                                                                 .withLogConfigurationEnabled(logConfigurationEnabled)
+                                                                 .withConfiguredLocales(configuredLocales)
+                                                                 .withIgnoredFolders(ignoredFolders)
+                                                                 .build());
+        executor.execute(() -> initialize(site.get()));
       }
 
     /*******************************************************************************************************************
