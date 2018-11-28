@@ -186,10 +186,10 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public <Type> Type getProperty2 (@Nonnull Key<Type> key)
+    public <T> T getProperty2 (@Nonnull Key<T> key)
       throws NotFoundException, IOException
       {
-        final Type value = (Type)propertyMap.get(key);
+        final T value = (T)propertyMap.get(key);
         return (value != null) ? value : propertyResolver.resolveProperty(id, key);
       }
 
@@ -199,7 +199,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <Type> Type getProperty2 (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
+    public <T> T getProperty2 (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
       throws IOException
       {
         try
