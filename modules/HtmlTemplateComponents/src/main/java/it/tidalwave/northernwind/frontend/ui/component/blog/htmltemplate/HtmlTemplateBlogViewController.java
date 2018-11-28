@@ -33,13 +33,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -50,12 +54,12 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import java.time.format.FormatStyle;
 
 /***********************************************************************************************************************
  *
@@ -71,14 +75,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private final static Key<String> PROP_ADD_URL = new Key<>("@url");
     private final static Key<String> PROP_ADD_ID = new Key<>("@id");
 
-    private final static Map<String, DateTimeFormatter> STYLE_MAP = new HashMap<>();
+    private final static Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
 
     static
       {
-        STYLE_MAP.put("S-", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
-        STYLE_MAP.put("M-", DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
-        STYLE_MAP.put("L-", DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG));
-        STYLE_MAP.put("F-", DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("S-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.SHORT, l));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("M-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.MEDIUM, l));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("L-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.LONG, l));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("F-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, l));
       }
 
     @Nonnull
@@ -320,10 +324,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * Renders the date of the blog post.
      *
      ******************************************************************************************************************/
-    /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime blogDateTime)
+    /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime dateTime)
       {
-        htmlBuilder.append(String.format("<span class='nw-publishDate'>%s</span>%n",
-                                         blogDateTime.format(getDateTimeFormatter())));
+        final String template = "<span class='nw-publishDate'>%s</span>%n";
+        htmlBuilder.append(String.format(template, dateTime.format(getDateTimeFormatter())));
       }
 
     /*******************************************************************************************************************
@@ -453,13 +457,15 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             final String pattern = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DATE_FORMAT)
                                            .replaceAll("EEEEE+", "EEEE")
                                            .replaceAll("MMMMM+", "MMMM");
-            return ((pattern.length() == 2) ? STYLE_MAP.get(pattern)
-                                            : DateTimeFormatter.ofPattern(pattern)).withLocale(requestLocaleManager.getLocales().get(0));
+            final Locale locale = requestLocaleManager.getLocales().get(0);
+            return (((pattern.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(pattern).apply(locale)
+                                             : DateTimeFormatter.ofPattern(pattern)).withLocale(locale))
+                    .withZone(ZoneId.of("CET")); // FIXME timezone hardwired - get from properties
           }
         catch (NotFoundException | IOException e)
           {
+            log.info("USING {} {}", System.identityHashCode(requestLocaleManager.getDateTimeFormatter()));
+            return requestLocaleManager.getDateTimeFormatter();
           }
-
-        return requestLocaleManager.getDateTimeFormatter();
       }
   }
