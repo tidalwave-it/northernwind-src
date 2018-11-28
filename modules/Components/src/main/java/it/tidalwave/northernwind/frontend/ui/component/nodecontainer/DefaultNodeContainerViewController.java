@@ -71,7 +71,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             try
               {
-                final String title = rssSiteNode.getProperties().getProperty(PROPERTY_TITLE, "RSS");
+                final String title = rssSiteNode.getProperties().getProperty2(PROPERTY_TITLE, "RSS");
                 builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n",
                                              RSS_MIME_TYPE, title, site.createLink(rssSiteNode.getRelativeUri())));
               }
@@ -119,9 +119,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
         setCustomTemplate(viewProperties);
         view.addAttribute("language", requestLocaleManager.getLocales().get(0).getLanguage());
-        view.addAttribute("titlePrefix", viewProperties.getProperty(PROPERTY_TITLE_PREFIX, ""));
-        view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION, ""));
-        view.addAttribute("title", siteNodeProperties.getProperty(PROPERTY_TITLE, ""));
+        view.addAttribute("titlePrefix", viewProperties.getProperty2(PROPERTY_TITLE_PREFIX, ""));
+        view.addAttribute("description", viewProperties.getProperty2(PROPERTY_DESCRIPTION, ""));
+        view.addAttribute("title", siteNodeProperties.getProperty2(PROPERTY_TITLE, ""));
         view.addAttribute("screenCssSection", computeScreenCssSection());
         view.addAttribute("printCssSection", computePrintCssSection());
         view.addAttribute("rssFeeds", computeRssFeedsSection());
@@ -152,7 +152,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
         try
           {
-            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS,
+            for (final String relativeUri : getViewProperties().getProperty2(PROPERTY_SCREEN_STYLE_SHEETS,
                                                                             Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri
@@ -180,7 +180,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
         try
           {
-            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_PRINT_STYLE_SHEETS,
+            for (final String relativeUri : getViewProperties().getProperty2(PROPERTY_PRINT_STYLE_SHEETS,
                                                                             Collections.<String>emptyList()))
               {
                 final String link = relativeUri.startsWith("http") ? relativeUri
@@ -207,7 +207,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         try
           {
-            for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS,
+            for (final String relativePath : getViewProperties().getProperty2(PROPERTY_RSS_FEEDS,
                                                                              Collections.<String>emptyList()))
               {
                 site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink);
@@ -233,7 +233,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
         try
           {
-            for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS,
+            for (final String relativeUri : getViewProperties().getProperty2(PROPERTY_SCRIPTS,
                                                                             Collections.<String>emptyList()))
               {
                 // Always use </script> to close, as some browsers break without
@@ -259,9 +259,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         try
           {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH);
+            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_TEMPLATE_PATH);
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
+            view.setTemplate(template.getProperties().getProperty2(PROPERTY_TEMPLATE));
           }
         catch (NotFoundException e)
           {
@@ -281,13 +281,13 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
         try
           {
-            for (final String relativePath : getViewProperties().getProperty(PROPERTY_INLINED_SCRIPTS,
+            for (final String relativePath : getViewProperties().getProperty2(PROPERTY_INLINED_SCRIPTS,
                                                                              Collections.<String>emptyList()))
               {
                 try
                   {
                     final Content script = site.find(Content).withRelativePath(relativePath).result();
-                    builder.append(script.getProperties().getProperty(PROPERTY_TEMPLATE));
+                    builder.append(script.getProperties().getProperty2(PROPERTY_TEMPLATE));
                   }
                 catch (NotFoundException e)
                   {

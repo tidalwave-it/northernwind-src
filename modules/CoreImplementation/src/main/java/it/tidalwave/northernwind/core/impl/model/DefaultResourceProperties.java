@@ -41,6 +41,9 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -164,10 +167,29 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public <Type> Type getProperty (@Nonnull Key<Type> key)
+    public <T> Optional<T> getProperty (@Nonnull Key<T> key)
+      {
+        try
+          {
+            return Optional.of(getProperty2(key));
+          }
+        catch (NotFoundException | IOException e)
+          {
+            log.info("", e);
+            return Optional.empty();
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull @SuppressWarnings("unchecked")
+    public <T> T getProperty2 (@Nonnull Key<T> key)
       throws NotFoundException, IOException
       {
-        final Type value = (Type)propertyMap.get(key);
+        final T value = (T)propertyMap.get(key);
         return (value != null) ? value : propertyResolver.resolveProperty(id, key);
       }
 
@@ -177,12 +199,12 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <Type> Type getProperty (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
+    public <T> T getProperty2 (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
       throws IOException
       {
         try
           {
-            return getProperty(key);
+            return getProperty2(key);
           }
         catch (NotFoundException e)
           {
@@ -199,7 +221,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
       throws IOException
       {
-        return Integer.parseInt(getProperty(key, "" + defaultValue));
+        return Integer.parseInt(getProperty2(key, "" + defaultValue));
       }
 
     /*******************************************************************************************************************
@@ -211,7 +233,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
       throws IOException
       {
-        return Boolean.parseBoolean(getProperty(key, "" + defaultValue));
+        return Boolean.parseBoolean(getProperty2(key, "" + defaultValue));
       }
 
     /*******************************************************************************************************************
@@ -227,7 +249,7 @@ public class DefaultResourceProperties implements ResourceProperties
           {
             try
               {
-                return ZonedDateTime.parse(getProperty(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
+                return ZonedDateTime.parse(getProperty2(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
               }
             catch (NotFoundException e)
               {
