@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 164a502366ba5cac76f5a48b0676eb23eb3df375 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -64,7 +64,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 164a502366ba5cac76f5a48b0676eb23eb3df375 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -452,23 +452,16 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Nonnull
     private DateTimeFormatter getDateTimeFormatter()
       {
-        String zoneId = null;
+        final Locale locale = requestLocaleManager.getLocales().get(0);
+        final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
+        final DateTimeFormatter dtf = properties.getProperty(PROPERTY_DATE_FORMAT)
+            .map(s -> s.replaceAll("EEEEE+", "EEEE"))
+            .map(s -> s.replaceAll("MMMMM+", "MMMM"))
+            .map(p -> (((p.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(p).apply(locale)
+                                          : DateTimeFormatter.ofPattern(p)).withLocale(locale)))
+            .orElse(requestLocaleManager.getDateTimeFormatter());
 
-        try
-          {
-            final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
-            zoneId = properties.getProperty2(PROPERTY_TIME_ZONE, DEFAULT_TIMEZONE);
-            final String pattern = properties.getProperty2(PROPERTY_DATE_FORMAT)
-                                             .replaceAll("EEEEE+", "EEEE")
-                                             .replaceAll("MMMMM+", "MMMM");
-            final Locale locale = requestLocaleManager.getLocales().get(0);
-            return (((pattern.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(pattern).apply(locale)
-                                             : DateTimeFormatter.ofPattern(pattern)).withLocale(locale))
-                    .withZone(ZoneId.of(zoneId));
-          }
-        catch (NotFoundException | IOException e)
-          {
-            return requestLocaleManager.getDateTimeFormatter().withZone(ZoneId.of(zoneId));
-          }
+        final String zoneId = properties.getProperty(PROPERTY_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
+        return dtf.withZone(ZoneId.of(zoneId));
       }
   }

@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 87603d49dce4b935a7a9b6359da41f18c4d5f1ee $
  *
  * *********************************************************************************************************************
  * #L%
@@ -53,17 +53,14 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.is;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 87603d49dce4b935a7a9b6359da41f18c4d5f1ee $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -161,6 +158,8 @@ public class HtmlTemplateBlogViewControllerTest
             properties = mock(ResourceProperties.class);
             when(node.getPropertyGroup(eq(viewId))).thenReturn(properties);
           }
+
+        when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
 
         if (propertyValue.isPresent())
           {
