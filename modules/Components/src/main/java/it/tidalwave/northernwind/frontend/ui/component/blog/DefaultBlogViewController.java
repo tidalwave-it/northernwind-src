@@ -136,7 +136,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                       {
                         try
                           {
-                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(post.getExposedUri());
+                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(post.getExposedUri2());
                             results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
                           }
                         catch (NotFoundException | IOException e)
@@ -221,7 +221,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               {
                 log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
                 // FIXME: use hasProperty() and use PROPERTY_FULLTEXT
-                post.getProperties().getProperty(PROPERTY_TITLE); // Skip folders used for categories - this throws exception
+                post.getProperties().getProperty2(PROPERTY_TITLE); // Skip folders used for categories - this throws exception
 
                 if (currentItem < maxFullItems)
                   {
@@ -264,7 +264,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             try
               {
-                for (final String tag : post.getProperties().getProperty(PROPERTY_TAGS).split(","))
+                for (final String tag : post.getProperties().getProperty2(PROPERTY_TAGS).split(","))
                   {
                     TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
 
@@ -299,7 +299,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         final List<Content> allPosts = new ArrayList<>();
 
-        for (final String relativePath : siteNodeProperties.getProperty(PROPERTY_CONTENTS))
+        for (final String relativePath : siteNodeProperties.getProperty2(PROPERTY_CONTENTS))
           {
             final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
             allPosts.addAll(postsFolder.findChildren().results());
@@ -389,7 +389,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             try
               {
                 if (category.equals("")
-                    || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY, "---")))
+                    || category.equals(post.getProperties().getProperty2(PROPERTY_CATEGORY, "---")))
                   {
                     destinationPosts.add(post);
                   }
@@ -419,7 +419,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             try
               {
-                final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS, "").split(","));
+                final List<String> tags = Arrays.asList(post.getProperties().getProperty2(PROPERTY_TAGS, "").split(","));
 
                 if (tags.contains(tag))
                   {
@@ -445,7 +445,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             try
               {
-                if (exposedUri.equals(post.getExposedUri()))
+                if (exposedUri.equals(post.getExposedUri2()))
                   {
                     return post;
                   }

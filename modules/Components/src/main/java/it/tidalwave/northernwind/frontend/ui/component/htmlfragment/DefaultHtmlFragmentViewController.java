@@ -73,17 +73,17 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
 
         try
           {
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_CONTENTS))
+            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_CONTENTS))
               {
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
 
                 try
                   {
-                    htmlBuilder.append(content.getProperties().getProperty(PROPERTY_FULL_TEXT)).append("\n");
+                    htmlBuilder.append(content.getProperties().getProperty2(PROPERTY_FULL_TEXT)).append("\n");
                   }
                 catch (NotFoundException e)
                   {
-                    htmlBuilder.append(content.getProperties().getProperty(PROPERTY_TEMPLATE)).append("\n");
+                    htmlBuilder.append(content.getProperties().getProperty2(PROPERTY_TEMPLATE)).append("\n");
                   }
               }
           }
@@ -103,7 +103,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
         try
           {
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
+            view.setClassName(viewProperties.getProperty2(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (IOException e)
           {

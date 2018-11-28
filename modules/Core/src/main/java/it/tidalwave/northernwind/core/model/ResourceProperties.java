@@ -38,6 +38,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -98,7 +99,7 @@ public interface ResourceProperties extends As, Identifiable
         public static PropertyResolver DEFAULT = new PropertyResolver()
           {
             @Override
-            public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
+            public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
               throws NotFoundException, IOException
               {
                 throw new NotFoundException();
@@ -106,7 +107,7 @@ public interface ResourceProperties extends As, Identifiable
           };
 
         @Nonnull
-        public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
+        public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
           throws NotFoundException, IOException;
       }
 
@@ -116,31 +117,46 @@ public interface ResourceProperties extends As, Identifiable
      *
      * @param   key                 the property key
      * @return                      the property value
-     * @throws  NotFoundException   if the property doesn't exist
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <Type> Type getProperty (@Nonnull Key<Type> key)
+    public <T> Optional<T> getProperty (@Nonnull Key<T> key);
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property.
+     *
+     * @deprecated  use {@link #getProperty(it.tidalwave.util.Key) instead}
+     *
+     * @param   key                 the property key
+     * @return                      the property value
+     * @throws  NotFoundException   if the property doesn't exist
+     *
+     ******************************************************************************************************************/
+    @Nonnull @Deprecated
+    public <T> T getProperty2 (@Nonnull Key<T> key)
       throws NotFoundException, IOException;
 
     /*******************************************************************************************************************
      *
      * Retrieves a property, eventually returning a default value.
      *
+     * @deprecated  use {@link #getProperty(it.tidalwave.util.Key) instead}
+     * 
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public <Type> Type getProperty (@Nonnull Key<Type> key, @Nonnull Type defaultValue)
+    @Nonnull @Deprecated
+    public <T> T getProperty2 (@Nonnull Key<T> key, @Nonnull T defaultValue)
       throws IOException;
 
     /*******************************************************************************************************************
      *
      * Retrieves a property, eventually returning a default value.
      *
-     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
      *
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
@@ -155,7 +171,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      * Retrieves a property, eventually returning a default value.
      *
-     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
      *
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist

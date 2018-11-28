@@ -116,7 +116,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
         
         try
           {
-            for (final String permanentRedirectConfig : properties.getProperty(PROPERTY_PERMANENT_REDIRECTS))
+            for (final String permanentRedirectConfig : properties.getProperty2(PROPERTY_PERMANENT_REDIRECTS))
               {
                 permanentMappings.add(new Mapping(permanentRedirectConfig));  
               }
