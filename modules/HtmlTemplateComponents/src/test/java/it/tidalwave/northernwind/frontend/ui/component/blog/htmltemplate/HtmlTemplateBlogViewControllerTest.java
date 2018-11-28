@@ -53,9 +53,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.is;
 
 /***********************************************************************************************************************
  *
@@ -159,15 +159,17 @@ public class HtmlTemplateBlogViewControllerTest
             when(node.getPropertyGroup(eq(viewId))).thenReturn(properties);
           }
 
+        when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
+
         if (propertyValue.isPresent())
           {
-            when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue.get());
-            when(properties.getProperty(eq(propertyKey), any())).thenReturn(propertyValue.get());
+            when(properties.getProperty2(eq(propertyKey))).thenReturn(propertyValue.get());
+            when(properties.getProperty2(eq(propertyKey), any())).thenReturn(propertyValue.get());
           }
         else
           {
-            when(properties.getProperty(eq(propertyKey))).thenThrow(new NotFoundException());
-            when(properties.getProperty(eq(propertyKey), any())).thenAnswer(invocation -> invocation.getArgument(1));
+            when(properties.getProperty2(eq(propertyKey))).thenThrow(new NotFoundException());
+            when(properties.getProperty2(eq(propertyKey), any())).thenAnswer(invocation -> invocation.getArgument(1));
           }
       }
 

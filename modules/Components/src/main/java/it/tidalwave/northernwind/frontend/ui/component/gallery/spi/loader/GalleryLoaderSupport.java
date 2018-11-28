@@ -101,7 +101,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
 
         try
           {
-            metadataProviderName = properties.getProperty(PROPERTY_MEDIA_METADATA_PROVIDER, "");
+            metadataProviderName = properties.getProperty2(PROPERTY_MEDIA_METADATA_PROVIDER, "");
             return context.getBean(metadataProviderName, MediaMetadataProvider.class);
           }
         catch (IOException e)

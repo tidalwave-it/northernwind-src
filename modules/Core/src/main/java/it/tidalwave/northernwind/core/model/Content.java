@@ -28,6 +28,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
@@ -92,6 +93,19 @@ public interface Content extends Resource, SimpleComposite<Content>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath getExposedUri()
+    public Optional<ResourcePath> getExposedUri();
+
+    /*******************************************************************************************************************
+     *
+     * Returns the exposed URI mapped to this resource.
+     *
+     * @deprecated  Use {@link #getExposedUri()} instead.
+     * @return  the exposed URI
+     * @throws  NotFoundException  if the resource can't be found
+     * @throws  IOException        if an I/O error occurs (??? FIXME)
+     *
+     ******************************************************************************************************************/
+    @Nonnull @Deprecated
+    public ResourcePath getExposedUri2()
       throws NotFoundException, IOException;
   }
