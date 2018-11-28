@@ -121,7 +121,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
               {
                 final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
                 propertyJaxb.setName(key.stringValue());
-                final Object value = properties.getProperty(key);
+                final Object value = properties.getProperty2(key);
 
                 if (value instanceof Collection)
                   {

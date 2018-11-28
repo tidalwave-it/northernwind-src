@@ -62,7 +62,7 @@ public class ContentPropertyResolverMacroFilter extends MacroFilter
         try
           {
             final String propertyName = matcher.group(1);
-            return requestContext.get().getContentProperties().getProperty(new Key<String>(propertyName), "");
+            return requestContext.get().getContentProperties().getProperty2(new Key<String>(propertyName), "");
           }
         catch (IOException e)
           {

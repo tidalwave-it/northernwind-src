@@ -128,6 +128,8 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override @Nonnull
     public DateTimeFormatter getDateTimeFormatter()
       {
-        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(getLocales().get(0)).withZone(ZoneId.systemDefault());
+        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
+                                .withLocale(getLocales().get(0))
+                                .withZone(ZoneId.systemDefault());
       }
   }

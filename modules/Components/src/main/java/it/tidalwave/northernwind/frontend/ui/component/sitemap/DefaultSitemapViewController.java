@@ -169,7 +169,7 @@ public class DefaultSitemapViewController implements SitemapViewController
         // just using a single property and only peeking into a single node
         final Key<String> priorityKey = (childSiteNode == null) ? PROPERTY_SITEMAP_PRIORITY
                                                                 : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
-        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty(priorityKey, "0.5"));
+        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty2(priorityKey, "0.5"));
 
         if (sitemapPriority > 0)
           {
@@ -178,7 +178,7 @@ public class DefaultSitemapViewController implements SitemapViewController
             builder.append(String.format("    <lastmod>%s</lastmod>%n",
                                          getSiteNodeDateTime(properties).format(dateTimeFormatter)));
             builder.append(String.format("    <changefreq>%s</changefreq>%n",
-                                         properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
+                                         properties.getProperty2(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
             builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
             builder.append("  </url>\n");
           }
@@ -193,7 +193,7 @@ public class DefaultSitemapViewController implements SitemapViewController
       {
         try
           {
-            final String string = properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE);
+            final String string = properties.getProperty2(Properties.PROPERTY_LATEST_MODIFICATION_DATE);
             return ZonedDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
           }
         catch (NotFoundException e)

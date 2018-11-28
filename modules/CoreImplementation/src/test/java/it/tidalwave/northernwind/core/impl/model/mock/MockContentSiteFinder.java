@@ -92,11 +92,11 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
 
             if (relativePath.equals("/"))
               {
-                when(content.getExposedUri()).thenReturn(new ResourcePath());
+                when(content.getExposedUri2()).thenReturn(new ResourcePath());
               }
             else
               {
-                when(content.getExposedUri()).thenReturn(new ResourcePath("EXPOSED-" + relativePath.substring(1)
+                when(content.getExposedUri2()).thenReturn(new ResourcePath("EXPOSED-" + relativePath.substring(1)
                                                                                   .replace('/', '-')
                                                                                   .replace(' ', '-')));
               }

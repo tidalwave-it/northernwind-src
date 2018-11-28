@@ -88,7 +88,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         fallbackTemplate = loadTemplate(context, "bluetteFallback");
         lightboxFallbackTemplate = loadTemplate(context, "bluetteLightboxFallback");
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
-        copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT, "");
+        copyright = bluetteConfiguration.getProperty2(PROPERTY_COPYRIGHT, "");
       }
 
     /*******************************************************************************************************************
@@ -141,7 +141,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
               {
                 if (key.stringValue().startsWith("bluette") || key.stringValue().equals("logging"))
                   {
-                    final Object value = bluetteConfiguration.getProperty(key);
+                    final Object value = bluetteConfiguration.getProperty2(key);
                     builder.append(String.format("var %s = %s;%n", key.stringValue(), value));
                   }
               }
