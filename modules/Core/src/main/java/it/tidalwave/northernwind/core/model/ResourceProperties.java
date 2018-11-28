@@ -38,6 +38,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -98,7 +99,7 @@ public interface ResourceProperties extends As, Identifiable
         public static PropertyResolver DEFAULT = new PropertyResolver()
           {
             @Override
-            public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
+            public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
               throws NotFoundException, IOException
               {
                 throw new NotFoundException();
@@ -106,7 +107,7 @@ public interface ResourceProperties extends As, Identifiable
           };
 
         @Nonnull
-        public <Type> Type resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<Type> key)
+        public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
           throws NotFoundException, IOException;
       }
 
@@ -120,7 +121,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <Type> Type getProperty (@Nonnull Key<Type> key)
+    public <T> T getProperty (@Nonnull Key<T> key)
       throws NotFoundException, IOException;
 
     /*******************************************************************************************************************
@@ -133,14 +134,14 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <Type> Type getProperty (@Nonnull Key<Type> key, @Nonnull Type defaultValue)
+    public <T> T getProperty (@Nonnull Key<T> key, @Nonnull T defaultValue)
       throws IOException;
 
     /*******************************************************************************************************************
      *
      * Retrieves a property, eventually returning a default value.
      *
-     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
      *
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
@@ -155,7 +156,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      * Retrieves a property, eventually returning a default value.
      *
-     * FIXME: temporary, until we fix the Key<Type> issue with Type != String. Should be handled by the generic version.
+     * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
      *
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
