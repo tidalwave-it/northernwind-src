@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-filesystem</artifactId>
-        <version>1.1-ALPHA-40-SNAPSHOT</version>
+        <version>1.1-ALPHA-40</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core-filesystem-hg</artifactId>
-    <version>1.1-ALPHA-40-SNAPSHOT</version>
+    <version>1.1-ALPHA-40</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Filesystems, Mercurial</name>
     <description>The implementation of the Mercurial filesystem.</description>
