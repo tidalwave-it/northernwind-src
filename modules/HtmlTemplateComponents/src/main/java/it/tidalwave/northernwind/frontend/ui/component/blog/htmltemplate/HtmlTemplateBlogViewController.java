@@ -75,6 +75,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private final static Key<String> PROP_ADD_URL = new Key<>("@url");
     private final static Key<String> PROP_ADD_ID = new Key<>("@id");
 
+    protected final static String DEFAULT_TIMEZONE = "CET";
+
     private final static Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
 
     static
@@ -450,20 +452,23 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Nonnull
     private DateTimeFormatter getDateTimeFormatter()
       {
+        String zoneId = null;
+
         try
           {
-            final String pattern = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_DATE_FORMAT)
-                                           .replaceAll("EEEEE+", "EEEE")
-                                           .replaceAll("MMMMM+", "MMMM");
+            final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
+            zoneId = properties.getProperty(PROPERTY_TIME_ZONE, DEFAULT_TIMEZONE);
+            final String pattern = properties.getProperty(PROPERTY_DATE_FORMAT)
+                                             .replaceAll("EEEEE+", "EEEE")
+                                             .replaceAll("MMMMM+", "MMMM");
             final Locale locale = requestLocaleManager.getLocales().get(0);
             return (((pattern.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(pattern).apply(locale)
                                              : DateTimeFormatter.ofPattern(pattern)).withLocale(locale))
-                    .withZone(ZoneId.of("CET")); // FIXME timezone hardwired - get from properties
+                    .withZone(ZoneId.of(zoneId));
           }
         catch (NotFoundException | IOException e)
           {
-            log.info("USING {} {}", System.identityHashCode(requestLocaleManager.getDateTimeFormatter()));
-            return requestLocaleManager.getDateTimeFormatter();
+            return requestLocaleManager.getDateTimeFormatter().withZone(ZoneId.of(zoneId));
           }
       }
   }
