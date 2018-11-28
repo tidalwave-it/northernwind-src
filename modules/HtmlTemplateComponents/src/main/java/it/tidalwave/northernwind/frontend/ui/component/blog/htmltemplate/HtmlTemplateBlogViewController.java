@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 164a502366ba5cac76f5a48b0676eb23eb3df375 $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -29,13 +29,14 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -43,28 +44,29 @@ import java.time.format.FormatStyle;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.*;
+import static it.tidalwave.util.LocalizedDateTimeFormatters.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id: 164a502366ba5cac76f5a48b0676eb23eb3df375 $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -77,14 +79,25 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     protected final static String DEFAULT_TIMEZONE = "CET";
 
+    private static final String TEMPLATE_MAIN_TITLE = "<h2>%s</h2>%n";
+    private static final String TEMPLATE_REFERENCE_TITLE = "<h3>%s</h3>%n";
+    private static final String TEMPLATE_DIV_BLOG_POST = "<div id='%s' class='nw-blog-post'>%n";
+    private static final String TEMPLATE_FULL_TEXT = "<div class='nw-blog-post-content'>%n%s%n</div>%n";
+    private static final String TEMPLATE_PERMALINK = "&nbsp;- <a href='%s'>Permalink</a>%n";
+    private static final String TEMPLATE_REFERENCE_LINK = "<li><a href='%s'>%s</a></li>%n";
+    private static final String TEMPLATE_CATEGORY = "&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>";
+    private static final String TEMPLATE_DATE = "<span class='nw-publishDate'>%s</span>%n";
+    private static final String TEMPLATE_TAG_CLOUD_LINK = "<a href=\"%s\" class=\"tagCloudItem rank%s\" rel=\"%d\">%s</a>%n";
+    private static final String TEMPLATE_TAG_LINK = "%n<a class='nw-tag' href='%s'>%s</a>";
+
     private final static Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
 
     static
       {
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("S-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.SHORT, l));
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("M-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.MEDIUM, l));
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("L-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.LONG, l));
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("F-", l -> LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, l));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("S-", locale -> getDateTimeFormatterFor(FormatStyle.SHORT, locale));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("M-", locale -> getDateTimeFormatterFor(FormatStyle.MEDIUM, locale));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("L-", locale -> getDateTimeFormatterFor(FormatStyle.LONG, locale));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("F-", locale -> getDateTimeFormatterFor(FormatStyle.FULL, locale));
       }
 
     @Nonnull
@@ -154,10 +167,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final StringBuilder htmlBuilder = new StringBuilder();
         renderMainTitle(htmlBuilder);
 
-        for (final String html : htmlParts)
-          {
-            htmlBuilder.append(html);
-          }
+        htmlParts.stream().forEach(html -> htmlBuilder.append(html));
 
         if (referencesRendered)
           {
@@ -178,7 +188,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         log.debug("addReference()");
 
-//        final ZonedDateTime blogDateTime = getBlogDateTime(post);
         final StringBuilder htmlBuilder = new StringBuilder();
 
         if (!referencesRendered)
@@ -197,42 +206,34 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     private void addPost (final @Nonnull Content post, final boolean addBody)
-      throws IOException, NotFoundException
       {
         log.debug("addPost({}, {})", post, addBody);
+
         final ResourceProperties properties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
         final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
                                                                           DefaultBlogViewController.TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
-        htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
-        htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty2(PROPERTY_TITLE)));
+        htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
 
-        htmlBuilder.append("<div class='nw-blog-post-meta'>");
+        append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, properties.getProperty(PROPERTY_TITLE));
+
+        htmlBuilder.append("<div class='nw-blog-post-meta'>\n");
         renderDate(htmlBuilder, blogDateTime);
         renderCategory(htmlBuilder, post);
         renderTags(htmlBuilder, post);
         renderPermalink(htmlBuilder, post);
-        htmlBuilder.append("</div>");
+        htmlBuilder.append("</div>\n");
 
         if (addBody)
           {
-            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty2(PROPERTY_FULL_TEXT)));
-
-            try
-              {
-                requestContext.setDynamicNodeProperty(PROP_ADD_ID, properties.getProperty2(PROPERTY_ID));
-              }
-            catch (NotFoundException | IOException e)
-              {
-                log.debug("Can't set dynamic property " + PROP_ADD_ID, e); // ok, no id
-              }
-
+            append(htmlBuilder, TEMPLATE_FULL_TEXT, properties.getProperty(PROPERTY_FULL_TEXT));
+            properties.getProperty(PROPERTY_ID).ifPresent(id -> requestContext.setDynamicNodeProperty(PROP_ADD_ID, id));
             requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, computeTitle(post));
           }
 
-        htmlBuilder.append(String.format("</div>%n"));
+        htmlBuilder.append("</div>\n");
         htmlParts.add(htmlBuilder.toString());
       }
 
@@ -243,21 +244,20 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     @Override
     protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
-      throws IOException, NotFoundException
       {
         log.debug("addTagCloud({})", tagsAndCount);
-        final StringBuilder htmlBuilder = new StringBuilder();
-        htmlBuilder.append("<div class='tagCloud'>");
 
-        for (final TagAndCount tagAndCount : tagsAndCount)
+        final StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<div class='tagCloud'>\n");
+
+        tagsAndCount.stream().forEach(tagAndCount ->
           {
             final String tag = tagAndCount.tag;
             final String link = createTagLink(tag);
-            htmlBuilder.append(String.format("<a href=\"%s\" class=\"tagCloudItem rank%s\" rel=\"%d\">%s</a>%n",
-                                             link, tagAndCount.rank, tagAndCount.count, tag));
-          }
+            htmlBuilder.append(String.format(TEMPLATE_TAG_CLOUD_LINK, link, tagAndCount.rank, tagAndCount.count, tag));
+          });
 
-        htmlBuilder.append(String.format("</div>%n"));
+        htmlBuilder.append("</div>\n");
         htmlParts.add(htmlBuilder.toString());
       }
 
@@ -269,28 +269,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private String computeTitle (final @Nonnull Content post)
       {
         final ResourceProperties properties = post.getProperties();
+        final Optional<String> prefix    = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
+        final Optional<String> title     = properties.getProperty(PROPERTY_TITLE);
+        final Optional<String> separator = prefix.flatMap(p -> title.map(s -> " - "));
+
         final StringBuilder buffer = new StringBuilder();
-        String separator = "";
-
-        try
-          {
-            buffer.append(siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_TITLE));
-            separator = " - ";
-          }
-        catch (NotFoundException | IOException e)
-          {
-            // ok, no title
-          }
-
-        try
-          {
-            final String t = properties.getProperty2(PROPERTY_TITLE); // before append separator
-            buffer.append(separator).append(t);
-          }
-        catch (NotFoundException | IOException e)
-          {
-            // ok, no title
-          }
+        prefix.ifPresent(buffer::append);
+        separator.ifPresent(buffer::append);
+        title.ifPresent(buffer::append);
 
         return buffer.toString();
       }
@@ -304,19 +290,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     /* package */ void renderMainTitle (final @Nonnull StringBuilder htmlBuilder)
       {
-        try
-          {
-            final String title = siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_TITLE);
-
-            if (!title.trim().equals(""))
-              {
-                htmlBuilder.append(String.format("<h2>%s</h2>%n", title));
-              }
-          }
-        catch (NotFoundException | IOException e)
-          {
-            // ok, no title
-          }
+        final Optional<String> mainTitle = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE)
+                .map(String::trim)
+                .flatMap(this::filterEmptyString);
+        append(htmlBuilder, TEMPLATE_MAIN_TITLE, mainTitle);
       }
 
     /*******************************************************************************************************************
@@ -326,8 +303,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime dateTime)
       {
-        final String template = "<span class='nw-publishDate'>%s</span>%n";
-        htmlBuilder.append(String.format(template, dateTime.format(findDateTimeFormatter())));
+        final Optional<String> dt = Optional.of(dateTime.format(findDateTimeFormatter()));
+        append(htmlBuilder, TEMPLATE_DATE, dt);
       }
 
     /*******************************************************************************************************************
@@ -336,18 +313,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     private void renderPermalink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      throws IOException
       {
-        try
-          {
-            final String link = site.createLink(siteNode.getRelativeUri().appendedWith(post.getExposedUri()));
-            htmlBuilder.append(String.format("&nbsp;- <a href='%s'>Permalink</a>%n", link));
-            requestContext.setDynamicNodeProperty(PROP_ADD_URL, link);
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no link
-          }
+        final Optional<String> link  = post.getExposedUri().map(this::createLink);
+        append(htmlBuilder, TEMPLATE_PERMALINK, link);
+        link.ifPresent(l -> requestContext.setDynamicNodeProperty(PROP_ADD_URL, l));
       }
 
     /*******************************************************************************************************************
@@ -355,22 +324,13 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * Renders a reference link.
      *
      ******************************************************************************************************************/
-    private void renderReferenceLink (final @Nonnull StringBuilder htmlBuilder,
-                                      final @Nonnull Content post)
-      throws IOException
+    private void renderReferenceLink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
         //        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
 
-        try
-          {
-            final String link = site.createLink(siteNode.getRelativeUri().appendedWith(post.getExposedUri()));
-            final String title = post.getProperties().getProperty2(PROPERTY_TITLE);
-            htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>%n", link, title));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no link
-          }
+        final Optional<String> title = post.getProperties().getProperty(PROPERTY_TITLE);
+        final Optional<String> link  = post.getExposedUri().map(this::createLink);
+        append(htmlBuilder, TEMPLATE_REFERENCE_LINK, link, title);
       }
 
     /*******************************************************************************************************************
@@ -379,17 +339,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      throws IOException
       {
-        try
-          {
-            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>",
-                               post.getProperties().getProperty2(PROPERTY_CATEGORY)));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no category
-          }
+        final Optional<String> category = post.getProperties().getProperty(PROPERTY_CATEGORY);
+        append(htmlBuilder, TEMPLATE_CATEGORY, category);
       }
 
     /*******************************************************************************************************************
@@ -398,29 +350,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     private void renderTags (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      throws IOException
       {
-        try
-          {
-            final List<String> tags = Arrays.asList(post.getProperties().getProperty2(PROPERTY_TAGS).split(","));
-            Collections.sort(tags);
-            final StringBuilder buffer = new StringBuilder();
-            String separator = "";
-
-            for (final String tag : tags)
-              {
-                final String link = createTagLink(tag);
-                buffer.append(separator).append(String.format("%n<a class='nw-tag' href='%s'>%s</a>", link, tag));
-                separator = ", ";
-              }
-
-            htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-tags'>Tagged as %s</span>",
-                               buffer.toString()));
-          }
-        catch (NotFoundException | IOException e)
-          {
-            // ok, no tags
-          }
+        final String tags = post.getProperties().getProperty(PROPERTY_TAGS)
+            .map(s -> Stream.of(s.split(",")))
+            .orElse(Stream.empty())
+            .sorted()
+            .map(tag -> String.format(TEMPLATE_TAG_LINK, createTagLink(tag), tag))
+            .collect(joining(", "));
+        htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-tags'>Tagged as %s</span>", tags));
       }
 
     /*******************************************************************************************************************
@@ -430,18 +367,26 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     @Nonnull
     private String createTagLink (final String tag)
-      throws UnsupportedEncodingException
       {
-        final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
-        String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
-
-        // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
-        if (!link.endsWith("/"))
+        try
           {
-            link += "/";
-          }
+            final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
+            // FIXME: refactor with ResourcePath
+            String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
 
-        return link;
+            // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
+            if (!link.endsWith("/"))
+              {
+                link += "/";
+              }
+
+            return link;
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            log.error("", e);
+            return "";
+          }
       }
 
     /*******************************************************************************************************************
@@ -467,5 +412,45 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         final String zoneId = properties.getProperty(PROPERTY_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
         return dtf.withZone(ZoneId.of(zoneId));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String createLink (final @Nonnull ResourcePath path)
+      {
+        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static void append (final @Nonnull StringBuilder builder,
+                                final @Nonnull String template,
+                                final @Nonnull Optional<String> ... optionalStrings)
+      {
+        if (Stream.of(optionalStrings).allMatch(Optional::isPresent))
+          {
+            final Object[] strings = Stream.of(optionalStrings).map(Optional::get).collect(toList()).toArray();
+            builder.append(String.format(template, strings));
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Optional<String> filterEmptyString (final @Nonnull String s)
+      {
+        final Optional<String> x = (s.equals("") ? Optional.empty() : Optional.of(s));
+        return x;
       }
   }

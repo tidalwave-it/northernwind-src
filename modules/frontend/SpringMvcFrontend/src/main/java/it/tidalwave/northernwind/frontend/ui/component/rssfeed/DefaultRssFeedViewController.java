@@ -130,7 +130,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         try
           {
             // FIXME: manipulate through site.createLink()
-            final String link = linkBase.replaceAll("/$", "") + post.getExposedUri().asString() + "/";
+            final String link = linkBase.replaceAll("/$", "") + post.getExposedUri2().asString() + "/";
             final Guid guid = new Guid();
             guid.setPermaLink(true);
             guid.setValue(link);

@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
 import java.io.IOException;
@@ -140,7 +141,21 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourcePath getExposedUri()
+    public Optional<ResourcePath> getExposedUri()
+      {
+        final Optional<String> exposedUri = getProperties().getProperty(PROPERTY_EXPOSED_URI);
+
+        return exposedUri.isPresent() ? exposedUri.map(ResourcePath::new)
+                                      : getDefaultExposedUri();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public ResourcePath getExposedUri2()
       throws NotFoundException, IOException
       {
         try
@@ -149,7 +164,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
           }
         catch (NotFoundException e)
           {
-            return getDefaultExposedUri();
+            return getDefaultExposedUri().orElseThrow(NotFoundException::new);
           }
       }
 
@@ -163,21 +178,21 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourcePath getDefaultExposedUri()
-      throws NotFoundException, IOException
+    private Optional<ResourcePath> getDefaultExposedUri()
       {
-        String title = getResource().getProperties().getProperty2(PROPERTY_TITLE);
-        title = deAccent(title);
-        title = title.replaceAll(" ", "-")
-                     .replaceAll(",", "")
-                     .replaceAll("\\.", "")
-                     .replaceAll(";", "")
-                     .replaceAll("/", "")
-                     .replaceAll("!", "")
-                     .replaceAll("\\?", "")
-                     .replaceAll(":", "")
-                     .replaceAll("[^\\w-]*", "");
-        return new ResourcePath(title.toLowerCase());
+        return getResource().getProperties().getProperty(PROPERTY_TITLE)
+            .map(this::deAccent)
+            .map(t -> t.replaceAll(" ", "-")
+                       .replaceAll(",", "")
+                       .replaceAll("\\.", "")
+                       .replaceAll(";", "")
+                       .replaceAll("/", "")
+                       .replaceAll("!", "")
+                       .replaceAll("\\?", "")
+                       .replaceAll(":", "")
+                       .replaceAll("[^\\w-]*", ""))
+            .map(String::toLowerCase)
+            .map(ResourcePath::new);
       }
 
     /*******************************************************************************************************************
