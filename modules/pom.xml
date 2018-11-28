@@ -30,8 +30,11 @@
         <netbeans.version>RELEASE80</netbeans.version>
         <rome.version>1.0.0</rome.version>
         <stringtemplate.version>4.0.8</stringtemplate.version>
-        <thesefoolishthings.version>3.1-ALPHA-1</thesefoolishthings.version>
+        <thesefoolishthings.version>3.1-ALPHA-4</thesefoolishthings.version>
         <xmpcore.version>5.1.0</xmpcore.version>
+
+        <tft.mockito.version>2.23.4</tft.mockito.version>
+        <tft.spring.version>5.1.2.RELEASE</tft.spring.version>
     </properties>
 
     <dependencyManagement>
@@ -121,14 +124,18 @@
             <artifactId>javax.inject</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
@@ -184,30 +191,6 @@
         </resources>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-banned-dependencies</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>commons-logging:commons-logging</exclude>
-                                        <exclude>org.aspectj:aspectjweaver</exclude>
-                                        <exclude>com.kenai.nbpwr:org-slf4j-jdk14</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

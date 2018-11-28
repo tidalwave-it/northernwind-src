@@ -64,5 +64,9 @@
             <artifactId>it-tidalwave-northernwind-common-tests</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-test</artifactId>
+        </dependency>
     </dependencies>
 </project>
