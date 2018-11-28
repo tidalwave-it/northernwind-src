@@ -20,10 +20,12 @@
     <description>The parent POM for modules.</description>
 
     <properties>
+        <activation.version>1.1.1</activation.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
         <guava.version>14.0.1</guava.version>
         <javax-servlet-api.version>2.5</javax-servlet-api.version>
+        <jaxb.version>2.2.11</jaxb.version>
         <jetty.version>6.1.26</jetty.version>
         <jtidy.version>r938</jtidy.version>
         <mistral.version>1.0-ALPHA-3</mistral.version>
@@ -87,6 +89,27 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+                <version>${activation.version}</version>
             </dependency>
 
             <dependency>
