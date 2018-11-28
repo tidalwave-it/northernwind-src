@@ -72,7 +72,7 @@ public class DefaultMenuViewController implements MenuViewController
      {
         try
           {
-            view.setTitle(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE));
+            view.setTitle(siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_TITLE));
           }
         catch (NotFoundException e)
           {
@@ -85,9 +85,9 @@ public class DefaultMenuViewController implements MenuViewController
           {
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
 
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH);
+            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_TEMPLATE_PATH);
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE));
+            view.setTemplate(template.getProperties().getProperty2(PROPERTY_TEMPLATE));
           }
         catch (NotFoundException e)
           {
@@ -99,12 +99,12 @@ public class DefaultMenuViewController implements MenuViewController
 
         try
           {
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_LINKS))
+            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_LINKS))
               {
                 try
                   {
                     final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
-                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL,
+                    final String navigationTitle = targetSiteNode.getProperties().getProperty2(PROPERTY_NAVIGATION_LABEL,
                                                                                               "no nav. label");
                     view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));
                   }

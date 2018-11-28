@@ -114,7 +114,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 //            throw new HttpStatusException(404);
 //          }
 
-        final String entries = siteNodeProperties.getProperty(PROPERTY_ENTRIES);
+        final String entries = siteNodeProperties.getProperty2(PROPERTY_ENTRIES);
         final StringBuilder builder = new StringBuilder();
         final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR, currentYear);
         final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR, Math.min(selectedYear, currentYear));
@@ -203,7 +203,7 @@ public class DefaultCalendarViewController implements CalendarViewController
       {
         try
           {
-            builder.append(String.format("<h2>%s</h2>%n", siteNodeProperties.getProperty(PROPERTY_TITLE)));
+            builder.append(String.format("<h2>%s</h2>%n", siteNodeProperties.getProperty2(PROPERTY_TITLE)));
           }
         catch (NotFoundException e)
           {

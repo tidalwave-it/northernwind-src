@@ -59,21 +59,21 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     interface Exclusions
       {
-        public <Type> Type getProperty(Key<Type> key) throws NotFoundException, IOException;
-        public <Type> Type getProperty(Key<Type> key, Type defaultValue) throws IOException;
+        public <Type> Type getProperty2(Key<Type> key) throws NotFoundException, IOException;
+        public <Type> Type getProperty2(Key<Type> key, Type defaultValue) throws IOException;
       }
 
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
     private final ResourceProperties delegate;
 
     @Override
-    public <Type> Type getProperty (final @Nonnull Key<Type> key)
+    public <Type> Type getProperty2 (final @Nonnull Key<Type> key)
       throws NotFoundException, IOException
       {
         try
           {
             requestContext.setContent(content);
-            return delegate.getProperty(key);
+            return delegate.getProperty2(key);
           }
         finally
           {
@@ -82,13 +82,13 @@ class ResourcePropertiesDelegate implements ResourceProperties
       }
 
     @Override
-    public <Type> Type getProperty (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
+    public <Type> Type getProperty2 (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
       throws IOException
       {
         try
           {
             requestContext.setContent(content);
-            return delegate.getProperty(key, defaultValue);
+            return delegate.getProperty2(key, defaultValue);
           }
         finally
           {
@@ -145,7 +145,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
       {
         try
           {
-            return new ResourcePath(getProperties().getProperty(PROPERTY_EXPOSED_URI));
+            return new ResourcePath(getProperties().getProperty2(PROPERTY_EXPOSED_URI));
           }
         catch (NotFoundException e)
           {
@@ -166,7 +166,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     private ResourcePath getDefaultExposedUri()
       throws NotFoundException, IOException
       {
-        String title = getResource().getProperties().getProperty(PROPERTY_TITLE);
+        String title = getResource().getProperties().getProperty2(PROPERTY_TITLE);
         title = deAccent(title);
         title = title.replaceAll(" ", "-")
                      .replaceAll(",", "")

@@ -207,7 +207,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                                                                           DefaultBlogViewController.TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
         htmlBuilder.append(String.format("<div id='%s' class='nw-blog-post'>%n", idPrefix));
-        htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty(PROPERTY_TITLE)));
+        htmlBuilder.append(String.format("<h3>%s</h3>%n", properties.getProperty2(PROPERTY_TITLE)));
 
         htmlBuilder.append("<div class='nw-blog-post-meta'>");
         renderDate(htmlBuilder, blogDateTime);
@@ -218,11 +218,11 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         if (addBody)
           {
-            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty(PROPERTY_FULL_TEXT)));
+            htmlBuilder.append(String.format("<div class='nw-blog-post-content'>%s</div>%n", properties.getProperty2(PROPERTY_FULL_TEXT)));
 
             try
               {
-                requestContext.setDynamicNodeProperty(PROP_ADD_ID, properties.getProperty(PROPERTY_ID));
+                requestContext.setDynamicNodeProperty(PROP_ADD_ID, properties.getProperty2(PROPERTY_ID));
               }
             catch (NotFoundException | IOException e)
               {
@@ -274,7 +274,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         try
           {
-            buffer.append(siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE));
+            buffer.append(siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_TITLE));
             separator = " - ";
           }
         catch (NotFoundException | IOException e)
@@ -284,7 +284,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         try
           {
-            final String t = properties.getProperty(PROPERTY_TITLE); // before append separator
+            final String t = properties.getProperty2(PROPERTY_TITLE); // before append separator
             buffer.append(separator).append(t);
           }
         catch (NotFoundException | IOException e)
@@ -306,7 +306,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         try
           {
-            final String title = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
+            final String title = siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_TITLE);
 
             if (!title.trim().equals(""))
               {
@@ -364,7 +364,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         try
           {
             final String link = site.createLink(siteNode.getRelativeUri().appendedWith(post.getExposedUri()));
-            final String title = post.getProperties().getProperty(PROPERTY_TITLE);
+            final String title = post.getProperties().getProperty2(PROPERTY_TITLE);
             htmlBuilder.append(String.format("<li><a href='%s'>%s</a></li>%n", link, title));
           }
         catch (NotFoundException e)
@@ -384,7 +384,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         try
           {
             htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>",
-                               post.getProperties().getProperty(PROPERTY_CATEGORY)));
+                               post.getProperties().getProperty2(PROPERTY_CATEGORY)));
           }
         catch (NotFoundException e)
           {
@@ -402,7 +402,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         try
           {
-            final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).split(","));
+            final List<String> tags = Arrays.asList(post.getProperties().getProperty2(PROPERTY_TAGS).split(","));
             Collections.sort(tags);
             final StringBuilder buffer = new StringBuilder();
             String separator = "";
@@ -457,8 +457,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         try
           {
             final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
-            zoneId = properties.getProperty(PROPERTY_TIME_ZONE, DEFAULT_TIMEZONE);
-            final String pattern = properties.getProperty(PROPERTY_DATE_FORMAT)
+            zoneId = properties.getProperty2(PROPERTY_TIME_ZONE, DEFAULT_TIMEZONE);
+            final String pattern = properties.getProperty2(PROPERTY_DATE_FORMAT)
                                              .replaceAll("EEEEE+", "EEEE")
                                              .replaceAll("MMMMM+", "MMMM");
             final Locale locale = requestLocaleManager.getLocales().get(0);

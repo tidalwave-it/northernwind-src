@@ -117,24 +117,39 @@ public interface ResourceProperties extends As, Identifiable
      *
      * @param   key                 the property key
      * @return                      the property value
-     * @throws  NotFoundException   if the property doesn't exist
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <T> T getProperty (@Nonnull Key<T> key)
+    public <T> Optional<T> getProperty (@Nonnull Key<T> key);
+
+    /*******************************************************************************************************************
+     *
+     * Retrieves a property.
+     *
+     * @deprecated  use {@link #getProperty(it.tidalwave.util.Key) instead}
+     *
+     * @param   key                 the property key
+     * @return                      the property value
+     * @throws  NotFoundException   if the property doesn't exist
+     *
+     ******************************************************************************************************************/
+    @Nonnull @Deprecated
+    public <T> T getProperty2 (@Nonnull Key<T> key)
       throws NotFoundException, IOException;
 
     /*******************************************************************************************************************
      *
      * Retrieves a property, eventually returning a default value.
      *
+     * @deprecated  use {@link #getProperty(it.tidalwave.util.Key) instead}
+     * 
      * @param   key                 the property key
      * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public <T> T getProperty (@Nonnull Key<T> key, @Nonnull T defaultValue)
+    @Nonnull @Deprecated
+    public <T> T getProperty2 (@Nonnull Key<T> key, @Nonnull T defaultValue)
       throws IOException;
 
     /*******************************************************************************************************************

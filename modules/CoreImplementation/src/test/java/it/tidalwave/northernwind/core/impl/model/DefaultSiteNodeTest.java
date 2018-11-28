@@ -61,6 +61,30 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.is;
 
 /***********************************************************************************************************************
  *
@@ -219,11 +243,11 @@ public class DefaultSiteNodeTest
         // FIXME: consider using a concrete mock for ResourceProperties, since it's cumbersome to mock in this way
         if (exposedUri != null)
           {
-            when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenReturn(exposedUri);
+            when(properties.getProperty2(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenReturn(exposedUri);
           }
         else
           {
-            when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenAnswer(new Answer<String>()
+            when(properties.getProperty2(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenAnswer(new Answer<String>()
               {
                 @Override
                 public String answer (final @Nonnull InvocationOnMock invocation)
