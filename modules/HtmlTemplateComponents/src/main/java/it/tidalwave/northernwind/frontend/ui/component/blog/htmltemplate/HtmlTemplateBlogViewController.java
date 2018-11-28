@@ -327,7 +327,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime dateTime)
       {
         final String template = "<span class='nw-publishDate'>%s</span>%n";
-        htmlBuilder.append(String.format(template, dateTime.format(getDateTimeFormatter())));
+        htmlBuilder.append(String.format(template, dateTime.format(findDateTimeFormatter())));
       }
 
     /*******************************************************************************************************************
@@ -446,11 +446,15 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     /*******************************************************************************************************************
      *
+     * Returns the proper {@link DateTimeFormatter}. It is build from an explicit pattern, if defined in the current
+     * {@link SiteNode}; otherwise the one provided by the {@link RequestLocaleManager} is used. The formatter is
+     * configured with the time zone defined in the {@code SiteNode}, or a default is used.
      *
+     * @return      the {@code DateTimeFormatter}
      *
      ******************************************************************************************************************/
     @Nonnull
-    private DateTimeFormatter getDateTimeFormatter()
+    private DateTimeFormatter findDateTimeFormatter()
       {
         final Locale locale = requestLocaleManager.getLocales().get(0);
         final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
