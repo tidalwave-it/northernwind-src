@@ -38,7 +38,7 @@ import org.springframework.core.task.TaskExecutor;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class WaitingTaskExecutor implements TaskExecutor
+public class TaskExecutorMock implements TaskExecutor
   {
     private Runnable task;
 
@@ -48,7 +48,7 @@ public class WaitingTaskExecutor implements TaskExecutor
         this.task = task;
       }
 
-    public void doExecute()
+    public void start()
       {
         task.run();
       }

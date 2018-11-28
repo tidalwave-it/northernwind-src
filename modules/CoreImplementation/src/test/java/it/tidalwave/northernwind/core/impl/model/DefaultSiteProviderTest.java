@@ -38,10 +38,16 @@ import it.tidalwave.northernwind.core.model.Site;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
-import it.tidalwave.northernwind.core.impl.test.WaitingTaskExecutor;
+import it.tidalwave.northernwind.core.impl.test.TaskExecutorMock;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
@@ -59,11 +65,13 @@ public class DefaultSiteProviderTest
 
     private DefaultSite site;
 
-    private WaitingTaskExecutor executor;
+    private TaskExecutorMock executor;
 
     private ServletContext servletContext;
 
     private Site.Builder.CallBack siteBuilderCallback;
+
+    private static final String SERVLET_CONTEXT_PATH = "thecontextpath";
 
     /*******************************************************************************************************************
      *
@@ -72,7 +80,7 @@ public class DefaultSiteProviderTest
     public void setup()
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteProviderTest/TestBeans.xml");
-        executor = context.getBean(WaitingTaskExecutor.class);
+        executor = context.getBean(TaskExecutorMock.class);
         servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
 
@@ -82,20 +90,21 @@ public class DefaultSiteProviderTest
         final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
         when(modelFactory.createSite()).thenReturn(builder);
 
-        when(servletContext.getContextPath()).thenReturn("thecontextpath");
+        when(servletContext.getContextPath()).thenReturn(SERVLET_CONTEXT_PATH);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_create_and_initialize_Site_when_DefaultSiteProvider_is_initialized()
+    public void must_properly_create_the_Site()
       throws Exception
       {
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
+        // then
         verify(siteBuilderCallback).build(argThat(new SiteBuilderMatcher()
-                .withContextPath("thecontextpath")
+                .withContextPath(SERVLET_CONTEXT_PATH)
                 .withDocumentPath("testDocumentPath")
                 .withMediaPath("testMediaPath")
                 .withLibraryPath("testLibraryPath")
@@ -103,16 +112,25 @@ public class DefaultSiteProviderTest
                 .withConfigurationEnabled(true)
                 .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
                 .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
-
-        verify(executor).execute(any(Runnable.class)); // FIXME: needed?
-
-        assertThat(underTest.getSite(), sameInstance((Site)site));
+        // the executor that initializes Site hasn't been started here
+        assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_create_and_initialize_the_Site()
+      throws Exception
+      {
+        // given
+        underTest = context.getBean(DefaultSiteProvider.class);
         // when
-        executor.doExecute(); // emulate Site initialization in background
+        executor.start(); // initializes Site
         // then
         verify(site).initialize();
-        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(true));
       }
 
@@ -137,7 +155,7 @@ public class DefaultSiteProviderTest
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
         // then
-        assertThat(underTest.getContextPath(), is("thecontextpath"));
+        assertThat(underTest.getContextPath(), is(SERVLET_CONTEXT_PATH));
       }
 
     /*******************************************************************************************************************
@@ -162,12 +180,12 @@ public class DefaultSiteProviderTest
       throws Exception
       {
         // given
-        doThrow(new IOException("test")).when(site).initialize();
-        // when
         underTest = context.getBean(DefaultSiteProvider.class);
-        executor.doExecute(); // emulate Site initialization in background
+        doThrow(new IOException("Simulated error in initialization")).when(site).initialize();
+        // when
+        executor.start(); // emulate Site initialization in background
         // then
-        assertThat(underTest.getSite(), sameInstance((Site)site));
+        assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
       }
   }
