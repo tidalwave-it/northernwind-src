@@ -24,10 +24,6 @@
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
-            <artifactId>it-tidalwave-northernwind-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
         </dependency>
         <dependency>
@@ -94,6 +90,10 @@
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-common-tests</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-test</artifactId>
         </dependency>
     </dependencies>
 

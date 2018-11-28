@@ -21,7 +21,7 @@
         <!-- Otherwise can't be released because of missing javadocs -->
         <tft.javadoc.excludePackageNames />
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
@@ -44,6 +44,10 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-test</artifactId>
         </dependency>
     </dependencies>
 
