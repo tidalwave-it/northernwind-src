@@ -65,6 +65,8 @@ public final class Properties
 
     public static final Key<String> PROPERTY_DATE_FORMAT = new Key<>("dateFormat");
 
+    public static final Key<String> PROPERTY_TIME_ZONE = new Key<>("timeZone");
+
     public static final Key<List<String>> PROPERTY_CONTENTS = new Key<>("contents");
 
     // FIXME: should be Key<List<String>>

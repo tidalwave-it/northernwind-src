@@ -127,7 +127,7 @@ public class MockModelFactory extends ModelFactorySupport
 
         // TODO: this is cumbersome code... perhaps just use DefaultResourceProperties?
         final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).
+        when(properties.getProperty2(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).
                 thenAnswer(new Answer<String>()
           {
             @Override
@@ -144,8 +144,8 @@ public class MockModelFactory extends ModelFactorySupport
                 final String propertyName = e.getKey().substring(path.length() + 1);
                 final Key<String> propertyKey = new Key<>(propertyName);
                 log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
-                when(properties.getProperty(eq(propertyKey))).thenReturn(e.getValue());
-                when(properties.getProperty(eq(propertyKey), anyString())).thenReturn(e.getValue());
+                when(properties.getProperty2(eq(propertyKey))).thenReturn(e.getValue());
+                when(properties.getProperty2(eq(propertyKey), anyString())).thenReturn(e.getValue());
               }
           }
 

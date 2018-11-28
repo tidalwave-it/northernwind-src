@@ -123,7 +123,7 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
                 try
                   {
                     final String segment = getResource().getProperties()
-                                                        .getProperty(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
+                                                        .getProperty2(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (IOException | NotFoundException e)

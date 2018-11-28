@@ -104,7 +104,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       {
         final Site site = siteProvider.get().getSite();
 
-        for (final Iterator<String> i = properties.getProperty(PROPERTY_MEDIA_PATHS).iterator(); i.hasNext(); )
+        for (final Iterator<String> i = properties.getProperty2(PROPERTY_MEDIA_PATHS).iterator(); i.hasNext(); )
           {
             final String mediaPath = i.next();
             final String resourceRelativePath = String.format(mediaPath, mediaId.stringValue());

@@ -173,7 +173,7 @@ class DefaultMetadata implements Metadata
         
         try
           {
-            for (final String s : properties.getProperty(EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS))
+            for (final String s : properties.getProperty2(EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS))
               {
                 final String[] split = s.split(":");
                 lensMap.put(split[0].trim(), split[1].trim());

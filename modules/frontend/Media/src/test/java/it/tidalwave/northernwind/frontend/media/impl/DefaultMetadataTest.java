@@ -70,7 +70,7 @@ public class DefaultMetadataTest
         context.getBean(MetadataInterpolatorFactory.class); // initialize it
         properties = mock(ResourceProperties.class);
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
-        when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));
+        when(resourceProperties.getProperty2(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));
         when(properties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
       }
 
