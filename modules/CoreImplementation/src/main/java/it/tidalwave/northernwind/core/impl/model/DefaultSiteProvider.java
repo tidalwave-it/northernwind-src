@@ -42,10 +42,10 @@ import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletContext;
 import org.springframework.core.task.TaskExecutor;
+import it.tidalwave.util.BundleUtilities;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.util.BundleHelper;
 import it.tidalwave.util.NotFoundException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
@@ -162,7 +162,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Override @Nonnull
     public String getVersionString()
       {
-        return BundleHelper.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
+        return BundleUtilities.getMessage(DefaultSiteProvider.class, "NorthernWind.version");
       }
 
     /*******************************************************************************************************************
