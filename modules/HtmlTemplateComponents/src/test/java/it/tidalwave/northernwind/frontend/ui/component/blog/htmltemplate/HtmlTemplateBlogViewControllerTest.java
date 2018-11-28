@@ -104,7 +104,7 @@ public class HtmlTemplateBlogViewControllerTest
       throws Exception
       {
         // given
-        mockNodeProperty(viewId, PROPERTY_TITLE, Optional.of(title));
+        mockNodeProperty(new Id(viewId), PROPERTY_TITLE, Optional.of(title));
         // when
         final StringBuilder builder = new StringBuilder();
         underTest.renderMainTitle(builder);
@@ -116,8 +116,7 @@ public class HtmlTemplateBlogViewControllerTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider="dateTestDataProvider")
-    public void must_properly_render_the_date (final @Nonnull String viewId,
-                                               final @Nonnull String localeCode,
+    public void must_properly_render_the_date (final @Nonnull String localeCode,
                                                final @Nonnull Optional<String> dateFormat,
                                                final @Nonnull ZonedDateTime dateTime,
                                                final @Nonnull String expectedRendering)
@@ -125,10 +124,10 @@ public class HtmlTemplateBlogViewControllerTest
       {
         // given
         final Locale locale = new Locale(localeCode, localeCode);
+        final Id viewId = new Id("id");
         // default of RequestLocaleManager
-        final DateTimeFormatter dtf =
-                LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
-                                                       .withZone(ZoneId.of("CET"));
+        final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
+                                                                 .withZone(ZoneId.of("CET"));
         log.info(">>>> locale is {} - {}", locale, System.identityHashCode(dtf));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
@@ -143,15 +142,14 @@ public class HtmlTemplateBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void mockNodeProperty (final @Nonnull String viewId,
+    private void mockNodeProperty (final @Nonnull Id viewId,
                                    final @Nonnull Key<String> propertyKey,
                                    final @Nonnull Optional<String> propertyValue)
       throws Exception
       {
-        final Id id = new Id(viewId);
-        when(view.getId()).thenReturn(id);
+        when(view.getId()).thenReturn(viewId);
         final ResourceProperties properties = mock(ResourceProperties.class);
-        when(node.getPropertyGroup(eq(id))).thenReturn(properties);
+        when(node.getPropertyGroup(eq(viewId))).thenReturn(properties);
 
         if (propertyValue.isPresent())
           {
@@ -190,24 +188,24 @@ public class HtmlTemplateBlogViewControllerTest
 
         return new Object[][]
           {
-           // viewId  loc. date format           value   expected value
-            { "id1", "en", Optional.empty(),     dt,     "<span class='nw-publishDate'>Tuesday, August 7, 2012 5:31:03 PM CEST</span>\n"},
-            { "id2", "it", Optional.empty(),     dt,     "<span class='nw-publishDate'>marted\u00ec 7 agosto 2012 17:31:03 CEST</span>\n"},
+           // loc.  date format           value   expected value
+            { "en", Optional.empty(),     dt,     "<span class='nw-publishDate'>Tuesday, August 7, 2012 5:31:03 PM CEST</span>\n"},
+            { "it", Optional.empty(),     dt,     "<span class='nw-publishDate'>marted\u00ec 7 agosto 2012 17:31:03 CEST</span>\n"},
 
-            { "id3", "en", Optional.of(pattern), dt,     "<span class='nw-publishDate'>Tuesday, August 7, 2012</span>\n"},
-            { "id4", "it", Optional.of(pattern), dt,     "<span class='nw-publishDate'>marted\u00ec, agosto 7, 2012</span>\n"},
+            { "en", Optional.of(pattern), dt,     "<span class='nw-publishDate'>Tuesday, August 7, 2012</span>\n"},
+            { "it", Optional.of(pattern), dt,     "<span class='nw-publishDate'>marted\u00ec, agosto 7, 2012</span>\n"},
 
-            { "id5", "en", Optional.of("S-"),    dt,     "<span class='nw-publishDate'>8/7/12 5:31 PM</span>\n"},
-            { "id6", "it", Optional.of("S-"),    dt,     "<span class='nw-publishDate'>07/08/12 17:31</span>\n"},
+            { "en", Optional.of("S-"),    dt,     "<span class='nw-publishDate'>8/7/12 5:31 PM</span>\n"},
+            { "it", Optional.of("S-"),    dt,     "<span class='nw-publishDate'>07/08/12 17:31</span>\n"},
 
-            { "id5", "en", Optional.of("M-"),    dt,     "<span class='nw-publishDate'>Aug 7, 2012 5:31 PM</span>\n"},
-            { "id6", "it", Optional.of("M-"),    dt,     "<span class='nw-publishDate'>7-ago-2012 17:31</span>\n"},
+            { "en", Optional.of("M-"),    dt,     "<span class='nw-publishDate'>Aug 7, 2012 5:31 PM</span>\n"},
+            { "it", Optional.of("M-"),    dt,     "<span class='nw-publishDate'>7-ago-2012 17:31</span>\n"},
 
-            { "id5", "en", Optional.of("L-"),    dt,     "<span class='nw-publishDate'>August 7, 2012 5:31:03 PM</span>\n"},
-            { "id6", "it", Optional.of("L-"),    dt,     "<span class='nw-publishDate'>7 agosto 2012 17:31:03</span>\n"},
+            { "en", Optional.of("L-"),    dt,     "<span class='nw-publishDate'>August 7, 2012 5:31:03 PM</span>\n"},
+            { "it", Optional.of("L-"),    dt,     "<span class='nw-publishDate'>7 agosto 2012 17:31:03</span>\n"},
 
-            { "id5", "en", Optional.of("F-"),    dt,     "<span class='nw-publishDate'>Tuesday, August 7, 2012 5:31:03 PM CEST</span>\n"},
-            { "id6", "it", Optional.of("F-"),    dt,     "<span class='nw-publishDate'>marted\u00ec 7 agosto 2012 17:31:03 CEST</span>\n"},
+            { "en", Optional.of("F-"),    dt,     "<span class='nw-publishDate'>Tuesday, August 7, 2012 5:31:03 PM CEST</span>\n"},
+            { "it", Optional.of("F-"),    dt,     "<span class='nw-publishDate'>marted\u00ec 7 agosto 2012 17:31:03 CEST</span>\n"},
           };
       }
   }
