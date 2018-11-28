@@ -79,7 +79,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
 
             log.debug(">>>> template: {}", template);
 
-            for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS))
+            for (final String relativePath : viewProperties.getProperty2(PROPERTY_CONTENTS))
               {
                 final StringBuilder htmlFragmentBuilder = new StringBuilder();
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
@@ -91,7 +91,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
               }
 
             view.setText(htmlBuilder.toString());
-            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS, "nw-" + view.getId()));
+            view.setClassName(viewProperties.getProperty2(PROPERTY_CLASS, "nw-" + view.getId()));
           }
         catch (NotFoundException e)
           {
@@ -117,7 +117,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
-            final String title = contentProperties.getProperty(PROPERTY_TITLE);
+            final String title = contentProperties.getProperty2(PROPERTY_TITLE);
             htmlBuilder.append(String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup));
           }
         catch (NotFoundException e)
@@ -137,7 +137,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
-            htmlBuilder.append(contentProperties.getProperty(PROPERTY_FULL_TEXT)).append("\n");
+            htmlBuilder.append(contentProperties.getProperty2(PROPERTY_FULL_TEXT)).append("\n");
           }
         catch (NotFoundException e)
           {
@@ -157,10 +157,10 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
+            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
             final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
             final ResourceProperties templateProperties = content.getProperties();
-            return templateProperties.getProperty(PROPERTY_TEMPLATE, "$content$");
+            return templateProperties.getProperty2(PROPERTY_TEMPLATE, "$content$");
           }
         catch (NotFoundException e)
           {
