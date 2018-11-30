@@ -27,18 +27,19 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -87,30 +88,19 @@ public class DefaultMenuViewController implements MenuViewController
           {
           }
 
-        try
+        for (final String relativePath : viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList()))
           {
-            for (final String relativePath : viewProperties.getProperty2(PROPERTY_LINKS))
+            try
               {
-                try
-                  {
-                    final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
-                    final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL)
-                                                                                 .orElse("no nav. label");
-                    view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));
-                  }
-                catch (NotFoundException e)
-                  {
-                    log.warn("Ignoring link '{}' because of {}", relativePath, e.toString());
-                  }
+                final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
+                final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL)
+                                                                             .orElse("no nav. label");
+                view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));
               }
-          }
-        catch (NotFoundException e)
-          {
-            log.error("", e);
-          }
-        catch (IOException e)
-          {
-            log.error("", e);
+            catch (NotFoundException e)
+              {
+                log.warn("Ignoring link '{}' because of {}", relativePath, e.toString());
+              }
           }
       }
   }
