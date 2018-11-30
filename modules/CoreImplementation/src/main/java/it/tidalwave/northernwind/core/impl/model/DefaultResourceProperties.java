@@ -32,16 +32,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import java.util.Optional;
 import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -182,57 +180,6 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         final T value = (T)propertyMap.get(key);
         return (value != null) ? value : propertyResolver.resolveProperty(id, key);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
-      throws IOException
-      {
-        return Integer.parseInt(getProperty(key).orElse("" + defaultValue));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
-      throws IOException
-      {
-        return Boolean.parseBoolean(getProperty(key).orElse("" + defaultValue));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public ZonedDateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
-                                              final @Nonnull ZonedDateTime defaultValue)
-      {
-        for (final Key<String> key : keys)
-          {
-            try
-              {
-                return ZonedDateTime.parse(getProperty2(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
-              }
-            catch (NotFoundException e)
-              {
-              }
-            catch (IOException e)
-              {
-                log.warn("", e);
-              }
-          }
-
-        return defaultValue;
       }
 
     /*******************************************************************************************************************

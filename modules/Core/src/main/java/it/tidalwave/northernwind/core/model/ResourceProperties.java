@@ -39,6 +39,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -149,8 +150,11 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<Integer>
-    public int getIntProperty (@Nonnull Key<String> key, int defaultValue)
-      throws IOException;
+    default public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
+      throws IOException
+      {
+        return Integer.parseInt(getProperty(key).orElse("" + defaultValue));
+      }
 
     /*******************************************************************************************************************
      *
@@ -164,8 +168,11 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<Boolean>
-    public boolean getBooleanProperty (@Nonnull Key<String> key, boolean defaultValue)
-      throws IOException;
+    default public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
+      throws IOException
+      {
+        return Boolean.parseBoolean(getProperty(key).orElse("" + defaultValue));
+      }
 
     /*******************************************************************************************************************
      *
@@ -177,8 +184,26 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<ZonedDateTime>
-    public ZonedDateTime getDateTimeProperty (@Nonnull Collection<Key<String>> keys,
-                                              @Nonnull ZonedDateTime defaultValue);
+    default public ZonedDateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
+                                                      final @Nonnull ZonedDateTime defaultValue)
+      {
+        for (final Key<String> key : keys)
+          {
+            try
+              {
+                return ZonedDateTime.parse(getProperty2(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
+              }
+            catch (NotFoundException e)
+              {
+              }
+            catch (IOException e)
+              {
+//                log.warn("", e);
+              }
+          }
+
+        return defaultValue;
+      }
 
     /*******************************************************************************************************************
      *
