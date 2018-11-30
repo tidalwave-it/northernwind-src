@@ -29,20 +29,24 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 import java.io.IOException;
 import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -84,7 +88,14 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       };
 
     protected static final String LINK_RELSTYLESHEET_MEDIASCREEN_HREF =
-            "<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />\n";
+            "<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />%n";
+
+    private static final String LINK_CSS =
+            "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />%n";
+
+    // Always use </script> to close, as some browsers break without
+    private static final String TEMPLATE_SCRIPT =
+            "<script type=\"text/javascript\" src=\"%s\"></script>%n";
 
     @Nonnull
     private final NodeContainerView view;
@@ -111,15 +122,15 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
 
         setCustomTemplate(viewProperties);
-        view.addAttribute("language", requestLocaleManager.getLocales().get(0).getLanguage());
-        view.addAttribute("titlePrefix", viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
-        view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
-        view.addAttribute("title", siteNodeProperties.getProperty(PROPERTY_TITLE).orElse(""));
+        view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
+        view.addAttribute("titlePrefix",      viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
+        view.addAttribute("description",      viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
+        view.addAttribute("title",            siteNodeProperties.getProperty(PROPERTY_TITLE).orElse(""));
         view.addAttribute("screenCssSection", computeScreenCssSection());
-        view.addAttribute("printCssSection", computePrintCssSection());
-        view.addAttribute("rssFeeds", computeRssFeedsSection());
-        view.addAttribute("scripts", computeScriptsSection());
-        view.addAttribute("inlinedScripts", computeInlinedScriptsSection());
+        view.addAttribute("printCssSection",  computePrintCssSection());
+        view.addAttribute("rssFeeds",         computeRssFeedsSection());
+        view.addAttribute("scripts",          computeScriptsSection());
+        view.addAttribute("inlinedScripts",   computeInlinedScriptsSection());
       }
 
     /*******************************************************************************************************************
@@ -141,17 +152,10 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeScreenCssSection()
       {
-        final StringBuilder builder = new StringBuilder();
-
-        for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS)
-                                                           .orElse(Collections.<String>emptyList()))
-          {
-            final String link = relativeUri.startsWith("http") ? relativeUri
-                                                               : site.createLink(new ResourcePath(relativeUri));
-            builder.append(String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link));
-          }
-
-        return builder.toString();
+        return streamOf(PROPERTY_SCREEN_STYLE_SHEETS)
+                .map(this::createLink)
+                .map(link -> String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link))
+                .collect(joining());
       }
 
     /*******************************************************************************************************************
@@ -162,18 +166,10 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computePrintCssSection()
       {
-        final StringBuilder builder = new StringBuilder();
-
-        for (final String relativeUri : getViewProperties().getProperty(PROPERTY_PRINT_STYLE_SHEETS)
-                                                           .orElse(Collections.<String>emptyList()))
-          {
-            final String link = relativeUri.startsWith("http") ? relativeUri
-                                                               : site.createLink(new ResourcePath(relativeUri));
-            final String template = "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n";
-            builder.append(String.format(template, link));
-          }
-
-        return builder.toString();
+        return streamOf(PROPERTY_PRINT_STYLE_SHEETS)
+                .map(this::createLink)
+                .map(link -> String.format(LINK_CSS, link))
+                .collect(joining());
       }
 
     /*******************************************************************************************************************
@@ -184,11 +180,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection()
       {
-        for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS)
-                                                            .orElse(Collections.<String>emptyList()))
-          {
-            site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink);
-          }
+        streamOf(PROPERTY_RSS_FEEDS).forEach(relativePath ->
+            site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink));
 
         return createRssLink.toString();
       }
@@ -201,15 +194,34 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeScriptsSection()
       {
+        return streamOf(PROPERTY_SCRIPTS)
+                .map(relativeUri -> site.createLink(new ResourcePath(relativeUri)))
+                .map(link -> String.format(TEMPLATE_SCRIPT, link))
+                .collect(joining());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String computeInlinedScriptsSection()
+      {
         final StringBuilder builder = new StringBuilder();
 
-        for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS)
-                                                           .orElse(Collections.<String>emptyList()))
+        streamOf(PROPERTY_INLINED_SCRIPTS).forEach(relativePath ->
           {
-            // Always use </script> to close, as some browsers break without
-            builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>%n",
-                                         site.createLink(new ResourcePath(relativeUri))));
-          }
+            try
+              {
+                final Content script = site.find(Content).withRelativePath(relativePath).result();
+                script.getProperties().getProperty(PROPERTY_TEMPLATE).ifPresent(builder::append);
+              }
+            catch (NotFoundException e)
+              {
+                // ok, no script
+              }
+          });
 
         return builder.toString();
       }
@@ -239,24 +251,19 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected String computeInlinedScriptsSection()
+    private Stream<String> streamOf (final @Nonnull Key<List<String>> key)
       {
-        final StringBuilder builder = new StringBuilder();
+        return getViewProperties().getProperty(key).orElse(emptyList()).stream();
+      }
 
-        for (final String relativePath : getViewProperties().getProperty(PROPERTY_INLINED_SCRIPTS)
-                                                            .orElse(Collections.<String>emptyList()))
-          {
-            try
-              {
-                final Content script = site.find(Content).withRelativePath(relativePath).result();
-                builder.append(script.getProperties().getProperty2(PROPERTY_TEMPLATE));
-              }
-            catch (IOException | NotFoundException e)
-              {
-                // ok, no script
-              }
-          }
-
-        return builder.toString();
+    /*******************************************************************************************************************
+     *
+     * .
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String createLink (final @Nonnull String relativeUri)
+      {
+        return relativeUri.startsWith("http") ? relativeUri : site.createLink(new ResourcePath(relativeUri));
       }
   }
