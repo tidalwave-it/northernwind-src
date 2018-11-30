@@ -222,7 +222,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               {
                 log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
                 // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
-                if (post.getProperties().getProperty(PROPERTY_TITLE).isPresent())
+                if (post.getProperty(PROPERTY_TITLE).isPresent())
                   {
                     if (currentItem < maxFullItems)
                       {
@@ -259,7 +259,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
 
         findAllPosts(siteNodeProperties).stream()
-                .flatMap(post -> Stream.of(post.getProperties().getProperty(PROPERTY_TAGS).orElse("").split(",")))
+                .flatMap(post -> Stream.of(post.getProperty(PROPERTY_TAGS).orElse("").split(",")))
                 .forEach(tag ->
               {
                 TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
@@ -455,7 +455,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasCategory (final @Nonnull Content post, final @Nonnull String category)
       {
-        return category.equals("") || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY).orElse("---"));
+        return category.equals("") || category.equals(post.getProperty(PROPERTY_CATEGORY).orElse("---"));
       }
 
     /*******************************************************************************************************************
@@ -464,7 +464,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
-        return Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
+        return Arrays.asList(post.getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
       }
 
     /*******************************************************************************************************************

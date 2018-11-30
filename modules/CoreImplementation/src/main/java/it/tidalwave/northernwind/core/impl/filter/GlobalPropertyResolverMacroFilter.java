@@ -70,7 +70,7 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
             final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result(); // See NW-223
             // END FIXME
             final Key<String> key = new Key<>(matcher.group(1));
-            return rootSiteNode.getProperties().getProperty(key).orElse("");
+            return rootSiteNode.getProperty(key).orElse("");
           }
         catch (NotFoundException  e)
           {

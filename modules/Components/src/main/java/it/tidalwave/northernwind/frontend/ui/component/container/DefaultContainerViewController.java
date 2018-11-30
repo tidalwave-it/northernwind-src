@@ -68,7 +68,7 @@ public class DefaultContainerViewController implements ContainerViewController
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
+            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
           }
         catch (NotFoundException e)
           {

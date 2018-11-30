@@ -121,8 +121,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
               {
                 try
                   {
-                    final String segment = getResource().getProperties().getProperty(PROPERTY_EXPOSED_URI)
-                                                                        .orElse(decode(file));
+                    final String segment = getResource().getProperty(PROPERTY_EXPOSED_URI).orElse(decode(file));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (NotFoundException e) // FIXME: for getParent()

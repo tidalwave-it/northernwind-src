@@ -124,7 +124,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
-        final String siteNodeTitle = siteNode.getProperties().getProperty(Properties.PROPERTY_TITLE).orElse("");
+        final String siteNodeTitle = siteNode.getProperty(Properties.PROPERTY_TITLE).orElse("");
 
         if ("".equals(param))
           {

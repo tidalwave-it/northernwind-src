@@ -77,7 +77,7 @@ public class DefaultMenuViewController implements MenuViewController
           {
             final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
+            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
           }
         catch (NotFoundException e)
           {
@@ -87,7 +87,7 @@ public class DefaultMenuViewController implements MenuViewController
         viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList())
                 .stream()
                 .flatMap(path -> site.find(SiteNode).withRelativePath(path).stream())
-                .forEach(node -> view.addLink(node.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL)
+                .forEach(node -> view.addLink(node.getProperty(PROPERTY_NAVIGATION_LABEL)
                                                                   .orElse("no nav. label"),
                                               site.createLink(node.getRelativeUri())));
       }

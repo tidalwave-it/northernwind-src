@@ -99,7 +99,7 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
             final String templateRelativePath = viewProperties.getProperty(new Key<String>(templateName + "Path")).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            return template.getProperties().getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new); // FIXME
+            return template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new); // FIXME
           }
         catch (NotFoundException e)
           {

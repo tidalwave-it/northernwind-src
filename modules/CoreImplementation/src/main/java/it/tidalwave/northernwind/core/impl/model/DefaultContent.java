@@ -124,7 +124,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public Optional<ResourcePath> getExposedUri()
       {
-        final Optional<String> exposedUri = getProperties().getProperty(PROPERTY_EXPOSED_URI);
+        final Optional<String> exposedUri = getProperty(PROPERTY_EXPOSED_URI);
 
         return exposedUri.isPresent() ? exposedUri.map(ResourcePath::new)
                                       : getDefaultExposedUri();
@@ -142,7 +142,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Nonnull
     private Optional<ResourcePath> getDefaultExposedUri()
       {
-        return getResource().getProperties().getProperty(PROPERTY_TITLE)
+        return getResource().getProperty(PROPERTY_TITLE)
             .map(this::deAccent)
             .map(t -> t.replaceAll(" ", "-")
                        .replaceAll(",", "")

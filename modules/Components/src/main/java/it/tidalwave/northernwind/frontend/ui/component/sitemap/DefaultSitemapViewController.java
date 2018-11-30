@@ -160,7 +160,7 @@ public class DefaultSitemapViewController implements SitemapViewController
         // just using a single property and only peeking into a single node
         final Key<String> priorityKey = (childSiteNode == null) ? PROPERTY_SITEMAP_PRIORITY
                                                                 : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
-        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty(priorityKey).orElse("0.5"));
+        final float sitemapPriority = Float.parseFloat(siteNode.getProperty(priorityKey).orElse("0.5"));
 
         if (sitemapPriority > 0)
           {

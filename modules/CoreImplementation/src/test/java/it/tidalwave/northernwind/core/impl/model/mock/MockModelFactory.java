@@ -71,6 +71,7 @@ public class MockModelFactory extends ModelFactorySupport
     public Resource build (final @Nonnull Resource.Builder builder)
       {
         final Resource resource = mock(Resource.class);
+        when(resource.getProperty(any())).thenCallRealMethod();
         final String path = builder.getFile().getPath().asString();
         log.trace(">>>> creating Resource for {}", path);
 
@@ -87,6 +88,7 @@ public class MockModelFactory extends ModelFactorySupport
     public Content build (final @Nonnull Content.Builder builder)
       {
         final Content content = mock(Content.class);
+        when(content.getProperty(any())).thenCallRealMethod();
         final String path = builder.getFolder().getPath().asString();
         log.trace(">>>> creating Content for {}", path);
 
@@ -123,6 +125,7 @@ public class MockModelFactory extends ModelFactorySupport
         final String path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
         final SiteNode siteNode = mock(SiteNode.class);
+        when(siteNode.getProperty(any())).thenCallRealMethod();
 
         final ResourceProperties properties = mock(ResourceProperties.class);
         when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default

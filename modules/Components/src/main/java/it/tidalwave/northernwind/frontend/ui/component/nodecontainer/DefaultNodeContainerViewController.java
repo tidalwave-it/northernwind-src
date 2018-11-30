@@ -159,7 +159,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                 .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).stream())
                 .map(node -> String.format(TEMPLATE_RSS_LINK,
                                            RSS_MIME_TYPE,
-                                           node.getProperties().getProperty(PROPERTY_TITLE).orElse("RSS"),
+                                           node.getProperty(PROPERTY_TITLE).orElse("RSS"),
                                            site.createLink(node.getRelativeUri())))
                 .collect(joining());
       }
@@ -188,7 +188,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         return streamOf(PROPERTY_INLINED_SCRIPTS)
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream())
-                .flatMap(script -> script.getProperties().getProperty(PROPERTY_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                .flatMap(script -> script.getProperty(PROPERTY_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(joining());
       }
 
@@ -203,7 +203,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
           {
             final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
+            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
           }
         catch (NotFoundException e)
           {

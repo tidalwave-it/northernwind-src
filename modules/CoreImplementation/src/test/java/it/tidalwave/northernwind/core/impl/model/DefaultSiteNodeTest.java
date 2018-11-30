@@ -202,6 +202,7 @@ public class DefaultSiteNodeTest
         final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);
         when(resource.getFile()).thenReturn(resourceFile);
+        when(resource.getProperty(any())).thenCallRealMethod();
 
         final SiteNode parentSiteNode = mock(SiteNode.class);
         when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
