@@ -456,7 +456,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasCategory (final @Nonnull Content post, final @Nonnull String category)
       {
-        return category.equals("") || category.equals(post.getProperty(PROPERTY_CATEGORY).orElse("---"));
+        return category.equals("") || post.getProperty(PROPERTY_CATEGORY).map(category::equals).orElse(false);
       }
 
     /*******************************************************************************************************************
