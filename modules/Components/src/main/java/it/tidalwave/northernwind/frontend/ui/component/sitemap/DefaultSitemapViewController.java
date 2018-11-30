@@ -31,9 +31,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
@@ -44,9 +41,10 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_LATEST_MODIFICATION_DATE;
+import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
 /***********************************************************************************************************************
@@ -169,31 +167,12 @@ public class DefaultSitemapViewController implements SitemapViewController
             builder.append("  <url>\n");
             builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
             builder.append(String.format("    <lastmod>%s</lastmod>%n",
-                                         getSiteNodeDateTime(properties).format(dateTimeFormatter)));
+                                         properties.getDateTimeProperty(PROPERTY_LATEST_MODIFICATION_DATE).orElse(TIME0).format(dateTimeFormatter)));
             builder.append(String.format("    <changefreq>%s</changefreq>%n",
                                          properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY).orElse("daily")));
             builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
             builder.append("  </url>\n");
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ZonedDateTime getSiteNodeDateTime (final @Nonnull ResourceProperties properties)
-      {
-        try
-          {
-            final String string = properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE).orElseThrow(NotFoundException::new); // FIXME
-            return ZonedDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
-          }
-        catch (NotFoundException e)
-          {
-          }
-
-        return Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
       }
 
     /*******************************************************************************************************************
