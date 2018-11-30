@@ -258,8 +258,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final Map<String, TagAndCount> tagAndCountMapByTag = new TreeMap<>();
         final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
 
-        findAllPosts(siteNodeProperties).stream()
-                .flatMap(post -> Stream.of(post.getProperty(PROPERTY_TAGS).orElse("").split(",")))
+        findAllPosts(siteNodeProperties)
+                .stream()
+                .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .forEach(tag ->
               {
                 TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
