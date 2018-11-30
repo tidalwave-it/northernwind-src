@@ -132,7 +132,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public Finder<Content> findChildren()
       {
-        return new PathFinderSupport<Content>(this);
+        return new PathFinderSupport<>(this);
       }
 
     /*******************************************************************************************************************
