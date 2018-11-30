@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
@@ -38,6 +37,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -69,38 +69,29 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     @PostConstruct
     /* package */ void initialize()
       {
+        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        try
+        viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream().forEach(relativePath ->
           {
-            for (final String relativePath : siteNode.getPropertyGroup(view.getId()).getProperty2(PROPERTY_CONTENTS))
+            try
               {
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
-
-                try
-                  {
-                    htmlBuilder.append(content.getProperties().getProperty2(PROPERTY_FULL_TEXT)).append("\n");
-                  }
-                catch (NotFoundException e)
-                  {
-                    htmlBuilder.append(content.getProperties().getProperty2(PROPERTY_TEMPLATE)).append("\n");
-                  }
+                final ResourceProperties contentProperties = content.getProperties();
+                htmlBuilder.append(contentProperties.getProperty(PROPERTY_FULL_TEXT)
+                                                    .orElse(contentProperties.getProperty(PROPERTY_TEMPLATE)
+                                                                             .orElse("")));
+                htmlBuilder.append("\n");
               }
-          }
-        catch (NotFoundException e)
-          {
-            htmlBuilder.append(e.toString().replaceAll("\\[.*\\]", ""));
-            log.error("NotFoundException", e.toString());
-          }
-        catch (IOException e)
-          {
-            htmlBuilder.append(e.toString());
-            log.error("IOException", e);
-          }
+            catch (NotFoundException e)
+              {
+                htmlBuilder.append(e.toString().replaceAll("\\[.*\\]", ""));
+                log.error("NotFoundException", e.toString());
+              }
+          });
 
         view.setContent(htmlBuilder.toString());
-
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
       }
   }
