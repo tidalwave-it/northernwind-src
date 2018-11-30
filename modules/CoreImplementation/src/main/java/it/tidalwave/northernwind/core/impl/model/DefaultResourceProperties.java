@@ -99,17 +99,10 @@ public class DefaultResourceProperties implements ResourceProperties
         this.id = otherProperties.id;
         this.propertyResolver = otherProperties.propertyResolver;
 
-        for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
-          {
-            propertyMap.put(entry.getKey(), entry.getValue()); // FIXME: clone the property
-          }
-
-        for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
-          {
-            final Id groupId = entry.getKey();
-            final DefaultResourceProperties propertyGroup = new DefaultResourceProperties(entry.getValue());
-            groupMap.put(groupId, propertyGroup);
-          }
+        otherProperties.propertyMap.entrySet().stream().forEach(e ->
+                propertyMap.put(e.getKey(), e.getValue())); // FIXME: clone the property
+        otherProperties.groupMap.entrySet().stream().forEach(e ->
+                groupMap.put(e.getKey(), new DefaultResourceProperties(e.getValue())));
       }
 
     /*******************************************************************************************************************
