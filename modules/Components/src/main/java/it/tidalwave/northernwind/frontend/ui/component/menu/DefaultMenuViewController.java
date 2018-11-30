@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -76,16 +75,13 @@ public class DefaultMenuViewController implements MenuViewController
 
         try
           {
-            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_TEMPLATE_PATH);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty2(PROPERTY_TEMPLATE));
+            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
           }
         catch (NotFoundException e)
           {
             // ok, use the default template
-          }
-        catch (IOException e)
-          {
           }
 
         for (final String relativePath : viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList()))

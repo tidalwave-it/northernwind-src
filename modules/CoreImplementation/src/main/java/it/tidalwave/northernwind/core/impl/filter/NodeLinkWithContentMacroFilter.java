@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 025cff484dfca41188c19dc45fcf142a7b02436c $
  *
  * *********************************************************************************************************************
  * #L%
@@ -59,7 +59,7 @@ import lombok.extern.slf4j.Slf4j;
  * </ul>
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 025cff484dfca41188c19dc45fcf142a7b02436c $
  *
  **********************************************************************************************************************/
 @Configurable @Order(NodeLinkMacroFilter.ORDER - 1) @Slf4j
@@ -89,7 +89,7 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Site site = siteProvider.get().getSite();
         final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
         final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final ResourcePath path = siteNode.getRelativeUri().appendedWith(content.getExposedUri2());
+        final ResourcePath path = siteNode.getRelativeUri().appendedWith(content.getExposedUri().orElseThrow(NotFoundException::new)); // FIXME
         final String link = site.createLink(path);
 
         return language.flatMap(l -> postProcessor.map(pp -> pp.postProcess(link, l))).orElse(link);

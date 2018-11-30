@@ -160,26 +160,14 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         try
           {
-            return Optional.of(getProperty2(key));
+            final T value = (T)propertyMap.get(key);
+            return Optional.of((value != null) ? value : propertyResolver.resolveProperty(id, key));
           }
         catch (NotFoundException | IOException e)
           {
             log.info("", e);
             return Optional.empty();
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull @SuppressWarnings("unchecked")
-    public <T> T getProperty2 (@Nonnull Key<T> key)
-      throws NotFoundException, IOException
-      {
-        final T value = (T)propertyMap.get(key);
-        return (value != null) ? value : propertyResolver.resolveProperty(id, key);
       }
 
     /*******************************************************************************************************************

@@ -32,11 +32,9 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -60,20 +58,19 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     interface Exclusions
       {
-        public <Type> Type getProperty2(Key<Type> key) throws NotFoundException, IOException;
+        public <T> Optional<T> getProperty (Key<T> key);
       }
 
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
     private final ResourceProperties delegate;
 
     @Override
-    public <Type> Type getProperty2 (final @Nonnull Key<Type> key)
-      throws NotFoundException, IOException
+    public <T> Optional<T> getProperty (final @Nonnull Key<T> key)
       {
         try
           {
             requestContext.setContent(content);
-            return delegate.getProperty2(key);
+            return delegate.getProperty(key);
           }
         finally
           {
@@ -131,25 +128,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
         return exposedUri.isPresent() ? exposedUri.map(ResourcePath::new)
                                       : getDefaultExposedUri();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public ResourcePath getExposedUri2()
-      throws NotFoundException, IOException
-      {
-        try
-          {
-            return new ResourcePath(getProperties().getProperty2(PROPERTY_EXPOSED_URI));
-          }
-        catch (NotFoundException e)
-          {
-            return getDefaultExposedUri().orElseThrow(NotFoundException::new);
-          }
       }
 
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or the next

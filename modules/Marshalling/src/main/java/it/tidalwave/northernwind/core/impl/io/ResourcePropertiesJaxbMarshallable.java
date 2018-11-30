@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: ffe9aad8518e6a04deeb7bf5e3b3c7242fdf7492 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: ffe9aad8518e6a04deeb7bf5e3b3c7242fdf7492 $
  *
  **********************************************************************************************************************/
 @DciRole(datumType = ResourceProperties.class) @Configurable @Slf4j
@@ -121,7 +121,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
               {
                 final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
                 propertyJaxb.setName(key.stringValue());
-                final Object value = properties.getProperty2(key);
+                final Object value = properties.getProperty(key).orElseThrow(NotFoundException::new); // FIXME
 
                 if (value instanceof Collection)
                   {

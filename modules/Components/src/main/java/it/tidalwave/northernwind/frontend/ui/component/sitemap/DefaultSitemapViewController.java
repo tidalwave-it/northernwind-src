@@ -193,15 +193,11 @@ public class DefaultSitemapViewController implements SitemapViewController
       {
         try
           {
-            final String string = properties.getProperty2(Properties.PROPERTY_LATEST_MODIFICATION_DATE);
+            final String string = properties.getProperty(Properties.PROPERTY_LATEST_MODIFICATION_DATE).orElseThrow(NotFoundException::new); // FIXME
             return ZonedDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
           }
         catch (NotFoundException e)
           {
-          }
-        catch (IOException e)
-          {
-            log.warn("", e);
           }
 
         return Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));

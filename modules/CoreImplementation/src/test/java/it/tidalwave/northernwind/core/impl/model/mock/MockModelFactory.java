@@ -136,7 +136,6 @@ public class MockModelFactory extends ModelFactorySupport
                 final Key<String> propertyKey = new Key<>(propertyName);
                 log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
                 when(properties.getProperty(eq(propertyKey))).thenReturn(Optional.of(e.getValue()));
-                when(properties.getProperty2(eq(propertyKey))).thenReturn(e.getValue());
               }
           }
 

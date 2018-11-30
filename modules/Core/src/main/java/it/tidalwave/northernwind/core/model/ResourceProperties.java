@@ -126,21 +126,6 @@ public interface ResourceProperties extends As, Identifiable
 
     /*******************************************************************************************************************
      *
-     * Retrieves a property.
-     *
-     * @deprecated  use {@link #getProperty(it.tidalwave.util.Key) instead}
-     *
-     * @param   key                 the property key
-     * @return                      the property value
-     * @throws  NotFoundException   if the property doesn't exist
-     *
-     ******************************************************************************************************************/
-    @Nonnull @Deprecated
-    public <T> T getProperty2 (@Nonnull Key<T> key)
-      throws NotFoundException, IOException;
-
-    /*******************************************************************************************************************
-     *
      * Retrieves a property, eventually returning a default value.
      *
      * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.

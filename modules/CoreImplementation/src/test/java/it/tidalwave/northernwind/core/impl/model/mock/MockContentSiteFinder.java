@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 34a0bc9145f4218a2a758e80e90ff213a09c8e4e $
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,10 +30,9 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import java.io.IOException;
+import java.util.Optional;
 import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -44,7 +43,7 @@ import static org.mockito.Mockito.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 34a0bc9145f4218a2a758e80e90ff213a09c8e4e $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
@@ -86,27 +85,20 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
     @Override @Nonnull
     protected List<? extends Content> computeResults()
       {
-        try
-          {
-            final Content content = mock(Content.class);
+        final Content content = mock(Content.class);
 
-            if (relativePath.equals("/"))
-              {
-                when(content.getExposedUri2()).thenReturn(new ResourcePath());
-              }
-            else
-              {
-                when(content.getExposedUri2()).thenReturn(new ResourcePath("EXPOSED-" + relativePath.substring(1)
-                                                                                  .replace('/', '-')
-                                                                                  .replace(' ', '-')));
-              }
-
-            return Arrays.asList(content);
-          }
-        catch (NotFoundException | IOException e)
+        if (relativePath.equals("/"))
           {
-            throw new RuntimeException(e);
+            when(content.getExposedUri()).thenReturn(Optional.of(new ResourcePath()));
           }
+        else
+          {
+            when(content.getExposedUri()).thenReturn(Optional.of(new ResourcePath("EXPOSED-" + relativePath.substring(1)
+                                                                              .replace('/', '-')
+                                                                              .replace(' ', '-'))));
+          }
+
+        return Arrays.asList(content);
       }
 
     @Override

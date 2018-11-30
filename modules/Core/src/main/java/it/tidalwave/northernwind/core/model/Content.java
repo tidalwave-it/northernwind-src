@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 33bc17f249cd1317a678ad6be6f0a75643acda93 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -29,8 +29,6 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,7 +42,7 @@ import lombok.experimental.Wither;
  * A piece of content to be composed into a page.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 33bc17f249cd1317a678ad6be6f0a75643acda93 $
  *
  **********************************************************************************************************************/
 public interface Content extends Resource, SimpleComposite<Content>
@@ -92,18 +90,4 @@ public interface Content extends Resource, SimpleComposite<Content>
      ******************************************************************************************************************/
     @Nonnull
     public Optional<ResourcePath> getExposedUri();
-
-    /*******************************************************************************************************************
-     *
-     * Returns the exposed URI mapped to this resource.
-     *
-     * @deprecated  Use {@link #getExposedUri()} instead.
-     * @return  the exposed URI
-     * @throws  NotFoundException  if the resource can't be found
-     * @throws  IOException        if an I/O error occurs (??? FIXME)
-     *
-     ******************************************************************************************************************/
-    @Nonnull @Deprecated
-    public ResourcePath getExposedUri2()
-      throws NotFoundException, IOException;
   }

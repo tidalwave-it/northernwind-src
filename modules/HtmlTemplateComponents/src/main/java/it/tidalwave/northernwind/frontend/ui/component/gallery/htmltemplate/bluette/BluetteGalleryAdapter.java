@@ -35,7 +35,6 @@ import java.io.IOException;
 import org.stringtemplate.v4.ST;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -125,33 +124,24 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     public String getInlinedScript()
       {
         final StringBuilder builder = new StringBuilder();
+        final SiteNode siteNode = context.getSiteNode();
+        final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri().appendedWith("images.xml"));
 
-        try
+        builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
+        builder.append(String.format("var bluetteCatalogUrl = \"%s\";%n", link));
+
+        final ResourceProperties bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
+
+        // FIXME: since key doesn't have dynamic type, we can't properly escape strings.
+        for (final Key<?> key : bluetteConfiguration.getKeys())
           {
-            final SiteNode siteNode = context.getSiteNode();
-            final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri().appendedWith("images.xml"));
-
-            builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
-            builder.append(String.format("var bluetteCatalogUrl = \"%s\";%n", link));
-
-            final ResourceProperties bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
-
-            // FIXME: since key doesn't have dynamic type, we can't properly escape strings.
-            for (final Key<?> key : bluetteConfiguration.getKeys())
+            if (key.stringValue().startsWith("bluette") || key.stringValue().equals("logging"))
               {
-                if (key.stringValue().startsWith("bluette") || key.stringValue().equals("logging"))
-                  {
-                    final Object value = bluetteConfiguration.getProperty2(key);
-                    builder.append(String.format("var %s = %s;%n", key.stringValue(), value));
-                  }
+                bluetteConfiguration.getProperty(key).ifPresent(value -> builder.append(String.format("var %s = %s;%n", key.stringValue(), value)));
               }
+          }
 
-            builder.append("//]]>\n</script>\n");
-          }
-        catch (NotFoundException | IOException e)
-          {
-            // ok, no configuration
-          }
+        builder.append("//]]>\n</script>\n");
 
         return builder.toString();
       }

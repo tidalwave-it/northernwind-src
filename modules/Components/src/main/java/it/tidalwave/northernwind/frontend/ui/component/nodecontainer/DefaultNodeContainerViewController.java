@@ -235,11 +235,11 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         try
           {
-            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_TEMPLATE_PATH);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty2(PROPERTY_TEMPLATE));
+            view.setTemplate(template.getProperties().getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
           }
-        catch (NotFoundException | IOException e)
+        catch (NotFoundException e)
           {
             log.warn("Cannot find custom template, using default ({})", e.toString());
           }

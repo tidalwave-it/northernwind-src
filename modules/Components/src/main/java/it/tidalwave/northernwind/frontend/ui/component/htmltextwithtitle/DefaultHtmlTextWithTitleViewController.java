@@ -140,7 +140,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         try
           {
-            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE).orElseThrow(NotFoundException::new); // FIXME
             final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
             final ResourceProperties templateProperties = content.getProperties();
             return templateProperties.getProperty(PROPERTY_TEMPLATE).orElse("$content$");
