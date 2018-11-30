@@ -36,7 +36,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
@@ -59,6 +61,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
@@ -97,6 +101,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       };
 
+    private final Comparator<TagAndCount> TAG_COUNT_COMPARATOR = new Comparator<TagAndCount>()
+      {
+        @Override
+        public int compare (final @Nonnull TagAndCount tac1, final @Nonnull TagAndCount tac2)
+          {
+            return (int)Math.signum(tac2.count - tac1.count);
+          }
+      };
+
     @Nonnull
     protected final BlogView view;
 
@@ -126,33 +139,21 @@ public abstract class DefaultBlogViewController implements BlogViewController
             protected List<? extends SiteNode> computeResults()
               {
                 log.info("findCompositeContents()");
-                final List<SiteNode> results = new ArrayList<>();
 
-                try
-                  {
-                    final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
-
-                    for (final Content post : findAllPosts(componentProperties))
-                      {
-                        try
-                          {
-                            final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(post.getExposedUri2());
-                            results.add(new ChildSiteNode(siteNode, relativeUri, post.getProperties()));
-                          }
-                        catch (NotFoundException | IOException e)
-                          {
-                            log.warn("While reading properties", e);
-                          }
-                      }
-                  }
-                catch (NotFoundException | IOException e)
-                  {
-                    log.warn("While reading property group", e);
-                  }
+                final List<SiteNode> results = findAllPosts(siteNode.getPropertyGroup(view.getId()))
+                        .stream()
+                        .flatMap(post -> createChildSiteNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
+                        .collect(toList());
 
                 log.info(">>>> returning: {}", results);
 
                 return results;
+              }
+
+            @Nonnull
+            private Optional<ChildSiteNode> createChildSiteNode (final @Nonnull Content post)
+              {
+                return post.getExposedUri().map(postUri -> new ChildSiteNode(siteNode, siteNode.getRelativeUri().appendedWith(postUri), post.getProperties()));
               }
           };
       }
@@ -203,7 +204,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     private void generateBlogPosts()
-      throws IOException, NotFoundException, HttpStatusException
+      throws IOException, HttpStatusException
       {
         final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
         final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS, 99);
@@ -220,29 +221,26 @@ public abstract class DefaultBlogViewController implements BlogViewController
             try
               {
                 log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-                // FIXME: use hasProperty() and use PROPERTY_FULLTEXT
-                post.getProperties().getProperty2(PROPERTY_TITLE); // Skip folders used for categories - this throws exception
+                // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
+                if (post.getProperties().getProperty(PROPERTY_TITLE).isPresent())
+                  {
+                    if (currentItem < maxFullItems)
+                      {
+                        addFullPost(post);
+                      }
+                    else if (currentItem < maxFullItems + maxLeadinItems)
+                      {
+                        addLeadInPost(post);
+                      }
+                    else if (currentItem < maxItems)
+                      {
+                        addReference(post);
+                      }
 
-                if (currentItem < maxFullItems)
-                  {
-                    addFullPost(post);
+                    currentItem++;
                   }
-                else if (currentItem < maxFullItems + maxLeadinItems)
-                  {
-                    addLeadInPost(post);
-                  }
-                else if (currentItem < maxItems)
-                  {
-                    addReference(post);
-                  }
-
-                currentItem++;
               }
-            catch (NotFoundException e)
-              {
-                log.info("While reading property group of post {}", e.toString());
-              }
-            catch (IOException e)
+            catch (NotFoundException | IOException e)
               {
                 log.warn("While reading property group of post", e);
               }
@@ -255,33 +253,25 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     private void generateTagCloud()
-      throws IOException, NotFoundException, HttpStatusException
+      throws HttpStatusException
       {
         final Map<String, TagAndCount> tagAndCountMapByTag = new TreeMap<>();
         final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
 
-        for (final Content post : findAllPosts(siteNodeProperties))
-          {
-            try
+        findAllPosts(siteNodeProperties).stream()
+                .flatMap(post -> Stream.of(post.getProperties().getProperty(PROPERTY_TAGS).orElse("").split(",")))
+                .forEach(tag ->
               {
-                for (final String tag : post.getProperties().getProperty2(PROPERTY_TAGS).split(","))
+                TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
+
+                if (tagAndCount == null)
                   {
-                    TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
-
-                    if (tagAndCount == null)
-                      {
-                        tagAndCount = new TagAndCount(tag, 0, "");
-                        tagAndCountMapByTag.put(tag, tagAndCount);
-                      }
-
-                    tagAndCount.count++;
+                    tagAndCount = new TagAndCount(tag, 0, "");
+                    tagAndCountMapByTag.put(tag, tagAndCount);
                   }
-              }
-            catch (NotFoundException | IOException e)
-              {
-                // ok, not tag
-              }
-          }
+
+                tagAndCount.count++;
+              });
 
         final Collection<TagAndCount> tagsAndCount = tagAndCountMapByTag.values();
         computeRanks(tagsAndCount);
@@ -295,19 +285,21 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     @Nonnull
     private List<Content> findAllPosts (final @Nonnull ResourceProperties siteNodeProperties)
-      throws NotFoundException, IOException
       {
-        final List<Content> allPosts = new ArrayList<>();
-
-        for (final String relativePath : siteNodeProperties.getProperty2(PROPERTY_CONTENTS))
-          {
-            final Content postsFolder = site.find(Content).withRelativePath(relativePath).result();
-            allPosts.addAll(postsFolder.findChildren().results());
-          }
-
-        log.debug(">>>> all posts: {}", allPosts.size());
-
-        return allPosts;
+        return siteNodeProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream()
+                .flatMap(relativePath ->
+                    {
+                      try
+                        {
+                          final Content postsFolder = site.find(Content).withRelativePath(relativePath).result(); // FIXME: use optionalResult()
+                          return postsFolder.findChildren().results().stream();
+                        }
+                      catch (NotFoundException e)
+                        {
+                          return Stream.empty();
+                        }
+                    })
+                .collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -317,7 +309,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     // TODO: embed the sort by reverse date in the finder
     @Nonnull
     private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException, NotFoundException, HttpStatusException
+      throws IOException, HttpStatusException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
         final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
@@ -325,10 +317,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final List<Content> posts = new ArrayList<>();
         //
         // The thing work differently in function of pathParams:
-        // + when no pathParams, it returns all the posts
-        // + when it matches a category, it returns all the posts in that category
-        // + when it matches an exposed URI of a single specific post, and not in 'index' mode it returns only that
-        //   post; if in 'index' mode, it returns all the posts.
+        // + when no pathParams, return all the posts;
+        // + when it matches a category, return all the posts in that category;
+        // + when it matches an exposed URI of a single specific post:
+        //      + if not in 'index' mode, return only that post;
+        //      + if in 'index' mode, returns all the posts.
         //
         if ("".equals(pathParams))
           {
@@ -339,21 +332,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
             if (pathParams.startsWith(TAG_PREFIX))
               {
                 final String tag = pathParams.replaceFirst("^" + TAG_PREFIX, "");
-                filterByTag(allPosts, posts, tag);
+                posts.addAll(filteredByTag(allPosts, tag));
               }
             else
               {
-                try
-                  {
-                    final Content singlePost = findPostByExposedUri(allPosts, new ResourcePath(pathParams));
-                    // pathParams matches an exposedUri; thus it's not a category, so an index wants all
-                    posts.addAll(index ? allPosts : Collections.singletonList(singlePost));
-                  }
-                catch (NotFoundException e)
-                  {
-                    // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
-                    filterByCategory(allPosts, posts, pathParams);
-                  }
+                posts.addAll(filteredByExposedUri(allPosts, new ResourcePath(pathParams))
+                            // pathParams matches an exposedUri; thus it's not a category, so an index wants all
+                            .map(singlePost -> index ? allPosts : singletonList(singlePost))
+                            // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
+                            .orElse(filteredByCategory(allPosts, pathParams)));
               }
           }
 
@@ -372,50 +359,34 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * Adds to {@code destinationPosts} all the {@code sourcePosts} that matches the selected {@code category}; all
-     * posts if the category is empty.
+     * Filters the {@code sourcePosts} that matches the selected {@code category}; returns all posts if the category is
+     * empty.
      *
-     * @param  sourcePosts          the source posts
-     * @param  destinationPosts     the destination posts
-     * @param  category             the category
+     * @param  posts          the source posts
+     * @param  category       the category
+     * @return                the filtered posts
      *
      ******************************************************************************************************************/
-    private void filterByCategory (final @Nonnull List<Content> sourcePosts,
-                                   final @Nonnull List<Content> destinationPosts,
-                                   final @Nonnull String category)
+    @Nonnull
+    private static List<Content> filteredByCategory (final @Nonnull List<Content> posts, final @Nonnull String category)
       {
-        for (final Content post : sourcePosts)
-          {
-            if (category.equals("") || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY).orElse("---")))
-              {
-                destinationPosts.add(post);
-              }
-          }
+        return posts.stream().filter(post -> hasCategory(post, category)).collect(toList());
       }
 
     /*******************************************************************************************************************
      *
-     * Adds to {@code destinationPosts} all the {@code sourcePosts} that matches the selected {@code tag}; all
+     * Filters the {@code sourcePosts} that matches the selected{@code tag}; returns all
      * posts if the category is empty.
      *
-     * @param  sourcePosts          the source posts
-     * @param  destinationPosts     the destination posts
-     * @param  tag                  the tag
+     * @param  posts          the source posts
+     * @param  tag            the tag
+     * @return                the filtered posts
      *
      ******************************************************************************************************************/
-    private void filterByTag (final @Nonnull List<Content> sourcePosts,
-                              final @Nonnull List<Content> destinationPosts,
-                              final @Nonnull String tag)
+    @Nonnull
+    private static List<Content> filteredByTag (final @Nonnull List<Content> posts, final @Nonnull String tag)
       {
-        for (final Content post : sourcePosts)
-          {
-            final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).orElse("").split(","));
-
-            if (tags.contains(tag))
-              {
-                destinationPosts.add(post);
-              }
-          }
+        return posts.stream().filter(post -> hasTag(post, tag)).collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -423,29 +394,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Content findPostByExposedUri (final List<Content> allPosts, final @Nonnull ResourcePath exposedUri)
-      throws NotFoundException, IOException
+    private static Optional<Content> filteredByExposedUri (final @Nonnull List<Content> posts,
+                                                           final @Nonnull ResourcePath exposedUri)
       {
-        for (final Content post : allPosts)
-          {
-            try
-              {
-                if (exposedUri.equals(post.getExposedUri2()))
-                  {
-                    return post;
-                  }
-              }
-            catch (NotFoundException e)
-              {
-                log.warn("{}", e.toString());
-              }
-            catch (IOException e)
-              {
-                log.warn("", e);
-              }
-          }
-
-        throw new NotFoundException("Blog post with exposedUri=" + exposedUri.asString());
+        return posts.stream().filter(post -> post.getExposedUri().map(exposedUri::equals).orElse(false)).findFirst();
       }
 
     /*******************************************************************************************************************
@@ -473,8 +425,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract  void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount)
-      throws IOException, NotFoundException;
+    protected abstract  void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
 
     /*******************************************************************************************************************
      *
@@ -490,14 +441,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private void computeRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
       {
         final List<TagAndCount> tagsAndCountByCountDescending = new ArrayList<>(tagsAndCount);
-        Collections.sort(tagsAndCountByCountDescending, new Comparator<TagAndCount>()
-          {
-            @Override
-            public int compare (final @Nonnull TagAndCount tac1, final @Nonnull TagAndCount tac2)
-              {
-                return (int)Math.signum(tac2.count - tac1.count);
-              }
-          });
+        Collections.sort(tagsAndCountByCountDescending, TAG_COUNT_COMPARATOR);
 
         int rank = 1;
         int previousCount = 0;
@@ -513,6 +457,24 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
             previousCount = tac.count;
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private static boolean hasCategory (final @Nonnull Content post, final @Nonnull String category)
+      {
+        return category.equals("") || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY).orElse("---"));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
+      {
+        return Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
       }
 
     /*******************************************************************************************************************
