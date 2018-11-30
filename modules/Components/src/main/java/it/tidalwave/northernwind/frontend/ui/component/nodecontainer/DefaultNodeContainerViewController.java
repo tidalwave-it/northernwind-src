@@ -156,7 +156,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     private String computeRssFeedsSection()
       {
         return streamOf(PROPERTY_RSS_FEEDS)
-                .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).results().stream())
+                .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).stream())
                 .map(node -> String.format(TEMPLATE_RSS_LINK,
                                            RSS_MIME_TYPE,
                                            node.getProperties().getProperty(PROPERTY_TITLE).orElse("RSS"),
@@ -186,22 +186,10 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     protected String computeInlinedScriptsSection()
       {
-        final StringBuilder builder = new StringBuilder();
-
-        streamOf(PROPERTY_INLINED_SCRIPTS).forEach(relativePath ->
-          {
-            try
-              {
-                final Content script = site.find(Content).withRelativePath(relativePath).result();
-                script.getProperties().getProperty(PROPERTY_TEMPLATE).ifPresent(builder::append);
-              }
-            catch (NotFoundException e)
-              {
-                // ok, no script
-              }
-          });
-
-        return builder.toString();
+        return streamOf(PROPERTY_INLINED_SCRIPTS)
+                .flatMap(path -> site.find(Content).withRelativePath(path).stream())
+                .flatMap(script -> script.getProperties().getProperty(PROPERTY_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                .collect(joining());
       }
 
     /*******************************************************************************************************************

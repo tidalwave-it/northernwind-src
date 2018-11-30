@@ -30,7 +30,7 @@ package it.tidalwave.northernwind.frontend.media.impl;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Iterator;
+import java.util.Optional;
 import java.io.IOException;
 import org.imajine.image.EditableImage;
 import org.imajine.image.op.ReadOp;
@@ -72,7 +72,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       throws NotFoundException
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-        return findMedia(mediaId, properties).getFile();
+        return findMedia(mediaId, properties).map(m -> m.getFile()).orElseThrow(NotFoundException::new); // FIXME
       }
 
     /*******************************************************************************************************************
@@ -96,33 +96,17 @@ public class DefaultMetadataLoader implements MetadataLoader
      * @param  mediaId            the media id
      * @param  properties         the configuration properties
      * @return                    the {@code Media}
-     * @throws NotFoundException  if no {@code Media} is found
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Media findMedia (final @Nonnull Id mediaId, final @Nonnull ResourceProperties properties)
-      throws NotFoundException
+    private Optional<Media> findMedia (final @Nonnull Id mediaId, final @Nonnull ResourceProperties properties)
       {
         final Site site = siteProvider.get().getSite();
 
-        for (final Iterator<String> i = properties.getProperty(PROPERTY_MEDIA_PATHS).orElse(emptyList()).iterator(); i.hasNext(); )
-          {
-            final String mediaPath = i.next();
-            final String resourceRelativePath = String.format(mediaPath, mediaId.stringValue());
-
-            try
-              {
-                return site.find(Media).withRelativePath(resourceRelativePath).result();
-              }
-            catch (NotFoundException e)
-              {
-                if (!i.hasNext())
-                  {
-                    throw e;
-                  }
-              }
-          }
-
-        throw new RuntimeException("Shouldn't get here");
+        return properties.getProperty(PROPERTY_MEDIA_PATHS).orElse(emptyList())
+                .stream()
+                .map(pathTemplate -> String.format(pathTemplate, mediaId.stringValue()))
+                .flatMap(path -> site.find(Media).withRelativePath(path).stream())
+                .findFirst();
       }
   }

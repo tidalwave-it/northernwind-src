@@ -36,9 +36,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.FinderSupport;
-import it.tidalwave.northernwind.core.model.SiteFinder;
+import it.tidalwave.util.Finder8Support;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
+import it.tidalwave.northernwind.core.model.SiteFinder;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -49,7 +49,7 @@ import lombok.ToString;
  **********************************************************************************************************************/
 @Immutable
 @ToString(callSuper = true, exclude = "mapByRelativePath")
-public class DefaultSiteFinder<TYPE> extends FinderSupport<TYPE, DefaultSiteFinder<TYPE>> implements SiteFinder<TYPE>
+public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYPE>> implements SiteFinder<TYPE>
   {
     private final static long serialVersionUID = 3242345356779345L;
 

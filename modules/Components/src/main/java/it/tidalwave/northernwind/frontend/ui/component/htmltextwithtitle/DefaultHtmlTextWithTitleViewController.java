@@ -29,7 +29,7 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.stringtemplate.v4.ST;
 import it.tidalwave.util.NotFoundException;
@@ -40,6 +40,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -71,39 +72,23 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @PostConstruct
     /* package */ void initialize()
       {
-        try
-          {
-            int titleLevel = 2; // TODO: read override from properties
-            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            final StringBuilder htmlBuilder = new StringBuilder();
-            final String template = getTemplate(viewProperties);
+        final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
+        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final String template = getTemplate(viewProperties);
 
-            log.debug(">>>> template: {}", template);
+        log.debug(">>>> template: {}", template);
 
-            for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()))
-              {
-                final StringBuilder htmlFragmentBuilder = new StringBuilder();
-                final Content content = site.find(Content).withRelativePath(relativePath).result();
-                final ResourceProperties contentProperties = content.getProperties();
-                appendTitle(contentProperties, htmlFragmentBuilder, "h" + titleLevel++);
-                appendText(contentProperties, htmlFragmentBuilder);
-                final ST t = new ST(template, '$', '$').add("content", htmlFragmentBuilder.toString());
-                htmlBuilder.append(t.render());
-              }
+        final String html = viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())
+                .stream()
+                .flatMap(path -> site.find(Content).withRelativePath(path).stream())
+                .map(content -> content.getProperties())
+                .map(properties -> appendTitle(properties, "h" + titleLevel.getAndIncrement()) +
+                                   appendText(properties))
+                .collect(joining());
 
-            view.setText(htmlBuilder.toString());
-            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
-          }
-        catch (NotFoundException e)
-          {
-            view.setText(e.toString());
-            log.error("", e.toString());
-          }
-        catch (IOException e)
-          {
-            view.setText(e.toString());
-            log.error("", e);
-          }
+        final ST t = new ST(template, '$', '$').add("content", html);
+        view.setText(t.render());
+        view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
       }
 
     /*******************************************************************************************************************
@@ -111,11 +96,10 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      * Appends the title.
      *
      ******************************************************************************************************************/
-    private void appendTitle (final @Nonnull ResourceProperties contentProperties,
-                              final @Nonnull StringBuilder htmlBuilder,
-                              final @Nonnull String titleMarkup)
+    @Nonnull
+    private static String appendTitle (final @Nonnull ResourceProperties properties, final @Nonnull String titleMarkup)
       {
-        contentProperties.getProperty(PROPERTY_TITLE).ifPresent(title -> htmlBuilder.append(String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup)));
+        return properties.getProperty(PROPERTY_TITLE).map(title -> String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup)).orElse("");
       }
 
     /*******************************************************************************************************************
@@ -123,10 +107,10 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      * Appends the text.
      *
      ******************************************************************************************************************/
-    private void appendText (final @Nonnull ResourceProperties contentProperties,
-                             final @Nonnull StringBuilder htmlBuilder)
+    @Nonnull
+    private static String appendText (final @Nonnull ResourceProperties properties)
       {
-        contentProperties.getProperty(PROPERTY_FULL_TEXT).ifPresent(text -> htmlBuilder.append(text).append("\n"));
+        return properties.getProperty(PROPERTY_FULL_TEXT).map(text -> text + "\n").orElse("");
       }
 
     /*******************************************************************************************************************
@@ -136,7 +120,6 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      ******************************************************************************************************************/
     @Nonnull
     private String getTemplate (final @Nonnull ResourceProperties viewProperties)
-      throws IOException
       {
         try
           {

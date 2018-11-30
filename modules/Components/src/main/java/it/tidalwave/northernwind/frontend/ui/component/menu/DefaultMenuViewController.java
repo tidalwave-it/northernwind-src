@@ -84,19 +84,11 @@ public class DefaultMenuViewController implements MenuViewController
             // ok, use the default template
           }
 
-        for (final String relativePath : viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList()))
-          {
-            try
-              {
-                final SiteNode targetSiteNode = site.find(SiteNode).withRelativePath(relativePath).result();
-                final String navigationTitle = targetSiteNode.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL)
-                                                                             .orElse("no nav. label");
-                view.addLink(navigationTitle, site.createLink(targetSiteNode.getRelativeUri()));
-              }
-            catch (NotFoundException e)
-              {
-                log.warn("Ignoring link '{}' because of {}", relativePath, e.toString());
-              }
-          }
+        viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList())
+                .stream()
+                .flatMap(path -> site.find(SiteNode).withRelativePath(path).stream())
+                .forEach(node -> view.addLink(node.getProperties().getProperty(PROPERTY_NAVIGATION_LABEL)
+                                                                  .orElse("no nav. label"),
+                                              site.createLink(node.getRelativeUri())));
       }
   }

@@ -30,14 +30,13 @@ package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -70,28 +69,14 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     /* package */ void initialize()
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-
-        final StringBuilder htmlBuilder = new StringBuilder();
-
-        viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream().forEach(relativePath ->
-          {
-            try
-              {
-                final Content content = site.find(Content).withRelativePath(relativePath).result();
-                final ResourceProperties contentProperties = content.getProperties();
-                htmlBuilder.append(contentProperties.getProperty(PROPERTY_FULL_TEXT)
-                                                    .orElse(contentProperties.getProperty(PROPERTY_TEMPLATE)
-                                                                             .orElse("")));
-                htmlBuilder.append("\n");
-              }
-            catch (NotFoundException e)
-              {
-                htmlBuilder.append(e.toString().replaceAll("\\[.*\\]", ""));
-                log.error("NotFoundException", e.toString());
-              }
-          });
-
-        view.setContent(htmlBuilder.toString());
+        view.setContent(viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())
+                                      .stream()
+                                      .flatMap(path -> site.find(Content).withRelativePath(path).stream())
+                                      .map(content -> content.getProperties())
+                                      .map(properties -> properties.getProperty(PROPERTY_FULL_TEXT)
+                                                                   .orElse(properties.getProperty(PROPERTY_TEMPLATE)
+                                                                                     .orElse("")))
+                                      .collect(joining("\n")));
         view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
       }
   }

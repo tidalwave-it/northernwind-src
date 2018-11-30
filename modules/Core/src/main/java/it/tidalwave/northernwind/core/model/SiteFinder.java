@@ -28,8 +28,8 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.spi.ExtendedFinder8Support;
 
-import it.tidalwave.util.spi.ExtendedFinderSupport;
 
 /***********************************************************************************************************************
  *
@@ -37,7 +37,7 @@ import it.tidalwave.util.spi.ExtendedFinderSupport;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface SiteFinder<T> extends ExtendedFinderSupport<T, SiteFinder<T>>
+public interface SiteFinder<T> extends ExtendedFinder8Support<T, SiteFinder<T>>
   {
     @Nonnull
     public SiteFinder<T> withRelativePath (@Nonnull String relativePath);

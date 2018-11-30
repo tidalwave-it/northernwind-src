@@ -37,7 +37,6 @@ import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.Marshallable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -117,12 +116,10 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
 
         for (final Key<?> key : new TreeSet<>(properties.getKeys()))
           {
-            try
+            final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
+            propertyJaxb.setName(key.stringValue());
+            properties.getProperty(key).ifPresent(value ->
               {
-                final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
-                propertyJaxb.setName(key.stringValue());
-                final Object value = properties.getProperty(key).orElseThrow(NotFoundException::new); // FIXME
-
                 if (value instanceof Collection)
                   {
                     final ValuesJaxb valuesJaxb = objectFactory.createValuesJaxb();
@@ -139,12 +136,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
                   }
 
                 propertiesJaxb.getProperty().add(propertyJaxb);
-              }
-            catch (NotFoundException e)
-              {
-                // never occurs
-                log.error("", e);
-              }
+              });
           }
 
         for (final Id groupId : new TreeSet<>(properties.getGroupIds()))

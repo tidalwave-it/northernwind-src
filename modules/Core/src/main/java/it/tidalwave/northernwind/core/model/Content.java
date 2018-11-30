@@ -29,7 +29,7 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import it.tidalwave.role.SimpleComposite;
+import it.tidalwave.role.SimpleComposite8;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,7 +45,7 @@ import lombok.experimental.Wither;
  * @version $Id: 33bc17f249cd1317a678ad6be6f0a75643acda93 $
  *
  **********************************************************************************************************************/
-public interface Content extends Resource, SimpleComposite<Content>
+public interface Content extends Resource, SimpleComposite8<Content>
   {
     /*******************************************************************************************************************
      *
