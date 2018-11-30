@@ -156,6 +156,12 @@ public interface ResourceProperties extends As, Identifiable
         return getProperty(key).map(Boolean::parseBoolean);
       }
 
+    @Nonnull // FIXME: should be Key<DateTime>
+    default public Optional<ZonedDateTime> getDateTimeProperty (final @Nonnull Key<String> key)
+      {
+        return getDateTimeProperty(Collections.singletonList(key));
+      }
+
     /*******************************************************************************************************************
      *
      * Retrieves a datetime property, searching through a sequence of keys, eventually returning a default value.
