@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationContext;
@@ -72,11 +71,6 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
     public MockResourceFinder withRelativeUri(String relativeUri)
       {
         return this;
-      }
-
-    @Override
-    public void doWithResults(Predicate<Resource> predicate)
-      {
       }
 
     @Override

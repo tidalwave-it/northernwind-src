@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
-import com.google.common.base.Function;
+import java.util.function.Function;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;

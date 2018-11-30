@@ -35,7 +35,6 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -78,73 +77,67 @@ public class DefaultSitemapViewController implements SitemapViewController
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         builder.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
-        site.find(SiteNode.class).doWithResults(new Predicate<SiteNode>()
-          {
-            @Override
-            public boolean apply (final @Nonnull SiteNode siteNode)
-              {
-                try
-                  {
-                    final Layout layout = siteNode.getLayout();
+        site.find(SiteNode.class).results().stream().forEach(siteNode ->
+            {
+              try
+                {
+                  final Layout layout = siteNode.getLayout();
 
-                    // Prevents infinite recursion
-                    if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
-                      {
-                        // FIXME: should probably skip children of sitenodes with managePathParams
-                        // FIXME: for instance, Calendar would benefit
-                        // FIXME: Would Blog benefit? It should, as it manages its own children
-                        // FIXME: Places and Themes should move managePathParams=true to each children
-                        // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
-                        log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
+                  // Prevents infinite recursion
+                  if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
+                    {
+                      // FIXME: should probably skip children of sitenodes with managePathParams
+                      // FIXME: for instance, Calendar would benefit
+                      // FIXME: Would Blog benefit? It should, as it manages its own children
+                      // FIXME: Places and Themes should move managePathParams=true to each children
+                      // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
+                      log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
 
-                        appendUrl(builder, siteNode, null);
+                      appendUrl(builder, siteNode, null);
 
-                        layout.accept(new VisitorSupport<Layout, Void>()
-                          {
-                            @Override
-                            public void visit (final @Nonnull Layout childLayout)
-                              {
-                                try
-                                  {
-                                    final Object controller = childLayout.createViewAndController(siteNode).getController();
+                      layout.accept(new VisitorSupport<Layout, Void>()
+                        {
+                          @Override
+                          public void visit (final @Nonnull Layout childLayout)
+                            {
+                              try
+                                {
+                                  final Object controller = childLayout.createViewAndController(siteNode).getController();
 
-                                    if (controller instanceof CompositeSiteNodeController)
-                                      {
-                                        for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findChildrenSiteNodes().results())
-                                          {
-                                            appendUrl(builder, siteNode, childSiteNode);
-                                          }
-                                      }
-                                  }
-                                catch (HttpStatusException e)
-                                  {
-                                    log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
-                                  }
-                                catch (Exception e)
-                                  {
-                                    log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
-                                  }
-                              }
+                                  if (controller instanceof CompositeSiteNodeController)
+                                    {
+                                      for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findChildrenSiteNodes().results())
+                                        {
+                                          appendUrl(builder, siteNode, childSiteNode);
+                                        }
+                                    }
+                                }
+                              catch (HttpStatusException e)
+                                {
+                                  log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
+                                }
+                              catch (Exception e)
+                                {
+                                  log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
+                                }
+                            }
 
-                            @Override
-                            public Void getValue()
-                              {
-                                return null;
-                              }
-                          });
-                      }
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("", e);
-                  }
-                catch (NotFoundException e)
-                  {
-                    log.warn("", e);
-                  }
-
-                return false;
-              }
+                          @Override
+                          public Void getValue()
+                            {
+                              return null;
+                            }
+                        });
+                    }
+                }
+              catch (IOException e)
+                {
+                  log.warn("", e);
+                }
+              catch (NotFoundException e)
+                {
+                  log.warn("", e);
+                }
           });
 
         builder.append("</urlset>\n");

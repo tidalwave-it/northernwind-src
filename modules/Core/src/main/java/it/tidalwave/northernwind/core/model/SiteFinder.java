@@ -28,7 +28,7 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import com.google.common.base.Predicate;
+
 import it.tidalwave.util.spi.ExtendedFinderSupport;
 
 /***********************************************************************************************************************
@@ -44,7 +44,4 @@ public interface SiteFinder<T> extends ExtendedFinderSupport<T, SiteFinder<T>>
 
     @Nonnull
     public SiteFinder<T> withRelativeUri (@Nonnull String relativeUri);
-
-    // TODO: move to Finder?
-    public void doWithResults (@Nonnull Predicate<T> predicate);
   }

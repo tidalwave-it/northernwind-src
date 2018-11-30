@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import com.google.common.base.Predicate;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteFinder;
@@ -216,20 +215,6 @@ public class DefaultSiteFinder<TYPE> extends FinderSupport<TYPE, DefaultSiteFind
           }
 
         return results;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void doWithResults (final @Nonnull Predicate<TYPE> predicate)
-      {
-        for (final TYPE object : results())
-          {
-            predicate.apply(object);
-          }
       }
 
     /*******************************************************************************************************************

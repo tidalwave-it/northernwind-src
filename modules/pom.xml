@@ -21,7 +21,6 @@
         <activation.version>1.1.1</activation.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
-        <guava.version>14.0.1</guava.version>
         <javax-servlet-api.version>2.5</javax-servlet-api.version>
         <jaxb.version>2.2.11</jaxb.version>
         <jetty.version>6.1.26</jetty.version>
@@ -88,12 +87,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
                 <version>${commons-math.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
             </dependency>
 
             <dependency>

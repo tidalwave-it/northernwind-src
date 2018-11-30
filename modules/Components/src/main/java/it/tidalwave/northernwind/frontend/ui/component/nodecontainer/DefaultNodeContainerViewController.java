@@ -32,7 +32,6 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Stream;
 import java.io.IOException;
-import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -59,33 +58,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
-    /*******************************************************************************************************************
-     *
-     * .
-     *
-     ******************************************************************************************************************/
-    private final Predicate<SiteNode> createRssLink = new Predicate<SiteNode>()
-      {
-        private final static String RSS_MIME_TYPE = "application/rss+xml";
-
-        private final StringBuilder builder = new StringBuilder();
-
-        @Override
-        public boolean apply (final @Nonnull SiteNode rssSiteNode)
-          {
-            final String title = rssSiteNode.getProperties().getProperty(PROPERTY_TITLE).orElse("RSS");
-            builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n",
-                                         RSS_MIME_TYPE, title, site.createLink(rssSiteNode.getRelativeUri())));
-
-            return false;
-          }
-
-        @Override @Nonnull
-        public String toString()
-          {
-            return builder.toString();
-          }
-      };
+    private final static String RSS_MIME_TYPE = "application/rss+xml";
 
     protected static final String LINK_RELSTYLESHEET_MEDIASCREEN_HREF =
             "<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />%n";
@@ -96,6 +69,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     // Always use </script> to close, as some browsers break without
     private static final String TEMPLATE_SCRIPT =
             "<script type=\"text/javascript\" src=\"%s\"></script>%n";
+
+    private static final String TEMPLATE_RSS_LINK = "<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n";
 
     @Nonnull
     private final NodeContainerView view;
@@ -180,10 +155,13 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection()
       {
-        streamOf(PROPERTY_RSS_FEEDS).forEach(relativePath ->
-            site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink));
-
-        return createRssLink.toString();
+        return streamOf(PROPERTY_RSS_FEEDS)
+                .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).results().stream())
+                .map(node -> String.format(TEMPLATE_RSS_LINK,
+                                           RSS_MIME_TYPE,
+                                           node.getProperties().getProperty(PROPERTY_TITLE).orElse("RSS"),
+                                           site.createLink(node.getRelativeUri())))
+                .collect(joining());
       }
 
     /*******************************************************************************************************************

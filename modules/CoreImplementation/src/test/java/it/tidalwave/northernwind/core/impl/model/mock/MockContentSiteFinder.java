@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
@@ -99,11 +98,5 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
           }
 
         return Arrays.asList(content);
-      }
-
-    @Override
-    public void doWithResults (final @Nonnull Predicate<Content> predicate)
-      {
-        throw new UnsupportedOperationException("Not supported.");
       }
   }

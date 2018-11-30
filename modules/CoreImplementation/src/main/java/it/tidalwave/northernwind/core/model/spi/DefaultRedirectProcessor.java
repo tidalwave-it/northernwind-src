@@ -35,7 +35,6 @@ import java.util.List;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
-import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -89,9 +88,9 @@ public class DefaultRedirectProcessor implements RequestProcessor
           }
       }
 
-    @VisibleForTesting final static Id PROPERTY_GROUP_ID = new Id("Redirector");
+    /* VisibleForTesting */ final static Id PROPERTY_GROUP_ID = new Id("Redirector");
 
-    @VisibleForTesting final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
+    /* VisibleForTesting */ final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
 
     @Inject
     private Provider<SiteProvider> siteProvider;
@@ -107,7 +106,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
 //    @PostConstruct // FIXME: see NW-224
-    @VisibleForTesting void initialize()
+    /* VisibleForTesting */ void initialize()
       throws IOException, NotFoundException
       {
         site = siteProvider.get().getSite();
