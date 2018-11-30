@@ -232,7 +232,6 @@
         <module>HtmlPatches</module>
         <module>HtmlTemplateComponents</module>
         <module>Profiling</module>
-        <module>InfoglueImporter</module>
         <module>filesystems</module>
         <module>frontend</module>
         <module>webapp</module>
