@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: d7bfdf8e074cd5dbba8b6469aff9d6d20fe638db $
  *
  * *********************************************************************************************************************
  * #L%
@@ -42,7 +42,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: d7bfdf8e074cd5dbba8b6469aff9d6d20fe638db $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable
@@ -66,9 +66,9 @@ public class DefaultContainerViewController implements ContainerViewController
             // First search the template in a path, which could be useful for retrieving from a library; if not
             // found, a property with the contents is searched.
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            final String templateRelativePath = viewProperties.getProperty2(PROPERTY_TEMPLATE_PATH);
+            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperties().getProperty2(PROPERTY_TEMPLATE));
+            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
           }
         catch (NotFoundException e)
           {
@@ -76,6 +76,6 @@ public class DefaultContainerViewController implements ContainerViewController
           }
 
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        view.setClassName(viewProperties.getProperty2(PROPERTY_CLASS, "nw-" + view.getId()));
+        view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
       }
   }

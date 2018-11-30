@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 4c6f42d5b08efddf09a3988a34aa04ef2364d79f $
  *
  * *********************************************************************************************************************
  * #L%
@@ -59,14 +59,14 @@ import org.xml.sax.SAXException;
  * Specific for the format of SlideShowPro Player for Lightroom 1.9.8.5
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 4c6f42d5b08efddf09a3988a34aa04ef2364d79f $
  *
  **********************************************************************************************************************/
 @Slf4j
 public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
   {
     public static final Key<String> PROPERTY_IMAGES = new Key<>("images");
-    
+
     private static final String XPATH_IMG = "/gallery/album/img";
 
     public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties)
@@ -85,7 +85,7 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
             final DocumentBuilder db = dbf.newDocumentBuilder(); // FIXME: inject
             final XPathFactory xPathFactory = XPathFactory.newInstance(); // FIXME: inject
 
-            final String s = siteNode.getProperties().getProperty2(PROPERTY_IMAGES);
+            final String s = siteNode.getProperty(PROPERTY_IMAGES).orElseThrow(NotFoundException::new); // FIXME
             final Document document = db.parse(new InputSource(new StringReader(s)));
             final XPath xPath = xPathFactory.newXPath();
             final XPathExpression jx1 = xPath.compile(XPATH_IMG);

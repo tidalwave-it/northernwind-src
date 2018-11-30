@@ -193,7 +193,7 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
     /*******************************************************************************************************************
      *
      * Returns the parent of this file.
-     * FIXME: make @Nonnull, throws NotFoundException when no parent
+     * FIXME: make @Nonnull, use Optional
      *
      * @return  the parent or null if no parent
      *

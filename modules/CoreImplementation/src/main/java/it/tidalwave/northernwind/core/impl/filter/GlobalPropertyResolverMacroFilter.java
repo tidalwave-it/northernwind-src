@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 89d6dcfbd5621d8a2735ca1dced05fe45431bffa $
  *
  * *********************************************************************************************************************
  * #L%
@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
@@ -44,10 +43,10 @@ import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 
 /***********************************************************************************************************************
  *
- * TODO: is still needed now that we have SiteNodePropertyMacroFilter?
+ * TODO: is still needed?
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 89d6dcfbd5621d8a2735ca1dced05fe45431bffa $
  *
  **********************************************************************************************************************/
 @Configurable @Order(HIGHEST_PRECEDENCE)
@@ -70,10 +69,10 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
             final Site site = siteProvider.get().getSite();
             final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result(); // See NW-223
             // END FIXME
-            final String propertyName = matcher.group(1);
-            return rootSiteNode.getProperties().getProperty2(new Key<String>(propertyName), "");
+            final Key<String> key = new Key<>(matcher.group(1));
+            return rootSiteNode.getProperty(key).orElse("");
           }
-        catch (NotFoundException | IOException e)
+        catch (NotFoundException  e)
           {
             return "ERR";
           }

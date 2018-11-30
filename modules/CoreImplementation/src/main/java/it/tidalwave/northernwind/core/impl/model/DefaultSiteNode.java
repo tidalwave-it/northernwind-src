@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 51048f332460f3e367847d04a3eb5d08178bfa79 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -46,23 +46,22 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Cleanup;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.net.URLDecoder.*;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
-import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
 
 /***********************************************************************************************************************
  *
  * A node of the site, mapped to a given URL.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 51048f332460f3e367847d04a3eb5d08178bfa79 $
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString(callSuper = false, of = "relativeUri")
@@ -122,11 +121,10 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
               {
                 try
                   {
-                    final String segment = getResource().getProperties()
-                                                        .getProperty2(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
+                    final String segment = getResource().getProperty(PROPERTY_EXPOSED_URI).orElse(decode(file));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
-                catch (IOException | NotFoundException e)
+                catch (NotFoundException e) // FIXME: for getParent()
                   {
                     log.error("", e); // should never occur
                     throw new RuntimeException(e);
@@ -234,5 +232,21 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
         log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
         final @Cleanup InputStream is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String decode (final @Nonnull ResourceFile file)
+      {
+        try
+          {
+            return java.net.URLDecoder.decode(file.getName(), "UTF-8");
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            throw new RuntimeException(e); // should never occur
+          }
       }
   }

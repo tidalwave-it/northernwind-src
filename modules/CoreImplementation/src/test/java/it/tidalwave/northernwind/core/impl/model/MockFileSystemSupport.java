@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import com.google.common.base.Function;
+import java.util.function.Function;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;

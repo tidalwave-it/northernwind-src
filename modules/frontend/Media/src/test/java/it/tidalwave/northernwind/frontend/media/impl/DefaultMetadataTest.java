@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 39b8d932d1719711b47f615d75e1fe9b060e4c8f $
  *
  * *********************************************************************************************************************
  * #L%
@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Optional;
 import org.imajine.image.Rational;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -47,7 +48,7 @@ import static org.hamcrest.CoreMatchers.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 39b8d932d1719711b47f615d75e1fe9b060e4c8f $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -70,7 +71,7 @@ public class DefaultMetadataTest
         context.getBean(MetadataInterpolatorFactory.class); // initialize it
         properties = mock(ResourceProperties.class);
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
-        when(resourceProperties.getProperty2(PROPERTY_LENS_IDS)).thenReturn(Arrays.asList("1:Lens1", "2:Lens2"));
+        when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Optional.of(Arrays.asList("1:Lens1", "2:Lens2")));
         when(properties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
       }
 

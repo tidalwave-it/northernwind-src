@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 0f4ae8be705978dd2dc9fd9d835fa4afe476ea4d $
  *
  * *********************************************************************************************************************
  * #L%
@@ -32,18 +32,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
@@ -54,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  * The default implementation of {@link ResourceProperties}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 0f4ae8be705978dd2dc9fd9d835fa4afe476ea4d $
  *
  **********************************************************************************************************************/
 // FIXME: this is a patched copy, needs public constructor for builder - see NW-180
@@ -101,17 +97,10 @@ public class DefaultResourceProperties implements ResourceProperties
         this.id = otherProperties.id;
         this.propertyResolver = otherProperties.propertyResolver;
 
-        for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
-          {
-            propertyMap.put(entry.getKey(), entry.getValue()); // FIXME: clone the property
-          }
-
-        for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
-          {
-            final Id groupId = entry.getKey();
-            final DefaultResourceProperties propertyGroup = new DefaultResourceProperties(entry.getValue());
-            groupMap.put(groupId, propertyGroup);
-          }
+        otherProperties.propertyMap.entrySet().stream().forEach(e ->
+                propertyMap.put(e.getKey(), e.getValue())); // FIXME: clone the property
+        otherProperties.groupMap.entrySet().stream().forEach(e ->
+                groupMap.put(e.getKey(), new DefaultResourceProperties(e.getValue())));
       }
 
     /*******************************************************************************************************************
@@ -171,96 +160,14 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         try
           {
-            return Optional.of(getProperty2(key));
+            final T value = (T)propertyMap.get(key);
+            return Optional.of((value != null) ? value : propertyResolver.resolveProperty(id, key));
           }
         catch (NotFoundException | IOException e)
           {
             log.info("", e);
             return Optional.empty();
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull @SuppressWarnings("unchecked")
-    public <T> T getProperty2 (@Nonnull Key<T> key)
-      throws NotFoundException, IOException
-      {
-        final T value = (T)propertyMap.get(key);
-        return (value != null) ? value : propertyResolver.resolveProperty(id, key);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public <T> T getProperty2 (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
-      throws IOException
-      {
-        try
-          {
-            return getProperty2(key);
-          }
-        catch (NotFoundException e)
-          {
-            return defaultValue;
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
-      throws IOException
-      {
-        return Integer.parseInt(getProperty2(key, "" + defaultValue));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
-      throws IOException
-      {
-        return Boolean.parseBoolean(getProperty2(key, "" + defaultValue));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public ZonedDateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
-                                              final @Nonnull ZonedDateTime defaultValue)
-      {
-        for (final Key<String> key : keys)
-          {
-            try
-              {
-                return ZonedDateTime.parse(getProperty2(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
-              }
-            catch (NotFoundException e)
-              {
-              }
-            catch (IOException e)
-              {
-                log.warn("", e);
-              }
-          }
-
-        return defaultValue;
       }
 
     /*******************************************************************************************************************

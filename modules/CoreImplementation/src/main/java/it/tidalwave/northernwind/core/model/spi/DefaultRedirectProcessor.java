@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 9663b5d0936a3fdaabe9ec093928bca854c8dfd1 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -35,7 +35,6 @@ import java.util.List;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
-import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -47,13 +46,14 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 9663b5d0936a3fdaabe9ec093928bca854c8dfd1 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @Order(HIGHEST_PRECEDENCE+1)
@@ -67,63 +67,56 @@ public class DefaultRedirectProcessor implements RequestProcessor
       {
         private final String regex;
         private final String replacement;
-        
+
         public Mapping (final @Nonnull String configuration)
           {
             final String[] parts = configuration.split(" -> ");
             regex = parts[0];
             replacement = parts[1];
           }
-        
+
         @Nonnull
         public String replace (final @Nonnull String string)
           {
             return string.replaceAll(regex, replacement);
           }
-        
+
         @Override @Nonnull
         public String toString()
           {
-            return regex + " -> " + replacement;  
+            return regex + " -> " + replacement;
           }
       }
-    
-    @VisibleForTesting final static Id PROPERTY_GROUP_ID = new Id("Redirector");
-    
-    @VisibleForTesting final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
+
+    /* VisibleForTesting */ final static Id PROPERTY_GROUP_ID = new Id("Redirector");
+
+    /* VisibleForTesting */ final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
 
     @Inject
     private Provider<SiteProvider> siteProvider;
-    
+
     private Site site;
 
     private final List<Mapping> permanentMappings = new ArrayList<>();
-    
+
     private boolean initialized;
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
 //    @PostConstruct // FIXME: see NW-224
-    @VisibleForTesting void initialize()
+    /* VisibleForTesting */ void initialize()
       throws IOException, NotFoundException
       {
         site = siteProvider.get().getSite();
         final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result();
         final ResourceProperties rootSiteNodeProperties = rootSiteNode.getProperties();
         final ResourceProperties properties = rootSiteNodeProperties.getGroup(PROPERTY_GROUP_ID);
-        
-        try
+
+        for (final String permanentRedirectConfig : properties.getProperty(PROPERTY_PERMANENT_REDIRECTS).orElse(emptyList()))
           {
-            for (final String permanentRedirectConfig : properties.getProperty2(PROPERTY_PERMANENT_REDIRECTS))
-              {
-                permanentMappings.add(new Mapping(permanentRedirectConfig));  
-              }
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no PROPERTY_PERMANENT_REDIRECTS
+            permanentMappings.add(new Mapping(permanentRedirectConfig));
           }
 
         log.info("Permanent redirect mappings:");
@@ -133,7 +126,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
             log.info(">>>> {}", mapping.toString());
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -148,16 +141,16 @@ public class DefaultRedirectProcessor implements RequestProcessor
               {
                 if (!initialized)
                   {
-                    try 
+                    try
                       {
                         initialize();
                       }
-                    catch (NotFoundException | IOException e) 
+                    catch (NotFoundException | IOException e)
                       {
                         throw new RuntimeException(e);
                       }
 
-                    initialized = true;  
+                    initialized = true;
                   }
               } // END FIXME
 
@@ -169,12 +162,12 @@ public class DefaultRedirectProcessor implements RequestProcessor
 
                 if (!newRelativeUri.equals(relativeUri))
                   {
-                    log.info(">>>> redirecting from {} to {} ...", relativeUri, newRelativeUri);  
+                    log.info(">>>> redirecting from {} to {} ...", relativeUri, newRelativeUri);
                     throw HttpStatusException.permanentRedirect(site, newRelativeUri);
                   }
               }
           }
-        
+
         return Status.CONTINUE;
       }
   }

@@ -32,25 +32,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import com.google.common.base.Predicate;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationContext;
-import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.Finder8Support;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor
-class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> implements SiteFinder<Resource>
+class MockResourceFinder extends Finder8Support<Resource, SiteFinder<Resource>> implements SiteFinder<Resource>
   {
     private static final long serialVersionUID = 1692141469939523431L;
 
@@ -72,11 +71,6 @@ class MockResourceFinder extends FinderSupport<Resource, MockResourceFinder> imp
     public MockResourceFinder withRelativeUri(String relativeUri)
       {
         return this;
-      }
-
-    @Override
-    public void doWithResults(Predicate<Resource> predicate)
-      {
       }
 
     @Override

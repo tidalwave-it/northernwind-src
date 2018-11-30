@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 18aa2a23c25a69729f3f9eb89599d855fcf1232f $
  *
  * *********************************************************************************************************************
  * #L%
@@ -31,11 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -45,15 +41,16 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_LATEST_MODIFICATION_DATE;
+import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 18aa2a23c25a69729f3f9eb89599d855fcf1232f $
  *
  **********************************************************************************************************************/
 @Configurable @RequiredArgsConstructor @Slf4j
@@ -78,73 +75,67 @@ public class DefaultSitemapViewController implements SitemapViewController
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         builder.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
-        site.find(SiteNode.class).doWithResults(new Predicate<SiteNode>()
-          {
-            @Override
-            public boolean apply (final @Nonnull SiteNode siteNode)
-              {
-                try
-                  {
-                    final Layout layout = siteNode.getLayout();
+        site.find(SiteNode.class).stream().forEach(siteNode ->
+            {
+              try
+                {
+                  final Layout layout = siteNode.getLayout();
 
-                    // Prevents infinite recursion
-                    if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
-                      {
-                        // FIXME: should probably skip children of sitenodes with managePathParams
-                        // FIXME: for instance, Calendar would benefit
-                        // FIXME: Would Blog benefit? It should, as it manages its own children
-                        // FIXME: Places and Themes should move managePathParams=true to each children
-                        // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
-                        log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
+                  // Prevents infinite recursion
+                  if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
+                    {
+                      // FIXME: should probably skip children of sitenodes with managePathParams
+                      // FIXME: for instance, Calendar would benefit
+                      // FIXME: Would Blog benefit? It should, as it manages its own children
+                      // FIXME: Places and Themes should move managePathParams=true to each children
+                      // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
+                      log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
 
-                        appendUrl(builder, siteNode, null);
+                      appendUrl(builder, siteNode, null);
 
-                        layout.accept(new VisitorSupport<Layout, Void>()
-                          {
-                            @Override
-                            public void visit (final @Nonnull Layout childLayout)
-                              {
-                                try
-                                  {
-                                    final Object controller = childLayout.createViewAndController(siteNode).getController();
+                      layout.accept(new VisitorSupport<Layout, Void>()
+                        {
+                          @Override
+                          public void visit (final @Nonnull Layout childLayout)
+                            {
+                              try
+                                {
+                                  final Object controller = childLayout.createViewAndController(siteNode).getController();
 
-                                    if (controller instanceof CompositeSiteNodeController)
-                                      {
-                                        for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findChildrenSiteNodes().results())
-                                          {
-                                            appendUrl(builder, siteNode, childSiteNode);
-                                          }
-                                      }
-                                  }
-                                catch (HttpStatusException e)
-                                  {
-                                    log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
-                                  }
-                                catch (Exception e)
-                                  {
-                                    log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
-                                  }
-                              }
+                                  if (controller instanceof CompositeSiteNodeController)
+                                    {
+                                      for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findChildrenSiteNodes().results())
+                                        {
+                                          appendUrl(builder, siteNode, childSiteNode);
+                                        }
+                                    }
+                                }
+                              catch (HttpStatusException e)
+                                {
+                                  log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
+                                }
+                              catch (Exception e)
+                                {
+                                  log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
+                                }
+                            }
 
-                            @Override
-                            public Void getValue()
-                              {
-                                return null;
-                              }
-                          });
-                      }
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("", e);
-                  }
-                catch (NotFoundException e)
-                  {
-                    log.warn("", e);
-                  }
-
-                return false;
-              }
+                          @Override
+                          public Void getValue()
+                            {
+                              return null;
+                            }
+                        });
+                    }
+                }
+              catch (IOException e)
+                {
+                  log.warn("", e);
+                }
+              catch (NotFoundException e)
+                {
+                  log.warn("", e);
+                }
           });
 
         builder.append("</urlset>\n");
@@ -169,42 +160,19 @@ public class DefaultSitemapViewController implements SitemapViewController
         // just using a single property and only peeking into a single node
         final Key<String> priorityKey = (childSiteNode == null) ? PROPERTY_SITEMAP_PRIORITY
                                                                 : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
-        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty2(priorityKey, "0.5"));
+        final float sitemapPriority = Float.parseFloat(siteNode.getProperty(priorityKey).orElse("0.5"));
 
         if (sitemapPriority > 0)
           {
             builder.append("  <url>\n");
             builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
             builder.append(String.format("    <lastmod>%s</lastmod>%n",
-                                         getSiteNodeDateTime(properties).format(dateTimeFormatter)));
+                                         properties.getDateTimeProperty(PROPERTY_LATEST_MODIFICATION_DATE).orElse(TIME0).format(dateTimeFormatter)));
             builder.append(String.format("    <changefreq>%s</changefreq>%n",
-                                         properties.getProperty2(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
+                                         properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY).orElse("daily")));
             builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
             builder.append("  </url>\n");
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ZonedDateTime getSiteNodeDateTime (final @Nonnull ResourceProperties properties)
-      {
-        try
-          {
-            final String string = properties.getProperty2(Properties.PROPERTY_LATEST_MODIFICATION_DATE);
-            return ZonedDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
-          }
-        catch (NotFoundException e)
-          {
-          }
-        catch (IOException e)
-          {
-            log.warn("", e);
-          }
-
-        return Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
       }
 
     /*******************************************************************************************************************

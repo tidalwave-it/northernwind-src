@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 1704b1d2dc47c50d78f5ea123e9ffd3c33d40b76 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -39,7 +39,6 @@ import java.time.format.FormatStyle;
 import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -60,7 +59,7 @@ import static org.hamcrest.CoreMatchers.is;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 1704b1d2dc47c50d78f5ea123e9ffd3c33d40b76 $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -160,17 +159,6 @@ public class HtmlTemplateBlogViewControllerTest
           }
 
         when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
-
-        if (propertyValue.isPresent())
-          {
-            when(properties.getProperty2(eq(propertyKey))).thenReturn(propertyValue.get());
-            when(properties.getProperty2(eq(propertyKey), any())).thenReturn(propertyValue.get());
-          }
-        else
-          {
-            when(properties.getProperty2(eq(propertyKey))).thenThrow(new NotFoundException());
-            when(properties.getProperty2(eq(propertyKey), any())).thenAnswer(invocation -> invocation.getArgument(1));
-          }
       }
 
     /*******************************************************************************************************************

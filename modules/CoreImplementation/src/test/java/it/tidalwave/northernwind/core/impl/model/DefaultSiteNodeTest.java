@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: f0db9f04ca68b428d3dddf272cfc4e0e588ce1e1 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -46,8 +47,6 @@ import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import static org.hamcrest.MatcherAssert.*;
@@ -58,7 +57,7 @@ import static org.hamcrest.CoreMatchers.is;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: f0db9f04ca68b428d3dddf272cfc4e0e588ce1e1 $
  *
  **********************************************************************************************************************/
 public class DefaultSiteNodeTest
@@ -203,29 +202,13 @@ public class DefaultSiteNodeTest
         final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);
         when(resource.getFile()).thenReturn(resourceFile);
+        when(resource.getProperty(any())).thenCallRealMethod();
 
         final SiteNode parentSiteNode = mock(SiteNode.class);
         when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
 
         final ResourceProperties properties = mock(ResourceProperties.class);
-
-        // FIXME: consider using a concrete mock for ResourceProperties, since it's cumbersome to mock in this way
-        if (exposedUri != null)
-          {
-            when(properties.getProperty2(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenReturn(exposedUri);
-          }
-        else
-          {
-            when(properties.getProperty2(eq(SiteNode.PROPERTY_EXPOSED_URI), anyString())).thenAnswer(new Answer<String>()
-              {
-                @Override
-                public String answer (final @Nonnull InvocationOnMock invocation)
-                  {
-                    return (String)invocation.getArguments()[1];
-                  }
-              });
-          }
-
+        when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
         when(resource.getProperties()).thenReturn(properties);
 
         final SiteFinder<SiteNode> siteNodeFinder = mock(SiteFinder.class);
