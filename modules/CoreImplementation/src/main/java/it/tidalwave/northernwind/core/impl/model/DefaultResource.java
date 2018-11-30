@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -38,7 +37,6 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -56,7 +54,6 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
  * The default implementation for {@link Resource}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString(callSuper = true, of = "placeHolder")
@@ -132,7 +129,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
               }
 
-            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER, tmpPlaceHolder);
+            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER).orElse(tmpPlaceHolder);
 
             if (log.isDebugEnabled())
               {
@@ -156,14 +153,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
         for (final Key<?> key : properties.getKeys())
           {
-            try
-              {
-                log.debug("{}>>>> {} = {}", indent, key, properties.getProperty2(key));
-              }
-            catch (NotFoundException | IOException e)
-              {
-                log.error("", e);
-              }
+            log.debug("{}>>>> {} = {}", indent, key, properties.getProperty(key));
           }
 
         log.debug("{} property groups: {}", indent, properties.getGroupIds());

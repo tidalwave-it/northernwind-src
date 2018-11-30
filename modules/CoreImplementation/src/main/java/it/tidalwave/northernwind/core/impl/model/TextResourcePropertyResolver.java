@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,9 +29,10 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Arrays;
+import java.util.List;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -69,13 +69,12 @@ import lombok.extern.slf4j.Slf4j;
  * HTML support is a legacy and will be removed in a future version.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
 public class TextResourcePropertyResolver implements ResourceProperties.PropertyResolver
   {
-    private static final ImmutableList<String> EXTENSIONS = ImmutableList.of(".xhtml", ".html", ".xml", ".txt");
+    private static final List<String> EXTENSIONS = Arrays.asList(".xhtml", ".html", ".xml", ".txt");
 
     @Inject
     private RequestLocaleManager localeRequestManager;

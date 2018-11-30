@@ -25,7 +25,6 @@ package it.tidalwave.northernwind.frontend.ui.component.search;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface SearchViewController 

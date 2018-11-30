@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -35,7 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -52,11 +51,10 @@ import lombok.extern.slf4j.Slf4j;
  *
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString
-public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T>
+public class PathFinderSupport<T extends Resource> extends SimpleFinder8Support<T>
   {
     private static final long serialVersionUID = 2345536092354546452L;
 

@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -40,7 +39,6 @@ import lombok.experimental.Wither;
  * A {@code Media} item is a document that is served as-is, without any processing. It's typically an image or such.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface Media extends Resource

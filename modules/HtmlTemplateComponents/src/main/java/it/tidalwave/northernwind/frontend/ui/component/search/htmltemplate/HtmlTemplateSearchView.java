@@ -32,7 +32,6 @@ import it.tidalwave.northernwind.frontend.ui.component.search.SearchView;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Search/#v1.0", 

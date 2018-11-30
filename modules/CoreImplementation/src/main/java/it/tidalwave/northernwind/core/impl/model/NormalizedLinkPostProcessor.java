@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -35,7 +34,6 @@ import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
  * This postprocessor normalize links related to {@link SiteNode}s by making sure they end with a trailing slash (/).
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class NormalizedLinkPostProcessor implements LinkPostProcessor

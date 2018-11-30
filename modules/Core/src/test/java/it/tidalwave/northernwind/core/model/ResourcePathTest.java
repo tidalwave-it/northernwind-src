@@ -20,28 +20,25 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.core.model;
 
+import java.util.Arrays;
 import javax.annotation.Nonnull;
 import java.util.List;
-import com.google.common.collect.ImmutableList;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static com.google.common.collect.ImmutableList.of;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class ResourcePathTest
@@ -66,7 +63,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = NullPointerException.class)
     public void must_reject_null_segments()
       {
-        final ResourcePath underTest = new ResourcePath(of("a", null, "/c"));
+        final ResourcePath underTest = new ResourcePath(Arrays.asList("a", null, "/c"));
       }
 
     /*******************************************************************************************************************
@@ -75,7 +72,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_empty_segments()
       {
-        final ResourcePath underTest = new ResourcePath(of("a", "", "/c"));
+        final ResourcePath underTest = new ResourcePath(Arrays.asList("a", "", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -84,7 +81,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_segments_containing_slash()
       {
-        final ResourcePath underTest = new ResourcePath(of("a", "b", "/c"));
+        final ResourcePath underTest = new ResourcePath(Arrays.asList("a", "b", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -121,7 +118,7 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "asStringProvider",
           dependsOnMethods = { "must_properly_create_an_empty_path", "must_properly_create_an_empty_path_from_string" })
-    public void must_properly_compute_asString (final @Nonnull ImmutableList<String> segments,
+    public void must_properly_compute_asString (final @Nonnull List<String> segments,
                                                 final @Nonnull String expectedAsString)
       {
         // given
@@ -379,15 +376,15 @@ public class ResourcePathTest
         return new Object[][]
           {
           //  path              exp. asString       exp. segments
-            { "",               "/",                of()                        },
-            { "/",              "/",                of()                        },
-            { "/foo",           "/foo",             of("foo")                   },
-            { "/foo/bar",       "/foo/bar",         of("foo", "bar")            },
-            { "/foo/bar/baz",   "/foo/bar/baz",     of("foo", "bar", "baz")     },
+            { "",               "/",                Arrays.asList()                        },
+            { "/",              "/",                Arrays.asList()                        },
+            { "/foo",           "/foo",             Arrays.asList("foo")                   },
+            { "/foo/bar",       "/foo/bar",         Arrays.asList("foo", "bar")            },
+            { "/foo/bar/baz",   "/foo/bar/baz",     Arrays.asList("foo", "bar", "baz")     },
 
-            { "foo",            "/foo",             of("foo")                   },
-            { "foo/bar",        "/foo/bar",         of("foo", "bar")            },
-            { "foo/bar/baz",    "/foo/bar/baz",     of("foo", "bar", "baz")     }
+            { "foo",            "/foo",             Arrays.asList("foo")                   },
+            { "foo/bar",        "/foo/bar",         Arrays.asList("foo", "bar")            },
+            { "foo/bar/baz",    "/foo/bar/baz",     Arrays.asList("foo", "bar", "baz")     }
           };
       }
 
@@ -490,10 +487,10 @@ public class ResourcePathTest
       {
         return new Object[][]
           {
-            { of(),                     "/"},
-            { of("foo"),                "/foo"},
-            { of("foo", "bar"),         "/foo/bar"},
-            { of("foo", "bar", "baz"),  "/foo/bar/baz"},
+            { Arrays.asList(),                     "/"},
+            { Arrays.asList("foo"),                "/foo"},
+            { Arrays.asList("foo", "bar"),         "/foo/bar"},
+            { Arrays.asList("foo", "bar", "baz"),  "/foo/bar/baz"},
           };
       }
 
