@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -70,34 +72,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 /* package */ class DefaultSite implements InternalSite
   {
-    static interface FilePredicate
-      {
-        public void apply (@Nonnull ResourceFile file, @Nonnull ResourcePath relativeUri);
-      }
-
-    static interface FileFilter
-      {
-        public boolean accept (@Nonnull ResourceFile file);
-      }
-
-    private final FileFilter FOLDER_FILTER = new FileFilter()
-      {
-        @Override
-        public boolean accept (final @Nonnull ResourceFile file)
-          {
-            return file.isFolder() && !ignoredFolders.contains(file.getName());
-          }
-      };
-
-    private final FileFilter FILE_FILTER = new FileFilter()
-      {
-        @Override
-        public boolean accept (final @Nonnull ResourceFile file)
-          {
-            return file.isData() && !ignoredFolders.contains(file.getName());
-          }
-      };
-
     @Inject
     private List<LinkPostProcessor> linkPostProcessors;
 
@@ -157,6 +131,12 @@ import lombok.extern.slf4j.Slf4j;
     private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
 
     private final List<Locale> configuredLocales = new ArrayList<>();
+
+    private final Predicate<ResourceFile> FOLDER_FILTER =
+            file -> file.isFolder() && !ignoredFolders.contains(file.getName());
+
+    private final Predicate<ResourceFile> FILE_FILTER =
+            file -> file.isData() && !ignoredFolders.contains(file.getName());
 
     /*******************************************************************************************************************
      *
@@ -268,37 +248,17 @@ import lombok.extern.slf4j.Slf4j;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(libraryFolder, FILE_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
-              {
-                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
-              }
-          });
+        traverse(libraryFolder, FILE_FILTER,
+                (file, relativePath) -> libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build()));
 
-        traverse(mediaFolder, FILE_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
-              {
-                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
-              }
-          });
+        traverse(mediaFolder, FILE_FILTER,
+                (file, relativePath) -> mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build()));
 
-        traverse(documentFolder, FOLDER_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
-              {
-                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
-              }
-          });
+        traverse(documentFolder, FOLDER_FILTER,
+                (folder, relativePath) -> documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build()));
 
-        traverse(nodeFolder, FOLDER_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+        traverse(nodeFolder, FOLDER_FILTER,
+                (folder, relativePath) ->
               {
                 try
                   {
@@ -324,8 +284,7 @@ import lombok.extern.slf4j.Slf4j;
                   {
                     throw new RuntimeException(e);
                   }
-              }
-          });
+              });
 
         if (logConfigurationEnabled)
           {
@@ -339,7 +298,7 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     * Traverse the file system with a {@link FilePredicate}.
+     * Traverse the file system with a {@link Predicate}.
      *
      * @param  folder      the folder to traverse
      * @param  fileFilter  the filter for directory contents
@@ -347,15 +306,15 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourceFile folder,
-                           final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FilePredicate predicate)
+                           final @Nonnull Predicate<ResourceFile> fileFilter,
+                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> predicate)
       {
         traverse(folder.getPath(), folder, fileFilter, predicate);
       }
 
     /*******************************************************************************************************************
      *
-     * Traverse the file system with a {@link FilePredicate}.
+     * Traverse the file system with a {@link Predicate}.
      *
      * @param  file        the file to traverse
      * @param  fileFilter  the filter for directory contents
@@ -364,21 +323,18 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourcePath rootPath,
                            final @Nonnull ResourceFile file,
-                           final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FilePredicate predicate)
+                           final @Nonnull Predicate<ResourceFile> fileFilter,
+                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> predicate)
       {
         log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, predicate);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
-        if (fileFilter.accept(file))
+        if (fileFilter.test(file))
           {
-            predicate.apply(file, relativePath);
+            predicate.accept(file, relativePath);
           }
 
-        for (final ResourceFile child : file.findChildren().results())
-          {
-            traverse(rootPath, child, fileFilter, predicate);
-          }
+        file.findChildren().results().forEach(child -> traverse(rootPath, child, fileFilter, predicate));
       }
 
     /*******************************************************************************************************************
