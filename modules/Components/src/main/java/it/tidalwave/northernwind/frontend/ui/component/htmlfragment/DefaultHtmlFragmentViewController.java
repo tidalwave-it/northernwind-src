@@ -73,6 +73,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
                                       .stream()
                                       .flatMap(path -> site.find(Content).withRelativePath(path).stream())
                                       .map(content -> content.getProperties())
+                                       // FIXME: use a method searching through a sequence of keys, such as getDateTimeProperty()
                                       .map(properties -> properties.getProperty(PROPERTY_FULL_TEXT)
                                                                    .orElse(properties.getProperty(PROPERTY_TEMPLATE)
                                                                                      .orElse("")))
