@@ -157,7 +157,6 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
-      throws IOException, NotFoundException
       {
       }
 
