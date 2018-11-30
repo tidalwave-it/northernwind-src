@@ -53,7 +53,6 @@ import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Cleanup;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.net.URLDecoder.*;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
 
@@ -123,10 +122,10 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
                 try
                   {
                     final String segment = getResource().getProperties().getProperty(PROPERTY_EXPOSED_URI)
-                                                                        .orElse(decode(file.getName(), "UTF-8"));
+                                                                        .orElse(decode(file));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
-                catch (IOException | NotFoundException e)
+                catch (NotFoundException e) // FIXME: for getParent()
                   {
                     log.error("", e); // should never occur
                     throw new RuntimeException(e);
@@ -234,5 +233,21 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
         log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
         final @Cleanup InputStream is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String decode (final @Nonnull ResourceFile file)
+      {
+        try
+          {
+            return java.net.URLDecoder.decode(file.getName(), "UTF-8");
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            throw new RuntimeException(e); // should never occur
+          }
       }
   }
