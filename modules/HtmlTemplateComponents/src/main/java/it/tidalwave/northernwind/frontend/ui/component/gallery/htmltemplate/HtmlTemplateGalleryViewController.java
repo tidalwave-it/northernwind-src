@@ -119,7 +119,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initializeHtmlTemplateGalleryViewController()
-      throws HttpStatusException, IOException
+      throws HttpStatusException
       {
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
