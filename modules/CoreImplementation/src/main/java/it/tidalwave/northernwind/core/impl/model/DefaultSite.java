@@ -219,8 +219,8 @@ import lombok.extern.slf4j.Slf4j;
       {
         log.info("initialize()");
 
-        relativePathMapsByType.put(Content.class, documentMapByRelativePath);
-        relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
+        relativePathMapsByType.put(Content.class,  documentMapByRelativePath);
+        relativePathMapsByType.put(Media.class,    mediaMapByRelativePath);
         relativePathMapsByType.put(Resource.class, libraryMapByRelativePath);
         relativePathMapsByType.put(SiteNode.class, nodeMapByRelativePath);
 
@@ -248,51 +248,73 @@ import lombok.extern.slf4j.Slf4j;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(libraryFolder, FILE_FILTER,
-                (file, relativePath) -> libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build()));
-
-        traverse(mediaFolder, FILE_FILTER,
-                (file, relativePath) -> mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build()));
-
-        traverse(documentFolder, FOLDER_FILTER,
-                (folder, relativePath) -> documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build()));
-
-        traverse(nodeFolder, FOLDER_FILTER,
-                (folder, relativePath) ->
-              {
-                try
-                  {
-                    final SiteNode siteNode = modelFactory.createSiteNode(DefaultSite.this, folder);
-                    nodeMapByRelativePath.put(relativePath.asString(), siteNode);
-
-                    if (!siteNode.isPlaceHolder())
-                      {
-                        final ResourcePath relativeUri = siteNode.getRelativeUri();
-                        // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
-                        if ("true".equals(siteNode.getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS).orElse("false")))
-                          {
-                            final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
-                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
-                          }
-                        else
-                          {
-                            nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
-                          }
-                      }
-                  }
-                catch (IOException | NotFoundException e)
-                  {
-                    throw new RuntimeException(e);
-                  }
-              });
+        traverse(libraryFolder,  FILE_FILTER,   this::createResource);
+        traverse(mediaFolder,    FILE_FILTER,   this::createMedia);
+        traverse(documentFolder, FOLDER_FILTER, this::createContent);
+        traverse(nodeFolder,     FOLDER_FILTER, this::createSiteNode);
 
         if (logConfigurationEnabled)
           {
             logConfiguration("Documents by relative path:", documentMapByRelativePath);
-            logConfiguration("Library by relative path:", libraryMapByRelativePath);
-            logConfiguration("Media by relative path:", mediaMapByRelativePath);
-            logConfiguration("Nodes by relative path:", nodeMapByRelativePath);
-            logConfiguration("Nodes by relative URI:", nodeMapByRelativeUri);
+            logConfiguration("Library by relative path:",   libraryMapByRelativePath);
+            logConfiguration("Media by relative path:",     mediaMapByRelativePath);
+            logConfiguration("Nodes by relative path:",     nodeMapByRelativePath);
+            logConfiguration("Nodes by relative URI:",      nodeMapByRelativeUri);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createContent (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+      {
+        documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createMedia (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+      {
+        mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createResource (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+      {
+        libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createSiteNode (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+      {
+        try
+          {
+            final SiteNode siteNode = modelFactory.createSiteNode(this, folder);
+            nodeMapByRelativePath.put(relativePath.asString(), siteNode);
+
+            if (!siteNode.isPlaceHolder())
+              {
+                final ResourcePath relativeUri = siteNode.getRelativeUri();
+                // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
+                if ("true".equals(siteNode.getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS).orElse("false")))
+                  {
+                    final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
+                    nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
+                  }
+                else
+                  {
+                    nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
+                  }
+              }
+          }
+        catch (IOException | NotFoundException e)
+          {
+            throw new RuntimeException(e);
           }
       }
 
@@ -345,11 +367,7 @@ import lombok.extern.slf4j.Slf4j;
     private static void logConfiguration (final @Nonnull String name, Map<String, ?> propertyMap)
       {
         log.info(name);
-
-        for (final Entry<String, ?> entry : propertyMap.entrySet())
-          {
-            log.info(">>>> {}: {}", entry.getKey(), entry.getValue());
-          }
+        propertyMap.entrySet().stream().forEach(entry -> log.info(">>>> {}: {}", entry.getKey(), entry.getValue()));
       }
 
     /*******************************************************************************************************************
