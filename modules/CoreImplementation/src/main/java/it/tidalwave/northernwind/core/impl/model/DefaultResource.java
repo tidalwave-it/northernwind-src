@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: c9432c8da6518f5d74cc1e83285e66ed5b7cd120 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -56,7 +56,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
  * The default implementation for {@link Resource}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: c9432c8da6518f5d74cc1e83285e66ed5b7cd120 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString(callSuper = true, of = "placeHolder")
@@ -132,7 +132,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
               }
 
-            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER, tmpPlaceHolder);
+            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER).orElse(tmpPlaceHolder);
 
             if (log.isDebugEnabled())
               {

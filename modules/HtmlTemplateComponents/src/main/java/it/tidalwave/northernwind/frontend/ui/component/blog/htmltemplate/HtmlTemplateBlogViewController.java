@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: bdbc5f12c90c51172cf0ec6260f0438c54faa692 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -66,7 +66,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: bdbc5f12c90c51172cf0ec6260f0438c54faa692 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -212,8 +212,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final ResourceProperties properties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
-                                                                          DefaultBlogViewController.TIME0);
+        final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS).orElse(DefaultBlogViewController.TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
         htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
 

@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 446e093fdfefff111226123264c496c3a11b8e7e $
  *
  * *********************************************************************************************************************
  * #L%
@@ -64,7 +64,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 446e093fdfefff111226123264c496c3a11b8e7e $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
@@ -116,9 +116,9 @@ public class DefaultCalendarViewController implements CalendarViewController
 
         final String entries = siteNodeProperties.getProperty2(PROPERTY_ENTRIES);
         final StringBuilder builder = new StringBuilder();
-        final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR, currentYear);
-        final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR, Math.min(selectedYear, currentYear));
-        final int lastYear = viewProperties.getIntProperty(PROPERTY_LAST_YEAR, Math.max(selectedYear, currentYear));
+        final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR).orElse(currentYear);
+        final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR).orElse(Math.min(selectedYear, currentYear));
+        final int lastYear = viewProperties.getIntProperty(PROPERTY_LAST_YEAR).orElse(Math.max(selectedYear, currentYear));
         final int columns = 4;
 
         builder.append("<div class='nw-calendar'>\n");

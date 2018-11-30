@@ -32,14 +32,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
-import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -145,15 +146,13 @@ public interface ResourceProperties extends As, Identifiable
      * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
      *
      * @param   key                 the property key
-     * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<Integer>
-    default public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
-      throws IOException
+    default public Optional<Integer> getIntProperty (final @Nonnull Key<String> key)
       {
-        return Integer.parseInt(getProperty(key).orElse("" + defaultValue));
+        return getProperty(key).map(Integer::parseInt);
       }
 
     /*******************************************************************************************************************
@@ -163,15 +162,13 @@ public interface ResourceProperties extends As, Identifiable
      * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
      *
      * @param   key                 the property key
-     * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<Boolean>
-    default public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
-      throws IOException
+    default public Optional<Boolean> getBooleanProperty (final @Nonnull Key<String> key)
       {
-        return Boolean.parseBoolean(getProperty(key).orElse("" + defaultValue));
+        return getProperty(key).map(Boolean::parseBoolean);
       }
 
     /*******************************************************************************************************************
@@ -179,30 +176,16 @@ public interface ResourceProperties extends As, Identifiable
      * Retrieves a datetime property, searching through a sequence of keys, eventually returning a default value.
      *
      * @param   keys                the property keys
-     * @param   defaultValue        the default value to return when the property doesn't exist
      * @return                      the property value
      *
      ******************************************************************************************************************/
     @Nonnull // FIXME: should be Key<ZonedDateTime>
-    default public ZonedDateTime getDateTimeProperty (final @Nonnull Collection<Key<String>> keys,
-                                                      final @Nonnull ZonedDateTime defaultValue)
+    default public Optional<ZonedDateTime> getDateTimeProperty (final @Nonnull Collection<Key<String>> keys)
       {
-        for (final Key<String> key : keys)
-          {
-            try
-              {
-                return ZonedDateTime.parse(getProperty2(key), DateTimeFormatter.ISO_ZONED_DATE_TIME);
-              }
-            catch (NotFoundException e)
-              {
-              }
-            catch (IOException e)
-              {
-//                log.warn("", e);
-              }
-          }
-
-        return defaultValue;
+        return keys.stream().flatMap(key -> getProperty(key)
+                                        .map(date -> ZonedDateTime.parse(date, DateTimeFormatter.ISO_ZONED_DATE_TIME))
+                                        .map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                            .findFirst();
       }
 
     /*******************************************************************************************************************

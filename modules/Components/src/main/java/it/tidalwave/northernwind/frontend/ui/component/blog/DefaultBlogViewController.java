@@ -95,8 +95,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
         @Override
         public int compare (final @Nonnull Content post1, final @Nonnull Content post2)
           {
-            final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
-            final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
+            final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+            final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
             return dateTime2.compareTo(dateTime1);
           }
       };
@@ -178,7 +178,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         try
           {
             final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
-            final boolean tagCloud = siteNodeProperties.getBooleanProperty(PROPERTY_TAG_CLOUD, false);
+            final boolean tagCloud = siteNodeProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
 
             if (tagCloud)
               {
@@ -192,7 +192,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             render();
           }
         // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen
-        catch (NotFoundException | IOException e)
+        catch (NotFoundException e)
           {
             log.warn("While reading property group at initialization", e);
           }
@@ -204,12 +204,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     private void generateBlogPosts()
-      throws IOException, HttpStatusException
+      throws HttpStatusException
       {
         final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
-        final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS, 99);
-        final int maxLeadinItems = componentProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS, 99);
-        final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS, 99);
+        final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
+        final int maxLeadinItems = componentProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
+        final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
 
         log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
@@ -309,10 +309,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
     // TODO: embed the sort by reverse date in the finder
     @Nonnull
     private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException, HttpStatusException
+      throws HttpStatusException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
-        final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX, false);
+        final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX).orElse(false);
         final List<Content> allPosts = findAllPosts(siteNodeProperties);
         final List<Content> posts = new ArrayList<>();
         //

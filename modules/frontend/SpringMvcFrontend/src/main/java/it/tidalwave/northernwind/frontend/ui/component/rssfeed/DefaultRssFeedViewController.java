@@ -109,7 +109,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       throws IOException, NotFoundException
       {
-        final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS, TIME0);
+        final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
         if (feed.getLastBuildDate() == null)
           {
