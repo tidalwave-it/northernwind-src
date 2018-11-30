@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -79,7 +80,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
 
             log.debug(">>>> template: {}", template);
 
-            for (final String relativePath : viewProperties.getProperty2(PROPERTY_CONTENTS))
+            for (final String relativePath : viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()))
               {
                 final StringBuilder htmlFragmentBuilder = new StringBuilder();
                 final Content content = site.find(Content).withRelativePath(relativePath).result();
@@ -113,17 +114,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     private void appendTitle (final @Nonnull ResourceProperties contentProperties,
                               final @Nonnull StringBuilder htmlBuilder,
                               final @Nonnull String titleMarkup)
-      throws IOException
       {
-        try
-          {
-            final String title = contentProperties.getProperty2(PROPERTY_TITLE);
-            htmlBuilder.append(String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no title
-          }
+        contentProperties.getProperty(PROPERTY_TITLE).ifPresent(title -> htmlBuilder.append(String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup)));
       }
 
     /*******************************************************************************************************************
@@ -133,17 +125,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      ******************************************************************************************************************/
     private void appendText (final @Nonnull ResourceProperties contentProperties,
                              final @Nonnull StringBuilder htmlBuilder)
-      throws IOException
       {
-        try
-          {
-            htmlBuilder.append(contentProperties.getProperty2(PROPERTY_FULL_TEXT)).append("\n");
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("", e);
-            htmlBuilder.append(e.toString());
-          }
+        contentProperties.getProperty(PROPERTY_FULL_TEXT).ifPresent(text -> htmlBuilder.append(text).append("\n"));
       }
 
     /*******************************************************************************************************************
