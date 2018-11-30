@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 33bc17f249cd1317a678ad6be6f0a75643acda93 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -44,7 +44,7 @@ import lombok.experimental.Wither;
  * A piece of content to be composed into a page.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 33bc17f249cd1317a678ad6be6f0a75643acda93 $
  *
  **********************************************************************************************************************/
 public interface Content extends Resource, SimpleComposite<Content>
@@ -88,8 +88,6 @@ public interface Content extends Resource, SimpleComposite<Content>
      * Returns the exposed URI mapped to this resource.
      *
      * @return  the exposed URI
-     * @throws  NotFoundException  if the resource can't be found
-     * @throws  IOException        if an I/O error occurs (??? FIXME)
      *
      ******************************************************************************************************************/
     @Nonnull
