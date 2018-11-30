@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 51048f332460f3e367847d04a3eb5d08178bfa79 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -62,7 +62,7 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
  * A node of the site, mapped to a given URL.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 51048f332460f3e367847d04a3eb5d08178bfa79 $
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString(callSuper = false, of = "relativeUri")
@@ -122,8 +122,8 @@ import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
               {
                 try
                   {
-                    final String segment = getResource().getProperties()
-                                                        .getProperty2(PROPERTY_EXPOSED_URI, decode(file.getName(), "UTF-8"));
+                    final String segment = getResource().getProperties().getProperty(PROPERTY_EXPOSED_URI)
+                                                                        .orElse(decode(file.getName(), "UTF-8"));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (IOException | NotFoundException e)

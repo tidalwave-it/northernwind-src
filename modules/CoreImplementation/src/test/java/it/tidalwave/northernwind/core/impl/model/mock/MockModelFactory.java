@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 2586ce516d6b2661ade5889af3e5cea6bc43860b $
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,6 +30,7 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.io.IOException;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -44,9 +45,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +53,7 @@ import static org.mockito.Mockito.when;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 2586ce516d6b2661ade5889af3e5cea6bc43860b $
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -125,17 +124,9 @@ public class MockModelFactory extends ModelFactorySupport
         log.trace(">>>> creating SiteNode for {}", path);
         final SiteNode siteNode = mock(SiteNode.class);
 
-        // TODO: this is cumbersome code... perhaps just use DefaultResourceProperties?
         final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty2(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).
-                thenAnswer(new Answer<String>()
-          {
-            @Override
-            public String answer (final @Nonnull InvocationOnMock invocation)
-              {
-                return (String)invocation.getArguments()[1]; // default value
-              }
-          });
+        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
+//        when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn(Optional.empty());
 
         for (final Map.Entry<String, String> e : resourceProperties.entrySet())
           {
@@ -144,8 +135,8 @@ public class MockModelFactory extends ModelFactorySupport
                 final String propertyName = e.getKey().substring(path.length() + 1);
                 final Key<String> propertyKey = new Key<>(propertyName);
                 log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
+                when(properties.getProperty(eq(propertyKey))).thenReturn(Optional.of(e.getValue()));
                 when(properties.getProperty2(eq(propertyKey))).thenReturn(e.getValue());
-                when(properties.getProperty2(eq(propertyKey), anyString())).thenReturn(e.getValue());
               }
           }
 

@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: dfafb1f97e778f622af5e081eb2a0281d07df204 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: dfafb1f97e778f622af5e081eb2a0281d07df204 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -88,7 +88,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         fallbackTemplate = loadTemplate(context, "bluetteFallback");
         lightboxFallbackTemplate = loadTemplate(context, "bluetteLightboxFallback");
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
-        copyright = bluetteConfiguration.getProperty2(PROPERTY_COPYRIGHT, "");
+        copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT).orElse("");
       }
 
     /*******************************************************************************************************************

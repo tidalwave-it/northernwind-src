@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: b6920b63e8220900eb1f9f66a9fbc99337b7b135 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -64,7 +64,7 @@ import lombok.extern.slf4j.Slf4j;
  * The default implementation of {@link Site}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: b6920b63e8220900eb1f9f66a9fbc99337b7b135 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -309,7 +309,7 @@ import lombok.extern.slf4j.Slf4j;
                       {
                         final ResourcePath relativeUri = siteNode.getRelativeUri();
                         // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
-                        if ("true".equals(siteNode.getProperties().getProperty2(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
+                        if ("true".equals(siteNode.getProperties().getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS).orElse("false")))
                           {
                             final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
                             nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);

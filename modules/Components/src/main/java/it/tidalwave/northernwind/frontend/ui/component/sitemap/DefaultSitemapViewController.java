@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 18aa2a23c25a69729f3f9eb89599d855fcf1232f $
  *
  * *********************************************************************************************************************
  * #L%
@@ -53,7 +53,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapVie
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 18aa2a23c25a69729f3f9eb89599d855fcf1232f $
  *
  **********************************************************************************************************************/
 @Configurable @RequiredArgsConstructor @Slf4j
@@ -169,7 +169,7 @@ public class DefaultSitemapViewController implements SitemapViewController
         // just using a single property and only peeking into a single node
         final Key<String> priorityKey = (childSiteNode == null) ? PROPERTY_SITEMAP_PRIORITY
                                                                 : PROPERTY_SITEMAP_CHILDREN_PRIORITY;
-        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty2(priorityKey, "0.5"));
+        final float sitemapPriority = Float.parseFloat(siteNode.getProperties().getProperty(priorityKey).orElse("0.5"));
 
         if (sitemapPriority > 0)
           {
@@ -178,7 +178,7 @@ public class DefaultSitemapViewController implements SitemapViewController
             builder.append(String.format("    <lastmod>%s</lastmod>%n",
                                          getSiteNodeDateTime(properties).format(dateTimeFormatter)));
             builder.append(String.format("    <changefreq>%s</changefreq>%n",
-                                         properties.getProperty2(PROPERTY_SITEMAP_CHANGE_FREQUENCY, "daily")));
+                                         properties.getProperty(PROPERTY_SITEMAP_CHANGE_FREQUENCY).orElse("daily")));
             builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
             builder.append("  </url>\n");
           }

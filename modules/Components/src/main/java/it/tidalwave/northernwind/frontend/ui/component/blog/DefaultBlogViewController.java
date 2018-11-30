@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 803acd10d11b7a7194f7c5f88a85ebb723a51090 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -66,7 +66,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 803acd10d11b7a7194f7c5f88a85ebb723a51090 $
  *
  **********************************************************************************************************************/
 @Configurable @RequiredArgsConstructor @Slf4j
@@ -386,17 +386,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         for (final Content post : sourcePosts)
           {
-            try
+            if (category.equals("") || category.equals(post.getProperties().getProperty(PROPERTY_CATEGORY).orElse("---")))
               {
-                if (category.equals("")
-                    || category.equals(post.getProperties().getProperty2(PROPERTY_CATEGORY, "---")))
-                  {
-                    destinationPosts.add(post);
-                  }
-              }
-            catch (IOException e2)
-              {
-                log.warn("", e2);
+                destinationPosts.add(post);
               }
           }
       }
@@ -417,18 +409,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         for (final Content post : sourcePosts)
           {
-            try
-              {
-                final List<String> tags = Arrays.asList(post.getProperties().getProperty2(PROPERTY_TAGS, "").split(","));
+            final List<String> tags = Arrays.asList(post.getProperties().getProperty(PROPERTY_TAGS).orElse("").split(","));
 
-                if (tags.contains(tag))
-                  {
-                    destinationPosts.add(post);
-                  }
-              }
-            catch (IOException e2)
+            if (tags.contains(tag))
               {
-                log.warn("", e2);
+                destinationPosts.add(post);
               }
           }
       }

@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 59974696e16d5fab7204f114c22a7d13fcfd5cb6 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -49,7 +49,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 59974696e16d5fab7204f114c22a7d13fcfd5cb6 $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
@@ -69,16 +69,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         @Override
         public boolean apply (final @Nonnull SiteNode rssSiteNode)
           {
-            try
-              {
-                final String title = rssSiteNode.getProperties().getProperty2(PROPERTY_TITLE, "RSS");
-                builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n",
-                                             RSS_MIME_TYPE, title, site.createLink(rssSiteNode.getRelativeUri())));
-              }
-            catch (IOException e)
-              {
-                log.warn("", e); // shouldn't occur
-              }
+            final String title = rssSiteNode.getProperties().getProperty(PROPERTY_TITLE).orElse("RSS");
+            builder.append(String.format("<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n",
+                                         RSS_MIME_TYPE, title, site.createLink(rssSiteNode.getRelativeUri())));
 
             return false;
           }
@@ -119,9 +112,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
         setCustomTemplate(viewProperties);
         view.addAttribute("language", requestLocaleManager.getLocales().get(0).getLanguage());
-        view.addAttribute("titlePrefix", viewProperties.getProperty2(PROPERTY_TITLE_PREFIX, ""));
-        view.addAttribute("description", viewProperties.getProperty2(PROPERTY_DESCRIPTION, ""));
-        view.addAttribute("title", siteNodeProperties.getProperty2(PROPERTY_TITLE, ""));
+        view.addAttribute("titlePrefix", viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
+        view.addAttribute("description", viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
+        view.addAttribute("title", siteNodeProperties.getProperty(PROPERTY_TITLE).orElse(""));
         view.addAttribute("screenCssSection", computeScreenCssSection());
         view.addAttribute("printCssSection", computePrintCssSection());
         view.addAttribute("rssFeeds", computeRssFeedsSection());
@@ -150,19 +143,12 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final StringBuilder builder = new StringBuilder();
 
-        try
+        for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCREEN_STYLE_SHEETS)
+                                                           .orElse(Collections.<String>emptyList()))
           {
-            for (final String relativeUri : getViewProperties().getProperty2(PROPERTY_SCREEN_STYLE_SHEETS,
-                                                                            Collections.<String>emptyList()))
-              {
-                final String link = relativeUri.startsWith("http") ? relativeUri
-                                                                   : site.createLink(new ResourcePath(relativeUri));
-                builder.append(String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link));
-              }
-          }
-        catch (IOException e)
-          {
-            log.error("", e);
+            final String link = relativeUri.startsWith("http") ? relativeUri
+                                                               : site.createLink(new ResourcePath(relativeUri));
+            builder.append(String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link));
           }
 
         return builder.toString();
@@ -178,20 +164,13 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final StringBuilder builder = new StringBuilder();
 
-        try
+        for (final String relativeUri : getViewProperties().getProperty(PROPERTY_PRINT_STYLE_SHEETS)
+                                                           .orElse(Collections.<String>emptyList()))
           {
-            for (final String relativeUri : getViewProperties().getProperty2(PROPERTY_PRINT_STYLE_SHEETS,
-                                                                            Collections.<String>emptyList()))
-              {
-                final String link = relativeUri.startsWith("http") ? relativeUri
-                                                                   : site.createLink(new ResourcePath(relativeUri));
-                final String template = "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n";
-                builder.append(String.format(template, link));
-              }
-          }
-        catch (IOException e)
-          {
-            log.error("", e);
+            final String link = relativeUri.startsWith("http") ? relativeUri
+                                                               : site.createLink(new ResourcePath(relativeUri));
+            final String template = "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />\n";
+            builder.append(String.format(template, link));
           }
 
         return builder.toString();
@@ -205,17 +184,10 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection()
       {
-        try
+        for (final String relativePath : getViewProperties().getProperty(PROPERTY_RSS_FEEDS)
+                                                            .orElse(Collections.<String>emptyList()))
           {
-            for (final String relativePath : getViewProperties().getProperty2(PROPERTY_RSS_FEEDS,
-                                                                             Collections.<String>emptyList()))
-              {
-                site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink);
-              }
-          }
-        catch (IOException e)
-          {
-            log.error("", e);
+            site.find(SiteNode).withRelativePath(relativePath).doWithResults(createRssLink);
           }
 
         return createRssLink.toString();
@@ -231,19 +203,12 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final StringBuilder builder = new StringBuilder();
 
-        try
+        for (final String relativeUri : getViewProperties().getProperty(PROPERTY_SCRIPTS)
+                                                           .orElse(Collections.<String>emptyList()))
           {
-            for (final String relativeUri : getViewProperties().getProperty2(PROPERTY_SCRIPTS,
-                                                                            Collections.<String>emptyList()))
-              {
-                // Always use </script> to close, as some browsers break without
-                builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>%n",
-                                             site.createLink(new ResourcePath(relativeUri))));
-              }
-          }
-        catch (IOException e)
-          {
-            log.error("", e);
+            // Always use </script> to close, as some browsers break without
+            builder.append(String.format("<script type=\"text/javascript\" src=\"%s\"></script>%n",
+                                         site.createLink(new ResourcePath(relativeUri))));
           }
 
         return builder.toString();
@@ -255,7 +220,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     private void setCustomTemplate (final @Nonnull ResourceProperties viewProperties)
-      throws IOException
       {
         try
           {
@@ -263,7 +227,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
             view.setTemplate(template.getProperties().getProperty2(PROPERTY_TEMPLATE));
           }
-        catch (NotFoundException e)
+        catch (NotFoundException | IOException e)
           {
             log.warn("Cannot find custom template, using default ({})", e.toString());
           }
@@ -279,25 +243,18 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final StringBuilder builder = new StringBuilder();
 
-        try
+        for (final String relativePath : getViewProperties().getProperty(PROPERTY_INLINED_SCRIPTS)
+                                                            .orElse(Collections.<String>emptyList()))
           {
-            for (final String relativePath : getViewProperties().getProperty2(PROPERTY_INLINED_SCRIPTS,
-                                                                             Collections.<String>emptyList()))
+            try
               {
-                try
-                  {
-                    final Content script = site.find(Content).withRelativePath(relativePath).result();
-                    builder.append(script.getProperties().getProperty2(PROPERTY_TEMPLATE));
-                  }
-                catch (NotFoundException e)
-                  {
-                    // ok, no script
-                  }
+                final Content script = site.find(Content).withRelativePath(relativePath).result();
+                builder.append(script.getProperties().getProperty2(PROPERTY_TEMPLATE));
               }
-          }
-        catch (IOException e)
-          {
-            log.error("", e);
+            catch (IOException | NotFoundException e)
+              {
+                // ok, no script
+              }
           }
 
         return builder.toString();

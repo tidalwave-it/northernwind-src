@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
  * Copyright (C) 2011 - 2018 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
- * $Id$
- * 
+ *
+ * $Id: 9f70fc03a70bc0808c2acaa559ef2a1018bff687 $
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -47,7 +47,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * A default implementation of {@link HtmlTextWithTitleViewController}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 9f70fc03a70bc0808c2acaa559ef2a1018bff687 $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
@@ -91,7 +91,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
               }
 
             view.setText(htmlBuilder.toString());
-            view.setClassName(viewProperties.getProperty2(PROPERTY_CLASS, "nw-" + view.getId()));
+            view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
           }
         catch (NotFoundException e)
           {
@@ -160,7 +160,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
             final String templateRelativePath = viewProperties.getProperty2(PROPERTY_WRAPPER_TEMPLATE_RESOURCE);
             final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
             final ResourceProperties templateProperties = content.getProperties();
-            return templateProperties.getProperty2(PROPERTY_TEMPLATE, "$content$");
+            return templateProperties.getProperty(PROPERTY_TEMPLATE).orElse("$content$");
           }
         catch (NotFoundException e)
           {

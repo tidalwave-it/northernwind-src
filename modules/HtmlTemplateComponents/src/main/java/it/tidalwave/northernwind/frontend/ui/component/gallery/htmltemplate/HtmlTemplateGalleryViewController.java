@@ -1,27 +1,27 @@
 /*
  * #%L
  * *********************************************************************************************************************
- * 
+ *
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
  * Copyright (C) 2011 - 2018 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations under the License.
- * 
+ *
  * *********************************************************************************************************************
- * 
- * $Id$
- * 
+ *
+ * $Id: c8234da6296eaa18d232cb3fb7be7ba468a85086 $
+ *
  * *********************************************************************************************************************
  * #L%
  */
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: c8234da6296eaa18d232cb3fb7be7ba468a85086 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -58,22 +58,22 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
   {
     @Nonnull
     private final GalleryView view;
-  
+
     @Nonnull
     private final SiteNode siteNode;
-    
+
     @Nonnull
     private final RequestHolder requestHolder;
-    
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view, 
-                                              final @Nonnull SiteNode siteNode, 
-                                              final @Nonnull Site site, 
-                                              final @Nonnull RequestHolder requestHolder, 
+    public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view,
+                                              final @Nonnull SiteNode siteNode,
+                                              final @Nonnull Site site,
+                                              final @Nonnull RequestHolder requestHolder,
                                               final @Nonnull RequestLocaleManager requestLocaleManager)
       throws IOException
       {
@@ -81,51 +81,51 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         this.view = view;
         this.siteNode = siteNode;
         this.requestHolder = requestHolder;
-        
+
         final GalleryAdapterContext context = new GalleryAdapterContext()
           {
             @Override
-            public void addAttribute (final @Nonnull String name, final @Nonnull String value) 
+            public void addAttribute (final @Nonnull String name, final @Nonnull String value)
               {
                 ((TextHolder)view).addAttribute(name, value);
               }
 
             @Override @Nonnull
-            public Site getSite() 
+            public Site getSite()
               {
                 return site;
               }
 
             @Override @Nonnull
-            public SiteNode getSiteNode() 
+            public SiteNode getSiteNode()
               {
                 return siteNode;
               }
 
             @Override @Nonnull
-            public GalleryView getView() 
+            public GalleryView getView()
               {
                 return view;
               }
           };
-    
+
         galleryAdapter = new BluetteGalleryAdapter(context); // FIXME: get implementation from configuration
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
     @PostConstruct
-    /* package */ void initializeHtmlTemplateGalleryViewController() 
+    /* package */ void initializeHtmlTemplateGalleryViewController()
       throws HttpStatusException, IOException
       {
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
-        final String siteNodeTitle = siteNode.getProperties().getProperty2(Properties.PROPERTY_TITLE, "");
-        
+        final String siteNodeTitle = siteNode.getProperties().getProperty(Properties.PROPERTY_TITLE).orElse("");
+
         if ("".equals(param))
           {
             galleryAdapter.renderGallery(view, items);
@@ -140,30 +140,30 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
             galleryAdapter.renderLightboxFallback(view, items);
             textHolder.addAttribute("title", siteNodeTitle);
           }
-        else 
+        else
           {
             final Id id = new Id(param);
             final Item item = itemMapById.get(id);
-            
+
             if (item == null)
               {
                 log.warn("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
-                throw new HttpStatusException(404);  
+                throw new HttpStatusException(404);
               }
-            
+
             galleryAdapter.renderFallback(view, item, items);
             textHolder.addAttribute("title", item.getDescription());
           }
       }
-    
+
     @Nonnull
     private String getParam()
-      { 
-        try 
+      {
+        try
           {
             return requestHolder.get().getParameter("_escaped_fragment_");
-          } 
-        catch (NotFoundException ex) 
+          }
+        catch (NotFoundException ex)
           {
             return requestHolder.get().getPathParams(siteNode);
           }
@@ -175,19 +175,19 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected String computeInlinedScriptsSection() 
+    protected String computeInlinedScriptsSection()
       {
         return super.computeInlinedScriptsSection() + "\n" + galleryAdapter.getInlinedScript();
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected ResourceProperties getViewProperties() 
+    protected ResourceProperties getViewProperties()
       {
         return super.getViewProperties().merged(galleryAdapter.getExtraViewProperties(view.getId()));
-      } 
+      }
   }

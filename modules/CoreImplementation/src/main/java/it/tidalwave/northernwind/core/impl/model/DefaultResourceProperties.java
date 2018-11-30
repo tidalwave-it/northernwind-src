@@ -190,29 +190,10 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> T getProperty2 (final @Nonnull Key<T> key, final @Nonnull T defaultValue)
-      throws IOException
-      {
-        try
-          {
-            return getProperty2(key);
-          }
-        catch (NotFoundException e)
-          {
-            return defaultValue;
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
     public int getIntProperty (final @Nonnull Key<String> key, final int defaultValue)
       throws IOException
       {
-        return Integer.parseInt(getProperty2(key, "" + defaultValue));
+        return Integer.parseInt(getProperty(key).orElse("" + defaultValue));
       }
 
     /*******************************************************************************************************************
@@ -224,7 +205,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public boolean getBooleanProperty (final @Nonnull Key<String> key, final boolean defaultValue)
       throws IOException
       {
-        return Boolean.parseBoolean(getProperty2(key, "" + defaultValue));
+        return Boolean.parseBoolean(getProperty(key).orElse("" + defaultValue));
       }
 
     /*******************************************************************************************************************

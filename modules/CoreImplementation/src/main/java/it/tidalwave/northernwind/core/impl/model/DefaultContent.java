@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 0718462d5dabafba1df5bb41e8831ddf98187ca3 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -61,7 +61,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
     interface Exclusions
       {
         public <Type> Type getProperty2(Key<Type> key) throws NotFoundException, IOException;
-        public <Type> Type getProperty2(Key<Type> key, Type defaultValue) throws IOException;
       }
 
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
@@ -81,21 +80,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
             requestContext.clearContent();
           }
       }
-
-    @Override
-    public <Type> Type getProperty2 (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
-      throws IOException
-      {
-        try
-          {
-            requestContext.setContent(content);
-            return delegate.getProperty2(key, defaultValue);
-          }
-        finally
-          {
-            requestContext.clearContent();
-          }
-      }
   }
 
 /***********************************************************************************************************************
@@ -103,7 +87,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * A piece of content to be composed into a {@code Node}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 0718462d5dabafba1df5bb41e8831ddf98187ca3 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString(callSuper = true, exclude="requestContext")

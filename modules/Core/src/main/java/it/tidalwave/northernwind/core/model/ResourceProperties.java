@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: b1d1e264b85c1f9293e8489be18495f20fe36a8f $
  *
  * *********************************************************************************************************************
  * #L%
@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.time.ZonedDateTime;
 import java.io.IOException;
 import it.tidalwave.util.As;
@@ -38,7 +39,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,7 +51,7 @@ import lombok.experimental.Wither;
  * A bag of properties for a {@link Resource}s.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: b1d1e264b85c1f9293e8489be18495f20fe36a8f $
  *
  **********************************************************************************************************************/
 public interface ResourceProperties extends As, Identifiable
@@ -136,21 +136,6 @@ public interface ResourceProperties extends As, Identifiable
     @Nonnull @Deprecated
     public <T> T getProperty2 (@Nonnull Key<T> key)
       throws NotFoundException, IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Retrieves a property, eventually returning a default value.
-     *
-     * @deprecated  use {@link #getProperty(it.tidalwave.util.Key) instead}
-     * 
-     * @param   key                 the property key
-     * @param   defaultValue        the default value to return when the property doesn't exist
-     * @return                      the property value
-     *
-     ******************************************************************************************************************/
-    @Nonnull @Deprecated
-    public <T> T getProperty2 (@Nonnull Key<T> key, @Nonnull T defaultValue)
-      throws IOException;
 
     /*******************************************************************************************************************
      *

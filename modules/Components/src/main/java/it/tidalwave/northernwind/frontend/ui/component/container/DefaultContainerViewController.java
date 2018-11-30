@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: d7bfdf8e074cd5dbba8b6469aff9d6d20fe638db $
  *
  * *********************************************************************************************************************
  * #L%
@@ -42,7 +42,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: d7bfdf8e074cd5dbba8b6469aff9d6d20fe638db $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable
@@ -76,6 +76,6 @@ public class DefaultContainerViewController implements ContainerViewController
           }
 
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        view.setClassName(viewProperties.getProperty2(PROPERTY_CLASS, "nw-" + view.getId()));
+        view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
       }
   }
