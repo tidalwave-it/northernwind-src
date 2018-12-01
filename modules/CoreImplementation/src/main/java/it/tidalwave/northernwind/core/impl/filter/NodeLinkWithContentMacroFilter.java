@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 003bee76084cf5fad5f9e69a647affbe1ff862b6 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -32,7 +32,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.io.IOException;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -43,6 +42,8 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -59,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
  * </ul>
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 003bee76084cf5fad5f9e69a647affbe1ff862b6 $
  *
  **********************************************************************************************************************/
 @Configurable @Order(NodeLinkMacroFilter.ORDER - 1) @Slf4j
@@ -81,16 +82,18 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
 
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
-      throws NotFoundException, IOException
+      throws NotFoundException
       {
         final String relativePath = matcher.group("relativePath");
         final String contentRelativePath = matcher.group("contentRelativePath");
         final Optional<String> language = Optional.ofNullable(matcher.group("language"));
+
         final Site site = siteProvider.get().getSite();
-        final SiteNode siteNode = site.find(SiteNode.class).withRelativePath(relativePath).result();
-        final Content content = site.find(Content.class).withRelativePath(contentRelativePath).result();
-        final ResourcePath path = siteNode.getRelativeUri().appendedWith(content.getExposedUri().orElseThrow(NotFoundException::new)); // FIXME
-        final String link = site.createLink(path);
+        final SiteNode siteNode = site.find(SiteNode).withRelativePath(relativePath).result();
+        final Content content = site.find(Content).withRelativePath(contentRelativePath).result();
+        final ResourcePath nodePath = siteNode.getRelativeUri();
+        final ResourcePath contentPath = content.getExposedUri().orElseThrow(() -> new NotFoundException("Content with no exposed URI"));
+        final String link = site.createLink(nodePath.appendedWith(contentPath));
 
         return language.flatMap(l -> postProcessor.map(pp -> pp.postProcess(link, l))).orElse(link);
       }
