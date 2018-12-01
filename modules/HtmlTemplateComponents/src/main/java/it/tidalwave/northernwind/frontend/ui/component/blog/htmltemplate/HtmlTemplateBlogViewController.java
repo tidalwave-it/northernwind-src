@@ -246,18 +246,13 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         log.debug("addTagCloud({})", tagsAndCount);
 
-        final StringBuilder htmlBuilder = new StringBuilder();
-        htmlBuilder.append("<div class='tagCloud'>\n");
-
-        tagsAndCount.stream().forEach(tagAndCount ->
-          {
-            final String tag = tagAndCount.tag;
-            final String link = createTagLink(tag);
-            htmlBuilder.append(String.format(TEMPLATE_TAG_CLOUD_LINK, link, tagAndCount.rank, tagAndCount.count, tag));
-          });
-
-        htmlBuilder.append("</div>\n");
-        htmlParts.add(htmlBuilder.toString());
+        htmlParts.add(tagsAndCount.stream()
+                                  .map(tagAndCount -> String.format(TEMPLATE_TAG_CLOUD_LINK,
+                                                                    createTagLink(tagAndCount.tag),
+                                                                    tagAndCount.rank,
+                                                                    tagAndCount.count,
+                                                                    tagAndCount.tag))
+                                  .collect(joining("", "<div class='tagCloud'>\n", "</div>\n")));
       }
 
     /*******************************************************************************************************************
