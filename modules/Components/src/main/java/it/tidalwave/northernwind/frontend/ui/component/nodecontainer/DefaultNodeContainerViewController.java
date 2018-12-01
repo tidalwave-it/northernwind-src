@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 9cf734ff0e378dba78d5dc3f9879862834565f16 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -35,12 +35,12 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -52,7 +52,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 9cf734ff0e378dba78d5dc3f9879862834565f16 $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
@@ -84,6 +84,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
+    private final TemplateHelper templateHelper = new TemplateHelper(this);
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -96,7 +98,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         final ResourceProperties viewProperties = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
 
-        setCustomTemplate(viewProperties);
+        templateHelper.getTemplate5(viewProperties).ifPresent(view::setTemplate);
         view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
         view.addAttribute("titlePrefix",      viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
         view.addAttribute("description",      viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
@@ -190,25 +192,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream())
                 .flatMap(script -> script.getProperty(PROPERTY_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(joining());
-      }
-
-    /*******************************************************************************************************************
-     *
-     * .
-     *
-     ******************************************************************************************************************/
-    private void setCustomTemplate (final @Nonnull ResourceProperties viewProperties)
-      {
-        try
-          {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("Cannot find custom template, using default ({})", e.toString());
-          }
       }
 
     /*******************************************************************************************************************

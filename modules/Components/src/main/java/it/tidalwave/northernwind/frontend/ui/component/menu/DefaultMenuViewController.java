@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 1feaeccd397bbe355d5cdc6012a48118a2f38e28 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -31,11 +31,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -47,7 +46,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * The default implementation of {@link MenuViewController}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 1feaeccd397bbe355d5cdc6012a48118a2f38e28 $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Scope("session") @Slf4j
@@ -62,6 +61,8 @@ public class DefaultMenuViewController implements MenuViewController
     @Nonnull
     private final Site site;
 
+    private final TemplateHelper templateHelper = new TemplateHelper(this);
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -72,23 +73,12 @@ public class DefaultMenuViewController implements MenuViewController
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);
-
-        try
-          {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
-          }
-        catch (NotFoundException e)
-          {
-            // ok, use the default template
-          }
+        templateHelper.getTemplate2(viewProperties).ifPresent(view::setTemplate);
 
         viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList())
                 .stream()
                 .flatMap(path -> site.find(SiteNode).withRelativePath(path).stream())
-                .forEach(node -> view.addLink(node.getProperty(PROPERTY_NAVIGATION_LABEL)
-                                                                  .orElse("no nav. label"),
+                .forEach(node -> view.addLink(node.getProperty(PROPERTY_NAVIGATION_LABEL).orElse("no nav. label"), // FIXME
                                               site.createLink(node.getRelativeUri())));
       }
   }

@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 20c22cf8d64f578840d3430769d2063c5db9cdf9 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -40,6 +40,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
@@ -50,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 20c22cf8d64f578840d3430769d2063c5db9cdf9 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j

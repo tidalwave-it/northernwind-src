@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: d7f06bccbd9765a6bdfe6b831a6b3c416f55ba71 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -32,11 +32,10 @@ import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.stringtemplate.v4.ST;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -49,7 +48,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * A default implementation of {@link HtmlTextWithTitleViewController}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: d7f06bccbd9765a6bdfe6b831a6b3c416f55ba71 $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
@@ -64,6 +63,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @Nonnull
     private final Site site;
 
+    private final TemplateHelper templateHelper = new TemplateHelper(this);
+
     /*******************************************************************************************************************
      *
      * Initializes this controller.
@@ -74,7 +75,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        final String template = getTemplate(viewProperties);
+        final String template = templateHelper.getTemplate1(viewProperties);
 
         log.debug(">>>> template: {}", template);
 
@@ -111,26 +112,5 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     private static String appendText (final @Nonnull ResourceProperties properties)
       {
         return properties.getProperty(PROPERTY_FULL_TEXT).map(text -> text + "\n").orElse("");
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Returns the template.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String getTemplate (final @Nonnull ResourceProperties viewProperties)
-      {
-        try
-          {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE).orElseThrow(NotFoundException::new); // FIXME
-            final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
-            final ResourceProperties templateProperties = content.getProperties();
-            return templateProperties.getProperty(PROPERTY_TEMPLATE).orElse("$content$");
-          }
-        catch (NotFoundException e)
-          {
-            return "$content$";
-          }
       }
   }

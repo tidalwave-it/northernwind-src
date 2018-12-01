@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: f88cc769fbdce625402fa575f6cc8c551794f645 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -52,13 +52,19 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: f88cc769fbdce625402fa575f6cc8c551794f645 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
     private static final Key<String> PROPERTY_COPYRIGHT = new Key<>("copyright");
+
+    private static final Key<String> PROPERTY_BLUETTE_TEMPLATE_PATH = new Key<>("bluettePath");
+    
+    private static final Key<String> PROPERTY_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteFallbackPath");
+
+    private static final Key<String> PROPERTY_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteLightboxFallbackPath");
 
     @Nonnull
     private final GalleryAdapterContext context;
@@ -83,9 +89,10 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
       throws IOException
       {
         this.context = context;
-        galleryTemplate = loadTemplate(context, "bluette");
-        fallbackTemplate = loadTemplate(context, "bluetteFallback");
-        lightboxFallbackTemplate = loadTemplate(context, "bluetteLightboxFallback");
+
+        galleryTemplate = loadTemplate(context, PROPERTY_BLUETTE_TEMPLATE_PATH);
+        fallbackTemplate = loadTemplate(context, PROPERTY_BLUETTE_FALLBACK_TEMPLATE_PATH);
+        lightboxFallbackTemplate = loadTemplate(context, PROPERTY_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH);
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
         copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT).orElse("");
       }
