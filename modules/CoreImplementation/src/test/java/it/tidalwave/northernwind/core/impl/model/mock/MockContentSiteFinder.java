@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,11 +29,8 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import java.io.IOException;
-import com.google.common.base.Predicate;
-import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.FinderSupport;
+import java.util.Optional;
+import it.tidalwave.util.Finder8Support;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
@@ -44,11 +40,10 @@ import static org.mockito.Mockito.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFinder<Content>>
+public class MockContentSiteFinder extends Finder8Support<Content, SiteFinder<Content>>
                                    implements SiteFinder<Content>
   {
     private final static long serialVersionUID = 1L;
@@ -86,32 +81,19 @@ public class MockContentSiteFinder extends FinderSupport<Content, DefaultSiteFin
     @Override @Nonnull
     protected List<? extends Content> computeResults()
       {
-        try
+        final Content content = mock(Content.class);
+
+        if (relativePath.equals("/"))
           {
-            final Content content = mock(Content.class);
-
-            if (relativePath.equals("/"))
-              {
-                when(content.getExposedUri2()).thenReturn(new ResourcePath());
-              }
-            else
-              {
-                when(content.getExposedUri2()).thenReturn(new ResourcePath("EXPOSED-" + relativePath.substring(1)
-                                                                                  .replace('/', '-')
-                                                                                  .replace(' ', '-')));
-              }
-
-            return Arrays.asList(content);
+            when(content.getExposedUri()).thenReturn(Optional.of(new ResourcePath()));
           }
-        catch (NotFoundException | IOException e)
+        else
           {
-            throw new RuntimeException(e);
+            when(content.getExposedUri()).thenReturn(Optional.of(new ResourcePath("EXPOSED-" + relativePath.substring(1)
+                                                                              .replace('/', '-')
+                                                                              .replace(' ', '-'))));
           }
-      }
 
-    @Override
-    public void doWithResults (final @Nonnull Predicate<Content> predicate)
-      {
-        throw new UnsupportedOperationException("Not supported.");
+        return Arrays.asList(content);
       }
   }

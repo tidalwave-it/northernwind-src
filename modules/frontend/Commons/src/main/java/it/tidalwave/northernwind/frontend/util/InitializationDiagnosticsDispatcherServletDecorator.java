@@ -20,7 +20,6 @@
  * 
  * *********************************************************************************************************************
  * 
- * $Id$
  * 
  * *********************************************************************************************************************
  * #L%
@@ -48,7 +47,6 @@ import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderL
  * in case of error.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class InitializationDiagnosticsDispatcherServletDecorator extends HttpServlet

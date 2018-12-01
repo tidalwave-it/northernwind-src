@@ -20,7 +20,6 @@
  * 
  * *********************************************************************************************************************
  * 
- * $Id$
  * 
  * *********************************************************************************************************************
  * #L%
@@ -35,7 +34,6 @@ import org.springframework.core.task.TaskExecutor;
  * A {@link TaskExecutor} that waits before launching a task, useful for testing.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class TaskExecutorMock implements TaskExecutor

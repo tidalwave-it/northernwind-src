@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,8 +29,8 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.io.IOException;
-import com.google.common.base.Function;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j

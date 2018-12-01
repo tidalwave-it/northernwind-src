@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -48,7 +47,6 @@ import lombok.experimental.Delegate;
  * of a blog should implement this interface and return the relative paths of all the posts.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface CompositeSiteNodeController
