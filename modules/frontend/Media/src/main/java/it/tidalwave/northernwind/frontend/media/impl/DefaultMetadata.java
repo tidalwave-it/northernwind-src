@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 9213b19a441e1a398d62aa40b4ef2ac08ef97765 $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -54,7 +54,7 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
  * A default implementation of {@link Metadata}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: 9213b19a441e1a398d62aa40b4ef2ac08ef97765 $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @AllArgsConstructor @ToString @Slf4j

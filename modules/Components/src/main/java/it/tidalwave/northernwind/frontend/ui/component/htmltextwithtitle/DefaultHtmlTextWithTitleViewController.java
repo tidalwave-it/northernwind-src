@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 9f70fc03a70bc0808c2acaa559ef2a1018bff687 $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -49,7 +49,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * A default implementation of {@link HtmlTextWithTitleViewController}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: 9f70fc03a70bc0808c2acaa559ef2a1018bff687 $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j

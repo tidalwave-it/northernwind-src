@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: dbe6a94192fdbcfc3f05def85df6af454210ae39 $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -47,7 +47,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * The default implementation of {@link MenuViewController}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: dbe6a94192fdbcfc3f05def85df6af454210ae39 $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Scope("session") @Slf4j

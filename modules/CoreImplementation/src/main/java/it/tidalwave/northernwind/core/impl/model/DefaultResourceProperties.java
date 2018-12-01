@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 0f4ae8be705978dd2dc9fd9d835fa4afe476ea4d $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  * The default implementation of {@link ResourceProperties}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: 0f4ae8be705978dd2dc9fd9d835fa4afe476ea4d $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 // FIXME: this is a patched copy, needs public constructor for builder - see NW-180

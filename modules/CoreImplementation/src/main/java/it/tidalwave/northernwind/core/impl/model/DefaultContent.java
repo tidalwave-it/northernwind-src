@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 0718462d5dabafba1df5bb41e8831ddf98187ca3 $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -84,7 +84,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * A piece of content to be composed into a {@code Node}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: 0718462d5dabafba1df5bb41e8831ddf98187ca3 $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString(callSuper = true, exclude="requestContext")
