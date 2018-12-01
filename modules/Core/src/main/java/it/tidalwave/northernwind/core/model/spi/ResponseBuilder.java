@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -44,7 +43,6 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
  * @param <RESPONSE_TYPE>  the produced response (may change in function of the technology used for serving the
  *                         results)
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface ResponseBuilder<RESPONSE_TYPE>

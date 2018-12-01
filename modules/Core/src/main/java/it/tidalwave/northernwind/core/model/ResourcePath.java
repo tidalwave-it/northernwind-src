@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -32,8 +31,11 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.EqualsAndHashCode;
+import static java.util.Collections.*;
 
 /***********************************************************************************************************************
  *
@@ -41,14 +43,13 @@ import lombok.EqualsAndHashCode;
  * it.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Immutable @EqualsAndHashCode
 public class ResourcePath
   {
     @Nonnull
-    /* package */ final ImmutableList<String> segments;
+    /* package */ final List<String> segments;
 
     /*******************************************************************************************************************
      *
@@ -57,7 +58,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath()
       {
-        this(ImmutableList.<String>of());
+        this(emptyList());
       }
 
     /*******************************************************************************************************************
@@ -69,8 +70,10 @@ public class ResourcePath
      ******************************************************************************************************************/
     public ResourcePath (final @Nonnull String path)
       {
-        this((path.equals("/") | path.equals("")) ? ImmutableList.<String>of()
-                                                  : ImmutableList.<String>copyOf(validated(path).split("/")));
+//        this((path.equals("/") | path.equals("")) ? ImmutableList.<String>of()
+//                                                  : ImmutableList.<String>copyOf(validated(path).split("/")));
+        this((path.equals("/") | path.equals("")) ? emptyList()
+                                                  : Arrays.asList(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -80,7 +83,7 @@ public class ResourcePath
      * @param  segments  the segments
      *
      ******************************************************************************************************************/
-    /* package */ ResourcePath (final @Nonnull ImmutableList<String> segments)
+    /* package */ ResourcePath (final @Nonnull List<String> segments)
       {
         this.segments = validated(segments);
       }
@@ -215,7 +218,10 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull ResourcePath path)
       {
-        return new ResourcePath(new ImmutableList.Builder<String>().addAll(path.segments).addAll(segments).build());
+        final List<String> builder = new ArrayList<>(path.segments);
+        builder.addAll(segments);
+        return new ResourcePath(builder);
+//        return new ResourcePath(new ImmutableList.Builder<String>().addAll(path.segments).addAll(segments).build());
       }
 
     /*******************************************************************************************************************
@@ -245,7 +251,10 @@ public class ResourcePath
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
-        return new ResourcePath(new ImmutableList.Builder<String>().addAll(segments).addAll(path.segments).build());
+        final List<String> builder = new ArrayList<>(segments);
+        builder.addAll(path.segments);
+        return new ResourcePath(builder);
+//        return new ResourcePath(new ImmutableList.Builder<String>().addAll(segments).addAll(path.segments).build());
       }
 
     /*******************************************************************************************************************
@@ -273,7 +282,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath urlDecoded()
       {
-        final ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
+        final List<String> builder = new ArrayList<>();
 
         for (final String segment : segments)
           {
@@ -287,7 +296,7 @@ public class ResourcePath
               }
           }
 
-        return new ResourcePath(builder.build());
+        return new ResourcePath(builder);
       }
 
     /*******************************************************************************************************************
@@ -325,7 +334,7 @@ public class ResourcePath
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String toString() 
+    public String toString()
       {
         try
           {
@@ -333,10 +342,10 @@ public class ResourcePath
           }
         catch (RuntimeException e)
           {
-            return segments.toString();  
+            return segments.toString();
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -360,7 +369,7 @@ public class ResourcePath
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static ImmutableList<String> validated (final @Nonnull ImmutableList<String> segments)
+    private static List<String> validated (final @Nonnull List<String> segments)
       {
         for (final String segment : segments)
           {

@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -31,6 +30,7 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,7 +44,6 @@ import lombok.experimental.Wither;
  * or a folder, with a bag of properties.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface Resource extends As
@@ -110,6 +109,20 @@ public interface Resource extends As
      ******************************************************************************************************************/
     @Nonnull
     public ResourceProperties getProperties();
+
+    /*******************************************************************************************************************
+     *
+     * Shortcut for {@code getProperties().getProperty(key)}.
+     *
+     * @param   key     the key
+     * @return          the property
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    default public <T> Optional<T> getProperty (@Nonnull Key<T> key)
+      {
+        return getProperties().getProperty(key);
+      }
 
     /*******************************************************************************************************************
      *

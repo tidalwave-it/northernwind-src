@@ -20,7 +20,6 @@
  * 
  * *********************************************************************************************************************
  * 
- * $Id$
  * 
  * *********************************************************************************************************************
  * #L%
@@ -44,7 +43,6 @@ import org.stringtemplate.v4.ST;
  *
  * TODO: refactor with HtmlHolder
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragmentViewController

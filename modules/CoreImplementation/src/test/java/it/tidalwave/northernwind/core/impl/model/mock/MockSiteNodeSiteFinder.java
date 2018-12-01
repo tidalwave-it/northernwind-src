@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,9 +29,7 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import com.google.common.base.Predicate;
-import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
-import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.util.Finder8Support;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -42,11 +39,10 @@ import static org.mockito.Mockito.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteFinder<SiteNode>>
+public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<SiteNode>>
                                     implements SiteFinder<SiteNode>
   {
     private final static long serialVersionUID = 1L;
@@ -87,11 +83,5 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, DefaultSiteF
         final SiteNode content = mock(SiteNode.class);
         when(content.getRelativeUri()).thenReturn(new ResourcePath("URI-" + relativePath.substring(1)));
         return Arrays.asList(content);
-      }
-
-    @Override
-    public void doWithResults (final @Nonnull Predicate<SiteNode> predicate)
-      {
-        throw new UnsupportedOperationException("Not supported.");
       }
   }

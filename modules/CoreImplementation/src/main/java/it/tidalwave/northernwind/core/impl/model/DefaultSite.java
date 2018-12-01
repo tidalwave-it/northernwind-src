@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -39,6 +38,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -64,40 +65,11 @@ import lombok.extern.slf4j.Slf4j;
  * The default implementation of {@link Site}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
 /* package */ class DefaultSite implements InternalSite
   {
-    static interface FilePredicate
-      {
-        public void apply (@Nonnull ResourceFile file, @Nonnull ResourcePath relativeUri);
-      }
-
-    static interface FileFilter
-      {
-        public boolean accept (@Nonnull ResourceFile file);
-      }
-
-    private final FileFilter FOLDER_FILTER = new FileFilter()
-      {
-        @Override
-        public boolean accept (final @Nonnull ResourceFile file)
-          {
-            return file.isFolder() && !ignoredFolders.contains(file.getName());
-          }
-      };
-
-    private final FileFilter FILE_FILTER = new FileFilter()
-      {
-        @Override
-        public boolean accept (final @Nonnull ResourceFile file)
-          {
-            return file.isData() && !ignoredFolders.contains(file.getName());
-          }
-      };
-
     @Inject
     private List<LinkPostProcessor> linkPostProcessors;
 
@@ -157,6 +129,12 @@ import lombok.extern.slf4j.Slf4j;
     private final Map<Class<?>, RegexTreeMap<?>> relativeUriMapsByType = new HashMap<>();
 
     private final List<Locale> configuredLocales = new ArrayList<>();
+
+    private final Predicate<ResourceFile> FOLDER_FILTER =
+            file -> file.isFolder() && !ignoredFolders.contains(file.getName());
+
+    private final Predicate<ResourceFile> FILE_FILTER =
+            file -> file.isData() && !ignoredFolders.contains(file.getName());
 
     /*******************************************************************************************************************
      *
@@ -239,8 +217,8 @@ import lombok.extern.slf4j.Slf4j;
       {
         log.info("initialize()");
 
-        relativePathMapsByType.put(Content.class, documentMapByRelativePath);
-        relativePathMapsByType.put(Media.class, mediaMapByRelativePath);
+        relativePathMapsByType.put(Content.class,  documentMapByRelativePath);
+        relativePathMapsByType.put(Media.class,    mediaMapByRelativePath);
         relativePathMapsByType.put(Resource.class, libraryMapByRelativePath);
         relativePathMapsByType.put(SiteNode.class, nodeMapByRelativePath);
 
@@ -268,78 +246,79 @@ import lombok.extern.slf4j.Slf4j;
         nodeMapByRelativePath.clear();
         nodeMapByRelativeUri.clear();
 
-        traverse(libraryFolder, FILE_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
-              {
-                libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
-              }
-          });
-
-        traverse(mediaFolder, FILE_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
-              {
-                mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
-              }
-          });
-
-        traverse(documentFolder, FOLDER_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
-              {
-                documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
-              }
-          });
-
-        traverse(nodeFolder, FOLDER_FILTER, new FilePredicate()
-          {
-            @Override
-            public void apply (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
-              {
-                try
-                  {
-                    final SiteNode siteNode = modelFactory.createSiteNode(DefaultSite.this, folder);
-                    nodeMapByRelativePath.put(relativePath.asString(), siteNode);
-
-                    if (!siteNode.isPlaceHolder())
-                      {
-                        final ResourcePath relativeUri = siteNode.getRelativeUri();
-                        // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
-                        if ("true".equals(siteNode.getProperties().getProperty2(SiteNode.PROPERTY_MANAGES_PATH_PARAMS, "false")))
-                          {
-                            final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
-                            nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
-                          }
-                        else
-                          {
-                            nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
-                          }
-                      }
-                  }
-                catch (IOException | NotFoundException e)
-                  {
-                    throw new RuntimeException(e);
-                  }
-              }
-          });
+        traverse(libraryFolder,  FILE_FILTER,   this::createResource);
+        traverse(mediaFolder,    FILE_FILTER,   this::createMedia);
+        traverse(documentFolder, FOLDER_FILTER, this::createContent);
+        traverse(nodeFolder,     FOLDER_FILTER, this::createSiteNode);
 
         if (logConfigurationEnabled)
           {
             logConfiguration("Documents by relative path:", documentMapByRelativePath);
-            logConfiguration("Library by relative path:", libraryMapByRelativePath);
-            logConfiguration("Media by relative path:", mediaMapByRelativePath);
-            logConfiguration("Nodes by relative path:", nodeMapByRelativePath);
-            logConfiguration("Nodes by relative URI:", nodeMapByRelativeUri);
+            logConfiguration("Library by relative path:",   libraryMapByRelativePath);
+            logConfiguration("Media by relative path:",     mediaMapByRelativePath);
+            logConfiguration("Nodes by relative path:",     nodeMapByRelativePath);
+            logConfiguration("Nodes by relative URI:",      nodeMapByRelativeUri);
           }
       }
 
     /*******************************************************************************************************************
      *
-     * Traverse the file system with a {@link FilePredicate}.
+     ******************************************************************************************************************/
+    private void createContent (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+      {
+        documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createMedia (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+      {
+        mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createResource (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+      {
+        libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createSiteNode (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+      {
+        try
+          {
+            final SiteNode siteNode = modelFactory.createSiteNode(this, folder);
+            nodeMapByRelativePath.put(relativePath.asString(), siteNode);
+
+            if (!siteNode.isPlaceHolder())
+              {
+                final ResourcePath relativeUri = siteNode.getRelativeUri();
+                // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
+                if ("true".equals(siteNode.getProperty(SiteNode.PROPERTY_MANAGES_PATH_PARAMS).orElse("false")))
+                  {
+                    final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
+                    nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
+                  }
+                else
+                  {
+                    nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
+                  }
+              }
+          }
+        catch (IOException | NotFoundException e)
+          {
+            throw new RuntimeException(e);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Traverse the file system with a {@link Predicate}.
      *
      * @param  folder      the folder to traverse
      * @param  fileFilter  the filter for directory contents
@@ -347,15 +326,15 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourceFile folder,
-                           final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FilePredicate predicate)
+                           final @Nonnull Predicate<ResourceFile> fileFilter,
+                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> predicate)
       {
         traverse(folder.getPath(), folder, fileFilter, predicate);
       }
 
     /*******************************************************************************************************************
      *
-     * Traverse the file system with a {@link FilePredicate}.
+     * Traverse the file system with a {@link Predicate}.
      *
      * @param  file        the file to traverse
      * @param  fileFilter  the filter for directory contents
@@ -364,21 +343,18 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourcePath rootPath,
                            final @Nonnull ResourceFile file,
-                           final @Nonnull FileFilter fileFilter,
-                           final @Nonnull FilePredicate predicate)
+                           final @Nonnull Predicate<ResourceFile> fileFilter,
+                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> predicate)
       {
         log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, predicate);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
-        if (fileFilter.accept(file))
+        if (fileFilter.test(file))
           {
-            predicate.apply(file, relativePath);
+            predicate.accept(file, relativePath);
           }
 
-        for (final ResourceFile child : file.findChildren().results())
-          {
-            traverse(rootPath, child, fileFilter, predicate);
-          }
+        file.findChildren().results().forEach(child -> traverse(rootPath, child, fileFilter, predicate));
       }
 
     /*******************************************************************************************************************
@@ -389,11 +365,7 @@ import lombok.extern.slf4j.Slf4j;
     private static void logConfiguration (final @Nonnull String name, Map<String, ?> propertyMap)
       {
         log.info(name);
-
-        for (final Entry<String, ?> entry : propertyMap.entrySet())
-          {
-            log.info(">>>> {}: {}", entry.getKey(), entry.getValue());
-          }
+        propertyMap.entrySet().stream().forEach(entry -> log.info(">>>> {}: {}", entry.getKey(), entry.getValue()));
       }
 
     /*******************************************************************************************************************

@@ -20,7 +20,6 @@
  * 
  * *********************************************************************************************************************
  * 
- * $Id$
  * 
  * *********************************************************************************************************************
  * #L%
@@ -36,7 +35,6 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
  * Implementations of this interface provide metadata for media rendering.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface MediaMetadataProvider

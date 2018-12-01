@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -30,6 +29,7 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.io.IOException;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
@@ -44,9 +44,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +52,6 @@ import static org.mockito.Mockito.when;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -72,6 +69,7 @@ public class MockModelFactory extends ModelFactorySupport
     public Resource build (final @Nonnull Resource.Builder builder)
       {
         final Resource resource = mock(Resource.class);
+        when(resource.getProperty(any())).thenCallRealMethod();
         final String path = builder.getFile().getPath().asString();
         log.trace(">>>> creating Resource for {}", path);
 
@@ -88,6 +86,7 @@ public class MockModelFactory extends ModelFactorySupport
     public Content build (final @Nonnull Content.Builder builder)
       {
         final Content content = mock(Content.class);
+        when(content.getProperty(any())).thenCallRealMethod();
         final String path = builder.getFolder().getPath().asString();
         log.trace(">>>> creating Content for {}", path);
 
@@ -124,18 +123,11 @@ public class MockModelFactory extends ModelFactorySupport
         final String path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
         final SiteNode siteNode = mock(SiteNode.class);
+        when(siteNode.getProperty(any())).thenCallRealMethod();
 
-        // TODO: this is cumbersome code... perhaps just use DefaultResourceProperties?
         final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty2(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS), anyString())).
-                thenAnswer(new Answer<String>()
-          {
-            @Override
-            public String answer (final @Nonnull InvocationOnMock invocation)
-              {
-                return (String)invocation.getArguments()[1]; // default value
-              }
-          });
+        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
+//        when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn(Optional.empty());
 
         for (final Map.Entry<String, String> e : resourceProperties.entrySet())
           {
@@ -144,8 +136,7 @@ public class MockModelFactory extends ModelFactorySupport
                 final String propertyName = e.getKey().substring(path.length() + 1);
                 final Key<String> propertyKey = new Key<>(propertyName);
                 log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
-                when(properties.getProperty2(eq(propertyKey))).thenReturn(e.getValue());
-                when(properties.getProperty2(eq(propertyKey), anyString())).thenReturn(e.getValue());
+                when(properties.getProperty(eq(propertyKey))).thenReturn(Optional.of(e.getValue()));
               }
           }
 
