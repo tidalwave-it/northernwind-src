@@ -41,12 +41,10 @@ import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -181,7 +179,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void addReference (final @Nonnull Content post)
+    protected void addLinkToPost (final @Nonnull Content post)
       {
         log.debug("addReference()");
 
@@ -206,14 +204,14 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         log.debug("addPost({}, {})", post, addBody);
 
-        final ResourceProperties properties = post.getProperties();
+        final ResourceProperties postProperties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
-        final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+        final ZonedDateTime blogDateTime = postProperties.getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
         htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
 
-        append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, properties.getProperty(PROPERTY_TITLE));
+        append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, postProperties.getProperty(PROPERTY_TITLE));
 
         htmlBuilder.append("<div class='nw-blog-post-meta'>\n");
         renderDate(htmlBuilder, blogDateTime);
@@ -224,8 +222,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         if (addBody)
           {
-            append(htmlBuilder, TEMPLATE_FULL_TEXT, properties.getProperty(PROPERTY_FULL_TEXT));
-            properties.getProperty(PROPERTY_ID).ifPresent(id -> requestContext.setDynamicNodeProperty(PROP_ADD_ID, id));
+            append(htmlBuilder, TEMPLATE_FULL_TEXT, postProperties.getProperty(PROPERTY_FULL_TEXT));
+            postProperties.getProperty(PROPERTY_ID).ifPresent(id -> requestContext.setDynamicNodeProperty(PROP_ADD_ID, id));
             requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, computeTitle(post));
           }
 
@@ -259,9 +257,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Nonnull
     private String computeTitle (final @Nonnull Content post)
       {
-        final ResourceProperties properties = post.getProperties();
-        final Optional<String> prefix    = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE);
-        final Optional<String> title     = properties.getProperty(PROPERTY_TITLE);
+        final Optional<String> prefix    = getViewProperties().getProperty(PROPERTY_TITLE);
+        final Optional<String> title     = post.getProperties().getProperty(PROPERTY_TITLE);
         final Optional<String> separator = prefix.flatMap(p -> title.map(s -> " - "));
 
         final StringBuilder buffer = new StringBuilder();
@@ -281,10 +278,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     /* package */ void renderMainTitle (final @Nonnull StringBuilder htmlBuilder)
       {
-        final Optional<String> mainTitle = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE)
+        append(htmlBuilder, TEMPLATE_MAIN_TITLE, getViewProperties().getProperty(PROPERTY_TITLE)
                 .map(String::trim)
-                .flatMap(this::filterEmptyString);
-        append(htmlBuilder, TEMPLATE_MAIN_TITLE, mainTitle);
+                .flatMap(this::filterEmptyString));
       }
 
     /*******************************************************************************************************************
@@ -294,8 +290,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime dateTime)
       {
-        final Optional<String> dt = Optional.of(dateTime.format(findDateTimeFormatter()));
-        append(htmlBuilder, TEMPLATE_DATE, dt);
+        append(htmlBuilder, TEMPLATE_DATE, Optional.of(dateTime.format(findDateTimeFormatter())));
       }
 
     /*******************************************************************************************************************
@@ -331,8 +326,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
-        final Optional<String> category = post.getProperty(PROPERTY_CATEGORY);
-        append(htmlBuilder, TEMPLATE_CATEGORY, category);
+        append(htmlBuilder, TEMPLATE_CATEGORY, post.getProperty(PROPERTY_CATEGORY));
       }
 
     /*******************************************************************************************************************
@@ -393,15 +387,15 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private DateTimeFormatter findDateTimeFormatter()
       {
         final Locale locale = requestLocaleManager.getLocales().get(0);
-        final ResourceProperties properties = siteNode.getPropertyGroup(view.getId());
-        final DateTimeFormatter dtf = properties.getProperty(PROPERTY_DATE_FORMAT)
+        final ResourceProperties viewProperties = getViewProperties();
+        final DateTimeFormatter dtf = viewProperties.getProperty(PROPERTY_DATE_FORMAT)
             .map(s -> s.replaceAll("EEEEE+", "EEEE"))
             .map(s -> s.replaceAll("MMMMM+", "MMMM"))
             .map(p -> (((p.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(p).apply(locale)
                                           : DateTimeFormatter.ofPattern(p)).withLocale(locale)))
             .orElse(requestLocaleManager.getDateTimeFormatter());
 
-        final String zoneId = properties.getProperty(PROPERTY_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
+        final String zoneId = viewProperties.getProperty(PROPERTY_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
         return dtf.withZone(ZoneId.of(zoneId));
       }
 

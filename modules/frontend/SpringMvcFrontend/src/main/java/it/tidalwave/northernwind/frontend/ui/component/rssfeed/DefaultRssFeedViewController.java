@@ -150,7 +150,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
       }
 
     @Override
-    protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+    protected void addLinkToPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       {
       }
 
@@ -161,7 +161,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void render()
-      throws IllegalArgumentException, FeedException, NotFoundException, IOException
+      throws FeedException
       {
         feed.setGenerator("NorthernWind v" + siteProvider.get().getVersionString());
         feed.setItems(items);
