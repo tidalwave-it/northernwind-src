@@ -83,9 +83,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private static final String TEMPLATE_REFERENCE_TITLE = "<h3>%s</h3>%n";
     private static final String TEMPLATE_DIV_BLOG_POST = "<div id='%s' class='nw-blog-post'>%n";
     private static final String TEMPLATE_FULL_TEXT = "<div class='nw-blog-post-content'>%n%s%n</div>%n";
-    private static final String TEMPLATE_PERMALINK = "&nbsp;- <a href='%s'>Permalink</a>%n";
+    private static final String TEMPLATE_PERMALINK = "&#160;- <a href='%s'>Permalink</a>%n";
     private static final String TEMPLATE_REFERENCE_LINK = "<li><a href='%s'>%s</a></li>%n";
-    private static final String TEMPLATE_CATEGORY = "&nbsp;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>";
+    private static final String TEMPLATE_CATEGORY = "&#160;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>";
     private static final String TEMPLATE_DATE = "<span class='nw-publishDate'>%s</span>%n";
     private static final String TEMPLATE_TAG_CLOUD_LINK = "<a href=\"%s\" class=\"tagCloudItem rank%s\" rel=\"%d\">%s</a>%n";
     private static final String TEMPLATE_TAG_LINK = "%n<a class='nw-tag' href='%s'>%s</a>";
@@ -356,7 +356,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             .sorted()
             .map(tag -> String.format(TEMPLATE_TAG_LINK, createTagLink(tag), tag))
             .collect(joining(", "));
-        htmlBuilder.append(String.format("&nbsp;- <span class='nw-blog-post-tags'>Tagged as %s</span>", tags));
+        htmlBuilder.append(String.format("&#160;- <span class='nw-blog-post-tags'>Tagged as %s</span>", tags));
       }
 
     /*******************************************************************************************************************
