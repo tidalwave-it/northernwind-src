@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -36,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -44,7 +44,6 @@ import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
-import com.google.common.base.Function;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
@@ -60,7 +59,6 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString(of="delegate")

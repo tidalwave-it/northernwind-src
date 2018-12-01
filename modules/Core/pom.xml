@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-java8supplement</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role</artifactId>
         </dependency>
 
@@ -40,11 +44,6 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
 
         <dependency>

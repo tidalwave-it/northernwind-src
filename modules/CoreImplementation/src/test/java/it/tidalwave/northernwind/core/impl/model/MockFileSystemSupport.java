@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import com.google.common.base.Function;
+import java.util.function.Function;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
@@ -54,7 +53,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * TODO: refactor with MockResourceFile,
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @ToString

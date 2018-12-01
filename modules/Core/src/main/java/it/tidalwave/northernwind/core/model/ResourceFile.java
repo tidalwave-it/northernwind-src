@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -44,7 +43,6 @@ import it.tidalwave.role.Composite;
  * etc...
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.Finder>
@@ -193,7 +191,7 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
     /*******************************************************************************************************************
      *
      * Returns the parent of this file.
-     * FIXME: make @Nonnull, throws NotFoundException when no parent
+     * FIXME: make @Nonnull, use Optional
      *
      * @return  the parent or null if no parent
      *

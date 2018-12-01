@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -51,7 +50,6 @@ import static it.tidalwave.northernwind.core.model.Content.Content;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable
@@ -97,16 +95,16 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
             final GalleryView view = context.getView();
             final Site site = context.getSite();
             final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            final String templateRelativePath = viewProperties.getProperty2(new Key<String>(templateName + "Path"));
+            final String templateRelativePath = viewProperties.getProperty(new Key<String>(templateName + "Path")).orElseThrow(NotFoundException::new); // FIXME
             final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            return template.getProperties().getProperty2(PROPERTY_TEMPLATE);
+            return template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new); // FIXME
           }
         catch (NotFoundException e)
           {
             return loadDefaultTemplate(templateName + ".txt");
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *

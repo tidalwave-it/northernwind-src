@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -35,8 +34,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.io.IOException;
-import com.google.common.base.Function;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -50,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j @ToString(of="delegate")
