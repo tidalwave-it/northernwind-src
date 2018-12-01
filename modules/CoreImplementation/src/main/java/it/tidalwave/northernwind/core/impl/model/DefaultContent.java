@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -32,11 +31,9 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Finder;
+import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -60,36 +57,19 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     interface Exclusions
       {
-        public <Type> Type getProperty2(Key<Type> key) throws NotFoundException, IOException;
-        public <Type> Type getProperty2(Key<Type> key, Type defaultValue) throws IOException;
+        public <T> Optional<T> getProperty (Key<T> key);
       }
 
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
     private final ResourceProperties delegate;
 
     @Override
-    public <Type> Type getProperty2 (final @Nonnull Key<Type> key)
-      throws NotFoundException, IOException
+    public <T> Optional<T> getProperty (final @Nonnull Key<T> key)
       {
         try
           {
             requestContext.setContent(content);
-            return delegate.getProperty2(key);
-          }
-        finally
-          {
-            requestContext.clearContent();
-          }
-      }
-
-    @Override
-    public <Type> Type getProperty2 (final @Nonnull Key<Type> key, final @Nonnull Type defaultValue)
-      throws IOException
-      {
-        try
-          {
-            requestContext.setContent(content);
-            return delegate.getProperty2(key, defaultValue);
+            return delegate.getProperty(key);
           }
         finally
           {
@@ -103,7 +83,6 @@ class ResourcePropertiesDelegate implements ResourceProperties
  * A piece of content to be composed into a {@code Node}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j @ToString(callSuper = true, exclude="requestContext")
@@ -130,9 +109,9 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder<Content> findChildren()
+    public Finder8<Content> findChildren()
       {
-        return new PathFinderSupport<Content>(this);
+        return new PathFinderSupport<>(this);
       }
 
     /*******************************************************************************************************************
@@ -143,29 +122,10 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public Optional<ResourcePath> getExposedUri()
       {
-        final Optional<String> exposedUri = getProperties().getProperty(PROPERTY_EXPOSED_URI);
+        final Optional<String> exposedUri = getProperty(PROPERTY_EXPOSED_URI);
 
         return exposedUri.isPresent() ? exposedUri.map(ResourcePath::new)
                                       : getDefaultExposedUri();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public ResourcePath getExposedUri2()
-      throws NotFoundException, IOException
-      {
-        try
-          {
-            return new ResourcePath(getProperties().getProperty2(PROPERTY_EXPOSED_URI));
-          }
-        catch (NotFoundException e)
-          {
-            return getDefaultExposedUri().orElseThrow(NotFoundException::new);
-          }
       }
 
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or the next
@@ -180,7 +140,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Nonnull
     private Optional<ResourcePath> getDefaultExposedUri()
       {
-        return getResource().getProperties().getProperty(PROPERTY_TITLE)
+        return getResource().getProperty(PROPERTY_TITLE)
             .map(this::deAccent)
             .map(t -> t.replaceAll(" ", "-")
                        .replaceAll(",", "")

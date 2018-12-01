@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -49,7 +48,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -64,7 +62,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
@@ -92,8 +89,7 @@ public class DefaultCalendarViewController implements CalendarViewController
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize()
-      throws NotFoundException,
-             IOException,
+      throws IOException,
              ParserConfigurationException,
              SAXException,
              XPathExpressionException,
@@ -114,11 +110,11 @@ public class DefaultCalendarViewController implements CalendarViewController
 //            throw new HttpStatusException(404);
 //          }
 
-        final String entries = siteNodeProperties.getProperty2(PROPERTY_ENTRIES);
+        final String entries = siteNodeProperties.getProperty(PROPERTY_ENTRIES).orElse("");
         final StringBuilder builder = new StringBuilder();
-        final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR, currentYear);
-        final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR, Math.min(selectedYear, currentYear));
-        final int lastYear = viewProperties.getIntProperty(PROPERTY_LAST_YEAR, Math.max(selectedYear, currentYear));
+        final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR).orElse(currentYear);
+        final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR).orElse(Math.min(selectedYear, currentYear));
+        final int lastYear = viewProperties.getIntProperty(PROPERTY_LAST_YEAR).orElse(Math.max(selectedYear, currentYear));
         final int columns = 4;
 
         builder.append("<div class='nw-calendar'>\n");
@@ -199,16 +195,8 @@ public class DefaultCalendarViewController implements CalendarViewController
      ******************************************************************************************************************/
     private void appendTitle (final @Nonnull StringBuilder builder,
                               final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException
       {
-        try
-          {
-            builder.append(String.format("<h2>%s</h2>%n", siteNodeProperties.getProperty2(PROPERTY_TITLE)));
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no title
-          }
+        siteNodeProperties.getProperty(PROPERTY_TITLE).ifPresent(title -> builder.append(String.format("<h2>%s</h2>%n", title)));
       }
 
     /*******************************************************************************************************************

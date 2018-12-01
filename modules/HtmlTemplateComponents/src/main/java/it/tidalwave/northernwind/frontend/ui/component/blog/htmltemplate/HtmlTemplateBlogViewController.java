@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -66,7 +65,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -213,14 +211,12 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final StringBuilder htmlBuilder = new StringBuilder();
 
         properties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);
-
-        final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS,
-                                                                          DefaultBlogViewController.TIME0);
+        final ZonedDateTime blogDateTime = properties.getDateTimeProperty(DefaultBlogViewController.DATE_KEYS).orElse(DefaultBlogViewController.TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
         htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
 
         append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, properties.getProperty(PROPERTY_TITLE));
-        
+
         htmlBuilder.append("<div class='nw-blog-post-meta'>\n");
         renderDate(htmlBuilder, blogDateTime);
         renderCategory(htmlBuilder, post);
@@ -331,7 +327,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       {
         //        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
 
-        final Optional<String> title = post.getProperties().getProperty(PROPERTY_TITLE);
+        final Optional<String> title = post.getProperty(PROPERTY_TITLE);
         final Optional<String> link  = post.getExposedUri().map(this::createLink);
         append(htmlBuilder, TEMPLATE_REFERENCE_LINK, link, title);
       }
@@ -343,7 +339,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
-        final Optional<String> category = post.getProperties().getProperty(PROPERTY_CATEGORY);
+        final Optional<String> category = post.getProperty(PROPERTY_CATEGORY);
         append(htmlBuilder, TEMPLATE_CATEGORY, category);
       }
 
@@ -354,7 +350,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     private void renderTags (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
-        final String tags = post.getProperties().getProperty(PROPERTY_TAGS)
+        final String tags = post.getProperty(PROPERTY_TAGS)
             .map(s -> Stream.of(s.split(",")))
             .orElse(Stream.empty())
             .sorted()

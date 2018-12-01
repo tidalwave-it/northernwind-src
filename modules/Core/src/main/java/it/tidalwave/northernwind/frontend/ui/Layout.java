@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -50,7 +49,6 @@ import lombok.experimental.Wither;
  * A {@code Layout} contains the description of the visual structure of a {@link SiteNode}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder>

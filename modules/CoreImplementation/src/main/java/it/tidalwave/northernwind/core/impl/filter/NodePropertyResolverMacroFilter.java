@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -31,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.regex.Matcher;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
@@ -41,7 +39,6 @@ import static org.springframework.core.Ordered.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable @Order(HIGHEST_PRECEDENCE)
@@ -58,14 +55,7 @@ public class NodePropertyResolverMacroFilter extends MacroFilter
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        try
-          {
-            final String propertyName = matcher.group(1);
-            return context.get().getNodeProperties().getProperty2(new Key<String>(propertyName), "");
-          }
-        catch (IOException e)
-          {
-            return "ERR";
-          }
+        final Key<String> key = new Key<>(matcher.group(1));
+        return context.get().getNodeProperties().getProperty(key).orElse("");
       }
   }
