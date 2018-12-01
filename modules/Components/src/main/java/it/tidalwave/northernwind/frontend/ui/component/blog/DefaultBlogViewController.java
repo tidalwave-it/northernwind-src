@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: f23efe6912cf44b24c2f46cf4ee7447b4f09dcde $
  *
  * *********************************************************************************************************************
  * #L%
@@ -70,7 +70,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: f23efe6912cf44b24c2f46cf4ee7447b4f09dcde $
  *
  **********************************************************************************************************************/
 @Configurable @RequiredArgsConstructor @Slf4j
@@ -218,31 +218,24 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         for (final Content post : findPostsInReverseDateOrder(componentProperties))
           {
-            try
+            log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
+            // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
+            if (post.getProperty(PROPERTY_TITLE).isPresent())
               {
-                log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-                // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
-                if (post.getProperty(PROPERTY_TITLE).isPresent())
+                if (currentItem < maxFullItems)
                   {
-                    if (currentItem < maxFullItems)
-                      {
-                        addFullPost(post);
-                      }
-                    else if (currentItem < maxFullItems + maxLeadinItems)
-                      {
-                        addLeadInPost(post);
-                      }
-                    else if (currentItem < maxItems)
-                      {
-                        addReference(post);
-                      }
-
-                    currentItem++;
+                    addFullPost(post);
                   }
-              }
-            catch (NotFoundException | IOException e)
-              {
-                log.warn("While reading property group of post", e);
+                else if (currentItem < maxFullItems + maxLeadinItems)
+                  {
+                    addLeadInPost(post);
+                  }
+                else if (currentItem < maxItems)
+                  {
+                    addReference(post);
+                  }
+
+                currentItem++;
               }
           }
       }
@@ -395,22 +388,19 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addFullPost (@Nonnull Content post)
-      throws IOException, NotFoundException;
+    protected abstract void addFullPost (@Nonnull Content post);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addLeadInPost (@Nonnull Content post)
-      throws IOException, NotFoundException;
+    protected abstract void addLeadInPost (@Nonnull Content post);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addReference (@Nonnull Content post)
-      throws IOException, NotFoundException;
+    protected abstract void addReference (@Nonnull Content post);
 
     /*******************************************************************************************************************
      *

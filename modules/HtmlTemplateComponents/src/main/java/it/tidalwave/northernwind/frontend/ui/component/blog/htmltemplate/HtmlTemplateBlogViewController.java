@@ -137,7 +137,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     @Override
     protected void addFullPost (final @Nonnull Content post)
-      throws IOException, NotFoundException
       {
         log.debug("addFullPost()");
         addPost(post, true);
@@ -150,7 +149,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     @Override
     protected void addLeadInPost (final @Nonnull Content post)
-      throws IOException, NotFoundException
       {
         log.debug("addLeadInPost()");
         addPost(post, false);
@@ -184,7 +182,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     @Override
     protected void addReference (final @Nonnull Content post)
-      throws IOException, NotFoundException
       {
         log.debug("addReference()");
 

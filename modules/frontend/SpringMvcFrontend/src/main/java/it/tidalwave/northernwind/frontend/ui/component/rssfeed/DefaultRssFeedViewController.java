@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 96f07cfff4469d83fd444f923446027bf420f1b1 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -58,7 +58,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 96f07cfff4469d83fd444f923446027bf420f1b1 $
  *
  **********************************************************************************************************************/
 @Configurable @Slf4j
@@ -107,7 +107,6 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
-      throws IOException, NotFoundException
       {
         final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
