@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
+ * $Id: 2c76477e5fb4db2ddc96b267e5a8434374ed15cf $
  *
  * *********************************************************************************************************************
  * #L%
@@ -53,7 +53,7 @@ import lombok.experimental.Wither;
  * A bag of properties for a {@link Resource}s.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
+ * @version $Id: 2c76477e5fb4db2ddc96b267e5a8434374ed15cf $
  *
  **********************************************************************************************************************/
 public interface ResourceProperties extends As, Identifiable
@@ -104,7 +104,7 @@ public interface ResourceProperties extends As, Identifiable
             public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
               throws NotFoundException, IOException
               {
-                throw new NotFoundException();
+                throw new NotFoundException(key.stringValue());
               }
           };
 
