@@ -30,10 +30,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Stream;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -59,17 +57,18 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
   {
     private final static String RSS_MIME_TYPE = "application/rss+xml";
 
-    protected static final String LINK_RELSTYLESHEET_MEDIASCREEN_HREF =
+    private static final String TEMPLATE_LINK_SCREEN_CSS =
             "<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />%n";
 
-    private static final String LINK_CSS =
+    private static final String TEMPLATE_LINK_PRINT_CSS =
             "<link rel=\"stylesheet\" media=\"print\" href=\"%s\" type=\"text/css\" />%n";
 
     // Always use </script> to close, as some browsers break without
     private static final String TEMPLATE_SCRIPT =
             "<script type=\"text/javascript\" src=\"%s\"></script>%n";
 
-    private static final String TEMPLATE_RSS_LINK = "<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n";
+    private static final String TEMPLATE_RSS_LINK =
+            "<link rel=\"alternate\" type=\"%s\" title=\"%s\" href=\"%s\" />%n";
 
     @Nonnull
     private final NodeContainerView view;
@@ -92,9 +91,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize()
-      throws IOException, NotFoundException
       {
-        final ResourceProperties viewProperties = getViewProperties();
+        final ResourceProperties viewProperties     = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
 
         viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
@@ -132,7 +130,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         return streamOf(PROPERTY_SCREEN_STYLE_SHEETS)
                 .map(this::createLink)
-                .map(link -> String.format(LINK_RELSTYLESHEET_MEDIASCREEN_HREF, link))
+                .map(link -> String.format(TEMPLATE_LINK_SCREEN_CSS, link))
                 .collect(joining());
       }
 
@@ -146,7 +144,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         return streamOf(PROPERTY_PRINT_STYLE_SHEETS)
                 .map(this::createLink)
-                .map(link -> String.format(LINK_CSS, link))
+                .map(link -> String.format(TEMPLATE_LINK_PRINT_CSS, link))
                 .collect(joining());
       }
 
