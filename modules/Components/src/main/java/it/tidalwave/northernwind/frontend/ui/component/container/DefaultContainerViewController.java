@@ -28,13 +28,12 @@ package it.tidalwave.northernwind.frontend.ui.component.container;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -52,28 +51,17 @@ public class DefaultContainerViewController implements ContainerViewController
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull
+    @Nonnull @Getter
     private final Site site;
+
+    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     @PostConstruct
     /* package */ void initialize()
-      throws IOException
       {
-        try
-          {
-            // First search the template in a path, which could be useful for retrieving from a library; if not
-            // found, a property with the contents is searched.
-            final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
-          }
-        catch (NotFoundException e)
-          {
-            // ok, use the default template
-          }
-
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
+                                                          .ifPresent(view::setTemplate);
         view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
       }
   }
