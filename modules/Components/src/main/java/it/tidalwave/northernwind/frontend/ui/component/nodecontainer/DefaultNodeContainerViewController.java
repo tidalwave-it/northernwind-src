@@ -55,6 +55,8 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @RequiredArgsConstructor @Configurable @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
+    // TODO: this class should not set the HTML contents... it should be a responsibility of the view.
+    // Instead, it should pass unormatted objects
     private final static String RSS_MIME_TYPE = "application/rss+xml";
 
     private static final String TEMPLATE_LINK_SCREEN_CSS =
