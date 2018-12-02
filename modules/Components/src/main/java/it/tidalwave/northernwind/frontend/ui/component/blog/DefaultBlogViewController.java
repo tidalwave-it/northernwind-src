@@ -53,7 +53,6 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -72,12 +71,12 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 @Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
-    @AllArgsConstructor @Getter @ToString
+    @RequiredArgsConstructor @Getter @ToString
     protected static class TagAndCount
       {
         public final String tag;
         public int count;
-        public String rank;
+        public String rank = "";
       }
 
     public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
@@ -86,25 +85,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     protected static final String TAG_PREFIX = "tag/";
 
-    private final Comparator<Content> REVERSE_DATE_COMPARATOR = new Comparator<Content>()
+    private final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
       {
-        @Override
-        public int compare (final @Nonnull Content post1, final @Nonnull Content post2)
-          {
-            final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
-            final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
-            return dateTime2.compareTo(dateTime1);
-          }
+        final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+        final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+        return dateTime2.compareTo(dateTime1);
       };
 
-    private final Comparator<TagAndCount> TAG_COUNT_COMPARATOR = new Comparator<TagAndCount>()
-      {
-        @Override
-        public int compare (final @Nonnull TagAndCount tac1, final @Nonnull TagAndCount tac2)
-          {
-            return (int)Math.signum(tac2.count - tac1.count);
-          }
-      };
+    private final Comparator<TagAndCount> TAG_COUNT_COMPARATOR =
+        (tac1, tac2) -> (int)Math.signum(tac2.count - tac1.count);
 
     @Nonnull
     protected final BlogView view;
@@ -131,6 +120,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         return new SimpleFinderSupport<SiteNode>()
           {
+            private static final long serialVersionUID = 1L;
+
             @Override
             protected List<? extends SiteNode> computeResults()
               {
@@ -244,18 +235,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
         findAllPosts(getViewProperties())
                 .stream()
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
-                .forEach(tag ->
-              {
-                TagAndCount tagAndCount = tagAndCountMapByTag.get(tag);
-
-                if (tagAndCount == null)
-                  {
-                    tagAndCount = new TagAndCount(tag, 0, "");
-                    tagAndCountMapByTag.put(tag, tagAndCount);
-                  }
-
-                tagAndCount.count++;
-              });
+                // FIXME: this is not functional - should rather use reduce
+                .forEach(tag -> tagAndCountMapByTag.computeIfAbsent(tag, TagAndCount::new).count++);
 
         final Collection<TagAndCount> tagsAndCount = tagAndCountMapByTag.values();
         computeRanks(tagsAndCount);
