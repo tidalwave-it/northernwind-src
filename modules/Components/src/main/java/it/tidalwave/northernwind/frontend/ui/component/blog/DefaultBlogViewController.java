@@ -41,11 +41,9 @@ import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -136,22 +134,18 @@ public abstract class DefaultBlogViewController implements BlogViewController
             @Override
             protected List<? extends SiteNode> computeResults()
               {
-                log.info("findCompositeContents()");
-
-                final List<SiteNode> results = findAllPosts(siteNode.getPropertyGroup(view.getId()))
+                return findAllPosts(getViewProperties())
                         .stream()
                         .flatMap(post -> createChildSiteNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
                         .collect(toList());
-
-                log.info(">>>> returning: {}", results);
-
-                return results;
               }
 
             @Nonnull
             private Optional<ChildSiteNode> createChildSiteNode (final @Nonnull Content post)
               {
-                return post.getExposedUri().map(postUri -> new ChildSiteNode(siteNode, siteNode.getRelativeUri().appendedWith(postUri), post.getProperties()));
+                return post.getExposedUri().map(uri -> new ChildSiteNode(siteNode,
+                                                                         siteNode.getRelativeUri().appendedWith(uri),
+                                                                         post.getProperties()));
               }
           };
       }
@@ -173,10 +167,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         log.info("Initializing for {}", siteNode);
         // called at initialization
-        try
-          {
-            final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
-            final boolean tagCloud = siteNodeProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+//        try
+//          {
+            final boolean tagCloud = getViewProperties().getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
 
             if (tagCloud)
               {
@@ -188,12 +181,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
 
             render();
-          }
-        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen
-        catch (NotFoundException e)
-          {
-            log.warn("While reading property group at initialization", e);
-          }
+//          }
+//        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen
+//        catch (NotFoundException e)
+//          {
+//            log.warn("While reading property group at initialization", e);
+//          }
       }
 
     /*******************************************************************************************************************
@@ -204,43 +197,36 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private void generateBlogPosts()
       throws HttpStatusException
       {
-        final ResourceProperties componentProperties = siteNode.getPropertyGroup(view.getId());
-        final int maxFullItems = componentProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
-        final int maxLeadinItems = componentProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
-        final int maxItems = componentProperties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
+        final ResourceProperties viewProperties = getViewProperties();
+        final int maxFullItems   = viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
+        final int maxLeadinItems = viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
+        final int maxItems       = viewProperties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
 
         log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
         int currentItem = 0;
 
-        for (final Content post : findPostsInReverseDateOrder(componentProperties))
+        for (final Content post : findPostsInReverseDateOrder(viewProperties))
           {
-            try
+            log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
+            // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
+            if (post.getProperty(PROPERTY_TITLE).isPresent())
               {
-                log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-                // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
-                if (post.getProperty(PROPERTY_TITLE).isPresent())
+                if (currentItem < maxFullItems)
                   {
-                    if (currentItem < maxFullItems)
-                      {
-                        addFullPost(post);
-                      }
-                    else if (currentItem < maxFullItems + maxLeadinItems)
-                      {
-                        addLeadInPost(post);
-                      }
-                    else if (currentItem < maxItems)
-                      {
-                        addReference(post);
-                      }
-
-                    currentItem++;
+                    addFullPost(post);
                   }
-              }
-            catch (NotFoundException | IOException e)
-              {
-                log.warn("While reading property group of post", e);
+                else if (currentItem < maxFullItems + maxLeadinItems)
+                  {
+                    addLeadInPost(post);
+                  }
+                else if (currentItem < maxItems)
+                  {
+                    addLinkToPost(post);
+                  }
+
+                currentItem++;
               }
           }
       }
@@ -254,9 +240,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws HttpStatusException
       {
         final Map<String, TagAndCount> tagAndCountMapByTag = new TreeMap<>();
-        final ResourceProperties siteNodeProperties = siteNode.getPropertyGroup(view.getId());
 
-        findAllPosts(siteNodeProperties)
+        findAllPosts(getViewProperties())
                 .stream()
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .forEach(tag ->
@@ -393,22 +378,19 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addFullPost (@Nonnull Content post)
-      throws IOException, NotFoundException;
+    protected abstract void addFullPost (@Nonnull Content post);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addLeadInPost (@Nonnull Content post)
-      throws IOException, NotFoundException;
+    protected abstract void addLeadInPost (@Nonnull Content post);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addReference (@Nonnull Content post)
-      throws IOException, NotFoundException;
+    protected abstract void addLinkToPost (@Nonnull Content post);
 
     /*******************************************************************************************************************
      *
@@ -422,6 +404,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     protected abstract void render()
       throws Exception;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected ResourceProperties getViewProperties()
+      {
+        return siteNode.getPropertyGroup(view.getId());
+      }
 
     /*******************************************************************************************************************
      *
