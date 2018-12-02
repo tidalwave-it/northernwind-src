@@ -20,7 +20,7 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 0dd2c67db0ccbfb32500851e335e2fb9b19832ec $
+ * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -44,7 +44,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
  * TODO: copy the implementation of {@link MockContentSiteFinder}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: 0dd2c67db0ccbfb32500851e335e2fb9b19832ec $
+ * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
