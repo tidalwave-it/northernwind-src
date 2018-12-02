@@ -28,168 +28,77 @@
 package it.tidalwave.northernwind.frontend.ui.component;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteProvider;
-import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
+ * A facility class to retrieve templates.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class TemplateHelper
   {
     @Nonnull
     private final Object owner;
 
-    @Inject
-    private Provider<SiteProvider> siteProvider;
+    @Nonnull
+    private final Supplier<Site> site;
 
     /*******************************************************************************************************************
      *
+     * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieve through the
+     * {@code PROPERTY_TEMPLATE} of the {@code Content}.
      *
+     * @param       contentRelativePath     the path of the {@code Content}
+     * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getTemplate1 (final @Nonnull ResourceProperties viewProperties)
+    public Optional<String> getTemplate (final @Nonnull String contentRelativePath)
       {
-        try
-          {
-            final Site site = siteProvider.get().getSite();
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE).orElseThrow(NotFoundException::new); // FIXME
-            final Content content = site.find(Content).withRelativePath(templateRelativePath).result();
-            final ResourceProperties templateProperties = content.getProperties();
-            return templateProperties.getProperty(PROPERTY_TEMPLATE).orElse("$content$");
-          }
-        catch (NotFoundException e)
-          {
-            return "$content$";
-          }
+        return site.get().find(Content).withRelativePath(contentRelativePath)
+                                       .optionalResult()
+                                       .flatMap(content -> content.getProperty(PROPERTY_TEMPLATE));
       }
 
     /*******************************************************************************************************************
      *
+     * Gets an embedded, default template with the given name. The template file should be in the classpath, in the same
+     * package as the owner class.
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Optional<String> getTemplate2 (final @Nonnull ResourceProperties viewProperties)
-      {
-        try
-          {
-            final Site site = siteProvider.get().getSite();
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            return template.getProperty(PROPERTY_TEMPLATE);
-          }
-        catch (NotFoundException e)
-          {
-            // ok, use the default template
-            return Optional.empty();
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
+     * @param       fileName            the name of the file
+     * @return                          the template contents
+     * @throws      RuntimeException    if the template can't be loaded
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<String> getTemplate4 (final @Nonnull ResourceProperties viewProperties)
-      {
-        // First search the template in a path, which could be useful for retrieving from a library; if not
-        // found, a property with the contents is searched.
-        try
-          {
-            final Site site = siteProvider.get().getSite();
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            return template.getProperty(PROPERTY_TEMPLATE);
-          }
-        catch (NotFoundException e)
-          {
-            // ok, use the default template
-            return Optional.empty();
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Optional<String> getTemplate5 (final @Nonnull ResourceProperties viewProperties)
-      {
-        try
-          {
-            final Site site = siteProvider.get().getSite();
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            return template.getProperty(PROPERTY_TEMPLATE);
-          }
-        catch (NotFoundException e)
-          {
-//            log.warn("Cannot find custom template, using default ({})", e.toString());
-            return Optional.empty();
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String getTemplate3 (final @Nonnull ResourceProperties viewProperties,
-                                final @Nonnull Key<String> templateName)
-      throws IOException
-      {
-        try
-          {
-            final Site site = siteProvider.get().getSite();
-            final String templateRelativePath = viewProperties.getProperty(templateName).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content).withRelativePath(templateRelativePath).result();
-            return template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new); // FIXME
-          }
-        catch (NotFoundException e)
-          {
-            return loadDefaultTemplate(templateName.stringValue().replaceAll("Path$", "") + ".txt");
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public String loadDefaultTemplate (final @Nonnull String templateName)
-      throws IOException
+    public String getEmbeddedTemplate (final @Nonnull String fileName)
       {
         final String packagePath = owner.getClass().getPackage().getName().replace('.', '/');
-        final Resource resource = new ClassPathResource("/" + packagePath + "/" + templateName);
-        final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
-        final char[] buffer = new char[(int)resource.contentLength()];
-        r.read(buffer);
-        return new String(buffer);
+        final Resource resource = new ClassPathResource("/" + packagePath + "/" + fileName);
+
+        try (final Reader r = new InputStreamReader(resource.getInputStream()))
+          {
+            final char[] buffer = new char[(int)resource.contentLength()];
+            r.read(buffer);
+            return new String(buffer);
+          }
+        catch (IOException e)
+          {
+            throw new RuntimeException("Missing resource: " + fileName, e);
+          }
       }
   }

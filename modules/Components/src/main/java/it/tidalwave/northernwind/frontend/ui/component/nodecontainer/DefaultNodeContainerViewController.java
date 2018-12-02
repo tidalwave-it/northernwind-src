@@ -41,6 +41,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -78,13 +79,13 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull
+    @Nonnull @Getter
     private final Site site;
 
     @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
-    private final TemplateHelper templateHelper = new TemplateHelper(this);
+    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     /*******************************************************************************************************************
      *
@@ -98,7 +99,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         final ResourceProperties viewProperties = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
 
-        templateHelper.getTemplate5(viewProperties).ifPresent(view::setTemplate);
+        viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
+                                                          .ifPresent(view::setTemplate);
+
         view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
         view.addAttribute("titlePrefix",      viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
         view.addAttribute("description",      viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));

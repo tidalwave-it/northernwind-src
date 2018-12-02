@@ -110,7 +110,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
               }
           };
 
-        galleryAdapter = new BluetteGalleryAdapter(context); // FIXME: get implementation from configuration
+        galleryAdapter = new BluetteGalleryAdapter(site, context); // FIXME: get implementation from configuration
       }
 
     /*******************************************************************************************************************

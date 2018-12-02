@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -58,10 +59,10 @@ public class DefaultMenuViewController implements MenuViewController
     @Nonnull
     protected final SiteNode siteNode;
 
-    @Nonnull
+    @Nonnull @Getter
     private final Site site;
 
-    private final TemplateHelper templateHelper = new TemplateHelper(this);
+    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     /*******************************************************************************************************************
      *
@@ -73,7 +74,8 @@ public class DefaultMenuViewController implements MenuViewController
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);
-        templateHelper.getTemplate2(viewProperties).ifPresent(view::setTemplate);
+        viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
+                                                          .ifPresent(view::setTemplate);
 
         viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList())
                 .stream()

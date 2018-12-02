@@ -42,6 +42,7 @@ import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -60,10 +61,10 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull
+    @Nonnull @Getter
     private final Site site;
 
-    private final TemplateHelper templateHelper = new TemplateHelper(this);
+    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     /*******************************************************************************************************************
      *
@@ -75,8 +76,9 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        final String template = templateHelper.getTemplate1(viewProperties);
-
+        final String template = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE)
+                                              .flatMap(templateHelper::getTemplate)
+                                              .orElse("$content$");
         log.debug(">>>> template: {}", template);
 
         final String html = viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())
