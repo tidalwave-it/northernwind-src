@@ -163,7 +163,7 @@ public class DefaultResourceProperties implements ResourceProperties
           }
         catch (NotFoundException | IOException e)
           {
-            log.info("", e);
+            log.trace("", e);
             return Optional.empty();
           }
       }

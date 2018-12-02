@@ -33,12 +33,9 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.testng.annotations.BeforeMethod;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -82,8 +79,8 @@ public class NorthernWindTestSupport
 
         when(siteProvider.getSite()).thenReturn(site);
 
-        when(site.find(eq(Content))).thenReturn(new MockContentSiteFinder());
-        when(site.find(eq(SiteNode))).thenReturn(new MockSiteNodeSiteFinder());
+        MockContentSiteFinder.registerTo(site);
+        MockSiteNodeSiteFinder.registerTo(site);
         when(site.createLink(any(ResourcePath.class))).thenAnswer(
                 invocation -> "/LINK" + ((ResourcePath)invocation.getArguments()[0]).asString());
 //                return ((ResourcePath)invocation.getArguments()[0]).prepend("LINK").asString();
