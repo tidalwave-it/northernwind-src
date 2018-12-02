@@ -31,12 +31,16 @@ import java.util.Arrays;
 import java.util.List;
 import it.tidalwave.util.Finder8Support;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import static org.mockito.Mockito.*;
+import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 
 /***********************************************************************************************************************
+ *
+ * TODO: copy the implementation of {@link MockContentSiteFinder}.
  *
  * @author  Fabrizio Giudici
  *
@@ -51,7 +55,12 @@ public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<
 
     private final String relativeUri;
 
-    public MockSiteNodeSiteFinder()
+    public static void registerTo (final @Nonnull Site site)
+      {
+        when(site.find(eq(SiteNode))).thenReturn(new MockSiteNodeSiteFinder());
+      }
+
+    private MockSiteNodeSiteFinder()
       {
         this.relativePath = null;
         this.relativeUri = null;

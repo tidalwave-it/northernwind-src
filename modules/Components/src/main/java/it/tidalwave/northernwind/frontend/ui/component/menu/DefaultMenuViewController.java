@@ -30,16 +30,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -57,8 +57,10 @@ public class DefaultMenuViewController implements MenuViewController
     @Nonnull
     protected final SiteNode siteNode;
 
-    @Nonnull
+    @Nonnull @Getter
     private final Site site;
+
+    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     /*******************************************************************************************************************
      *
@@ -70,23 +72,13 @@ public class DefaultMenuViewController implements MenuViewController
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);
-
-        try
-          {
-            final String templateRelativePath = viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).orElseThrow(NotFoundException::new); // FIXME
-            final Content template = site.find(Content.class).withRelativePath(templateRelativePath).result();
-            view.setTemplate(template.getProperty(PROPERTY_TEMPLATE).orElseThrow(NotFoundException::new)); // FIXME
-          }
-        catch (NotFoundException e)
-          {
-            // ok, use the default template
-          }
+        viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
+                                                          .ifPresent(view::setTemplate);
 
         viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList())
                 .stream()
                 .flatMap(path -> site.find(SiteNode).withRelativePath(path).stream())
-                .forEach(node -> view.addLink(node.getProperty(PROPERTY_NAVIGATION_LABEL)
-                                                                  .orElse("no nav. label"),
+                .forEach(node -> view.addLink(node.getProperty(PROPERTY_NAVIGATION_LABEL).orElse("no nav. label"), // FIXME
                                               site.createLink(node.getRelativeUri())));
       }
   }

@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
-import java.io.IOException;
 import org.stringtemplate.v4.ST;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
@@ -58,6 +57,12 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
     private static final Key<String> PROPERTY_COPYRIGHT = new Key<>("copyright");
 
+    private static final Key<String> PROPERTY_BLUETTE_TEMPLATE_PATH = new Key<>("bluettePath");
+
+    private static final Key<String> PROPERTY_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteFallbackPath");
+
+    private static final Key<String> PROPERTY_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteLightboxFallbackPath");
+
     @Nonnull
     private final GalleryAdapterContext context;
 
@@ -77,13 +82,14 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      *
      ******************************************************************************************************************/
-    public BluetteGalleryAdapter (final @Nonnull GalleryAdapterContext context)
-      throws IOException
+    public BluetteGalleryAdapter (final @Nonnull Site site, final @Nonnull GalleryAdapterContext context)
       {
+        super(site);
         this.context = context;
-        galleryTemplate = loadTemplate(context, "bluette");
-        fallbackTemplate = loadTemplate(context, "bluetteFallback");
-        lightboxFallbackTemplate = loadTemplate(context, "bluetteLightboxFallback");
+
+        galleryTemplate          = loadTemplate(context, PROPERTY_BLUETTE_TEMPLATE_PATH, "bluette.txt");
+        fallbackTemplate         = loadTemplate(context, PROPERTY_BLUETTE_FALLBACK_TEMPLATE_PATH, "bluetteFallback.txt");
+        lightboxFallbackTemplate = loadTemplate(context, PROPERTY_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH, "bluetteLightboxFallback.txt");
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
         copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT).orElse("");
       }

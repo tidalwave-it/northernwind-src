@@ -102,7 +102,7 @@ public interface ResourceProperties extends As, Identifiable
             public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
               throws NotFoundException, IOException
               {
-                throw new NotFoundException();
+                throw new NotFoundException(key.stringValue());
               }
           };
 

@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.Properties;
+import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
@@ -107,7 +108,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
               }
           };
 
-        galleryAdapter = new BluetteGalleryAdapter(context); // FIXME: get implementation from configuration
+        galleryAdapter = new BluetteGalleryAdapter(site, context); // FIXME: get implementation from configuration
       }
 
     /*******************************************************************************************************************
