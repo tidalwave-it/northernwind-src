@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -36,7 +35,6 @@ import it.tidalwave.util.spi.ExtendedFinderSupport;
  * A specialization of {@link Finder} for {@link Layout}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface LayoutFinder extends ExtendedFinderSupport<Layout, LayoutFinder>

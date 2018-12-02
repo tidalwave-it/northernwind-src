@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -36,7 +35,6 @@ import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
  * {@code LinkPostProcessor} or {@code DefaultSite} fails injection.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class VoidLinkPostProcessor implements LinkPostProcessor

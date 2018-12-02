@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id$
  *
  * *********************************************************************************************************************
  * #L%
@@ -48,7 +47,6 @@ import javax.servlet.ServletContextListener;
  * the {@link ServletContext} as attributes.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class ExternalConfigurationServletContextListener implements ServletContextListener

@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: 51048f332460f3e367847d04a3eb5d08178bfa79 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -61,7 +60,6 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
  * A node of the site, mapped to a given URL.
  *
  * @author  Fabrizio Giudici
- * @version $Id: 51048f332460f3e367847d04a3eb5d08178bfa79 $
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString(callSuper = false, of = "relativeUri")

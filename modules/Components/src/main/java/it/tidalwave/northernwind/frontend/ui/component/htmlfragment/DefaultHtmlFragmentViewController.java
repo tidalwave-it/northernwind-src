@@ -20,7 +20,6 @@
  *
  * *********************************************************************************************************************
  *
- * $Id: a1591e56997937c633fba05105d521612d15b528 $
  *
  * *********************************************************************************************************************
  * #L%
@@ -45,7 +44,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * A default implementation of {@link HtmlFragmentViewController}.
  *
  * @author  Fabrizio Giudici
- * @version $Id: a1591e56997937c633fba05105d521612d15b528 $
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Configurable @Slf4j
