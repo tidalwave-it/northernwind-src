@@ -46,8 +46,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
@@ -86,6 +85,8 @@ public class MockModelFactory extends ModelFactorySupport
     public Content build (final @Nonnull Content.Builder builder)
       {
         final Content content = mock(Content.class);
+        final ResourceProperties properties = createMockProperties();
+        when(content.getProperties()).thenReturn(properties);
         when(content.getProperty(any())).thenCallRealMethod();
         final String path = builder.getFolder().getPath().asString();
         log.trace(">>>> creating Content for {}", path);
@@ -124,11 +125,13 @@ public class MockModelFactory extends ModelFactorySupport
         log.trace(">>>> creating SiteNode for {}", path);
         final SiteNode siteNode = mock(SiteNode.class);
         when(siteNode.getProperty(any())).thenCallRealMethod();
+        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
+        when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
-        final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
-//        when(properties.getProperty(eq(SiteNode.PROPERTY_MANAGES_PATH_PARAMS))).thenReturn(Optional.empty());
+        final ResourceProperties properties = createMockProperties();
+        when(siteNode.getProperties()).thenReturn(properties);
 
+        // FIXME: drop this - instead find the required SiteNode and stub its properties; see comments of MockContentSiteFinder
         for (final Map.Entry<String, String> e : resourceProperties.entrySet())
           {
             if (e.getKey().startsWith(path + "."))
@@ -140,10 +143,14 @@ public class MockModelFactory extends ModelFactorySupport
               }
           }
 
-        when(siteNode.getProperties()).thenReturn(properties);
-        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
-        when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
-
         return siteNode;
+      }
+
+    @Nonnull
+    private ResourceProperties createMockProperties()
+      {
+        final ResourceProperties properties = mock(ResourceProperties.class);
+        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
+        return properties;
       }
   }

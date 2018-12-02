@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.time.ZonedDateTime;
-import java.io.IOException;
 import com.sun.syndication.feed.rss.Channel;
 import com.sun.syndication.feed.rss.Content;
 import com.sun.syndication.feed.rss.Guid;
@@ -44,7 +43,6 @@ import com.sun.syndication.io.WireFeedOutput;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestContext;
-import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -68,12 +66,6 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     @Nonnull
     private final RssFeedView view;
 
-    @Nonnull
-    private final SiteNode siteNode;
-
-    @Nonnull
-    private final Site site;
-
     private final List<Item> items = new ArrayList<>();
 
     private final String linkBase;
@@ -85,15 +77,11 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
                                          final @Nonnull SiteNode siteNode,
                                          final @Nonnull Site site,
-                                         final @Nonnull RequestLocaleManager requestLocaleManager,
                                          final @Nonnull RequestHolder requestHolder,
                                          final @Nonnull RequestContext requestContext)
-      throws NotFoundException, IOException
       {
         super(view, siteNode, site, requestHolder, requestContext);
         this.view = view;
-        this.siteNode = siteNode;
-        this.site = site;
         feed = new Channel("rss_2.0");
         properties = siteNode.getPropertyGroup(view.getId());
         linkBase = properties.getProperty(PROPERTY_LINK).orElse("");
@@ -105,7 +93,6 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
-      throws IOException, NotFoundException
       {
         final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
@@ -149,7 +136,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
       }
 
     @Override
-    protected void addReference (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+    protected void addLinkToPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
       {
       }
 
@@ -160,7 +147,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     @Override
     protected void render()
-      throws IllegalArgumentException, FeedException, NotFoundException, IOException
+      throws FeedException
       {
         feed.setGenerator("NorthernWind v" + siteProvider.get().getVersionString());
         feed.setItems(items);
