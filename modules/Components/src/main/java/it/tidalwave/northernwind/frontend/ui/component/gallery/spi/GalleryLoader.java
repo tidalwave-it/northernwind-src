@@ -20,7 +20,6 @@
  * 
  * *********************************************************************************************************************
  * 
- * $Id$
  * 
  * *********************************************************************************************************************
  * #L%
@@ -37,7 +36,6 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewContro
  * Implementations of this interface are capable to load the list of items of the gallery from different formats.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface GalleryLoader

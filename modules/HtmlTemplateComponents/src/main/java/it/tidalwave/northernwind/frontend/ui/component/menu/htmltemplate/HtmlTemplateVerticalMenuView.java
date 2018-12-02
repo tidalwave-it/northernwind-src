@@ -20,7 +20,6 @@
  * 
  * *********************************************************************************************************************
  * 
- * $Id$
  * 
  * *********************************************************************************************************************
  * #L%
@@ -41,7 +40,6 @@ import lombok.Getter;
  * An HtmlTemplate implementation of {@link MenuView}, using an horizontal layout.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/VerticalMenu/#v1.0", 
