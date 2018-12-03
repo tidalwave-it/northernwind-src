@@ -85,35 +85,35 @@ public class DefaultBlogViewControllerTest
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
-        public UnderTest (BlogView view,
-                          SiteNode siteNode,
-                          Site site,
-                          RequestHolder requestHolder,
-                          RequestContext requestContext)
+        public UnderTest (final @Nonnull BlogView view,
+                          final @Nonnull SiteNode siteNode,
+                          final @Nonnull Site site,
+                          final @Nonnull RequestHolder requestHolder,
+                          final @Nonnull RequestContext requestContext)
           {
             super(view, siteNode, site, requestHolder, requestContext);
           }
 
         @Override
-        protected void addFullPost (Content post)
+        protected void addFullPost (final @Nonnull Content post)
           {
             fullPosts.add(post);
           }
 
         @Override
-        protected void addLeadInPost (Content post)
+        protected void addLeadInPost (final @Nonnull Content post)
           {
             leadInPosts.add(post);
           }
 
         @Override
-        protected void addLinkToPost (Content post)
+        protected void addLinkToPost (final @Nonnull Content post)
           {
             linkedPosts.add(post);
           }
 
         @Override
-        protected void addTagCloud (Collection<TagAndCount> tagsAndCount)
+        protected void addTagCloud (final @Nonnull Collection<TagAndCount> tagsAndCount)
           {
             this.tagsAndCount.addAll(tagsAndCount);
           }
