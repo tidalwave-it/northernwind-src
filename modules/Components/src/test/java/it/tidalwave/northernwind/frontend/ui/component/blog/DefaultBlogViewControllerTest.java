@@ -253,7 +253,7 @@ public class DefaultBlogViewControllerTest
 
         final List<TagAndCount> actualTacs = underTest.tagsAndCount
                             .stream()
-                            .sorted(comparing(TagAndCount::getCount).reversed())
+                            .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
         actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
 
@@ -262,8 +262,8 @@ public class DefaultBlogViewControllerTest
             new TagAndCount("tag9",  57, "2"),
             new TagAndCount("tag1",  54, "3"),
             new TagAndCount("tag10", 52, "4"),
-            new TagAndCount("tag7",  52, "4"),
             new TagAndCount("tag5",  52, "4"),
+            new TagAndCount("tag7",  52, "4"),
             new TagAndCount("tag2",  48, "5"),
             new TagAndCount("tag4",  47, "6"),
             new TagAndCount("tag3",  44, "7"),

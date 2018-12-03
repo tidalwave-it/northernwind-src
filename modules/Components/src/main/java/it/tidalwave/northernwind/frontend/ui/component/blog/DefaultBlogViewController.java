@@ -59,6 +59,7 @@ import lombok.experimental.Wither;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
@@ -94,7 +95,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               {
                 throw new IllegalArgumentException("Mismatching " + this + " vs " + other);
               }
-            
+
             return new TagAndCount(tag, this.count + other.count, "");
           }
 
@@ -117,9 +118,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         return dateTime2.compareTo(dateTime1);
       };
-
-    private static final Comparator<TagAndCount> TAG_COUNT_COMPARATOR =
-        (tac1, tac2) -> (int)Math.signum(tac2.count - tac1.count);
 
     @Nonnull
     protected final BlogView view;
@@ -244,7 +242,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 .stream()
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
-                .values();
+                .values()
+                .stream()
+                .sorted(comparing(TagAndCount::getTag))
+                .collect(toList());
         addTagCloud(withRanks(tagsAndCount));
       }
 
