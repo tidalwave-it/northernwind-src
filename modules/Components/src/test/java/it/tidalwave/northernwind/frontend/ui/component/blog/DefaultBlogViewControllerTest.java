@@ -182,7 +182,7 @@ public class DefaultBlogViewControllerTest
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
 
         tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
-        dates = createMockDates(100);
+        dates = createMockDateTimes(100);
         posts = createMockPosts(100, new ArrayList<>(dates), tags);
 
         final List<String> postFolderRelativePaths = Arrays.asList("/blog");
@@ -271,12 +271,19 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
+     * Creates the given number of mock dates and times, spanned in the decade 1/1/2018 - 31/12/2028.
+     *
+     * @param       count       the count of dates
+     * @return                  the dates
+     *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<ZonedDateTime> createMockDates (final @Nonnegative int count)
+    private static List<ZonedDateTime> createMockDateTimes (final @Nonnegative int count)
       {
         final ZonedDateTime base = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"));
-        final List<ZonedDateTime> dates = new Random(23).ints(count, 0, 10 * 365 * 24 * 60).mapToObj(m -> base.plusMinutes(m)).collect(toList());
+        final List<ZonedDateTime> dates = new Random(23).ints(count, 0, 10 * 365 * 24 * 60)
+                                                        .mapToObj(base::plusMinutes)
+                                                        .collect(toList());
         final ZonedDateTime max = dates.stream().max(ZonedDateTime::compareTo).get();
         final ZonedDateTime min = dates.stream().min(ZonedDateTime::compareTo).get();
         assert Duration.between(min, max).getSeconds() > 9 * 365 * 24 * 60 : "No timespan";
@@ -285,10 +292,26 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
+     * Create the given number of mock {@link Content} instances represeting blog posts.
+     * Each one is assigned:
+     *
+     * <ul>
+     * <li>a {@code PROPERTY_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
+     * <li>a {@code PROPERTY_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
+     * <li>a set of tags taken from the given collection, each one having 50% of chances of being set.</li>
+     * </ul>
+     *
+     * All used random sequences are reproducible for the sake of test assertions.
+     *
+     * @param       count       the required number of posts
+     * @param       dateTimes   a collection of datetimes used as the publishing date of each post
+     * @param       tags        a collection of tags that are randomly assigned to posts
+     * @return                  the mock posts
+     *
      ******************************************************************************************************************/
     @Nonnull
     private static List<Content> createMockPosts (final @Nonnegative int count,
-                                                  final @Nonnull List<ZonedDateTime> dates,
+                                                  final @Nonnull List<ZonedDateTime> dateTimes,
                                                   final @Nonnull List<String> tags)
       {
         final List<Content> posts = new ArrayList<>();
@@ -296,14 +319,14 @@ public class DefaultBlogViewControllerTest
 
         for (int i = 0; i< count; i++)
           {
-            final ZonedDateTime date = dates.remove(0);
+            final ZonedDateTime dateTime = dateTimes.remove(0);
             final Content post = mock(Content.class);
             final ResourceProperties properties = createMockProperties();
             when(post.getProperties()).thenReturn(properties);
             when(post.getProperty(any(Key.class))).thenCallRealMethod();
-            when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(date)));
-            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("title " + date));
-            when(post.toString()).thenReturn(String.format("Content(%3d) - %s", i, ISO_ZONED_DATE_TIME.format(date)));
+            when(post.toString()).thenReturn(String.format("Content(%3d) - %s", i, ISO_ZONED_DATE_TIME.format(dateTime)));
+            when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
+            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("Title #" + i));
 
             final List<String> theseTags = new ArrayList<>();
 
