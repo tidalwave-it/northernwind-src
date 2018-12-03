@@ -34,9 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -62,6 +60,8 @@ import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import static lombok.AccessLevel.PRIVATE;
+import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -71,12 +71,26 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 @Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
-    @RequiredArgsConstructor @Getter @ToString
+    @AllArgsConstructor(access = PRIVATE) @Getter @ToString
     protected static class TagAndCount
       {
         public final String tag;
-        public int count;
-        public String rank = "";
+        public final int count;
+        public String rank; // FIXME: final
+
+        public TagAndCount (final @Nonnull String tag)
+          {
+            this.tag   = tag;
+            this.count = 1;
+            this.rank  = "";
+          }
+
+        @Nonnull
+        public TagAndCount reduced (final @Nonnull TagAndCount other)
+          {
+            assert this.tag.equals(other.tag);
+            return new TagAndCount(tag, this.count + other.count, "");
+          }
       }
 
     public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
@@ -230,15 +244,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private void generateTagCloud()
       throws HttpStatusException
       {
-        final Map<String, TagAndCount> tagAndCountMapByTag = new TreeMap<>();
-
-        findAllPosts(getViewProperties())
+        final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
-                // FIXME: this is not functional - should rather use reduce
-                .forEach(tag -> tagAndCountMapByTag.computeIfAbsent(tag, TagAndCount::new).count++);
-
-        final Collection<TagAndCount> tagsAndCount = tagAndCountMapByTag.values();
+                .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
+                .values();
         computeRanks(tagsAndCount);
         addTagCloud(tagsAndCount);
       }
