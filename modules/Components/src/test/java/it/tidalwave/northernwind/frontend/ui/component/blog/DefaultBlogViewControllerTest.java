@@ -212,16 +212,18 @@ public class DefaultBlogViewControllerTest
         final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         allPosts.forEach(post -> log.info(">>>> {}", post));
 
-        assertThat("full posts", underTest.fullPosts.size(), is(maxFullItems));
+        assertThat("full posts",   underTest.fullPosts.size(),   is(maxFullItems));
         assertThat("leadIn posts", underTest.leadInPosts.size(), is(maxLeadinItems));
-        assertThat("all posts", allPosts.size(), is(maxItems));
+        assertThat("all posts",    allPosts.size(),              is(maxItems));
 
-        final List<ZonedDateTime> publishingDates = allPosts.stream()
-                                                            .map(post -> post.getProperties().getDateTimeProperty(PROPERTY_PUBLISHING_DATE).get())
-                                                            .collect(toList());
-        final List<ZonedDateTime> sorted = publishingDates.stream()
-                                                          .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
-                                                          .collect(toList());
+        final List<ZonedDateTime> publishingDates = allPosts
+                .stream()
+                .map(post -> post.getProperties().getDateTimeProperty(PROPERTY_PUBLISHING_DATE).get())
+                .collect(toList());
+        final List<ZonedDateTime> sorted = publishingDates
+                .stream()
+                .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
+                .collect(toList());
         assertThat("Improperly sorted", publishingDates, is(sorted));
 
         assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
@@ -242,9 +244,9 @@ public class DefaultBlogViewControllerTest
         underTest.initialize();
         // then
         final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
-        assertThat("full posts", underTest.fullPosts.size(), is(0));      // TODO: should be: method not called
+        assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest.leadInPosts.size(), is(0));  // TODO: should be: method not called
-        assertThat("all posts", allPosts.size(), is(0)); // TODO: should be: method not called
+        assertThat("all posts",    allPosts.size(), is(0));               // TODO: should be: method not called
 
         final List<TagAndCount> actualTacs = underTest.tagsAndCount
                             .stream()
