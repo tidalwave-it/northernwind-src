@@ -51,6 +51,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -61,7 +62,6 @@ import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static lombok.AccessLevel.PRIVATE;
-import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -93,20 +93,20 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       }
 
-    public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+    protected static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
     protected static final String TAG_PREFIX = "tag/";
 
-    private final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
+    private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
       {
         final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         return dateTime2.compareTo(dateTime1);
       };
 
-    private final Comparator<TagAndCount> TAG_COUNT_COMPARATOR =
+    private static final Comparator<TagAndCount> TAG_COUNT_COMPARATOR =
         (tac1, tac2) -> (int)Math.signum(tac2.count - tac1.count);
 
     @Nonnull
@@ -242,7 +242,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     private void generateTagCloud()
-      throws HttpStatusException
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
