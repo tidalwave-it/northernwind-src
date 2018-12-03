@@ -60,8 +60,9 @@ import static java.time.format.DateTimeFormatter.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
 import java.time.Duration;
-import static java.time.temporal.ChronoField.YEAR;
+import java.util.stream.IntStream;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,6 +82,8 @@ public class DefaultBlogViewControllerTest
         public final List<Content> leadInPosts = new ArrayList<>();
 
         public final List<Content> linkedPosts = new ArrayList<>();
+
+        public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
         public UnderTest (BlogView view,
                           SiteNode siteNode,
@@ -112,6 +115,7 @@ public class DefaultBlogViewControllerTest
         @Override
         protected void addTagCloud (Collection<TagAndCount> tagsAndCount)
           {
+            this.tagsAndCount.addAll(tagsAndCount);
           }
 
         @Override
@@ -135,6 +139,8 @@ public class DefaultBlogViewControllerTest
     private List<Content> posts;
 
     private List<ZonedDateTime> dates;
+
+    private List<String> tags;
 
     /*******************************************************************************************************************
      *
@@ -175,8 +181,9 @@ public class DefaultBlogViewControllerTest
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
 
+        tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
         dates = createMockDates(100);
-        posts = createMockPosts(100, new ArrayList<>(dates));
+        posts = createMockPosts(100, new ArrayList<>(dates), tags);
 
         final List<String> postFolderRelativePaths = Arrays.asList("/blog");
         final Content blogFolder1 = site.find(Content).withRelativePath("/blog").result();
@@ -220,6 +227,52 @@ public class DefaultBlogViewControllerTest
                                                           .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
                                                           .collect(toList());
         assertThat("Improperly sorted", publishingDates, is(sorted));
+
+        assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
+      }
+
+    /*******************************************************************************************************************
+     *
+     * TODO: should be parameterised
+     * 
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_render_tag_cloud()
+      throws Exception
+      {
+        // given
+        when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
+        // when
+        underTest.initialize();
+        // then
+        assertThat("full posts", underTest.fullPosts.size(), is(0));      // TODO: should be: method not called
+        assertThat("leadIn posts", underTest.leadInPosts.size(), is(0));  // TODO: should be: method not called
+
+        final List<Content> allPosts = new ArrayList<>();
+        allPosts.addAll(underTest.fullPosts);
+        allPosts.addAll(underTest.leadInPosts);
+        allPosts.addAll(underTest.linkedPosts);
+        assertThat("all posts", allPosts.size(), is(0)); // TODO: should be: method not called
+
+        final List<TagAndCount> actualTacs = underTest.tagsAndCount
+                            .stream()
+                            .sorted(comparing(DefaultBlogViewController.TagAndCount::getCount).reversed())
+                            .collect(toList());
+        actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
+
+        final List<TagAndCount> expectedTacs = Arrays.asList(
+            new TagAndCount("tag8",  58, "1"),
+            new TagAndCount("tag9",  57, "2"),
+            new TagAndCount("tag1",  54, "3"),
+            new TagAndCount("tag10", 52, "4"),
+            new TagAndCount("tag7",  52, "5"), // FIXME: should be 4
+            new TagAndCount("tag5",  52, "5"), // FIXME: should be 4
+            new TagAndCount("tag2",  48, "5"),
+            new TagAndCount("tag4",  47, "6"),
+            new TagAndCount("tag3",  44, "7"),
+            new TagAndCount("tag6",  41, "8"));
+
+        assertThat(actualTacs, is(expectedTacs));
       }
 
     /*******************************************************************************************************************
@@ -241,9 +294,11 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     @Nonnull
     private static List<Content> createMockPosts (final @Nonnegative int count,
-                                                  final @Nonnull List<ZonedDateTime> dates)
+                                                  final @Nonnull List<ZonedDateTime> dates,
+                                                  final @Nonnull List<String> tags)
       {
         final List<Content> posts = new ArrayList<>();
+        final Random random = new Random(45);
 
         for (int i = 0; i< count; i++)
           {
@@ -255,7 +310,24 @@ public class DefaultBlogViewControllerTest
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(date)));
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("title " + date));
             when(post.toString()).thenReturn(String.format("Content(%3d) - %s", i, ISO_ZONED_DATE_TIME.format(date)));
+
+            final List<String> theseTags = new ArrayList<>();
+
+            for (String tag : tags)
+              {
+                if (random.nextDouble() > 0.5)
+                  {
+                    theseTags.add(tag);
+                  }
+              }
+
+            if (!theseTags.isEmpty())
+              {
+                when(properties.getProperty(PROPERTY_TAGS)).thenReturn(Optional.of(theseTags.stream().collect(joining(","))));
+              }
+
             posts.add(post);
+            log.info(">>>> post {} with tags {}", post, theseTags);
           }
 
         return posts;

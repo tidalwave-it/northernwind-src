@@ -61,7 +61,8 @@ import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
-import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PACKAGE;
+import lombok.EqualsAndHashCode;
 
 /***********************************************************************************************************************
  *
@@ -71,7 +72,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
-    @AllArgsConstructor(access = PRIVATE) @Getter @ToString
+    @AllArgsConstructor(access = PACKAGE) @Getter @EqualsAndHashCode
     protected static class TagAndCount
       {
         public final String tag;
@@ -90,6 +91,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             assert this.tag.equals(other.tag);
             return new TagAndCount(tag, this.count + other.count, "");
+          }
+
+        @Override @Nonnull
+        public String toString()
+          {
+            return String.format("TagAndCount(%s, %d, %s)", tag, count, rank);
           }
       }
 
