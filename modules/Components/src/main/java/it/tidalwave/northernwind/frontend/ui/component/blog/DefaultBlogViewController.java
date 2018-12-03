@@ -210,30 +210,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
-        int currentItem = 0;
+        final List<Content> posts = findPostsInReverseDateOrder(viewProperties)
+                .stream()
+                .filter(post -> post.getProperty(PROPERTY_TITLE).isPresent())
+                .collect(toList());
 
-        for (final Content post : findPostsInReverseDateOrder(viewProperties))
-          {
-            log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-            // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
-            if (post.getProperty(PROPERTY_TITLE).isPresent())
-              {
-                if (currentItem < maxFullItems)
-                  {
-                    addFullPost(post);
-                  }
-                else if (currentItem < maxFullItems + maxLeadinItems)
-                  {
-                    addLeadInPost(post);
-                  }
-                else if (currentItem < maxItems)
-                  {
-                    addLinkToPost(post);
-                  }
-
-                currentItem++;
-              }
-          }
+        final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
+        split.get(0).forEach(this::addFullPost);
+        split.get(1).forEach(this::addLeadInPost);
+        split.get(2).forEach(this::addLinkToPost);
       }
 
     /*******************************************************************************************************************
@@ -258,9 +243,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<Content> findAllPosts (final @Nonnull ResourceProperties siteNodeProperties)
+    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
       {
-        return siteNodeProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream()
+        return properties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream()
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream()
                                                                           .flatMap(folder -> folder.findChildren().stream()))
                 .collect(toList());
@@ -272,12 +257,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: embed the sort by reverse date in the finder
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties)
+    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
-        final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX).orElse(false);
-        final List<Content> allPosts = findAllPosts(siteNodeProperties);
+        final boolean index = properties.getBooleanProperty(PROPERTY_INDEX).orElse(false);
+        final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
         //
         // The thing work differently in function of pathParams:
@@ -446,6 +431,34 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
         return Arrays.asList(post.getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static <T> List<T> safeSubList (final @Nonnull List<T> list, final int from, final int to)
+      {
+        final int to2 = Math.min(list.size(), to);
+        return (from >= to2) ? emptyList() : list.subList(from, to2);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static <T> List<List<T>> split (final @Nonnull List<T> list, final int ... index)
+      {
+        List<List<T>> result = new ArrayList<>();
+
+        for (int i = 0; i < index.length - 1; i++)
+          {
+            result.add(safeSubList(list, index[i], index[i + 1]));
+          }
+
+        return result;
       }
 
     /*******************************************************************************************************************
