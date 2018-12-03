@@ -187,6 +187,7 @@ public class DefaultBlogViewControllerTest
         dates = createMockDateTimes(100);
         posts = createMockPosts(100, new ArrayList<>(dates), tags);
 
+        // TODO: use multiple folders
         final List<String> postFolderRelativePaths = Arrays.asList("/blog");
         final Content blogFolder1 = site.find(Content).withRelativePath("/blog").result();
         when(blogFolder1.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(posts)));
