@@ -46,6 +46,7 @@ import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_NAVIGATION_LABEL;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewController.PROPERTY_LINKS;
 
@@ -204,16 +205,5 @@ public class DefaultMenuViewControllerTest
       {
         final ResourceProperties properties = site.find(type).withRelativePath(relativePath).result().getProperties();
         when(properties.getProperty(eq(key))).thenReturn(Optional.of(value));
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ResourceProperties createMockProperties()
-      {
-        final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
-        return properties;
       }
   }

@@ -33,9 +33,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import it.tidalwave.util.Finder8Support;
-import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -44,6 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -155,13 +154,5 @@ public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<
         when(siteNode.getProperty(any())).thenCallRealMethod();
 
         return siteNode;
-      }
-
-    @Nonnull
-    private ResourceProperties createMockProperties()
-      {
-        final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
-        return properties;
       }
   }

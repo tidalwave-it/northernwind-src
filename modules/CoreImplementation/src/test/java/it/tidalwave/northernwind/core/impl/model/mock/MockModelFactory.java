@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.io.IOException;
@@ -146,11 +147,17 @@ public class MockModelFactory extends ModelFactorySupport
         return siteNode;
       }
 
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties createMockProperties()
+    public static ResourceProperties createMockProperties()
       {
         final ResourceProperties properties = mock(ResourceProperties.class);
         when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
+        when(properties.getDateTimeProperty(any(Key.class))).thenCallRealMethod();
+        when(properties.getDateTimeProperty(any(List.class))).thenCallRealMethod();
         return properties;
       }
   }

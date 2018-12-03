@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import it.tidalwave.northernwind.util.CollectionFunctions;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.time.Duration;
@@ -58,10 +57,12 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
+import static java.time.format.DateTimeFormatter.*;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
-import static java.time.format.DateTimeFormatter.*;
+import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static org.mockito.Mockito.*;
@@ -210,7 +211,7 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
-        final List<Content> allPosts = CollectionFunctions.concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
+        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         allPosts.forEach(post -> log.info(">>>> {}", post));
 
         assertThat("full posts",   underTest.fullPosts.size(),   is(maxFullItems));
@@ -244,7 +245,7 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
-        final List<Content> allPosts = CollectionFunctions.concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
+        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest.leadInPosts.size(), is(0));  // TODO: should be: method not called
         assertThat("all posts",    allPosts.size(), is(0));               // TODO: should be: method not called
@@ -342,18 +343,5 @@ public class DefaultBlogViewControllerTest
           }
 
         return posts;
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static ResourceProperties createMockProperties()
-      {
-        final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
-        when(properties.getDateTimeProperty(any(Key.class))).thenCallRealMethod();
-        when(properties.getDateTimeProperty(any(List.class))).thenCallRealMethod();
-        return properties;
       }
   }
