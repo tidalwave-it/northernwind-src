@@ -52,17 +52,17 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
+import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
-import static lombok.AccessLevel.PACKAGE;
-import lombok.EqualsAndHashCode;
 
 /***********************************************************************************************************************
  *
@@ -438,34 +438,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
         return Arrays.asList(post.getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static <T> List<T> safeSubList (final @Nonnull List<T> list, final int from, final int to)
-      {
-        final int to2 = Math.min(list.size(), to);
-        return (from >= to2) ? emptyList() : list.subList(from, to2);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static <T> List<List<T>> split (final @Nonnull List<T> list, final int ... index)
-      {
-        List<List<T>> result = new ArrayList<>();
-
-        for (int i = 0; i < index.length - 1; i++)
-          {
-            result.add(safeSubList(list, index[i], index[i + 1]));
-          }
-
-        return result;
       }
 
     /*******************************************************************************************************************

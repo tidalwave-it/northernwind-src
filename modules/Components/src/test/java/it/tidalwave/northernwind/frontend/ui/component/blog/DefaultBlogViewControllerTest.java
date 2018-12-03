@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
+import it.tidalwave.northernwind.util.CollectionFunctions;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.time.Duration;
@@ -209,7 +210,7 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
-        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
+        final List<Content> allPosts = CollectionFunctions.concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         allPosts.forEach(post -> log.info(">>>> {}", post));
 
         assertThat("full posts",   underTest.fullPosts.size(),   is(maxFullItems));
@@ -243,7 +244,7 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
-        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
+        final List<Content> allPosts = CollectionFunctions.concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest.leadInPosts.size(), is(0));  // TODO: should be: method not called
         assertThat("all posts",    allPosts.size(), is(0));               // TODO: should be: method not called
@@ -354,21 +355,5 @@ public class DefaultBlogViewControllerTest
         when(properties.getDateTimeProperty(any(Key.class))).thenCallRealMethod();
         when(properties.getDateTimeProperty(any(List.class))).thenCallRealMethod();
         return properties;
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static <T> List<T> concat (final @Nonnull Collection<T> ... collections)
-      {
-        final List<T> result = new ArrayList<>();
-
-        for (final Collection<T> collection : collections)
-          {
-            result.addAll(collection);
-          }
-
-        return result;
       }
   }
