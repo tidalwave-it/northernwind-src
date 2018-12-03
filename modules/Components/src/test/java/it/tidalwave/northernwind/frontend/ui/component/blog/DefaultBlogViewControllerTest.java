@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.IntStream;
 import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -49,6 +51,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
@@ -60,9 +63,6 @@ import static java.time.format.DateTimeFormatter.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
-import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
-import java.time.Duration;
-import java.util.stream.IntStream;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -209,16 +209,12 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
+        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
+        allPosts.forEach(post -> log.info(">>>> {}", post));
+
         assertThat("full posts", underTest.fullPosts.size(), is(maxFullItems));
         assertThat("leadIn posts", underTest.leadInPosts.size(), is(maxLeadinItems));
-
-        final List<Content> allPosts = new ArrayList<>();
-        allPosts.addAll(underTest.fullPosts);
-        allPosts.addAll(underTest.leadInPosts);
-        allPosts.addAll(underTest.linkedPosts);
         assertThat("all posts", allPosts.size(), is(maxItems));
-
-        allPosts.forEach(post -> log.info(">>>> {}", post));
 
         final List<ZonedDateTime> publishingDates = allPosts.stream()
                                                             .map(post -> post.getProperties().getDateTimeProperty(PROPERTY_PUBLISHING_DATE).get())
@@ -234,7 +230,7 @@ public class DefaultBlogViewControllerTest
     /*******************************************************************************************************************
      *
      * TODO: should be parameterised
-     * 
+     *
      ******************************************************************************************************************/
     @Test
     public void must_properly_render_tag_cloud()
@@ -245,18 +241,14 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
+        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         assertThat("full posts", underTest.fullPosts.size(), is(0));      // TODO: should be: method not called
         assertThat("leadIn posts", underTest.leadInPosts.size(), is(0));  // TODO: should be: method not called
-
-        final List<Content> allPosts = new ArrayList<>();
-        allPosts.addAll(underTest.fullPosts);
-        allPosts.addAll(underTest.leadInPosts);
-        allPosts.addAll(underTest.linkedPosts);
         assertThat("all posts", allPosts.size(), is(0)); // TODO: should be: method not called
 
         final List<TagAndCount> actualTacs = underTest.tagsAndCount
                             .stream()
-                            .sorted(comparing(DefaultBlogViewController.TagAndCount::getCount).reversed())
+                            .sorted(comparing(TagAndCount::getCount).reversed())
                             .collect(toList());
         actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
 
@@ -344,5 +336,21 @@ public class DefaultBlogViewControllerTest
         when(properties.getDateTimeProperty(any(Key.class))).thenCallRealMethod();
         when(properties.getDateTimeProperty(any(List.class))).thenCallRealMethod();
         return properties;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static <T> List<T> concat (final @Nonnull Collection<T> ... collections)
+      {
+        final List<T> result = new ArrayList<>();
+
+        for (final Collection<T> collection : collections)
+          {
+            result.addAll(collection);
+          }
+
+        return result;
       }
   }
