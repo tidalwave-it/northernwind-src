@@ -83,8 +83,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
                 .stream()
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream())
                 .map(content -> content.getProperties())
-                .map(properties -> appendTitle(properties, "h" + titleLevel.getAndIncrement()) +
-                                   appendText(properties))
+                .map(properties -> appendTitle(properties, "h" + titleLevel.getAndIncrement()) + appendText(properties))
                 .collect(joining());
 
         final ST t = new ST(template, '$', '$').add("content", html);
