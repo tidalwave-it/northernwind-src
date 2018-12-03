@@ -48,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 
@@ -355,16 +356,5 @@ public class DefaultNodeContainerViewControllerTest
       {
         final ResourceProperties properties = site.find(type).withRelativePath(relativePath).result().getProperties();
         when(properties.getProperty(eq(key))).thenReturn(Optional.of(value));
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private ResourceProperties createMockProperties()
-      {
-        final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
-        return properties;
       }
   }

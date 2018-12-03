@@ -51,17 +51,20 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.experimental.Wither;
 import lombok.extern.slf4j.Slf4j;
+import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
+import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
-import static lombok.AccessLevel.PRIVATE;
-import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -71,43 +74,50 @@ import lombok.AllArgsConstructor;
 @Configurable @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
-    @AllArgsConstructor(access = PRIVATE) @Getter @ToString
+    @AllArgsConstructor(access = PACKAGE) @Getter @EqualsAndHashCode
     protected static class TagAndCount
       {
         public final String tag;
         public final int count;
-        public String rank; // FIXME: final
+
+        @Wither
+        public final String rank;
 
         public TagAndCount (final @Nonnull String tag)
           {
-            this.tag   = tag;
-            this.count = 1;
-            this.rank  = "";
+            this(tag, 1, "");
           }
 
         @Nonnull
         public TagAndCount reduced (final @Nonnull TagAndCount other)
           {
-            assert this.tag.equals(other.tag);
+            if (!this.tag.equals(other.tag))
+              {
+                throw new IllegalArgumentException("Mismatching " + this + " vs " + other);
+              }
+
             return new TagAndCount(tag, this.count + other.count, "");
+          }
+
+        @Override @Nonnull
+        public String toString()
+          {
+            return String.format("TagAndCount(%s, %d, %s)", tag, count, rank);
           }
       }
 
-    public static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+    protected static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
     protected static final String TAG_PREFIX = "tag/";
 
-    private final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
+    private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
       {
         final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         return dateTime2.compareTo(dateTime1);
       };
-
-    private final Comparator<TagAndCount> TAG_COUNT_COMPARATOR =
-        (tac1, tac2) -> (int)Math.signum(tac2.count - tac1.count);
 
     @Nonnull
     protected final BlogView view;
@@ -174,15 +184,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
         // called at initialization
 //        try
 //          {
-            final boolean tagCloud = getViewProperties().getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+            final ResourceProperties viewProperties = getViewProperties();
+            final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
 
             if (tagCloud)
               {
-                generateTagCloud();
+                generateTagCloud(viewProperties);
               }
             else
               {
-                generateBlogPosts();
+                generateBlogPosts(viewProperties);
               }
 
             render();
@@ -199,41 +210,25 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the blog posts.
      *
      ******************************************************************************************************************/
-    private void generateBlogPosts()
+    private void generateBlogPosts (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final ResourceProperties viewProperties = getViewProperties();
-        final int maxFullItems   = viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
-        final int maxLeadinItems = viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
-        final int maxItems       = viewProperties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
+        final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
+        final int maxLeadinItems = properties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
+        final int maxItems       = properties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
 
         log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
-        int currentItem = 0;
+        final List<Content> posts = findPostsInReverseDateOrder(properties)
+                .stream()
+                .filter(post -> post.getProperty(PROPERTY_TITLE).isPresent())
+                .collect(toList());
 
-        for (final Content post : findPostsInReverseDateOrder(viewProperties))
-          {
-            log.debug(">>>>>>> processing blog item #{}: {}", currentItem, post);
-            // Skip folders used for categories - they have no title - FIXME: use PROPERTY_FULLTEXT
-            if (post.getProperty(PROPERTY_TITLE).isPresent())
-              {
-                if (currentItem < maxFullItems)
-                  {
-                    addFullPost(post);
-                  }
-                else if (currentItem < maxFullItems + maxLeadinItems)
-                  {
-                    addLeadInPost(post);
-                  }
-                else if (currentItem < maxItems)
-                  {
-                    addLinkToPost(post);
-                  }
-
-                currentItem++;
-              }
-          }
+        final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
+        split.get(0).forEach(this::addFullPost);
+        split.get(1).forEach(this::addLeadInPost);
+        split.get(2).forEach(this::addLinkToPost);
       }
 
     /*******************************************************************************************************************
@@ -241,16 +236,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the blog posts.
      *
      ******************************************************************************************************************/
-    private void generateTagCloud()
-      throws HttpStatusException
+    private void generateTagCloud (final @Nonnull ResourceProperties properties)
       {
-        final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
+        final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
                 .stream()
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
-                .values();
-        computeRanks(tagsAndCount);
-        addTagCloud(tagsAndCount);
+                .values()
+                .stream()
+                .sorted(comparing(TagAndCount::getTag))
+                .collect(toList());
+        addTagCloud(withRanks(tagsAndCount));
       }
 
     /*******************************************************************************************************************
@@ -259,9 +255,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<Content> findAllPosts (final @Nonnull ResourceProperties siteNodeProperties)
+    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
       {
-        return siteNodeProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream()
+        return properties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream()
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream()
                                                                           .flatMap(folder -> folder.findChildren().stream()))
                 .collect(toList());
@@ -273,12 +269,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: embed the sort by reverse date in the finder
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties siteNodeProperties)
+    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
-        final boolean index = siteNodeProperties.getBooleanProperty(PROPERTY_INDEX).orElse(false);
-        final List<Content> allPosts = findAllPosts(siteNodeProperties);
+        final boolean index = properties.getBooleanProperty(PROPERTY_INDEX).orElse(false);
+        final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
         //
         // The thing work differently in function of pathParams:
@@ -410,25 +406,29 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private void computeRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
+    private List<TagAndCount> withRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
       {
-        final List<TagAndCount> tagsAndCountByCountDescending = new ArrayList<>(tagsAndCount);
-        Collections.sort(tagsAndCountByCountDescending, TAG_COUNT_COMPARATOR);
+        final List<Integer> counts = tagsAndCount.stream()
+                                                 .map(TagAndCount::getCount)
+                                                 .distinct()
+                                                 .sorted(reverseOrder())
+                                                 .collect(toList());
 
-        int rank = 1;
-        int previousCount = 0;
+        return tagsAndCount.stream()
+                           .map(tac -> tac.withRank(rankOf(tac.count, counts)))
+                           .collect(toList());
+      }
 
-        for (final TagAndCount tac : tagsAndCountByCountDescending)
-          {
-            tac.rank = (rank <= 10) ? Integer.toString(rank) : "Others";
-
-            if (previousCount != tac.count)
-              {
-                rank++;
-              }
-
-            previousCount = tac.count;
-          }
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String rankOf (final int count, final List<Integer> counts)
+      {
+        assert counts.contains(count);
+        final int rank = counts.indexOf(count) + 1;
+        return (rank <= 10) ? Integer.toString(rank) : "Others";
       }
 
     /*******************************************************************************************************************
