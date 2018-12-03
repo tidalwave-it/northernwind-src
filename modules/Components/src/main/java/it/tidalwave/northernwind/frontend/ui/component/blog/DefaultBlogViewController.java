@@ -174,15 +174,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
         // called at initialization
 //        try
 //          {
-            final boolean tagCloud = getViewProperties().getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+            final ResourceProperties viewProperties = getViewProperties();
+            final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
 
             if (tagCloud)
               {
-                generateTagCloud();
+                generateTagCloud(viewProperties);
               }
             else
               {
-                generateBlogPosts();
+                generateBlogPosts(viewProperties);
               }
 
             render();
@@ -199,18 +200,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the blog posts.
      *
      ******************************************************************************************************************/
-    private void generateBlogPosts()
+    private void generateBlogPosts (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final ResourceProperties viewProperties = getViewProperties();
-        final int maxFullItems   = viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
-        final int maxLeadinItems = viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
-        final int maxItems       = viewProperties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
+        final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
+        final int maxLeadinItems = properties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
+        final int maxItems       = properties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
 
         log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
-        final List<Content> posts = findPostsInReverseDateOrder(viewProperties)
+        final List<Content> posts = findPostsInReverseDateOrder(properties)
                 .stream()
                 .filter(post -> post.getProperty(PROPERTY_TITLE).isPresent())
                 .collect(toList());
@@ -226,9 +226,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the blog posts.
      *
      ******************************************************************************************************************/
-    private void generateTagCloud()
+    private void generateTagCloud (final @Nonnull ResourceProperties properties)
       {
-        final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
+        final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
                 .stream()
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
