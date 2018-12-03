@@ -319,32 +319,25 @@ public class DefaultBlogViewControllerTest
 
         for (int i = 0; i< count; i++)
           {
+            final String title = "Title #" + i;
             final ZonedDateTime dateTime = dateTimes.remove(0);
             final Content post = mock(Content.class);
             final ResourceProperties properties = createMockProperties();
             when(post.getProperties()).thenReturn(properties);
             when(post.getProperty(any(Key.class))).thenCallRealMethod();
-            when(post.toString()).thenReturn(String.format("Content(%3d) - %s", i, ISO_ZONED_DATE_TIME.format(dateTime)));
+            when(post.toString()).thenReturn(String.format("Content(%3d) - %s - %s", i, ISO_ZONED_DATE_TIME.format(dateTime), title));
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
-            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("Title #" + i));
+            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(title));
 
-            final List<String> theseTags = new ArrayList<>();
+            final String tagsAsString = tags.stream().filter(__ -> random.nextDouble() > 0.5).collect(joining(","));
 
-            for (String tag : tags)
+            if (!tagsAsString.equals(""))
               {
-                if (random.nextDouble() > 0.5)
-                  {
-                    theseTags.add(tag);
-                  }
-              }
-
-            if (!theseTags.isEmpty())
-              {
-                when(properties.getProperty(PROPERTY_TAGS)).thenReturn(Optional.of(theseTags.stream().collect(joining(","))));
+                when(properties.getProperty(PROPERTY_TAGS)).thenReturn(Optional.of(tagsAsString));
               }
 
             posts.add(post);
-            log.info(">>>> post {} with tags {}", post, theseTags);
+            log.info(">>>> post {} - {}", post, tagsAsString);
           }
 
         return posts;
