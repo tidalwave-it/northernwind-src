@@ -55,6 +55,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
@@ -77,19 +78,23 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         public final String tag;
         public final int count;
-        public String rank; // FIXME: final
+
+        @Wither
+        public final String rank;
 
         public TagAndCount (final @Nonnull String tag)
           {
-            this.tag   = tag;
-            this.count = 1;
-            this.rank  = "";
+            this(tag, 1, "");
           }
 
         @Nonnull
         public TagAndCount reduced (final @Nonnull TagAndCount other)
           {
-            assert this.tag.equals(other.tag);
+            if (!this.tag.equals(other.tag))
+              {
+                throw new IllegalArgumentException("Mismatching " + this + " vs " + other);
+              }
+            
             return new TagAndCount(tag, this.count + other.count, "");
           }
 
@@ -240,8 +245,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
                 .values();
-        computeRanks(tagsAndCount);
-        addTagCloud(tagsAndCount);
+        addTagCloud(withRanks(tagsAndCount));
       }
 
     /*******************************************************************************************************************
@@ -401,25 +405,29 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private void computeRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
+    private List<TagAndCount> withRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
       {
-        final List<TagAndCount> tagsAndCountByCountDescending = new ArrayList<>(tagsAndCount);
-        Collections.sort(tagsAndCountByCountDescending, TAG_COUNT_COMPARATOR);
+        final List<Integer> counts = tagsAndCount.stream()
+                                                 .map(TagAndCount::getCount)
+                                                 .distinct()
+                                                 .sorted(reverseOrder())
+                                                 .collect(toList());
 
-        int rank = 1;
-        int previousCount = 0;
+        return tagsAndCount.stream()
+                           .map(tac -> tac.withRank(rankOf(tac.count, counts)))
+                           .collect(toList());
+      }
 
-        for (final TagAndCount tac : tagsAndCountByCountDescending)
-          {
-            tac.rank = (rank <= 10) ? Integer.toString(rank) : "Others";
-
-            if (previousCount != tac.count)
-              {
-                rank++;
-              }
-
-            previousCount = tac.count;
-          }
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String rankOf (final int count, final List<Integer> counts)
+      {
+        assert counts.contains(count);
+        final int rank = counts.indexOf(count) + 1;
+        return (rank <= 10) ? Integer.toString(rank) : "Others";
       }
 
     /*******************************************************************************************************************

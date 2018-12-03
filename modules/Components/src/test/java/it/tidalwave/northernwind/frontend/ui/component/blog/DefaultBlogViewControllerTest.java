@@ -262,8 +262,8 @@ public class DefaultBlogViewControllerTest
             new TagAndCount("tag9",  57, "2"),
             new TagAndCount("tag1",  54, "3"),
             new TagAndCount("tag10", 52, "4"),
-            new TagAndCount("tag7",  52, "5"), // FIXME: should be 4
-            new TagAndCount("tag5",  52, "5"), // FIXME: should be 4
+            new TagAndCount("tag7",  52, "4"),
+            new TagAndCount("tag5",  52, "4"),
             new TagAndCount("tag2",  48, "5"),
             new TagAndCount("tag4",  47, "6"),
             new TagAndCount("tag3",  44, "7"),
