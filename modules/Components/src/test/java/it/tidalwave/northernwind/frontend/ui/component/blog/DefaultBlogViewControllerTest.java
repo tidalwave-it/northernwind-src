@@ -63,11 +63,13 @@ import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -128,6 +130,8 @@ public class DefaultBlogViewControllerTest
 
     private Site site;
 
+    private SiteNode siteNode;
+
     private BlogView view;
 
     private UnderTest underTest;
@@ -135,6 +139,8 @@ public class DefaultBlogViewControllerTest
     private ResourceProperties viewProperties;
 
     private ResourceProperties siteNodeProperties;
+
+    private Request request;
 
     private RequestHolder requestHolder;
 
@@ -166,49 +172,39 @@ public class DefaultBlogViewControllerTest
         viewProperties = createMockProperties();
         siteNodeProperties = createMockProperties();
 
-        final SiteNode siteNode = mock(SiteNode.class);
+        siteNode = mock(SiteNode.class);
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         view = mock(BlogView.class);
         when(view.getId()).thenReturn(viewId);
 
-        Request request = mock(Request.class);
-        when(request.getPathParams(same(siteNode))).thenReturn("");
-
+        request = mock(Request.class);
         requestHolder = mock(RequestHolder.class);
         when(requestHolder.get()).thenReturn(request);
 
-        RequestContext requestContext = mock(RequestContext.class);
+        final RequestContext requestContext = mock(RequestContext.class);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
-
-        tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
-        dates = createMockDateTimes(100);
-        posts = createMockPosts(100, new ArrayList<>(dates), tags);
-
-        // TODO: use multiple folders
-        final List<String> postFolderRelativePaths = Arrays.asList("/blog");
-        final Content blogFolder1 = site.find(Content).withRelativePath("/blog").result();
-        when(blogFolder1.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(posts)));
-
-        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(postFolderRelativePaths));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test
-    public void must_properly_render_posts()
+    @Test(dataProvider = "postRenderingTestData")
+    public void must_properly_render_posts (final int seed,
+                                            final int maxFullItems,
+                                            final int maxLeadinItems,
+                                            final int maxItems,
+                                            final @Nonnull String pathParams)
       throws Exception
       {
         // given
-        final int maxFullItems = 10;
-        final int maxLeadinItems = 7;
-        final int maxItems = 30;
+        createMockData(seed);
         when(viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
         underTest.initialize();
         // then
@@ -237,11 +233,13 @@ public class DefaultBlogViewControllerTest
      * TODO: should be parameterised
      *
      ******************************************************************************************************************/
-    @Test
-    public void must_properly_render_tag_cloud()
+    @Test(dataProvider = "tagCloudRenderingTestData")
+    public void must_properly_render_tag_cloud (final int seed,
+                                                final List<TagAndCount> expectedTacs)
       throws Exception
       {
         // given
+        createMockData(seed);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
         // when
         underTest.initialize();
@@ -256,20 +254,72 @@ public class DefaultBlogViewControllerTest
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
         actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
-
-        final List<TagAndCount> expectedTacs = Arrays.asList(
-            new TagAndCount("tag8",  58, "1"),
-            new TagAndCount("tag9",  57, "2"),
-            new TagAndCount("tag1",  54, "3"),
-            new TagAndCount("tag10", 52, "4"),
-            new TagAndCount("tag5",  52, "4"),
-            new TagAndCount("tag7",  52, "4"),
-            new TagAndCount("tag2",  48, "5"),
-            new TagAndCount("tag4",  47, "6"),
-            new TagAndCount("tag3",  44, "7"),
-            new TagAndCount("tag6",  41, "8"));
-
         assertThat(actualTacs, is(expectedTacs));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
+    private static Object[][] postRenderingTestData()
+      {
+        return new Object[][]
+          {
+           // seed full leadin max  pathParams
+            { 45,  10,  7,     30,  ""},
+            { 87,  10,  7,     30,  ""}
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
+    private static Object[][] tagCloudRenderingTestData()
+      {
+        return new Object[][]
+          {
+           // seed
+            { 45,  Arrays.asList(new TagAndCount("tag8",  58, "1"),
+                                 new TagAndCount("tag9",  57, "2"),
+                                 new TagAndCount("tag1",  54, "3"),
+                                 new TagAndCount("tag10", 52, "4"),
+                                 new TagAndCount("tag5",  52, "4"),
+                                 new TagAndCount("tag7",  52, "4"),
+                                 new TagAndCount("tag2",  48, "5"),
+                                 new TagAndCount("tag4",  47, "6"),
+                                 new TagAndCount("tag3",  44, "7"),
+                                 new TagAndCount("tag6",  41, "8")) },
+
+            { 87,  Arrays.asList(new TagAndCount("tag10", 55, "1"),
+                                 new TagAndCount("tag1",  53, "2"),
+                                 new TagAndCount("tag8",  52, "3"),
+                                 new TagAndCount("tag9",  52, "3"),
+                                 new TagAndCount("tag3",  48, "4"),
+                                 new TagAndCount("tag4",  46, "5"),
+                                 new TagAndCount("tag5",  46, "5"),
+                                 new TagAndCount("tag2",  44, "6"),
+                                 new TagAndCount("tag6",  43, "7"),
+                                 new TagAndCount("tag7",  43, "7")) }
+            };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void createMockData (final int seed)
+      throws NotFoundException
+      {
+        tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
+        dates = createMockDateTimes(100, seed);
+        posts = createMockPosts(100, new ArrayList<>(dates), tags, seed);
+
+        // TODO: use multiple folders
+        final List<String> postFolderRelativePaths = Arrays.asList("/blog");
+        final Content blogFolder1 = site.find(Content).withRelativePath("/blog").result();
+        when(blogFolder1.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(posts)));
+
+        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(postFolderRelativePaths));
       }
 
     /*******************************************************************************************************************
@@ -277,16 +327,17 @@ public class DefaultBlogViewControllerTest
      * Creates the given number of mock dates and times, spanned in the decade 1/1/2018 - 31/12/2028.
      *
      * @param       count       the count of dates
+     * @param       seed        the seed for the pseudo-random sequence
      * @return                  the dates
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<ZonedDateTime> createMockDateTimes (final @Nonnegative int count)
+    private static List<ZonedDateTime> createMockDateTimes (final @Nonnegative int count, final int seed)
       {
         final ZonedDateTime base = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"));
-        final List<ZonedDateTime> dates = new Random(23).ints(count, 0, 10 * 365 * 24 * 60)
-                                                        .mapToObj(base::plusMinutes)
-                                                        .collect(toList());
+        final List<ZonedDateTime> dates = new Random(seed).ints(count, 0, 10 * 365 * 24 * 60)
+                                                          .mapToObj(base::plusMinutes)
+                                                          .collect(toList());
         final ZonedDateTime max = dates.stream().max(ZonedDateTime::compareTo).get();
         final ZonedDateTime min = dates.stream().min(ZonedDateTime::compareTo).get();
         assert Duration.between(min, max).getSeconds() > 9 * 365 * 24 * 60 : "No timespan";
@@ -309,16 +360,18 @@ public class DefaultBlogViewControllerTest
      * @param       count       the required number of posts
      * @param       dateTimes   a collection of datetimes used as the publishing date of each post
      * @param       tags        a collection of tags that are randomly assigned to posts
+     * @param       seed        the seed for the pseudo-random sequence
      * @return                  the mock posts
      *
      ******************************************************************************************************************/
     @Nonnull
     private static List<Content> createMockPosts (final @Nonnegative int count,
                                                   final @Nonnull List<ZonedDateTime> dateTimes,
-                                                  final @Nonnull List<String> tags)
+                                                  final @Nonnull List<String> tags,
+                                                  final int seed)
       {
         final List<Content> posts = new ArrayList<>();
-        final Random random = new Random(45);
+        final Random random = new Random(seed);
 
         for (int i = 0; i< count; i++)
           {
