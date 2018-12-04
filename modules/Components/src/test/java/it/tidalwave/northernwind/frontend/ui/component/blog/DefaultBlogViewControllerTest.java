@@ -72,8 +72,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /***********************************************************************************************************************
  *
