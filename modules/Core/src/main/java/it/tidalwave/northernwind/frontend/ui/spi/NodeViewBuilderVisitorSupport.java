@@ -45,19 +45,19 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @RequiredArgsConstructor @Slf4j
-public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentContainerType> implements Visitor<Layout, ComponentType>
+public abstract class NodeViewBuilderVisitorSupport<COMPONENT, CONTAINER> implements Visitor<Layout, COMPONENT>
   {
     @Nonnull
     protected final SiteNode siteNode;
 
-    private ComponentType rootComponent;
+    private COMPONENT rootComponent;
 
-    private Stack<ComponentType> components = new Stack<>();
+    private Stack<COMPONENT> components = new Stack<>();
 
     @Override
     public void preVisit (final @Nonnull Layout layout)
       {
-        final ComponentType component = createComponent(layout);
+        final COMPONENT component = createComponent(layout);
 
         if (rootComponent == null)
           {
@@ -65,7 +65,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
           }
         else
           {
-            attach((ComponentContainerType)components.peek(), component);
+            attach((CONTAINER)components.peek(), component);
           }
 
         components.push(component);
@@ -83,17 +83,17 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
       }
 
     @Override @Nonnull
-    public ComponentType getValue()
+    public COMPONENT getValue()
       {
         return rootComponent;
       }
 
     @Nonnull
-    private ComponentType createComponent (@Nonnull Layout layout)
+    private COMPONENT createComponent (@Nonnull Layout layout)
       {
         try
           {
-            return (ComponentType)layout.createViewAndController(siteNode).getView();
+            return (COMPONENT)layout.createViewAndController(siteNode).getView();
           }
         catch (NotFoundException e)
           {
@@ -121,7 +121,7 @@ public abstract class NodeViewBuilderVisitorSupport<ComponentType, ComponentCont
       }
 
     @Nonnull
-    protected abstract ComponentType createPlaceHolderComponent (@Nonnull Layout layout, @Nonnull String message);
+    protected abstract COMPONENT createPlaceHolderComponent (@Nonnull Layout layout, @Nonnull String message);
 
-    protected abstract void attach (@Nonnull ComponentContainerType parent, @Nonnull ComponentType child);
+    protected abstract void attach (@Nonnull CONTAINER parent, @Nonnull COMPONENT child);
   }

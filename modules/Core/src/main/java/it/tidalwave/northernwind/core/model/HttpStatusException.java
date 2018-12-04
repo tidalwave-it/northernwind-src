@@ -50,7 +50,7 @@ public class HttpStatusException extends Exception
   {
     /** Status codes that don't imply an error. */
     private static final List<Integer> GOOD_CODES = Arrays.asList(SC_FOUND, SC_MOVED_PERMANENTLY, SC_MOVED_TEMPORARILY);
-    
+
     @Getter
     private final int httpStatus;
 
@@ -60,37 +60,37 @@ public class HttpStatusException extends Exception
     /*******************************************************************************************************************
      *
      * Creates an exception representing a temporary redirect.
-     * 
+     *
      * @param  site         the {@link Site}
      * @param  relativeUri  the relativeUri to redirect to
      * @return              the exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static HttpStatusException temporaryRedirect (final @Nonnull Site site, final @Nonnull String relativeUri) 
+    public static HttpStatusException temporaryRedirect (final @Nonnull Site site, final @Nonnull String relativeUri)
       {
         // FIXME: inject Site
         return new HttpStatusException(SC_MOVED_TEMPORARILY)
                   .withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
       }
-    
+
     /*******************************************************************************************************************
      *
      * Creates an exception representing a permanent redirect.
-     * 
+     *
      * @param  site         the {@link Site}
      * @param  relativeUri  the relativeUri to redirect to
      * @return              the exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static HttpStatusException permanentRedirect (final @Nonnull Site site, final @Nonnull String relativeUri) 
+    public static HttpStatusException permanentRedirect (final @Nonnull Site site, final @Nonnull String relativeUri)
       {
         // FIXME: inject Site
         return new HttpStatusException(SC_MOVED_PERMANENTLY)
                   .withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
       }
-    
+
     /*******************************************************************************************************************
      *
      * Creates an instance with the given HTTP status.
@@ -109,6 +109,7 @@ public class HttpStatusException extends Exception
      ******************************************************************************************************************/
     private HttpStatusException (final int httpStatus, final @Nonnull Map<String, String> headers)
       {
+        super(String.format("httpStatus=%d, headers=%s", httpStatus, headers));
         this.httpStatus = httpStatus;
         this.headers = headers;
       }
@@ -133,11 +134,11 @@ public class HttpStatusException extends Exception
     /*******************************************************************************************************************
      *
      * Return {@code true} whether this exception represents an error.
-     * 
+     *
      * @return  {@code true} in case of error
      *
      ******************************************************************************************************************/
-    public boolean isError() 
+    public boolean isError()
       {
         return !GOOD_CODES.contains(httpStatus);
       }
