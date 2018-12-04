@@ -261,24 +261,31 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
+     * TODO: variations of the max parameters (including cases in which there are less posts than expected)
+     * TODO: test categories
+     *
      ******************************************************************************************************************/
     @DataProvider
     private static Object[][] postRenderingTestData()
       {
         return new Object[][]
           {
-           // seed full leadin max  pathParams   // expected post ids (full / leadIn / linked)
-            { 45,  10,  7,     30,  "",          asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
-                                                 asList(12, 64, 39, 25,  4, 19, 32),
-                                                 asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
+           // seed full leadin max  pathParams          // expected post ids (full / leadIn / linked)
+            { 45,  10,  7,     30,  "",                 asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
+                                                        asList(12, 64, 39, 25,  4, 19, 32),
+                                                        asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
 
-            { 45,  10,  7,     30,  "/tag/tag3", asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
-                                                 asList(21, 84, 30, 55, 74, 78, 45),
-                                                 asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
+            { 45,  10,  7,     30,  "/tag/tag3",        asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
+                                                        asList(21, 84, 30, 55, 74, 78, 45),
+                                                        asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
 
-            { 87,  10,  7,     30,  "",          asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
-                                                 asList(30, 36, 22,  0, 35, 44, 49),
-                                                 asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
+            { 45,  10,  7,     30,  "/tag/inexistent",  asList(),
+                                                        asList(),
+                                                        asList() },
+
+            { 87,  10,  7,     30,  "",                 asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
+                                                        asList(30, 36, 22,  0, 35, 44, 49),
+                                                        asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
           };
       }
 
