@@ -446,7 +446,7 @@ public class DefaultBlogViewControllerTest
      * </ul>
      *
      * A convenient {@code toString()} method is also mocked.
-     * 
+     *
      * All used random sequences are reproducible for the sake of test assertions.
      *
      * @param       count       the required number of posts
@@ -465,8 +465,8 @@ public class DefaultBlogViewControllerTest
                                                   final int seed)
       {
         final List<Content> posts = new ArrayList<>();
-        final Random random  = new Random(seed);
-        final Random random2 = new Random(seed);
+        final Random categoryRnd = new Random(seed);
+        final Random tagRnd      = new Random(seed);
 
         for (int i = 0; i< count; i++)
           {
@@ -481,11 +481,11 @@ public class DefaultBlogViewControllerTest
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
 
             // Assign category
-            final Optional<String> category = Optional.ofNullable(categories.get(random2.nextInt(categories.size())));
+            final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
             when(post.getProperties().getProperty(PROPERTY_CATEGORY)).thenReturn(category);
 
             // Assign tag
-            final String tagsAsString = tags.stream().filter(__ -> random.nextDouble() > 0.5).collect(joining(","));
+            final String tagsAsString = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(joining(","));
 
             if (!tagsAsString.equals(""))
               {
@@ -530,7 +530,7 @@ public class DefaultBlogViewControllerTest
         final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
         final String dateTime     = post.getProperty(PROPERTY_PUBLISHING_DATE).orElse("???");
         final String category     = post.getProperty(PROPERTY_CATEGORY).orElse("");
-        final String tagsAsString = post.getProperty(PROPERTY_TAGS).orElse("");
-        return String.format("Content(%s - %-10s - %s - %-10s - %s)", title, exposedUri, dateTime, category, tagsAsString);
+        final String tags = post.getProperty(PROPERTY_TAGS).orElse("");
+        return String.format("Content(%s - %-10s - %s - %-10s - %s)", title, exposedUri, dateTime, category, tags);
       }
   }
