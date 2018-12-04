@@ -440,9 +440,13 @@ public class DefaultBlogViewControllerTest
      * <ul>
      * <li>a {@code PROPERTY_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
      * <li>a {@code PROPERTY_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
-     * <li>a set of tags taken from the given collection, each one having 50% of chances of being set.</li>
+     * <li>a {@code PROPERTY_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
+     * <li>a {@code PROPERTY_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
+     * <li>a {@code getExposedUri()} set as {@code "post-#&lt;num&gt;"}</li>
      * </ul>
      *
+     * A convenient {@code toString()} method is also mocked.
+     * 
      * All used random sequences are reproducible for the sake of test assertions.
      *
      * @param       count       the required number of posts
