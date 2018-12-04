@@ -234,8 +234,6 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
-     * TODO: should be parameterised
-     *
      ******************************************************************************************************************/
     @Test(dataProvider = "tagCloudRenderingTestData")
     public void must_properly_render_tag_cloud (final int seed,
