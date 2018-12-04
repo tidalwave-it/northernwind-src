@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -71,6 +72,8 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /***********************************************************************************************************************
  *
@@ -148,6 +151,8 @@ public class DefaultBlogViewControllerTest
     private List<Content> posts;
 
     private List<ZonedDateTime> dates;
+
+    private List<String> categories;
 
     private List<String> tags;
 
@@ -304,6 +309,10 @@ public class DefaultBlogViewControllerTest
                                                         asList(21, 84, 30, 55, 74, 78, 45),
                                                         asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
 
+            { 45,  10,  7,     30,  "/category1",       asList(44, 18, 12, 25, 19, 71, 99, 97, 90, 48),
+                                                        asList(75, 84, 54, 42, 15, 45, 51),
+                                                        asList(83, 72, 58, 26, 95, 28, 60, 93, 56, 59, 82, 91)     },
+
             { 87,  10,  7,     30,  "",                 asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
                                                         asList(30, 36, 22,  0, 35, 44, 49),
                                                         asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
@@ -312,9 +321,6 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
-     * TODO: variations of the max parameters (including cases in which there are less posts than expected)
-     * TODO: test categories
-     *
      ******************************************************************************************************************/
     @DataProvider
     private static Object[][] postRenderingTestData404()
@@ -322,7 +328,8 @@ public class DefaultBlogViewControllerTest
         return new Object[][]
           {
            // seed full leadin max  pathParams
-            { 45,  10,  7,     30,  "/tag/inexistent", }
+            { 45,  10,  7,     30,  "/tag/inexistent", },
+            { 45,  10,  7,     30,  "/inexistent",     }
           };
       }
 
@@ -361,20 +368,31 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
+     * @param       seed        the seed for the pseudo-random sequence
+     *
      ******************************************************************************************************************/
     private void createMockData (final int seed)
       throws NotFoundException
       {
+        categories = Arrays.asList(null, "category1", "category2");
         tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
         dates = createMockDateTimes(100, seed);
-        posts = createMockPosts(100, dates, tags, seed);
+        posts = createMockPosts(100, dates, categories, tags, seed);
 
-        // TODO: use multiple folders
-        final List<String> postFolderRelativePaths = Arrays.asList("/blog");
-        final Content blogFolder1 = site.find(Content).withRelativePath("/blog").result();
-        when(blogFolder1.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(posts)));
+        // Distribute all the posts to different folders
+        final List<String> postFolderPaths = Arrays.asList("/blog", "/blog/folder1", "/blog/folder2");
+        final Random rnd = new Random(seed);
+        final Map<Integer, List<Content>> postsMap = posts.stream().collect(groupingBy(__ -> rnd.nextInt(postFolderPaths.size())));
 
-        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(postFolderRelativePaths));
+        for (int i = 0; i < postFolderPaths.size(); i++)
+          {
+            final Content blogFolder = site.find(Content).withRelativePath(postFolderPaths.get(i)).result();
+            when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(postsMap.get(i))));
+          }
+
+        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(postFolderPaths));
+
+        posts.forEach(post -> log.info(">>>> post {}", post));
       }
 
     /*******************************************************************************************************************
@@ -414,6 +432,7 @@ public class DefaultBlogViewControllerTest
      *
      * @param       count       the required number of posts
      * @param       dateTimes   a collection of datetimes used as the publishing date of each post
+     * @param       categories  a collection of categories that are randomly assigned to posts
      * @param       tags        a collection of tags that are randomly assigned to posts
      * @param       seed        the seed for the pseudo-random sequence
      * @return                  the mock posts
@@ -422,23 +441,31 @@ public class DefaultBlogViewControllerTest
     @Nonnull
     private static List<Content> createMockPosts (final @Nonnegative int count,
                                                   final @Nonnull List<ZonedDateTime> dateTimes,
+                                                  final @Nonnull List<String> categories,
                                                   final @Nonnull List<String> tags,
                                                   final int seed)
       {
         final List<Content> posts = new ArrayList<>();
-        final Random random = new Random(seed);
+        final Random random  = new Random(seed);
+        final Random random2 = new Random(seed);
 
         for (int i = 0; i< count; i++)
           {
-            final String title = "Title #" + i;
+            final String title = String.format("Title #%2d", i);
             final ZonedDateTime dateTime = dateTimes.get(i);
             final Content post = mock(Content.class);
             final ResourceProperties properties = createMockProperties();
+            when(post.toString()).thenAnswer(invocation -> toString((Content)invocation.getMock()));
             when(post.getProperties()).thenReturn(properties);
             when(post.getProperty(any(Key.class))).thenCallRealMethod();
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(title));
 
+            // Assign category
+            final Optional<String> category = Optional.ofNullable(categories.get(random2.nextInt(categories.size())));
+            when(post.getProperties().getProperty(PROPERTY_CATEGORY)).thenReturn(category);
+
+            // Assign tag
             final String tagsAsString = tags.stream().filter(__ -> random.nextDouble() > 0.5).collect(joining(","));
 
             if (!tagsAsString.equals(""))
@@ -446,9 +473,7 @@ public class DefaultBlogViewControllerTest
                 when(properties.getProperty(PROPERTY_TAGS)).thenReturn(Optional.of(tagsAsString));
               }
 
-            when(post.toString()).thenReturn(String.format("Content(%3d) - %s - %s - %s", i, ISO_ZONED_DATE_TIME.format(dateTime), title, tagsAsString));
             posts.add(post);
-            log.info(">>>> post {}", post);
           }
 
         return posts;
@@ -471,8 +496,21 @@ public class DefaultBlogViewControllerTest
     private static List<Integer> getPostIds (final @Nonnull List<Content> posts)
       {
         return posts.stream().map(c -> c.toString())
-                             .map(s -> s.replaceAll("^.*\\( *([0-9]+)\\).*$", "$1"))
+                             .map(s -> s.replaceAll("^.*Title # *([0-9]+).*$", "$1"))
                              .map(Integer::parseInt)
                              .collect(toList());
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String toString (final @Nonnull Content post)
+      {
+        final String title        = post.getProperty(PROPERTY_TITLE).orElse("???");
+        final String dateTime     = post.getProperty(PROPERTY_PUBLISHING_DATE).orElse("???");
+        final String category     = post.getProperty(PROPERTY_CATEGORY).orElse("");
+        final String tagsAsString = post.getProperty(PROPERTY_TAGS).orElse("");
+        return String.format("Content(%s - %s - %-10s - %s)", title, dateTime, category, tagsAsString);
       }
   }
