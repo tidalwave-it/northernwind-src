@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-41-SNAPSHOT</version>
+        <version>1.1-ALPHA-41</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core-default</artifactId>
-    <version>1.1-ALPHA-41-SNAPSHOT</version>
+    <version>1.1-ALPHA-41</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Core Default Implementation</name>
     <description>A default implementation of the Core.</description>
