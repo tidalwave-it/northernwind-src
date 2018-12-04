@@ -53,15 +53,16 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
 import static java.time.format.DateTimeFormatter.*;
+import static java.util.Arrays.asList;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -69,7 +70,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -196,7 +196,10 @@ public class DefaultBlogViewControllerTest
                                             final int maxFullItems,
                                             final int maxLeadinItems,
                                             final int maxItems,
-                                            final @Nonnull String pathParams)
+                                            final @Nonnull String pathParams,
+                                            final @Nonnull List<Integer> expectedFullPostIds,
+                                            final @Nonnull List<Integer> expectedLeadInPostIds,
+                                            final @Nonnull List<Integer> expectedLinkedPostIds)
       throws Exception
       {
         // given
@@ -208,22 +211,23 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.initialize();
         // then
+        underTest.fullPosts.forEach  (post -> log.info(">>>> full:    {}", post));
+        underTest.leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
+        underTest.linkedPosts.forEach(post -> log.info(">>>> linked:  {}", post));
+
+        final List<Integer> actualFullPostsIds   = getPostIds(underTest.fullPosts);
+        final List<Integer> actualLeadInPostsIds = getPostIds(underTest.leadInPosts);
+        final List<Integer> actualLinkedPostsIds = getPostIds(underTest.linkedPosts);
+        assertThat("full posts",   actualFullPostsIds,   is(expectedFullPostIds));
+        assertThat("leadIn posts", actualLeadInPostsIds, is(expectedLeadInPostIds));
+        assertThat("all posts",    actualLinkedPostsIds, is(expectedLinkedPostIds));
+
         final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
-        allPosts.forEach(post -> log.info(">>>> {}", post));
-
-        assertThat("full posts",   underTest.fullPosts.size(),   is(maxFullItems));
-        assertThat("leadIn posts", underTest.leadInPosts.size(), is(maxLeadinItems));
-        assertThat("all posts",    allPosts.size(),              is(maxItems));
-
         final List<ZonedDateTime> publishingDates = allPosts
                 .stream()
                 .map(post -> post.getProperties().getDateTimeProperty(PROPERTY_PUBLISHING_DATE).get())
                 .collect(toList());
-        final List<ZonedDateTime> sorted = publishingDates
-                .stream()
-                .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
-                .collect(toList());
-        assertThat("Improperly sorted", publishingDates, is(sorted));
+        assertSortedInReverseOrder(publishingDates);
 
         assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
       }
@@ -265,9 +269,18 @@ public class DefaultBlogViewControllerTest
       {
         return new Object[][]
           {
-           // seed full leadin max  pathParams
-            { 45,  10,  7,     30,  ""},
-            { 87,  10,  7,     30,  ""}
+           // seed full leadin max  pathParams   // expected post ids (full / leadIn / linked)
+            { 45,  10,  7,     30,  "",          asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
+                                                 asList(12, 64, 39, 25,  4, 19, 32),
+                                                 asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
+
+            { 45,  10,  7,     30,  "/tag/tag3", asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
+                                                 asList(21, 84, 30, 55, 74, 78, 45),
+                                                 asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
+
+            { 87,  10,  7,     30,  "",          asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
+                                                 asList(30, 36, 22,  0, 35, 44, 49),
+                                                 asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
           };
       }
 
@@ -381,7 +394,6 @@ public class DefaultBlogViewControllerTest
             final ResourceProperties properties = createMockProperties();
             when(post.getProperties()).thenReturn(properties);
             when(post.getProperty(any(Key.class))).thenCallRealMethod();
-            when(post.toString()).thenReturn(String.format("Content(%3d) - %s - %s", i, ISO_ZONED_DATE_TIME.format(dateTime), title));
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(title));
 
@@ -392,10 +404,33 @@ public class DefaultBlogViewControllerTest
                 when(properties.getProperty(PROPERTY_TAGS)).thenReturn(Optional.of(tagsAsString));
               }
 
+            when(post.toString()).thenReturn(String.format("Content(%3d) - %s - %s - %s", i, ISO_ZONED_DATE_TIME.format(dateTime), title, tagsAsString));
             posts.add(post);
-            log.info(">>>> post {} - {}", post, tagsAsString);
+            log.info(">>>> post {}", post);
           }
 
         return posts;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void assertSortedInReverseOrder (final @Nonnull List<ZonedDateTime> dates)
+      {
+        final List<ZonedDateTime> sorted = dates.stream()
+                                                .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
+                                                .collect(toList());
+        assertThat("Improperly sorted", dates, is(sorted));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private static List<Integer> getPostIds (final @Nonnull List<Content> posts)
+      {
+        return posts.stream().map(c -> c.toString())
+                             .map(s -> s.replaceAll("^.*\\( *([0-9]+)\\).*$", "$1"))
+                             .map(Integer::parseInt)
+                             .collect(toList());
       }
   }
