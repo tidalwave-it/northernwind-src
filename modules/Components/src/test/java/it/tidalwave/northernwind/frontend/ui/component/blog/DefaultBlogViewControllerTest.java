@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -67,7 +66,6 @@ import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_EXPOSED_URI;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static org.mockito.Mockito.*;
@@ -356,28 +354,28 @@ public class DefaultBlogViewControllerTest
       {
         return new Object[][]
           {
-           // seed
-            { 45,  Arrays.asList(new TagAndCount("tag8",  58, "1"),
-                                 new TagAndCount("tag9",  57, "2"),
-                                 new TagAndCount("tag1",  54, "3"),
-                                 new TagAndCount("tag10", 52, "4"),
-                                 new TagAndCount("tag5",  52, "4"),
-                                 new TagAndCount("tag7",  52, "4"),
-                                 new TagAndCount("tag2",  48, "5"),
-                                 new TagAndCount("tag4",  47, "6"),
-                                 new TagAndCount("tag3",  44, "7"),
-                                 new TagAndCount("tag6",  41, "8")) },
+           // seed  expected result
+            { 45,   asList(new TagAndCount("tag8",  58, "1"),
+                           new TagAndCount("tag9",  57, "2"),
+                           new TagAndCount("tag1",  54, "3"),
+                           new TagAndCount("tag10", 52, "4"),
+                           new TagAndCount("tag5",  52, "4"),
+                           new TagAndCount("tag7",  52, "4"),
+                           new TagAndCount("tag2",  48, "5"),
+                           new TagAndCount("tag4",  47, "6"),
+                           new TagAndCount("tag3",  44, "7"),
+                           new TagAndCount("tag6",  41, "8")) },
 
-            { 87,  Arrays.asList(new TagAndCount("tag10", 55, "1"),
-                                 new TagAndCount("tag1",  53, "2"),
-                                 new TagAndCount("tag8",  52, "3"),
-                                 new TagAndCount("tag9",  52, "3"),
-                                 new TagAndCount("tag3",  48, "4"),
-                                 new TagAndCount("tag4",  46, "5"),
-                                 new TagAndCount("tag5",  46, "5"),
-                                 new TagAndCount("tag2",  44, "6"),
-                                 new TagAndCount("tag6",  43, "7"),
-                                 new TagAndCount("tag7",  43, "7")) }
+            { 87,   asList(new TagAndCount("tag10", 55, "1"),
+                           new TagAndCount("tag1",  53, "2"),
+                           new TagAndCount("tag8",  52, "3"),
+                           new TagAndCount("tag9",  52, "3"),
+                           new TagAndCount("tag3",  48, "4"),
+                           new TagAndCount("tag4",  46, "5"),
+                           new TagAndCount("tag5",  46, "5"),
+                           new TagAndCount("tag2",  44, "6"),
+                           new TagAndCount("tag6",  43, "7"),
+                           new TagAndCount("tag7",  43, "7")) }
             };
       }
 
@@ -395,17 +393,19 @@ public class DefaultBlogViewControllerTest
         posts = createMockPosts(100, dates, categories, tags, seed);
 
         // Distribute all the posts to different folders
-        final List<String> postFolderPaths = Arrays.asList("/blog", "/blog/folder1", "/blog/folder2");
+        final List<String> paths = Arrays.asList("/blog", "/blog/folder1", "/blog/folder2");
         final Random rnd = new Random(seed);
-        final Map<Integer, List<Content>> postsMap = posts.stream().collect(groupingBy(__ -> rnd.nextInt(postFolderPaths.size())));
-
-        for (int i = 0; i < postFolderPaths.size(); i++)
+        posts.stream()
+             .collect(groupingBy(__ -> paths.get(rnd.nextInt(paths.size()))))
+             .entrySet()
+             .stream()
+             .forEach(e ->
           {
-            final Content blogFolder = site.find(Content).withRelativePath(postFolderPaths.get(i)).result();
-            when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(postsMap.get(i))));
-          }
+            final Content blogFolder = site.find(Content).withRelativePath(e.getKey()).optionalResult().get();
+            when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(e.getValue())));
+          });
 
-        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(postFolderPaths));
+        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(paths));
 
         posts.forEach(post -> log.info(">>>> post {}", post));
       }
