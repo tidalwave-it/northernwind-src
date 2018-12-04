@@ -330,7 +330,7 @@ public class DefaultBlogViewControllerTest
       {
         tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
         dates = createMockDateTimes(100, seed);
-        posts = createMockPosts(100, new ArrayList<>(dates), tags, seed);
+        posts = createMockPosts(100, dates, tags, seed);
 
         // TODO: use multiple folders
         final List<String> postFolderRelativePaths = Arrays.asList("/blog");
@@ -394,7 +394,7 @@ public class DefaultBlogViewControllerTest
         for (int i = 0; i< count; i++)
           {
             final String title = "Title #" + i;
-            final ZonedDateTime dateTime = dateTimes.remove(0);
+            final ZonedDateTime dateTime = dateTimes.get(i);
             final Content post = mock(Content.class);
             final ResourceProperties properties = createMockProperties();
             when(post.getProperties()).thenReturn(properties);
