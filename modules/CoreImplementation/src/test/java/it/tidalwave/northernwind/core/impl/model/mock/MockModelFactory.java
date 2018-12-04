@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.io.IOException;
@@ -44,8 +45,8 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -146,11 +147,17 @@ public class MockModelFactory extends ModelFactorySupport
         return siteNode;
       }
 
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties createMockProperties()
+    public static ResourceProperties createMockProperties()
       {
         final ResourceProperties properties = mock(ResourceProperties.class);
         when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
+        when(properties.getDateTimeProperty(any(Key.class))).thenCallRealMethod();
+        when(properties.getDateTimeProperty(any(List.class))).thenCallRealMethod();
         return properties;
       }
   }
