@@ -67,6 +67,7 @@ import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_EXPOSED_URI;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static org.mockito.Mockito.*;
@@ -303,6 +304,14 @@ public class DefaultBlogViewControllerTest
                                                         asList(12, 64, 39, 25,  4, 19, 32),
                                                         asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
 
+            { 45,  10,  7,     30,  "/post-10",         asList(10),
+                                                        asList(),
+                                                        asList() },
+
+            { 45,  10,  7,     30,  "/post-43",         asList(43),
+                                                        asList(),
+                                                        asList() },
+
             { 45,  10,  7,     30,  "/tag/tag3",        asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
                                                         asList(21, 84, 30, 55, 74, 78, 45),
                                                         asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
@@ -334,8 +343,8 @@ public class DefaultBlogViewControllerTest
         return new Object[][]
           {
            // seed full leadin max  pathParams
-            { 45,  10,  7,     30,  "/tag/inexistent", },
-            { 45,  10,  7,     30,  "/inexistent",     }
+            { 45,  10,  7,     30,  "/tag/inexistent",  },
+            { 45,  10,  7,     30,  "/inexistent",      }
           };
       }
 
@@ -457,15 +466,15 @@ public class DefaultBlogViewControllerTest
 
         for (int i = 0; i< count; i++)
           {
-            final String title = String.format("Title #%2d", i);
             final ZonedDateTime dateTime = dateTimes.get(i);
             final Content post = mock(Content.class);
             final ResourceProperties properties = createMockProperties();
             when(post.toString()).thenAnswer(invocation -> toString((Content)invocation.getMock()));
             when(post.getProperties()).thenReturn(properties);
             when(post.getProperty(any(Key.class))).thenCallRealMethod();
+            when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
-            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(title));
+            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
 
             // Assign category
             final Optional<String> category = Optional.ofNullable(categories.get(random2.nextInt(categories.size())));
@@ -514,9 +523,10 @@ public class DefaultBlogViewControllerTest
     private static String toString (final @Nonnull Content post)
       {
         final String title        = post.getProperty(PROPERTY_TITLE).orElse("???");
+        final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
         final String dateTime     = post.getProperty(PROPERTY_PUBLISHING_DATE).orElse("???");
         final String category     = post.getProperty(PROPERTY_CATEGORY).orElse("");
         final String tagsAsString = post.getProperty(PROPERTY_TAGS).orElse("");
-        return String.format("Content(%s - %s - %-10s - %s)", title, dateTime, category, tagsAsString);
+        return String.format("Content(%s - %-10s - %s - %-10s - %s)", title, exposedUri, dateTime, category, tagsAsString);
       }
   }
