@@ -44,6 +44,7 @@ import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.ArrayListFinder8;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -235,6 +236,30 @@ public class DefaultBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
+    @Test(dataProvider = "postRenderingTestData404",
+          expectedExceptions = HttpStatusException.class,
+          expectedExceptionsMessageRegExp = ".*httpStatus=404.*")
+    public void must_return_404 (final int seed,
+                                 final int maxFullItems,
+                                 final int maxLeadinItems,
+                                 final int maxItems,
+                                 final @Nonnull String pathParams)
+      throws Exception
+      {
+        // given
+        createMockData(seed);
+        when(viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        // when
+        underTest.initialize();
+        // then should throw exception
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Test(dataProvider = "tagCloudRenderingTestData")
     public void must_properly_render_tag_cloud (final int seed,
                                                 final List<TagAndCount> expectedTacs)
@@ -279,13 +304,25 @@ public class DefaultBlogViewControllerTest
                                                         asList(21, 84, 30, 55, 74, 78, 45),
                                                         asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
 
-            { 45,  10,  7,     30,  "/tag/inexistent",  asList(),
-                                                        asList(),
-                                                        asList() },
-
             { 87,  10,  7,     30,  "",                 asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
                                                         asList(30, 36, 22,  0, 35, 44, 49),
                                                         asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     * TODO: variations of the max parameters (including cases in which there are less posts than expected)
+     * TODO: test categories
+     *
+     ******************************************************************************************************************/
+    @DataProvider
+    private static Object[][] postRenderingTestData404()
+      {
+        return new Object[][]
+          {
+           // seed full leadin max  pathParams
+            { 45,  10,  7,     30,  "/tag/inexistent", }
           };
       }
 
