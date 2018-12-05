@@ -99,8 +99,10 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     @Nonnull
     private final SiteNode siteNode;
 
+    @Nonnull
     private final BeanFactory beanFactory;
 
+    @Nonnull
     protected GalleryAdapter galleryAdapter;
 
     protected final List<Item> items = new ArrayList<>();
@@ -132,11 +134,12 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
       throws Exception
       {
         super.initialize();
+        log.info("initialize() - {}", siteNode.getRelativeUri());
         final long time = System.currentTimeMillis();
         final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, siteNode.getProperties()); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
         itemMapById.putAll(items.stream().collect(toMap(Item::getId, i -> i)));
-        log.info("{} gallery items loaded in {} msec", items.size(), System.currentTimeMillis() - time);
+        log.info(">>>> {} gallery items loaded in {} msec", items.size(), System.currentTimeMillis() - time);
       }
 
     /*******************************************************************************************************************
