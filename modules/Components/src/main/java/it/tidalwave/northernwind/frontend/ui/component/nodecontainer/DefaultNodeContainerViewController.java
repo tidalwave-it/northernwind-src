@@ -27,10 +27,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -52,7 +50,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Configurable @Slf4j
+@RequiredArgsConstructor @Slf4j
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
     // TODO: this class should not set the HTML contents... it should be a responsibility of the view.
@@ -91,8 +89,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    /* package */ void initialize()
+    @Override
+    public void initialize()
+      throws Exception
       {
         final ResourceProperties viewProperties     = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
