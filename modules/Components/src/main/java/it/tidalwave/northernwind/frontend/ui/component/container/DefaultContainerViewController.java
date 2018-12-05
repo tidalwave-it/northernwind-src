@@ -27,8 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.container;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -42,7 +40,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Configurable
+@RequiredArgsConstructor
 public class DefaultContainerViewController implements ContainerViewController
   {
     @Nonnull
@@ -56,8 +54,8 @@ public class DefaultContainerViewController implements ContainerViewController
 
     private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
-    @PostConstruct
-    /* package */ void initialize()
+    @Override
+    public void initialize()
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)

@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 
 /***********************************************************************************************************************
@@ -34,7 +35,7 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface BlogViewController extends CompositeSiteNodeController
+public interface BlogViewController extends CompositeSiteNodeController, ViewController
   {
     // FIXME: these should be Integer
     public static final Key<String> PROPERTY_MAX_FULL_ITEMS = new Key<>("maxFullItems");

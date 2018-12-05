@@ -42,7 +42,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -65,7 +64,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
     // FIXME: find a proper name space, possibly merging with other - or defining @ as dynamic properties
