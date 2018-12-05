@@ -135,15 +135,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             return controller.findAllPosts(controller.getViewProperties())
                     .stream()
-                    .flatMap(post -> createChildSiteNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
+                    .flatMap(post -> createVirtualNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
                     .collect(toList());
           }
 
         @Nonnull
-        private Optional<VirtualSiteNode> createChildSiteNode (final @Nonnull Content post)
+        private Optional<VirtualSiteNode> createVirtualNode (final @Nonnull Content post)
           {
-            return post.getExposedUri().map(uri -> new VirtualSiteNode(controller.siteNode,
-                                                                       controller.siteNode.getRelativeUri().appendedWith(uri),
+            final SiteNode siteNode = controller.siteNode;
+            return post.getExposedUri().map(uri -> new VirtualSiteNode(siteNode,
+                                                                       siteNode.getRelativeUri().appendedWith(uri),
                                                                        post.getProperties()));
           }
       }
