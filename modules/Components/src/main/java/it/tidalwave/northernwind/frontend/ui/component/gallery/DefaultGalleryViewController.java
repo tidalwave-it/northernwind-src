@@ -28,12 +28,11 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.spi.SimpleFinderSupport;
@@ -53,11 +52,13 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Slf4j
 public class DefaultGalleryViewController extends DefaultNodeContainerViewController implements GalleryViewController
   {
     @Nonnull
     private final SiteNode siteNode;
+
+    private final BeanFactory beanFactory;
 
     protected GalleryAdapter galleryAdapter;
 
@@ -72,19 +73,23 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     public DefaultGalleryViewController (final @Nonnull NodeContainerView view,
                                          final @Nonnull SiteNode siteNode,
                                          final @Nonnull Site site,
-                                         final @Nonnull RequestLocaleManager requestLocaleManager)
+                                         final @Nonnull RequestLocaleManager requestLocaleManager,
+                                         final @Nonnull BeanFactory beanFactory)
       {
         super(view, siteNode, site, requestLocaleManager);
         this.siteNode = siteNode;
+        this.beanFactory = beanFactory;
       }
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    private void initialize()
+    @Override
+    public void initialize()
+      throws Exception
       {
+        super.initialize();
         loadItems(siteNode.getProperties());
       }
 
@@ -127,7 +132,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         final long time = System.currentTimeMillis();
         items.clear();
         itemMapById.clear();
-        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(properties); // FIXME: make it configurable
+        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, properties); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
 
         for (final Item item : items)

@@ -27,9 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -48,7 +46,7 @@ import lombok.Getter;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Configurable @Scope("session") @Slf4j
+@RequiredArgsConstructor @Scope("session") @Slf4j
 public class DefaultMenuViewController implements MenuViewController
   {
     @Nonnull
@@ -67,8 +65,8 @@ public class DefaultMenuViewController implements MenuViewController
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-   @PostConstruct
-   /* package */ void initialize()
+    @Override
+    public void initialize()
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);

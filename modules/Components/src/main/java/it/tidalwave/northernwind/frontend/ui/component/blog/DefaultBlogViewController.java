@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +38,6 @@ import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.spi.SimpleFinderSupport;
@@ -71,7 +69,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
     @AllArgsConstructor(access = PACKAGE) @Getter @EqualsAndHashCode
@@ -170,8 +168,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    protected void initialize()
+    @Override
+    public void initialize()
       throws Exception
       {
         // FIXME: ugly workaround for a design limitation. See NW-110.

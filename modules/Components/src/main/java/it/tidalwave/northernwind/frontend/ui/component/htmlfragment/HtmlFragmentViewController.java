@@ -26,8 +26,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
-import java.util.List;
-import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 
 /***********************************************************************************************************************
  *
@@ -36,6 +35,6 @@ import it.tidalwave.util.Key;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface HtmlFragmentViewController
+public interface HtmlFragmentViewController extends ViewController
   {
   }

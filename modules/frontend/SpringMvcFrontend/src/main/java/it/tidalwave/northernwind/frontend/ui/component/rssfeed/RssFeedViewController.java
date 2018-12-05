@@ -27,13 +27,14 @@
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface RssFeedViewController
+public interface RssFeedViewController extends ViewController
   {
     public static final Key<String> PROPERTY_CREATOR = new Key<>("creator");
 

@@ -116,7 +116,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_template()
-      throws NotFoundException
+      throws Exception
       {
         // given
         final String templateContent = "the template content";
@@ -134,7 +134,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_property_set()
-      throws NotFoundException
+      throws Exception
       {
         // given
         final String templatePath = "/path/to/template";
@@ -151,7 +151,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_Content()
-      throws NotFoundException
+      throws Exception
       {
         // given
         final String templatePath = "/path/to/inexistent/template";
@@ -167,6 +167,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_language()
+      throws Exception
       {
         // when
         underTest.initialize();
@@ -179,6 +180,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title_prefix()
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_TITLE_PREFIX)).thenReturn(Optional.of("the title prefix"));
@@ -193,6 +195,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title_prefix_when_unspecified()
+      throws Exception
       {
         // when
         underTest.initialize();
@@ -205,6 +208,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_descriptiond()
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_DESCRIPTION)).thenReturn(Optional.of("the description"));
@@ -219,6 +223,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_description_when_unspecified()
+      throws Exception
       {
         // when
         underTest.initialize();
@@ -231,6 +236,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title()
+      throws Exception
       {
         // given
         when(nodeProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
@@ -245,6 +251,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title_when_unspecified()
+      throws Exception
       {
         // when
         underTest.initialize();
@@ -257,6 +264,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_screenCssSection()
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
@@ -274,6 +282,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_printCssSection()
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_PRINT_STYLE_SHEETS))
@@ -291,7 +300,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_rssFeeds()
-      throws NotFoundException
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_RSS_FEEDS)).thenReturn(Optional.of(
@@ -313,6 +322,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_scripts()
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_SCRIPTS)).thenReturn(Optional.of(Arrays.asList("/js/1.js", "/js/2.js")));
@@ -329,7 +339,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_inlined_scripts()
-      throws NotFoundException
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_INLINED_SCRIPTS)).thenReturn(Optional.of(

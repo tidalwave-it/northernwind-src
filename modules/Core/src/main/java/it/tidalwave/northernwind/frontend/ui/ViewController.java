@@ -24,17 +24,28 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
-
-import it.tidalwave.northernwind.frontend.ui.ViewController;
+package it.tidalwave.northernwind.frontend.ui;
 
 /***********************************************************************************************************************
  *
- * The controller of {@link HtmlTextWithTitleView}.
+ * The common ancestor of all controllers of views.
+ *
+ * @stereotype  Presentation Controller
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface HtmlTextWithTitleViewController extends ViewController
+public interface ViewController
   {
+    /*******************************************************************************************************************
+     *
+     * Initializes the component. If the class has a superclass, remember to call {@code super.initialize()}.
+     *
+     * @throws      Exception       in case of problems
+     *
+     ******************************************************************************************************************/
+    default public void initialize()
+      throws Exception
+      {
+      }
   }
