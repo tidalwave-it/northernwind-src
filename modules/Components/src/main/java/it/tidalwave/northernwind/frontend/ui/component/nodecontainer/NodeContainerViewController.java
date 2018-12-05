@@ -28,13 +28,14 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import java.util.List;
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface NodeContainerViewController
+public interface NodeContainerViewController extends ViewController
   {
     /** The prefix to prepend to the HTML title. */
     public static final Key<String> PROPERTY_TITLE_PREFIX = new Key<>("titlePrefix");

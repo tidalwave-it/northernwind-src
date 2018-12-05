@@ -27,8 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ModelFactory;
@@ -45,14 +43,14 @@ import lombok.RequiredArgsConstructor;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor
+@RequiredArgsConstructor
 public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
-    @Inject
-    protected ModelFactory modelFactory;
-
     @Nonnull @Getter
     private final Site site;
+
+    @Nonnull
+    protected final ModelFactory modelFactory;
 
     private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
