@@ -28,8 +28,8 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.BeanCreationException;
@@ -41,6 +41,7 @@ import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -64,18 +65,19 @@ import lombok.extern.slf4j.Slf4j;
     /* package */ final Constructor<?> viewConstructor;
 
     @Nonnull
-    /* package */ final Constructor<?> viewControllerConstructor;
+    /* package */ final Constructor<? extends ViewController> viewControllerConstructor;
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    public ViewBuilder (final @Nonnull Class<?> viewClass, final @Nonnull Class<?> viewControllerClass)
+    public ViewBuilder (final @Nonnull Class<?> viewClass,
+                        final @Nonnull Class<? extends ViewController> viewControllerClass)
       throws NoSuchMethodException, InvocationTargetException, InstantiationException,
              IllegalArgumentException, IllegalAccessException, SecurityException
       {
         viewConstructor = viewClass.getConstructors()[0];
-        viewControllerConstructor = viewControllerClass.getConstructors()[0];
+        viewControllerConstructor = (Constructor<ViewController>)viewControllerClass.getConstructors()[0];
       }
 
     /*******************************************************************************************************************
@@ -98,7 +100,7 @@ import lombok.extern.slf4j.Slf4j;
         try
           {
             final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
-            final Object controller = viewControllerConstructor.newInstance(
+            final ViewController controller = viewControllerConstructor.newInstance(
                     computeConstructorArguments(viewControllerConstructor, id, siteNode, view));
             return new ViewAndController(view, controller);
           }

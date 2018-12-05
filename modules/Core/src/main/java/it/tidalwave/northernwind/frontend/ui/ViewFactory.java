@@ -50,7 +50,7 @@ public interface ViewFactory
     public static class ViewAndController
       {
         private final Object view;
-        private final Object controller;
+        private final ViewController controller;
       }
 
     /*******************************************************************************************************************

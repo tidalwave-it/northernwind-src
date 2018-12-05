@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.impl.ui.mock;
 
 import lombok.ToString;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 
 /***********************************************************************************************************************
  *
@@ -34,6 +35,6 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @ToString
-public class MockController1
+public class MockController1 implements ViewController
   {
   }
