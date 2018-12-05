@@ -80,7 +80,6 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         @Override @Nonnull
         protected List<? extends SiteNode> computeResults()
           {
-            log.info("findChildrenSiteNodes()");
             final List<SiteNode> results = new ArrayList<>();
             final SiteNode siteNode = controller.siteNode;
             results.add(new ChildSiteNode(siteNode,
@@ -92,8 +91,6 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
                 final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(item.getId().stringValue());
                 results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
               }
-
-            log.info(">>>> returning: {}", results);
 
             return results;
           }
