@@ -27,10 +27,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -47,13 +45,13 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable(preConstruction = true) @Slf4j
+@Slf4j
 public abstract class GalleryLoaderSupport implements GalleryLoader
   {
     private static final Key<String> PROPERTY_MEDIA_METADATA_PROVIDER = new Key<>("mediaMetadataProvider");
 
-    @Inject
-    private ApplicationContext context;
+    @Nonnull
+    private final BeanFactory beanFactory;
 
     @Nonnull
     private final MediaMetadataProvider mediaMetadataProvider;
@@ -65,8 +63,10 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
      *
      *
      ******************************************************************************************************************/
-    protected GalleryLoaderSupport (final @Nonnull ResourceProperties properties)
+    protected GalleryLoaderSupport (final @Nonnull BeanFactory beanFactory,
+                                    final @Nonnull ResourceProperties properties)
       {
+        this.beanFactory = beanFactory;
         this.properties = properties;
         mediaMetadataProvider = findMediaMetadataProvider();
       }
@@ -98,7 +98,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
 
         try
           {
-            return context.getBean(metadataProviderName, MediaMetadataProvider.class);
+            return beanFactory.getBean(metadataProviderName, MediaMetadataProvider.class);
           }
         catch (NoSuchBeanDefinitionException e)
           {

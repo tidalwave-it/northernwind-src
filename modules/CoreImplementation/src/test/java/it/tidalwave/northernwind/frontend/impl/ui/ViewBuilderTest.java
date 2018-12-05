@@ -26,15 +26,16 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import lombok.RequiredArgsConstructor;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
@@ -59,7 +60,7 @@ public class ViewBuilderTest
       }
 
     @RequiredArgsConstructor
-    public static class MockController
+    public static class MockController implements ViewController
       {
         public final Id id;
         public final SiteNode siteNode;

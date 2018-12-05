@@ -19,21 +19,23 @@
  * specific language governing permissions and limitations under the License.
  *
  * *********************************************************************************************************************
- * 
- * 
+ *
+ *
  * *********************************************************************************************************************
  * #L%
  */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface SitemapViewController
+public interface SitemapViewController extends ViewController
+
   {
     public static final Key<String> PROPERTY_SITEMAP_PRIORITY = new Key<>("siteMap.priority");
 

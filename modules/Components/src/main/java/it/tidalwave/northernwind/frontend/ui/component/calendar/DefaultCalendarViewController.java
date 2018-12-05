@@ -28,26 +28,20 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.Locale;
 import java.text.DateFormatSymbols;
 import java.time.ZonedDateTime;
-import java.io.IOException;
 import java.io.StringReader;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -64,7 +58,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Configurable @Slf4j
+@RequiredArgsConstructor @Slf4j
 public class DefaultCalendarViewController implements CalendarViewController
   {
     @Nonnull
@@ -87,13 +81,9 @@ public class DefaultCalendarViewController implements CalendarViewController
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    /* package */ void initialize()
-      throws IOException,
-             ParserConfigurationException,
-             SAXException,
-             XPathExpressionException,
-             HttpStatusException
+    @Override
+    public void initialize()
+      throws Exception
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode);
         final int currentYear = getCurrentYear(pathParams);
