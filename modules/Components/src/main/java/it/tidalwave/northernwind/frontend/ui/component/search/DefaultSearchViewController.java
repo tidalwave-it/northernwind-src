@@ -23,10 +23,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.search;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.net.URL;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,21 +34,21 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Configurable @Slf4j
+@RequiredArgsConstructor @Slf4j
 public class DefaultSearchViewController implements SearchViewController
   {
     @Nonnull
     private final SearchView view;
-    
+
 //    @Nonnull
 //    private final SiteNode siteNode;
-//    
+//
 //    @Nonnull
 //    private final Site site;
 //
 //    @Nonnull
 //    private final RequestLocaleManager requestLocaleManager;
-    
+
     @Nonnull
     private final RequestHolder requestHolder;
 
@@ -59,8 +57,7 @@ public class DefaultSearchViewController implements SearchViewController
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    protected void initialize()
+    public void initialize()
       throws Exception
       {
         final String q = requestHolder.get().getParameter("q") + "%20site:stoppingdown.net";

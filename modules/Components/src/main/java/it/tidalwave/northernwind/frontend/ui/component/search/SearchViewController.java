@@ -22,11 +22,13 @@
  **********************************************************************************************************************/
 package it.tidalwave.northernwind.frontend.ui.component.search;
 
+import it.tidalwave.northernwind.frontend.ui.ViewController;
+
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface SearchViewController 
-  { 
+public interface SearchViewController extends ViewController
+  {
   }
