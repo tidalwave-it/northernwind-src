@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
 import javax.annotation.Nonnull;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -45,7 +44,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Configurable @Slf4j
+@RequiredArgsConstructor @Slf4j
 public class DefaultHtmlFragmentViewController implements HtmlFragmentViewController
   {
     @Nonnull

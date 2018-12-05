@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.VisitorSupport;
@@ -50,7 +49,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapVie
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor @Slf4j
 public class DefaultSitemapViewController implements SitemapViewController
   {
     @Nonnull

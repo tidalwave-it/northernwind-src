@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.spi.SimpleFinderSupport;
@@ -70,7 +69,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
     @AllArgsConstructor(access = PACKAGE) @Getter @EqualsAndHashCode

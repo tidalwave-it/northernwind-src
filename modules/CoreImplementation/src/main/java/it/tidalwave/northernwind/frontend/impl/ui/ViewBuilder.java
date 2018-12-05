@@ -45,6 +45,7 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 
 /***********************************************************************************************************************
  *
@@ -126,7 +127,7 @@ import lombok.extern.slf4j.Slf4j;
     /*******************************************************************************************************************
      *
      * Computes the argument values for calling the given constructor. They are taken from the current
-     * {@link BeanFactory}, with {@code instanceArgs} eventually overriding them.
+     * {@link BeanFactory}, with {@code overridingArgs} eventually overriding them.
      *
      * @param  constructor      the constructor
      * @param  overridingArgs   the overriding arguments
@@ -154,6 +155,10 @@ import lombok.extern.slf4j.Slf4j;
             if (Site.class.isAssignableFrom(argumentType))
               {
                 result.add(beanFactory.getBean(SiteProvider.class).getSite());
+              }
+            else if (BeanFactory.class.isAssignableFrom(argumentType))
+              {
+                result.add(beanFactory);
               }
             else
               {

@@ -28,10 +28,11 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
@@ -50,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Slf4j
 public class HtmlTemplateGalleryViewController extends DefaultGalleryViewController
   {
     @Nonnull
@@ -71,10 +72,12 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                                               final @Nonnull SiteNode siteNode,
                                               final @Nonnull Site site,
                                               final @Nonnull RequestHolder requestHolder,
-                                              final @Nonnull RequestLocaleManager requestLocaleManager)
+                                              final @Nonnull RequestLocaleManager requestLocaleManager,
+                                              final @Nonnull ModelFactory modelFactory,
+                                              final @Nonnull BeanFactory beanFactory)
       throws IOException
       {
-        super(view, siteNode, site, requestLocaleManager);
+        super(view, siteNode, site, requestLocaleManager, beanFactory);
         this.view = view;
         this.siteNode = siteNode;
         this.requestHolder = requestHolder;
@@ -106,7 +109,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
               }
           };
 
-        galleryAdapter = new BluetteGalleryAdapter(site, context); // FIXME: get implementation from configuration
+        galleryAdapter = new BluetteGalleryAdapter(site, modelFactory, context); // FIXME: get implementation from configuration
       }
 
     /*******************************************************************************************************************
