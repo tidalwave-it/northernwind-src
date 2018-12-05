@@ -162,7 +162,7 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     @BeforeMethod
     private void setup()
-      throws NotFoundException
+      throws Exception
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
 
@@ -196,6 +196,7 @@ public class DefaultBlogViewControllerTest
         final RequestContext requestContext = mock(RequestContext.class);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
+        underTest.initialize();
       }
 
     /*******************************************************************************************************************
@@ -219,7 +220,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         underTest.fullPosts.forEach  (post -> log.info(">>>> full:    {}", post));
         underTest.leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
@@ -262,7 +263,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then should throw exception
       }
 
@@ -278,7 +279,7 @@ public class DefaultBlogViewControllerTest
         createMockData(seed);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
@@ -305,9 +306,9 @@ public class DefaultBlogViewControllerTest
         // given
         createMockData(45);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
-        underTest.initialize();
+        underTest.renderView();
         // when
-        final List<? extends SiteNode> children = underTest.findChildrenSiteNodes().results();
+        final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then
         final List<String> expectedUris = posts.stream()
                                                .map(c -> c.getExposedUri().get().prependedWith(SITE_NODE_RELATIVE_URI).asString())

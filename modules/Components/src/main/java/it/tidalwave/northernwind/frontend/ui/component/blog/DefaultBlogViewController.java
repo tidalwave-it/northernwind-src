@@ -116,17 +116,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // FIXME: add eventual localized versions
     @RequiredArgsConstructor
-    private static class ChildrenVirtualNodeFinder extends SimpleFinder8Support<SiteNode>
+    private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
         @Nonnull
         private final DefaultBlogViewController controller;
 
-        public ChildrenVirtualNodeFinder (final @Nonnull ChildrenVirtualNodeFinder other, final @Nonnull Object override)
+        public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
           {
             super(other, override);
-            final ChildrenVirtualNodeFinder source = getSource(ChildrenVirtualNodeFinder.class, other, override);
+            final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
             this.controller = source.controller;
           }
 
@@ -135,16 +135,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             return controller.findAllPosts(controller.getViewProperties())
                     .stream()
-                    .flatMap(post -> createChildSiteNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
+                    .flatMap(post -> createVirtualNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
                     .collect(toList());
           }
 
         @Nonnull
-        private Optional<ChildSiteNode> createChildSiteNode (final @Nonnull Content post)
+        private Optional<VirtualSiteNode> createVirtualNode (final @Nonnull Content post)
           {
-            return post.getExposedUri().map(uri -> new ChildSiteNode(controller.siteNode,
-                                                                     controller.siteNode.getRelativeUri().appendedWith(uri),
-                                                                     post.getProperties()));
+            final SiteNode siteNode = controller.siteNode;
+            return post.getExposedUri().map(uri -> new VirtualSiteNode(siteNode,
+                                                                       siteNode.getRelativeUri().appendedWith(uri),
+                                                                       post.getProperties()));
           }
       }
 
@@ -182,28 +183,22 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findChildrenSiteNodes()
+    public Finder8<SiteNode> findVirtualSiteNodes()
       {
-        return new ChildrenVirtualNodeFinder(this);
+        return new VirtualSiteNodeFinder(this);
       }
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
-        // FIXME: ugly workaround for a design limitation. See NW-110.
-        if (isCalledBySitemapController()) // called as a CompositeContentsController
-          {
-            return;
-          }
+        log.info("renderView() for {}", siteNode);
 
-        log.info("Initializing for {}", siteNode);
-        // called at initialization
 //        try
 //          {
             final ResourceProperties viewProperties = getViewProperties();
@@ -469,22 +464,5 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
         return Arrays.asList(post.getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    private static boolean isCalledBySitemapController()
-      {
-        for (final StackTraceElement element : Thread.currentThread().getStackTrace())
-          {
-            if (element.getClassName().contains("SitemapViewController"))
-              {
-                return true;
-              }
-          }
-
-        return false;
       }
   }

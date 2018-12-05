@@ -114,14 +114,14 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
-        super.initialize();
+        super.renderView();
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;

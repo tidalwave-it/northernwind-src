@@ -60,11 +60,11 @@ public class DefaultSitemapViewController implements SitemapViewController
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
         final StringBuilder builder = new StringBuilder();
@@ -100,7 +100,7 @@ public class DefaultSitemapViewController implements SitemapViewController
 
                                   if (controller instanceof CompositeSiteNodeController)
                                     {
-                                      for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findChildrenSiteNodes().results())
+                                      for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findVirtualSiteNodes().results())
                                         {
                                           appendUrl(builder, siteNode, childSiteNode);
                                         }

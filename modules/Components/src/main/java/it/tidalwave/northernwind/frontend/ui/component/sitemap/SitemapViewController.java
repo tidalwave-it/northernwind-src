@@ -35,7 +35,6 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
  *
  **********************************************************************************************************************/
 public interface SitemapViewController extends ViewController
-
   {
     public static final Key<String> PROPERTY_SITEMAP_PRIORITY = new Key<>("siteMap.priority");
 
