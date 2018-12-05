@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -82,9 +83,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      *
      ******************************************************************************************************************/
-    public BluetteGalleryAdapter (final @Nonnull Site site, final @Nonnull GalleryAdapterContext context)
+    public BluetteGalleryAdapter (final @Nonnull Site site,
+                                  final @Nonnull ModelFactory modelFactory,
+                                  final @Nonnull GalleryAdapterContext context)
       {
-        super(site);
+        super(site, modelFactory);
         this.context = context;
 
         galleryTemplate          = loadTemplate(context, PROPERTY_BLUETTE_TEMPLATE_PATH, "bluette.txt");

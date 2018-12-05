@@ -27,13 +27,14 @@
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface CalendarViewController
+public interface CalendarViewController extends ViewController
   {
     /** The list of entries of the calendar. */
     public static final Key<String> PROPERTY_ENTRIES = new Key<>("entries");
