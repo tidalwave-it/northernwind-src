@@ -116,17 +116,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // FIXME: add eventual localized versions
     @RequiredArgsConstructor
-    private static class ChildrenVirtualNodeFinder extends SimpleFinder8Support<SiteNode>
+    private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
         @Nonnull
         private final DefaultBlogViewController controller;
 
-        public ChildrenVirtualNodeFinder (final @Nonnull ChildrenVirtualNodeFinder other, final @Nonnull Object override)
+        public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
           {
             super(other, override);
-            final ChildrenVirtualNodeFinder source = getSource(ChildrenVirtualNodeFinder.class, other, override);
+            final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
             this.controller = source.controller;
           }
 
@@ -140,11 +140,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
 
         @Nonnull
-        private Optional<ChildSiteNode> createChildSiteNode (final @Nonnull Content post)
+        private Optional<VirtualSiteNode> createChildSiteNode (final @Nonnull Content post)
           {
-            return post.getExposedUri().map(uri -> new ChildSiteNode(controller.siteNode,
-                                                                     controller.siteNode.getRelativeUri().appendedWith(uri),
-                                                                     post.getProperties()));
+            return post.getExposedUri().map(uri -> new VirtualSiteNode(controller.siteNode,
+                                                                       controller.siteNode.getRelativeUri().appendedWith(uri),
+                                                                       post.getProperties()));
           }
       }
 
@@ -182,9 +182,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findChildrenSiteNodes()
+    public Finder8<SiteNode> findVirtualSiteNodes()
       {
-        return new ChildrenVirtualNodeFinder(this);
+        return new VirtualSiteNodeFinder(this);
       }
 
     /*******************************************************************************************************************
@@ -197,7 +197,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws Exception
       {
         log.info("renderView() for {}", siteNode);
-        
+
 //        try
 //          {
             final ResourceProperties viewProperties = getViewProperties();

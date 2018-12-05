@@ -308,7 +308,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
         underTest.renderView();
         // when
-        final List<? extends SiteNode> children = underTest.findChildrenSiteNodes().results();
+        final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then
         final List<String> expectedUris = posts.stream()
                                                .map(c -> c.getExposedUri().get().prependedWith(SITE_NODE_RELATIVE_URI).asString())

@@ -63,17 +63,17 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor
-    private static class ChildrenVirtualNodeFinder extends SimpleFinder8Support<SiteNode>
+    private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
         @Nonnull
         private final DefaultGalleryViewController controller;
 
-        public ChildrenVirtualNodeFinder (final @Nonnull ChildrenVirtualNodeFinder other, final @Nonnull Object override)
+        public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
           {
             super(other, override);
-            final ChildrenVirtualNodeFinder source = getSource(ChildrenVirtualNodeFinder.class, other, override);
+            final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
             this.controller = source.controller;
           }
 
@@ -82,14 +82,14 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
           {
             final List<SiteNode> results = new ArrayList<>();
             final SiteNode siteNode = controller.siteNode;
-            results.add(new ChildSiteNode(siteNode,
-                                          siteNode.getRelativeUri().appendedWith("lightbox"),
-                                          siteNode.getProperties()));
+            results.add(new VirtualSiteNode(siteNode,
+                                            siteNode.getRelativeUri().appendedWith("lightbox"),
+                                            siteNode.getProperties()));
 
             for (final Item item : controller.itemMapById.values())
               {
                 final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(item.getId().stringValue());
-                results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
+                results.add(new VirtualSiteNode(siteNode, relativeUri, siteNode.getProperties()));
               }
 
             return results;
@@ -140,9 +140,9 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findChildrenSiteNodes()
+    public Finder8<SiteNode> findVirtualSiteNodes()
       {
-        return new ChildrenVirtualNodeFinder(this);
+        return new VirtualSiteNodeFinder(this);
       }
 
     /*******************************************************************************************************************
