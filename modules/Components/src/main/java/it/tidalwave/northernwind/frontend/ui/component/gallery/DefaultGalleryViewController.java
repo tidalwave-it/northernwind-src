@@ -99,7 +99,6 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
           }
       }
 
-
     @Nonnull
     private final SiteNode siteNode;
 
