@@ -49,9 +49,28 @@ public interface ViewFactory
     @RequiredArgsConstructor @Getter @ToString
     public static class ViewAndController
       {
+        @Nonnull
         private final Object view;
+
+        @Nonnull
         private final ViewController controller;
-      }
+
+        /***************************************************************************************************************
+         *
+         * Call the controller to have the view rendered, and return it.
+         *
+         * @return                      the rendered view
+         * @exception   Exception       if something failed
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public Object renderView()
+          throws Exception
+          {
+            controller.renderView();
+            return view;
+          }
+     }
 
     /*******************************************************************************************************************
      *

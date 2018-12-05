@@ -36,8 +36,6 @@ import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
@@ -47,6 +45,7 @@ import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNode
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -63,53 +62,52 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor
-    private static class ChildrenVirtualNodeFinder extends SimpleFinder8Support<SiteNode>
+    private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
-    @Nonnull
+        @Nonnull
         private final DefaultGalleryViewController controller;
 
-        public ChildrenVirtualNodeFinder (final @Nonnull ChildrenVirtualNodeFinder other, final @Nonnull Object override)
+        public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
           {
             super(other, override);
-            final ChildrenVirtualNodeFinder source = getSource(ChildrenVirtualNodeFinder.class, other, override);
+            final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
             this.controller = source.controller;
           }
 
         @Override @Nonnull
         protected List<? extends SiteNode> computeResults()
           {
-            log.info("findChildrenSiteNodes()");
-            final List<SiteNode> results = new ArrayList<>();
             final SiteNode siteNode = controller.siteNode;
-            results.add(new ChildSiteNode(siteNode,
-                                          siteNode.getRelativeUri().appendedWith("lightbox"),
-                                          siteNode.getProperties()));
+            final List<SiteNode> result = controller.itemMapById.values().stream()
+                    .map(item -> createVirtualNode(siteNode, item.getId().stringValue()))
+                    .collect(toList());
+            result.add(0, createVirtualNode(siteNode, "lightbox"));
+            return result;
+          }
 
-            for (final Item item : controller.itemMapById.values())
-              {
-                final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(item.getId().stringValue());
-                results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
-              }
-
-            log.info(">>>> returning: {}", results);
-
-            return results;
+        @Nonnull
+        private VirtualSiteNode createVirtualNode (final @Nonnull SiteNode siteNode, final String relativeUri)
+          {
+            return new VirtualSiteNode(siteNode,
+                                       siteNode.getRelativeUri().appendedWith(relativeUri),
+                                       siteNode.getProperties());
           }
       }
-
 
     @Nonnull
     private final SiteNode siteNode;
 
+    @Nonnull
     private final BeanFactory beanFactory;
 
+    @Nonnull
     protected GalleryAdapter galleryAdapter;
 
-    protected final List<Item> items = new ArrayList<Item>();
+    protected final List<Item> items = new ArrayList<>();
 
-    protected final Map<Id, Item> itemMapById = new HashMap<Id, Item>();
+    protected final Map<Id, Item> itemMapById = new HashMap<>();
 
     /*******************************************************************************************************************
      *
@@ -128,6 +126,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
@@ -135,7 +134,12 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
       throws Exception
       {
         super.initialize();
-        loadItems(siteNode.getProperties());
+        log.info("initialize() - {}", siteNode.getRelativeUri());
+        final long time = System.currentTimeMillis();
+        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, siteNode.getProperties()); // FIXME: make it configurable
+        items.addAll(loader.loadGallery(siteNode));
+        itemMapById.putAll(items.stream().collect(toMap(Item::getId, i -> i)));
+        log.info(">>>> {} gallery items loaded in {} msec", items.size(), System.currentTimeMillis() - time);
       }
 
     /*******************************************************************************************************************
@@ -144,29 +148,8 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findChildrenSiteNodes()
+    public Finder8<SiteNode> findVirtualSiteNodes()
       {
-        return new ChildrenVirtualNodeFinder(this);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Loads the items in the gallery.
-     *
-     ******************************************************************************************************************/
-    private void loadItems (final @Nonnull ResourceProperties properties)
-      {
-        final long time = System.currentTimeMillis();
-        items.clear();
-        itemMapById.clear();
-        final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, properties); // FIXME: make it configurable
-        items.addAll(loader.loadGallery(siteNode));
-
-        for (final Item item : items)
-          {
-            itemMapById.put(item.getId(), item);
-          }
-
-        log.info("gallery items loaded in {} msec", System.currentTimeMillis() - time);
+        return new VirtualSiteNodeFinder(this);
       }
   }
