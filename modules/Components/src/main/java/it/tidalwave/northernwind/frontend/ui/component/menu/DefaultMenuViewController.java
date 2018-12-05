@@ -62,11 +62,11 @@ public class DefaultMenuViewController implements MenuViewController
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);

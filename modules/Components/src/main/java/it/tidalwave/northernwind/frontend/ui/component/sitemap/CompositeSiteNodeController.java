@@ -57,7 +57,7 @@ public interface CompositeSiteNodeController
      * found inside the Site. A special implementation is provided.
      */
     @RequiredArgsConstructor
-    public static class ChildSiteNode implements SiteNode
+    public static class VirtualSiteNode implements SiteNode
       {
         @Nonnull
         private final SiteNode parentSiteNode;
@@ -111,5 +111,5 @@ public interface CompositeSiteNodeController
       }
 
     @Nonnull
-    public Finder<SiteNode> findChildrenSiteNodes();
+    public Finder<SiteNode> findVirtualSiteNodes();
   }

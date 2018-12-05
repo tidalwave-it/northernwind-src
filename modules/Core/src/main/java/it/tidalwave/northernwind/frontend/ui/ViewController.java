@@ -48,4 +48,16 @@ public interface ViewController
       throws Exception
       {
       }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the component to a view.
+     *
+     * @throws      Exception       in case of problems - it will cause a fatal error (such as HTTP status 500)
+     *
+     ******************************************************************************************************************/
+    default public void renderView()
+      throws Exception
+      {
+      }
   }
