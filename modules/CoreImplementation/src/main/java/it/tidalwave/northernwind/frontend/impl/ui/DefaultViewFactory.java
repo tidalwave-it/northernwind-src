@@ -32,11 +32,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
@@ -44,6 +44,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import static it.tidalwave.util.NotFoundException.*;
 
 /***********************************************************************************************************************
@@ -55,13 +56,16 @@ import static it.tidalwave.util.NotFoundException.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString
+@RequiredArgsConstructor @Slf4j @ToString
 public class DefaultViewFactory implements ViewFactory
   {
     /* package */ final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
+
+    @Nonnull
+    private final RequestContext requestContext;
 
     /*******************************************************************************************************************
      *
@@ -96,7 +100,7 @@ public class DefaultViewFactory implements ViewFactory
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
             final String typeUri = viewMetadata.typeUri();
-            final ViewBuilder viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
+            final ViewBuilder viewBuilder = new ViewBuilder(requestContext, viewClass, viewMetadata.controlledBy());
             viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
 
@@ -113,10 +117,6 @@ public class DefaultViewFactory implements ViewFactory
     private void logConfiguration()
       {
         log.info("View definitions:");
-
-        for (final ViewBuilder viewBuilder : viewBuilderMapByTypeUri.values())
-          {
-            log.info(">>>> {}", viewBuilder);
-          }
+        viewBuilderMapByTypeUri.values().stream().forEach(viewBuilder -> log.info(">>>> {}", viewBuilder));
       }
   }

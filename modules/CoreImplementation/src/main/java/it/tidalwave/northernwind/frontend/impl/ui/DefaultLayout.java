@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map;
 import java.util.Stack;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -162,14 +163,7 @@ public class DefaultLayout implements Layout, Cloneable
     @Override @Nonnull
     public DefaultLayout clone()
       {
-        try
-          {
-            return accept(new CloneVisitor());
-          }
-        catch (NotFoundException e)
-          {
-            throw new RuntimeException(e);
-          }
+        return accept(new CloneVisitor()).orElseThrow(RuntimeException::new);
       }
 
     /*******************************************************************************************************************
@@ -240,8 +234,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull // TODO: push up to CompositeSupport
-    public <Type> Type accept (final @Nonnull Visitor<Layout, Type> visitor)
-      throws NotFoundException
+    public <T> Optional<T> accept (final @Nonnull Visitor<Layout, T> visitor)
       {
         visitor.preVisit(this);
         visitor.visit(this);
@@ -253,7 +246,14 @@ public class DefaultLayout implements Layout, Cloneable
 
         visitor.postVisit(this);
 
-        return visitor.getValue();
+        try
+          {
+            return Optional.ofNullable(visitor.getValue()); // TODO: visitor.getOptionalValue()
+          }
+        catch (NotFoundException e)
+          {
+            return Optional.empty();
+          }
       }
 
     /*******************************************************************************************************************

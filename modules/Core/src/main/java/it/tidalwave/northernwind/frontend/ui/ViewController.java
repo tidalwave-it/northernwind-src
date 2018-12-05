@@ -26,6 +26,12 @@
  */
 package it.tidalwave.northernwind.frontend.ui;
 
+import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.RequestContext;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 /***********************************************************************************************************************
  *
  * The common ancestor of all controllers of views.
@@ -37,14 +43,22 @@ package it.tidalwave.northernwind.frontend.ui;
  **********************************************************************************************************************/
 public interface ViewController
   {
+    @RequiredArgsConstructor @ToString @Getter
+    public static class RenderContext // FIXME: make an interface
+      {
+        @Nonnull
+        private final RequestContext requestContext;
+      }
+
     /*******************************************************************************************************************
      *
      * Initializes the component. If the class has a superclass, remember to call {@code super.initialize()}.
      *
+     * @param       context         the context for rendering
      * @throws      Exception       in case of problems
      *
      ******************************************************************************************************************/
-    default public void initialize()
+    default public void initialize (final @Nonnull RenderContext context)
       throws Exception
       {
       }
@@ -55,10 +69,11 @@ public interface ViewController
      *
      * TODO: pass the Request here and drop RequestHolder.
      *
+     * @param       context         the context for rendering
      * @throws      Exception       in case of problems - it will cause a fatal error (such as HTTP status 500)
      *
      ******************************************************************************************************************/
-    default public void renderView()
+    default public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
       }

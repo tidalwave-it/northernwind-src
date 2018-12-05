@@ -33,6 +33,7 @@ import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -45,12 +46,12 @@ import org.mockito.stubbing.Answer;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
-import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
@@ -69,6 +70,8 @@ public class DefaultNodeContainerViewControllerTest
     private ResourceProperties nodeProperties;
 
     private ResourceProperties viewProperties;
+
+    private RenderContext renderContext;
 
     private final Answer logInvocation = invocation ->
       {
@@ -109,8 +112,10 @@ public class DefaultNodeContainerViewControllerTest
         final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.US));
 
+        renderContext = new RenderContext(mock(RequestContext.class));
+
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
-        underTest.initialize();
+        underTest.initialize(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -126,7 +131,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         stubProperty(Content, templatePath, PROPERTY_TEMPLATE, templateContent);
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).setTemplate(templateContent);
       }
@@ -143,7 +148,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set PROPERTY_TEMPLATE
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -159,7 +164,7 @@ public class DefaultNodeContainerViewControllerTest
         final String templatePath = "/path/to/inexistent/template";
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -172,7 +177,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("language", Locale.US.getLanguage());
       }
@@ -187,7 +192,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_TITLE_PREFIX)).thenReturn(Optional.of("the title prefix"));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("titlePrefix", "the title prefix");
       }
@@ -200,7 +205,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("titlePrefix", "");
       }
@@ -215,7 +220,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_DESCRIPTION)).thenReturn(Optional.of("the description"));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("description", "the description");
       }
@@ -228,7 +233,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("description", "");
       }
@@ -243,7 +248,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(nodeProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("title", "the title");
       }
@@ -256,7 +261,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("title", "");
       }
@@ -272,7 +277,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
                 .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("screenCssSection",
             "<link rel=\"stylesheet\" media=\"screen\" href=\"http://acme.com/css/1.css\" type=\"text/css\" />\n" +
@@ -290,7 +295,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_PRINT_STYLE_SHEETS))
                 .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("printCssSection",
             "<link rel=\"stylesheet\" media=\"print\" href=\"http://acme.com/css/1.css\" type=\"text/css\" />\n" +
@@ -311,7 +316,7 @@ public class DefaultNodeContainerViewControllerTest
         stubProperty(SiteNode, "/feed2", PROPERTY_TITLE, "Feed 2 title");
         // no property for feed3
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("rssFeeds",
             "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Feed 1 title\" href=\"http://acme.com/URI-feed1\" />\n" +
@@ -329,7 +334,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_SCRIPTS)).thenReturn(Optional.of(Arrays.asList("/js/1.js", "/js/2.js")));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("scripts",
             "<script type=\"text/javascript\" src=\"http://acme.com/js/1.js\"></script>\n" +
@@ -350,7 +355,7 @@ public class DefaultNodeContainerViewControllerTest
         stubProperty(Content, "/script2", PROPERTY_TEMPLATE, "<script>2</script>");
         // no property for script3
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("inlinedScripts",
             "<script>1</script>" +
