@@ -60,11 +60,11 @@ public class DefaultSitemapViewController implements SitemapViewController
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
         final StringBuilder builder = new StringBuilder();

@@ -81,6 +81,7 @@ public class DefaultNodeContainerViewControllerTest
      ******************************************************************************************************************/
     @BeforeMethod
     private void setup()
+      throws Exception
       {
         final Id viewId = new Id("id");
 
@@ -109,6 +110,7 @@ public class DefaultNodeContainerViewControllerTest
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.US));
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
+        underTest.initialize();
       }
 
     /*******************************************************************************************************************
@@ -124,7 +126,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         stubProperty(Content, templatePath, PROPERTY_TEMPLATE, templateContent);
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).setTemplate(templateContent);
       }
@@ -141,7 +143,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set PROPERTY_TEMPLATE
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -157,7 +159,7 @@ public class DefaultNodeContainerViewControllerTest
         final String templatePath = "/path/to/inexistent/template";
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -170,7 +172,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("language", Locale.US.getLanguage());
       }
@@ -185,7 +187,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_TITLE_PREFIX)).thenReturn(Optional.of("the title prefix"));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("titlePrefix", "the title prefix");
       }
@@ -198,7 +200,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("titlePrefix", "");
       }
@@ -213,7 +215,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_DESCRIPTION)).thenReturn(Optional.of("the description"));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("description", "the description");
       }
@@ -226,7 +228,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("description", "");
       }
@@ -241,7 +243,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(nodeProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("title", "the title");
       }
@@ -254,7 +256,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("title", "");
       }
@@ -270,7 +272,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
                 .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("screenCssSection",
             "<link rel=\"stylesheet\" media=\"screen\" href=\"http://acme.com/css/1.css\" type=\"text/css\" />\n" +
@@ -288,7 +290,7 @@ public class DefaultNodeContainerViewControllerTest
         when(viewProperties.getProperty(PROPERTY_PRINT_STYLE_SHEETS))
                 .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("printCssSection",
             "<link rel=\"stylesheet\" media=\"print\" href=\"http://acme.com/css/1.css\" type=\"text/css\" />\n" +
@@ -309,7 +311,7 @@ public class DefaultNodeContainerViewControllerTest
         stubProperty(SiteNode, "/feed2", PROPERTY_TITLE, "Feed 2 title");
         // no property for feed3
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("rssFeeds",
             "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Feed 1 title\" href=\"http://acme.com/URI-feed1\" />\n" +
@@ -327,7 +329,7 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_SCRIPTS)).thenReturn(Optional.of(Arrays.asList("/js/1.js", "/js/2.js")));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("scripts",
             "<script type=\"text/javascript\" src=\"http://acme.com/js/1.js\"></script>\n" +
@@ -348,7 +350,7 @@ public class DefaultNodeContainerViewControllerTest
         stubProperty(Content, "/script2", PROPERTY_TEMPLATE, "<script>2</script>");
         // no property for script3
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).addAttribute("inlinedScripts",
             "<script>1</script>" +

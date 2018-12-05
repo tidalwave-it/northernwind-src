@@ -189,21 +189,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
-        // FIXME: ugly workaround for a design limitation. See NW-110.
-        if (isCalledBySitemapController()) // called as a CompositeContentsController
-          {
-            return;
-          }
-
-        log.info("Initializing for {}", siteNode);
-        // called at initialization
+        log.info("renderView() for {}", siteNode);
+        
 //        try
 //          {
             final ResourceProperties viewProperties = getViewProperties();
@@ -469,22 +463,5 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
         return Arrays.asList(post.getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    private static boolean isCalledBySitemapController()
-      {
-        for (final StackTraceElement element : Thread.currentThread().getStackTrace())
-          {
-            if (element.getClassName().contains("SitemapViewController"))
-              {
-                return true;
-              }
-          }
-
-        return false;
       }
   }

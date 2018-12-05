@@ -86,11 +86,11 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
         final ResourceProperties viewProperties     = getViewProperties();
