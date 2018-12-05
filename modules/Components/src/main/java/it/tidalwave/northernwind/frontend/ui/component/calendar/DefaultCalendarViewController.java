@@ -78,11 +78,11 @@ public class DefaultCalendarViewController implements CalendarViewController
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       throws Exception
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode);
