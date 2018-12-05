@@ -70,6 +70,7 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @BeforeMethod
     private void setup()
+      throws Exception
       {
         final Id viewId = new Id("id");
 
@@ -92,6 +93,7 @@ public class DefaultMenuViewControllerTest
         when(view.getId()).thenReturn(viewId);
 
         underTest = new DefaultMenuViewController(view, siteNode, site);
+        underTest.initialize();
       }
 
     /*******************************************************************************************************************
@@ -99,7 +101,7 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_template()
-      throws NotFoundException
+      throws Exception
       {
         // given
         final String templateContent = "the template content";
@@ -107,7 +109,7 @@ public class DefaultMenuViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         stubProperty(Content, templatePath, PROPERTY_TEMPLATE, templateContent);
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).setTemplate(templateContent);
       }
@@ -117,14 +119,14 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_property_set()
-      throws NotFoundException
+      throws Exception
       {
         // given
         final String templatePath = "/path/to/template";
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set PROPERTY_TEMPLATE
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -134,13 +136,13 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_Content()
-      throws NotFoundException
+      throws Exception
       {
         // given
         final String templatePath = "/path/to/inexistent/template";
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -150,11 +152,12 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title()
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view).setTitle("the title");
       }
@@ -164,9 +167,10 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title_when_unspecified()
+      throws Exception
       {
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         verify(view, never()).setTitle(anyString());
       }
@@ -176,7 +180,7 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_add_the_links()
-      throws NotFoundException
+      throws Exception
       {
         // given
         when(viewProperties.getProperty(PROPERTY_LINKS)).thenReturn(Optional.of(
@@ -185,7 +189,7 @@ public class DefaultMenuViewControllerTest
         stubProperty(SiteNode, "/node2", PROPERTY_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3
         // when
-        underTest.initialize();
+        underTest.renderView();
         // then
         final InOrder inOrder = inOrder(view);
         inOrder.verify(view).addLink("Node 1 title", "http://acme.com/URI-node1");

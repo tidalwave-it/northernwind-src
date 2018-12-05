@@ -64,11 +64,11 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
 
     /*******************************************************************************************************************
      *
-     * Initializes this controller.
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize()
+    public void renderView()
       {
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
