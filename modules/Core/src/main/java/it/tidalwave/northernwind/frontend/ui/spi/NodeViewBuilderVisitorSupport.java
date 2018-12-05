@@ -34,6 +34,7 @@ import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,7 +94,8 @@ public abstract class NodeViewBuilderVisitorSupport<COMPONENT, CONTAINER> implem
       {
         try
           {
-            return (COMPONENT)layout.createViewAndController(siteNode).getView();
+            final ViewAndController viewAndController = layout.createViewAndController(siteNode);
+            return (COMPONENT)viewAndController.renderView();
           }
         catch (NotFoundException e)
           {
