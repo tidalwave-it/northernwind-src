@@ -53,6 +53,8 @@ public interface ViewController
      *
      * Renders the component to a view.
      *
+     * TODO: pass the Request here and drop RequestHolder.
+     *
      * @throws      Exception       in case of problems - it will cause a fatal error (such as HTTP status 500)
      *
      ******************************************************************************************************************/
