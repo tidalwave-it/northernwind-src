@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.stringtemplate.v4.ST;
@@ -69,8 +68,8 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    /* package */ void initialize()
+    @Override
+    public void initialize()
       {
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());

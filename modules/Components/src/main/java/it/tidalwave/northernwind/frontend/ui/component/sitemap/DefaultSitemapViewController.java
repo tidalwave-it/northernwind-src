@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -65,8 +64,8 @@ public class DefaultSitemapViewController implements SitemapViewController
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    protected void initialize()
+    @Override
+    public void initialize()
       throws Exception
       {
         final StringBuilder builder = new StringBuilder();

@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -91,8 +90,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    /* package */ void initialize()
+    @Override
+    public void initialize()
+      throws Exception
       {
         final ResourceProperties viewProperties     = getViewProperties();
         final ResourceProperties siteNodeProperties = siteNode.getProperties();

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,9 +81,11 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    private void initialize()
+    @Override
+    public void initialize()
+      throws Exception
       {
+        super.initialize();
         loadItems(siteNode.getProperties());
       }
 

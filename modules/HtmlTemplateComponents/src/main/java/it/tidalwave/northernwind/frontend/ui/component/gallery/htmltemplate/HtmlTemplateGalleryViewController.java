@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
@@ -115,10 +114,11 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    /* package */ void initializeHtmlTemplateGalleryViewController()
-      throws HttpStatusException
+    @Override
+    public void initialize()
+      throws Exception
       {
+        super.initialize();
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;

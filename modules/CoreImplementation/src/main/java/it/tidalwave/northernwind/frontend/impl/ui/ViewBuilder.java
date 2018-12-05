@@ -102,6 +102,7 @@ import lombok.extern.slf4j.Slf4j;
             final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
             final ViewController controller = viewControllerConstructor.newInstance(
                     computeConstructorArguments(viewControllerConstructor, id, siteNode, view));
+            controller.initialize();
             return new ViewAndController(view, controller);
           }
         catch (InvocationTargetException e)

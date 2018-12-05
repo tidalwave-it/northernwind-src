@@ -37,4 +37,15 @@ package it.tidalwave.northernwind.frontend.ui;
  **********************************************************************************************************************/
 public interface ViewController
   {
+    /*******************************************************************************************************************
+     *
+     * Initializes the component. If the class has a superclass, remember to call {@code super.initialize()}.
+     *
+     * @throws      Exception       in case of problems
+     *
+     ******************************************************************************************************************/
+    default public void initialize()
+      throws Exception
+      {
+      }
   }

@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -63,8 +62,8 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    /* package */ void initialize()
+    @Override
+    public void initialize()
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.setContent(viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())

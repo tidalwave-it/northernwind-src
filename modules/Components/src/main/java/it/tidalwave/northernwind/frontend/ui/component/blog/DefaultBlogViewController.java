@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,8 +169,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Initializes this controller.
      *
      ******************************************************************************************************************/
-    @PostConstruct
-    protected void initialize()
+    @Override
+    public void initialize()
       throws Exception
       {
         // FIXME: ugly workaround for a design limitation. See NW-110.
