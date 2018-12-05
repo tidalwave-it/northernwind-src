@@ -117,7 +117,7 @@ public class ViewBuilderTest
         // when
         final ViewAndController viewAndController = underTest.createViewAndController(id, siteNode);
         // then
-        final Object oController = viewAndController.getController();
+        final ViewController oController = viewAndController.getController();
         final Object oView = viewAndController.getView();
 
         assertThat(oController, is(not(nullValue())));
