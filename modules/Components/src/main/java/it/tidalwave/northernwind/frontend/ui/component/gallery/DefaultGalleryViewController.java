@@ -26,18 +26,18 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.BeanFactory;
-import it.tidalwave.util.Finder;
+import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
@@ -45,6 +45,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryLoader
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader.SlideShowProPlayerGalleryLoader;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -55,6 +56,50 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultGalleryViewController extends DefaultNodeContainerViewController implements GalleryViewController
   {
+    /*******************************************************************************************************************
+     *
+     * A {@link Finder8} which returns virtual {@link SiteNode}s representing the multiple contents served by the
+     * {@link SiteNode} associated to this controller. This is typically used to create site maps.
+     *
+     ******************************************************************************************************************/
+    @RequiredArgsConstructor
+    private static class ChildrenVirtualNodeFinder extends SimpleFinder8Support<SiteNode>
+      {
+        private static final long serialVersionUID = 1L;
+
+    @Nonnull
+        private final DefaultGalleryViewController controller;
+
+        public ChildrenVirtualNodeFinder (final @Nonnull ChildrenVirtualNodeFinder other, final @Nonnull Object override)
+          {
+            super(other, override);
+            final ChildrenVirtualNodeFinder source = getSource(ChildrenVirtualNodeFinder.class, other, override);
+            this.controller = source.controller;
+          }
+
+        @Override @Nonnull
+        protected List<? extends SiteNode> computeResults()
+          {
+            log.info("findChildrenSiteNodes()");
+            final List<SiteNode> results = new ArrayList<>();
+            final SiteNode siteNode = controller.siteNode;
+            results.add(new ChildSiteNode(siteNode,
+                                          siteNode.getRelativeUri().appendedWith("lightbox"),
+                                          siteNode.getProperties()));
+
+            for (final Item item : controller.itemMapById.values())
+              {
+                final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(item.getId().stringValue());
+                results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
+              }
+
+            log.info(">>>> returning: {}", results);
+
+            return results;
+          }
+      }
+
+
     @Nonnull
     private final SiteNode siteNode;
 
@@ -95,31 +140,13 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder<SiteNode> findChildrenSiteNodes()
+    public Finder8<SiteNode> findChildrenSiteNodes()
       {
-        return new SimpleFinderSupport<SiteNode>()
-          {
-            @Override
-            protected List<? extends SiteNode> computeResults()
-              {
-                log.info("findChildrenSiteNodes()");
-                final List<SiteNode> results = new ArrayList<>();
-                results.add(new ChildSiteNode(siteNode, siteNode.getRelativeUri().appendedWith("lightbox"), siteNode.getProperties()));
-
-                for (final Item item : itemMapById.values())
-                  {
-                    final ResourcePath relativeUri = siteNode.getRelativeUri().appendedWith(item.getId().stringValue());
-                    results.add(new ChildSiteNode(siteNode, relativeUri, siteNode.getProperties()));
-                  }
-
-                log.info(">>>> returning: {}", results);
-
-                return results;
-              }
-          };
+        return new ChildrenVirtualNodeFinder(this);
       }
 
     /*******************************************************************************************************************

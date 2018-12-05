@@ -38,9 +38,9 @@ import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
-import it.tidalwave.util.Finder;
+import it.tidalwave.util.Finder8;
+import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -72,6 +72,10 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewContr
 @RequiredArgsConstructor @Slf4j
 public abstract class DefaultBlogViewController implements BlogViewController
   {
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
     @AllArgsConstructor(access = PACKAGE) @Getter @EqualsAndHashCode
     protected static class TagAndCount
       {
@@ -101,6 +105,46 @@ public abstract class DefaultBlogViewController implements BlogViewController
         public String toString()
           {
             return String.format("TagAndCount(%s, %d, %s)", tag, count, rank);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * A {@link Finder8} which returns virtual {@link SiteNode}s representing the multiple contents served by the
+     * {@link SiteNode} associated to this controller. This is typically used to create site maps.
+     *
+     ******************************************************************************************************************/
+    // FIXME: add eventual localized versions
+    @RequiredArgsConstructor
+    private static class ChildrenVirtualNodeFinder extends SimpleFinder8Support<SiteNode>
+      {
+        private static final long serialVersionUID = 1L;
+
+        @Nonnull
+        private final DefaultBlogViewController controller;
+
+        public ChildrenVirtualNodeFinder (final @Nonnull ChildrenVirtualNodeFinder other, final @Nonnull Object override)
+          {
+            super(other, override);
+            final ChildrenVirtualNodeFinder source = getSource(ChildrenVirtualNodeFinder.class, other, override);
+            this.controller = source.controller;
+          }
+
+        @Override @Nonnull
+        protected List<? extends SiteNode> computeResults()
+          {
+            return controller.findAllPosts(controller.getViewProperties())
+                    .stream()
+                    .flatMap(post -> createChildSiteNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
+                    .collect(toList());
+          }
+
+        @Nonnull
+        private Optional<ChildSiteNode> createChildSiteNode (final @Nonnull Content post)
+          {
+            return post.getExposedUri().map(uri -> new ChildSiteNode(controller.siteNode,
+                                                                     controller.siteNode.getRelativeUri().appendedWith(uri),
+                                                                     post.getProperties()));
           }
       }
 
@@ -134,33 +178,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    // FIXME: add eventual localized versions
     @Override @Nonnull
-    public Finder<SiteNode> findChildrenSiteNodes()
+    public Finder8<SiteNode> findChildrenSiteNodes()
       {
-        return new SimpleFinderSupport<SiteNode>()
-          {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            protected List<? extends SiteNode> computeResults()
-              {
-                return findAllPosts(getViewProperties())
-                        .stream()
-                        .flatMap(post -> createChildSiteNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
-                        .collect(toList());
-              }
-
-            @Nonnull
-            private Optional<ChildSiteNode> createChildSiteNode (final @Nonnull Content post)
-              {
-                return post.getExposedUri().map(uri -> new ChildSiteNode(siteNode,
-                                                                         siteNode.getRelativeUri().appendedWith(uri),
-                                                                         post.getProperties()));
-              }
-          };
+        return new ChildrenVirtualNodeFinder(this);
       }
 
     /*******************************************************************************************************************

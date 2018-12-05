@@ -68,6 +68,8 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import it.tidalwave.role.ContextManager;
+import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -129,6 +131,8 @@ public class DefaultBlogViewControllerTest
           }
       }
 
+    private static final String SITE_NODE_RELATIVE_URI = "/blogNode";
+
     private Site site;
 
     private SiteNode siteNode;
@@ -160,6 +164,8 @@ public class DefaultBlogViewControllerTest
     private void setup()
       throws NotFoundException
       {
+        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
+
         final Id viewId = new Id("id");
 
         site = mock(Site.class);
@@ -178,6 +184,7 @@ public class DefaultBlogViewControllerTest
         siteNode = mock(SiteNode.class);
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
+        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(SITE_NODE_RELATIVE_URI));
 
         view = mock(BlogView.class);
         when(view.getId()).thenReturn(viewId);
@@ -284,6 +291,33 @@ public class DefaultBlogViewControllerTest
                             .collect(toList());
         actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
         assertThat(actualTacs, is(expectedTacs));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * TODO: parameterise
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_retrieve_children_virtual_nodes()
+      throws Exception
+      {
+        // given
+        createMockData(45);
+        when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
+        underTest.initialize();
+        // when
+        final List<? extends SiteNode> children = underTest.findChildrenSiteNodes().results();
+        // then
+        final List<String> expectedUris = posts.stream()
+                                               .map(c -> c.getExposedUri().get().prependedWith(SITE_NODE_RELATIVE_URI).asString())
+                                               .sorted()
+                                               .collect(toList());
+        final List<String> actualUris = children.stream()
+                                                .map(n -> n.getRelativeUri().asString())
+                                                .sorted()
+                                                .collect(toList());
+        assertThat(actualUris, is(expectedUris));
       }
 
     /*******************************************************************************************************************
