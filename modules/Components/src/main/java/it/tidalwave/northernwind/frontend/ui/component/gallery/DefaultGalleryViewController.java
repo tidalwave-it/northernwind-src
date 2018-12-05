@@ -166,6 +166,6 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
             itemMapById.put(item.getId(), item);
           }
 
-        log.info("gallery items loaded in {} msec", System.currentTimeMillis() - time);
+        log.info("{} gallery items loaded in {} msec", items.size(), System.currentTimeMillis() - time);
       }
   }
