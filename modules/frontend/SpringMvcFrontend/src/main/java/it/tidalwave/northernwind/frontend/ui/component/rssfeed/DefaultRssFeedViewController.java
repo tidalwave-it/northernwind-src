@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -40,7 +39,6 @@ import com.sun.syndication.feed.rss.Guid;
 import com.sun.syndication.feed.rss.Item;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -57,11 +55,11 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Slf4j
 public class DefaultRssFeedViewController extends DefaultBlogViewController implements RssFeedViewController
   {
-    @Inject
-    private Provider<SiteProvider> siteProvider;
+    @Nonnull
+    private final SiteProvider siteProvider;
 
     @Nonnull
     private final RssFeedView view;
@@ -77,10 +75,12 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
                                          final @Nonnull SiteNode siteNode,
                                          final @Nonnull Site site,
+                                         final @Nonnull SiteProvider siteProvider,
                                          final @Nonnull RequestHolder requestHolder,
                                          final @Nonnull RequestContext requestContext)
       {
         super(view, siteNode, site, requestHolder, requestContext);
+        this.siteProvider = siteProvider;
         this.view = view;
         feed = new Channel("rss_2.0");
         properties = siteNode.getPropertyGroup(view.getId());
@@ -149,7 +149,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void render()
       throws FeedException
       {
-        feed.setGenerator("NorthernWind v" + siteProvider.get().getVersionString());
+        feed.setGenerator("NorthernWind v" + siteProvider.getVersionString());
         feed.setItems(items);
 
 //        if (!StringUtils.hasText(feed.getEncoding()))

@@ -41,6 +41,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -67,9 +68,10 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
 
     private static final String XPATH_IMG = "/gallery/album/img";
 
-    public SlideShowProPlayerGalleryLoader (final @Nonnull ResourceProperties properties)
+    public SlideShowProPlayerGalleryLoader (final @Nonnull BeanFactory beanFactory,
+                                            final @Nonnull ResourceProperties properties)
       {
-        super(properties);
+        super(beanFactory, properties);
       }
 
     @Override @Nonnull
