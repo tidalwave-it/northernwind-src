@@ -30,12 +30,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,36 +45,71 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A support class for creating visitors for {@link Layout} that build a view implementation.
+ * A {@link Layout} visitor that instantiate views and controllers for a given {@code Layout}. The whole {@code Layout}
+ * tree is visited and for each child an instance of {@link ViewAndController} is created, the controller being called
+ * with the {@link ViewController#initialize(it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext)}
+ * method. No rendering is performed, but instances of {@code ViewAndController} are stored for later retrieval by means
+ * of the method {@link #getViewAndControllerFor(it.tidalwave.northernwind.frontend.ui.Layout)}.
  *
- * @author  Fabrizio Giudici
+ * @stereotype  Visitor
+ * @author      Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @NotThreadSafe @RequiredArgsConstructor @Slf4j
-public class NodeViewBuilderVisitor extends VisitorSupport<Layout, Map<Layout, ViewAndController>>
+public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewAndControllerLayoutBuilder>
   {
     private static final ViewController VOID_CONTROLLER = new ViewController() {};
 
     @Nonnull
     private final SiteNode siteNode;
 
+    @Nonnull
+    private final RenderContext renderContext;
+
     @Getter @Nonnull
     private final BiFunction<Layout, String, Object> fallbackViewSupplier;
 
     private final Map<Layout, ViewAndController> viewAndControllerMapByLayout = new IdentityHashMap<>();
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Override
     public void visit (final @Nonnull Layout layout)
       {
-        viewAndControllerMapByLayout.put(layout, createComponent(layout));
+        try
+          {
+            final ViewAndController vac = createComponent(layout);
+            vac.getController().initialize(renderContext);
+            viewAndControllerMapByLayout.put(layout, vac);
+          }
+        catch (Exception e)
+          {
+            viewAndControllerMapByLayout.put(layout, createFallback(layout, e.toString()));
+          }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Override @Nonnull
-    public Map<Layout, ViewAndController> getValue()
+    public ViewAndControllerLayoutBuilder getValue()
       {
-        return viewAndControllerMapByLayout;
+        return this;
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Optional<ViewAndController> getViewAndControllerFor (final @Nonnull Layout layout)
+      {
+        return Optional.ofNullable(viewAndControllerMapByLayout.get(layout));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private ViewAndController createComponent (@Nonnull Layout layout)
       {
@@ -92,6 +129,9 @@ public class NodeViewBuilderVisitor extends VisitorSupport<Layout, Map<Layout, V
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     protected ViewAndController createFallback (@Nonnull Layout layout, @Nonnull String message)
       {

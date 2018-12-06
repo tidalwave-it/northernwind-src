@@ -35,10 +35,11 @@ import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitor;
-import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRendererVisitor;
+import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
 import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,31 +70,43 @@ public class SpringMvcSiteView implements SiteView
       {
         log.info("renderSiteNode({})", siteNode);
 
-        final NodeViewBuilderVisitor nodeViewBuilderVisitor = new NodeViewBuilderVisitor(siteNode, this::createFallbackView);
-        siteNode.getLayout().accept(nodeViewBuilderVisitor);
-//        log.info(">>>> DYNAMIC ATTRIBUTES {}", nodeViewBuilderVisitor.getAttributes());
-        final NodeViewRendererVisitor<TextHolder, TextHolder> nodeViewRendererVisitor =
-                new NodeViewRendererVisitor<>(requestContext, nodeViewBuilderVisitor, this::attach);
-        siteNode.getLayout().accept(nodeViewRendererVisitor);
-        final TextHolder textHolder = nodeViewRendererVisitor.getRootComponent();
-        responseHolder.response().withStatus(nodeViewRendererVisitor.getStatus())
+        final RenderContext renderContext = new RenderContext(requestContext);
+        final ViewAndControllerLayoutBuilder vacBuilder =
+                new ViewAndControllerLayoutBuilder(siteNode, renderContext, this::createFallbackView);
+        siteNode.getLayout().accept(vacBuilder);
+        final NodeViewRenderer<TextHolder, TextHolder> renderer =
+                new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
+        siteNode.getLayout().accept(renderer);
+        final TextHolder textHolder = renderer.getRootComponent();
+        responseHolder.response().withStatus(renderer.getStatus())
                                  .withBody(textHolder.asBytes("UTF-8"))
                                  .withContentType(textHolder.getMimeType())
                                  .put();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void setCaption (final String string)
       {
 //        throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private TextHolder createFallbackView (final @Nonnull Layout layout, final @Nonnull String message)
       {
         return new HtmlHolder("<div>" + message + "</div>");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void attach (final @Nonnull TextHolder parent, final @Nonnull TextHolder child)
       {
         parent.addComponent(child);

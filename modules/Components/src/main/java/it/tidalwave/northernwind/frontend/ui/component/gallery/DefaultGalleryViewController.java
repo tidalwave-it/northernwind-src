@@ -130,10 +130,10 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize (final @Nonnull RenderContext context)
+    public void initialize()
       throws Exception
       {
-        super.initialize(context);
+        super.initialize();
         log.info("initialize() - {}", siteNode.getRelativeUri());
         final long time = System.currentTimeMillis();
         final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, siteNode.getProperties()); // FIXME: make it configurable

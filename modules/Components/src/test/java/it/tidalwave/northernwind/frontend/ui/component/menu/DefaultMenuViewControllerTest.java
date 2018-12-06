@@ -99,6 +99,7 @@ public class DefaultMenuViewControllerTest
         renderContext = new RenderContext(mock(RequestContext.class));
 
         underTest = new DefaultMenuViewController(view, siteNode, site);
+        underTest.initialize();
         underTest.initialize(renderContext);
       }
 

@@ -201,6 +201,7 @@ public class DefaultBlogViewControllerTest
         renderContext = new RenderContext(requestContext);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
+        underTest.initialize();
         underTest.initialize(renderContext);
       }
 

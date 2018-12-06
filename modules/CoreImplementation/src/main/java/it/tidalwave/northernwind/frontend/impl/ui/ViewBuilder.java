@@ -38,12 +38,10 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -64,9 +62,6 @@ import lombok.extern.slf4j.Slf4j;
     private BeanFactory beanFactory;
 
     @Nonnull
-    private final RequestContext requestContext;
-
-    @Nonnull
     /* package */ final Constructor<?> viewConstructor;
 
     @Nonnull
@@ -76,13 +71,11 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    public ViewBuilder (final @Nonnull RequestContext requestContext,
-                        final @Nonnull Class<?> viewClass,
+    public ViewBuilder (final @Nonnull Class<?> viewClass,
                         final @Nonnull Class<? extends ViewController> viewControllerClass)
       throws NoSuchMethodException, InvocationTargetException, InstantiationException,
              IllegalArgumentException, IllegalAccessException, SecurityException
       {
-        this.requestContext = requestContext;
         viewConstructor = viewClass.getConstructors()[0];
         viewControllerConstructor = (Constructor<ViewController>)viewControllerClass.getConstructors()[0];
       }
@@ -109,7 +102,7 @@ import lombok.extern.slf4j.Slf4j;
             final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
             final ViewController controller = viewControllerConstructor.newInstance(
                     computeConstructorArguments(viewControllerConstructor, id, siteNode, view));
-            controller.initialize(new RenderContext(requestContext));
+            controller.initialize();
             return new ViewAndController(view, controller);
           }
         catch (InvocationTargetException e)

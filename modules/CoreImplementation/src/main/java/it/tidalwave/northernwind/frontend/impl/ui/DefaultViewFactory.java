@@ -36,7 +36,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
@@ -63,9 +62,6 @@ public class DefaultViewFactory implements ViewFactory
 
     @Getter @Setter
     private boolean logConfigurationEnabled = false;
-
-    @Nonnull
-    private final RequestContext requestContext;
 
     /*******************************************************************************************************************
      *
@@ -100,7 +96,7 @@ public class DefaultViewFactory implements ViewFactory
           {
             final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
             final String typeUri = viewMetadata.typeUri();
-            final ViewBuilder viewBuilder = new ViewBuilder(requestContext, viewClass, viewMetadata.controlledBy());
+            final ViewBuilder viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
             viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
 

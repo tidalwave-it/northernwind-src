@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.impl.ui;
 
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -88,8 +87,6 @@ public class ViewBuilderTest
 
     private MockService2 service2;
 
-    private RequestContext requestContext;
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -107,9 +104,7 @@ public class ViewBuilderTest
 
         id = new Id("theId");
 
-        requestContext = mock(RequestContext.class);
-
-        underTest = new ViewBuilder(requestContext, MockView.class, MockController.class);
+        underTest = new ViewBuilder(MockView.class, MockController.class);
       }
 
     /*******************************************************************************************************************
