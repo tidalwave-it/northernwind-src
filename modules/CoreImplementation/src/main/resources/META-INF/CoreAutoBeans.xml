@@ -149,6 +149,7 @@
 
     <bean id="viewFactory"
           class="it.tidalwave.northernwind.frontend.impl.ui.DefaultViewFactory" >
+        <constructor-arg ref="requestContext"/>
         <property name="logConfigurationEnabled" value="${nw.logConfigurationEnabled}" />
     </bean>
 

@@ -29,13 +29,14 @@ package it.tidalwave.northernwind.frontend.ui.spi;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Stack;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite.Visitor;
+import java.util.function.BiConsumer;
+import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -45,20 +46,40 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NotThreadSafe @RequiredArgsConstructor @Slf4j
-public abstract class NodeViewBuilderVisitorSupport<COMPONENT, CONTAINER> implements Visitor<Layout, COMPONENT>
+@NotThreadSafe @Slf4j
+public class NodeViewRendererVisitor<COMPONENT, CONTAINER> extends VisitorSupport<Layout, COMPONENT>
   {
     @Nonnull
-    protected final SiteNode siteNode;
+    private final NodeViewBuilderVisitor nodeViewBuilderVisitor;
 
+    @Nonnull
+    private final BiConsumer<CONTAINER, COMPONENT> attacher;
+
+    private final RenderContext renderContext;
+
+    private final Stack<COMPONENT> components = new Stack<>();
+
+    @Getter
+    private int status = 200;
+
+    @Getter
     private COMPONENT rootComponent;
 
-    private Stack<COMPONENT> components = new Stack<>();
+    public NodeViewRendererVisitor (final @Nonnull RequestContext requestContext,
+                                    final @Nonnull NodeViewBuilderVisitor nodeViewBuilderVisitor,
+                                    final @Nonnull BiConsumer<CONTAINER, COMPONENT> attacher)
+      {
+        this.nodeViewBuilderVisitor = nodeViewBuilderVisitor;
+        this.attacher = attacher;
+        this.renderContext = new RenderContext(requestContext);
+      }
+
 
     @Override
     public void preVisit (final @Nonnull Layout layout)
       {
-        final COMPONENT component = createComponent(layout);
+        final ViewAndController viewAndController = nodeViewBuilderVisitor.getValue().get(layout);
+        final COMPONENT component = createComponent(viewAndController, layout);
 
         if (rootComponent == null)
           {
@@ -66,16 +87,12 @@ public abstract class NodeViewBuilderVisitorSupport<COMPONENT, CONTAINER> implem
           }
         else
           {
-            attach((CONTAINER)components.peek(), component);
+            attacher.accept((CONTAINER)components.peek(), component);
           }
 
         components.push(component);
       }
 
-    @Override
-    public void visit (final @Nonnull Layout layout)
-      {
-      }
 
     @Override
     public void postVisit (final @Nonnull Layout layout)
@@ -83,29 +100,21 @@ public abstract class NodeViewBuilderVisitorSupport<COMPONENT, CONTAINER> implem
         components.pop();
       }
 
-    @Override @Nonnull
-    public COMPONENT getValue()
-      {
-        return rootComponent;
-      }
-
     @Nonnull
-    private COMPONENT createComponent (@Nonnull Layout layout)
+    private COMPONENT createComponent (final @Nonnull ViewAndController viewAndController, final @Nonnull Layout layout)
       {
+        assert viewAndController != null : "No ViewAndController for" + layout;
+
         try
           {
-            final ViewAndController viewAndController = layout.createViewAndController(siteNode);
-            return (COMPONENT)viewAndController.renderView();
-          }
-        catch (NotFoundException e)
-          {
-            log.warn("Component not found", e);
-            return createPlaceHolderComponent(layout, "Missing component: " + layout.getTypeUri());
+            return (COMPONENT)viewAndController.renderView(renderContext);
           }
         catch (HttpStatusException e)
           {
             // FIXME: should set the status in the response - unfortunately at this level the ResponseHolder is abstract
             log.warn("Returning HTTP status {}", e.getHttpStatus());
+            status = e.getHttpStatus();
+
             String message = "<h1>Status " + e.getHttpStatus() + "</h1>"; // FIXME: use a resource bundle
 
             if (e.getHttpStatus() == 404)
@@ -113,17 +122,18 @@ public abstract class NodeViewBuilderVisitorSupport<COMPONENT, CONTAINER> implem
                 message = "<h1>Not found</h1>";
               }
 
-            return createPlaceHolderComponent(layout, message);
+            if (e.getHttpStatus() == 500)
+              {
+                message = "<h1>Internal error</h1>";
+              }
+
+            return (COMPONENT)nodeViewBuilderVisitor.getFallbackViewSupplier().apply(layout, message);
           }
         catch (Throwable e)
           {
             log.warn("Internal error", e);
-            return createPlaceHolderComponent(layout, "Error");
+            status = 500;
+            return (COMPONENT)nodeViewBuilderVisitor.getFallbackViewSupplier().apply(layout, e.toString());
           }
       }
-
-    @Nonnull
-    protected abstract COMPONENT createPlaceHolderComponent (@Nonnull Layout layout, @Nonnull String message);
-
-    protected abstract void attach (@Nonnull CONTAINER parent, @Nonnull COMPONENT child);
   }
