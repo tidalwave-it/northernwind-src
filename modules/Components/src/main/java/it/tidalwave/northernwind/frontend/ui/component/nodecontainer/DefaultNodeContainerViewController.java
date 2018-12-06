@@ -94,20 +94,22 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       throws Exception
       {
         final ResourceProperties viewProperties     = getViewProperties();
-        final ResourceProperties siteNodeProperties = siteNode.getProperties();
+        final ResourceProperties siteNodeProperties = context.getRequestContext().getNodeProperties();
 
         viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
                                                           .ifPresent(view::setTemplate);
 
         view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
-        view.addAttribute("titlePrefix",      viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
         view.addAttribute("description",      viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
-        view.addAttribute("title",            siteNodeProperties.getProperty(PROPERTY_TITLE).orElse(""));
+        view.addAttribute("titlePrefix",      viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
+        view.addAttribute("title",            siteNodeProperties.getProperty(PROPERTY_DYNAMIC_TITLE).orElse(
+                                              siteNodeProperties.getProperty(PROPERTY_TITLE).orElse("")));
         view.addAttribute("screenCssSection", computeScreenCssSection());
         view.addAttribute("printCssSection",  computePrintCssSection());
         view.addAttribute("rssFeeds",         computeRssFeedsSection());
         view.addAttribute("scripts",          computeScriptsSection());
         view.addAttribute("inlinedScripts",   computeInlinedScriptsSection());
+        siteNodeProperties.getProperty(PROPERTY_DYNAMIC_IMAGE_ID).ifPresent(id -> view.addAttribute("imageId", id));
       }
 
     /*******************************************************************************************************************

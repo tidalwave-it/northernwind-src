@@ -70,6 +70,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -84,11 +85,11 @@ public class DefaultBlogViewControllerTest
   {
     static class UnderTest extends DefaultBlogViewController
       {
-        public final List<Content> fullPosts = new ArrayList<>();
+        public final List<Content> _fullPosts = new ArrayList<>();
 
-        public final List<Content> leadInPosts = new ArrayList<>();
+        public final List<Content> _leadInPosts = new ArrayList<>();
 
-        public final List<Content> linkedPosts = new ArrayList<>();
+        public final List<Content> _linkedPosts = new ArrayList<>();
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
@@ -104,19 +105,19 @@ public class DefaultBlogViewControllerTest
         @Override
         protected void addFullPost (final @Nonnull Content post)
           {
-            fullPosts.add(post);
+            _fullPosts.add(post);
           }
 
         @Override
         protected void addLeadInPost (final @Nonnull Content post)
           {
-            leadInPosts.add(post);
+            _leadInPosts.add(post);
           }
 
         @Override
         protected void addLinkToPost (final @Nonnull Content post)
           {
-            linkedPosts.add(post);
+            _linkedPosts.add(post);
           }
 
         @Override
@@ -202,7 +203,6 @@ public class DefaultBlogViewControllerTest
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
         underTest.initialize();
-        underTest.initialize(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -225,21 +225,22 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        underTest.initialize(renderContext);
         // when
         underTest.renderView(renderContext);
         // then
-        underTest.fullPosts.forEach  (post -> log.info(">>>> full:    {}", post));
-        underTest.leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
-        underTest.linkedPosts.forEach(post -> log.info(">>>> linked:  {}", post));
+        underTest._fullPosts.forEach  (post -> log.info(">>>> full:    {}", post));
+        underTest._leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
+        underTest._linkedPosts.forEach(post -> log.info(">>>> linked:  {}", post));
 
-        final List<Integer> actualFullPostsIds   = getPostIds(underTest.fullPosts);
-        final List<Integer> actualLeadInPostsIds = getPostIds(underTest.leadInPosts);
-        final List<Integer> actualLinkedPostsIds = getPostIds(underTest.linkedPosts);
+        final List<Integer> actualFullPostsIds   = getPostIds(underTest._fullPosts);
+        final List<Integer> actualLeadInPostsIds = getPostIds(underTest._leadInPosts);
+        final List<Integer> actualLinkedPostsIds = getPostIds(underTest._linkedPosts);
         assertThat("full posts",   actualFullPostsIds,   is(expectedFullPostIds));
         assertThat("leadIn posts", actualLeadInPostsIds, is(expectedLeadInPostIds));
         assertThat("all posts",    actualLinkedPostsIds, is(expectedLinkedPostIds));
 
-        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
+        final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         final List<ZonedDateTime> publishingDates = allPosts
                 .stream()
                 .map(post -> post.getProperties().getDateTimeProperty(PROPERTY_PUBLISHING_DATE).get())
@@ -247,19 +248,6 @@ public class DefaultBlogViewControllerTest
         assertSortedInReverseOrder(publishingDates);
 
         assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
-
-        if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
-          {
-            final String id = String.format("%2d", expectedFullPostIds.get(0));
-            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_ID),    eq("id#" + id));
-            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_TITLE), eq("Title #" + id));
-            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_URL),   eq("http://acme.com/blogNode/post-" + id));
-            // TODO: no more invocations
-          }
-        else
-          {
-            verify(requestContext, never()).setDynamicNodeProperty(any(Key.class), any(Object.class));
-          }
       }
 
     /*******************************************************************************************************************
@@ -281,6 +269,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        underTest.initialize(renderContext);
         // when
         underTest.renderView(renderContext);
         // then should throw exception
@@ -297,13 +286,14 @@ public class DefaultBlogViewControllerTest
         // given
         createMockData(seed);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
+        underTest.initialize(renderContext);
         // when
         underTest.renderView(renderContext);
         // then
-        final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
-        assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
-        assertThat("leadIn posts", underTest.leadInPosts.size(), is(0));  // TODO: should be: method not called
-        assertThat("all posts",    allPosts.size(), is(0));               // TODO: should be: method not called
+        final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        assertThat("full posts",   underTest._fullPosts.size(), is(0));    // TODO: should be: method not called
+        assertThat("leadIn posts", underTest._leadInPosts.size(), is(0));  // TODO: should be: method not called
+        assertThat("all posts",    allPosts.size(), is(0));                // TODO: should be: method not called
 
         final List<TagAndCount> actualTacs = underTest.tagsAndCount
                             .stream()
@@ -311,6 +301,52 @@ public class DefaultBlogViewControllerTest
                             .collect(toList());
         actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
         assertThat(actualTacs, is(expectedTacs));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "postRenderingTestData")
+    public void must_properly_set_dynamic_properties_for_single_posts (
+                                                      final int seed,
+                                                      final int maxFullItems,
+                                                      final int maxLeadinItems,
+                                                      final int maxItems,
+                                                      final @Nonnull String pathParams,
+                                                      final @Nonnull List<Integer> expectedFullPostIds,
+                                                      final @Nonnull List<Integer> expectedLeadInPostIds,
+                                                      final @Nonnull List<Integer> expectedLinkedPostIds)
+      throws Exception
+      {
+        // given
+        createMockData(seed);
+        when(viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        // when
+        underTest.initialize(renderContext);
+        // then
+        if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
+          {
+            final Integer id = expectedFullPostIds.get(0);
+            assertThat(underTest.fullPosts.get(0), is(posts.get(id)));
+
+            final String sid = String.format("%2d", id);
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_ID),       eq("id#" + sid));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_TITLE),    eq("Title #" + sid));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_URL),      eq("http://acme.com/blogNode/post-" + sid));
+
+            if (posts.get(id).getProperty(PROPERTY_IMAGE_ID).isPresent())
+              {
+                verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_IMAGE_ID), eq("imageId#" + sid));
+              }
+            // TODO: verify no more invocations
+          }
+        else
+          {
+            verify(requestContext, never()).setDynamicNodeProperty(any(Key.class), any(Object.class));
+          }
       }
 
     /*******************************************************************************************************************
@@ -324,8 +360,6 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(45);
-        when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
-        underTest.renderView(renderContext);
         // when
         final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then
@@ -357,6 +391,10 @@ public class DefaultBlogViewControllerTest
                                                         asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
 
             { 45,  10,  7,     30,  "/post-10",         asList(10),
+                                                        asList(),
+                                                        asList() },
+
+            { 45,  10,  7,     30,  "/post-11",         asList(11),
                                                         asList(),
                                                         asList() },
 
@@ -495,6 +533,7 @@ public class DefaultBlogViewControllerTest
      * <li>a {@code PROPERTY_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
      * <li>a {@code PROPERTY_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
      * <li>a {@code PROPERTY_ID} set as {@code "id#&lt;num&gt;"}</li>
+     * <li>a {@code PROPERTY_IMAGE_ID} set as {@code "imageId#&lt;num&gt;"} to the 10% of posts</li>
      * <li>a {@code PROPERTY_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
      * <li>a {@code PROPERTY_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
      * <li>a {@code getExposedUri()} set as {@code "post-#&lt;num&gt;"}</li>
@@ -522,6 +561,7 @@ public class DefaultBlogViewControllerTest
         final List<Content> posts = new ArrayList<>();
         final Random categoryRnd = new Random(seed);
         final Random tagRnd      = new Random(seed);
+        final Random imageIdRnd  = new Random(seed);
 
         for (int i = 0; i< count; i++)
           {
@@ -535,6 +575,11 @@ public class DefaultBlogViewControllerTest
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
             when(properties.getProperty(PROPERTY_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
+
+            if (imageIdRnd.nextDouble() > 0.9)
+              {
+                when(properties.getProperty(PROPERTY_IMAGE_ID)).thenReturn(Optional.of(String.format("imageId#%2d", i)));
+              }
 
             // Assign category
             final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
@@ -585,8 +630,9 @@ public class DefaultBlogViewControllerTest
         final String title        = post.getProperty(PROPERTY_TITLE).orElse("???");
         final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
         final String dateTime     = post.getProperty(PROPERTY_PUBLISHING_DATE).orElse("???");
+        final String imageId      = post.getProperty(PROPERTY_IMAGE_ID).orElse("");
         final String category     = post.getProperty(PROPERTY_CATEGORY).orElse("");
         final String tags = post.getProperty(PROPERTY_TAGS).orElse("");
-        return String.format("Content(%s - %-10s - %s - %-10s - %s)", title, exposedUri, dateTime, category, tags);
+        return String.format("Content(%s - %-10s - %s - %-10s - %-10s - %s)", title, exposedUri, dateTime, imageId, category, tags);
       }
   }
