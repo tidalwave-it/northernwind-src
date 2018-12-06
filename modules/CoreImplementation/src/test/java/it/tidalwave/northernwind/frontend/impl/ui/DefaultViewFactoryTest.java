@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 import java.lang.reflect.Constructor;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController1;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController2;
@@ -51,8 +50,6 @@ import static org.hamcrest.CoreMatchers.*;
  **********************************************************************************************************************/
 public class DefaultViewFactoryTest
   {
-    private RequestContext requestContext;
-
     private DefaultViewFactory underTest;
 
     /*******************************************************************************************************************
@@ -61,8 +58,7 @@ public class DefaultViewFactoryTest
     @BeforeMethod
     public void setup()
       {
-        requestContext = mock(RequestContext.class);
-        underTest = new DefaultViewFactory(requestContext);
+        underTest = new DefaultViewFactory();
       }
 
     /*******************************************************************************************************************

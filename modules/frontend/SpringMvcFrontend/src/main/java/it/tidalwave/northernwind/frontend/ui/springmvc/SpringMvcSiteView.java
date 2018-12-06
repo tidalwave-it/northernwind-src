@@ -35,6 +35,7 @@ import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewBuilderVisitor;
@@ -69,9 +70,9 @@ public class SpringMvcSiteView implements SiteView
       {
         log.info("renderSiteNode({})", siteNode);
 
-        final NodeViewBuilderVisitor nodeViewBuilderVisitor = new NodeViewBuilderVisitor(siteNode, this::createFallbackView);
+        final RenderContext renderContext = new RenderContext(requestContext);
+        final NodeViewBuilderVisitor nodeViewBuilderVisitor = new NodeViewBuilderVisitor(siteNode, renderContext, this::createFallbackView);
         siteNode.getLayout().accept(nodeViewBuilderVisitor);
-//        log.info(">>>> DYNAMIC ATTRIBUTES {}", nodeViewBuilderVisitor.getAttributes());
         final NodeViewRendererVisitor<TextHolder, TextHolder> nodeViewRendererVisitor =
                 new NodeViewRendererVisitor<>(requestContext, nodeViewBuilderVisitor, this::attach);
         siteNode.getLayout().accept(nodeViewRendererVisitor);

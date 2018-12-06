@@ -115,6 +115,7 @@ public class DefaultNodeContainerViewControllerTest
         renderContext = new RenderContext(mock(RequestContext.class));
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
+        underTest.initialize();
         underTest.initialize(renderContext);
       }
 

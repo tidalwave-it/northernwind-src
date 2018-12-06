@@ -36,6 +36,7 @@ import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,9 @@ public class NodeViewBuilderVisitor extends VisitorSupport<Layout, Map<Layout, V
     @Nonnull
     private final SiteNode siteNode;
 
+    @Nonnull
+    private final RenderContext renderContext;
+
     @Getter @Nonnull
     private final BiFunction<Layout, String, Object> fallbackViewSupplier;
 
@@ -64,7 +68,16 @@ public class NodeViewBuilderVisitor extends VisitorSupport<Layout, Map<Layout, V
     @Override
     public void visit (final @Nonnull Layout layout)
       {
-        viewAndControllerMapByLayout.put(layout, createComponent(layout));
+        try
+          {
+            final ViewAndController createComponent = createComponent(layout);
+            createComponent.getController().initialize(renderContext);
+            viewAndControllerMapByLayout.put(layout, createComponent);
+          }
+        catch (Exception e)
+          {
+            viewAndControllerMapByLayout.put(layout, createFallback(layout, e.toString()));
+          }
       }
 
     @Override @Nonnull
