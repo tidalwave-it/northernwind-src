@@ -31,13 +31,11 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 import it.tidalwave.role.Composite.VisitorSupport;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -48,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NotThreadSafe @Slf4j
+@NotThreadSafe
 public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layout, COMPONENT>
   {
     @Nonnull
@@ -61,9 +59,6 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
 
     private final Stack<COMPONENT> components = new Stack<>();
 
-//    @Getter
-//    private int status = 200;
-//
     @Getter
     private COMPONENT rootComponent;
 
@@ -75,8 +70,8 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
                              final @Nonnull BiConsumer<CONTAINER, COMPONENT> attacher)
       {
         this.vacLayoutBuilder = vacLayoutBuilder;
-        this.attacher = attacher;
-        this.renderContext = new RenderContext(requestContext);
+        this.attacher         = attacher;
+        this.renderContext    = new RenderContext(requestContext);
       }
 
     /*******************************************************************************************************************
@@ -118,18 +113,10 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
         try
           {
             return (COMPONENT)vac.renderView(renderContext);
-//          }
-//        catch (HttpStatusException e)
-//          {
-//            log.warn("Returning HTTP status {}", e.getHttpStatus());
-//            status = e.getHttpStatus();
-//            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, e);
           }
         catch (Throwable e)
           {
-            log.warn("renderView()", e);
-//            status = 500;
-            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, e);
+            return (COMPONENT)vacLayoutBuilder.getErrorViewSupplier().apply(layout, e);
           }
       }
   }
