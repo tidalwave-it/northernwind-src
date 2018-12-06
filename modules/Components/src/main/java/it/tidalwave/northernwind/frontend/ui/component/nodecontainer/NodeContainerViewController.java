@@ -54,4 +54,7 @@ public interface NodeContainerViewController extends ViewController
 
     /** The list of relative paths for inlined JavaScript scripts. */
     public static final Key<List<String>> PROPERTY_INLINED_SCRIPTS = new Key<>("inlinedScripts");
+
+    /** The id of the primary image to be associated to this page. */
+    public static final Key<String> PROPERTY_DYNAMIC_IMAGE_ID = new Key<>("@imageId");
   }

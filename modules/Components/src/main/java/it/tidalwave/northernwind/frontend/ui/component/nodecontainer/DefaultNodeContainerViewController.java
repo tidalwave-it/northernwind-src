@@ -108,6 +108,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         view.addAttribute("rssFeeds",         computeRssFeedsSection());
         view.addAttribute("scripts",          computeScriptsSection());
         view.addAttribute("inlinedScripts",   computeInlinedScriptsSection());
+
+        context.getRequestContext().getNodeProperties().getProperty(PROPERTY_DYNAMIC_IMAGE_ID)
+                .ifPresent(id -> view.addAttribute("imageId", id));
       }
 
     /*******************************************************************************************************************

@@ -65,6 +65,7 @@ import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 
 /***********************************************************************************************************************
  *
@@ -378,6 +379,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         context.setDynamicNodeProperty(PROPERTY_DYNAMIC_TITLE, computeTitle(post));
         post.getExposedUri().map(this::createLink)
                 .ifPresent(l -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_URL, l));
+        post.getProperty(PROPERTY_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_IMAGE_ID, id));
       }
 
     /*******************************************************************************************************************

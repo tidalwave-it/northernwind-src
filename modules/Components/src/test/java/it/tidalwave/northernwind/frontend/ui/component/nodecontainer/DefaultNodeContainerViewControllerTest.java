@@ -112,7 +112,10 @@ public class DefaultNodeContainerViewControllerTest
         final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.US));
 
-        renderContext = new RenderContext(mock(RequestContext.class));
+        final RequestContext requestContext = mock(RequestContext.class);
+        when(requestContext.getNodeProperties()).thenReturn(nodeProperties);
+
+        renderContext = new RenderContext(requestContext);
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
         underTest.initialize();

@@ -52,6 +52,9 @@ public interface BlogViewController extends CompositeSiteNodeController, ViewCon
     // FIXME: this should be Boolean
     public static final Key<String> PROPERTY_TAG_CLOUD = new Key<>("tagCloud");
 
+    /** The id of the image to be associated with a blog post. */
+    public static final Key<String> PROPERTY_IMAGE_ID = new Key<>("imageId");
+
     // TODO: find a proper name space, possibly merging with other - or defining @ as dynamic properties
     /** Dynamic property generated during rendering with the title of the blog post. */
     public static final Key<String> PROPERTY_DYNAMIC_TITLE = new Key<>("@title");
