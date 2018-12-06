@@ -49,5 +49,5 @@ public interface GalleryLoader
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<GalleryViewController.Item> loadGallery (@Nonnull SiteNode siteNode);
+    public List<GalleryViewController.GalleryItem> loadGallery (@Nonnull SiteNode siteNode);
   }
