@@ -42,7 +42,6 @@ import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import it.tidalwave.northernwind.core.model.spi.ResponseHolder;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
 import lombok.extern.slf4j.Slf4j;
-import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
