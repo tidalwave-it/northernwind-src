@@ -141,10 +141,6 @@ public class DefaultSiteViewController implements SiteViewController
       {
         Collections.sort(requestProcessors, new AnnotationAwareOrderComparator());
         log.info(">>>> requestProcessors:");
-
-        for (final RequestProcessor requestProcessor : requestProcessors)
-          {
-            log.info(">>>>>>>> {}", requestProcessor);
-          }
+        requestProcessors.forEach(p -> log.info(">>>>>>>> {}", p));
       }
   }
