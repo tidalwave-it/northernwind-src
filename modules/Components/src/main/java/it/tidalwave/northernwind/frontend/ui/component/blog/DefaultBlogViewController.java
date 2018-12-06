@@ -180,6 +180,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     protected final RequestContext requestContext;
 
+    /* VisibleForTesting */ final List<Content> fullPosts = new ArrayList<>();
+
+    /* VisibleForTesting */ final List<Content> leadInPosts = new ArrayList<>();
+
+    /* VisibleForTesting */ final List<Content> linkedPosts = new ArrayList<>();
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -198,19 +204,20 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     @Override
     public void initialize (final @Nonnull RenderContext context)
+      throws HttpStatusException
       {
-        // FIXME: pending. This should be done only when a single post is going to be rendered in full.
-        // But getting it is an expensive operation, that we'd like not to repeat when rendering will occur.
-        // Until this gets fixed, setDynamicProperties() is anyway performed by generateBlogPosts().
-        // See NW-127.
+        log.info("initialize(RenderContext) for {}", siteNode);
 
-        if (!getViewProperties().getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false))
+        final ResourceProperties viewProperties = getViewProperties();
+        final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+
+        if (!tagCloud)
           {
-            final Content post = null;
+            prepareBlogPosts(context, viewProperties);
 
-            if (post != null)
+            if ((fullPosts.size() == 1) && leadInPosts.isEmpty() && linkedPosts.isEmpty())
               {
-                setDynamicProperties(context, post);
+                setDynamicProperties(context, fullPosts.get(0));
               }
           }
       }
@@ -226,35 +233,29 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         log.info("renderView() for {}", siteNode);
 
-//        try
-//          {
-            final ResourceProperties viewProperties = getViewProperties();
-            final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+        final ResourceProperties viewProperties = getViewProperties();
+        final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
 
-            if (tagCloud)
-              {
-                generateTagCloud(viewProperties);
-              }
-            else
-              {
-                generateBlogPosts(context, viewProperties);
-              }
+        if (tagCloud)
+          {
+            generateTagCloud(viewProperties);
+          }
+        else
+          {
+            fullPosts.forEach(this::addFullPost);
+            leadInPosts.forEach(this::addLeadInPost);
+            linkedPosts.forEach(this::addLinkToPost);
+          }
 
-            render();
-//          }
-//        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen
-//        catch (NotFoundException e)
-//          {
-//            log.warn("While reading property group at initialization", e);
-//          }
+        render();
       }
 
     /*******************************************************************************************************************
      *
-     * Renders the blog posts.
+     * Prepares the blog posts.
      *
      ******************************************************************************************************************/
-    private void generateBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
+    private void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
@@ -270,15 +271,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 .collect(toList());
 
         final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
-        split.get(0).forEach(this::addFullPost);
-        split.get(1).forEach(this::addLeadInPost);
-        split.get(2).forEach(this::addLinkToPost);
-
-        // FIXME: until this can't be done in initialize(context) we do now - see NW-127
-        if (split.get(0).size() == 1) // rendering a single post in full
-          {
-            setDynamicProperties(context, split.get(0).get(0));
-          }
+        fullPosts.addAll(split.get(0));
+        leadInPosts.addAll(split.get(1));
+        linkedPosts.addAll(split.get(2));
       }
 
     /*******************************************************************************************************************
@@ -389,16 +384,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private String computeTitle (final @Nonnull Content post)
       {
-        final Optional<String> prefix    = getViewProperties().getProperty(PROPERTY_TITLE);
-        final Optional<String> title     = post.getProperties().getProperty(PROPERTY_TITLE);
-        final Optional<String> separator = prefix.flatMap(p -> title.map(s -> " - "));
+        final String prefix    = siteNode.getProperty(PROPERTY_TITLE).orElse("");
+        final String title     = post.getProperties().getProperty(PROPERTY_TITLE).orElse("");
+        final String separator = prefix.equals("") || title.equals("") ? "": " - ";
 
-        final StringBuilder buffer = new StringBuilder();
-        prefix.ifPresent(buffer::append);
-        separator.ifPresent(buffer::append);
-        title.ifPresent(buffer::append);
-
-        return buffer.toString();
+        return prefix + separator + title;
       }
 
     /*******************************************************************************************************************

@@ -54,15 +54,4 @@ public interface BlogViewController extends CompositeSiteNodeController, ViewCon
 
     /** The id of the image to be associated with a blog post. */
     public static final Key<String> PROPERTY_IMAGE_ID = new Key<>("imageId");
-
-    // TODO: find a proper name space, possibly merging with other - or defining @ as dynamic properties
-    /** Dynamic property generated during rendering with the title of the blog post. */
-    public static final Key<String> PROPERTY_DYNAMIC_TITLE = new Key<>("@title");
-
-    /** Dynamic property generated during rendering with the permalink of the blog post. */
-    public static final Key<String> PROPERTY_DYNAMIC_URL = new Key<>("@url");
-
-    /** Dynamic property generated during rendering with the unique id of the blog post. */
-    public static final Key<String> PROPERTY_DYNAMIC_ID = new Key<>("@id");
-
   }
