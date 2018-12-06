@@ -41,16 +41,18 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A support class for creating visitors for {@link Layout} that build a view implementation.
+ * A {@link Layout} visitor that renders everything for the given layout.
+ *
+ * @stereotype  Visitor
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class NodeViewRendererVisitor<COMPONENT, CONTAINER> extends VisitorSupport<Layout, COMPONENT>
+public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layout, COMPONENT>
   {
     @Nonnull
-    private final NodeViewBuilderVisitor nodeViewBuilderVisitor;
+    private final ViewAndControllerLayoutBuilder vacLayoutBuilder;
 
     @Nonnull
     private final BiConsumer<CONTAINER, COMPONENT> attacher;
@@ -65,21 +67,26 @@ public class NodeViewRendererVisitor<COMPONENT, CONTAINER> extends VisitorSuppor
     @Getter
     private COMPONENT rootComponent;
 
-    public NodeViewRendererVisitor (final @Nonnull RequestContext requestContext,
-                                    final @Nonnull NodeViewBuilderVisitor nodeViewBuilderVisitor,
-                                    final @Nonnull BiConsumer<CONTAINER, COMPONENT> attacher)
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public NodeViewRenderer (final @Nonnull RequestContext requestContext,
+                             final @Nonnull ViewAndControllerLayoutBuilder vacLayoutBuilder,
+                             final @Nonnull BiConsumer<CONTAINER, COMPONENT> attacher)
       {
-        this.nodeViewBuilderVisitor = nodeViewBuilderVisitor;
+        this.vacLayoutBuilder = vacLayoutBuilder;
         this.attacher = attacher;
         this.renderContext = new RenderContext(requestContext);
       }
 
-
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Override
     public void preVisit (final @Nonnull Layout layout)
       {
-        final ViewAndController viewAndController = nodeViewBuilderVisitor.getValue().get(layout);
-        final COMPONENT component = createComponent(viewAndController, layout);
+        final ViewAndController vac = vacLayoutBuilder.getViewAndControllerFor(layout).get();
+        final COMPONENT component = renderView(vac, layout);
 
         if (rootComponent == null)
           {
@@ -93,21 +100,24 @@ public class NodeViewRendererVisitor<COMPONENT, CONTAINER> extends VisitorSuppor
         components.push(component);
       }
 
-
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Override
     public void postVisit (final @Nonnull Layout layout)
       {
         components.pop();
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    private COMPONENT createComponent (final @Nonnull ViewAndController viewAndController, final @Nonnull Layout layout)
+    private COMPONENT renderView (final @Nonnull ViewAndController vac, final @Nonnull Layout layout)
       {
-        assert viewAndController != null : "No ViewAndController for" + layout;
-
         try
           {
-            return (COMPONENT)viewAndController.renderView(renderContext);
+            return (COMPONENT)vac.renderView(renderContext);
           }
         catch (HttpStatusException e)
           {
@@ -127,13 +137,13 @@ public class NodeViewRendererVisitor<COMPONENT, CONTAINER> extends VisitorSuppor
                 message = "<h1>Internal error</h1>";
               }
 
-            return (COMPONENT)nodeViewBuilderVisitor.getFallbackViewSupplier().apply(layout, message);
+            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, message);
           }
         catch (Throwable e)
           {
             log.warn("Internal error", e);
             status = 500;
-            return (COMPONENT)nodeViewBuilderVisitor.getFallbackViewSupplier().apply(layout, e.toString());
+            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, e.toString());
           }
       }
   }
