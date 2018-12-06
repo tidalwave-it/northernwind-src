@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
@@ -102,31 +102,6 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public void renderGallery (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
-      {
-        final Item item = items.get(0);
-        final int itemCount = items.size();
-        final int index = items.indexOf(item);
-        final Site site = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
-        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get((index + 1) % itemCount).getId().stringValue()));
-        final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
-        final ST t = new ST(galleryTemplate, '$', '$').add("caption", item.getDescription())
-                                                      .add("previous", previousUrl)
-                                                      .add("next", nextUrl)
-                                                      .add("lightbox", lightboxUrl)
-                                                      .add("home", "/blog") // FIXME
-                                                      .add("copyright", copyright);
-        context.addAttribute("content", t.render());
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     @Override @Nonnull
     public String getInlinedScript()
       {
@@ -159,16 +134,17 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderCatalog (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
+    public void renderCatalog (final @Nonnull GalleryView view, final @Nonnull List<GalleryItem> items)
       throws HttpStatusException
       {
         final StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         builder.append("<gallery>\n");
 
-        for (final Item item : items)
+        for (final GalleryItem item : items)
           {
-            builder.append(String.format("    <stillImage id=\"%s\" title=\"%s\" />%n", item.getId(), item.getDescription()));
+            builder.append(String.format("    <stillImage id=\"%s\" title=\"%s\" />%n",
+                                         item.getId(), item.getDescription()));
           }
 
         builder.append("</gallery>\n");
@@ -185,41 +161,25 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderFallback (final @Nonnull GalleryView view,
-                                final @Nonnull Item item,
-                                final @Nonnull List<Item> items)
+    public void renderGallery (final @Nonnull GalleryView view, final @Nonnull List<GalleryItem> items)
       {
-        final TextHolder textHolder = (TextHolder)view;
-        final int itemCount = items.size();
-        final int index = items.indexOf(item);
+        final GalleryItem item  = items.get(0);
+        final int count         = items.size();
+        final int index         = items.indexOf(item);
+        final int prevIndex     = (index - 1 + count) % count;
+        final int nextIndex     = (index + 1) % count;
         final Site site = siteProvider.get().getSite();
         final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
-        final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(item.getId().stringValue())).replaceAll("/$", "");
-        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get((index - 1 + itemCount) % itemCount).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get((index + 1) % itemCount).getId().stringValue()));
+        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
+        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
-        final String imageId     = item.getId().stringValue();
-        final String imageUrl    = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: with imageId, this is probably useless, drop it
-        final String redirectScript = "<script type=\"text/javascript\">\n"
-                                    + "//<![CDATA[\n"
-                                    + "window.location.replace('" + redirectUrl + "');\n"
-                                    + "//]]>\n"
-                                    + "</script>\n";
-        final ST t = new ST(fallbackTemplate, '$', '$').add("caption", item.getDescription())
-                                                       .add("previous", previousUrl)
-                                                       .add("next", nextUrl)
-                                                       .add("lightbox", lightboxUrl)
-                                                       .add("home", "/blog") // FIXME
-                                                       .add("imageId", imageId)
-                                                       .add("imageUrl", imageUrl)
-                                                       .add("copyright", copyright);
-        textHolder.addAttribute("content", t.render());
-        // FIXME: it would be better to change the properties rather than directly touch the template attributes
-        textHolder.addAttribute("description", item.getDescription());
-        textHolder.addAttribute("inlinedScripts", redirectScript);
-        textHolder.addAttribute("imageId", imageId);
-        textHolder.addAttribute("imageUrl", imageUrl);
-        textHolder.addAttribute("scripts", "");
+        final ST t = new ST(galleryTemplate, '$', '$').add("caption",   item.getDescription())
+                                                      .add("previous",  previousUrl)
+                                                      .add("next",      nextUrl)
+                                                      .add("lightbox",  lightboxUrl)
+                                                      .add("home",      "/blog") // FIXME
+                                                      .add("copyright", copyright);
+        context.addAttribute("content", t.render());
       }
 
     /*******************************************************************************************************************
@@ -228,15 +188,60 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderLightboxFallback (final @Nonnull GalleryView view, final @Nonnull List<Item> items)
+    public void renderItem (final @Nonnull GalleryView view,
+                            final @Nonnull GalleryItem item,
+                            final @Nonnull List<GalleryItem> items)
+      {
+        final TextHolder textHolder = (TextHolder)view;
+        final int count     = items.size();
+        final int index     = items.indexOf(item);
+        final int prevIndex = (index - 1 + count) % count;
+        final int nextIndex = (index + 1) % count;
+        final Site site     = siteProvider.get().getSite();
+        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
+        final String imageId     = item.getId().stringValue();
+        final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(imageId)).replaceAll("/$", "");
+        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
+        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
+        final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
+        final String imageUrl    = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: parametrise size
+        final String redirectScript = "<script type=\"text/javascript\">\n"
+                                    + "//<![CDATA[\n"
+                                    + "window.location.replace('" + redirectUrl + "');\n"
+                                    + "//]]>\n"
+                                    + "</script>\n";
+        final ST t = new ST(fallbackTemplate, '$', '$').add("caption",   item.getDescription())
+                                                       .add("previous",  previousUrl)
+                                                       .add("next",      nextUrl)
+                                                       .add("lightbox",  lightboxUrl)
+                                                       .add("home",      "/blog") // FIXME
+                                                       .add("imageId",   imageId)
+                                                       .add("imageUrl",  imageUrl)
+                                                       .add("copyright", copyright);
+        textHolder.addAttribute("content",        t.render());
+        // FIXME: it would be better to change the properties rather than directly touch the template attributes
+        textHolder.addAttribute("description",    item.getDescription());
+        textHolder.addAttribute("inlinedScripts", redirectScript);
+        textHolder.addAttribute("imageId",        imageId);
+        textHolder.addAttribute("imageUrl",       imageUrl);
+        textHolder.addAttribute("scripts",        "");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void renderLightbox (final @Nonnull GalleryView view, final @Nonnull List<GalleryItem> items)
       {
         final Site site = siteProvider.get().getSite();
         final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
         final StringBuilder builder = new StringBuilder();
 
-        for (final Item item : items)
+        for (final GalleryItem item : items)
           {
-            final String id = item.getId().stringValue();
+            final String id   = item.getId().stringValue();
             final String link = site.createLink(baseUrl.appendedWith(id));
             builder.append(String.format("<a href=\"%s\"><img src=\"/media/stillimages/100/%s.jpg\"/></a>%n", link, id));
           }

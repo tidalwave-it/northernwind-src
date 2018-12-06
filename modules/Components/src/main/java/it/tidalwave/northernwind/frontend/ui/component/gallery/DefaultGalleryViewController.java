@@ -81,7 +81,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
           {
             final SiteNode siteNode = controller.siteNode;
             final List<SiteNode> result = controller.itemMapById.values().stream()
-                    .map(item -> createVirtualNode(siteNode, item.getId().stringValue()))
+                    .map(gallery -> createVirtualNode(siteNode, gallery.getId().stringValue()))
                     .collect(toList());
             result.add(0, createVirtualNode(siteNode, "lightbox"));
             return result;
@@ -105,9 +105,9 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
     @Nonnull
     protected GalleryAdapter galleryAdapter;
 
-    protected final List<Item> items = new ArrayList<>();
+    protected final List<GalleryItem> items = new ArrayList<>();
 
-    protected final Map<Id, Item> itemMapById = new HashMap<>();
+    protected final Map<Id, GalleryItem> itemMapById = new HashMap<>();
 
     /*******************************************************************************************************************
      *
@@ -138,7 +138,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         final long time = System.currentTimeMillis();
         final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, siteNode.getProperties()); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
-        itemMapById.putAll(items.stream().collect(toMap(Item::getId, i -> i)));
+        itemMapById.putAll(items.stream().collect(toMap(GalleryItem::getId, i -> i)));
         log.info(">>>> {} gallery items loaded in {} msec", items.size(), System.currentTimeMillis() - time);
       }
 

@@ -45,7 +45,6 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 
 /***********************************************************************************************************************
  *
