@@ -204,7 +204,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
-        final String imageUrl    = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: with imageId, this is probably useless, drop it
+        final String imageUrl    = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: parametrise size
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
