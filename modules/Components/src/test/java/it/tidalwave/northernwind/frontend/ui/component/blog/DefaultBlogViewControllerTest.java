@@ -43,6 +43,8 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.ArrayListFinder8;
+import it.tidalwave.role.ContextManager;
+import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -68,8 +70,6 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -145,6 +145,8 @@ public class DefaultBlogViewControllerTest
 
     private ResourceProperties siteNodeProperties;
 
+    private RenderContext renderContext;
+
     private Request request;
 
     private RequestHolder requestHolder;
@@ -194,9 +196,11 @@ public class DefaultBlogViewControllerTest
         when(requestHolder.get()).thenReturn(request);
 
         final RequestContext requestContext = mock(RequestContext.class);
+        renderContext = new RenderContext(requestContext);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
         underTest.initialize();
+        underTest.initialize(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -220,7 +224,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         underTest.fullPosts.forEach  (post -> log.info(">>>> full:    {}", post));
         underTest.leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
@@ -263,7 +267,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then should throw exception
       }
 
@@ -279,7 +283,7 @@ public class DefaultBlogViewControllerTest
         createMockData(seed);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
@@ -306,7 +310,7 @@ public class DefaultBlogViewControllerTest
         // given
         createMockData(45);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // when
         final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then

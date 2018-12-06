@@ -90,7 +90,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
         final ResourceProperties viewProperties     = getViewProperties();

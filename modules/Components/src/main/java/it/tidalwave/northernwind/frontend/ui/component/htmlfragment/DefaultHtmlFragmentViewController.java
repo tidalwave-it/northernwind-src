@@ -62,7 +62,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.setContent(viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())

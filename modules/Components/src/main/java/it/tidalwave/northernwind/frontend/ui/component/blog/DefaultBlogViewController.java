@@ -194,7 +194,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
         log.info("renderView() for {}", siteNode);
