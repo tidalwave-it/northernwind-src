@@ -82,7 +82,7 @@ public class DefaultCalendarViewController implements CalendarViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode);

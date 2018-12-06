@@ -31,13 +31,15 @@ import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpStatus;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
 import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +54,9 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringMvcSiteView implements SiteView
   {
     @Inject
+    private RequestContext requestContext;
+
+    @Inject
     private SpringMvcResponseHolder responseHolder;
 
     /*******************************************************************************************************************
@@ -65,27 +70,45 @@ public class SpringMvcSiteView implements SiteView
       {
         log.info("renderSiteNode({})", siteNode);
 
-        try
-          {
-            final Visitor<Layout, TextHolder> nodeViewBuilderVisitor = new SpringMvcNodeViewBuilderVisitor(siteNode);
-            final TextHolder textHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);
-            responseHolder.response().withBody(textHolder.asBytes("UTF-8"))
-                                     .withContentType(textHolder.getMimeType())
-                                     .put();
-          }
-        catch (NotFoundException e)
-          {
-            log.error("", e);
-            responseHolder.response().withStatus(HttpStatus.NOT_FOUND.value())
-                                     .withBody(e.toString())
-                                     .withContentType("text/html")
-                                     .put();
-          }
+        final RenderContext renderContext = new RenderContext(requestContext);
+        final ViewAndControllerLayoutBuilder vacBuilder =
+                new ViewAndControllerLayoutBuilder(siteNode, renderContext, this::createFallbackView);
+        siteNode.getLayout().accept(vacBuilder);
+        final NodeViewRenderer<TextHolder, TextHolder> renderer =
+                new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
+        siteNode.getLayout().accept(renderer);
+        final TextHolder textHolder = renderer.getRootComponent();
+        responseHolder.response().withStatus(renderer.getStatus())
+                                 .withBody(textHolder.asBytes("UTF-8"))
+                                 .withContentType(textHolder.getMimeType())
+                                 .put();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void setCaption (final String string)
       {
 //        throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private TextHolder createFallbackView (final @Nonnull Layout layout, final @Nonnull String message)
+      {
+        return new HtmlHolder("<div>" + message + "</div>");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void attach (final @Nonnull TextHolder parent, final @Nonnull TextHolder child)
+      {
+        parent.addComponent(child);
       }
   }

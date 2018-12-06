@@ -31,6 +31,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -59,15 +60,16 @@ public interface ViewFactory
          *
          * Call the controller to have the view rendered, and return it.
          *
+         * @param       context         the render context
          * @return                      the rendered view
          * @exception   Exception       if something failed
          *
          **************************************************************************************************************/
         @Nonnull
-        public Object renderView()
+        public Object renderView (final @Nonnull RenderContext context)
           throws Exception
           {
-            controller.renderView();
+            controller.renderView(context);
             return view;
           }
      }

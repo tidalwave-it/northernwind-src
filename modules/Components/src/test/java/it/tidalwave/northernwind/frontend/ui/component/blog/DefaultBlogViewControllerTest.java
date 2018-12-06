@@ -43,6 +43,8 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.ArrayListFinder8;
+import it.tidalwave.role.ContextManager;
+import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -68,8 +70,6 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -145,7 +145,11 @@ public class DefaultBlogViewControllerTest
 
     private ResourceProperties siteNodeProperties;
 
+    private RenderContext renderContext;
+
     private Request request;
+
+    private RequestContext requestContext;
 
     private RequestHolder requestHolder;
 
@@ -193,10 +197,12 @@ public class DefaultBlogViewControllerTest
         requestHolder = mock(RequestHolder.class);
         when(requestHolder.get()).thenReturn(request);
 
-        final RequestContext requestContext = mock(RequestContext.class);
+        requestContext = mock(RequestContext.class);
+        renderContext = new RenderContext(requestContext);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
         underTest.initialize();
+        underTest.initialize(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -220,7 +226,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         underTest.fullPosts.forEach  (post -> log.info(">>>> full:    {}", post));
         underTest.leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
@@ -241,6 +247,19 @@ public class DefaultBlogViewControllerTest
         assertSortedInReverseOrder(publishingDates);
 
         assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
+
+        if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
+          {
+            final String id = String.format("%2d", expectedFullPostIds.get(0));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_ID),    eq("id#" + id));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_TITLE), eq("Title #" + id));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_URL),   eq("http://acme.com/blogNode/post-" + id));
+            // TODO: no more invocations
+          }
+        else
+          {
+            verify(requestContext, never()).setDynamicNodeProperty(any(Key.class), any(Object.class));
+          }
       }
 
     /*******************************************************************************************************************
@@ -263,7 +282,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then should throw exception
       }
 
@@ -279,7 +298,7 @@ public class DefaultBlogViewControllerTest
         createMockData(seed);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         final List<Content> allPosts = concat(underTest.fullPosts, underTest.leadInPosts, underTest.linkedPosts);
         assertThat("full posts",   underTest.fullPosts.size(), is(0));    // TODO: should be: method not called
@@ -306,7 +325,7 @@ public class DefaultBlogViewControllerTest
         // given
         createMockData(45);
         when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // when
         final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then
@@ -475,6 +494,7 @@ public class DefaultBlogViewControllerTest
      * <ul>
      * <li>a {@code PROPERTY_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
      * <li>a {@code PROPERTY_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
+     * <li>a {@code PROPERTY_ID} set as {@code "id#&lt;num&gt;"}</li>
      * <li>a {@code PROPERTY_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
      * <li>a {@code PROPERTY_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
      * <li>a {@code getExposedUri()} set as {@code "post-#&lt;num&gt;"}</li>
@@ -514,6 +534,7 @@ public class DefaultBlogViewControllerTest
             when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
+            when(properties.getProperty(PROPERTY_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
 
             // Assign category
             final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));

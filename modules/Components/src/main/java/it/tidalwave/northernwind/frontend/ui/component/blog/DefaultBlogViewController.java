@@ -38,6 +38,8 @@ import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import it.tidalwave.util.Finder8;
 import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.util.Key;
@@ -194,7 +196,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
         log.info("renderView() for {}", siteNode);
@@ -210,7 +212,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
             else
               {
-                generateBlogPosts(viewProperties);
+                generateBlogPosts(context, viewProperties);
               }
 
             render();
@@ -227,7 +229,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the blog posts.
      *
      ******************************************************************************************************************/
-    private void generateBlogPosts (final @Nonnull ResourceProperties properties)
+    private void generateBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
@@ -246,6 +248,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
         split.get(0).forEach(this::addFullPost);
         split.get(1).forEach(this::addLeadInPost);
         split.get(2).forEach(this::addLinkToPost);
+
+        // FIXME: until this can't be done in initialize(context) we do now - see NW-127
+        if (split.get(0).size() == 1) // rendering a single post in full
+          {
+            setDynamicProperties(context, split.get(0).get(0));
+          }
       }
 
     /*******************************************************************************************************************
@@ -333,6 +341,78 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> found {} items", posts.size());
 
         return posts;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
+      {
+        post.getProperty(PROPERTY_ID).ifPresent(id -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_ID, id));
+        context.setDynamicNodeProperty(PROPERTY_DYNAMIC_TITLE, computeTitle(post));
+        post.getExposedUri().map(this::createLink)
+                .ifPresent(l -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_URL, l));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeTitle (final @Nonnull Content post)
+      {
+        final Optional<String> prefix    = getViewProperties().getProperty(PROPERTY_TITLE);
+        final Optional<String> title     = post.getProperties().getProperty(PROPERTY_TITLE);
+        final Optional<String> separator = prefix.flatMap(p -> title.map(s -> " - "));
+
+        final StringBuilder buffer = new StringBuilder();
+        prefix.ifPresent(buffer::append);
+        separator.ifPresent(buffer::append);
+        title.ifPresent(buffer::append);
+
+        return buffer.toString();
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String createLink (final @Nonnull ResourcePath path)
+      {
+        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String createTagLink (final String tag)
+      {
+        try
+          {
+            final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
+            // FIXME: refactor with ResourcePath
+            String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
+
+            // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
+            if (!link.endsWith("/"))
+              {
+                link += "/";
+              }
+
+            return link;
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            log.error("", e);
+            return "";
+          }
       }
 
     /*******************************************************************************************************************
