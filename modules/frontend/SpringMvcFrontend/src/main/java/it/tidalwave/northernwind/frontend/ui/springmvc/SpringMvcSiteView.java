@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.springmvc;
 
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -59,6 +60,8 @@ public class SpringMvcSiteView implements SiteView
     @Inject
     private SpringMvcResponseHolder responseHolder;
 
+    private final ThreadLocal<Integer> httpStatus = new ThreadLocal<>();
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -69,6 +72,7 @@ public class SpringMvcSiteView implements SiteView
       throws IOException
       {
         log.info("renderSiteNode({})", siteNode);
+        httpStatus.set(200);
 
         final RenderContext renderContext = new RenderContext(requestContext);
         final ViewAndControllerLayoutBuilder vacBuilder =
@@ -78,7 +82,7 @@ public class SpringMvcSiteView implements SiteView
                 new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
         siteNode.getLayout().accept(renderer);
         final TextHolder textHolder = renderer.getRootComponent();
-        responseHolder.response().withStatus(renderer.getStatus())
+        responseHolder.response().withStatus(httpStatus.get())
                                  .withBody(textHolder.asBytes("UTF-8"))
                                  .withContentType(textHolder.getMimeType())
                                  .put();
@@ -97,11 +101,37 @@ public class SpringMvcSiteView implements SiteView
 
     /*******************************************************************************************************************
      *
+     * TODO: sometimes this gets wrapped in a layout (e.g. when it's thrown by a Node Controller), otherwise it just
+     * renders as bare markup. If there is no container, it should be wrapped by a small embedded template.
+     *
+     * Only for codes such as 404 and 500, you could configure a wrapping template from a Node, so that the usual
+     * layout is rendered.
+     *
      ******************************************************************************************************************/
     @Nonnull
-    private TextHolder createFallbackView (final @Nonnull Layout layout, final @Nonnull String message)
+    private TextHolder createFallbackView (final @Nonnull Layout layout, final @Nonnull Throwable t)
       {
-        return new HtmlHolder("<div>" + message + "</div>");
+        final int status = (t instanceof HttpStatusException) ? ((HttpStatusException)t).getHttpStatus() : 500;
+        httpStatus.set(status);
+
+        final String message;
+
+        switch (status)
+          {
+            case 404:
+                message = "Not Found";
+                break;
+
+            case 500:
+                message = "Internal errur";
+                break;
+
+            default:
+                message = "Status " + status;
+                break;
+          }
+
+        return new HtmlHolder("<div><h1>" + message + "</h1></div>");
       }
 
     /*******************************************************************************************************************
