@@ -45,7 +45,7 @@ import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
 import it.tidalwave.util.NotFoundException;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,9 +75,9 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
       }
 
     @Override @Nonnull
-    public List<Item> loadGallery (final @Nonnull SiteNode siteNode)
+    public List<GalleryItem> loadGallery (final @Nonnull SiteNode siteNode)
       {
-        final List<Item> items = new ArrayList<>();
+        final List<GalleryItem> items = new ArrayList<>();
 
         try
           {

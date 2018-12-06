@@ -38,13 +38,13 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_TITLE;
 
 /***********************************************************************************************************************
  *
@@ -125,35 +125,37 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
-        final String siteNodeTitle = siteNode.getProperty(Properties.PROPERTY_TITLE).orElse("");
+        final String siteNodeTitle = siteNode.getProperty(PROPERTY_TITLE).orElse("");
 
-        if ("".equals(param))
+        switch (param)
           {
-            galleryAdapter.renderGallery(view, items);
-            textHolder.addAttribute("title", siteNodeTitle);
-          }
-        else if ("images.xml".equals(param))
-          {
-            galleryAdapter.renderCatalog(view, items);
-          }
-        else if ("lightbox".equals(param))
-          {
-            galleryAdapter.renderLightboxFallback(view, items);
-            textHolder.addAttribute("title", siteNodeTitle);
-          }
-        else
-          {
-            final Id id = new Id(param);
-            final Item item = itemMapById.get(id);
+            case "":
+                galleryAdapter.renderGallery(view, items);
+                textHolder.addAttribute("title", siteNodeTitle);
+                break;
 
-            if (item == null)
-              {
-                log.warn("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
-                throw new HttpStatusException(404);
-              }
+            case "images.xml":
+                galleryAdapter.renderCatalog(view, items);
+                break;
 
-            galleryAdapter.renderFallback(view, item, items);
-            textHolder.addAttribute("title", item.getDescription());
+            case "lightbox":
+                galleryAdapter.renderLightbox(view, items);
+                textHolder.addAttribute("title", siteNodeTitle);
+                break;
+
+            default: // id of the photo item to render
+                final Id id = new Id(param);
+                final GalleryItem item = itemMapById.get(id);
+
+                if (item == null)
+                  {
+                    log.warn("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
+                    throw new HttpStatusException(404);
+                  }
+
+                galleryAdapter.renderItem(view, item, items);
+                textHolder.addAttribute("title", item.getDescription());
+                break;
           }
       }
 

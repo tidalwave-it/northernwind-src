@@ -192,30 +192,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void initialize (final @Nonnull RenderContext context)
-      {
-        // FIXME: pending. This should be done only when a single post is going to be rendered in full.
-        // But getting it is an expensive operation, that we'd like not to repeat when rendering will occur.
-        // Until this gets fixed, setDynamicProperties() is anyway performed by generateBlogPosts().
-        // See NW-127.
-
-        if (!getViewProperties().getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false))
-          {
-            final Content post = null;
-
-            if (post != null)
-              {
-                setDynamicProperties(context, post);
-              }
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
      * {@inheritDoc }
      *
      ******************************************************************************************************************/
