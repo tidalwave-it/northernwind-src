@@ -32,12 +32,12 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -66,7 +66,7 @@ public class DefaultMenuViewController implements MenuViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);

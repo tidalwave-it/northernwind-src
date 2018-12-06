@@ -40,13 +40,9 @@ import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -67,11 +63,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    // FIXME: find a proper name space, possibly merging with other - or defining @ as dynamic properties
-    private final static Key<String> PROP_ADD_TITLE = new Key<>("@title");
-    private final static Key<String> PROP_ADD_URL = new Key<>("@url");
-    private final static Key<String> PROP_ADD_ID = new Key<>("@id");
-
     protected final static String DEFAULT_TIMEZONE = "CET";
 
     private static final String TEMPLATE_MAIN_TITLE = "<h2>%s</h2>%n";
@@ -204,6 +195,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final ResourceProperties postProperties = post.getProperties();
         final StringBuilder htmlBuilder = new StringBuilder();
 
+        postProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);
         final ZonedDateTime blogDateTime = postProperties.getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
         htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
@@ -220,8 +212,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         if (addBody)
           {
             append(htmlBuilder, TEMPLATE_FULL_TEXT, postProperties.getProperty(PROPERTY_FULL_TEXT));
-            postProperties.getProperty(PROPERTY_ID).ifPresent(id -> requestContext.setDynamicNodeProperty(PROP_ADD_ID, id));
-            requestContext.setDynamicNodeProperty(PROP_ADD_TITLE, computeTitle(post));
           }
 
         htmlBuilder.append("</div>\n");
@@ -249,25 +239,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     /*******************************************************************************************************************
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String computeTitle (final @Nonnull Content post)
-      {
-        final Optional<String> prefix    = getViewProperties().getProperty(PROPERTY_TITLE);
-        final Optional<String> title     = post.getProperties().getProperty(PROPERTY_TITLE);
-        final Optional<String> separator = prefix.flatMap(p -> title.map(s -> " - "));
-
-        final StringBuilder buffer = new StringBuilder();
-        prefix.ifPresent(buffer::append);
-        separator.ifPresent(buffer::append);
-        title.ifPresent(buffer::append);
-
-        return buffer.toString();
-      }
-
-    /*******************************************************************************************************************
-     *
      * Renders the general title of the blog.
      *
      * FIXME: should use computeTitle(), but we don't have the post.
@@ -275,9 +246,11 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     /* package */ void renderMainTitle (final @Nonnull StringBuilder htmlBuilder)
       {
-        append(htmlBuilder, TEMPLATE_MAIN_TITLE, getViewProperties().getProperty(PROPERTY_TITLE)
+        final Optional<String> mainTitle = siteNode.getPropertyGroup(view.getId()).getProperty(PROPERTY_TITLE)
                 .map(String::trim)
-                .flatMap(this::filterEmptyString));
+                .flatMap(this::filterEmptyString);
+        append(htmlBuilder, TEMPLATE_MAIN_TITLE, mainTitle);
+        mainTitle.ifPresent(view::setTitle);
       }
 
     /*******************************************************************************************************************
@@ -297,9 +270,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     private void renderPermalink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
-        final Optional<String> link  = post.getExposedUri().map(this::createLink);
-        append(htmlBuilder, TEMPLATE_PERMALINK, link);
-        link.ifPresent(l -> requestContext.setDynamicNodeProperty(PROP_ADD_URL, l));
+        append(htmlBuilder, TEMPLATE_PERMALINK, post.getExposedUri().map(this::createLink));
       }
 
     /*******************************************************************************************************************
@@ -344,35 +315,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
     /*******************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String createTagLink (final String tag)
-      {
-        try
-          {
-            final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
-            // FIXME: refactor with ResourcePath
-            String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
-
-            // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
-            if (!link.endsWith("/"))
-              {
-                link += "/";
-              }
-
-            return link;
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            log.error("", e);
-            return "";
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
      * Returns the proper {@link DateTimeFormatter}. It is build from an explicit pattern, if defined in the current
      * {@link SiteNode}; otherwise the one provided by the {@link RequestLocaleManager} is used. The formatter is
      * configured with the time zone defined in the {@code SiteNode}, or a default is used.
@@ -394,17 +336,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
 
         final String zoneId = viewProperties.getProperty(PROPERTY_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
         return dtf.withZone(ZoneId.of(zoneId));
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private String createLink (final @Nonnull ResourcePath path)
-      {
-        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
       }
 
     /*******************************************************************************************************************

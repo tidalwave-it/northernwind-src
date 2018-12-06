@@ -32,7 +32,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
@@ -44,6 +43,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import static it.tidalwave.util.NotFoundException.*;
 
 /***********************************************************************************************************************
@@ -55,7 +55,7 @@ import static it.tidalwave.util.NotFoundException.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString
+@RequiredArgsConstructor @Slf4j @ToString
 public class DefaultViewFactory implements ViewFactory
   {
     /* package */ final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
@@ -113,10 +113,6 @@ public class DefaultViewFactory implements ViewFactory
     private void logConfiguration()
       {
         log.info("View definitions:");
-
-        for (final ViewBuilder viewBuilder : viewBuilderMapByTypeUri.values())
-          {
-            log.info(">>>> {}", viewBuilder);
-          }
+        viewBuilderMapByTypeUri.values().stream().forEach(viewBuilder -> log.info(">>>> {}", viewBuilder));
       }
   }

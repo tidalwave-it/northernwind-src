@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
@@ -130,8 +131,7 @@ public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder
      *
      ******************************************************************************************************************/
     @Nonnull // TODO: push up to Composite
-    public <Type> Type accept (@Nonnull Visitor<Layout, Type> visitor)
-      throws NotFoundException;
+    public <T> Optional<T> accept (@Nonnull Visitor<Layout, T> visitor);
 
     /*******************************************************************************************************************
      *

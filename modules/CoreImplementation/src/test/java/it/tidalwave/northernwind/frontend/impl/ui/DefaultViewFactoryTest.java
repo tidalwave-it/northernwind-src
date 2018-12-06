@@ -57,7 +57,6 @@ public class DefaultViewFactoryTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         underTest = new DefaultViewFactory();
       }

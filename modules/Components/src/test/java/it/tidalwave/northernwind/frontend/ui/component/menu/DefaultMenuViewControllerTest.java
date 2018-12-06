@@ -32,23 +32,25 @@ import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import org.mockito.InOrder;
-import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_NAVIGATION_LABEL;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewController.PROPERTY_LINKS;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
@@ -64,6 +66,8 @@ public class DefaultMenuViewControllerTest
     private DefaultMenuViewController underTest;
 
     private ResourceProperties viewProperties;
+
+    private RenderContext renderContext;
 
     /*******************************************************************************************************************
      *
@@ -92,8 +96,11 @@ public class DefaultMenuViewControllerTest
         view = mock(MenuView.class);
         when(view.getId()).thenReturn(viewId);
 
+        renderContext = new RenderContext(mock(RequestContext.class));
+
         underTest = new DefaultMenuViewController(view, siteNode, site);
         underTest.initialize();
+        underTest.initialize(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -109,7 +116,7 @@ public class DefaultMenuViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         stubProperty(Content, templatePath, PROPERTY_TEMPLATE, templateContent);
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).setTemplate(templateContent);
       }
@@ -126,7 +133,7 @@ public class DefaultMenuViewControllerTest
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set PROPERTY_TEMPLATE
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -142,7 +149,7 @@ public class DefaultMenuViewControllerTest
         final String templatePath = "/path/to/inexistent/template";
         when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view, never()).setTemplate(anyString());
       }
@@ -157,7 +164,7 @@ public class DefaultMenuViewControllerTest
         // given
         when(viewProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view).setTitle("the title");
       }
@@ -170,7 +177,7 @@ public class DefaultMenuViewControllerTest
       throws Exception
       {
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         verify(view, never()).setTitle(anyString());
       }
@@ -189,7 +196,7 @@ public class DefaultMenuViewControllerTest
         stubProperty(SiteNode, "/node2", PROPERTY_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3
         // when
-        underTest.renderView();
+        underTest.renderView(renderContext);
         // then
         final InOrder inOrder = inOrder(view);
         inOrder.verify(view).addLink("Node 1 title", "http://acme.com/URI-node1");
