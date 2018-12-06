@@ -149,6 +149,8 @@ public class DefaultBlogViewControllerTest
 
     private Request request;
 
+    private RequestContext requestContext;
+
     private RequestHolder requestHolder;
 
     private List<Content> posts;
@@ -195,7 +197,7 @@ public class DefaultBlogViewControllerTest
         requestHolder = mock(RequestHolder.class);
         when(requestHolder.get()).thenReturn(request);
 
-        final RequestContext requestContext = mock(RequestContext.class);
+        requestContext = mock(RequestContext.class);
         renderContext = new RenderContext(requestContext);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
@@ -244,6 +246,19 @@ public class DefaultBlogViewControllerTest
         assertSortedInReverseOrder(publishingDates);
 
         assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
+
+        if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
+          {
+            final String id = String.format("%2d", expectedFullPostIds.get(0));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_ID),    eq("id#" + id));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_TITLE), eq("Title #" + id));
+            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_URL),   eq("http://acme.com/blogNode/post-" + id));
+            // TODO: no more invocations
+          }
+        else
+          {
+            verify(requestContext, never()).setDynamicNodeProperty(any(Key.class), any(Object.class));
+          }
       }
 
     /*******************************************************************************************************************
@@ -478,6 +493,7 @@ public class DefaultBlogViewControllerTest
      * <ul>
      * <li>a {@code PROPERTY_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
      * <li>a {@code PROPERTY_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
+     * <li>a {@code PROPERTY_ID} set as {@code "id#&lt;num&gt;"}</li>
      * <li>a {@code PROPERTY_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
      * <li>a {@code PROPERTY_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
      * <li>a {@code getExposedUri()} set as {@code "post-#&lt;num&gt;"}</li>
@@ -517,6 +533,7 @@ public class DefaultBlogViewControllerTest
             when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
             when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
             when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
+            when(properties.getProperty(PROPERTY_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
 
             // Assign category
             final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
