@@ -47,27 +47,27 @@ import lombok.Getter;
  *
  **********************************************************************************************************************/
 @NotThreadSafe
-public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layout, COMPONENT>
+public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
   {
     @Nonnull
     private final ViewAndControllerLayoutBuilder vacLayoutBuilder;
 
     @Nonnull
-    private final BiConsumer<CONTAINER, COMPONENT> attacher;
+    private final BiConsumer<T, T> attacher;
 
     private final RenderContext renderContext;
 
-    private final Stack<COMPONENT> components = new Stack<>();
+    private final Stack<T> components = new Stack<>();
 
     @Getter
-    private COMPONENT rootComponent;
+    private T rootComponent;
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     public NodeViewRenderer (final @Nonnull RequestContext requestContext,
                              final @Nonnull ViewAndControllerLayoutBuilder vacLayoutBuilder,
-                             final @Nonnull BiConsumer<CONTAINER, COMPONENT> attacher)
+                             final @Nonnull BiConsumer<T, T> attacher)
       {
         this.vacLayoutBuilder = vacLayoutBuilder;
         this.attacher         = attacher;
@@ -81,7 +81,7 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
     public void preVisit (final @Nonnull Layout layout)
       {
         final ViewAndController vac = vacLayoutBuilder.getViewAndControllerFor(layout).get();
-        final COMPONENT component = renderView(vac, layout);
+        final T component = renderView(vac, layout);
 
         if (rootComponent == null)
           {
@@ -89,7 +89,7 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
           }
         else
           {
-            attacher.accept((CONTAINER)components.peek(), component);
+            attacher.accept(components.peek(), component);
           }
 
         components.push(component);
@@ -108,15 +108,15 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
      *
      ******************************************************************************************************************/
     @Nonnull
-    private COMPONENT renderView (final @Nonnull ViewAndController vac, final @Nonnull Layout layout)
+    private T renderView (final @Nonnull ViewAndController vac, final @Nonnull Layout layout)
       {
         try
           {
-            return (COMPONENT)vac.renderView(renderContext);
+            return (T)vac.renderView(renderContext);
           }
         catch (Throwable e)
           {
-            return (COMPONENT)vacLayoutBuilder.getErrorViewSupplier().apply(layout, e);
+            return (T)vacLayoutBuilder.getErrorViewSupplier().apply(layout, e);
           }
       }
   }

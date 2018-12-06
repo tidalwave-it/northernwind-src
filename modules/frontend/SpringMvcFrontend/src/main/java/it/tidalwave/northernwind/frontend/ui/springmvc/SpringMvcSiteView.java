@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.springmvc;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -44,6 +43,7 @@ import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
 import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /***********************************************************************************************************************
  *
@@ -70,34 +70,21 @@ public class SpringMvcSiteView implements SiteView
      ******************************************************************************************************************/
     @Override
     public void renderSiteNode (final @Nonnull SiteNode siteNode)
-      throws IOException
       {
         log.info("renderSiteNode({})", siteNode);
         httpStatus.set(HttpStatus.OK);
-
         final RenderContext renderContext = new RenderContext(requestContext);
-        final ViewAndControllerLayoutBuilder vacBuilder =
-                new ViewAndControllerLayoutBuilder(siteNode, renderContext, this::createErrorView);
+        final ViewAndControllerLayoutBuilder vacBuilder = new ViewAndControllerLayoutBuilder(siteNode,
+                                                                                             renderContext,
+                                                                                             this::createErrorView);
         siteNode.getLayout().accept(vacBuilder);
-        final NodeViewRenderer<TextHolder, TextHolder> renderer =
-                new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
+        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
         siteNode.getLayout().accept(renderer);
         final TextHolder textHolder = renderer.getRootComponent();
         responseHolder.response().withStatus(httpStatus.get().value())
-                                 .withBody(textHolder.asBytes("UTF-8"))
+                                 .withBody(textHolder.asBytes(UTF_8))
                                  .withContentType(textHolder.getMimeType())
                                  .put();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void setCaption (final String string)
-      {
-//        throw new UnsupportedOperationException("Not supported yet.");
       }
 
     /*******************************************************************************************************************
