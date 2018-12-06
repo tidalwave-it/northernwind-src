@@ -67,7 +67,7 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
     private final RenderContext renderContext;
 
     @Getter @Nonnull
-    private final BiFunction<Layout, String, Object> fallbackViewSupplier;
+    private final BiFunction<Layout, Throwable, Object> fallbackViewSupplier;
 
     private final Map<Layout, ViewAndController> viewAndControllerMapByLayout = new IdentityHashMap<>();
 
@@ -85,7 +85,8 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
           }
         catch (Exception e)
           {
-            viewAndControllerMapByLayout.put(layout, createFallback(layout, e.toString()));
+            log.warn("Exception in visit()", e);
+            viewAndControllerMapByLayout.put(layout, createFallback(layout, e));
           }
       }
 
@@ -120,12 +121,12 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
         catch (NotFoundException e)
           {
             log.warn("Component not found", e);
-            return createFallback(layout, "Missing component for: " + layout.getTypeUri());
+            return createFallback(layout, new NotFoundException("Missing component for: " + layout.getTypeUri()));
           }
         catch (Throwable e)
           {
             log.warn("Internal error", e);
-            return createFallback(layout, "Error");
+            return createFallback(layout, e);
           }
       }
 
@@ -133,8 +134,8 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ViewAndController createFallback (@Nonnull Layout layout, @Nonnull String message)
+    protected ViewAndController createFallback (@Nonnull Layout layout, @Nonnull Throwable e)
       {
-        return new ViewAndController(fallbackViewSupplier.apply(layout, message), VOID_CONTROLLER);
+        return new ViewAndController(fallbackViewSupplier.apply(layout, e), VOID_CONTROLLER);
       }
   }

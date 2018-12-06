@@ -61,9 +61,9 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
 
     private final Stack<COMPONENT> components = new Stack<>();
 
-    @Getter
-    private int status = 200;
-
+//    @Getter
+//    private int status = 200;
+//
     @Getter
     private COMPONENT rootComponent;
 
@@ -118,32 +118,18 @@ public class NodeViewRenderer<COMPONENT, CONTAINER> extends VisitorSupport<Layou
         try
           {
             return (COMPONENT)vac.renderView(renderContext);
-          }
-        catch (HttpStatusException e)
-          {
-            // FIXME: should set the status in the response - unfortunately at this level the ResponseHolder is abstract
-            log.warn("Returning HTTP status {}", e.getHttpStatus());
-            status = e.getHttpStatus();
-
-            String message = "<h1>Status " + e.getHttpStatus() + "</h1>"; // FIXME: use a resource bundle
-
-            if (e.getHttpStatus() == 404)
-              {
-                message = "<h1>Not found</h1>";
-              }
-
-            if (e.getHttpStatus() == 500)
-              {
-                message = "<h1>Internal error</h1>";
-              }
-
-            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, message);
+//          }
+//        catch (HttpStatusException e)
+//          {
+//            log.warn("Returning HTTP status {}", e.getHttpStatus());
+//            status = e.getHttpStatus();
+//            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, e);
           }
         catch (Throwable e)
           {
-            log.warn("Internal error", e);
-            status = 500;
-            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, e.toString());
+            log.warn("renderView()", e);
+//            status = 500;
+            return (COMPONENT)vacLayoutBuilder.getFallbackViewSupplier().apply(layout, e);
           }
       }
   }
