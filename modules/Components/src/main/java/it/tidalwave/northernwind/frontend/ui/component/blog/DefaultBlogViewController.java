@@ -38,6 +38,8 @@ import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import it.tidalwave.util.Finder8;
 import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.util.Key;
@@ -63,6 +65,7 @@ import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 
 /***********************************************************************************************************************
  *
@@ -177,6 +180,12 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     protected final RequestContext requestContext;
 
+    /* VisibleForTesting */ final List<Content> fullPosts = new ArrayList<>();
+
+    /* VisibleForTesting */ final List<Content> leadInPosts = new ArrayList<>();
+
+    /* VisibleForTesting */ final List<Content> linkedPosts = new ArrayList<>();
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -190,44 +199,63 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
-      throws Exception
+    public void initialize (final @Nonnull RenderContext context)
+      throws HttpStatusException
       {
-        log.info("renderView() for {}", siteNode);
+        log.info("initialize(RenderContext) for {}", siteNode);
 
-//        try
-//          {
-            final ResourceProperties viewProperties = getViewProperties();
-            final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+        final ResourceProperties viewProperties = getViewProperties();
+        final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
 
-            if (tagCloud)
+        if (!tagCloud)
+          {
+            prepareBlogPosts(context, viewProperties);
+
+            if ((fullPosts.size() == 1) && leadInPosts.isEmpty() && linkedPosts.isEmpty())
               {
-                generateTagCloud(viewProperties);
+                setDynamicProperties(context, fullPosts.get(0));
               }
-            else
-              {
-                generateBlogPosts(viewProperties);
-              }
-
-            render();
-//          }
-//        // FIXME: this happens when somebody tries to render a blog folder, which shouldn't happen
-//        catch (NotFoundException e)
-//          {
-//            log.warn("While reading property group at initialization", e);
-//          }
+          }
       }
 
     /*******************************************************************************************************************
      *
-     * Renders the blog posts.
+     * {@inheritDoc }
      *
      ******************************************************************************************************************/
-    private void generateBlogPosts (final @Nonnull ResourceProperties properties)
+    @Override
+    public void renderView (final @Nonnull RenderContext context)
+      throws Exception
+      {
+        log.info("renderView() for {}", siteNode);
+
+        final ResourceProperties viewProperties = getViewProperties();
+        final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+
+        if (tagCloud)
+          {
+            generateTagCloud(viewProperties);
+          }
+        else
+          {
+            fullPosts.forEach(this::addFullPost);
+            leadInPosts.forEach(this::addLeadInPost);
+            linkedPosts.forEach(this::addLinkToPost);
+          }
+
+        render();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Prepares the blog posts.
+     *
+     ******************************************************************************************************************/
+    private void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
@@ -243,9 +271,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 .collect(toList());
 
         final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
-        split.get(0).forEach(this::addFullPost);
-        split.get(1).forEach(this::addLeadInPost);
-        split.get(2).forEach(this::addLinkToPost);
+        fullPosts.addAll(split.get(0));
+        leadInPosts.addAll(split.get(1));
+        linkedPosts.addAll(split.get(2));
       }
 
     /*******************************************************************************************************************
@@ -333,6 +361,74 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> found {} items", posts.size());
 
         return posts;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
+      {
+        post.getProperty(PROPERTY_ID).ifPresent(id -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_ID, id));
+        context.setDynamicNodeProperty(PROPERTY_DYNAMIC_TITLE, computeTitle(post));
+        post.getExposedUri().map(this::createLink)
+                .ifPresent(l -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_URL, l));
+        post.getProperty(PROPERTY_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_IMAGE_ID, id));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String computeTitle (final @Nonnull Content post)
+      {
+        final String prefix    = siteNode.getProperty(PROPERTY_TITLE).orElse("");
+        final String title     = post.getProperties().getProperty(PROPERTY_TITLE).orElse("");
+        final String separator = prefix.equals("") || title.equals("") ? "": " - ";
+
+        return prefix + separator + title;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String createLink (final @Nonnull ResourcePath path)
+      {
+        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected String createTagLink (final String tag)
+      {
+        try
+          {
+            final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
+            // FIXME: refactor with ResourcePath
+            String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
+
+            // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
+            if (!link.endsWith("/"))
+              {
+                link += "/";
+              }
+
+            return link;
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            log.error("", e);
+            return "";
+          }
       }
 
     /*******************************************************************************************************************

@@ -26,18 +26,21 @@
  */
 package it.tidalwave.northernwind.frontend.ui.springmvc;
 
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpStatus;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
+import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
 import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +55,12 @@ import lombok.extern.slf4j.Slf4j;
 public class SpringMvcSiteView implements SiteView
   {
     @Inject
+    private RequestContext requestContext;
+
+    @Inject
     private SpringMvcResponseHolder responseHolder;
+
+    private final ThreadLocal<Integer> httpStatus = new ThreadLocal<>();
 
     /*******************************************************************************************************************
      *
@@ -64,28 +72,73 @@ public class SpringMvcSiteView implements SiteView
       throws IOException
       {
         log.info("renderSiteNode({})", siteNode);
+        httpStatus.set(200);
 
-        try
-          {
-            final Visitor<Layout, TextHolder> nodeViewBuilderVisitor = new SpringMvcNodeViewBuilderVisitor(siteNode);
-            final TextHolder textHolder = siteNode.getLayout().accept(nodeViewBuilderVisitor);
-            responseHolder.response().withBody(textHolder.asBytes("UTF-8"))
-                                     .withContentType(textHolder.getMimeType())
-                                     .put();
-          }
-        catch (NotFoundException e)
-          {
-            log.error("", e);
-            responseHolder.response().withStatus(HttpStatus.NOT_FOUND.value())
-                                     .withBody(e.toString())
-                                     .withContentType("text/html")
-                                     .put();
-          }
+        final RenderContext renderContext = new RenderContext(requestContext);
+        final ViewAndControllerLayoutBuilder vacBuilder =
+                new ViewAndControllerLayoutBuilder(siteNode, renderContext, this::createFallbackView);
+        siteNode.getLayout().accept(vacBuilder);
+        final NodeViewRenderer<TextHolder, TextHolder> renderer =
+                new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
+        siteNode.getLayout().accept(renderer);
+        final TextHolder textHolder = renderer.getRootComponent();
+        responseHolder.response().withStatus(httpStatus.get())
+                                 .withBody(textHolder.asBytes("UTF-8"))
+                                 .withContentType(textHolder.getMimeType())
+                                 .put();
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void setCaption (final String string)
       {
 //        throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * TODO: sometimes this gets wrapped in a layout (e.g. when it's thrown by a Node Controller), otherwise it just
+     * renders as bare markup. If there is no container, it should be wrapped by a small embedded template.
+     *
+     * Only for codes such as 404 and 500, you could configure a wrapping template from a Node, so that the usual
+     * layout is rendered.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private TextHolder createFallbackView (final @Nonnull Layout layout, final @Nonnull Throwable t)
+      {
+        final int status = (t instanceof HttpStatusException) ? ((HttpStatusException)t).getHttpStatus() : 500;
+        httpStatus.set(status);
+
+        final String message;
+
+        switch (status)
+          {
+            case 404:
+                message = "Not Found";
+                break;
+
+            case 500:
+                message = "Internal errur";
+                break;
+
+            default:
+                message = "Status " + status;
+                break;
+          }
+
+        return new HtmlHolder("<div><h1>" + message + "</h1></div>");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void attach (final @Nonnull TextHolder parent, final @Nonnull TextHolder child)
+      {
+        parent.addComponent(child);
       }
   }
