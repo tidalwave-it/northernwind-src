@@ -32,7 +32,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.Item;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryLoader;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.MediaMetadataProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * A support implementation for {@link GalleryLoader}, provides a default factory method for creating gallery
- * {@link Item}s which delegates to a {@link MediaMetadataProvider}.
+ * {@link GalleryItem}s which delegates to a {@link MediaMetadataProvider}.
  *
  * @author  Fabrizio Giudici
  *
@@ -73,7 +73,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
 
     /*******************************************************************************************************************
      *
-     * Creates a gallery {@link Item} for the given media id.
+     * Creates a gallery {@link GalleryItem} for the given media id.
      *
      * @param  mediaId   the media id
      * @return           the gallery {@code Item}
@@ -81,9 +81,9 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Item createItem (final @Nonnull Id mediaId)
+    public GalleryItem createItem (final @Nonnull Id mediaId)
       {
-        return new Item(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$XMP.dc.title$", properties));
+        return new GalleryItem(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$XMP.dc.title$", properties));
       }
 
     /*******************************************************************************************************************

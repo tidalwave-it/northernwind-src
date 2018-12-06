@@ -39,10 +39,9 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 public interface GalleryViewController extends CompositeSiteNodeController, ViewController
-// TODO: use as(CompositeContentsController) instead
   {
     @RequiredArgsConstructor @Getter @ToString
-    public static class Item
+    public static class GalleryItem
       {
         private final Id id;
 

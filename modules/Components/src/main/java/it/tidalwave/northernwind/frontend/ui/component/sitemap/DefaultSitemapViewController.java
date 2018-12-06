@@ -28,10 +28,8 @@ package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -64,7 +62,7 @@ public class DefaultSitemapViewController implements SitemapViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView()
+    public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
         final StringBuilder builder = new StringBuilder();
@@ -72,66 +70,55 @@ public class DefaultSitemapViewController implements SitemapViewController
         builder.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
         site.find(SiteNode.class).stream().forEach(siteNode ->
-            {
-              try
-                {
-                  final Layout layout = siteNode.getLayout();
+          {
+            final Layout layout = siteNode.getLayout();
 
-                  // Prevents infinite recursion
-                  if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
-                    {
-                      // FIXME: should probably skip children of sitenodes with managePathParams
-                      // FIXME: for instance, Calendar would benefit
-                      // FIXME: Would Blog benefit? It should, as it manages its own children
-                      // FIXME: Places and Themes should move managePathParams=true to each children
-                      // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
-                      log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
+            // Prevents infinite recursion
+            if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
+              {
+                // FIXME: should probably skip children of sitenodes with managePathParams
+                // FIXME: for instance, Calendar would benefit
+                // FIXME: Would Blog benefit? It should, as it manages its own children
+                // FIXME: Places and Themes should move managePathParams=true to each children
+                // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
+                log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
 
-                      appendUrl(builder, siteNode, null);
+                appendUrl(builder, siteNode, null);
 
-                      layout.accept(new VisitorSupport<Layout, Void>()
-                        {
-                          @Override
-                          public void visit (final @Nonnull Layout childLayout)
-                            {
-                              try
-                                {
-                                  final Object controller = childLayout.createViewAndController(siteNode).getController();
+                layout.accept(new VisitorSupport<Layout, Void>()
+                  {
+                    @Override
+                    public void visit (final @Nonnull Layout childLayout)
+                      {
+                        try
+                          {
+                            final Object controller = childLayout.createViewAndController(siteNode).getController();
 
-                                  if (controller instanceof CompositeSiteNodeController)
-                                    {
-                                      for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findVirtualSiteNodes().results())
-                                        {
-                                          appendUrl(builder, siteNode, childSiteNode);
-                                        }
-                                    }
-                                }
-                              catch (HttpStatusException e)
-                                {
-                                  log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
-                                }
-                              catch (Exception e)
-                                {
-                                  log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
-                                }
-                            }
+                            if (controller instanceof CompositeSiteNodeController)
+                              {
+                                for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findVirtualSiteNodes().results())
+                                  {
+                                    appendUrl(builder, siteNode, childSiteNode);
+                                  }
+                              }
+                          }
+                        catch (HttpStatusException e)
+                          {
+                            log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
+                          }
+                        catch (Exception e)
+                          {
+                            log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
+                          }
+                      }
 
-                          @Override
-                          public Void getValue()
-                            {
-                              return null;
-                            }
-                        });
-                    }
-                }
-              catch (IOException e)
-                {
-                  log.warn("", e);
-                }
-              catch (NotFoundException e)
-                {
-                  log.warn("", e);
-                }
+                    @Override
+                    public Void getValue()
+                      {
+                        return null;
+                      }
+                  });
+              }
           });
 
         builder.append("</urlset>\n");
@@ -146,7 +133,6 @@ public class DefaultSitemapViewController implements SitemapViewController
     private void appendUrl (final @Nonnull StringBuilder builder,
                             final @Nonnull SiteNode siteNode,
                             final @Nullable SiteNode childSiteNode)
-      throws IOException
       {
         final SiteNode n = (childSiteNode != null) ? childSiteNode : siteNode;
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
