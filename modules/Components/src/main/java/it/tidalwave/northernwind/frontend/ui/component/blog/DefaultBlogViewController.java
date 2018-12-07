@@ -158,7 +158,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
-    protected static final String TAG_PREFIX = "tag/";
+    protected static final String TAG_PREFIX = "tag";
 
     private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
       {
@@ -319,7 +319,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
+        final ResourcePath pathParams = requestHolder.get().getPathParams(siteNode);
         final boolean index = properties.getBooleanProperty(P_INDEX).orElse(false);
         final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
@@ -331,7 +331,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         //          if not in 'index' mode, return only that post;
         //          if in 'index' mode, returns all the posts.
         //
-        if ("".equals(pathParams))
+        if (pathParams.isEmpty())
           {
             posts.addAll(allPosts);
           }
@@ -339,16 +339,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             if (pathParams.startsWith(TAG_PREFIX))
               {
-                final String tag = pathParams.replaceFirst("^" + TAG_PREFIX, "");
-                posts.addAll(filteredByTag(allPosts, tag));
+                posts.addAll(filteredByTag(allPosts, pathParams.getSegment(1)));
               }
             else
               {
-                posts.addAll(filteredByExposedUri(allPosts, new ResourcePath(pathParams))
+                posts.addAll(filteredByExposedUri(allPosts, pathParams)
                             // pathParams matches an exposedUri; thus it's not a category, so an index wants all
                             .map(singlePost -> index ? allPosts : singletonList(singlePost))
                             // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
-                            .orElse(filteredByCategory(allPosts, pathParams)));
+                            .orElse(filteredByCategory(allPosts, pathParams.getLeading())));
               }
           }
 
@@ -414,9 +413,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try
           {
-            final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
             // FIXME: refactor with ResourcePath
-            String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
+            String link = site.createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
+                                                                   .appendedWith(URLEncoder.encode(tag, "UTF-8")));
 
             // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
             if (!link.endsWith("/"))

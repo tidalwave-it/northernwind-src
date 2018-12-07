@@ -226,7 +226,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         underTest.initialize(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -270,7 +270,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         underTest.initialize(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -325,7 +325,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         // when
         underTest.initialize(renderContext);
         // then

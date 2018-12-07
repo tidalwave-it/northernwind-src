@@ -35,6 +35,7 @@ import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
@@ -124,50 +125,58 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       throws Exception
       {
         super.renderView(context);
-        final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
+        final ResourcePath param = getParam();
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
         final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
 
-        switch (param)
+        if (param.getSegmentCount() > 1)
           {
-            case "":
-                galleryAdapter.renderGallery(view, items);
-                textHolder.addAttribute("title", siteNodeTitle);
-                break;
+            throw new HttpStatusException(SC_BAD_REQUEST);
+          }
 
-            case "images.xml":
-                galleryAdapter.renderCatalog(view, items);
-                break;
+        if (param.getSegmentCount() == 0)
+          {
+            galleryAdapter.renderGallery(view, items);
+            textHolder.addAttribute("title", siteNodeTitle);
+          }
+        else
+          {
+            switch (param.getLeading())
+              {
+                case "images.xml":
+                    galleryAdapter.renderCatalog(view, items);
+                    break;
 
-            case "lightbox":
-                galleryAdapter.renderLightbox(view, items);
-                textHolder.addAttribute("title", siteNodeTitle);
-                break;
+                case "lightbox":
+                    galleryAdapter.renderLightbox(view, items);
+                    textHolder.addAttribute("title", siteNodeTitle);
+                    break;
 
-            default: // id of the gallery item to render
-                final Id id = new Id(param);
-                final GalleryItem item = itemMapById.get(id);
+                default: // id of the gallery item to render
+                    final Id id = new Id(param.getLeading());
+                    final GalleryItem item = itemMapById.get(id);
 
-                if (item == null)
-                  {
-                    log.warn("Gallery item not found: {}", id);
-                    log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
-                    throw new HttpStatusException(SC_NOT_FOUND);
-                  }
+                    if (item == null)
+                      {
+                        log.warn("Gallery item not found: {}", id);
+                        log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
+                        throw new HttpStatusException(SC_NOT_FOUND);
+                      }
 
-                galleryAdapter.renderItem(view, item, items);
-                textHolder.addAttribute("title", item.getDescription());
-                break;
+                    galleryAdapter.renderItem(view, item, items);
+                    textHolder.addAttribute("title", item.getDescription());
+                    break;
+              }
           }
       }
 
     @Nonnull
-    private String getParam()
+    private ResourcePath getParam()
       {
         try
           {
-            return requestHolder.get().getParameter("_escaped_fragment_");
+            return new ResourcePath(requestHolder.get().getParameter("_escaped_fragment_"));
           }
         catch (NotFoundException ex)
           {

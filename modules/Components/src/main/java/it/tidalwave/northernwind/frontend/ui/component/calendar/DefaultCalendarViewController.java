@@ -87,7 +87,7 @@ public class DefaultCalendarViewController implements CalendarViewController
     public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
-        final String pathParams = requestHolder.get().getPathParams(siteNode);
+        final ResourcePath pathParams = requestHolder.get().getPathParams(siteNode);
         final int currentYear = getCurrentYear(pathParams);
 
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
@@ -229,14 +229,17 @@ public class DefaultCalendarViewController implements CalendarViewController
      *
      ******************************************************************************************************************/
     @Nonnegative
-    private int getCurrentYear (final @Nonnull String pathParams)
+    private int getCurrentYear (final @Nonnull ResourcePath pathParams)
       throws HttpStatusException
       {
+        if (pathParams.getSegmentCount() > 1)
+          {
+            throw new HttpStatusException(SC_BAD_REQUEST);
+          }
+
         try
           {
-            return "".equals(pathParams) ? ZonedDateTime.now().getYear()
-                                         : Integer.parseInt(pathParams.replaceAll("/$", "").replaceAll("^/", ""));
-//            return "".equals(pathParams) ? new ZonedDateTime().getYear() : Integer.parseInt(pathParams.replaceAll("/", ""));
+            return pathParams.isEmpty() ? ZonedDateTime.now().getYear() : Integer.parseInt(pathParams.getLeading());
           }
         catch (NumberFormatException e)
           {
