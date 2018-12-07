@@ -117,14 +117,14 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * {@link SiteNode} associated to this controller. This is typically used to create site maps.
      *
      ******************************************************************************************************************/
-    // FIXME: add eventual localized versions
+    // TODO: add eventual localized versions
     @RequiredArgsConstructor
     private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
         @Nonnull
-        private final DefaultBlogViewController controller;
+        private final transient DefaultBlogViewController controller;
 
         public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
           {
@@ -138,7 +138,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             return controller.findAllPosts(controller.getViewProperties())
                     .stream()
-                    .flatMap(post -> createVirtualNode(post).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplified in Java 9
+                    .flatMap(post -> createVirtualNode(post).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplified in Java 9
                     .collect(toList());
           }
 
@@ -213,7 +213,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         if (!tagCloud)
           {
-            prepareBlogPosts(context, viewProperties);
+            prepareBlogPosts(viewProperties);
 
             if ((fullPosts.size() == 1) && leadInPosts.isEmpty() && linkedPosts.isEmpty())
               {
@@ -255,14 +255,14 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Prepares the blog posts.
      *
      ******************************************************************************************************************/
-    private void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
+    private void prepareBlogPosts (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
         final int maxLeadinItems = properties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
         final int maxItems       = properties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
 
-        log.debug(">>>> rendering blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
+        log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
         final List<Content> posts = findPostsInReverseDateOrder(properties)
@@ -278,14 +278,14 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * Renders the blog posts.
+     * Renders the tag cloud.
      *
      ******************************************************************************************************************/
     private void generateTagCloud (final @Nonnull ResourceProperties properties)
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
                 .stream()
-                .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
                 .values()
                 .stream()
@@ -312,7 +312,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    // TODO: embed the sort by reverse date in the finder
+    // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
     private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
@@ -323,11 +323,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final List<Content> posts = new ArrayList<>();
         //
         // The thing work differently in function of pathParams:
-        // + when no pathParams, return all the posts;
-        // + when it matches a category, return all the posts in that category;
-        // + when it matches an exposed URI of a single specific post:
-        //      + if not in 'index' mode, return only that post;
-        //      + if in 'index' mode, returns all the posts.
+        //      when no pathParams, return all the posts;
+        //      when it matches a category, return all the posts in that category;
+        //      when it matches an exposed URI of a single specific post:
+        //          if not in 'index' mode, return only that post;
+        //          if in 'index' mode, returns all the posts.
         //
         if ("".equals(pathParams))
           {
@@ -496,7 +496,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract  void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
+    protected abstract void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
 
     /*******************************************************************************************************************
      *
