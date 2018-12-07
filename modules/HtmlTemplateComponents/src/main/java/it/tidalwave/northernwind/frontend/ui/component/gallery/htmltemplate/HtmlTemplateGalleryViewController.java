@@ -143,7 +143,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                 textHolder.addAttribute("title", siteNodeTitle);
                 break;
 
-            default: // id of the photo item to render
+            default: // id of the gallery item to render
                 final Id id = new Id(param);
                 final GalleryItem item = itemMapById.get(id);
 
