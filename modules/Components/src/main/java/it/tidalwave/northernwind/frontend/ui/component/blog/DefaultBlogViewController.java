@@ -406,12 +406,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try
           {
-            // FIXME: refactor with ResourcePath
+            // TODO: shouldn't ResourcePath always encode incoming strings?
             String link = site.createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
                                                                    .appendedWith(URLEncoder.encode(tag, "UTF-8")));
 
-            // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
-            if (!link.endsWith("/"))
+            // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
+            // Refactor by passing a parameter to createLink that overrides the default behaviour.
+            if (!link.endsWith("/") && !link.contains("?"))
               {
                 link += "/";
               }
