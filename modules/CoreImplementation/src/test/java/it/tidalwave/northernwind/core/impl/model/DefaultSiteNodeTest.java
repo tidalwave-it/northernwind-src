@@ -206,7 +206,7 @@ public class DefaultSiteNodeTest
         when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
 
         final ResourceProperties properties = mock(ResourceProperties.class);
-        when(properties.getProperty(eq(SiteNode.PROPERTY_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
+        when(properties.getProperty(eq(SiteNode.P_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
         when(resource.getProperties()).thenReturn(properties);
 
         final SiteFinder<SiteNode> siteNodeFinder = mock(SiteFinder.class);
