@@ -149,7 +149,8 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
 
                 if (item == null)
                   {
-                    log.warn("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
+                    log.warn("Gallery item not found: {}", id);
+                    log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
                     throw new HttpStatusException(404);
                   }
 
