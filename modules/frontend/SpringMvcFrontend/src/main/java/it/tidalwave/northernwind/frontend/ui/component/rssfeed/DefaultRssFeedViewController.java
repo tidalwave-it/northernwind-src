@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.rssfeed;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -40,12 +39,10 @@ import com.sun.syndication.feed.rss.Item;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -75,11 +72,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
                                          final @Nonnull SiteNode siteNode,
                                          final @Nonnull Site site,
-                                         final @Nonnull SiteProvider siteProvider,
-                                         final @Nonnull RequestHolder requestHolder,
-                                         final @Nonnull RequestContext requestContext)
+                                         final @Nonnull SiteProvider siteProvider)
       {
-        super(view, siteNode, site, requestHolder, requestContext);
+        super(view, siteNode, site);
         this.siteProvider = siteProvider;
         this.view = view;
         feed = new Channel("rss_2.0");

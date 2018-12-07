@@ -39,11 +39,9 @@ import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
@@ -71,10 +69,6 @@ public class HtmlTemplateBlogViewControllerTest
 
     private Site site;
 
-    private RequestHolder requestHolder;
-
-    private RequestContext requestContext;
-
     private RequestLocaleManager requestLocaleManager;
 
     /*******************************************************************************************************************
@@ -86,10 +80,8 @@ public class HtmlTemplateBlogViewControllerTest
         view = mock(BlogView.class);
         node = mock(SiteNode.class);
         site = mock(Site.class);
-        requestHolder = mock(RequestHolder.class);
-        requestContext = mock(RequestContext.class);
         requestLocaleManager = mock(RequestLocaleManager.class);
-        underTest = new HtmlTemplateBlogViewController(view, node, site, requestHolder, requestContext, requestLocaleManager);
+        underTest = new HtmlTemplateBlogViewController(view, node, site, requestLocaleManager);
       }
 
     /*******************************************************************************************************************

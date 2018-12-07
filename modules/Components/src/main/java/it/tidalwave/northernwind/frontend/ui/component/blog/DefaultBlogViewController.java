@@ -45,12 +45,10 @@ import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -176,12 +174,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private final Site site;
 
-    @Nonnull
-    private final RequestHolder requestHolder;
-
-    @Nonnull
-    protected final RequestContext requestContext;
-
     /* VisibleForTesting */ final List<Content> fullPosts = new ArrayList<>();
 
     /* VisibleForTesting */ final List<Content> leadInPosts = new ArrayList<>();
@@ -215,7 +207,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         if (!tagCloud)
           {
-            prepareBlogPosts(viewProperties);
+            prepareBlogPosts(context, viewProperties);
 
             if ((fullPosts.size() == 1) && leadInPosts.isEmpty() && linkedPosts.isEmpty())
               {
@@ -257,7 +249,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Prepares the blog posts.
      *
      ******************************************************************************************************************/
-    private void prepareBlogPosts (final @Nonnull ResourceProperties properties)
+    private void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = properties.getIntProperty(P_MAX_FULL_ITEMS).orElse(99);
@@ -267,7 +259,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
-        final List<Content> posts = findPostsInReverseDateOrder(properties)
+        final List<Content> posts = findPostsInReverseDateOrder(context, properties)
                 .stream()
                 .filter(post -> post.getProperty(P_TITLE).isPresent())
                 .collect(toList());
@@ -316,10 +308,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties properties)
+    private List<Content> findPostsInReverseDateOrder (final @Nonnull RenderContext context,
+                                                       final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final ResourcePath pathParams = requestHolder.get().getPathParams(siteNode);
+        final ResourcePath pathParams = context.getPathParams(siteNode);
         final boolean index = properties.getBooleanProperty(P_INDEX).orElse(false);
         final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();

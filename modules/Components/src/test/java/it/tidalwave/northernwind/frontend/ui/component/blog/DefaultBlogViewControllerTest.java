@@ -95,13 +95,9 @@ public class DefaultBlogViewControllerTest
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
-        public UnderTest (final @Nonnull BlogView view,
-                          final @Nonnull SiteNode siteNode,
-                          final @Nonnull Site site,
-                          final @Nonnull RequestHolder requestHolder,
-                          final @Nonnull RequestContext requestContext)
+        public UnderTest (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode, final @Nonnull Site site)
           {
-            super(view, siteNode, site, requestHolder, requestContext);
+            super(view, siteNode, site);
           }
 
         @Override
@@ -154,8 +150,6 @@ public class DefaultBlogViewControllerTest
 
     private RequestContext requestContext;
 
-    private RequestHolder requestHolder;
-
     private List<Content> posts;
 
     private List<ZonedDateTime> dates;
@@ -197,13 +191,10 @@ public class DefaultBlogViewControllerTest
         when(view.getId()).thenReturn(viewId);
 
         request = mock(Request.class);
-        requestHolder = mock(RequestHolder.class);
-        when(requestHolder.get()).thenReturn(request);
-
         requestContext = mock(RequestContext.class);
-        renderContext = new DefaultRenderContext(requestContext);
+        renderContext = new DefaultRenderContext(request, requestContext);
 
-        underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
+        underTest = new UnderTest(view, siteNode, site);
         underTest.initialize();
       }
 

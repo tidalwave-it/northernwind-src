@@ -27,8 +27,13 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *
@@ -37,6 +42,9 @@ import it.tidalwave.northernwind.core.model.RequestContext;
  **********************************************************************************************************************/
 public interface RenderContext
   {
+    @Nonnull
+    public Request getRequest();
+
     @Nonnull
     public RequestContext getRequestContext();
 
@@ -48,13 +56,48 @@ public interface RenderContext
      * This property will be made available by {@link #getNodeProperties()}, which e.g. is used by the
      * {@code $nodeProperty(...)$} macro.
      *
-     * @param  key    the property key
-     * @param  value  the property value
+     * @param       key         the property key
+     * @param       value       the property value
      *
      ******************************************************************************************************************/
     default public <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
       {
         getRequestContext().setDynamicNodeProperty(key, value);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns a query parameter.
+     *
+     * @param       name        the name of the parameter
+     * @return                  the value
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    default public Optional<String> getQueryParam (final @Nonnull String name)
+      {
+        try
+          {
+            return Optional.of(getRequest().getParameter(name));
+          }
+        catch (NotFoundException e)
+          {
+            return Optional.empty();
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns the path parameters.
+     *
+     * @param       siteNode    the node that needs the parameters
+     * @return                  the path parameters
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    default public ResourcePath getPathParams (final @Nonnull SiteNode siteNode)
+      {
+        return getRequest().getPathParams(siteNode);
       }
   }
 

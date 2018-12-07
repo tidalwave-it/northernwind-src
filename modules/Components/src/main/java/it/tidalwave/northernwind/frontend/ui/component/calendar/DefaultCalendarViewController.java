@@ -48,7 +48,6 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,9 +74,6 @@ public class DefaultCalendarViewController implements CalendarViewController
     @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
-    @Nonnull
-    private final RequestHolder requestHolder;
-
     /*******************************************************************************************************************
      *
      * {@inheritDoc }
@@ -87,9 +83,7 @@ public class DefaultCalendarViewController implements CalendarViewController
     public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
-        final ResourcePath pathParams = requestHolder.get().getPathParams(siteNode);
-        final int currentYear = getCurrentYear(pathParams);
-
+        final int currentYear = getCurrentYear(context.getPathParams(siteNode));
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
 

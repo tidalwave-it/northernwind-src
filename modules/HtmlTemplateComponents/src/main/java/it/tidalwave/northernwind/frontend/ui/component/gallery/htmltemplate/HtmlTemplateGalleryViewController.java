@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -38,7 +37,6 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
@@ -63,9 +61,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull
-    private final RequestHolder requestHolder;
-
     /*******************************************************************************************************************
      *
      *
@@ -74,7 +69,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view,
                                               final @Nonnull SiteNode siteNode,
                                               final @Nonnull Site site,
-                                              final @Nonnull RequestHolder requestHolder,
                                               final @Nonnull RequestLocaleManager requestLocaleManager,
                                               final @Nonnull ModelFactory modelFactory,
                                               final @Nonnull BeanFactory beanFactory)
@@ -83,7 +77,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         super(view, siteNode, site, requestLocaleManager, beanFactory);
         this.view = view;
         this.siteNode = siteNode;
-        this.requestHolder = requestHolder;
 
         final GalleryAdapterContext context = new GalleryAdapterContext()
           {
@@ -125,7 +118,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       throws Exception
       {
         super.renderView(context);
-        final ResourcePath param = getParam();
+        final ResourcePath param = getParam(context);
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
         final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
@@ -172,16 +165,10 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       }
 
     @Nonnull
-    private ResourcePath getParam()
+    private ResourcePath getParam (final @Nonnull RenderContext context)
       {
-        try
-          {
-            return new ResourcePath(requestHolder.get().getParameter("_escaped_fragment_"));
-          }
-        catch (NotFoundException ex)
-          {
-            return requestHolder.get().getPathParams(siteNode);
-          }
+        return context.getQueryParam("_escaped_fragment_").map(ResourcePath::new)
+                                                          .orElse(context.getPathParams(siteNode));
       }
 
     /*******************************************************************************************************************

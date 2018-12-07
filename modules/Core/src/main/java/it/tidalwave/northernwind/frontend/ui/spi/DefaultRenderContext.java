@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.Getter;
@@ -41,6 +42,9 @@ import lombok.ToString;
 @RequiredArgsConstructor @ToString @Getter
 public class DefaultRenderContext implements RenderContext
   {
+    @Nonnull
+    private final Request request;
+
     @Nonnull
     private final RequestContext requestContext;
   }

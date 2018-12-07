@@ -41,12 +41,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
@@ -90,9 +88,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private final SiteNode siteNode;
 
     @Nonnull
-    private final Site site;
-
-    @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
     private boolean referencesRendered;
@@ -106,13 +101,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     public HtmlTemplateBlogViewController (final @Nonnull BlogView view,
                                            final @Nonnull SiteNode siteNode,
                                            final @Nonnull Site site,
-                                           final @Nonnull RequestHolder requestHolder,
-                                           final @Nonnull RequestContext requestContext,
                                            final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(view, siteNode, site, requestHolder, requestContext);
+        super(view, siteNode, site);
         this.siteNode = siteNode;
-        this.site = site;
         this.requestLocaleManager = requestLocaleManager;
       }
 

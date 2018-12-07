@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -70,16 +71,16 @@ public class SpringMvcSiteView implements SiteView
      *
      ******************************************************************************************************************/
     @Override
-    public void renderSiteNode (final @Nonnull SiteNode siteNode)
+    public void renderSiteNode (final @Nonnull Request request, final @Nonnull SiteNode siteNode)
       {
         log.info("renderSiteNode({})", siteNode);
         httpStatus.set(HttpStatus.OK);
-        final RenderContext renderContext = new DefaultRenderContext(requestContext);
+        final RenderContext renderContext = new DefaultRenderContext(request, requestContext);
         final ViewAndControllerLayoutBuilder vacBuilder = new ViewAndControllerLayoutBuilder(siteNode,
                                                                                              renderContext,
                                                                                              this::createErrorView);
         siteNode.getLayout().accept(vacBuilder);
-        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
+        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(request, requestContext, vacBuilder, this::attach);
         siteNode.getLayout().accept(renderer);
         final TextHolder textHolder = renderer.getRootComponent();
         responseHolder.response().withStatus(httpStatus.get().value())

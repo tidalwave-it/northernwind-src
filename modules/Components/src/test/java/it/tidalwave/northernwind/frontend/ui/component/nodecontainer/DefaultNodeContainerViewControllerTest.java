@@ -33,6 +33,7 @@ import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -117,7 +118,7 @@ public class DefaultNodeContainerViewControllerTest
         final RequestContext requestContext = mock(RequestContext.class);
         when(requestContext.getNodeProperties()).thenReturn(nodeProperties);
 
-        renderContext = new DefaultRenderContext(requestContext);
+        renderContext = new DefaultRenderContext(mock(Request.class), requestContext);
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
         underTest.initialize();

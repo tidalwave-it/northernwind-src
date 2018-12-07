@@ -32,6 +32,7 @@ import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -97,7 +98,7 @@ public class DefaultMenuViewControllerTest
         view = mock(MenuView.class);
         when(view.getId()).thenReturn(viewId);
 
-        renderContext = new DefaultRenderContext(mock(RequestContext.class));
+        renderContext = new DefaultRenderContext(mock(Request.class), mock(RequestContext.class));
 
         underTest = new DefaultMenuViewController(view, siteNode, site);
         underTest.initialize();
