@@ -39,10 +39,12 @@ import com.sun.syndication.feed.rss.Item;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -59,6 +61,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     private final SiteProvider siteProvider;
 
     @Nonnull
+    private final SiteNode siteNode;
+
+    @Nonnull
     private final RssFeedView view;
 
     private final List<Item> items = new ArrayList<>();
@@ -69,6 +74,11 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 
     private final ResourceProperties properties;
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
                                          final @Nonnull SiteNode siteNode,
                                          final @Nonnull Site site,
@@ -76,6 +86,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
       {
         super(view, siteNode, site);
         this.siteProvider = siteProvider;
+        this.siteNode = siteNode;
         this.view = view;
         feed = new Channel("rss_2.0");
         properties = siteNode.getPropertyGroup(view.getId());
@@ -86,8 +97,28 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         feed.setCopyright(properties.getProperty(P_CREATOR).orElse(""));
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
-    protected void addFullPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
+    public void prepareRendering (final @Nonnull RenderContext context)
+      throws HttpStatusException
+      {
+        // do not call super!
+        log.info("prepareRendering(RenderContext) for {}", siteNode);
+        prepareBlogPosts(context, getViewProperties());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void addPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post,
+                            final @Nonnull RenderMode renderMode)
       {
         final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
@@ -101,7 +132,18 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final Content content = new Content();
         // FIXME: text/xhtml?
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
-        postProperties.getProperty(P_FULL_TEXT).ifPresent(content::setValue);
+
+        switch (renderMode)
+          {
+            case FULL:
+                postProperties.getProperty(P_FULL_TEXT).ifPresent(content::setValue);
+                break;
+
+            case LEAD_IN:
+                postProperties.getProperty(P_LEADIN_TEXT).ifPresent(content::setValue);
+                break;
+          }
+        
         item.setTitle(postProperties.getProperty(P_TITLE).orElse(""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(Date.from(blogDateTime.toInstant()));
@@ -125,21 +167,21 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         items.add(item);
       }
 
-    @Override
-    protected void addLeadInPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
-      {
-      }
-
-    @Override
-    protected void addLinkToPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post)
-      {
-      }
-
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     protected void render()
       throws FeedException

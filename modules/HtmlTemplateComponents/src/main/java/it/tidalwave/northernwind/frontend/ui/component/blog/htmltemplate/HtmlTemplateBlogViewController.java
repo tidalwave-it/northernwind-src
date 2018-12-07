@@ -85,9 +85,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
       }
 
     @Nonnull
-    private final SiteNode siteNode;
-
-    @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
     private boolean referencesRendered;
@@ -104,7 +101,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                                            final @Nonnull RequestLocaleManager requestLocaleManager)
       {
         super(view, siteNode, site);
-        this.siteNode = siteNode;
         this.requestLocaleManager = requestLocaleManager;
       }
 
@@ -114,22 +110,54 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void addFullPost (final @Nonnull Content post)
+    protected void addPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
       {
-        log.debug("addFullPost()");
-        addPost(post, true);
-      }
+        log.debug("addPost({}, {})", post, renderMode);
 
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    protected void addLeadInPost (final @Nonnull Content post)
-      {
-        log.debug("addLeadInPost()");
-        addPost(post, false);
+        final StringBuilder htmlBuilder = new StringBuilder();
+
+        if (renderMode == RenderMode.LINK)
+          {
+            if (!referencesRendered)
+              {
+                htmlBuilder.append("<ul>\n");
+                referencesRendered = true;
+              }
+
+            append(htmlBuilder, TEMPLATE_REFERENCE_LINK, post.getExposedUri().map(this::createLink),
+                                                         post.getProperty(P_TITLE));
+          }
+        else
+          {
+            post.getProperty(P_TITLE).ifPresent(view::setTitle);
+            final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+            final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
+            htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
+
+            append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, post.getProperty(P_TITLE));
+
+            htmlBuilder.append("<div class='nw-blog-post-meta'>\n");
+            renderDate(htmlBuilder, blogDateTime);
+            renderCategory(htmlBuilder, post);
+            renderTags(htmlBuilder, post);
+            renderPermalink(htmlBuilder, post);
+            htmlBuilder.append("</div>\n");
+
+            switch (renderMode)
+              {
+                case FULL:
+                    append(htmlBuilder, TEMPLATE_FULL_TEXT, post.getProperty(P_FULL_TEXT));
+                    break;
+
+                case LEAD_IN:
+                    append(htmlBuilder, TEMPLATE_FULL_TEXT, post.getProperty(P_LEADIN_TEXT));
+                    break;
+              }
+
+            htmlBuilder.append("</div>\n");
+          }
+
+        htmlParts.add(htmlBuilder.toString());
       }
 
     /*******************************************************************************************************************
@@ -141,7 +169,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     protected void render()
       {
         final StringBuilder htmlBuilder = new StringBuilder();
-        renderMainTitle(htmlBuilder);
+        renderTitle(htmlBuilder);
 
         htmlParts.stream().forEach(html -> htmlBuilder.append(html));
 
@@ -158,56 +186,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    protected void addLinkToPost (final @Nonnull Content post)
-      {
-        log.debug("addReference()");
-
-        final StringBuilder htmlBuilder = new StringBuilder();
-
-        if (!referencesRendered)
-          {
-            htmlBuilder.append("<ul>\n");
-            referencesRendered = true;
-          }
-
-        renderReferenceLink(htmlBuilder, post);
-        htmlParts.add(htmlBuilder.toString());
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     private void addPost (final @Nonnull Content post, final boolean addBody)
       {
-        log.debug("addPost({}, {})", post, addBody);
-
-        final ResourceProperties postProperties = post.getProperties();
-        final StringBuilder htmlBuilder = new StringBuilder();
-
-        postProperties.getProperty(P_TITLE).ifPresent(view::setTitle);
-        final ZonedDateTime blogDateTime = postProperties.getDateTimeProperty(DATE_KEYS).orElse(TIME0);
-        final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
-        htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
-
-        append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, postProperties.getProperty(P_TITLE));
-
-        htmlBuilder.append("<div class='nw-blog-post-meta'>\n");
-        renderDate(htmlBuilder, blogDateTime);
-        renderCategory(htmlBuilder, post);
-        renderTags(htmlBuilder, post);
-        renderPermalink(htmlBuilder, post);
-        htmlBuilder.append("</div>\n");
-
-        if (addBody)
-          {
-            append(htmlBuilder, TEMPLATE_FULL_TEXT, postProperties.getProperty(P_FULL_TEXT));
-          }
-
-        htmlBuilder.append("</div>\n");
-        htmlParts.add(htmlBuilder.toString());
       }
 
     /*******************************************************************************************************************
@@ -219,8 +199,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
         log.debug("addTagCloud({})", tagsAndCount);
-
-        htmlParts.add(tagsAndCount.stream()
+        final StringBuilder buffer = new StringBuilder();
+//        renderTitle(buffer);
+        htmlParts.add(buffer + tagsAndCount.stream()
                                   .map(tagAndCount -> String.format(TEMPLATE_TAG_CLOUD_LINK,
                                                                     createTagLink(tagAndCount.tag),
                                                                     tagAndCount.rank,
@@ -233,16 +214,10 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      * Renders the general title of the blog.
      *
-     * FIXME: should use computeTitle(), but we don't have the post.
-     *
      ******************************************************************************************************************/
-    /* package */ void renderMainTitle (final @Nonnull StringBuilder htmlBuilder)
+    /* package */ void renderTitle (final @Nonnull StringBuilder htmlBuilder)
       {
-        final Optional<String> mainTitle = siteNode.getPropertyGroup(view.getId()).getProperty(P_TITLE)
-                .map(String::trim)
-                .flatMap(this::filterEmptyString);
-        append(htmlBuilder, TEMPLATE_MAIN_TITLE, mainTitle);
-        mainTitle.ifPresent(view::setTitle);
+        append(htmlBuilder, TEMPLATE_MAIN_TITLE, title);
       }
 
     /*******************************************************************************************************************
@@ -263,20 +238,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private void renderPermalink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
         append(htmlBuilder, TEMPLATE_PERMALINK, post.getExposedUri().map(this::createLink));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Renders a reference link.
-     *
-     ******************************************************************************************************************/
-    private void renderReferenceLink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      {
-        //        final String idPrefix = "nw-blogpost-" + blogDateTime.toDate().getTime();
-
-        final Optional<String> title = post.getProperty(P_TITLE);
-        final Optional<String> link  = post.getExposedUri().map(this::createLink);
-        append(htmlBuilder, TEMPLATE_REFERENCE_LINK, link, title);
       }
 
     /*******************************************************************************************************************
@@ -345,17 +306,5 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
             final Object[] strings = Stream.of(optionalStrings).map(Optional::get).collect(toList()).toArray();
             builder.append(String.format(template, strings));
           }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private Optional<String> filterEmptyString (final @Nonnull String s)
-      {
-        final Optional<String> x = (s.equals("") ? Optional.empty() : Optional.of(s));
-        return x;
       }
   }
