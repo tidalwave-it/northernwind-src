@@ -44,7 +44,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_TITLE;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TITLE;
 
 /***********************************************************************************************************************
  *
@@ -125,7 +125,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
-        final String siteNodeTitle = siteNode.getProperty(PROPERTY_TITLE).orElse("");
+        final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
 
         switch (param)
           {
@@ -143,13 +143,14 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                 textHolder.addAttribute("title", siteNodeTitle);
                 break;
 
-            default: // id of the photo item to render
+            default: // id of the gallery item to render
                 final Id id = new Id(param);
                 final GalleryItem item = itemMapById.get(id);
 
                 if (item == null)
                   {
-                    log.warn("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
+                    log.warn("Gallery item not found: {}", id);
+                    log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
                     throw new HttpStatusException(404);
                   }
 

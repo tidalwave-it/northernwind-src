@@ -46,7 +46,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.Resource.PROPERTY_PLACE_HOLDER;
+import static it.tidalwave.northernwind.core.model.Resource.P_PLACE_HOLDER;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 
 /***********************************************************************************************************************
@@ -129,7 +129,7 @@ import static it.tidalwave.role.Unmarshallable.Unmarshallable;
                   }
               }
 
-            placeHolder = properties.getBooleanProperty(PROPERTY_PLACE_HOLDER).orElse(tmpPlaceHolder);
+            placeHolder = properties.getBooleanProperty(P_PLACE_HOLDER).orElse(tmpPlaceHolder);
 
             if (log.isDebugEnabled())
               {

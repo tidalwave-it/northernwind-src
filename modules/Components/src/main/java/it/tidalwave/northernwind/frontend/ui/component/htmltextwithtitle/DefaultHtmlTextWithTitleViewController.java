@@ -72,12 +72,12 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
       {
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        final String template = viewProperties.getProperty(PROPERTY_WRAPPER_TEMPLATE_RESOURCE)
+        final String template = viewProperties.getProperty(P_WRAPPER_TEMPLATE_RESOURCE)
                                               .flatMap(templateHelper::getTemplate)
                                               .orElse("$content$");
         log.debug(">>>> template: {}", template);
 
-        final String html = viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())
+        final String html = viewProperties.getProperty(P_CONTENTS).orElse(emptyList())
                 .stream()
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream())
                 .map(content -> content.getProperties())
@@ -87,7 +87,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
 
         final ST t = new ST(template, '$', '$').add("content", html);
         view.setText(t.render());
-        view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
+        view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
       }
 
     /*******************************************************************************************************************
@@ -98,7 +98,7 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @Nonnull
     private static String appendTitle (final @Nonnull ResourceProperties properties, final @Nonnull String titleMarkup)
       {
-        return properties.getProperty(PROPERTY_TITLE).map(title -> String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup)).orElse("");
+        return properties.getProperty(P_TITLE).map(title -> String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup)).orElse("");
       }
 
     /*******************************************************************************************************************
@@ -109,6 +109,6 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @Nonnull
     private static String appendText (final @Nonnull ResourceProperties properties)
       {
-        return properties.getProperty(PROPERTY_FULL_TEXT).map(text -> text + "\n").orElse("");
+        return properties.getProperty(P_FULL_TEXT).map(text -> text + "\n").orElse("");
       }
   }

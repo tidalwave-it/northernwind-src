@@ -93,18 +93,18 @@ public class DefaultCalendarViewController implements CalendarViewController
 
 //        try
 //          {
-//            siteNodeProperties.getProperty(PROPERTY_ENTRIES);
+//            siteNodeProperties.getProperty(P_ENTRIES);
 //          }
 //        catch (NotFoundException e)
 //          {
 //            throw new HttpStatusException(404);
 //          }
 
-        final String entries = siteNodeProperties.getProperty(PROPERTY_ENTRIES).orElse("");
+        final String entries = siteNodeProperties.getProperty(P_ENTRIES).orElse("");
         final StringBuilder builder = new StringBuilder();
-        final int selectedYear = viewProperties.getIntProperty(PROPERTY_SELECTED_YEAR).orElse(currentYear);
-        final int firstYear = viewProperties.getIntProperty(PROPERTY_FIRST_YEAR).orElse(Math.min(selectedYear, currentYear));
-        final int lastYear = viewProperties.getIntProperty(PROPERTY_LAST_YEAR).orElse(Math.max(selectedYear, currentYear));
+        final int selectedYear = viewProperties.getIntProperty(P_SELECTED_YEAR).orElse(currentYear);
+        final int firstYear = viewProperties.getIntProperty(P_FIRST_YEAR).orElse(Math.min(selectedYear, currentYear));
+        final int lastYear = viewProperties.getIntProperty(P_LAST_YEAR).orElse(Math.max(selectedYear, currentYear));
         final int columns = 4;
 
         builder.append("<div class='nw-calendar'>\n");
@@ -186,7 +186,7 @@ public class DefaultCalendarViewController implements CalendarViewController
     private void appendTitle (final @Nonnull StringBuilder builder,
                               final @Nonnull ResourceProperties siteNodeProperties)
       {
-        siteNodeProperties.getProperty(PROPERTY_TITLE).ifPresent(title -> builder.append(String.format("<h2>%s</h2>%n", title)));
+        siteNodeProperties.getProperty(P_TITLE).ifPresent(title -> builder.append(String.format("<h2>%s</h2>%n", title)));
       }
 
     /*******************************************************************************************************************

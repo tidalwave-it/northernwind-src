@@ -69,14 +69,14 @@ public class DefaultMenuViewController implements MenuViewController
     public void renderView (final @Nonnull RenderContext context)
      {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        viewProperties.getProperty(PROPERTY_TITLE).ifPresent(view::setTitle);
-        viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
-                                                          .ifPresent(view::setTemplate);
+        viewProperties.getProperty(P_TITLE).ifPresent(view::setTitle);
+        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
+                                                   .ifPresent(view::setTemplate);
 
-        viewProperties.getProperty(PROPERTY_LINKS).orElse(emptyList())
+        viewProperties.getProperty(P_LINKS).orElse(emptyList())
                 .stream()
                 .flatMap(path -> site.find(SiteNode).withRelativePath(path).stream())
-                .forEach(node -> view.addLink(node.getProperty(PROPERTY_NAVIGATION_LABEL).orElse("no nav. label"), // FIXME
+                .forEach(node -> view.addLink(node.getProperty(P_NAVIGATION_LABEL).orElse("no nav. label"), // FIXME
                                               site.createLink(node.getRelativeUri())));
       }
   }

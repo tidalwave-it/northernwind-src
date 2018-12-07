@@ -63,7 +63,7 @@ public class DefaultRequestContext implements RequestContext
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
-            log.warn("NO CONTENT IN CONTEXT");
+            log.warn("No Content Properties in RequestContext ({})", toString());
 //            Thread.dumpStack(); // FIXME
             return modelFactory.createProperties().build();
           }
@@ -76,7 +76,7 @@ public class DefaultRequestContext implements RequestContext
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
-            log.warn("NO CONTENT IN CONTEXT");
+            log.warn("No Node Properties in RequestContext ({})", toString());
 //            Thread.dumpStack(); // FIXME
             return dynamicNodePropertiesHolder.get();
           }
@@ -120,14 +120,14 @@ public class DefaultRequestContext implements RequestContext
     @Override
     public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value)
       {
-        ResourceProperties properties = dynamicNodePropertiesHolder.get();
+        final ResourceProperties properties = dynamicNodePropertiesHolder.get();
         dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
       }
 
     @Override @Nonnull
     public String toString()
       {
-        return String.format("RequestContext[content: %s, node: %s]", toString(contentHolder.get()), toString(nodeHolder.get()));
+        return String.format("RequestContext(content: %s, node: %s)", toString(contentHolder.get()), toString(nodeHolder.get()));
       }
 
     @Nonnull
