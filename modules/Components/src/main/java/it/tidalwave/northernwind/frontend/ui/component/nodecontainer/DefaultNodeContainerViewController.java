@@ -96,20 +96,19 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         final ResourceProperties viewProperties     = getViewProperties();
         final ResourceProperties siteNodeProperties = context.getRequestContext().getNodeProperties();
 
-        viewProperties.getProperty(PROPERTY_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
-                                                          .ifPresent(view::setTemplate);
+        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate).ifPresent(view::setTemplate);
 
         view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
-        view.addAttribute("description",      viewProperties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
-        view.addAttribute("titlePrefix",      viewProperties.getProperty(PROPERTY_TITLE_PREFIX).orElse(""));
-        view.addAttribute("title",            siteNodeProperties.getProperty(PROPERTY_DYNAMIC_TITLE).orElse(
-                                              siteNodeProperties.getProperty(PROPERTY_TITLE).orElse("")));
+        view.addAttribute("description",      viewProperties.getProperty(P_DESCRIPTION).orElse(""));
+        view.addAttribute("titlePrefix",      viewProperties.getProperty(P_TITLE_PREFIX).orElse(""));
+        view.addAttribute("title",            siteNodeProperties.getProperty(PD_TITLE).orElse(
+                                              siteNodeProperties.getProperty(P_TITLE).orElse(""))); // TODO: use multi-key
         view.addAttribute("screenCssSection", computeScreenCssSection());
         view.addAttribute("printCssSection",  computePrintCssSection());
         view.addAttribute("rssFeeds",         computeRssFeedsSection());
         view.addAttribute("scripts",          computeScriptsSection());
         view.addAttribute("inlinedScripts",   computeInlinedScriptsSection());
-        siteNodeProperties.getProperty(PROPERTY_DYNAMIC_IMAGE_ID).ifPresent(id -> view.addAttribute("imageId", id));
+        siteNodeProperties.getProperty(PD_IMAGE_ID).ifPresent(id -> view.addAttribute("imageId", id));
       }
 
     /*******************************************************************************************************************
@@ -131,7 +130,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeScreenCssSection()
       {
-        return streamOf(PROPERTY_SCREEN_STYLE_SHEETS)
+        return streamOf(P_SCREEN_STYLE_SHEETS)
                 .map(this::createLink)
                 .map(link -> String.format(TEMPLATE_LINK_SCREEN_CSS, link))
                 .collect(joining());
@@ -145,7 +144,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computePrintCssSection()
       {
-        return streamOf(PROPERTY_PRINT_STYLE_SHEETS)
+        return streamOf(P_PRINT_STYLE_SHEETS)
                 .map(this::createLink)
                 .map(link -> String.format(TEMPLATE_LINK_PRINT_CSS, link))
                 .collect(joining());
@@ -159,11 +158,11 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection()
       {
-        return streamOf(PROPERTY_RSS_FEEDS)
+        return streamOf(P_RSS_FEEDS)
                 .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).stream())
                 .map(node -> String.format(TEMPLATE_RSS_LINK,
                                            RSS_MIME_TYPE,
-                                           node.getProperty(PROPERTY_TITLE).orElse("RSS"),
+                                           node.getProperty(P_TITLE).orElse("RSS"),
                                            site.createLink(node.getRelativeUri())))
                 .collect(joining());
       }
@@ -176,7 +175,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeScriptsSection()
       {
-        return streamOf(PROPERTY_SCRIPTS)
+        return streamOf(P_SCRIPTS)
                 .map(relativeUri -> site.createLink(new ResourcePath(relativeUri)))
                 .map(link -> String.format(TEMPLATE_SCRIPT, link))
                 .collect(joining());
@@ -190,9 +189,9 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     protected String computeInlinedScriptsSection()
       {
-        return streamOf(PROPERTY_INLINED_SCRIPTS)
+        return streamOf(P_INLINED_SCRIPTS)
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream())
-                .flatMap(script -> script.getProperty(PROPERTY_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                .flatMap(script -> script.getProperty(P_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(joining());
       }
 

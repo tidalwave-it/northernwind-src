@@ -38,32 +38,32 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 public interface NodeContainerViewController extends ViewController
   {
     /** The prefix to prepend to the HTML title. */
-    public static final Key<String> PROPERTY_TITLE_PREFIX = new Key<>("titlePrefix");
+    public static final Key<String> P_TITLE_PREFIX = new Key<>("titlePrefix");
 
     /** The list of relative paths or URLs for screen CSS style sheets. */
-    public static final Key<List<String>> PROPERTY_SCREEN_STYLE_SHEETS = new Key<>("screenStyleSheets");
+    public static final Key<List<String>> P_SCREEN_STYLE_SHEETS = new Key<>("screenStyleSheets");
 
     /** The list of relative paths or URLs for print CSS style sheets. */
-    public static final Key<List<String>> PROPERTY_PRINT_STYLE_SHEETS = new Key<>("printStyleSheets");
+    public static final Key<List<String>> P_PRINT_STYLE_SHEETS = new Key<>("printStyleSheets");
 
     /** The list of relative paths for inlined RSS feeds. */
-    public static final Key<List<String>> PROPERTY_RSS_FEEDS = new Key<>("rssFeeds");
+    public static final Key<List<String>> P_RSS_FEEDS = new Key<>("rssFeeds");
 
     /** The list of relative paths or URLs for external JavaScript scripts. */
-    public static final Key<List<String>> PROPERTY_SCRIPTS = new Key<>("scripts");
+    public static final Key<List<String>> P_SCRIPTS = new Key<>("scripts");
 
     /** The list of relative paths for inlined JavaScript scripts. */
-    public static final Key<List<String>> PROPERTY_INLINED_SCRIPTS = new Key<>("inlinedScripts");
+    public static final Key<List<String>> P_INLINED_SCRIPTS = new Key<>("inlinedScripts");
 
     /** Dynamic property generated during rendering with the title of the blog post. */
-    public static final Key<String> PROPERTY_DYNAMIC_TITLE = new Key<>("@title");
+    public static final Key<String> PD_TITLE = new Key<>("@title");
 
     /** Dynamic property generated during rendering with the permalink of the blog post. */
-    public static final Key<String> PROPERTY_DYNAMIC_URL = new Key<>("@url");
+    public static final Key<String> PD_URL = new Key<>("@url");
 
     /** Dynamic property generated during rendering with the unique id of the blog post. */
-    public static final Key<String> PROPERTY_DYNAMIC_ID = new Key<>("@id");
+    public static final Key<String> PD_ID = new Key<>("@id");
 
     /** Dynamic property generated during rendering with the id of the primary image to be associated to this view. */
-    public static final Key<String> PROPERTY_DYNAMIC_IMAGE_ID = new Key<>("@imageId");
+    public static final Key<String> PD_IMAGE_ID = new Key<>("@imageId");
   }

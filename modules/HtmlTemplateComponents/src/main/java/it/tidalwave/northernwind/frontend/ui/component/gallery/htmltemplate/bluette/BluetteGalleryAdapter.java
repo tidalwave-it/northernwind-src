@@ -56,13 +56,13 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
-    private static final Key<String> PROPERTY_COPYRIGHT = new Key<>("copyright");
+    private static final Key<String> P_COPYRIGHT = new Key<>("copyright");
 
-    private static final Key<String> PROPERTY_BLUETTE_TEMPLATE_PATH = new Key<>("bluettePath");
+    private static final Key<String> P_BLUETTE_TEMPLATE_PATH = new Key<>("bluettePath");
 
-    private static final Key<String> PROPERTY_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteFallbackPath");
+    private static final Key<String> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteFallbackPath");
 
-    private static final Key<String> PROPERTY_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteLightboxFallbackPath");
+    private static final Key<String> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteLightboxFallbackPath");
 
     @Nonnull
     private final GalleryAdapterContext context;
@@ -90,11 +90,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         super(site, modelFactory);
         this.context = context;
 
-        galleryTemplate          = loadTemplate(context, PROPERTY_BLUETTE_TEMPLATE_PATH, "bluette.txt");
-        fallbackTemplate         = loadTemplate(context, PROPERTY_BLUETTE_FALLBACK_TEMPLATE_PATH, "bluetteFallback.txt");
-        lightboxFallbackTemplate = loadTemplate(context, PROPERTY_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH, "bluetteLightboxFallback.txt");
+        galleryTemplate          = loadTemplate(context, P_BLUETTE_TEMPLATE_PATH, "bluette.txt");
+        fallbackTemplate         = loadTemplate(context, P_BLUETTE_FALLBACK_TEMPLATE_PATH, "bluetteFallback.txt");
+        lightboxFallbackTemplate = loadTemplate(context, P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH, "bluetteLightboxFallback.txt");
         final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
-        copyright = bluetteConfiguration.getProperty(PROPERTY_COPYRIGHT).orElse("");
+        copyright = bluetteConfiguration.getProperty(P_COPYRIGHT).orElse("");
       }
 
     /*******************************************************************************************************************

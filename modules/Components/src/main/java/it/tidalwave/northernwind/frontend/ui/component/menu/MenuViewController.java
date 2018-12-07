@@ -40,5 +40,5 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 public interface MenuViewController extends ViewController
   {
     /** A list of relative paths pointing to the {@code SiteNode}s that must be linked from a menu. */
-    public static final Key<List<String>> PROPERTY_LINKS = new Key<List<String>>("links");
+    public static final Key<List<String>> P_LINKS = new Key<>("links");
   }

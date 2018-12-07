@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -120,15 +121,13 @@ public class TextHolder
       }
 
     @Nonnull
-    public byte[] asBytes (final @Nonnull String charset)
-      throws IOException
+    public byte[] asBytes (final @Nonnull Charset charset)
       {
         return asString(charset).getBytes(charset);
       }
 
     @Nonnull
-    public String asString (final @Nonnull String charset)
-      throws IOException
+    public String asString (final @Nonnull Charset charset)
       {
         ST t = new ST(template, '$', '$');
 
@@ -144,10 +143,10 @@ public class TextHolder
             builder.append(child.asString(charset)).append("\n");
           }
 
-        t = t.add("content", builder.toString());
+        t = t.add("content",     builder.toString());
         t = t.add("contextPath", siteProvider.get().getSite().getContextPath());
-        t = t.add("charset", charset);
-        t = t.add("language", "");
+        t = t.add("charset",     charset.name());
+        t = t.add("language",    "");
 
         return t.render();
       }
