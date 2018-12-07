@@ -62,6 +62,7 @@ import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -354,7 +355,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         // If not index mode, nothing found and searched for something in path params, return 404
         if (!index && !"".equals(pathParams) && posts.isEmpty())
           {
-            throw new HttpStatusException(404);
+            throw new HttpStatusException(SC_NOT_FOUND);
           }
 
         Collections.sort(posts, REVERSE_DATE_COMPARATOR);

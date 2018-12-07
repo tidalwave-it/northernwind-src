@@ -45,6 +45,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TITLE;
 
 /***********************************************************************************************************************
@@ -152,7 +153,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                   {
                     log.warn("Gallery item not found: {}", id);
                     log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
-                    throw new HttpStatusException(404);
+                    throw new HttpStatusException(SC_NOT_FOUND);
                   }
 
                 galleryAdapter.renderItem(view, item, items);

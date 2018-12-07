@@ -52,6 +52,7 @@ import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -98,7 +99,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 //          }
 //        catch (NotFoundException e)
 //          {
-//            throw new HttpStatusException(404);
+//            throw new HttpStatusException(SC_NOT_FOUND);
 //          }
 
         final String entries = siteNodeProperties.getProperty(P_ENTRIES).orElse("");
@@ -239,7 +240,7 @@ public class DefaultCalendarViewController implements CalendarViewController
           }
         catch (NumberFormatException e)
           {
-            throw new HttpStatusException(404);
+            throw new HttpStatusException(SC_NOT_FOUND);
           }
       }
   }
