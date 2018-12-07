@@ -26,12 +26,12 @@
  */
 package it.tidalwave.northernwind.frontend.ui.springmvc;
 
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -43,6 +43,7 @@ import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
 import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
 import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /***********************************************************************************************************************
  *
@@ -60,7 +61,7 @@ public class SpringMvcSiteView implements SiteView
     @Inject
     private SpringMvcResponseHolder responseHolder;
 
-    private final ThreadLocal<Integer> httpStatus = new ThreadLocal<>();
+    private final ThreadLocal<HttpStatus> httpStatus = new ThreadLocal<>();
 
     /*******************************************************************************************************************
      *
@@ -69,34 +70,21 @@ public class SpringMvcSiteView implements SiteView
      ******************************************************************************************************************/
     @Override
     public void renderSiteNode (final @Nonnull SiteNode siteNode)
-      throws IOException
       {
         log.info("renderSiteNode({})", siteNode);
-        httpStatus.set(200);
-
+        httpStatus.set(HttpStatus.OK);
         final RenderContext renderContext = new RenderContext(requestContext);
-        final ViewAndControllerLayoutBuilder vacBuilder =
-                new ViewAndControllerLayoutBuilder(siteNode, renderContext, this::createFallbackView);
+        final ViewAndControllerLayoutBuilder vacBuilder = new ViewAndControllerLayoutBuilder(siteNode,
+                                                                                             renderContext,
+                                                                                             this::createErrorView);
         siteNode.getLayout().accept(vacBuilder);
-        final NodeViewRenderer<TextHolder, TextHolder> renderer =
-                new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
+        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(requestContext, vacBuilder, this::attach);
         siteNode.getLayout().accept(renderer);
         final TextHolder textHolder = renderer.getRootComponent();
-        responseHolder.response().withStatus(httpStatus.get())
-                                 .withBody(textHolder.asBytes("UTF-8"))
+        responseHolder.response().withStatus(httpStatus.get().value())
+                                 .withBody(textHolder.asBytes(UTF_8))
                                  .withContentType(textHolder.getMimeType())
                                  .put();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void setCaption (final String string)
-      {
-//        throw new UnsupportedOperationException("Not supported yet.");
       }
 
     /*******************************************************************************************************************
@@ -109,29 +97,14 @@ public class SpringMvcSiteView implements SiteView
      *
      ******************************************************************************************************************/
     @Nonnull
-    private TextHolder createFallbackView (final @Nonnull Layout layout, final @Nonnull Throwable t)
+    private TextHolder createErrorView (final @Nonnull Layout layout, final @Nonnull Throwable t)
       {
-        final int status = (t instanceof HttpStatusException) ? ((HttpStatusException)t).getHttpStatus() : 500;
+        log.warn("While processing " + layout, t);
+        final HttpStatus status = (t instanceof HttpStatusException)
+                ? HttpStatus.valueOf(((HttpStatusException)t).getHttpStatus())
+                : HttpStatus.INTERNAL_SERVER_ERROR;
         httpStatus.set(status);
-
-        final String message;
-
-        switch (status)
-          {
-            case 404:
-                message = "Not Found";
-                break;
-
-            case 500:
-                message = "Internal errur";
-                break;
-
-            default:
-                message = "Status " + status;
-                break;
-          }
-
-        return new HtmlHolder("<div><h1>" + message + "</h1></div>");
+        return new HtmlHolder("<div><h1>" + status.getReasonPhrase() + "</h1></div>");
       }
 
     /*******************************************************************************************************************

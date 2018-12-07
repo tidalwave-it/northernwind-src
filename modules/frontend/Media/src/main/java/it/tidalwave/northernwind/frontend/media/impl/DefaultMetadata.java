@@ -46,7 +46,7 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.P_GROUP_ID;
 
 /***********************************************************************************************************************
  *
@@ -165,10 +165,10 @@ class DefaultMetadata implements Metadata
     private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
       throws IOException
       {
-        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();
 
-        for (final String s : properties.getProperty(EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS).orElse(emptyList()))
+        for (final String s : properties.getProperty(EmbeddedMediaMetadataProvider.P_LENS_IDS).orElse(emptyList()))
           {
             final String[] split = s.split(":");
             lensMap.put(split[0].trim(), split[1].trim());

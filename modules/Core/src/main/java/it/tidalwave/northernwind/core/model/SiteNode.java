@@ -45,12 +45,12 @@ public interface SiteNode extends Resource, SimpleComposite<SiteNode>
     public static final Class<SiteNode> SiteNode = SiteNode.class;
 
     /** The label used for creating navigation links to this {@code SiteNode}. */
-    public static final Key<String> PROPERTY_NAVIGATION_LABEL = new Key<>("navigationLabel");
+    public static final Key<String> P_NAVIGATION_LABEL = new Key<>("navigationLabel");
 
     /** If sets to true, this property makes the {@code SiteNode} capable to match not only its {@code /relativeUri},
      *  but also {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
     // FIXME: must be Boolean
-    public static final Key<String> PROPERTY_MANAGES_PATH_PARAMS = new Key<>("managesPathParams");
+    public static final Key<String> P_MANAGES_PATH_PARAMS = new Key<>("managesPathParams");
 
     /*******************************************************************************************************************
      *
@@ -66,7 +66,7 @@ public interface SiteNode extends Resource, SimpleComposite<SiteNode>
      *
      * Returns the relative URI of this {@code SiteNode}, which is the one exposed to the web. By default the relative
      * URI is the same as the relative path of the associated file, but each {@code SiteNode} can override it by setting
-     * {@link #PROPERTY_EXPOSED_URI}.
+     * {@link #P_EXPOSED_URI}.
      *
      * @return  the relative URI
      *

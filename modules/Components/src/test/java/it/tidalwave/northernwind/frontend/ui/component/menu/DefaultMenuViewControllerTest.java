@@ -45,11 +45,11 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import org.mockito.InOrder;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_NAVIGATION_LABEL;
+import static it.tidalwave.northernwind.core.model.SiteNode.P_NAVIGATION_LABEL;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import static it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewController.PROPERTY_LINKS;
+import static it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewController.P_LINKS;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -113,8 +113,8 @@ public class DefaultMenuViewControllerTest
         // given
         final String templateContent = "the template content";
         final String templatePath = "/path/to/template";
-        when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        stubProperty(Content, templatePath, PROPERTY_TEMPLATE, templateContent);
+        when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
+        stubProperty(Content, templatePath, P_TEMPLATE, templateContent);
         // when
         underTest.renderView(renderContext);
         // then
@@ -130,8 +130,8 @@ public class DefaultMenuViewControllerTest
       {
         // given
         final String templatePath = "/path/to/template";
-        when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        // don't set PROPERTY_TEMPLATE
+        when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
+        // don't set P_TEMPLATE
         // when
         underTest.renderView(renderContext);
         // then
@@ -147,7 +147,7 @@ public class DefaultMenuViewControllerTest
       {
         // given
         final String templatePath = "/path/to/inexistent/template";
-        when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
+        when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
         // then
@@ -162,7 +162,7 @@ public class DefaultMenuViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
+        when(viewProperties.getProperty(P_TITLE)).thenReturn(Optional.of("the title"));
         // when
         underTest.renderView(renderContext);
         // then
@@ -190,10 +190,10 @@ public class DefaultMenuViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_LINKS)).thenReturn(Optional.of(
+        when(viewProperties.getProperty(P_LINKS)).thenReturn(Optional.of(
                 Arrays.asList("/node1", "/node2", "/inexistentNode", "/node3")));
-        stubProperty(SiteNode, "/node1", PROPERTY_NAVIGATION_LABEL, "Node 1 title");
-        stubProperty(SiteNode, "/node2", PROPERTY_NAVIGATION_LABEL, "Node 2 title");
+        stubProperty(SiteNode, "/node1", P_NAVIGATION_LABEL, "Node 1 title");
+        stubProperty(SiteNode, "/node2", P_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3
         // when
         underTest.renderView(renderContext);

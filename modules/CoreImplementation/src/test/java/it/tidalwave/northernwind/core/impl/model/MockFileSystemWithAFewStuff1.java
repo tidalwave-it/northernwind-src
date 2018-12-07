@@ -58,7 +58,7 @@ public class MockFileSystemWithAFewStuff1 extends EmptyMockFileSystem
         createMockFolder(fileSystem, nodeFolder, "node1");
         createMockFolder(fileSystem, nodeFolder, "node2");
         createMockFolder(fileSystem, nodeFolder, "node3");
-        resourceProperties.put("/structure/node3." + SiteNode.PROPERTY_MANAGES_PATH_PARAMS.stringValue(), "true");
+        resourceProperties.put("/structure/node3." + SiteNode.P_MANAGES_PATH_PARAMS.stringValue(), "true");
         createMockFolder(fileSystem, nodeFolder, "node4");
         createMockFile(fileSystem, mediaFolder, "media1");
         createMockFile(fileSystem, mediaFolder, "media2");

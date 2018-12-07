@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -44,20 +43,8 @@ public interface SiteView
 
     /*******************************************************************************************************************
      *
-     * Sets the caption.
      *
-     * @param  caption   the caption
      *
      ******************************************************************************************************************/
-    public void setCaption (@Nonnull String caption);
-
-    /*******************************************************************************************************************
-     *
-     * Sets the layout.
-     *
-     * @param  layout  the layout
-     *
-     ******************************************************************************************************************/
-    public void renderSiteNode (@Nonnull SiteNode siteNode)
-      throws IOException;
+    public void renderSiteNode (@Nonnull SiteNode siteNode);
   }

@@ -58,7 +58,7 @@ public class TemplateHelper
     /*******************************************************************************************************************
      *
      * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieve through the
-     * {@code PROPERTY_TEMPLATE} of the {@code Content}.
+     * {@code P_TEMPLATE} of the {@code Content}.
      *
      * @param       contentRelativePath     the path of the {@code Content}
      * @return                              the template contents
@@ -69,7 +69,7 @@ public class TemplateHelper
       {
         return site.get().find(Content).withRelativePath(contentRelativePath)
                                        .optionalResult()
-                                       .flatMap(content -> content.getProperty(PROPERTY_TEMPLATE));
+                                       .flatMap(content -> content.getProperty(P_TEMPLATE));
       }
 
     /*******************************************************************************************************************

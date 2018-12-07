@@ -65,15 +65,14 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     public void renderView (final @Nonnull RenderContext context)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        view.setContent(viewProperties.getProperty(PROPERTY_CONTENTS).orElse(emptyList())
+        view.setContent(viewProperties.getProperty(P_CONTENTS).orElse(emptyList())
                                       .stream()
                                       .flatMap(path -> site.find(Content).withRelativePath(path).stream())
                                       .map(content -> content.getProperties())
-                                       // FIXME: use a method searching through a sequence of keys, such as getDateTimeProperty()
-                                      .map(properties -> properties.getProperty(PROPERTY_FULL_TEXT)
-                                                                   .orElse(properties.getProperty(PROPERTY_TEMPLATE)
+                                      .map(properties -> properties.getProperty(P_FULL_TEXT) // TODO: use multi-key
+                                                                   .orElse(properties.getProperty(P_TEMPLATE)
                                                                                      .orElse("")))
                                       .collect(joining("\n")));
-        view.setClassName(viewProperties.getProperty(PROPERTY_CLASS).orElse("nw-" + view.getId()));
+        view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
       }
   }

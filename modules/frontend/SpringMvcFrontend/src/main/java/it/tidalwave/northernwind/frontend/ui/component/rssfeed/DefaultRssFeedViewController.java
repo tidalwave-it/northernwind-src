@@ -84,11 +84,11 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         this.view = view;
         feed = new Channel("rss_2.0");
         properties = siteNode.getPropertyGroup(view.getId());
-        linkBase = properties.getProperty(PROPERTY_LINK).orElse("");
-        feed.setTitle(properties.getProperty(PROPERTY_TITLE).orElse(""));
-        feed.setDescription(properties.getProperty(PROPERTY_DESCRIPTION).orElse(""));
+        linkBase = properties.getProperty(P_LINK).orElse("");
+        feed.setTitle(properties.getProperty(P_TITLE).orElse(""));
+        feed.setDescription(properties.getProperty(P_DESCRIPTION).orElse(""));
         feed.setLink(linkBase); // FIXME: why not site.createLink()?
-        feed.setCopyright(properties.getProperty(PROPERTY_CREATOR).orElse(""));
+        feed.setCopyright(properties.getProperty(P_CREATOR).orElse(""));
       }
 
     @Override
@@ -106,8 +106,8 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final Content content = new Content();
         // FIXME: text/xhtml?
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
-        postProperties.getProperty(PROPERTY_FULL_TEXT).ifPresent(content::setValue);
-        item.setTitle(postProperties.getProperty(PROPERTY_TITLE).orElse(""));
+        postProperties.getProperty(P_FULL_TEXT).ifPresent(content::setValue);
+        item.setTitle(postProperties.getProperty(P_TITLE).orElse(""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(Date.from(blogDateTime.toInstant()));
         item.setContent(content);

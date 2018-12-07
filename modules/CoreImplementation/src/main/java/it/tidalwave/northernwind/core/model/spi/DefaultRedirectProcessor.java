@@ -86,9 +86,9 @@ public class DefaultRedirectProcessor implements RequestProcessor
           }
       }
 
-    /* VisibleForTesting */ final static Id PROPERTY_GROUP_ID = new Id("Redirector");
+    /* VisibleForTesting */ final static Id P_GROUP_ID = new Id("Redirector");
 
-    /* VisibleForTesting */ final static Key<List<String>> PROPERTY_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
+    /* VisibleForTesting */ final static Key<List<String>> P_PERMANENT_REDIRECTS = new Key<>("permanentRedirects");
 
     @Inject
     private Provider<SiteProvider> siteProvider;
@@ -110,9 +110,9 @@ public class DefaultRedirectProcessor implements RequestProcessor
         site = siteProvider.get().getSite();
         final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result();
         final ResourceProperties rootSiteNodeProperties = rootSiteNode.getProperties();
-        final ResourceProperties properties = rootSiteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        final ResourceProperties properties = rootSiteNodeProperties.getGroup(P_GROUP_ID);
 
-        for (final String permanentRedirectConfig : properties.getProperty(PROPERTY_PERMANENT_REDIRECTS).orElse(emptyList()))
+        for (final String permanentRedirectConfig : properties.getProperty(P_PERMANENT_REDIRECTS).orElse(emptyList()))
           {
             permanentMappings.add(new Mapping(permanentRedirectConfig));
           }
