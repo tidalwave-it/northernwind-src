@@ -48,6 +48,8 @@ import static java.util.Collections.*;
 @Immutable @EqualsAndHashCode
 public class ResourcePath
   {
+    public static final ResourcePath EMPTY = new ResourcePath("");
+    
     @Nonnull
     /* package */ final List<String> segments;
 
