@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
@@ -318,18 +317,18 @@ import lombok.extern.slf4j.Slf4j;
 
     /*******************************************************************************************************************
      *
-     * Traverse the file system with a {@link Predicate}.
+     * Traverse the file system with a consumer.
      *
      * @param  folder      the folder to traverse
      * @param  fileFilter  the filter for directory contents
-     * @param  predicate   the predicate
+     * @param  consumer    the consumer
      *
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourceFile folder,
                            final @Nonnull Predicate<ResourceFile> fileFilter,
-                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> predicate)
+                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> consumer)
       {
-        traverse(folder.getPath(), folder, fileFilter, predicate);
+        traverse(folder.getPath(), folder, fileFilter, consumer);
       }
 
     /*******************************************************************************************************************
@@ -338,23 +337,23 @@ import lombok.extern.slf4j.Slf4j;
      *
      * @param  file        the file to traverse
      * @param  fileFilter  the filter for directory contents
-     * @param  predicate   the predicate
+     * @param  consumer    the consumer
      *
      ******************************************************************************************************************/
     private void traverse (final @Nonnull ResourcePath rootPath,
                            final @Nonnull ResourceFile file,
                            final @Nonnull Predicate<ResourceFile> fileFilter,
-                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> predicate)
+                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> consumer)
       {
-        log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, predicate);
+        log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, consumer);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
         if (fileFilter.test(file))
           {
-            predicate.accept(file, relativePath);
+            consumer.accept(file, relativePath);
           }
 
-        file.findChildren().results().forEach(child -> traverse(rootPath, child, fileFilter, predicate));
+        file.findChildren().results().forEach(child -> traverse(rootPath, child, fileFilter, consumer));
       }
 
     /*******************************************************************************************************************
