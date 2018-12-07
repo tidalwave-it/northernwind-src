@@ -40,6 +40,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.mockito.stubbing.Answer;
@@ -115,7 +117,7 @@ public class DefaultNodeContainerViewControllerTest
         final RequestContext requestContext = mock(RequestContext.class);
         when(requestContext.getNodeProperties()).thenReturn(nodeProperties);
 
-        renderContext = new RenderContext(requestContext);
+        renderContext = new DefaultRenderContext(requestContext);
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
         underTest.initialize();

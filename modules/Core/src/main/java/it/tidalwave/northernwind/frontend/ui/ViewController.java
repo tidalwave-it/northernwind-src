@@ -27,11 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.RequestContext;
-import it.tidalwave.util.Key;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -44,30 +39,6 @@ import lombok.ToString;
  **********************************************************************************************************************/
 public interface ViewController
   {
-    @RequiredArgsConstructor @ToString @Getter
-    public static class RenderContext // FIXME: make an interface
-      {
-        @Nonnull
-        private final RequestContext requestContext;
-
-        /*******************************************************************************************************************
-         *
-         * Sets a dynamic node property. These properties can be associated to the current {@link SiteNode}, created in
-         * a dynamic fashion while processing the {@link Request} and available only in the {@link RequestContext}.
-         *
-         * This property will be made available by {@link #getNodeProperties()}, which e.g. is used by the
-         * {@code $nodeProperty(...)$} macro.
-         *
-         * @param  key    the property key
-         * @param  value  the property value
-         *
-         ******************************************************************************************************************/
-        public <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
-          {
-            getRequestContext().setDynamicNodeProperty(key, value);
-          }
-      }
-
     /*******************************************************************************************************************
      *
      * Initializes the component. If the class has a superclass, remember to call {@code super.initialize()}.

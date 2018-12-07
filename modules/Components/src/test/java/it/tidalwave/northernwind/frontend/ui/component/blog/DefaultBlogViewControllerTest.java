@@ -54,6 +54,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -199,7 +201,7 @@ public class DefaultBlogViewControllerTest
         when(requestHolder.get()).thenReturn(request);
 
         requestContext = mock(RequestContext.class);
-        renderContext = new RenderContext(requestContext);
+        renderContext = new DefaultRenderContext(requestContext);
 
         underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
         underTest.initialize();

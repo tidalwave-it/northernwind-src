@@ -36,11 +36,12 @@ import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
+import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.ui.spi.ViewAndControllerLayoutBuilder;
-import it.tidalwave.northernwind.frontend.ui.spi.NodeViewRenderer;
 import it.tidalwave.northernwind.frontend.springmvc.SpringMvcResponseHolder;
 import lombok.extern.slf4j.Slf4j;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -73,7 +74,7 @@ public class SpringMvcSiteView implements SiteView
       {
         log.info("renderSiteNode({})", siteNode);
         httpStatus.set(HttpStatus.OK);
-        final RenderContext renderContext = new RenderContext(requestContext);
+        final RenderContext renderContext = new DefaultRenderContext(requestContext);
         final ViewAndControllerLayoutBuilder vacBuilder = new ViewAndControllerLayoutBuilder(siteNode,
                                                                                              renderContext,
                                                                                              this::createErrorView);

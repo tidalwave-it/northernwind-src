@@ -33,7 +33,7 @@ import java.util.function.BiConsumer;
 import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
 
@@ -71,7 +71,7 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
       {
         this.vacLayoutBuilder = vacLayoutBuilder;
         this.attacher         = attacher;
-        this.renderContext    = new RenderContext(requestContext);
+        this.renderContext    = new DefaultRenderContext(requestContext);
       }
 
     /*******************************************************************************************************************

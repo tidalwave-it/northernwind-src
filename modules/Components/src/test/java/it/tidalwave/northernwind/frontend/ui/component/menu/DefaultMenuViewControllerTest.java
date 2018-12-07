@@ -38,7 +38,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
@@ -96,7 +97,7 @@ public class DefaultMenuViewControllerTest
         view = mock(MenuView.class);
         when(view.getId()).thenReturn(viewId);
 
-        renderContext = new RenderContext(mock(RequestContext.class));
+        renderContext = new DefaultRenderContext(mock(RequestContext.class));
 
         underTest = new DefaultMenuViewController(view, siteNode, site);
         underTest.initialize();

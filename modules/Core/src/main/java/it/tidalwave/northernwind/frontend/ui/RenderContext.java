@@ -24,47 +24,37 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.container;
+package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.core.model.RequestContext;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
-public class DefaultContainerViewController implements ContainerViewController
+public interface RenderContext
   {
     @Nonnull
-    private final ContainerView view;
-
-    @Nonnull
-    private final SiteNode siteNode;
-
-    @Nonnull @Getter
-    private final Site site;
-
-    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
+    public RequestContext getRequestContext();
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * Sets a dynamic node property. These properties can be associated to the current {@link SiteNode}, created in
+     * a dynamic fashion while processing the {@link Request} and available only in the {@link RequestContext}.
+     *
+     * This property will be made available by {@link #getNodeProperties()}, which e.g. is used by the
+     * {@code $nodeProperty(...)$} macro.
+     *
+     * @param  key    the property key
+     * @param  value  the property value
      *
      ******************************************************************************************************************/
-    @Override
-    public void renderView (final @Nonnull RenderContext context)
+    default public <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
       {
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate).ifPresent(view::setTemplate);
-        view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
+        getRequestContext().setDynamicNodeProperty(key, value);
       }
   }
+
