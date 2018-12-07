@@ -54,7 +54,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
     @Inject
     private DefaultRequestLocaleManager requestLocaleManager;
 
-    private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<String>();
+    private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<>();
 
     /*******************************************************************************************************************
      *
