@@ -53,7 +53,7 @@ import lombok.Cleanup;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
-import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI;
+import static it.tidalwave.northernwind.core.model.SiteNode.P_EXPOSED_URI;
 
 /***********************************************************************************************************************
  *
@@ -119,7 +119,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.PROPERTY_EXPOSED_URI
               {
                 try
                   {
-                    final String segment = getResource().getProperty(PROPERTY_EXPOSED_URI).orElse(decode(file));
+                    final String segment = getResource().getProperty(P_EXPOSED_URI).orElse(decode(file));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (NotFoundException e) // FIXME: for getParent()

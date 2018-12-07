@@ -37,14 +37,14 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 public interface CalendarViewController extends ViewController
   {
     /** The list of entries of the calendar. */
-    public static final Key<String> PROPERTY_ENTRIES = new Key<>("entries");
+    public static final Key<String> P_ENTRIES = new Key<>("entries");
 
     /** The selected year of the calendar. */
-    public static final Key<String> PROPERTY_SELECTED_YEAR = new Key<>("selectedYear");  // FIXME: Integer
+    public static final Key<String> P_SELECTED_YEAR = new Key<>("selectedYear");  // FIXME: Integer
 
     /** The first year in the year selector of the calendar. */
-    public static final Key<String> PROPERTY_FIRST_YEAR = new Key<>("firstYear");  // FIXME: Integer
+    public static final Key<String> P_FIRST_YEAR = new Key<>("firstYear");  // FIXME: Integer
 
     /** The last year in the year selector of the calendar. */
-    public static final Key<String> PROPERTY_LAST_YEAR = new Key<>("lastYear");  // FIXME: Integer
+    public static final Key<String> P_LAST_YEAR = new Key<>("lastYear");  // FIXME: Integer
   }

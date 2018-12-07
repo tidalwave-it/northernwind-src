@@ -36,7 +36,7 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_TEMPLATE;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE;
 import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.hamcrest.CoreMatchers.is;
@@ -77,7 +77,7 @@ public class TemplateHelperTest
         final String expectedResult = "Text of test template";
         final String contentRelativePath = "/the/path";
         final Content content = site.find(Content).withRelativePath(contentRelativePath).result();
-        when(content.getProperties().getProperty(eq(PROPERTY_TEMPLATE))).thenReturn(Optional.of(expectedResult));
+        when(content.getProperties().getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of(expectedResult));
         // when
         final Optional<String> actualResult = underTest.getTemplate(contentRelativePath);
         // then
@@ -93,7 +93,7 @@ public class TemplateHelperTest
       {
         // given
         final String contentRelativePath = "/the/path";
-        // no PROPERTY_TEMPLATE configured
+        // no P_TEMPLATE configured
         // when
         final Optional<String> actualResult = underTest.getTemplate(contentRelativePath);
         // then

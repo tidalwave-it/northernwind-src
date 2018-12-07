@@ -39,34 +39,34 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access=PRIVATE)
 public final class Properties
   {
-    public static final Key<String> PROPERTY_TITLE = new Key<>("title");
+    public static final Key<String> P_TITLE = new Key<>("title");
 
-    public static final Key<String> PROPERTY_ID = new Key<>("id");
+    public static final Key<String> P_ID = new Key<>("id");
 
-    public static final Key<String> PROPERTY_DESCRIPTION = new Key<>("description");
+    public static final Key<String> P_DESCRIPTION = new Key<>("description");
 
-    public static final Key<String> PROPERTY_FULL_TEXT = new Key<>("fullText");
+    public static final Key<String> P_FULL_TEXT = new Key<>("fullText");
 
-    public static final Key<String> PROPERTY_TEMPLATE_PATH = new Key<>("templatePath");
+    public static final Key<String> P_TEMPLATE_PATH = new Key<>("templatePath");
 
-    public static final Key<String> PROPERTY_TEMPLATE = new Key<>("template");
+    public static final Key<String> P_TEMPLATE = new Key<>("template");
 
-    public static final Key<String> PROPERTY_WRAPPER_TEMPLATE_RESOURCE = new Key<>("wrapperTemplate");
+    public static final Key<String> P_WRAPPER_TEMPLATE_RESOURCE = new Key<>("wrapperTemplate");
 
-    public static final Key<String> PROPERTY_CREATION_DATE = new Key<>("creationDateTime");// FIXME: those should be Key<ZonedDateTime>
+    public static final Key<String> P_CREATION_DATE = new Key<>("creationDateTime");// FIXME: those should be Key<ZonedDateTime>
 
-    public static final Key<String> PROPERTY_PUBLISHING_DATE = new Key<>("publishingDateTime");// FIXME: those should be Key<ZonedDateTime>
+    public static final Key<String> P_PUBLISHING_DATE = new Key<>("publishingDateTime");// FIXME: those should be Key<ZonedDateTime>
 
-    public static final Key<String> PROPERTY_LATEST_MODIFICATION_DATE = new Key<>("latestModificationDateTime");// FIXME: those should be Key<ZonedDateTime>
+    public static final Key<String> P_LATEST_MODIFICATION_DATE = new Key<>("latestModificationDateTime");// FIXME: those should be Key<ZonedDateTime>
 
-    public static final Key<String> PROPERTY_CLASS = new Key<>("class");
+    public static final Key<String> P_CLASS = new Key<>("class");
 
-    public static final Key<String> PROPERTY_DATE_FORMAT = new Key<>("dateFormat");
+    public static final Key<String> P_DATE_FORMAT = new Key<>("dateFormat");
 
-    public static final Key<String> PROPERTY_TIME_ZONE = new Key<>("timeZone");
+    public static final Key<String> P_TIME_ZONE = new Key<>("timeZone");
 
-    public static final Key<List<String>> PROPERTY_CONTENTS = new Key<>("contents");
+    public static final Key<List<String>> P_CONTENTS = new Key<>("contents");
 
     // FIXME: should be Key<List<String>>
-    public static final Key<String> PROPERTY_TAGS = new Key<>("tags");
+    public static final Key<String> P_TAGS = new Key<>("tags");
   }

@@ -69,7 +69,7 @@ public class DefaultMetadataLoader implements MetadataLoader
                                                final @Nonnull Id mediaId)
       throws NotFoundException
       {
-        final ResourceProperties properties = siteNodeProperties.getGroup(PROPERTY_GROUP_ID);
+        final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
         return findMedia(mediaId, properties).map(m -> m.getFile()).orElseThrow(NotFoundException::new); // FIXME
       }
 
@@ -101,7 +101,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       {
         final Site site = siteProvider.get().getSite();
 
-        return properties.getProperty(PROPERTY_MEDIA_PATHS).orElse(emptyList())
+        return properties.getProperty(P_MEDIA_PATHS).orElse(emptyList())
                 .stream()
                 .map(pathTemplate -> String.format(pathTemplate, mediaId.stringValue()))
                 .flatMap(path -> site.find(Media).withRelativePath(path).stream())

@@ -132,8 +132,8 @@ public class DefaultNodeContainerViewControllerTest
         // given
         final String templateContent = "the template content";
         final String templatePath = "/path/to/template";
-        when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        stubProperty(Content, templatePath, PROPERTY_TEMPLATE, templateContent);
+        when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
+        stubProperty(Content, templatePath, P_TEMPLATE, templateContent);
         // when
         underTest.renderView(renderContext);
         // then
@@ -149,8 +149,8 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         final String templatePath = "/path/to/template";
-        when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        // don't set PROPERTY_TEMPLATE
+        when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
+        // don't set P_TEMPLATE
         // when
         underTest.renderView(renderContext);
         // then
@@ -166,7 +166,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         final String templatePath = "/path/to/inexistent/template";
-        when(viewProperties.getProperty(PROPERTY_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
+        when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
         // then
@@ -194,7 +194,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_TITLE_PREFIX)).thenReturn(Optional.of("the title prefix"));
+        when(viewProperties.getProperty(P_TITLE_PREFIX)).thenReturn(Optional.of("the title prefix"));
         // when
         underTest.renderView(renderContext);
         // then
@@ -222,7 +222,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_DESCRIPTION)).thenReturn(Optional.of("the description"));
+        when(viewProperties.getProperty(P_DESCRIPTION)).thenReturn(Optional.of("the description"));
         // when
         underTest.renderView(renderContext);
         // then
@@ -250,7 +250,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(nodeProperties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of("the title"));
+        when(nodeProperties.getProperty(P_TITLE)).thenReturn(Optional.of("the title"));
         // when
         underTest.renderView(renderContext);
         // then
@@ -278,7 +278,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_SCREEN_STYLE_SHEETS))
+        when(viewProperties.getProperty(P_SCREEN_STYLE_SHEETS))
                 .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
         // when
         underTest.renderView(renderContext);
@@ -296,7 +296,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_PRINT_STYLE_SHEETS))
+        when(viewProperties.getProperty(P_PRINT_STYLE_SHEETS))
                 .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
         // when
         underTest.renderView(renderContext);
@@ -314,10 +314,10 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_RSS_FEEDS)).thenReturn(Optional.of(
+        when(viewProperties.getProperty(P_RSS_FEEDS)).thenReturn(Optional.of(
                 Arrays.asList("/feed1", "/feed2", "/inexistentFeed", "/feed3")));
-        stubProperty(SiteNode, "/feed1", PROPERTY_TITLE, "Feed 1 title");
-        stubProperty(SiteNode, "/feed2", PROPERTY_TITLE, "Feed 2 title");
+        stubProperty(SiteNode, "/feed1", P_TITLE, "Feed 1 title");
+        stubProperty(SiteNode, "/feed2", P_TITLE, "Feed 2 title");
         // no property for feed3
         // when
         underTest.renderView(renderContext);
@@ -336,7 +336,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_SCRIPTS)).thenReturn(Optional.of(Arrays.asList("/js/1.js", "/js/2.js")));
+        when(viewProperties.getProperty(P_SCRIPTS)).thenReturn(Optional.of(Arrays.asList("/js/1.js", "/js/2.js")));
         // when
         underTest.renderView(renderContext);
         // then
@@ -353,10 +353,10 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(PROPERTY_INLINED_SCRIPTS)).thenReturn(Optional.of(
+        when(viewProperties.getProperty(P_INLINED_SCRIPTS)).thenReturn(Optional.of(
                 Arrays.asList("/script1", "/script2", "/inexistentScript", "/script3")));
-        stubProperty(Content, "/script1", PROPERTY_TEMPLATE, "<script>1</script>");
-        stubProperty(Content, "/script2", PROPERTY_TEMPLATE, "<script>2</script>");
+        stubProperty(Content, "/script1", P_TEMPLATE, "<script>1</script>");
+        stubProperty(Content, "/script2", P_TEMPLATE, "<script>2</script>");
         // no property for script3
         // when
         underTest.renderView(renderContext);

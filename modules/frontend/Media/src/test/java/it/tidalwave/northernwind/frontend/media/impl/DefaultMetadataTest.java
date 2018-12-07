@@ -38,8 +38,8 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_GROUP_ID;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.PROPERTY_LENS_IDS;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.P_GROUP_ID;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.P_LENS_IDS;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -69,8 +69,8 @@ public class DefaultMetadataTest
         context.getBean(MetadataInterpolatorFactory.class); // initialize it
         properties = mock(ResourceProperties.class);
         final ResourceProperties resourceProperties = mock(ResourceProperties.class);
-        when(resourceProperties.getProperty(PROPERTY_LENS_IDS)).thenReturn(Optional.of(Arrays.asList("1:Lens1", "2:Lens2")));
-        when(properties.getGroup(PROPERTY_GROUP_ID)).thenReturn(resourceProperties);
+        when(resourceProperties.getProperty(P_LENS_IDS)).thenReturn(Optional.of(Arrays.asList("1:Lens1", "2:Lens2")));
+        when(properties.getGroup(P_GROUP_ID)).thenReturn(resourceProperties);
       }
 
     /*******************************************************************************************************************

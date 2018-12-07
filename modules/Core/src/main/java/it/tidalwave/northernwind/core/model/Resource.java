@@ -82,11 +82,11 @@ public interface Resource extends As
 
     /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
      *  defined, the resource uses a reasonable default. */
-    public static final Key<String> PROPERTY_EXPOSED_URI = new Key<>("exposedUri");
+    public static final Key<String> P_EXPOSED_URI = new Key<>("exposedUri");
 
     /** This property, controls whether this resource is a placeholder. See {@link #isPlaceHolder} for more information
      */
-    public static final Key<String> PROPERTY_PLACE_HOLDER = new Key<>("placeHolder");
+    public static final Key<String> P_PLACE_HOLDER = new Key<>("placeHolder");
 
     public static final Class<Resource> Resource = Resource.class;
 
