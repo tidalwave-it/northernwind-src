@@ -102,7 +102,7 @@ public class DefaultMenuViewControllerTest
 
         underTest = new DefaultMenuViewController(view, siteNode, site);
         underTest.initialize();
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
       }
 
     /*******************************************************************************************************************

@@ -55,14 +55,14 @@ public interface ViewController
 
     /*******************************************************************************************************************
      *
-     * Initializes the component giving it a chance to make changes to the {@link RenderContext}, for instance by
-     * setting a dynamic property. If the class has a superclass, remember to call {@code super.initialize(context)}.
+     * Prepares the component for rendering, for instance by checking preconditions or by setting dynamic properties.
+     * If the class has a superclass, remember to call {@code super.prepareRendering(context)}.
      *
      * @param       context         the context for rendering
      * @throws      Exception       in case of problems
      *
      ******************************************************************************************************************/
-    default public void initialize (final @Nonnull RenderContext context)
+    default public void prepareRendering (final @Nonnull RenderContext context)
       throws Exception
       {
       }

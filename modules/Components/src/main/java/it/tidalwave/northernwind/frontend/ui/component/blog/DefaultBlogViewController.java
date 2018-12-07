@@ -197,10 +197,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize (final @Nonnull RenderContext context)
+    public void prepareRendering (final @Nonnull RenderContext context)
       throws HttpStatusException
       {
-        log.info("initialize(RenderContext) for {}", siteNode);
+        log.info("prepareRendering(RenderContext) for {}", siteNode);
 
         final ResourceProperties viewProperties = getViewProperties();
         final boolean tagCloud = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);

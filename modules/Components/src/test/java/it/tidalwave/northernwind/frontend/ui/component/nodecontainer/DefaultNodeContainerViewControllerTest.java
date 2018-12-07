@@ -122,7 +122,7 @@ public class DefaultNodeContainerViewControllerTest
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
         underTest.initialize();
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
       }
 
     /*******************************************************************************************************************

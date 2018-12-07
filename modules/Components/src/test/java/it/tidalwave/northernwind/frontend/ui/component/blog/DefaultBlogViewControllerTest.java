@@ -218,7 +218,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
         // then
@@ -262,7 +262,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
         // then should throw exception
@@ -279,7 +279,7 @@ public class DefaultBlogViewControllerTest
         // given
         createMockData(seed);
         when(viewProperties.getBooleanProperty(P_TAG_CLOUD)).thenReturn(Optional.of(true));
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
         // then
@@ -318,7 +318,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         // when
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
         // then
         if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
           {
