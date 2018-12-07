@@ -68,7 +68,7 @@ public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
           {
             if (site.getConfiguredLocales().contains(locale))
               {
-                requestLocaleManager.setRequestLocale(locale);
+                requestLocaleManager.setLocale(locale);
                 break;
               }
           }

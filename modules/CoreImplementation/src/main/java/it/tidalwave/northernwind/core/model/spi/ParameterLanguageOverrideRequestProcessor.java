@@ -29,12 +29,13 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
-import it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
     private String parameterName = "l";
 
     @Inject
-    private DefaultRequestLocaleManager requestLocaleManager;
+    private RequestLocaleManager requestLocaleManager;
 
     private final ThreadLocal<String> parameterValueHolder = new ThreadLocal<>();
 
@@ -66,9 +67,10 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
       {
         try
           {
-            final String parameterValue = request.getParameter(parameterName);
-            parameterValueHolder.set(parameterValue);
-            requestLocaleManager.setRequestLocale(new Locale(parameterValue));
+            if (requestLocaleManager.setLocale(new Locale(request.getParameter(parameterName))))
+              {
+                parameterValueHolder.set(request.getParameter(parameterName));
+              }
           }
         catch (NotFoundException e)
           {
@@ -84,10 +86,9 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getParameterValue()
-      throws NotFoundException
+    public Optional<String> getParameterValue()
       {
-        return NotFoundException.throwWhenNull(parameterValueHolder.get(), "parameterValue");
+        return Optional.ofNullable(parameterValueHolder.get());
       }
 
     /*******************************************************************************************************************

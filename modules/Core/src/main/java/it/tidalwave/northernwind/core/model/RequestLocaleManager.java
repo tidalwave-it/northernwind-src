@@ -42,6 +42,16 @@ public interface RequestLocaleManager
   {
     /*******************************************************************************************************************
      *
+     * Explictly sets a the {@link Locale} for the current request. If the given {@link Locale} is not among those
+     * configured for this site, it will be ignored.
+     *
+     * @return   {@code true} if the {@link Locale} has been set.
+     *
+     ******************************************************************************************************************/
+    public boolean setLocale (@Nonnull Locale locale);
+
+    /*******************************************************************************************************************
+     *
      * Returns the {@link Locale}s for the current request. They are ordered by preference, descending.
      *
      * @return   the {@code Locale}s
