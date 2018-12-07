@@ -44,7 +44,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.PROPERTY_TITLE;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TITLE;
 
 /***********************************************************************************************************************
  *
@@ -125,7 +125,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
-        final String siteNodeTitle = siteNode.getProperty(PROPERTY_TITLE).orElse("");
+        final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
 
         switch (param)
           {

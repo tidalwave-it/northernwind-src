@@ -152,7 +152,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       }
 
-    protected static final List<Key<String>> DATE_KEYS = Arrays.asList(PROPERTY_PUBLISHING_DATE, PROPERTY_CREATION_DATE);
+    protected static final List<Key<String>> DATE_KEYS = Arrays.asList(P_PUBLISHING_DATE, P_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
@@ -209,7 +209,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.info("initialize(RenderContext) for {}", siteNode);
 
         final ResourceProperties viewProperties = getViewProperties();
-        final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+        final boolean tagCloud = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);
 
         if (!tagCloud)
           {
@@ -234,7 +234,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.info("renderView() for {}", siteNode);
 
         final ResourceProperties viewProperties = getViewProperties();
-        final boolean tagCloud = viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD).orElse(false);
+        final boolean tagCloud = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);
 
         if (tagCloud)
           {
@@ -258,16 +258,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private void prepareBlogPosts (final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final int maxFullItems   = properties.getIntProperty(PROPERTY_MAX_FULL_ITEMS).orElse(99);
-        final int maxLeadinItems = properties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS).orElse(99);
-        final int maxItems       = properties.getIntProperty(PROPERTY_MAX_ITEMS).orElse(99);
+        final int maxFullItems   = properties.getIntProperty(P_MAX_FULL_ITEMS).orElse(99);
+        final int maxLeadinItems = properties.getIntProperty(P_MAX_LEADIN_ITEMS).orElse(99);
+        final int maxItems       = properties.getIntProperty(P_MAX_ITEMS).orElse(99);
 
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems);
 
         final List<Content> posts = findPostsInReverseDateOrder(properties)
                 .stream()
-                .filter(post -> post.getProperty(PROPERTY_TITLE).isPresent())
+                .filter(post -> post.getProperty(P_TITLE).isPresent())
                 .collect(toList());
 
         final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
@@ -285,7 +285,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
                 .stream()
-                .flatMap(post -> post.getProperty(PROPERTY_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify in Java 9
+                .flatMap(post -> post.getProperty(P_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
                 .values()
                 .stream()
@@ -302,7 +302,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
       {
-        return properties.getProperty(PROPERTY_CONTENTS).orElse(emptyList()).stream()
+        return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
                 .flatMap(path -> site.find(Content).withRelativePath(path).stream()
                                                                           .flatMap(folder -> folder.findChildren().stream()))
                 .collect(toList());
@@ -318,7 +318,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       throws HttpStatusException
       {
         final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
-        final boolean index = properties.getBooleanProperty(PROPERTY_INDEX).orElse(false);
+        final boolean index = properties.getBooleanProperty(P_INDEX).orElse(false);
         final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
         //
@@ -370,11 +370,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
       {
-        post.getProperty(PROPERTY_ID).ifPresent(id -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_ID, id));
-        context.setDynamicNodeProperty(PROPERTY_DYNAMIC_TITLE, computeTitle(post));
+        post.getProperty(P_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_ID, id));
+        context.setDynamicNodeProperty(PD_TITLE, computeTitle(post));
         post.getExposedUri().map(this::createLink)
-                .ifPresent(l -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_URL, l));
-        post.getProperty(PROPERTY_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PROPERTY_DYNAMIC_IMAGE_ID, id));
+                .ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
+        post.getProperty(P_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_IMAGE_ID, id));
       }
 
     /*******************************************************************************************************************
@@ -384,8 +384,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private String computeTitle (final @Nonnull Content post)
       {
-        final String prefix    = siteNode.getProperty(PROPERTY_TITLE).orElse("");
-        final String title     = post.getProperties().getProperty(PROPERTY_TITLE).orElse("");
+        final String prefix    = siteNode.getProperty(P_TITLE).orElse("");
+        final String title     = post.getProperties().getProperty(P_TITLE).orElse("");
         final String separator = prefix.equals("") || title.equals("") ? "": " - ";
 
         return prefix + separator + title;
@@ -550,7 +550,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasCategory (final @Nonnull Content post, final @Nonnull String category)
       {
-        return category.equals("") || post.getProperty(PROPERTY_CATEGORY).map(category::equals).orElse(false);
+        return category.equals("") || post.getProperty(P_CATEGORY).map(category::equals).orElse(false);
       }
 
     /*******************************************************************************************************************
@@ -559,6 +559,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
-        return Arrays.asList(post.getProperty(PROPERTY_TAGS).orElse("").split(",")).contains(tag);
+        return Arrays.asList(post.getProperty(P_TAGS).orElse("").split(",")).contains(tag);
       }
   }

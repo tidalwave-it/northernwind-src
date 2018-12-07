@@ -122,7 +122,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public Optional<ResourcePath> getExposedUri()
       {
-        final Optional<String> exposedUri = getProperty(PROPERTY_EXPOSED_URI);
+        final Optional<String> exposedUri = getProperty(P_EXPOSED_URI);
 
         return exposedUri.isPresent() ? exposedUri.map(ResourcePath::new)
                                       : getDefaultExposedUri();
@@ -130,7 +130,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or the next
     // method can't stay here.
-    public static final Key<String> PROPERTY_TITLE = new Key<>("title");
+    public static final Key<String> P_TITLE = new Key<>("title");
 
     /*******************************************************************************************************************
      *
@@ -140,7 +140,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Nonnull
     private Optional<ResourcePath> getDefaultExposedUri()
       {
-        return getResource().getProperty(PROPERTY_TITLE)
+        return getResource().getProperty(P_TITLE)
             .map(this::deAccent)
             .map(t -> t.replaceAll(" ", "-")
                        .replaceAll(",", "")

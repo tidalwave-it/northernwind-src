@@ -102,7 +102,7 @@ public class HtmlTemplateBlogViewControllerTest
       throws Exception
       {
         // given
-        mockNodeProperty(new Id(viewId), PROPERTY_TITLE, Optional.of(title));
+        mockNodeProperty(new Id(viewId), P_TITLE, Optional.of(title));
         // when
         final StringBuilder builder = new StringBuilder();
         underTest.renderMainTitle(builder);
@@ -129,8 +129,8 @@ public class HtmlTemplateBlogViewControllerTest
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
-        mockNodeProperty(viewId, PROPERTY_DATE_FORMAT, dateFormat);
-        mockNodeProperty(viewId, PROPERTY_TIME_ZONE, timeZone);
+        mockNodeProperty(viewId, P_DATE_FORMAT, dateFormat);
+        mockNodeProperty(viewId, P_TIME_ZONE, timeZone);
         // when
         final StringBuilder builder = new StringBuilder();
         underTest.renderDate(builder, dateTime);

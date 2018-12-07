@@ -38,20 +38,20 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
 public interface BlogViewController extends CompositeSiteNodeController, ViewController
   {
     // FIXME: these should be Integer
-    public static final Key<String> PROPERTY_MAX_FULL_ITEMS = new Key<>("maxFullItems");
+    public static final Key<String> P_MAX_FULL_ITEMS = new Key<>("maxFullItems");
 
-    public static final Key<String> PROPERTY_MAX_ITEMS = new Key<>("maxItems");
+    public static final Key<String> P_MAX_ITEMS = new Key<>("maxItems");
 
-    public static final Key<String> PROPERTY_MAX_LEADIN_ITEMS = new Key<>("maxLeadInItems");
-
-    // FIXME: this should be Boolean
-    public static final Key<String> PROPERTY_INDEX = new Key<>("index");
-
-    public static final Key<String> PROPERTY_CATEGORY = new Key<>("category");
+    public static final Key<String> P_MAX_LEADIN_ITEMS = new Key<>("maxLeadInItems");
 
     // FIXME: this should be Boolean
-    public static final Key<String> PROPERTY_TAG_CLOUD = new Key<>("tagCloud");
+    public static final Key<String> P_INDEX = new Key<>("index");
+
+    public static final Key<String> P_CATEGORY = new Key<>("category");
+
+    // FIXME: this should be Boolean
+    public static final Key<String> P_TAG_CLOUD = new Key<>("tagCloud");
 
     /** The id of the image to be associated with a blog post. */
-    public static final Key<String> PROPERTY_IMAGE_ID = new Key<>("imageId");
+    public static final Key<String> P_IMAGE_ID = new Key<>("imageId");
   }

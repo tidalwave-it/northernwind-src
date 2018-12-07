@@ -221,9 +221,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         underTest.initialize(renderContext);
         // when
@@ -243,7 +243,7 @@ public class DefaultBlogViewControllerTest
         final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         final List<ZonedDateTime> publishingDates = allPosts
                 .stream()
-                .map(post -> post.getProperties().getDateTimeProperty(PROPERTY_PUBLISHING_DATE).get())
+                .map(post -> post.getProperties().getDateTimeProperty(P_PUBLISHING_DATE).get())
                 .collect(toList());
         assertSortedInReverseOrder(publishingDates);
 
@@ -265,9 +265,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         underTest.initialize(renderContext);
         // when
@@ -285,7 +285,7 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getBooleanProperty(PROPERTY_TAG_CLOUD)).thenReturn(Optional.of(true));
+        when(viewProperties.getBooleanProperty(P_TAG_CLOUD)).thenReturn(Optional.of(true));
         underTest.initialize(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -320,9 +320,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(PROPERTY_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(PROPERTY_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(PROPERTY_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
         // when
         underTest.initialize(renderContext);
@@ -333,13 +333,13 @@ public class DefaultBlogViewControllerTest
             assertThat(underTest.fullPosts.get(0), is(posts.get(id)));
 
             final String sid = String.format("%2d", id);
-            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_ID),       eq("id#" + sid));
-            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_TITLE),    eq("Title #" + sid));
-            verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_URL),      eq("http://acme.com/blogNode/post-" + sid));
+            verify(requestContext).setDynamicNodeProperty(eq(PD_ID),       eq("id#" + sid));
+            verify(requestContext).setDynamicNodeProperty(eq(PD_TITLE),    eq("Title #" + sid));
+            verify(requestContext).setDynamicNodeProperty(eq(PD_URL),      eq("http://acme.com/blogNode/post-" + sid));
 
-            if (posts.get(id).getProperty(PROPERTY_IMAGE_ID).isPresent())
+            if (posts.get(id).getProperty(P_IMAGE_ID).isPresent())
               {
-                verify(requestContext).setDynamicNodeProperty(eq(PROPERTY_DYNAMIC_IMAGE_ID), eq("imageId#" + sid));
+                verify(requestContext).setDynamicNodeProperty(eq(PD_IMAGE_ID), eq("imageId#" + sid));
               }
             // TODO: verify no more invocations
           }
@@ -497,7 +497,7 @@ public class DefaultBlogViewControllerTest
             when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(e.getValue())));
           });
 
-        when(viewProperties.getProperty(eq(PROPERTY_CONTENTS))).thenReturn(Optional.of(paths));
+        when(viewProperties.getProperty(eq(P_CONTENTS))).thenReturn(Optional.of(paths));
 
         posts.forEach(post -> log.info(">>>> post {}", post));
       }
@@ -530,12 +530,12 @@ public class DefaultBlogViewControllerTest
      * Each one is assigned:
      *
      * <ul>
-     * <li>a {@code PROPERTY_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
-     * <li>a {@code PROPERTY_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
-     * <li>a {@code PROPERTY_ID} set as {@code "id#&lt;num&gt;"}</li>
-     * <li>a {@code PROPERTY_IMAGE_ID} set as {@code "imageId#&lt;num&gt;"} to the 10% of posts</li>
-     * <li>a {@code PROPERTY_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
-     * <li>a {@code PROPERTY_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
+     * <li>a {@code P_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
+     * <li>a {@code P_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
+     * <li>a {@code P_ID} set as {@code "id#&lt;num&gt;"}</li>
+     * <li>a {@code P_IMAGE_ID} set as {@code "imageId#&lt;num&gt;"} to the 10% of posts</li>
+     * <li>a {@code P_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
+     * <li>a {@code P_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
      * <li>a {@code getExposedUri()} set as {@code "post-#&lt;num&gt;"}</li>
      * </ul>
      *
@@ -572,25 +572,25 @@ public class DefaultBlogViewControllerTest
             when(post.getProperties()).thenReturn(properties);
             when(post.getProperty(any(Key.class))).thenCallRealMethod();
             when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
-            when(properties.getProperty(PROPERTY_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
-            when(properties.getProperty(PROPERTY_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
-            when(properties.getProperty(PROPERTY_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
+            when(properties.getProperty(P_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
+            when(properties.getProperty(P_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
+            when(properties.getProperty(P_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
 
             if (imageIdRnd.nextDouble() > 0.9)
               {
-                when(properties.getProperty(PROPERTY_IMAGE_ID)).thenReturn(Optional.of(String.format("imageId#%2d", i)));
+                when(properties.getProperty(P_IMAGE_ID)).thenReturn(Optional.of(String.format("imageId#%2d", i)));
               }
 
             // Assign category
             final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
-            when(post.getProperties().getProperty(PROPERTY_CATEGORY)).thenReturn(category);
+            when(post.getProperties().getProperty(P_CATEGORY)).thenReturn(category);
 
             // Assign tag
             final String tagsAsString = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(joining(","));
 
             if (!tagsAsString.equals(""))
               {
-                when(properties.getProperty(PROPERTY_TAGS)).thenReturn(Optional.of(tagsAsString));
+                when(properties.getProperty(P_TAGS)).thenReturn(Optional.of(tagsAsString));
               }
 
             posts.add(post);
@@ -627,12 +627,12 @@ public class DefaultBlogViewControllerTest
     @Nonnull
     private static String toString (final @Nonnull Content post)
       {
-        final String title        = post.getProperty(PROPERTY_TITLE).orElse("???");
+        final String title        = post.getProperty(P_TITLE).orElse("???");
         final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
-        final String dateTime     = post.getProperty(PROPERTY_PUBLISHING_DATE).orElse("???");
-        final String imageId      = post.getProperty(PROPERTY_IMAGE_ID).orElse("");
-        final String category     = post.getProperty(PROPERTY_CATEGORY).orElse("");
-        final String tags = post.getProperty(PROPERTY_TAGS).orElse("");
+        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).orElse("???");
+        final String imageId      = post.getProperty(P_IMAGE_ID).orElse("");
+        final String category     = post.getProperty(P_CATEGORY).orElse("");
+        final String tags         = post.getProperty(P_TAGS).orElse("");
         return String.format("Content(%s - %-10s - %s - %-10s - %-10s - %s)", title, exposedUri, dateTime, imageId, category, tags);
       }
   }
