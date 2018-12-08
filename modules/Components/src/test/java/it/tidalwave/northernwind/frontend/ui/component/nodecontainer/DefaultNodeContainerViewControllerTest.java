@@ -33,6 +33,7 @@ import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -40,6 +41,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.mockito.stubbing.Answer;
@@ -115,11 +118,11 @@ public class DefaultNodeContainerViewControllerTest
         final RequestContext requestContext = mock(RequestContext.class);
         when(requestContext.getNodeProperties()).thenReturn(nodeProperties);
 
-        renderContext = new RenderContext(requestContext);
+        renderContext = new DefaultRenderContext(mock(Request.class), requestContext);
 
         underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
         underTest.initialize();
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -205,13 +208,13 @@ public class DefaultNodeContainerViewControllerTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_set_the_title_prefix_when_unspecified()
+    public void must_not_set_the_title_prefix_when_unspecified()
       throws Exception
       {
         // when
         underTest.renderView(renderContext);
         // then
-        verify(view).addAttribute("titlePrefix", "");
+        verify(view, never()).addAttribute(eq("titlePrefix"), anyString());
       }
 
     /*******************************************************************************************************************
@@ -233,13 +236,13 @@ public class DefaultNodeContainerViewControllerTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_set_the_description_when_unspecified()
+    public void must_not_set_the_description_when_unspecified()
       throws Exception
       {
         // when
         underTest.renderView(renderContext);
         // then
-        verify(view).addAttribute("description", "");
+        verify(view, never()).addAttribute(eq("description"), anyString());
       }
 
     /*******************************************************************************************************************
@@ -261,13 +264,13 @@ public class DefaultNodeContainerViewControllerTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_set_the_title_when_unspecified()
+    public void must_not_set_the_title_when_unspecified()
       throws Exception
       {
         // when
         underTest.renderView(renderContext);
         // then
-        verify(view).addAttribute("title", "");
+        verify(view, never()).addAttribute(eq("title"), anyString());
       }
 
     /*******************************************************************************************************************

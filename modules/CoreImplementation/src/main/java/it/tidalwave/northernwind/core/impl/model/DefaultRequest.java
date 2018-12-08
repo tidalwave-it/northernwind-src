@@ -151,12 +151,12 @@ import lombok.ToString;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getPathParams (final @Nonnull SiteNode siteNode)
+    public ResourcePath getPathParams (final @Nonnull SiteNode siteNode)
       {
         final String siteNodeRelativeUri = siteNode.getRelativeUri().asString();
         return (relativeUri.length() <= siteNodeRelativeUri.length())
-                ? ""
-                : relativeUri.substring(siteNodeRelativeUri.length());
+                ? new ResourcePath()
+                : new ResourcePath(relativeUri.substring(siteNodeRelativeUri.length()));
       }
 
     /*******************************************************************************************************************
@@ -175,13 +175,13 @@ import lombok.ToString;
 
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parameterMap,  headersMap, preferredLocales);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
     @Nonnull
-    public DefaultRequest withHeaderMap (final @Nonnull Map<String, List<String>>  headersMap) 
+    public DefaultRequest withHeaderMap (final @Nonnull Map<String, List<String>>  headersMap)
       {
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap,  headersMap, preferredLocales);
       }

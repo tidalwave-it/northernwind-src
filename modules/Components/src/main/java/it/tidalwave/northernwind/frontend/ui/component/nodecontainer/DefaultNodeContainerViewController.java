@@ -30,11 +30,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Stream;
 import it.tidalwave.util.Key;
+import java.util.Optional;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -99,10 +101,12 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate).ifPresent(view::setTemplate);
 
         view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
-        view.addAttribute("description",      viewProperties.getProperty(P_DESCRIPTION).orElse(""));
-        view.addAttribute("titlePrefix",      viewProperties.getProperty(P_TITLE_PREFIX).orElse(""));
-        view.addAttribute("title",            siteNodeProperties.getProperty(PD_TITLE).orElse(
-                                              siteNodeProperties.getProperty(P_TITLE).orElse(""))); // TODO: use multi-key
+        viewProperties.getProperty(P_DESCRIPTION).ifPresent(d -> view.addAttribute("description", d));
+        viewProperties.getProperty(P_TITLE_PREFIX).ifPresent(p -> view.addAttribute("titlePrefix", p));
+        Stream.of(siteNodeProperties.getProperty(PD_TITLE), siteNodeProperties.getProperty(P_TITLE)) // TODO: use multi-key
+              .filter(Optional::isPresent)
+              .map(Optional::get)
+              .findFirst().ifPresent(s -> view.addAttribute("title", s));
         view.addAttribute("screenCssSection", computeScreenCssSection());
         view.addAttribute("printCssSection",  computePrintCssSection());
         view.addAttribute("rssFeeds",         computeRssFeedsSection());
