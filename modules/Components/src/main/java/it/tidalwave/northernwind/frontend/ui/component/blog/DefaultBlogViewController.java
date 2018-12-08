@@ -45,12 +45,11 @@ import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -61,6 +60,7 @@ import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -152,11 +152,32 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       }
 
+    protected enum RenderMode
+      {
+        FULL, LEAD_IN, LINK
+      }
+
     protected static final List<Key<String>> DATE_KEYS = Arrays.asList(P_PUBLISHING_DATE, P_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
-    protected static final String TAG_PREFIX = "tag/";
+    private static final int NO_LIMIT = 9999;
+
+    private static final String INDEX_PREFIX = "index";
+
+    private static final ResourcePath TAG_CLOUD = new ResourcePath("tags");
+
+    private static final String TAG_PREFIX = "tag";
+
+    private Optional<String> tag = Optional.empty();
+
+    private Optional<String> uriOrCategory = Optional.empty();
+
+    private boolean indexMode = false;
+
+    private boolean tagCloudMode = false;
+
+    protected Optional<String> title = Optional.empty();
 
     private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
       {
@@ -173,12 +194,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     @Nonnull
     private final Site site;
-
-    @Nonnull
-    private final RequestHolder requestHolder;
-
-    @Nonnull
-    protected final RequestContext requestContext;
 
     /* VisibleForTesting */ final List<Content> fullPosts = new ArrayList<>();
 
@@ -203,21 +218,54 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void initialize (final @Nonnull RenderContext context)
+    public void prepareRendering (final @Nonnull RenderContext context)
       throws HttpStatusException
       {
-        log.info("initialize(RenderContext) for {}", siteNode);
+        log.info("prepareRendering(RenderContext) for {}", siteNode);
 
         final ResourceProperties viewProperties = getViewProperties();
-        final boolean tagCloud = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);
+        indexMode  = viewProperties.getBooleanProperty(P_INDEX).orElse(false);
+        ResourcePath pathParams = context.getPathParams(siteNode);
+        tagCloudMode = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);
 
-        if (!tagCloud)
+        if (pathParams.equals(TAG_CLOUD))
           {
-            prepareBlogPosts(viewProperties);
+            tagCloudMode = true;
+          }
+        else if (pathParams.startsWith(INDEX_PREFIX))
+          {
+            indexMode = true;
+            pathParams = pathParams.withoutLeading();
+          }
+
+        if (pathParams.startsWith(TAG_PREFIX) && (pathParams.getSegmentCount() == 2)) // matches(TAG_PREFIX, ".*")
+          {
+            tag = Optional.of(pathParams.getTrailing());
+          }
+        else if (pathParams.getSegmentCount() == 1)
+          {
+            uriOrCategory = Optional.of(pathParams.getLeading());
+          }
+        else if (!pathParams.isEmpty())
+          {
+            throw new HttpStatusException(SC_BAD_REQUEST);
+          }
+
+        if (tagCloudMode)
+          {
+            setTitle(context);
+          }
+        else
+          {
+            prepareBlogPosts(context, viewProperties);
 
             if ((fullPosts.size() == 1) && leadInPosts.isEmpty() && linkedPosts.isEmpty())
               {
                 setDynamicProperties(context, fullPosts.get(0));
+              }
+            else
+              {
+                setTitle(context);
               }
           }
       }
@@ -233,18 +281,15 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         log.info("renderView() for {}", siteNode);
 
-        final ResourceProperties viewProperties = getViewProperties();
-        final boolean tagCloud = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);
-
-        if (tagCloud)
+        if (tagCloudMode)
           {
-            generateTagCloud(viewProperties);
+            generateTagCloud(context, getViewProperties());
           }
         else
           {
-            fullPosts.forEach(this::addFullPost);
-            leadInPosts.forEach(this::addLeadInPost);
-            linkedPosts.forEach(this::addLinkToPost);
+            fullPosts.forEach(post -> addPost(post, RenderMode.FULL));
+            leadInPosts.forEach(post -> addPost(post, RenderMode.LEAD_IN));
+            linkedPosts.forEach(post -> addPost(post, RenderMode.LINK));
           }
 
         render();
@@ -255,17 +300,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Prepares the blog posts.
      *
      ******************************************************************************************************************/
-    private void prepareBlogPosts (final @Nonnull ResourceProperties properties)
+    protected void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final int maxFullItems   = properties.getIntProperty(P_MAX_FULL_ITEMS).orElse(99);
-        final int maxLeadinItems = properties.getIntProperty(P_MAX_LEADIN_ITEMS).orElse(99);
-        final int maxItems       = properties.getIntProperty(P_MAX_ITEMS).orElse(99);
+        final int maxFullItems   = indexMode ? 0        : properties.getIntProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
+        final int maxLeadinItems = indexMode ? 0        : properties.getIntProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
+        final int maxItems       = indexMode ? NO_LIMIT : properties.getIntProperty(P_MAX_ITEMS).orElse(NO_LIMIT);
 
-        log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {}",
-                  view.getId(), maxFullItems, maxLeadinItems, maxItems);
+        log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {} (index: {}, tag: {}, uri: {})",
+                  view.getId(), maxFullItems, maxLeadinItems, maxItems, indexMode, tag.orElse(""), uriOrCategory.orElse(""));
 
-        final List<Content> posts = findPostsInReverseDateOrder(properties)
+        final List<Content> posts = findPostsInReverseDateOrder(context, properties)
                 .stream()
                 .filter(post -> post.getProperty(P_TITLE).isPresent())
                 .collect(toList());
@@ -281,7 +326,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the tag cloud.
      *
      ******************************************************************************************************************/
-    private void generateTagCloud (final @Nonnull ResourceProperties properties)
+    private void generateTagCloud (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
                 .stream()
@@ -314,46 +359,46 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull ResourceProperties properties)
+    private List<Content> findPostsInReverseDateOrder (final @Nonnull RenderContext context,
+                                                       final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final String pathParams = requestHolder.get().getPathParams(siteNode).replaceFirst("^/", "");
-        final boolean index = properties.getBooleanProperty(P_INDEX).orElse(false);
+        final ResourcePath pathParams = context.getPathParams(siteNode);
+        final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();
+        final boolean allowEmpty = false; // indexMode || !filtering;
         final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
         //
-        // The thing work differently in function of pathParams:
+        // The thing works differently in function of pathParams:
         //      when no pathParams, return all the posts;
         //      when it matches a category, return all the posts in that category;
         //      when it matches an exposed URI of a single specific post:
         //          if not in 'index' mode, return only that post;
         //          if in 'index' mode, returns all the posts.
         //
-        if ("".equals(pathParams))
+        if (indexMode && !filtering)
           {
             posts.addAll(allPosts);
           }
         else
           {
-            if (pathParams.startsWith(TAG_PREFIX))
+            if (tag.isPresent())
               {
-                final String tag = pathParams.replaceFirst("^" + TAG_PREFIX, "");
-                posts.addAll(filteredByTag(allPosts, tag));
+                posts.addAll(filteredByTag(allPosts, tag.get()));
               }
             else
               {
-                posts.addAll(filteredByExposedUri(allPosts, new ResourcePath(pathParams))
+                posts.addAll(filteredByExposedUri(allPosts, pathParams)
                             // pathParams matches an exposedUri; thus it's not a category, so an index wants all
-                            .map(singlePost -> index ? allPosts : singletonList(singlePost))
+                            .map(singlePost -> indexMode ? allPosts : singletonList(singlePost))
                             // pathParams didn't match an exposedUri, so it's interpreted as a category to filter posts
-                            .orElse(filteredByCategory(allPosts, pathParams)));
+                            .orElseGet(() -> filteredByCategory(allPosts, uriOrCategory)));
               }
           }
 
-        // If not index mode, nothing found and searched for something in path params, return 404
-        if (!index && !"".equals(pathParams) && posts.isEmpty())
+        if (!allowEmpty && posts.isEmpty())
           {
-            throw new HttpStatusException(404);
+            throw new HttpStatusException(SC_NOT_FOUND);
           }
 
         Collections.sort(posts, REVERSE_DATE_COMPARATOR);
@@ -375,6 +420,38 @@ public abstract class DefaultBlogViewController implements BlogViewController
         post.getExposedUri().map(this::createLink)
                 .ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
         post.getProperty(P_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_IMAGE_ID, id));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void setTitle (final @Nonnull RenderContext context)
+      {
+        if (tagCloudMode)
+          {
+            title = Optional.of("Tags");
+          }
+        else if (indexMode)
+          {
+            title = Optional.of("Post index");
+
+            if (tag.isPresent())
+              {
+                title = Optional.of(String.format("Posts tagged as '%s'", tag.get()));
+              }
+            else if (uriOrCategory.isPresent())
+              {
+                title = Optional.of(String.format("Posts in category '%s'", uriOrCategory.get()));
+              }
+          }
+        else
+          {
+            title = getViewProperties().getProperty(P_TITLE).map(String::trim).flatMap(this::filterEmptyString);
+          }
+
+        title.ifPresent(s -> view.setTitle(s));
+        title.ifPresent(s -> context.setDynamicNodeProperty(PD_TITLE, s));
       }
 
     /*******************************************************************************************************************
@@ -412,12 +489,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         try
           {
-            final String tagLink = TAG_PREFIX + URLEncoder.encode(tag, "UTF-8");
-            // FIXME: refactor with ResourcePath
-            String link = site.createLink(siteNode.getRelativeUri().appendedWith(tagLink));
+            // TODO: shouldn't ResourcePath always encode incoming strings?
+            String link = site.createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
+                                                                   .appendedWith(URLEncoder.encode(tag, "UTF-8")));
 
-            // FIXME: workaround as createLink() doesn't append trailing / if the link contains a dot
-            if (!link.endsWith("/"))
+            // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
+            // Refactor by passing a parameter to createLink that overrides the default behaviour.
+            if (!link.endsWith("/") && !link.contains("?"))
               {
                 link += "/";
               }
@@ -442,7 +520,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Content> filteredByCategory (final @Nonnull List<Content> posts, final @Nonnull String category)
+    private static List<Content> filteredByCategory (final @Nonnull List<Content> posts,
+                                                     final @Nonnull Optional<String> category)
       {
         return posts.stream().filter(post -> hasCategory(post, category)).collect(toList());
       }
@@ -478,19 +557,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addFullPost (@Nonnull Content post);
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    protected abstract void addLeadInPost (@Nonnull Content post);
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    protected abstract void addLinkToPost (@Nonnull Content post);
+    protected abstract void addPost (@Nonnull Content post, @Nonnull RenderMode renderMode);
 
     /*******************************************************************************************************************
      *
@@ -548,9 +615,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private static boolean hasCategory (final @Nonnull Content post, final @Nonnull String category)
+    private static boolean hasCategory (final @Nonnull Content post, final @Nonnull Optional<String> category)
       {
-        return category.equals("") || post.getProperty(P_CATEGORY).map(category::equals).orElse(false);
+        return !category.isPresent() || post.getProperty(P_CATEGORY).equals(category);
       }
 
     /*******************************************************************************************************************
@@ -560,5 +627,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
         return Arrays.asList(post.getProperty(P_TAGS).orElse("").split(",")).contains(tag);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Optional<String> filterEmptyString (final @Nonnull String s)
+      {
+        final Optional<String> x = (s.equals("") ? Optional.empty() : Optional.of(s));
+        return x;
       }
   }

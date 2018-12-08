@@ -30,20 +30,21 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TITLE;
 
 /***********************************************************************************************************************
@@ -60,9 +61,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull
-    private final RequestHolder requestHolder;
-
     /*******************************************************************************************************************
      *
      *
@@ -71,7 +69,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view,
                                               final @Nonnull SiteNode siteNode,
                                               final @Nonnull Site site,
-                                              final @Nonnull RequestHolder requestHolder,
                                               final @Nonnull RequestLocaleManager requestLocaleManager,
                                               final @Nonnull ModelFactory modelFactory,
                                               final @Nonnull BeanFactory beanFactory)
@@ -80,7 +77,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         super(view, siteNode, site, requestLocaleManager, beanFactory);
         this.view = view;
         this.siteNode = siteNode;
-        this.requestHolder = requestHolder;
 
         final GalleryAdapterContext context = new GalleryAdapterContext()
           {
@@ -122,55 +118,57 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       throws Exception
       {
         super.renderView(context);
-        final String param = getParam().replaceAll("^/", "").replaceAll("/$", "");
+        final ResourcePath param = getParam(context);
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
         final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
 
-        switch (param)
+        if (param.getSegmentCount() > 1)
           {
-            case "":
-                galleryAdapter.renderGallery(view, items);
-                textHolder.addAttribute("title", siteNodeTitle);
-                break;
+            throw new HttpStatusException(SC_BAD_REQUEST);
+          }
 
-            case "images.xml":
-                galleryAdapter.renderCatalog(view, items);
-                break;
+        if (param.getSegmentCount() == 0)
+          {
+            galleryAdapter.renderGallery(view, items);
+            textHolder.addAttribute("title", siteNodeTitle);
+          }
+        else
+          {
+            switch (param.getLeading())
+              {
+                case "images.xml":
+                    galleryAdapter.renderCatalog(view, items);
+                    break;
 
-            case "lightbox":
-                galleryAdapter.renderLightbox(view, items);
-                textHolder.addAttribute("title", siteNodeTitle);
-                break;
+                case "lightbox":
+                    galleryAdapter.renderLightbox(view, items);
+                    textHolder.addAttribute("title", siteNodeTitle);
+                    break;
 
-            default: // id of the gallery item to render
-                final Id id = new Id(param);
-                final GalleryItem item = itemMapById.get(id);
+                default: // id of the gallery item to render
+                    final Id id = new Id(param.getLeading());
+                    final GalleryItem item = itemMapById.get(id);
 
-                if (item == null)
-                  {
-                    log.warn("Gallery item not found: {}", id);
-                    log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
-                    throw new HttpStatusException(404);
-                  }
+                    if (item == null)
+                      {
+                        log.warn("Gallery item not found: {}", id);
+                        log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
+                        throw new HttpStatusException(SC_NOT_FOUND);
+                      }
 
-                galleryAdapter.renderItem(view, item, items);
-                textHolder.addAttribute("title", item.getDescription());
-                break;
+                    galleryAdapter.renderItem(view, item, items);
+                    textHolder.addAttribute("title", item.getDescription());
+                    break;
+              }
           }
       }
 
     @Nonnull
-    private String getParam()
+    private ResourcePath getParam (final @Nonnull RenderContext context)
       {
-        try
-          {
-            return requestHolder.get().getParameter("_escaped_fragment_");
-          }
-        catch (NotFoundException ex)
-          {
-            return requestHolder.get().getPathParams(siteNode);
-          }
+        return context.getQueryParam("_escaped_fragment_").map(ResourcePath::new)
+                                                          .orElse(context.getPathParams(siteNode));
       }
 
     /*******************************************************************************************************************

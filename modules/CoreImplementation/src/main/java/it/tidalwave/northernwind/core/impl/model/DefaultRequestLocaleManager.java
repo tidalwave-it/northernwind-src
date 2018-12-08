@@ -99,12 +99,23 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void setRequestLocale (final @Nonnull Locale locale)
+    @Override
+    public boolean setLocale (final @Nonnull Locale locale)
       {
-        log.debug("setRequestLocale({})", locale);
-        localeHolder.set(locale);
+        if (siteProvider.get().getSite().getConfiguredLocales().contains(locale))
+            {
+              log.debug("setting locale to {} ...", locale);
+              localeHolder.set(locale);
+              return true;
+            }
+          else
+            {
+              log.warn("Can't set locale to {}, not in the configured ones", locale);
+              return false;
+            }
       }
 
     /*******************************************************************************************************************

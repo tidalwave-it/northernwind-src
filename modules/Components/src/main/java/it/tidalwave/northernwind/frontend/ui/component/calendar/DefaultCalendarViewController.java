@@ -48,9 +48,10 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -73,9 +74,6 @@ public class DefaultCalendarViewController implements CalendarViewController
     @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
-    @Nonnull
-    private final RequestHolder requestHolder;
-
     /*******************************************************************************************************************
      *
      * {@inheritDoc }
@@ -85,9 +83,7 @@ public class DefaultCalendarViewController implements CalendarViewController
     public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
-        final String pathParams = requestHolder.get().getPathParams(siteNode);
-        final int currentYear = getCurrentYear(pathParams);
-
+        final int currentYear = getCurrentYear(context.getPathParams(siteNode));
         final ResourceProperties siteNodeProperties = siteNode.getProperties();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
 
@@ -97,7 +93,7 @@ public class DefaultCalendarViewController implements CalendarViewController
 //          }
 //        catch (NotFoundException e)
 //          {
-//            throw new HttpStatusException(404);
+//            throw new HttpStatusException(SC_NOT_FOUND);
 //          }
 
         final String entries = siteNodeProperties.getProperty(P_ENTRIES).orElse("");
@@ -227,18 +223,21 @@ public class DefaultCalendarViewController implements CalendarViewController
      *
      ******************************************************************************************************************/
     @Nonnegative
-    private int getCurrentYear (final @Nonnull String pathParams)
+    private int getCurrentYear (final @Nonnull ResourcePath pathParams)
       throws HttpStatusException
       {
+        if (pathParams.getSegmentCount() > 1)
+          {
+            throw new HttpStatusException(SC_BAD_REQUEST);
+          }
+
         try
           {
-            return "".equals(pathParams) ? ZonedDateTime.now().getYear()
-                                         : Integer.parseInt(pathParams.replaceAll("/$", "").replaceAll("^/", ""));
-//            return "".equals(pathParams) ? new ZonedDateTime().getYear() : Integer.parseInt(pathParams.replaceAll("/", ""));
+            return pathParams.isEmpty() ? ZonedDateTime.now().getYear() : Integer.parseInt(pathParams.getLeading());
           }
         catch (NumberFormatException e)
           {
-            throw new HttpStatusException(404);
+            throw new HttpStatusException(SC_NOT_FOUND);
           }
       }
   }

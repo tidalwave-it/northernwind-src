@@ -47,6 +47,8 @@ public final class Properties
 
     public static final Key<String> P_FULL_TEXT = new Key<>("fullText");
 
+    public static final Key<String> P_LEADIN_TEXT = new Key<>("leadinText");
+
     public static final Key<String> P_TEMPLATE_PATH = new Key<>("templatePath");
 
     public static final Key<String> P_TEMPLATE = new Key<>("template");

@@ -27,56 +27,77 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
- *
- * The common ancestor of all controllers of views.
- *
- * @stereotype  Presentation Controller
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface ViewController
+public interface RenderContext
   {
+    @Nonnull
+    public Request getRequest();
+
+    @Nonnull
+    public RequestContext getRequestContext();
+
     /*******************************************************************************************************************
      *
-     * Initializes the component. If the class has a superclass, remember to call {@code super.initialize()}.
-     * This method must execute quickly, as it is called whenever a new instance is created - consider that some
-     * components, such as the one rendering a site map, are likely to instantiate lots of controllers.
+     * Sets a dynamic node property. These properties can be associated to the current {@link SiteNode}, created in
+     * a dynamic fashion while processing the {@link Request} and available only in the {@link RequestContext}.
      *
-     * @throws      Exception       in case of problems
+     * This property will be made available by {@link #getNodeProperties()}, which e.g. is used by the
+     * {@code $nodeProperty(...)$} macro.
+     *
+     * @param       key         the property key
+     * @param       value       the property value
      *
      ******************************************************************************************************************/
-    default public void initialize()
-      throws Exception
+    default public <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
       {
+        getRequestContext().setDynamicNodeProperty(key, value);
       }
 
     /*******************************************************************************************************************
      *
-     * Prepares the component for rendering, for instance by checking preconditions or by setting dynamic properties.
-     * If the class has a superclass, remember to call {@code super.prepareRendering(context)}.
+     * Returns a query parameter.
      *
-     * @param       context         the context for rendering
-     * @throws      Exception       in case of problems
+     * @param       name        the name of the parameter
+     * @return                  the value
      *
      ******************************************************************************************************************/
-    default public void prepareRendering (final @Nonnull RenderContext context)
-      throws Exception
+    @Nonnull
+    default public Optional<String> getQueryParam (final @Nonnull String name)
       {
+        try
+          {
+            return Optional.of(getRequest().getParameter(name));
+          }
+        catch (NotFoundException e)
+          {
+            return Optional.empty();
+          }
       }
 
     /*******************************************************************************************************************
      *
-     * Renders the component to a view.
+     * Returns the path parameters.
      *
-     * @param       context         the context for rendering
-     * @throws      Exception       in case of problems - it will cause a fatal error (such as HTTP status 500)
+     * @param       siteNode    the node that needs the parameters
+     * @return                  the path parameters
      *
      ******************************************************************************************************************/
-    default public void renderView (final @Nonnull RenderContext context)
-      throws Exception
+    @Nonnull
+    default public ResourcePath getPathParams (final @Nonnull SiteNode siteNode)
       {
+        return getRequest().getPathParams(siteNode);
       }
   }
+
