@@ -37,7 +37,7 @@ import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ import lombok.RequiredArgsConstructor;
  *
  * A {@link Layout} visitor that instantiate views and controllers for a given {@code Layout}. The whole {@code Layout}
  * tree is visited and for each child an instance of {@link ViewAndController} is created, the controller being called
- * with the {@link ViewController#initialize(it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext)}
+ * with the {@link ViewController#prepareRendering(it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext)}
  * method. No rendering is performed, but instances of {@code ViewAndController} are stored for later retrieval by means
  * of the method {@link #getViewAndControllerFor(it.tidalwave.northernwind.frontend.ui.Layout)}.
  *
@@ -79,7 +79,7 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
         try
           {
             final ViewAndController vac = createComponent(layout);
-            vac.getController().initialize(renderContext);
+            vac.getController().prepareRendering(renderContext);
             viewAndControllerMapByLayout.put(layout, vac);
           }
         catch (Exception e)

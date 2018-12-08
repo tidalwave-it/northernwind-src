@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-44-SNAPSHOT</version>
+        <version>1.1-ALPHA-45-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-media</artifactId>
-    <version>1.1-ALPHA-44-SNAPSHOT</version>
+    <version>1.1-ALPHA-45-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind - Frontend Media Extensions</name>
     <description>Media Extensions.</description>

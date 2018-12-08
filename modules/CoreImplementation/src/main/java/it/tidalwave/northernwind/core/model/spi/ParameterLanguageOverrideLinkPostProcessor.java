@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -42,7 +41,7 @@ import it.tidalwave.util.NotFoundException;
 public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProcessor
   {
     @Inject
-    private ParameterLanguageOverrideRequestProcessor parameterLanguageOverrideRequestProcessor;
+    private ParameterLanguageOverrideRequestProcessor plorp;
 
     /*******************************************************************************************************************
      *
@@ -52,15 +51,9 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
     @Override @Nonnull
     public String postProcess (final @Nonnull String link)
       {
-        try
-          {
-            final String parameterValue = parameterLanguageOverrideRequestProcessor.getParameterValue();
-            return postProcess(link, parameterValue);
-          }
-        catch (NotFoundException e)
-          {
-            return link;
-          }
+        // Ask to the request processor, not to the LocaleManager, because we need to replicate an explicitly set
+        // language in the request, only if present.
+        return plorp.getParameterValue().map(s -> postProcess(link, s)).orElse(link);
       }
 
     /*******************************************************************************************************************
@@ -69,9 +62,9 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String postProcess (final @Nonnull String link, final @Nonnull String parameterValue)
+    public String postProcess (final @Nonnull String link, final @Nonnull String language)
       {
-        final String parameterName = parameterLanguageOverrideRequestProcessor.getParameterName();
+        final String parameterName = plorp.getParameterName();
         final String regexp = "([\\?&])(" + parameterName + "=[a-z,0-9]*)";
 
         final Matcher matcher = Pattern.compile(regexp).matcher(link);
@@ -79,7 +72,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
         if (matcher.find()) // replace a parameter already present
           {
             final StringBuffer buffer = new StringBuffer();
-            matcher.appendReplacement(buffer, matcher.group(1) + parameterName + "=" + parameterValue);
+            matcher.appendReplacement(buffer, matcher.group(1) + parameterName + "=" + language);
             matcher.appendTail(buffer);
 
             return buffer.toString();
@@ -101,7 +94,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
             builder.append("?");
           }
 
-        builder.append(parameterName).append("=").append(parameterValue);
+        builder.append(parameterName).append("=").append(language);
 
         return builder.toString();
       }

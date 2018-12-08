@@ -81,7 +81,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
             final Site site = siteProvider.get().getSite();
             final SiteNode node = site.find(SiteNode).withRelativeUri(relativeUri).result();
             requestContext.setNode(node);
-            siteView.renderSiteNode(node);
+            siteView.renderSiteNode(request, node);
             //
             // Check *after* finding the SiteNode, since a "not found" must have been already handled here.
             //
