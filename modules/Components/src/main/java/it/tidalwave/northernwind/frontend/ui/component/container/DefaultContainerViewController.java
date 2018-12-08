@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

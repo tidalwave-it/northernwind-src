@@ -31,7 +31,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
