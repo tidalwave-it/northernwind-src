@@ -24,55 +24,28 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.core.model.spi;
+package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.Locale;
-import org.springframework.core.annotation.Order;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Request;
-import it.tidalwave.northernwind.core.model.RequestProcessor;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
+import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Order(1000) @Slf4j
-public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
+@RequiredArgsConstructor @ToString @Getter
+public class DefaultRenderContext implements RenderContext
   {
-    @Inject
-    private DefaultRequestLocaleManager requestLocaleManager;
+    @Nonnull
+    private final Request request;
 
-    @Inject
-    private Provider<SiteProvider> siteProvider;
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Status process (final @Nonnull Request request)
-      {
-        final Site site = siteProvider.get().getSite();
-
-        for (final Locale locale : request.getPreferredLocales())
-          {
-            if (site.getConfiguredLocales().contains(locale))
-              {
-                requestLocaleManager.setLocale(locale);
-                break;
-              }
-          }
-
-        return CONTINUE;
-      }
+    @Nonnull
+    private final RequestContext requestContext;
   }
+

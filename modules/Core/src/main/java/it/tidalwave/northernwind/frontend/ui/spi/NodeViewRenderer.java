@@ -31,9 +31,10 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 import it.tidalwave.role.Composite.VisitorSupport;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.ViewController.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
 
@@ -65,13 +66,14 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public NodeViewRenderer (final @Nonnull RequestContext requestContext,
+    public NodeViewRenderer (final @Nonnull Request request,
+                             final @Nonnull RequestContext requestContext,
                              final @Nonnull ViewAndControllerLayoutBuilder vacLayoutBuilder,
                              final @Nonnull BiConsumer<T, T> attacher)
       {
         this.vacLayoutBuilder = vacLayoutBuilder;
         this.attacher         = attacher;
-        this.renderContext    = new RenderContext(requestContext);
+        this.renderContext    = new DefaultRenderContext(request, requestContext);
       }
 
     /*******************************************************************************************************************

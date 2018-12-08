@@ -54,6 +54,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -93,31 +95,28 @@ public class DefaultBlogViewControllerTest
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
-        public UnderTest (final @Nonnull BlogView view,
-                          final @Nonnull SiteNode siteNode,
-                          final @Nonnull Site site,
-                          final @Nonnull RequestHolder requestHolder,
-                          final @Nonnull RequestContext requestContext)
+        public UnderTest (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode, final @Nonnull Site site)
           {
-            super(view, siteNode, site, requestHolder, requestContext);
+            super(view, siteNode, site);
           }
 
         @Override
-        protected void addFullPost (final @Nonnull Content post)
+        protected void addPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
           {
-            _fullPosts.add(post);
-          }
+            switch (renderMode)
+              {
+                case FULL:
+                    _fullPosts.add(post);
+                    break;
 
-        @Override
-        protected void addLeadInPost (final @Nonnull Content post)
-          {
-            _leadInPosts.add(post);
-          }
+                case LEAD_IN:
+                    _leadInPosts.add(post);
+                    break;
 
-        @Override
-        protected void addLinkToPost (final @Nonnull Content post)
-          {
-            _linkedPosts.add(post);
+                case LINK:
+                    _linkedPosts.add(post);
+                    break;
+              }
           }
 
         @Override
@@ -151,8 +150,6 @@ public class DefaultBlogViewControllerTest
     private Request request;
 
     private RequestContext requestContext;
-
-    private RequestHolder requestHolder;
 
     private List<Content> posts;
 
@@ -195,13 +192,11 @@ public class DefaultBlogViewControllerTest
         when(view.getId()).thenReturn(viewId);
 
         request = mock(Request.class);
-        requestHolder = mock(RequestHolder.class);
-        when(requestHolder.get()).thenReturn(request);
-
         requestContext = mock(RequestContext.class);
-        renderContext = new RenderContext(requestContext);
+        renderContext = new DefaultRenderContext(request, requestContext);
+        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.EMPTY);
 
-        underTest = new UnderTest(view, siteNode, site, requestHolder, requestContext);
+        underTest = new UnderTest(view, siteNode, site);
         underTest.initialize();
       }
 
@@ -214,6 +209,7 @@ public class DefaultBlogViewControllerTest
                                             final int maxLeadinItems,
                                             final int maxItems,
                                             final @Nonnull String pathParams,
+                                            final @Nonnull String expectedTitle,
                                             final @Nonnull List<Integer> expectedFullPostIds,
                                             final @Nonnull List<Integer> expectedLeadInPostIds,
                                             final @Nonnull List<Integer> expectedLinkedPostIds)
@@ -224,8 +220,8 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
-        underTest.initialize(renderContext);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
         // then
@@ -247,20 +243,27 @@ public class DefaultBlogViewControllerTest
                 .collect(toList());
         assertSortedInReverseOrder(publishingDates);
 
-        assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
+        if (!pathParams.equals("/tags"))
+          {
+            assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
+          }
+        else
+          {
+            assertThat(underTest.tagsAndCount.size(), is(10));
+          }
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider = "postRenderingTestData404",
+    @Test(dataProvider = "postRenderingTestDataNotFound",
           expectedExceptions = HttpStatusException.class,
           expectedExceptionsMessageRegExp = ".*httpStatus=404.*")
-    public void must_return_404 (final int seed,
-                                 final int maxFullItems,
-                                 final int maxLeadinItems,
-                                 final int maxItems,
-                                 final @Nonnull String pathParams)
+    public void must_throw_NotFound (final int seed,
+                                     final int maxFullItems,
+                                     final int maxLeadinItems,
+                                     final int maxItems,
+                                     final @Nonnull String pathParams)
       throws Exception
       {
         // given
@@ -268,8 +271,33 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
-        underTest.initialize(renderContext);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        underTest.prepareRendering(renderContext);
+        // when
+        underTest.renderView(renderContext);
+        // then should throw exception
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "postRenderingTestDataBadRequest",
+          expectedExceptions = HttpStatusException.class,
+          expectedExceptionsMessageRegExp = ".*httpStatus=400.*")
+    public void must_throw_BadRequest (final int seed,
+                                       final int maxFullItems,
+                                       final int maxLeadinItems,
+                                       final int maxItems,
+                                       final @Nonnull String pathParams)
+      throws Exception
+      {
+        // given
+        createMockData(seed);
+        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
         // then should throw exception
@@ -286,7 +314,35 @@ public class DefaultBlogViewControllerTest
         // given
         createMockData(seed);
         when(viewProperties.getBooleanProperty(P_TAG_CLOUD)).thenReturn(Optional.of(true));
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
+        // when
+        underTest.renderView(renderContext);
+        // then
+        final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        assertThat("full posts",   underTest._fullPosts.size(), is(0));    // TODO: should be: method not called
+        assertThat("leadIn posts", underTest._leadInPosts.size(), is(0));  // TODO: should be: method not called
+        assertThat("all posts",    allPosts.size(), is(0));                // TODO: should be: method not called
+
+        final List<TagAndCount> actualTacs = underTest.tagsAndCount
+                            .stream()
+                            .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
+                            .collect(toList());
+        actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
+        assertThat(actualTacs, is(expectedTacs));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider = "tagCloudRenderingTestData")
+    public void must_properly_render_tag_cloud2 (final int seed, // TODO: dup code from the previous test
+                                                final List<TagAndCount> expectedTacs)
+      throws Exception
+      {
+        // given
+        createMockData(seed);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath("tags"));
+        underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
         // then
@@ -307,12 +363,12 @@ public class DefaultBlogViewControllerTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "postRenderingTestData")
-    public void must_properly_set_dynamic_properties_for_single_posts (
-                                                      final int seed,
+    public void must_properly_set_dynamic_properties (final int seed,
                                                       final int maxFullItems,
                                                       final int maxLeadinItems,
                                                       final int maxItems,
                                                       final @Nonnull String pathParams,
+                                                      final @Nonnull String expectedTitle,
                                                       final @Nonnull List<Integer> expectedFullPostIds,
                                                       final @Nonnull List<Integer> expectedLeadInPostIds,
                                                       final @Nonnull List<Integer> expectedLinkedPostIds)
@@ -323,24 +379,29 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(pathParams);
+        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         // when
-        underTest.initialize(renderContext);
+        underTest.prepareRendering(renderContext);
         // then
         if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
           {
             final Integer id = expectedFullPostIds.get(0);
             assertThat(underTest.fullPosts.get(0), is(posts.get(id)));
+            verify(requestContext).setDynamicNodeProperty(eq(PD_TITLE),    eq(expectedTitle));
 
             final String sid = String.format("%2d", id);
             verify(requestContext).setDynamicNodeProperty(eq(PD_ID),       eq("id#" + sid));
-            verify(requestContext).setDynamicNodeProperty(eq(PD_TITLE),    eq("Title #" + sid));
             verify(requestContext).setDynamicNodeProperty(eq(PD_URL),      eq("http://acme.com/blogNode/post-" + sid));
 
             if (posts.get(id).getProperty(P_IMAGE_ID).isPresent())
               {
                 verify(requestContext).setDynamicNodeProperty(eq(PD_IMAGE_ID), eq("imageId#" + sid));
               }
+            // TODO: verify no more invocations
+          }
+        else if (pathParams.startsWith("/index") || pathParams.startsWith("/tags"))
+          {
+            verify(requestContext).setDynamicNodeProperty(eq(PD_TITLE),    eq(expectedTitle));
             // TODO: verify no more invocations
           }
         else
@@ -385,42 +446,93 @@ public class DefaultBlogViewControllerTest
       {
         return new Object[][]
           {
-           // seed full leadin max  pathParams          // expected post ids (full / leadIn / linked)
-            { 45,  10,  7,     30,  "",                 asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
-                                                        asList(12, 64, 39, 25,  4, 19, 32),
-                                                        asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
+           // seed full leadin max  pathParams          title   expected post ids (full / leadIn / linked)
+            { 45,  10,  7,     30,  "",                 "",     asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
+                                                                asList(12, 64, 39, 25,  4, 19, 32),
+                                                                asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
 
-            { 45,  10,  7,     30,  "/post-10",         asList(10),
-                                                        asList(),
-                                                        asList() },
+            { 45,  10,  7,     30,  "/post-10",         "Title #10",
+                                                                asList(10),
+                                                                asList(),
+                                                                asList() },
 
-            { 45,  10,  7,     30,  "/post-11",         asList(11),
-                                                        asList(),
-                                                        asList() },
+            { 45,  10,  7,     30,  "/post-11",         "Title #11",
+                                                                asList(11),
+                                                                asList(),
+                                                                asList() },
 
-            { 45,  10,  7,     30,  "/post-43",         asList(43),
-                                                        asList(),
-                                                        asList() },
+            { 45,  10,  7,     30,  "/post-43",         "Title #43",
+                                                                asList(43),
+                                                                asList(),
+                                                                asList() },
 
-            { 45,  10,  7,     30,  "/tag/tag3",        asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
-                                                        asList(21, 84, 30, 55, 74, 78, 45),
-                                                        asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
+            { 45,  10,  7,     30,  "/tag/tag3",        "",     asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
+                                                                asList(21, 84, 30, 55, 74, 78, 45),
+                                                                asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
 
-            { 45,  10,  7,     30,  "/tag/tag5",        asList(57, 63, 89, 18, 94, 39, 25, 19, 32,  3),
-                                                        asList(71, 11, 62, 38, 13, 21, 84),
-                                                        asList(36, 30, 14, 74,  7, 31, 45, 52, 83,  2, 72, 68,  9) },
+            { 45,  10,  7,     30,  "/tag/tag5",        "",     asList(57, 63, 89, 18, 94, 39, 25, 19, 32,  3),
+                                                                asList(71, 11, 62, 38, 13, 21, 84),
+                                                                asList(36, 30, 14, 74,  7, 31, 45, 52, 83,  2, 72, 68,  9) },
 
-            { 45,  10,  7,     30,  "/category1",       asList(44, 18, 12, 25, 19, 71, 99, 97, 90, 48),
-                                                        asList(75, 84, 54, 42, 15, 45, 51),
-                                                        asList(83, 72, 58, 26, 95, 28, 60, 93, 56, 59, 82, 91)     },
+            { 45,  10,  7,     30,  "/category1",       "",     asList(44, 18, 12, 25, 19, 71, 99, 97, 90, 48),
+                                                                asList(75, 84, 54, 42, 15, 45, 51),
+                                                                asList(83, 72, 58, 26, 95, 28, 60, 93, 56, 59, 82, 91)     },
 
-            { 45,  10,  7,     30,  "/category2",       asList(89, 94, 64,  3, 80, 38, 30, 29,  6, 14),
-                                                        asList(74, 78, 34, 43, 24, 52, 41),
-                                                        asList(46, 79, 85, 76, 53, 47, 65, 66, 61, 35, 49, 92, 23) },
+            { 45,  10,  7,     30,  "/category2",       "",     asList(89, 94, 64,  3, 80, 38, 30, 29,  6, 14),
+                                                                asList(74, 78, 34, 43, 24, 52, 41),
+                                                                asList(46, 79, 85, 76, 53, 47, 65, 66, 61, 35, 49, 92, 23) },
 
-            { 87,  10,  7,     30,  "",                 asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
-                                                        asList(30, 36, 22,  0, 35, 44, 49),
-                                                        asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
+            { 45,  10,  7,     30,  "/index",           "Post index",
+                                                                asList(),
+                                                                asList(),
+                                                                asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94, 12, 64, 39,
+                                                                       25,  4, 19, 32,  3, 71, 80, 11, 99, 97, 62, 96, 38,
+                                                                       13, 90, 21, 48, 75, 10, 84, 36, 30, 54, 29, 55,  6,
+                                                                       42, 14, 74, 87, 20, 15,  7, 31, 78, 34, 45, 51, 43,
+                                                                       24, 52, 83,  2, 72, 68,  9, 37, 58, 41, 46, 79, 85,
+                                                                       77, 26, 88, 76, 33, 53, 47, 17, 65, 70,  5, 66,  1,
+                                                                       61, 35, 40, 95, 28, 49, 60, 92, 23, 27, 93, 56, 59,
+                                                                       82, 81, 98, 50, 67, 22,  8,  0, 91) },
+
+            { 45,  10,  7,     30,  "/index/tag/tag3",  "Posts tagged as 'tag3'",
+                                                                asList(),
+                                                                asList(),
+                                                                asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99, 21, 84, 30,
+                                                                       55, 74, 78, 45, 51, 43, 72, 68, 37, 46, 85, 77, 26,
+                                                                       76, 47, 17, 65, 70, 66,  1, 35, 28, 49, 60, 92, 27,
+                                                                       93, 56, 98, 67, 91) },
+
+            { 45,  10,  7,     30,  "/index/tag/tag5",  "Posts tagged as 'tag5'",
+                                                                asList(),
+                                                                asList(),
+                                                                asList(57, 63, 89, 18, 94, 39, 25, 19, 32,  3, 71, 11, 62,
+                                                                       38, 13, 21, 84, 36, 30, 14, 74,  7, 31, 45, 52, 83,
+                                                                        2, 72, 68,  9, 37, 58, 79, 85, 77, 26, 88, 76, 47,
+                                                                       17, 65, 70, 66, 40, 95, 28, 49, 27, 56, 59, 50, 22) },
+
+            { 45,  10,  7,     30,  "/index/category1", "Posts in category 'category1'",
+                                                                asList(),
+                                                                asList(),
+                                                                asList(44, 18, 12, 25, 19, 71, 99, 97, 90, 48, 75, 84, 54,
+                                                                       42, 15, 45, 51, 83, 72, 58, 26, 95, 28, 60, 93, 56,
+                                                                       59, 82, 91) },
+
+            { 45,  10,  7,     30,  "/index/category2", "Posts in category 'category2'",
+                                                                asList(),
+                                                                asList(),
+                                                                asList(89, 94, 64,  3, 80, 38, 30, 29,  6, 14, 74, 78, 34,
+                                                                       43, 24, 52, 41, 46, 79, 85, 76, 53, 47, 65, 66, 61,
+                                                                       35, 49, 92, 23, 27, 8) },
+
+            { 45,  10,  7,     30,  "/tags",            "Tags",
+                                                                asList(),
+                                                                asList(),
+                                                                asList() },
+
+
+            { 87,  10,  7,     30,  "",                 "",     asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
+                                                                asList(30, 36, 22,  0, 35, 44, 49),
+                                                                asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
           };
       }
 
@@ -428,13 +540,31 @@ public class DefaultBlogViewControllerTest
      *
      ******************************************************************************************************************/
     @DataProvider
-    private static Object[][] postRenderingTestData404()
+    private static Object[][] postRenderingTestDataNotFound()
       {
         return new Object[][]
           {
            // seed full leadin max  pathParams
-            { 45,  10,  7,     30,  "/tag/inexistent",  },
-            { 45,  10,  7,     30,  "/inexistent",      }
+            { 45,  10,  7,     30,  "/inexistent",            },
+            { 45,  10,  7,     30,  "/tag/inexistent",        },
+            { 45,  10,  7,     30,  "/index/inexistent",      },
+            { 45,  10,  7,     30,  "/index/tag/inexistent",  }
+          };
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
+    private static Object[][] postRenderingTestDataBadRequest()
+      {
+        return new Object[][]
+          {
+           // seed full leadin max  pathParams
+            { 45,  10,  7,     30,  "/uri/extra-stuff",            },
+            { 45,  10,  7,     30,  "/tag/tag5/extra-stuff"        },
+            { 45,  10,  7,     30,  "/index/category/extra-stuff"  },
+            { 45,  10,  7,     30,  "/index/tag/tagX/extra-stuff"  }
           };
       }
 

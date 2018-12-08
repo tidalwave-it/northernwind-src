@@ -48,6 +48,8 @@ import static java.util.Collections.*;
 @Immutable @EqualsAndHashCode
 public class ResourcePath
   {
+    public static final ResourcePath EMPTY = new ResourcePath("");
+    
     @Nonnull
     /* package */ final List<String> segments;
 
@@ -139,6 +141,21 @@ public class ResourcePath
 
     /*******************************************************************************************************************
      *
+     * Returns a segment of this path. For instance, if the current object represents "/foo/bar/baz",
+     * {@code getSegment(1)} returns "baz"..
+     *
+     * @param   index   the index of the segment
+     * @return  the     segment
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getSegment (final @Nonnegative int index)
+      {
+        return segments.get(index);
+      }
+
+    /*******************************************************************************************************************
+     *
      * Returns the file extension of this path. For instance, if this object represents "/foo/bar/baz.jpg", "jpg" is
      * returned.
      *
@@ -204,6 +221,19 @@ public class ResourcePath
     public int getSegmentCount()
       {
         return segments.size();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns {@code true} if this paths is empty.
+     *
+     * @return  {@code true} if the path is empty
+     *
+     ******************************************************************************************************************/
+    @Nonnegative
+    public boolean isEmpty()
+      {
+        return segments.isEmpty();
       }
 
     /*******************************************************************************************************************

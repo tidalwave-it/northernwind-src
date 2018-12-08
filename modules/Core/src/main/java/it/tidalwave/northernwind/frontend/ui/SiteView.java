@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
@@ -46,5 +47,5 @@ public interface SiteView
      *
      *
      ******************************************************************************************************************/
-    public void renderSiteNode (@Nonnull SiteNode siteNode);
+    public void renderSiteNode (@Nonnull Request request, @Nonnull SiteNode siteNode);
   }

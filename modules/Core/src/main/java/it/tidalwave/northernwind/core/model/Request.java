@@ -116,7 +116,7 @@ public interface Request
     @Nonnull
     public List<String> getMultiValuedHeader (@Nonnull String headerName)
       throws NotFoundException;
-    
+
     /*******************************************************************************************************************
      *
      * Returns a parameter value.
@@ -150,5 +150,5 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getPathParams (@Nonnull SiteNode siteNode);
+    public ResourcePath getPathParams (@Nonnull SiteNode siteNode);
   }

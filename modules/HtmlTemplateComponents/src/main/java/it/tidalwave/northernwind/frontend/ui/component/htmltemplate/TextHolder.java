@@ -146,7 +146,7 @@ public class TextHolder
         t = t.add("content",     builder.toString());
         t = t.add("contextPath", siteProvider.get().getSite().getContextPath());
         t = t.add("charset",     charset.name());
-        t = t.add("language",    "");
+//        t = t.add("language",    "");
 
         return t.render();
       }
