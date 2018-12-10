@@ -105,8 +105,8 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
         for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
           {
             final ValuesJaxb values = propertyJaxb.getValues();
-            properties = properties.withProperty(new Key<>(propertyJaxb.getName()),
-                                                (values != null) ? values.getValue() : propertyJaxb.getValue());
+            properties = properties.withProperty(new Key<Object>(propertyJaxb.getName()) {},
+                                                ((values != null) ? values.getValue() : propertyJaxb.getValue()));
           }
 
         for (final PropertiesJaxb propertiesJaxb2 : propertiesJaxb.getProperties())

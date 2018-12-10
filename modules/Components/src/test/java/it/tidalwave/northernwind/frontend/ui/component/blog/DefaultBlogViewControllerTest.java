@@ -53,7 +53,6 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TagAndCount;
@@ -63,7 +62,7 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
-import static java.time.format.DateTimeFormatter.*;
+import static java.util.Collections.emptyList;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
@@ -217,9 +216,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         underTest.prepareRendering(renderContext);
         // when
@@ -239,7 +238,7 @@ public class DefaultBlogViewControllerTest
         final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         final List<ZonedDateTime> publishingDates = allPosts
                 .stream()
-                .map(post -> post.getProperties().getDateTimeProperty(P_PUBLISHING_DATE).get())
+                .map(post -> post.getProperty(P_PUBLISHING_DATE).get())
                 .collect(toList());
         assertSortedInReverseOrder(publishingDates);
 
@@ -268,9 +267,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         underTest.prepareRendering(renderContext);
         // when
@@ -293,9 +292,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         underTest.prepareRendering(renderContext);
         // when
@@ -313,7 +312,7 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getBooleanProperty(P_TAG_CLOUD)).thenReturn(Optional.of(true));
+        when(viewProperties.getProperty(P_TAG_CLOUD)).thenReturn(Optional.of(true));
         underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -376,9 +375,9 @@ public class DefaultBlogViewControllerTest
       {
         // given
         createMockData(seed);
-        when(viewProperties.getIntProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
-        when(viewProperties.getIntProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
-        when(viewProperties.getIntProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
+        when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
+        when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
+        when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
         // when
         underTest.prepareRendering(renderContext);
@@ -696,13 +695,12 @@ public class DefaultBlogViewControllerTest
         for (int i = 0; i< count; i++)
           {
             final ZonedDateTime dateTime = dateTimes.get(i);
-            final Content post = mock(Content.class);
+            final Content post = createMockContent();
             final ResourceProperties properties = createMockProperties();
             when(post.toString()).thenAnswer(invocation -> toString((Content)invocation.getMock()));
             when(post.getProperties()).thenReturn(properties);
-            when(post.getProperty(any(Key.class))).thenCallRealMethod();
             when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
-            when(properties.getProperty(P_PUBLISHING_DATE)).thenReturn(Optional.of(ISO_ZONED_DATE_TIME.format(dateTime)));
+            when(properties.getProperty(P_PUBLISHING_DATE)).thenReturn(Optional.of(dateTime));
             when(properties.getProperty(P_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
             when(properties.getProperty(P_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
 
@@ -716,11 +714,11 @@ public class DefaultBlogViewControllerTest
             when(post.getProperties().getProperty(P_CATEGORY)).thenReturn(category);
 
             // Assign tag
-            final String tagsAsString = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(joining(","));
+            final List<String> t2 = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(toList());
 
-            if (!tagsAsString.equals(""))
+            if (!t2.isEmpty())
               {
-                when(properties.getProperty(P_TAGS)).thenReturn(Optional.of(tagsAsString));
+                when(properties.getProperty(P_TAGS)).thenReturn(Optional.of(t2));
               }
 
             posts.add(post);
@@ -759,10 +757,10 @@ public class DefaultBlogViewControllerTest
       {
         final String title        = post.getProperty(P_TITLE).orElse("???");
         final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
-        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).orElse("???");
+        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(d -> d.toString()).orElse("???");
         final String imageId      = post.getProperty(P_IMAGE_ID).orElse("");
         final String category     = post.getProperty(P_CATEGORY).orElse("");
-        final String tags         = post.getProperty(P_TAGS).orElse("");
+        final Object tags         = post.getProperty(P_TAGS).orElse(emptyList());
         return String.format("Content(%s - %-10s - %s - %-10s - %-10s - %s)", title, exposedUri, dateTime, imageId, category, tags);
       }
   }

@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -99,7 +100,7 @@ public class ViewBuilderTest
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);
 
-        siteNode = mock(SiteNode.class);
+        siteNode = createMockSiteNode();
         when(siteProvider.getSite()).thenReturn(site);
 
         id = new Id("theId");

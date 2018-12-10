@@ -141,17 +141,16 @@ public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<
           }
 
         final Map<String, SiteNode> nodeMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return Arrays.asList(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNode));
+        return Arrays.asList(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNodeWithPath));
       }
 
     @Nonnull
-    private SiteNode createMockSiteNode (final @Nonnull String relativePath)
+    private SiteNode createMockSiteNodeWithPath (final @Nonnull String relativePath)
       {
-        final SiteNode siteNode = mock(SiteNode.class);
+        final SiteNode siteNode = createMockSiteNode();
         final ResourceProperties properties = createMockProperties();
         when(siteNode.getRelativeUri()).thenReturn(new ResourcePath("URI-" + relativePath.substring(1)));
         when(siteNode.getProperties()).thenReturn(properties);
-        when(siteNode.getProperty(any())).thenCallRealMethod();
 
         return siteNode;
       }

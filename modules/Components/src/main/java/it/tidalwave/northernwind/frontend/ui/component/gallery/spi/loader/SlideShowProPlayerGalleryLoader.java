@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
 @Slf4j
 public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
   {
-    public static final Key<String> P_IMAGES = new Key<>("images");
+    public static final Key<String> P_IMAGES = new Key<String>("images") {};
 
     private static final String XPATH_IMG = "/gallery/album/img";
 

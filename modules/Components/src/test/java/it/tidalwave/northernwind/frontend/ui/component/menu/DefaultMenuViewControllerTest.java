@@ -91,8 +91,7 @@ public class DefaultMenuViewControllerTest
           });
 
         viewProperties = createMockProperties();
-
-        final SiteNode siteNode = mock(SiteNode.class);
+        final SiteNode siteNode = createMockSiteNode();
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         view = mock(MenuView.class);

@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class GalleryLoaderSupport implements GalleryLoader
   {
-    private static final Key<String> P_MEDIA_METADATA_PROVIDER = new Key<>("mediaMetadataProvider");
+    private static final Key<String> P_MEDIA_METADATA_PROVIDER = new Key<String>("mediaMetadataProvider") {};
 
     @Nonnull
     private final BeanFactory beanFactory;
