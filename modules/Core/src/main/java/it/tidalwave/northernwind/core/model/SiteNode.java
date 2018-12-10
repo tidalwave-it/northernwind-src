@@ -45,12 +45,12 @@ public interface SiteNode extends Resource, SimpleComposite<SiteNode>
     public static final Class<SiteNode> SiteNode = SiteNode.class;
 
     /** The label used for creating navigation links to this {@code SiteNode}. */
-    public static final Key<String> P_NAVIGATION_LABEL = new Key<>("navigationLabel");
+    public static final Key<String> P_NAVIGATION_LABEL = new Key<String>("navigationLabel") {};
 
     /** If sets to true, this property makes the {@code SiteNode} capable to match not only its {@code /relativeUri},
      *  but also {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
     // FIXME: must be Boolean
-    public static final Key<String> P_MANAGES_PATH_PARAMS = new Key<>("managesPathParams");
+    public static final Key<String> P_MANAGES_PATH_PARAMS = new Key<String>("managesPathParams") {};
 
     /*******************************************************************************************************************
      *

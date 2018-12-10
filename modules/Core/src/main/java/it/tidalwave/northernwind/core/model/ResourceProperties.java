@@ -29,11 +29,10 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -124,57 +123,16 @@ public interface ResourceProperties extends As, Identifiable
 
     /*******************************************************************************************************************
      *
-     * Retrieves a property, eventually returning a default value.
-     *
-     * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
-     *
-     * @param   key                 the property key
-     * @return                      the property value
-     *
-     ******************************************************************************************************************/
-    @Nonnull // FIXME: should be Key<Integer>
-    default public Optional<Integer> getIntProperty (final @Nonnull Key<String> key)
-      {
-        return getProperty(key).map(Integer::parseInt);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Retrieves a property, eventually returning a default value.
-     *
-     * FIXME: temporary, until we fix the Key<T> issue with T != String. Should be handled by the generic version.
-     *
-     * @param   key                 the property key
-     * @return                      the property value
-     *
-     ******************************************************************************************************************/
-    @Nonnull // FIXME: should be Key<Boolean>
-    default public Optional<Boolean> getBooleanProperty (final @Nonnull Key<String> key)
-      {
-        return getProperty(key).map(Boolean::parseBoolean);
-      }
-
-    @Nonnull // FIXME: should be Key<DateTime>
-    default public Optional<ZonedDateTime> getDateTimeProperty (final @Nonnull Key<String> key)
-      {
-        return getDateTimeProperty(Collections.singletonList(key));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Retrieves a datetime property, searching through a sequence of keys, eventually returning a default value.
+     * Retrieves a property, searching through a sequence of keys.
      *
      * @param   keys                the property keys
      * @return                      the property value
      *
      ******************************************************************************************************************/
-    @Nonnull // FIXME: should be Key<ZonedDateTime>
-    default public Optional<ZonedDateTime> getDateTimeProperty (final @Nonnull Collection<Key<String>> keys)
+    @Nonnull
+    default public <T> Optional<T> getProperty (final @Nonnull List<Key<T>> keys)
       {
-        return keys.stream().flatMap(key -> getProperty(key)
-                                        .map(date -> ZonedDateTime.parse(date, DateTimeFormatter.ISO_ZONED_DATE_TIME))
-                                        .map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
-                            .findFirst();
+        return keys.stream().flatMap(key -> getProperty(key).map(Stream::of).orElseGet(Stream::empty)).findFirst(); // FIXME: simplify in Java 9
       }
 
     /*******************************************************************************************************************

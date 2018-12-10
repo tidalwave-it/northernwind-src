@@ -50,6 +50,7 @@ import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -108,7 +109,7 @@ public class DefaultMetadataCacheTest
                                       .withIptc(iptc)
                                       .withXmp(xmp)
                                       .build();
-        siteNodeProperties = mock(ResourceProperties.class);
+        siteNodeProperties = createMockProperties();
         mediaId = new Id("mediaId");
 
         when(metadataLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);

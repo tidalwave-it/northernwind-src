@@ -38,6 +38,7 @@ import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -69,7 +70,7 @@ public class EmbeddedMediaMetadataProviderTest
         context = helper.createSpringContext();
         underTest = context.getBean(EmbeddedMediaMetadataProvider.class);
         metadataCache = context.getBean(MetadataCache.class);
-        siteNodeProperties = mock(ResourceProperties.class);
+        siteNodeProperties = createMockProperties();
         mediaId = new Id("mediaId");
       }
 

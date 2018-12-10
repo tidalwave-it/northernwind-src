@@ -24,21 +24,46 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.sitemap;
+package it.tidalwave.northernwind.core.impl.model;
 
 import it.tidalwave.util.Key;
-import it.tidalwave.northernwind.frontend.ui.ViewController;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
+import javax.annotation.Nonnull;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface SitemapViewController extends ViewController
+public class DefaultResourcePropertiesTest
   {
-    public static final Key<Float> P_SITEMAP_PRIORITY = new Key<Float>("siteMap.priority") {};
+    @Test(dataProvider = "values")
+    public void testConvertValue (final @Nonnull Key<?> key, final @Nonnull Object value, final @Nonnull Object expectedValue)
+      {
+        // when
+        final Object actualValue = DefaultResourceProperties.convertValue(key, value);
+        // then
+        assertThat(actualValue, is(expectedValue));
+      }
 
-    public static final Key<Float> P_SITEMAP_CHILDREN_PRIORITY = new Key<Float>("siteMap.childrenPriority") {};
-
-    public static final Key<String> P_SITEMAP_CHANGE_FREQUENCY = new Key<String>("siteMap.changeFrequency") {};
-  }
+    @DataProvider
+    private Object[][] values()
+      {
+        return new Object[][]
+          {
+            { new Key<String>("") {},         "foo",      "foo" },
+            { new Key<Integer>("") {},        "17",       17    },
+            { new Key<Float>("") {},          "3.4",      3.4f  },
+            { new Key<Double>("") {},         "5.2",      5.2   },
+            { new Key<ZonedDateTime>("") {},  "2012-02-23T21:24:00.000+01:00", ZonedDateTime.parse("2012-02-23T21:24:00.000+01:00", ISO_ZONED_DATE_TIME)  },
+//            { new Key<List<Integer>>("") {},   asList("1", "2"), asList(1, 2) },
+          };
+      }
+}
