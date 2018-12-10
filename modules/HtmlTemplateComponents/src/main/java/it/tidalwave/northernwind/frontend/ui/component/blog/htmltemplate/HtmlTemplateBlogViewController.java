@@ -110,9 +110,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void addPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
+    protected void renderPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
       {
-        log.debug("addPost({}, {})", post, renderMode);
+        log.debug("renderPost({}, {})", post, renderMode);
 
         final StringBuilder htmlBuilder = new StringBuilder();
 
@@ -186,17 +186,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    private void addPost (final @Nonnull Content post, final boolean addBody)
-      {
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
     @Override
-    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+    protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
         log.debug("addTagCloud({})", tagsAndCount);
         final StringBuilder buffer = new StringBuilder();

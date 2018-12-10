@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +65,9 @@ import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
  *
@@ -285,9 +287,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
         else
           {
-            fullPosts.forEach(post -> addPost(post, RenderMode.FULL));
-            leadInPosts.forEach(post -> addPost(post, RenderMode.LEAD_IN));
-            linkedPosts.forEach(post -> addPost(post, RenderMode.LINK));
+            fullPosts.forEach(post -> renderPost(post, RenderMode.FULL));
+            leadInPosts.forEach(post -> renderPost(post, RenderMode.LEAD_IN));
+            linkedPosts.forEach(post -> renderPost(post, RenderMode.LINK));
           }
 
         render();
@@ -308,10 +310,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {} (index: {}, tag: {}, uri: {})",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems, indexMode, tag.orElse(""), uriOrCategory.orElse(""));
 
-        final List<Content> posts = findPostsInReverseDateOrder(context, properties)
+        final List<Content> posts = findPosts(context, properties)
                 .stream()
                 .filter(post -> post.getProperty(P_TITLE).isPresent())
+                .sorted(REVERSE_DATE_COMPARATOR)
                 .collect(toList());
+
+        if (posts.isEmpty())
+          {
+            throw new HttpStatusException(SC_NOT_FOUND);
+          }
 
         final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
         fullPosts.addAll(split.get(0));
@@ -334,21 +342,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 .stream()
                 .sorted(comparing(TagAndCount::getTag))
                 .collect(toList());
-        addTagCloud(withRanks(tagsAndCount));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Finds all the posts.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
-      {
-        return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
-                .flatMap(path -> site.find(Content).withRelativePath(path).stream()
-                                                                          .flatMap(folder -> folder.findChildren().stream()))
-                .collect(toList());
+        renderTagCloud(withRanks(tagsAndCount));
       }
 
     /*******************************************************************************************************************
@@ -357,13 +351,11 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull RenderContext context,
-                                                       final @Nonnull ResourceProperties properties)
+    private List<Content> findPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final ResourcePath pathParams = context.getPathParams(siteNode);
         final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();
-        final boolean allowEmpty = false; // indexMode || !filtering;
         final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
         //
@@ -394,16 +386,23 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
           }
 
-        if (!allowEmpty && posts.isEmpty())
-          {
-            throw new HttpStatusException(SC_NOT_FOUND);
-          }
-
-        Collections.sort(posts, REVERSE_DATE_COMPARATOR);
-
         log.debug(">>>> found {} items", posts.size());
 
         return posts;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Finds all the posts.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
+      {
+        return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
+                .flatMap(path -> site.find(Content).withRelativePath(path).stream()
+                                                                          .flatMap(folder -> folder.findChildren().stream()))
+                .collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -413,10 +412,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
       {
-        post.getProperty(P_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_ID, id));
         context.setDynamicNodeProperty(PD_TITLE, computeTitle(post));
-        post.getExposedUri().map(this::createLink)
-                .ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
+        post.getExposedUri().map(this::createLink).ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
+        post.getProperty(P_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_ID, id));
         post.getProperty(P_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_IMAGE_ID, id));
       }
 
@@ -555,13 +553,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addPost (@Nonnull Content post, @Nonnull RenderMode renderMode);
+    protected abstract void renderPost (@Nonnull Content post, @Nonnull RenderMode renderMode);
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
+    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
 
     /*******************************************************************************************************************
      *
@@ -584,6 +582,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
+    @Nonnull
     private List<TagAndCount> withRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
       {
         final List<Integer> counts = tagsAndCount.stream()
@@ -591,7 +590,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
                                                  .distinct()
                                                  .sorted(reverseOrder())
                                                  .collect(toList());
-
         return tagsAndCount.stream()
                            .map(tac -> tac.withRank(rankOf(tac.count, counts)))
                            .collect(toList());
@@ -635,7 +633,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private Optional<String> filterEmptyString (final @Nonnull String s)
       {
-        final Optional<String> x = (s.equals("") ? Optional.empty() : Optional.of(s));
-        return x;
+        return s.equals("") ? Optional.empty() : Optional.of(s);
       }
   }

@@ -117,7 +117,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void addPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post,
+    protected void renderPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post,
                             final @Nonnull RenderMode renderMode)
       {
         final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
@@ -173,7 +173,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
+    protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
       }
 

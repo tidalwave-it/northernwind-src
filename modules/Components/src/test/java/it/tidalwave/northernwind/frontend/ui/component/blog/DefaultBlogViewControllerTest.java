@@ -100,7 +100,7 @@ public class DefaultBlogViewControllerTest
           }
 
         @Override
-        protected void addPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
+        protected void renderPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
           {
             switch (renderMode)
               {
@@ -119,7 +119,7 @@ public class DefaultBlogViewControllerTest
           }
 
         @Override
-        protected void addTagCloud (final @Nonnull Collection<TagAndCount> tagsAndCount)
+        protected void renderTagCloud (final @Nonnull Collection<TagAndCount> tagsAndCount)
           {
             this.tagsAndCount.addAll(tagsAndCount);
           }
