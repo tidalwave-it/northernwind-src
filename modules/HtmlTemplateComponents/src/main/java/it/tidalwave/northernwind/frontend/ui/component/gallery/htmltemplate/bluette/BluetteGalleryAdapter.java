@@ -56,13 +56,13 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
-    private static final Key<String> P_COPYRIGHT = new Key<>("copyright");
+    private static final Key<String> P_COPYRIGHT = new Key<String>("copyright") {};
 
-    private static final Key<String> P_BLUETTE_TEMPLATE_PATH = new Key<>("bluettePath");
+    private static final Key<String> P_BLUETTE_TEMPLATE_PATH = new Key<String>("bluettePath") {};
 
-    private static final Key<String> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteFallbackPath");
+    private static final Key<String> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<String>("bluetteFallbackPath") {};
 
-    private static final Key<String> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<>("bluetteLightboxFallbackPath");
+    private static final Key<String> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<String>("bluetteLightboxFallbackPath") {};
 
     @Nonnull
     private final GalleryAdapterContext context;
