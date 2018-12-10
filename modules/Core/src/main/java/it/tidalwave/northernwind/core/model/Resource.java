@@ -27,10 +27,11 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -82,11 +83,11 @@ public interface Resource extends As
 
     /** The local portion of relativeUri by which a resource is exposed to the web. If this property is not
      *  defined, the resource uses a reasonable default. */
-    public static final Key<String> P_EXPOSED_URI = new Key<>("exposedUri");
+    public static final Key<String> P_EXPOSED_URI = new Key<String>("exposedUri") {};
 
     /** This property, controls whether this resource is a placeholder. See {@link #isPlaceHolder} for more information
      */
-    public static final Key<String> P_PLACE_HOLDER = new Key<>("placeHolder");
+    public static final Key<Boolean> P_PLACE_HOLDER = new Key<Boolean>("placeHolder") {};
 
     public static final Class<Resource> Resource = Resource.class;
 
@@ -122,6 +123,20 @@ public interface Resource extends As
     default public <T> Optional<T> getProperty (@Nonnull Key<T> key)
       {
         return getProperties().getProperty(key);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Shortcut for {@code getProperties().getProperty(keys)}.
+     *
+     * @param   keys    the keys
+     * @return          the property
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    default public <T> Optional<T> getProperty (@Nonnull List<Key<T>> keys)
+      {
+        return getProperties().getProperty(keys);
       }
 
     /*******************************************************************************************************************

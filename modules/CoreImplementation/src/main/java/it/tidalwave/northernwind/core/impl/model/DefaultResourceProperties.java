@@ -27,11 +27,13 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
 import it.tidalwave.util.Id;
@@ -43,6 +45,8 @@ import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Arrays.asList;
+import static java.time.format.DateTimeFormatter.*;
 
 /***********************************************************************************************************************
  *
@@ -55,6 +59,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString(exclude={"propertyResolver", "asSupport"})
 public class DefaultResourceProperties implements ResourceProperties
   {
+    private static final Map<Class<?>, Function<Object, Object>> CONVERTER_MAP = new HashMap<Class<?>, Function<Object, Object>>()
+      {{
+        put(Integer.class,       o -> Integer.parseInt((String)o));
+        put(Float.class,         o -> Float.parseFloat((String)o));
+        put(Double.class,        o -> Double.parseDouble((String)o));
+        put(Boolean.class,       o -> Boolean.parseBoolean((String)o));
+        put(ZonedDateTime.class, o -> ZonedDateTime.parse((String)o, ISO_ZONED_DATE_TIME));
+      }};
+
     @Nonnull @Getter
     private final Id id;
 
@@ -81,7 +94,7 @@ public class DefaultResourceProperties implements ResourceProperties
 //          {
 //            final String s = entry.getKey().stringValue();
 //            final Object value = entry.getValue();
-//            propertyMap.put(new Key<>(s), value);
+//            propertyMap.put(new Key<>(s) {}, value);
 //          }
       }
 
@@ -123,7 +136,7 @@ public class DefaultResourceProperties implements ResourceProperties
 
             if (!s.contains("."))
               {
-                propertyMap.put(new Key<>(s), value);
+                propertyMap.put(new Key<String>(s) {}, value);
               }
             else
               {
@@ -138,7 +151,7 @@ public class DefaultResourceProperties implements ResourceProperties
                     othersMap.put(groupId, otherMap);
                   }
 
-                otherMap.put(new Key<>(x[1]), value);
+                otherMap.put(new Key<String>(x[1]) {}, value);
               }
           }
 
@@ -158,8 +171,8 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         try
           {
-            final T value = (T)propertyMap.get(key);
-            return Optional.of((value != null) ? value : propertyResolver.resolveProperty(id, key));
+            final Object value = propertyMap.get(key);
+            return Optional.of(convertValue(key, (value != null) ? value : propertyResolver.resolveProperty(id, key)));
           }
         catch (NotFoundException | IOException e)
           {
@@ -285,5 +298,39 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         return new DefaultResourceProperties(this);
 //        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    /* visible for testing */ static <T> T convertValue (final @Nonnull Key<T> key, final @Nonnull Object value)
+      {
+        try
+          {
+            if (key.toString().equals("Key[tags]")) // workaround as Zephyr stores it as a comma-separated string
+              {
+                return (T)asList(((String)value).split(","));
+              }
+//            if (value instanceof List)
+//              {
+//                final List<Object> list = (List<Object>)value;
+//                Class<?> elementType = String.class; // FIXME: should get the generic of the list
+//
+//                return (T)list.stream()
+//                              .map(i -> CONVERTER_MAP.getOrDefault(elementType, o -> o).apply(value))
+//                              .collect(toList());
+//              }
+//            else
+              {
+                return (T)CONVERTER_MAP.getOrDefault(key.getType(), o -> o).apply(value);
+              }
+          }
+        catch (Exception e)
+          {
+            throw new RuntimeException(String.format("Can't convert '%s' to %s(%s)", value, key, key.getType()), e);
+          }
       }
   }

@@ -47,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
 import static org.mockito.Mockito.*;
@@ -78,7 +79,7 @@ public class HtmlTemplateBlogViewControllerTest
     public void setup()
       {
         view = mock(BlogView.class);
-        node = mock(SiteNode.class);
+        node = createMockSiteNode();
         site = mock(Site.class);
         requestLocaleManager = mock(RequestLocaleManager.class);
         underTest = new HtmlTemplateBlogViewController(view, node, site, requestLocaleManager);
@@ -144,7 +145,7 @@ public class HtmlTemplateBlogViewControllerTest
 
         if (properties == null) // not mocked yet
           {
-            properties = mock(ResourceProperties.class);
+            properties = createMockProperties();
             when(node.getPropertyGroup(eq(viewId))).thenReturn(properties);
           }
 

@@ -52,6 +52,7 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -93,7 +94,7 @@ public class DefaultSiteNodeTest
         inheritanceHelper = context.getBean(InheritanceHelper.class);
         requestLocaleManager = context.getBean(RequestLocaleManager.class);
 
-        resource = mock(Resource.class);
+        resource = createMockResource();
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
 
@@ -200,12 +201,11 @@ public class DefaultSiteNodeTest
         final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);
         when(resource.getFile()).thenReturn(resourceFile);
-        when(resource.getProperty(any())).thenCallRealMethod();
 
-        final SiteNode parentSiteNode = mock(SiteNode.class);
+        final SiteNode parentSiteNode = createMockSiteNode();
         when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
 
-        final ResourceProperties properties = mock(ResourceProperties.class);
+        final ResourceProperties properties = createMockProperties();
         when(properties.getProperty(eq(SiteNode.P_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
         when(resource.getProperties()).thenReturn(properties);
 
