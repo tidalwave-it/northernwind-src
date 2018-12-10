@@ -31,15 +31,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.time.ZonedDateTime;
 import com.sun.syndication.feed.rss.Channel;
 import com.sun.syndication.feed.rss.Content;
 import com.sun.syndication.feed.rss.Guid;
 import com.sun.syndication.feed.rss.Item;
-import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -82,9 +84,10 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
                                          final @Nonnull SiteNode siteNode,
                                          final @Nonnull Site site,
-                                         final @Nonnull SiteProvider siteProvider)
+                                         final @Nonnull SiteProvider siteProvider,
+                                         final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(view, siteNode, site);
+        super(site, siteNode, view, requestLocaleManager);
         this.siteProvider = siteProvider;
         this.siteNode = siteNode;
         this.view = view;
@@ -117,8 +120,34 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
+    protected void renderPosts (List<it.tidalwave.northernwind.core.model.Content> fullPosts,
+                           List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
+                           List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
+      throws Exception
+      {
+        fullPosts.forEach  (post -> renderPost(post, Optional.of(P_FULL_TEXT)));
+        leadinPosts.forEach(post -> renderPost(post, Optional.of(P_LEADIN_TEXT)));
+        linkedPosts.forEach(post -> renderPost(post, Optional.empty()));
+
+        feed.setGenerator("NorthernWind v" + siteProvider.getVersionString());
+        feed.setItems(items);
+
+//        if (!StringUtils.hasText(feed.getEncoding()))
+//          {
+//            feed.setEncoding("UTF-8");
+//          }
+
+        final WireFeedOutput feedOutput = new WireFeedOutput();
+        view.setContent(feedOutput.outputString(feed));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     protected void renderPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post,
-                            final @Nonnull RenderMode renderMode)
+                               final @Nonnull Optional<Key<String>> textProperty)
       {
         final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
@@ -132,18 +161,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final Content content = new Content();
         // FIXME: text/xhtml?
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
-
-        switch (renderMode)
-          {
-            case FULL:
-                postProperties.getProperty(P_FULL_TEXT).ifPresent(content::setValue);
-                break;
-
-            case LEAD_IN:
-                postProperties.getProperty(P_LEADIN_TEXT).ifPresent(content::setValue);
-                break;
-          }
-
+        textProperty.ifPresent(p -> postProperties.getProperty(p).ifPresent(content::setValue));
         item.setTitle(postProperties.getProperty(P_TITLE).orElse(""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(Date.from(blogDateTime.toInstant()));
@@ -175,26 +193,5 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     @Override
     protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    protected void render()
-      throws FeedException
-      {
-        feed.setGenerator("NorthernWind v" + siteProvider.getVersionString());
-        feed.setItems(items);
-
-//        if (!StringUtils.hasText(feed.getEncoding()))
-//          {
-//            feed.setEncoding("UTF-8");
-//          }
-
-        final WireFeedOutput feedOutput = new WireFeedOutput();
-        view.setContent(feedOutput.outputString(feed));
       }
   }
