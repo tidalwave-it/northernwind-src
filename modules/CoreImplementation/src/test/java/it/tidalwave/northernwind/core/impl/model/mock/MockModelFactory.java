@@ -68,8 +68,7 @@ public class MockModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public Resource build (final @Nonnull Resource.Builder builder)
       {
-        final Resource resource = mock(Resource.class);
-        when(resource.getProperty(any())).thenCallRealMethod();
+        final Resource resource = createMockResource();
         final String path = builder.getFile().getPath().asString();
         log.trace(">>>> creating Resource for {}", path);
 
@@ -85,10 +84,9 @@ public class MockModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public Content build (final @Nonnull Content.Builder builder)
       {
-        final Content content = mock(Content.class);
+        final Content content = createMockContent();
         final ResourceProperties properties = createMockProperties();
         when(content.getProperties()).thenReturn(properties);
-        when(content.getProperty(any())).thenCallRealMethod();
         final String path = builder.getFolder().getPath().asString();
         log.trace(">>>> creating Content for {}", path);
 
@@ -124,8 +122,7 @@ public class MockModelFactory extends ModelFactorySupport
         final String relativeUri = String.format("relativeUriFor:%s", folder.getPath().asString());
         final String path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
-        final SiteNode siteNode = mock(SiteNode.class);
-        when(siteNode.getProperty(any())).thenCallRealMethod();
+        final SiteNode siteNode = createMockSiteNode();
         when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
         when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
@@ -138,7 +135,7 @@ public class MockModelFactory extends ModelFactorySupport
             if (e.getKey().startsWith(path + "."))
               {
                 final String propertyName = e.getKey().substring(path.length() + 1);
-                final Key<String> propertyKey = new Key<>(propertyName);
+                final Key<String> propertyKey = new Key<String>(propertyName) {};
                 log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
                 when(properties.getProperty(eq(propertyKey))).thenReturn(Optional.of(e.getValue()));
               }
@@ -156,8 +153,43 @@ public class MockModelFactory extends ModelFactorySupport
       {
         final ResourceProperties properties = mock(ResourceProperties.class);
         when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
-        when(properties.getDateTimeProperty(any(Key.class))).thenCallRealMethod();
-        when(properties.getDateTimeProperty(any(List.class))).thenCallRealMethod();
+        when(properties.getProperty(any(List.class))).thenCallRealMethod();
         return properties;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static Resource createMockResource()
+      {
+        final Resource resource = mock(Resource.class);
+        when(resource.getProperty(any(Key.class))).thenCallRealMethod();
+        when(resource.getProperty(any(List.class))).thenCallRealMethod();
+        return resource;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static Content createMockContent()
+      {
+        final Content content = mock(Content.class);
+        when(content.getProperty(any(Key.class))).thenCallRealMethod();
+        when(content.getProperty(any(List.class))).thenCallRealMethod();
+        return content;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static SiteNode createMockSiteNode()
+      {
+        final SiteNode siteNode = mock(SiteNode.class);
+        when(siteNode.getProperty(any(Key.class))).thenCallRealMethod();
+        when(siteNode.getProperty(any(List.class))).thenCallRealMethod();
+        return siteNode;
       }
   }

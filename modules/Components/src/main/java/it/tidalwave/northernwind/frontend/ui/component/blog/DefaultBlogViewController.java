@@ -157,7 +157,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         FULL, LEAD_IN, LINK
       }
 
-    protected static final List<Key<String>> DATE_KEYS = Arrays.asList(P_PUBLISHING_DATE, P_CREATION_DATE);
+    protected static final List<Key<ZonedDateTime>> DATE_KEYS = Arrays.asList(P_PUBLISHING_DATE, P_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
@@ -181,9 +181,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (post1, post2) ->
       {
-        final ZonedDateTime dateTime1 = post1.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
-        final ZonedDateTime dateTime2 = post2.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
-        return dateTime2.compareTo(dateTime1);
+        return post2.getProperty(DATE_KEYS).orElse(TIME0).compareTo(post1.getProperty(DATE_KEYS).orElse(TIME0));
       };
 
     @Nonnull
@@ -224,9 +222,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.info("prepareRendering(RenderContext) for {}", siteNode);
 
         final ResourceProperties viewProperties = getViewProperties();
-        indexMode  = viewProperties.getBooleanProperty(P_INDEX).orElse(false);
+        indexMode  = viewProperties.getProperty(P_INDEX).orElse(false);
         ResourcePath pathParams = context.getPathParams(siteNode);
-        tagCloudMode = viewProperties.getBooleanProperty(P_TAG_CLOUD).orElse(false);
+        tagCloudMode = viewProperties.getProperty(P_TAG_CLOUD).orElse(false);
 
         if (pathParams.equals(TAG_CLOUD))
           {
@@ -303,9 +301,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
     protected void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
-        final int maxFullItems   = indexMode ? 0        : properties.getIntProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
-        final int maxLeadinItems = indexMode ? 0        : properties.getIntProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
-        final int maxItems       = indexMode ? NO_LIMIT : properties.getIntProperty(P_MAX_ITEMS).orElse(NO_LIMIT);
+        final int maxFullItems   = indexMode ? 0        : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
+        final int maxLeadinItems = indexMode ? 0        : properties.getProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
+        final int maxItems       = indexMode ? NO_LIMIT : properties.getProperty(P_MAX_ITEMS).orElse(NO_LIMIT);
 
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {} (index: {}, tag: {}, uri: {})",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems, indexMode, tag.orElse(""), uriOrCategory.orElse(""));
@@ -330,7 +328,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
                 .stream()
-                .flatMap(post -> post.getProperty(P_TAGS).map(t -> t.split(",")).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify in Java 9
+                .flatMap(post -> post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty)) // TODO: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
                 .values()
                 .stream()
@@ -462,7 +460,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private String computeTitle (final @Nonnull Content post)
       {
         final String prefix    = siteNode.getProperty(P_TITLE).orElse("");
-        final String title     = post.getProperties().getProperty(P_TITLE).orElse("");
+        final String title     = post.getProperty(P_TITLE).orElse("");
         final String separator = prefix.equals("") || title.equals("") ? "": " - ";
 
         return prefix + separator + title;
@@ -626,7 +624,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
       {
-        return Arrays.asList(post.getProperty(P_TAGS).orElse("").split(",")).contains(tag);
+        return post.getProperty(P_TAGS).orElse(emptyList()).contains(tag);
       }
 
     /*******************************************************************************************************************

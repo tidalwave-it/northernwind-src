@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import org.imajine.image.EditableImage;
@@ -46,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
-import java.time.format.FormatStyle;
 
 /***********************************************************************************************************************
  *

@@ -43,6 +43,7 @@ import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadat
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
@@ -67,8 +68,8 @@ public class DefaultMetadataTest
       {
         context = helper.createSpringContext();
         context.getBean(MetadataInterpolatorFactory.class); // initialize it
-        properties = mock(ResourceProperties.class);
-        final ResourceProperties resourceProperties = mock(ResourceProperties.class);
+        properties = createMockProperties();
+        final ResourceProperties resourceProperties = createMockProperties();
         when(resourceProperties.getProperty(P_LENS_IDS)).thenReturn(Optional.of(Arrays.asList("1:Lens1", "2:Lens2")));
         when(properties.getGroup(P_GROUP_ID)).thenReturn(resourceProperties);
       }

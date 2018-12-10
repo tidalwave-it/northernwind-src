@@ -104,7 +104,7 @@ public class DefaultNodeContainerViewControllerTest
         nodeProperties = createMockProperties();
         viewProperties = createMockProperties();
 
-        final SiteNode siteNode = mock(SiteNode.class);
+        final SiteNode siteNode = createMockSiteNode();
         when(siteNode.getProperties()).thenReturn(nodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
