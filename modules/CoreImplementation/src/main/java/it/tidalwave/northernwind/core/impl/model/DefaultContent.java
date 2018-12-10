@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
@@ -58,6 +59,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     interface Exclusions
       {
         public <T> Optional<T> getProperty (Key<T> key);
+        public <T> Optional<T> getProperty (List<Key<T>> keys);
       }
 
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
@@ -130,7 +132,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     // FIXME: this is declared in Frontend Components. Either move some properties in this module, or the next
     // method can't stay here.
-    public static final Key<String> P_TITLE = new Key<>("title");
+    public static final Key<String> P_TITLE = new Key<String>("title") {};
 
     /*******************************************************************************************************************
      *

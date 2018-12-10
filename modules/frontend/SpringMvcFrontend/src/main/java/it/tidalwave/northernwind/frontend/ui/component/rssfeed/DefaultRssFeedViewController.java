@@ -120,7 +120,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     protected void addPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post,
                             final @Nonnull RenderMode renderMode)
       {
-        final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+        final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
         if (feed.getLastBuildDate() == null)
           {
@@ -143,7 +143,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
                 postProperties.getProperty(P_LEADIN_TEXT).ifPresent(content::setValue);
                 break;
           }
-        
+
         item.setTitle(postProperties.getProperty(P_TITLE).orElse(""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(Date.from(blogDateTime.toInstant()));

@@ -36,9 +36,9 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
  **********************************************************************************************************************/
 public interface RssFeedViewController extends ViewController
   {
-    public static final Key<String> P_CREATOR = new Key<>("creator");
+    public static final Key<String> P_CREATOR = new Key<String>("creator") {};
 
-    public static final Key<String> P_LINK = new Key<>("link");
+    public static final Key<String> P_LINK = new Key<String>("link") {};
 
 //    public static final Key<String> P_X = new Key<String>("");
 //        <property name="contents"

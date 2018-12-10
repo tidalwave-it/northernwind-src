@@ -130,7 +130,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         else
           {
             post.getProperty(P_TITLE).ifPresent(view::setTitle);
-            final ZonedDateTime blogDateTime = post.getProperties().getDateTimeProperty(DATE_KEYS).orElse(TIME0);
+            final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
             final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
             htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
 
@@ -257,9 +257,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      ******************************************************************************************************************/
     private void renderTags (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
       {
-        final String tags = post.getProperty(P_TAGS)
-            .map(s -> Stream.of(s.split(",")))
-            .orElse(Stream.empty())
+        final String tags = post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty) // TODO: simplify in Java 9
             .sorted()
             .map(tag -> String.format(TEMPLATE_TAG_LINK, createTagLink(tag), tag))
             .collect(joining(", "));

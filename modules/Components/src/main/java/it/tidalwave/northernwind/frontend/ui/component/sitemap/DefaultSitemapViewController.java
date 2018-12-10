@@ -141,15 +141,15 @@ public class DefaultSitemapViewController implements SitemapViewController
         //
         // FIXME: if you put the sitemap property straightly into the child site node, you can simplify a lot,
         // just using a single property and only peeking into a single node
-        final Key<String> priorityKey = (childSiteNode == null) ? P_SITEMAP_PRIORITY : P_SITEMAP_CHILDREN_PRIORITY;
-        final float sitemapPriority = Float.parseFloat(siteNode.getProperty(priorityKey).orElse("0.5"));
+        final Key<Float> priorityKey = (childSiteNode == null) ? P_SITEMAP_PRIORITY : P_SITEMAP_CHILDREN_PRIORITY;
+        final float sitemapPriority = siteNode.getProperty(priorityKey).orElse(0.5f);
 
         if (sitemapPriority > 0)
           {
             builder.append("  <url>\n");
             builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
             builder.append(String.format("    <lastmod>%s</lastmod>%n",
-                                         properties.getDateTimeProperty(P_LATEST_MODIFICATION_DATE).orElse(TIME0).format(dateTimeFormatter)));
+                                         properties.getProperty(P_LATEST_MODIFICATION_DATE).orElse(TIME0).format(dateTimeFormatter)));
             builder.append(String.format("    <changefreq>%s</changefreq>%n",
                                          properties.getProperty(P_SITEMAP_CHANGE_FREQUENCY).orElse("daily")));
             builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
