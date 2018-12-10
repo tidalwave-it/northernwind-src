@@ -142,16 +142,15 @@ public class MockContentSiteFinder extends Finder8Support<Content, SiteFinder<Co
           }
 
         final Map<String, Content> contentMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return Arrays.asList(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContent));
+        return Arrays.asList(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContentWithPath));
       }
 
     @Nonnull
-    private Content createMockContent (final @Nonnull String relativePath)
+    private Content createMockContentWithPath (final @Nonnull String relativePath)
       {
-        final Content content = mock(Content.class);
+        final Content content = createMockContent();
         final ResourceProperties properties = createMockProperties();
         when(content.getProperties()).thenReturn(properties);
-        when(content.getProperty(any())).thenCallRealMethod();
         when(content.getExposedUri()).thenReturn(Optional.of(mockedExposedUri(relativePath)));
 
         return content;

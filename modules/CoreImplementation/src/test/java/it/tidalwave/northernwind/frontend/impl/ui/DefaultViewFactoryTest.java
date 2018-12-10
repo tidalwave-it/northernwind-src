@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.frontend.impl.ui.mock.MockView3;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -99,7 +100,7 @@ public class DefaultViewFactoryTest
       {
         // given
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
-        final SiteNode siteNode = mock(SiteNode.class);
+        final SiteNode siteNode = createMockSiteNode();
         final Id id = new Id("theId");
         final ViewAndController viewAndController = mock(ViewAndController.class);
         when(viewBuilder.createViewAndController(eq(id), same(siteNode))).thenReturn(viewAndController);
@@ -122,7 +123,7 @@ public class DefaultViewFactoryTest
       {
         // given
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
-        final SiteNode siteNode = mock(SiteNode.class);
+        final SiteNode siteNode = createMockSiteNode();
         final Id id = new Id("theId");
         underTest.viewBuilderMapByTypeUri.put("registeredType", viewBuilder);
         // then

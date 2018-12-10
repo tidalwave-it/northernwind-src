@@ -55,7 +55,7 @@ public class NodePropertyResolverMacroFilter extends MacroFilter
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        final Key<String> key = new Key<>(matcher.group(1));
+        final Key<String> key = new Key<String>(matcher.group(1)) {};
         return context.get().getNodeProperties().getProperty(key).orElse("");
       }
   }
