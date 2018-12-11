@@ -36,6 +36,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import it.tidalwave.northernwind.core.model.Site;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -46,7 +47,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class TemplateHelper
   {
     @Nonnull
@@ -57,8 +58,34 @@ public class TemplateHelper
 
     /*******************************************************************************************************************
      *
-     * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieve through the
-     * {@code P_TEMPLATE} of the {@code Content}.
+     ******************************************************************************************************************/
+    public TemplateHelper (final @Nonnull Object owner, final @Nonnull Site site)
+      {
+        this(owner, () -> site);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Gets a template from a {@link Content}, whose relative path is provided; the template is retrieved through the
+     * property {@code P_TEMPLATE} of the {@code Content}. If nothing is found, a default template with the given name
+     * is loaded from the embedded resources.
+     *
+     * @param       contentRelativePath     the path of the {@code Content}
+     * @param       embeddedResourceName    the name of the default embedded resource
+     * @return                              the template contents
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Template getTemplate (final @Nonnull String contentRelativePath, final @Nonnull String embeddedResourceName)
+      {
+        log.debug("getTemplate({}, {})", contentRelativePath, embeddedResourceName);
+        return new Template(getTemplate(contentRelativePath).orElse(getEmbeddedTemplate(embeddedResourceName)));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieved through the
+     * property {@code P_TEMPLATE} of the {@code Content}.
      *
      * @param       contentRelativePath     the path of the {@code Content}
      * @return                              the template contents
