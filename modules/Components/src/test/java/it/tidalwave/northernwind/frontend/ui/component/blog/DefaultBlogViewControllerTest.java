@@ -26,29 +26,28 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.time.Duration;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
-import java.util.Random;
-import java.util.stream.IntStream;
-import it.tidalwave.util.Finder8;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.ZonedDateTime;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.ArrayListFinder8;
+import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -62,18 +61,17 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.emptyList;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
+import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.DEFAULT_TIMEZONE;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
@@ -94,28 +92,22 @@ public class DefaultBlogViewControllerTest
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
-        public UnderTest (final @Nonnull BlogView view, final @Nonnull SiteNode siteNode, final @Nonnull Site site)
+        public UnderTest (final @Nonnull Site site,
+                          final @Nonnull SiteNode siteNode,
+                          final @Nonnull BlogView view,
+                          final @Nonnull RequestLocaleManager requestLocaleManager)
           {
-            super(view, siteNode, site);
+            super(site, siteNode, view, requestLocaleManager);
           }
 
         @Override
-        protected void renderPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
+        protected void renderPosts (final @Nonnull List<Content> fullPosts,
+                                    final @Nonnull List<Content> leadinPosts,
+                                    final @Nonnull List<Content> linkedPosts)
           {
-            switch (renderMode)
-              {
-                case FULL:
-                    _fullPosts.add(post);
-                    break;
-
-                case LEAD_IN:
-                    _leadInPosts.add(post);
-                    break;
-
-                case LINK:
-                    _linkedPosts.add(post);
-                    break;
-              }
+            _fullPosts.addAll(fullPosts);
+            _leadInPosts.addAll(leadinPosts);
+            _linkedPosts.addAll(linkedPosts);
           }
 
         @Override
@@ -124,10 +116,6 @@ public class DefaultBlogViewControllerTest
             this.tagsAndCount.addAll(tagsAndCount);
           }
 
-        @Override
-        protected void render()
-          {
-          }
       }
 
     private static final String SITE_NODE_RELATIVE_URI = "/blogNode";
@@ -150,13 +138,11 @@ public class DefaultBlogViewControllerTest
 
     private RequestContext requestContext;
 
-    private List<Content> posts;
+    private RequestLocaleManager requestLocaleManager;
 
-    private List<ZonedDateTime> dates;
+    private MockPosts mockPosts;
 
-    private List<String> categories;
-
-    private List<String> tags;
+    private Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *
@@ -166,8 +152,6 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
-
-        final Id viewId = new Id("id");
 
         site = mock(Site.class);
         MockSiteNodeSiteFinder.registerTo(site);
@@ -195,7 +179,11 @@ public class DefaultBlogViewControllerTest
         renderContext = new DefaultRenderContext(request, requestContext);
         when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.EMPTY);
 
-        underTest = new UnderTest(view, siteNode, site);
+        requestLocaleManager = mock(RequestLocaleManager.class);
+
+        mockPosts = new MockPosts(site, viewProperties);
+
+        underTest = new UnderTest(site, siteNode, view, requestLocaleManager);
         underTest.initialize();
       }
 
@@ -215,7 +203,7 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(seed);
+        mockPosts.createMockData(seed);
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
@@ -266,7 +254,7 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(seed);
+        mockPosts.createMockData(seed);
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
@@ -291,7 +279,7 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(seed);
+        mockPosts.createMockData(seed);
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
@@ -311,7 +299,7 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(seed);
+        mockPosts.createMockData(seed);
         when(viewProperties.getProperty(P_TAG_CLOUD)).thenReturn(Optional.of(true));
         underTest.prepareRendering(renderContext);
         // when
@@ -339,7 +327,7 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(seed);
+        mockPosts.createMockData(seed);
         when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath("tags"));
         underTest.prepareRendering(renderContext);
         // when
@@ -374,7 +362,7 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(seed);
+        mockPosts.createMockData(seed);
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
@@ -385,14 +373,14 @@ public class DefaultBlogViewControllerTest
         if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
           {
             final Integer id = expectedFullPostIds.get(0);
-            assertThat(underTest.fullPosts.get(0), is(posts.get(id)));
+            assertThat(underTest.fullPosts.get(0), is(mockPosts.getPosts().get(id)));
             verify(requestContext).setDynamicNodeProperty(eq(PD_TITLE),    eq(expectedTitle));
 
             final String sid = String.format("%2d", id);
             verify(requestContext).setDynamicNodeProperty(eq(PD_ID),       eq("id#" + sid));
             verify(requestContext).setDynamicNodeProperty(eq(PD_URL),      eq("http://acme.com/blogNode/post-" + sid));
 
-            if (posts.get(id).getProperty(P_IMAGE_ID).isPresent())
+            if (mockPosts.getPosts().get(id).getProperty(P_IMAGE_ID).isPresent())
               {
                 verify(requestContext).setDynamicNodeProperty(eq(PD_IMAGE_ID), eq("imageId#" + sid));
               }
@@ -419,11 +407,11 @@ public class DefaultBlogViewControllerTest
       throws Exception
       {
         // given
-        createMockData(45);
+        mockPosts.createMockData(45);
         // when
         final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then
-        final List<String> expectedUris = posts.stream()
+        final List<String> expectedUris = mockPosts.getPosts().stream()
                                                .map(c -> c.getExposedUri().get().prependedWith(SITE_NODE_RELATIVE_URI).asString())
                                                .sorted()
                                                .collect(toList());
@@ -432,6 +420,32 @@ public class DefaultBlogViewControllerTest
                                                 .sorted()
                                                 .collect(toList());
         assertThat(actualUris, is(expectedUris));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test(dataProvider="dateTestDataProvider")
+    public void must_properly_render_the_date (final @Nonnull String localeCode,
+                                               final @Nonnull Optional<String> dateFormat,
+                                               final @Nonnull ZonedDateTime dateTime,
+                                               final @Nonnull Optional<String> timeZone,
+                                               final @Nonnull String expectedValue)
+      throws Exception
+      {
+        // given
+        final Locale locale = new Locale(localeCode, localeCode);
+        // default of RequestLocaleManager
+        final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
+                                                                 .withZone(ZoneId.of(DEFAULT_TIMEZONE));
+        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
+        when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
+        mockNodeProperty(viewId, P_DATE_FORMAT, dateFormat);
+        mockNodeProperty(viewId, P_TIME_ZONE, timeZone);
+        // when
+        final String actualValue = underTest.formatDateTime(dateTime);
+        // then
+        assertThat(actualValue, is(expectedValue));
       }
 
     /*******************************************************************************************************************
@@ -602,129 +616,140 @@ public class DefaultBlogViewControllerTest
 
     /*******************************************************************************************************************
      *
-     * @param       seed        the seed for the pseudo-random sequence
-     *
      ******************************************************************************************************************/
-    private void createMockData (final int seed)
-      throws NotFoundException
+    @DataProvider
+    private Object[][] mainTitleTestDataProvider()
       {
-        categories = Arrays.asList(null, "category1", "category2");
-        tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
-        dates = createMockDateTimes(100, seed);
-        posts = createMockPosts(100, dates, categories, tags, seed);
-
-        // Distribute all the posts to different folders
-        final List<String> paths = Arrays.asList("/blog", "/blog/folder1", "/blog/folder2");
-        final Random rnd = new Random(seed);
-        posts.stream()
-             .collect(groupingBy(__ -> paths.get(rnd.nextInt(paths.size()))))
-             .entrySet()
-             .stream()
-             .forEach(e ->
+        return new Object[][]
           {
-            final Content blogFolder = site.find(Content).withRelativePath(e.getKey()).optionalResult().get();
-            when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(e.getValue())));
-          });
-
-        when(viewProperties.getProperty(eq(P_CONTENTS))).thenReturn(Optional.of(paths));
-
-        posts.forEach(post -> log.info(">>>> post {}", post));
+            { "id1", "title1",  "<h2>title1</h2>\n"  },
+            { "id2", "title 2", "<h2>title 2</h2>\n" },
+            { "id3", "",        ""                   },
+            { "id4", "  ",      ""                   }
+          };
       }
 
     /*******************************************************************************************************************
      *
-     * Creates the given number of mock dates and times, spanned in the decade 1/1/2018 - 31/12/2028.
-     *
-     * @param       count       the count of dates
-     * @param       seed        the seed for the pseudo-random sequence
-     * @return                  the dates
-     *
      ******************************************************************************************************************/
-    @Nonnull
-    private static List<ZonedDateTime> createMockDateTimes (final @Nonnegative int count, final int seed)
+    @DataProvider
+    private Object[][] dateTestDataProvider()
       {
-        final ZonedDateTime base = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"));
-        final List<ZonedDateTime> dates = new Random(seed).ints(count, 0, 10 * 365 * 24 * 60)
-                                                          .mapToObj(base::plusMinutes)
-                                                          .collect(toList());
-        final ZonedDateTime max = dates.stream().max(ZonedDateTime::compareTo).get();
-        final ZonedDateTime min = dates.stream().min(ZonedDateTime::compareTo).get();
-        assert Duration.between(min, max).getSeconds() > 9 * 365 * 24 * 60 : "No timespan";
-        return dates;
+        final ZonedDateTime dt = Instant.ofEpochMilli(1344353463985L).atZone(ZoneId.of("GMT"));
+
+        final Optional<String> noPattern   = Optional.empty();
+        final Optional<String> pattern     = Optional.of("EEEEEEEEEE, MMMMMM d, yyyy");
+        final Optional<String> shortStyle  = Optional.of("S-");
+        final Optional<String> mediumStyle = Optional.of("M-");
+        final Optional<String> longStyle   = Optional.of("L-");
+        final Optional<String> fullStyle   = Optional.of("F-");
+
+        final Optional<String> tzNone      = Optional.empty();
+        final Optional<String> tzGMT       = Optional.of("GMT");
+        final Optional<String> tzCET       = Optional.of("CET");
+        final Optional<String> tzPDT       = Optional.of("America/Los_Angeles");
+        final Optional<String> tzGMT10     = Optional.of("GMT+10");
+
+        return new Object[][]
+          {
+           // loc.  format         value   timezone    expected value
+            { "en", noPattern,     dt,     tzNone,     "Tuesday, August 7, 2012 5:31:03 PM CEST"},
+            { "en", noPattern,     dt,     tzGMT,      "Tuesday, August 7, 2012 3:31:03 PM GMT"},
+            { "en", noPattern,     dt,     tzCET,      "Tuesday, August 7, 2012 5:31:03 PM CEST"},
+            { "en", noPattern,     dt,     tzPDT,      "Tuesday, August 7, 2012 8:31:03 AM PDT"},
+            { "en", noPattern,     dt,     tzGMT10,    "Wednesday, August 8, 2012 1:31:03 AM GMT+10:00"},
+
+            { "it", noPattern,     dt,     tzNone,     "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
+            { "it", noPattern,     dt,     tzGMT,      "marted\u00ec 7 agosto 2012 15:31:03 GMT"},
+            { "it", noPattern,     dt,     tzCET,      "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
+            { "it", noPattern,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
+            { "it", noPattern,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
+
+
+            { "en", pattern,       dt,     tzNone,     "Tuesday, August 7, 2012"},
+            { "en", pattern,       dt,     tzGMT,      "Tuesday, August 7, 2012"},
+            { "en", pattern,       dt,     tzCET,      "Tuesday, August 7, 2012"},
+            { "en", pattern,       dt,     tzPDT,      "Tuesday, August 7, 2012"},
+            { "en", pattern,       dt,     tzGMT10,    "Wednesday, August 8, 2012"},
+
+            { "it", pattern,       dt,     tzNone,     "marted\u00ec, agosto 7, 2012"}, // FIXME: should be '7 agosto'
+            { "it", pattern,       dt,     tzGMT,      "marted\u00ec, agosto 7, 2012"},
+            { "it", pattern,       dt,     tzCET,      "marted\u00ec, agosto 7, 2012"},
+            { "it", pattern,       dt,     tzPDT,      "marted\u00ec, agosto 7, 2012"},
+            { "it", pattern,       dt,     tzGMT10,    "mercoled\u00ec, agosto 8, 2012"},
+
+
+            { "en", shortStyle,    dt,     tzNone,     "8/7/12 5:31 PM"},
+            { "en", shortStyle,    dt,     tzGMT,      "8/7/12 3:31 PM"},
+            { "en", shortStyle,    dt,     tzCET,      "8/7/12 5:31 PM"},
+            { "en", shortStyle,    dt,     tzPDT,      "8/7/12 8:31 AM"},
+            { "en", shortStyle,    dt,     tzGMT10,    "8/8/12 1:31 AM"},
+
+            { "it", shortStyle,    dt,     tzNone,     "07/08/12 17:31"},
+            { "it", shortStyle,    dt,     tzGMT,      "07/08/12 15:31"},
+            { "it", shortStyle,    dt,     tzCET,      "07/08/12 17:31"},
+            { "it", shortStyle,    dt,     tzPDT,      "07/08/12 8:31"},
+            { "it", shortStyle,    dt,     tzGMT10,    "08/08/12 1:31"},
+
+
+            { "en", mediumStyle,   dt,     tzNone,     "Aug 7, 2012 5:31 PM"},
+            { "en", mediumStyle,   dt,     tzGMT,      "Aug 7, 2012 3:31 PM"},
+            { "en", mediumStyle,   dt,     tzCET,      "Aug 7, 2012 5:31 PM"},
+            { "en", mediumStyle,   dt,     tzPDT,      "Aug 7, 2012 8:31 AM"},
+            { "en", mediumStyle,   dt,     tzGMT10,    "Aug 8, 2012 1:31 AM"},
+
+            { "it", mediumStyle,   dt,     tzNone,     "7-ago-2012 17:31"},
+            { "it", mediumStyle,   dt,     tzGMT,      "7-ago-2012 15:31"},
+            { "it", mediumStyle,   dt,     tzCET,      "7-ago-2012 17:31"},
+            { "it", mediumStyle,   dt,     tzPDT,      "7-ago-2012 8:31"},
+            { "it", mediumStyle,   dt,     tzGMT10,    "8-ago-2012 1:31"},
+
+
+            { "en", longStyle,     dt,     tzNone,     "August 7, 2012 5:31:03 PM"},
+            { "en", longStyle,     dt,     tzGMT,      "August 7, 2012 3:31:03 PM"},
+            { "en", longStyle,     dt,     tzCET,      "August 7, 2012 5:31:03 PM"},
+            { "en", longStyle,     dt,     tzPDT,      "August 7, 2012 8:31:03 AM"},
+            { "en", longStyle,     dt,     tzGMT10,    "August 8, 2012 1:31:03 AM"},
+
+            { "it", longStyle,     dt,     tzNone,     "7 agosto 2012 17:31:03"},
+            { "it", longStyle,     dt,     tzGMT,      "7 agosto 2012 15:31:03"},
+            { "it", longStyle,     dt,     tzCET,      "7 agosto 2012 17:31:03"},
+            { "it", longStyle,     dt,     tzPDT,      "7 agosto 2012 8:31:03"},
+            { "it", longStyle,     dt,     tzGMT10,    "8 agosto 2012 1:31:03"},
+
+
+            { "en", fullStyle,     dt,     tzNone,     "Tuesday, August 7, 2012 5:31:03 PM CEST"},
+            { "en", fullStyle,     dt,     tzGMT,      "Tuesday, August 7, 2012 3:31:03 PM GMT"},
+            { "en", fullStyle,     dt,     tzCET,      "Tuesday, August 7, 2012 5:31:03 PM CEST"},
+            { "en", fullStyle,     dt,     tzPDT,      "Tuesday, August 7, 2012 8:31:03 AM PDT"},
+            { "en", fullStyle,     dt,     tzGMT10,    "Wednesday, August 8, 2012 1:31:03 AM GMT+10:00"},
+
+            { "it", fullStyle,     dt,     tzNone,     "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
+            { "it", fullStyle,     dt,     tzGMT,      "marted\u00ec 7 agosto 2012 15:31:03 GMT"},
+            { "it", fullStyle,     dt,     tzCET,      "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
+            { "it", fullStyle,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
+            { "it", fullStyle,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
+          };
       }
 
     /*******************************************************************************************************************
      *
-     * Create the given number of mock {@link Content} instances represeting blog posts.
-     * Each one is assigned:
-     *
-     * <ul>
-     * <li>a {@code P_PUBLISHING_DATE} taken from the given collection of dateTimes;</li>
-     * <li>a {@code P_TITLE} set as {@code "Title #&lt;num&gt;"}</li>
-     * <li>a {@code P_ID} set as {@code "id#&lt;num&gt;"}</li>
-     * <li>a {@code P_IMAGE_ID} set as {@code "imageId#&lt;num&gt;"} to the 10% of posts</li>
-     * <li>a {@code P_CATEGORY} taken from the given collection, each one having equals chances of being set.</li>
-     * <li>a {@code P_TAGS} taken from the given collection, each one having 50% of chances of being set.</li>
-     * <li>a {@code getExposedUri()} set as {@code "post-#&lt;num&gt;"}</li>
-     * </ul>
-     *
-     * A convenient {@code toString()} method is also mocked.
-     *
-     * All used random sequences are reproducible for the sake of test assertions.
-     *
-     * @param       count       the required number of posts
-     * @param       dateTimes   a collection of datetimes used as the publishing date of each post
-     * @param       categories  a collection of categories that are randomly assigned to posts
-     * @param       tags        a collection of tags that are randomly assigned to posts
-     * @param       seed        the seed for the pseudo-random sequence
-     * @return                  the mock posts
-     *
      ******************************************************************************************************************/
-    @Nonnull
-    private static List<Content> createMockPosts (final @Nonnegative int count,
-                                                  final @Nonnull List<ZonedDateTime> dateTimes,
-                                                  final @Nonnull List<String> categories,
-                                                  final @Nonnull List<String> tags,
-                                                  final int seed)
+    private void mockNodeProperty (final @Nonnull Id viewId,
+                                   final @Nonnull Key<String> propertyKey,
+                                   final @Nonnull Optional<String> propertyValue)
+      throws Exception
       {
-        final List<Content> posts = new ArrayList<>();
-        final Random categoryRnd = new Random(seed);
-        final Random tagRnd      = new Random(seed);
-        final Random imageIdRnd  = new Random(seed);
+//        when(view.getId()).thenReturn(viewId);
+        ResourceProperties properties = siteNode.getPropertyGroup(viewId);
 
-        for (int i = 0; i< count; i++)
+        if (properties == null) // not mocked yet
           {
-            final ZonedDateTime dateTime = dateTimes.get(i);
-            final Content post = createMockContent();
-            final ResourceProperties properties = createMockProperties();
-            when(post.toString()).thenAnswer(invocation -> toString((Content)invocation.getMock()));
-            when(post.getProperties()).thenReturn(properties);
-            when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
-            when(properties.getProperty(P_PUBLISHING_DATE)).thenReturn(Optional.of(dateTime));
-            when(properties.getProperty(P_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
-            when(properties.getProperty(P_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));
-
-            if (imageIdRnd.nextDouble() > 0.9)
-              {
-                when(properties.getProperty(P_IMAGE_ID)).thenReturn(Optional.of(String.format("imageId#%2d", i)));
-              }
-
-            // Assign category
-            final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
-            when(post.getProperties().getProperty(P_CATEGORY)).thenReturn(category);
-
-            // Assign tag
-            final List<String> t2 = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(toList());
-
-            if (!t2.isEmpty())
-              {
-                when(properties.getProperty(P_TAGS)).thenReturn(Optional.of(t2));
-              }
-
-            posts.add(post);
+            properties = createMockProperties();
+            when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(properties);
           }
 
-        return posts;
+        when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
       }
 
     /*******************************************************************************************************************
@@ -747,20 +772,5 @@ public class DefaultBlogViewControllerTest
                              .map(s -> s.replaceAll("^.*Title # *([0-9]+).*$", "$1"))
                              .map(Integer::parseInt)
                              .collect(toList());
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String toString (final @Nonnull Content post)
-      {
-        final String title        = post.getProperty(P_TITLE).orElse("???");
-        final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
-        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(d -> d.toString()).orElse("???");
-        final String imageId      = post.getProperty(P_IMAGE_ID).orElse("");
-        final String category     = post.getProperty(P_CATEGORY).orElse("");
-        final Object tags         = post.getProperty(P_TAGS).orElse(emptyList());
-        return String.format("Content(%s - %-10s - %s - %-10s - %-10s - %s)", title, exposedUri, dateTime, imageId, category, tags);
       }
   }

@@ -120,6 +120,18 @@ public class TextHolder
         attributeMap.put(name, value);
       }
 
+//    @Nonnull
+//    public byte[] asBytes2 (final @Nonnull Charset charset)
+//      {
+//        return asString2(charset).getBytes(charset);
+//      }
+//
+//    @Nonnull
+//    public String asString2 (final @Nonnull Charset charset)
+//      {
+//        return template;
+//      }
+
     @Nonnull
     public byte[] asBytes (final @Nonnull Charset charset)
       {
@@ -144,7 +156,7 @@ public class TextHolder
           }
 
         t = t.add("content",     builder.toString());
-        t = t.add("contextPath", siteProvider.get().getSite().getContextPath());
+//        t = t.add("contextPath", siteProvider.get().getSite().getContextPath());
         t = t.add("charset",     charset.name());
 //        t = t.add("language",    "");
 
