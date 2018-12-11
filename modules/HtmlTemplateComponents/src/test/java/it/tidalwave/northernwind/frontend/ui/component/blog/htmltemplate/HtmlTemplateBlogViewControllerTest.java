@@ -105,8 +105,8 @@ public class HtmlTemplateBlogViewControllerTest
         when(node.getRelativeUri()).thenReturn(new ResourcePath("blog"));
         when(site.createLink(any(ResourcePath.class))).then(a -> "http://acme.com" + a.getArgument(0).toString());
 
-        mockViewProperties(viewId, P_TEMPLATE_POSTS, Optional.empty());
-        mockViewProperties(viewId, P_TEMPLATE_TAG_CLOUD, Optional.empty());
+        mockViewProperties(viewId, P_TEMPLATE_POSTS_PATH, Optional.empty());
+        mockViewProperties(viewId, P_TEMPLATE_TAG_CLOUD_PATH, Optional.empty());
 
         requestLocaleManager = mock(RequestLocaleManager.class);
         underTest = new HtmlTemplateBlogViewController(site,  node, view, requestLocaleManager);

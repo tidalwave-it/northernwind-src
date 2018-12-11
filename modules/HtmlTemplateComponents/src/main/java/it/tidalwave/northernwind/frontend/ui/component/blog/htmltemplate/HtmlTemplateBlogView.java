@@ -83,20 +83,20 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * Renders the blog contents. See {@link HtmlTemplateBlogViewController} for more information.
      *
      * @see         HtmlTemplateBlogViewController
-     * @param       template        an optional template for the rendering
+     * @param       templatePath    the path of an optional template for the rendering
      * @param       fullPosts       the posts to be rendered in full
      * @param       leadinPosts     the posts to be rendered as lead-in text
      * @param       linkedPosts     the posts to be rendered as links
      *
      ******************************************************************************************************************/
-    public void renderPosts (final @Nonnull Optional<String> template,
+    public void renderPosts (final @Nonnull Optional<String> templatePath,
                              final @Nonnull Aggregates fullPosts,
                              final @Nonnull Aggregates leadinPosts,
                              final @Nonnull Aggregates linkedPosts)
       {
 //        final Template postTemplate = templateHelper.getTemplate("/Templates/Blog/Post", "Post.st");
 //        postsTemplate.include("/singlePost", postTemplate);
-        final Template postsTemplate = templateHelper.getTemplate(template, "Posts.st");
+        final Template postsTemplate = templateHelper.getTemplate(templatePath, "Posts.st");
         postsTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(postsTemplate.render(fullPosts, leadinPosts, linkedPosts)));
       }
@@ -106,13 +106,13 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * Renders the tag cloud. See {@link HtmlTemplateBlogViewController} for more information.
      *
      * @see         HtmlTemplateBlogViewController
-     * @param       template        an optional template for the rendering
+     * @param       templatePath    the path of an optional template for the rendering
      * @param       tags            the tags to render in the cloud
      *
      ******************************************************************************************************************/
-    public void renderTagCloud (final @Nonnull Optional<String> template, final @Nonnull Aggregates tags)
+    public void renderTagCloud (final @Nonnull Optional<String> templatePath, final @Nonnull Aggregates tags)
       {
-        final Template tagCloudTemplate = templateHelper.getTemplate(template, "TagCloud.st");
+        final Template tagCloudTemplate = templateHelper.getTemplate(templatePath, "TagCloud.st");
         tagCloudTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(tagCloudTemplate.render(tags)));
       }
