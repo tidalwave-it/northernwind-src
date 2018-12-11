@@ -80,6 +80,7 @@ public class TemplateHelper
                                  final @Nonnull String embeddedResourceName)
       {
         log.debug("getTemplate({}, {})", templateRelativePath, embeddedResourceName);
+        // TODO: use a cache. Implement it on Site (as a generic cache), so it gets resetted when the Site is reset.
         return new Template(templateRelativePath.flatMap(this::getTemplate)
                                                 .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName)));
       }

@@ -59,28 +59,28 @@ import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate
  * <p>In case of post rendering, these three aggregates are defined:</p>
  *
  * <ul>
- * <li>{@code fullPosts} the posts to be rendered in full;</li>
- * <li>{@code leadinPosts} the posts to be rendered as lead-in text;</li>
- * <li>{@code linkedPosts} the posts to be rendered as links.</li>
+ * <li>{@code fullPosts}: the posts to be rendered in full;</li>
+ * <li>{@code leadinPosts}: the posts to be rendered as lead-in text;</li>
+ * <li>{@code linkedPosts}: the posts to be rendered as links.</li>
  * </ul>
  *
  * <p>Each item of these aggregates is composed of the following fields:</p>
  *
  * <ul>
  * <li>{@code title}: the title of the post;</li>
- * <li>{@code text} the text of the post;</li>
- * <li>{@code link} the URL of the post;</li>
- * <li>{@code id} the unique id of the post;</li>
- * <li>{@code publishDate} the publishing date of the post;</li>
- * <li>{@code category} the category of the post;</li>
- * <li>{@code tags} a list of tags of the post.</li>
+ * <li>{@code text}: the text of the post;</li>
+ * <li>{@code link}: the URL of the post;</li>
+ * <li>{@code id}: the unique id of the post;</li>
+ * <li>{@code publishDate}: the publishing date of the post;</li>
+ * <li>{@code category}: the category of the post;</li>
+ * <li>{@code tags}: a list of tags of the post.</li>
  * </ul>
  *
  * <p>Each tag is an aggregate of two attributes:</p>
  *
  * <ul>
  * <li>{@code name}: the name of the tag;</li>
- * <li>{@code link} the target URL.</li>
+ * <li>{@code link}: the target URL.</li>
  * </ul>
  *
  * <p>In case of tag cloud rendering, the defined aggregate is {@code tags} and each containe tag, in addition to the
