@@ -70,16 +70,19 @@ public class TemplateHelper
      * property {@code P_TEMPLATE} of the {@code Content}. If nothing is found, a default template with the given name
      * is loaded from the embedded resources.
      *
-     * @param       contentRelativePath     the path of the {@code Content}
+     * @param       templateRelativePath    the path of the {@code Content}
      * @param       embeddedResourceName    the name of the default embedded resource
      * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Template getTemplate (final @Nonnull String contentRelativePath, final @Nonnull String embeddedResourceName)
+    public Template getTemplate (final @Nonnull Optional<String> templateRelativePath,
+                                 final @Nonnull String embeddedResourceName)
       {
-        log.debug("getTemplate({}, {})", contentRelativePath, embeddedResourceName);
-        return new Template(getTemplate(contentRelativePath).orElse(getEmbeddedTemplate(embeddedResourceName)));
+        log.debug("getTemplate({}, {})", templateRelativePath, embeddedResourceName);
+        // TODO: use a cache. Implement it on Site (as a generic cache), so it gets resetted when the Site is reset.
+        return new Template(templateRelativePath.flatMap(this::getTemplate)
+                                                .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName)));
       }
 
     /*******************************************************************************************************************
@@ -87,14 +90,14 @@ public class TemplateHelper
      * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieved through the
      * property {@code P_TEMPLATE} of the {@code Content}.
      *
-     * @param       contentRelativePath     the path of the {@code Content}
+     * @param       templateRelativePath    the path of the {@code Content}
      * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<String> getTemplate (final @Nonnull String contentRelativePath)
+    public Optional<String> getTemplate (final @Nonnull String templateRelativePath)
       {
-        return site.get().find(Content).withRelativePath(contentRelativePath)
+        return site.get().find(Content).withRelativePath(templateRelativePath)
                                        .optionalResult()
                                        .flatMap(content -> content.getProperty(P_TEMPLATE));
       }

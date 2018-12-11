@@ -37,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogView.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
@@ -65,6 +64,7 @@ public class HtmlTemplateBlogViewTest
       {
         site = mock(Site.class);
         MockContentSiteFinder.registerTo(site);
+        underTest = new HtmlTemplateBlogView(site, viewId);
       }
 
     /*******************************************************************************************************************
@@ -75,12 +75,12 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final Content template = site.find(Content).withRelativePath(TEMPLATES_BLOG_POSTS).result();
+        final String templatePath = "/the/template/path";
+        final Content template = site.find(Content).withRelativePath(templatePath).result();
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom posts template"));
         // when
-        underTest = new HtmlTemplateBlogView(site, viewId);
-        underTest.renderPosts(Aggregates.EMPTY, Aggregates.EMPTY, Aggregates.EMPTY);
+        underTest.renderPosts(Optional.of(templatePath), Aggregates.EMPTY, Aggregates.EMPTY, Aggregates.EMPTY);
         // then
         assertThat(underTest.asString(UTF_8), is("<div class='nw-viewId'>\nCustom posts template\n\n</div>"));
       }
@@ -93,12 +93,12 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final Content template = site.find(Content).withRelativePath(TEMPLATES_BLOG_TAG_CLOUD).result();
+        final String templatePath = "/the/template/path";
+        final Content template = site.find(Content).withRelativePath(templatePath).result();
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom tag cloud template"));
         // when
-        underTest = new HtmlTemplateBlogView(site, viewId);
-        underTest.renderTagCloud(Aggregates.EMPTY);
+        underTest.renderTagCloud(Optional.of(templatePath), Aggregates.EMPTY);
         // then
         assertThat(underTest.asString(UTF_8), is("<div class='nw-viewId'>\nCustom tag cloud template\n\n</div>"));
       }

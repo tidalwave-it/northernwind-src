@@ -48,34 +48,39 @@ import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate
  *
  * <p>An implementation of {@link BlogViewController} based on HTML templates.</p>
  *
- * <p>See {@link HtmlTemplateBlogView} for information about customisation of the templates.</p>
+ * <p>The templates for rendering the page can be specified by means of the following properties:</p>
+ *
+ * <ul>
+ * <li>{@code P_TEMPLATE_POSTS}: the template for rendering posts;</li>
+ * <li>{@code P_TEMPLATE_TAG_CLOUD}: the template for rendering the tag cloud.</li>
+ * </ul>
  *
  * <p>This controller calls render methods to the view by passing aggregates to be used with templates.</p>
  * <p>In case of post rendering, these three aggregates are defined:</p>
  *
  * <ul>
- * <li>{@code fullPosts} the posts to be rendered in full;</li>
- * <li>{@code leadinPosts} the posts to be rendered as lead-in text;</li>
- * <li>{@code linkedPosts} the posts to be rendered as links.</li>
+ * <li>{@code fullPosts}: the posts to be rendered in full;</li>
+ * <li>{@code leadinPosts}: the posts to be rendered as lead-in text;</li>
+ * <li>{@code linkedPosts}: the posts to be rendered as links.</li>
  * </ul>
  *
  * <p>Each item of these aggregates is composed of the following fields:</p>
  *
  * <ul>
  * <li>{@code title}: the title of the post;</li>
- * <li>{@code text} the text of the post;</li>
- * <li>{@code link} the URL of the post;</li>
- * <li>{@code id} the unique id of the post;</li>
- * <li>{@code publishDate} the publishing date of the post;</li>
- * <li>{@code category} the category of the post;</li>
- * <li>{@code tags} a list of tags of the post.</li>
+ * <li>{@code text}: the text of the post;</li>
+ * <li>{@code link}: the URL of the post;</li>
+ * <li>{@code id}: the unique id of the post;</li>
+ * <li>{@code publishDate}: the publishing date of the post;</li>
+ * <li>{@code category}: the category of the post;</li>
+ * <li>{@code tags}: a list of tags of the post.</li>
  * </ul>
  *
  * <p>Each tag is an aggregate of two attributes:</p>
  *
  * <ul>
  * <li>{@code name}: the name of the tag;</li>
- * <li>{@code link} the target URL.</li>
+ * <li>{@code link}: the target URL.</li>
  * </ul>
  *
  * <p>In case of tag cloud rendering, the defined aggregate is {@code tags} and each containe tag, in addition to the
@@ -93,6 +98,12 @@ import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate
 @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
+    /** The relative path to the {@link Content} that contains a template for rendering posts. */
+    public static final Key<String> P_TEMPLATE_POSTS = new Key<String>("postsTemplate") {};
+
+    /** The relative path to the {@link Content} that contains a template for rendering the tag cloud. */
+    public static final Key<String> P_TEMPLATE_TAG_CLOUD = new Key<String>("tagCloudTemplate") {};
+
     @Nonnull
     private final HtmlTemplateBlogView view;
 
@@ -125,7 +136,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                                 final @Nonnull List<Content> leadinPosts,
                                 final @Nonnull List<Content> linkedPosts)
       {
-        view.renderPosts(fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
+        view.renderPosts(getViewProperties().getProperty(P_TEMPLATE_POSTS),
+                         fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
                          leadinPosts.stream().map(p -> toAggregate(p, P_LEADIN_TEXT)).collect(toAggregates("leadinPosts")),
                          linkedPosts.stream().map(p -> toAggregate(p, P_LEADIN_TEXT)).collect(toAggregates("linkedPosts")));
       }
@@ -138,7 +150,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Override
     protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
-        view.renderTagCloud(tagsAndCount.stream().map(tac -> toAggregate(tac)).collect(toAggregates("tags")));
+        view.renderTagCloud(getViewProperties().getProperty(P_TEMPLATE_TAG_CLOUD),
+                            tagsAndCount.stream().map(tac -> toAggregate(tac)).collect(toAggregates("tags")));
       }
 
     /*******************************************************************************************************************
