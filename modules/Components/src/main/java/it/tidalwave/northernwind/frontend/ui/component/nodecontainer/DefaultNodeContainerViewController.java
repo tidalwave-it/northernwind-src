@@ -113,6 +113,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
         view.addAttribute("scripts",          computeScriptsSection());
         view.addAttribute("inlinedScripts",   computeInlinedScriptsSection());
         siteNodeProperties.getProperty(PD_IMAGE_ID).ifPresent(id -> view.addAttribute("imageId", id));
+        siteNodeProperties.getProperty(PD_URL).ifPresent(id -> view.addAttribute("url", id));
       }
 
     /*******************************************************************************************************************
