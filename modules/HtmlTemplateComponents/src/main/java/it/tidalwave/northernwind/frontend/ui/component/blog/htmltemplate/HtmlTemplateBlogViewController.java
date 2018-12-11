@@ -27,81 +27,92 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Stream;
 import java.time.ZonedDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
+import it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate;
+import it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.util.LocalizedDateTimeFormatters.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregates.toAggregates;
 
 /***********************************************************************************************************************
  *
+ * <p>An implementation of {@link BlogViewController} based on HTML templates.</p>
+ *
+ * <p>See {@link HtmlTemplateBlogView} for information about customisation of the templates.</p>
+ *
+ * <p>This controller calls render methods to the view by passing aggregates to be used with templates.</p>
+ * <p>In case of post rendering, these three aggregates are defined:</p>
+ *
+ * <ul>
+ * <li>{@code fullPosts} the posts to be rendered in full;</li>
+ * <li>{@code leadinPosts} the posts to be rendered as lead-in text;</li>
+ * <li>{@code linkedPosts} the posts to be rendered as links.</li>
+ * </ul>
+ *
+ * <p>Each item of these aggregates is composed of the following fields:</p>
+ *
+ * <ul>
+ * <li>{@code title}: the title of the post;</li>
+ * <li>{@code text} the text of the post;</li>
+ * <li>{@code link} the URL of the post;</li>
+ * <li>{@code id} the unique id of the post;</li>
+ * <li>{@code publishDate} the publishing date of the post;</li>
+ * <li>{@code category} the category of the post;</li>
+ * <li>{@code tags} a list of tags of the post.</li>
+ * </ul>
+ *
+ * <p>Each tag is an aggregate of two attributes:</p>
+ *
+ * <ul>
+ * <li>{@code name}: the name of the tag;</li>
+ * <li>{@code link} the target URL.</li>
+ * </ul>
+ *
+ * <p>In case of tag cloud rendering, the defined aggregate is {@code tags} and each containe tag, in addition to the
+ * previous attributes, has got:</p>
+ *
+ * <ul>
+ * <li>{@code rank}: the rank of the tag;</li>
+ * <li>{@code count}: the count of the tagged posts.</li>
+ * </ul>
+ *
+ * @see     HtmlTemplateBlogView
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
-    protected final static String DEFAULT_TIMEZONE = "CET";
-
-    private static final String TEMPLATE_MAIN_TITLE = "<h2>%s</h2>%n";
-    private static final String TEMPLATE_REFERENCE_TITLE = "<h3>%s</h3>%n";
-    private static final String TEMPLATE_DIV_BLOG_POST = "<div id='%s' class='nw-blog-post'>%n";
-    private static final String TEMPLATE_FULL_TEXT = "<div class='nw-blog-post-content'>%n%s%n</div>%n";
-    private static final String TEMPLATE_PERMALINK = "&#160;- <a href='%s'>Permalink</a>%n";
-    private static final String TEMPLATE_REFERENCE_LINK = "<li><a href='%s'>%s</a></li>%n";
-    private static final String TEMPLATE_CATEGORY = "&#160;- <span class='nw-blog-post-category'>Filed under \"%s\"</span>";
-    private static final String TEMPLATE_DATE = "<span class='nw-publishDate'>%s</span>%n";
-    private static final String TEMPLATE_TAG_CLOUD_LINK = "<a href=\"%s\" class=\"tagCloudItem rank%s\" rel=\"%d\">%s</a>%n";
-    private static final String TEMPLATE_TAG_LINK = "%n<a class='nw-tag' href='%s'>%s</a>";
-
-    private final static Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
-
-    static
-      {
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("S-", locale -> getDateTimeFormatterFor(FormatStyle.SHORT, locale));
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("M-", locale -> getDateTimeFormatterFor(FormatStyle.MEDIUM, locale));
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("L-", locale -> getDateTimeFormatterFor(FormatStyle.LONG, locale));
-        DATETIME_FORMATTER_MAP_BY_STYLE.put("F-", locale -> getDateTimeFormatterFor(FormatStyle.FULL, locale));
-      }
-
     @Nonnull
-    private final RequestLocaleManager requestLocaleManager;
-
-    private boolean referencesRendered;
-
-    private final List<String> htmlParts = new ArrayList<>();
+    private final HtmlTemplateBlogView view;
 
     /*******************************************************************************************************************
      *
+     * Creates an instance,
+     *
+     * @param       site                    the site
+     * @param       siteNode                the {@link SiteNode} for which the view is to be rendered
+     * @param       view                    the view to render
+     * @param       requestLocaleManager    the {@link RequestLocaleManager}
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogViewController (final @Nonnull BlogView view,
+    public HtmlTemplateBlogViewController (final @Nonnull Site site,
                                            final @Nonnull SiteNode siteNode,
-                                           final @Nonnull Site site,
+                                           final @Nonnull HtmlTemplateBlogView view,
                                            final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(view, siteNode, site);
-        this.requestLocaleManager = requestLocaleManager;
+        super(site, siteNode, view, requestLocaleManager);
+        this.view = view;
       }
 
     /*******************************************************************************************************************
@@ -110,54 +121,13 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void addPost (final @Nonnull Content post, final @Nonnull RenderMode renderMode)
+    protected void renderPosts (final @Nonnull List<Content> fullPosts,
+                                final @Nonnull List<Content> leadinPosts,
+                                final @Nonnull List<Content> linkedPosts)
       {
-        log.debug("addPost({}, {})", post, renderMode);
-
-        final StringBuilder htmlBuilder = new StringBuilder();
-
-        if (renderMode == RenderMode.LINK)
-          {
-            if (!referencesRendered)
-              {
-                htmlBuilder.append("<ul>\n");
-                referencesRendered = true;
-              }
-
-            append(htmlBuilder, TEMPLATE_REFERENCE_LINK, post.getExposedUri().map(this::createLink),
-                                                         post.getProperty(P_TITLE));
-          }
-        else
-          {
-            post.getProperty(P_TITLE).ifPresent(view::setTitle);
-            final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
-            final String idPrefix = "nw-" + view.getId() + "-blogpost-" + blogDateTime.toInstant().toEpochMilli();
-            htmlBuilder.append(String.format(TEMPLATE_DIV_BLOG_POST, idPrefix));
-
-            append(htmlBuilder, TEMPLATE_REFERENCE_TITLE, post.getProperty(P_TITLE));
-
-            htmlBuilder.append("<div class='nw-blog-post-meta'>\n");
-            renderDate(htmlBuilder, blogDateTime);
-            renderCategory(htmlBuilder, post);
-            renderTags(htmlBuilder, post);
-            renderPermalink(htmlBuilder, post);
-            htmlBuilder.append("</div>\n");
-
-            switch (renderMode)
-              {
-                case FULL:
-                    append(htmlBuilder, TEMPLATE_FULL_TEXT, post.getProperty(P_FULL_TEXT));
-                    break;
-
-                case LEAD_IN:
-                    append(htmlBuilder, TEMPLATE_FULL_TEXT, post.getProperty(P_LEADIN_TEXT));
-                    break;
-              }
-
-            htmlBuilder.append("</div>\n");
-          }
-
-        htmlParts.add(htmlBuilder.toString());
+        view.renderPosts(fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
+                         leadinPosts.stream().map(p -> toAggregate(p, P_LEADIN_TEXT)).collect(toAggregates("leadinPosts")),
+                         linkedPosts.stream().map(p -> toAggregate(p, P_LEADIN_TEXT)).collect(toAggregates("linkedPosts")));
       }
 
     /*******************************************************************************************************************
@@ -166,143 +136,64 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void render()
+    protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
-        final StringBuilder htmlBuilder = new StringBuilder();
-        renderTitle(htmlBuilder);
-
-        htmlParts.stream().forEach(html -> htmlBuilder.append(html));
-
-        if (referencesRendered)
-          {
-            htmlBuilder.append("</ul>\n");
-          }
-
-        ((HtmlTemplateBlogView)view).addComponent(new HtmlHolder(htmlBuilder.toString()));
+        view.renderTagCloud(tagsAndCount.stream().map(tac -> toAggregate(tac)).collect(toAggregates("tags")));
       }
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Transforms a post into an {@link Aggregate}.
      *
-     ******************************************************************************************************************/
-    private void addPost (final @Nonnull Content post, final boolean addBody)
-      {
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    protected void addTagCloud (final Collection<TagAndCount> tagsAndCount)
-      {
-        log.debug("addTagCloud({})", tagsAndCount);
-        final StringBuilder buffer = new StringBuilder();
-//        renderTitle(buffer);
-        htmlParts.add(buffer + tagsAndCount.stream()
-                                  .map(tagAndCount -> String.format(TEMPLATE_TAG_CLOUD_LINK,
-                                                                    createTagLink(tagAndCount.tag),
-                                                                    tagAndCount.rank,
-                                                                    tagAndCount.count,
-                                                                    tagAndCount.tag))
-                                  .collect(joining("", "<div class='tagCloud'>\n", "</div>\n")));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Renders the general title of the blog.
-     *
-     ******************************************************************************************************************/
-    /* package */ void renderTitle (final @Nonnull StringBuilder htmlBuilder)
-      {
-        append(htmlBuilder, TEMPLATE_MAIN_TITLE, title);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Renders the date of the blog post.
-     *
-     ******************************************************************************************************************/
-    /* package */ void renderDate (final @Nonnull StringBuilder htmlBuilder, final @Nonnull ZonedDateTime dateTime)
-      {
-        append(htmlBuilder, TEMPLATE_DATE, Optional.of(dateTime.format(findDateTimeFormatter())));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Renders the permalink of the blog post.
-     *
-     ******************************************************************************************************************/
-    private void renderPermalink (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      {
-        append(htmlBuilder, TEMPLATE_PERMALINK, post.getExposedUri().map(this::createLink));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Renders the category of the blog post.
-     *
-     ******************************************************************************************************************/
-    private void renderCategory (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      {
-        append(htmlBuilder, TEMPLATE_CATEGORY, post.getProperty(P_CATEGORY));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Renders the tags of the blog post.
-     *
-     ******************************************************************************************************************/
-    private void renderTags (final @Nonnull StringBuilder htmlBuilder, final @Nonnull Content post)
-      {
-        final String tags = post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty) // TODO: simplify in Java 9
-            .sorted()
-            .map(tag -> String.format(TEMPLATE_TAG_LINK, createTagLink(tag), tag))
-            .collect(joining(", "));
-        htmlBuilder.append(String.format("&#160;- <span class='nw-blog-post-tags'>Tagged as %s</span>", tags));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Returns the proper {@link DateTimeFormatter}. It is build from an explicit pattern, if defined in the current
-     * {@link SiteNode}; otherwise the one provided by the {@link RequestLocaleManager} is used. The formatter is
-     * configured with the time zone defined in the {@code SiteNode}, or a default is used.
-     *
-     * @return      the {@code DateTimeFormatter}
+     * @param       post                the post
+     * @param       textProperty        the property to extract the text from
+     * @return                          the {@code Aggregate}
      *
      ******************************************************************************************************************/
     @Nonnull
-    private DateTimeFormatter findDateTimeFormatter()
+    private Aggregate toAggregate (final @Nonnull Content post, final @Nonnull Key<String> textProperty)
       {
-        final Locale locale = requestLocaleManager.getLocales().get(0);
-        final ResourceProperties viewProperties = getViewProperties();
-        final DateTimeFormatter dtf = viewProperties.getProperty(P_DATE_FORMAT)
-            .map(s -> s.replaceAll("EEEEE+", "EEEE"))
-            .map(s -> s.replaceAll("MMMMM+", "MMMM"))
-            .map(p -> (((p.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(p).apply(locale)
-                                          : DateTimeFormatter.ofPattern(p)).withLocale(locale)))
-            .orElse(requestLocaleManager.getDateTimeFormatter());
+        final ZonedDateTime dateTime = post.getProperty(DATE_KEYS).get();
+        final String id = String.format("nw-%s-blogpost-%s", view.getId(), dateTime.toInstant().toEpochMilli());
+        final List<String> tags = post.getProperty(P_TAGS).orElse(emptyList());
 
-        final String zoneId = viewProperties.getProperty(P_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
-        return dtf.withZone(ZoneId.of(zoneId));
+        return new Aggregate().with("title",        post.getProperty(P_TITLE))
+                              .with("text" ,        post.getProperty(textProperty))
+                              .with("link",         post.getExposedUri().map(this::createLink))
+                              .with("id",           id)
+                              .with("publishDate",  formatDateTime(dateTime))
+                              .with("category",     post.getProperty(P_CATEGORY))
+                              .with("tags",         tags.stream()
+                                                        .sorted()
+                                                        .map(tag -> toAggregate(tag).getMap())
+                                                        .collect(toList()));
       }
 
     /*******************************************************************************************************************
      *
+     * Transforms a {@link TagAndCount} into an {@link Aggregate}.
      *
+     * @param       tagAndCount         the tag info
+     * @return                          the {@code Aggregate}
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static void append (final @Nonnull StringBuilder builder,
-                                final @Nonnull String template,
-                                final @Nonnull Optional<String> ... optionalStrings)
+    private Aggregate toAggregate (final @Nonnull TagAndCount tagAndCount)
       {
-        if (Stream.of(optionalStrings).allMatch(Optional::isPresent))
-          {
-            final Object[] strings = Stream.of(optionalStrings).map(Optional::get).collect(toList()).toArray();
-            builder.append(String.format(template, strings));
-          }
+        return toAggregate(tagAndCount.tag).with("rank", tagAndCount.rank).with("count", tagAndCount.count);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Transforms a tag into an {@link Aggregate}.
+     *
+     * @param       tag                 the tag info
+     * @return                          the {@code Aggregate}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Aggregate toAggregate (final @Nonnull String tag)
+      {
+        return new Aggregate().with("name", tag).with("link", createTagLink(tag));
       }
   }
