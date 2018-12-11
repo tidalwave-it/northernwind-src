@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
@@ -39,13 +40,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
 
 /***********************************************************************************************************************
  *
- * <p>An implementation of {@link BlogView} based on HTML templates. Two templates can be customised, by creating some
- * content with the {@code P_TEMPLATE} property in the following paths:</p>
- *
- * <ul>
- * <li>{@code /Templates/Blog/Posts} for rendering posts;</li>
- * <li>{@code /Templates/Blog/TagCloud} for rendering the tag cloud;</li>
- * </ul>
+ * <p>An implementation of {@link BlogView} based on HTML templates.</p<
  *
  * @author  Fabrizio Giudici
  *
@@ -54,17 +49,9 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
               controlledBy=HtmlTemplateBlogViewController.class)
 public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implements BlogView
   {
-    public static final String TEMPLATES_BLOG_POSTS = "/Templates/Blog/Posts";
-
-    public static final String TEMPLATES_BLOG_TAG_CLOUD = "/Templates/Blog/TagCloud";
-
     private final TemplateHelper templateHelper;
 
-//    private final Template postTemplate;
-
-    private final Template postsTemplate;
-
-    private final Template tagCloudTemplate;
+    private String title;
 
     /*******************************************************************************************************************
      *
@@ -78,10 +65,6 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
       {
         super(id);
         templateHelper   = new TemplateHelper(this, site);
-//        postTemplate     = templateHelper.getTemplate("/Templates/Blog/Post", "Post.st");
-        postsTemplate    = templateHelper.getTemplate(TEMPLATES_BLOG_POSTS, "Posts.st");
-        tagCloudTemplate = templateHelper.getTemplate(TEMPLATES_BLOG_TAG_CLOUD, "TagCloud.st");
-//        postsTemplate.include("/singlePost", postTemplate);
       }
 
     /*******************************************************************************************************************
@@ -92,8 +75,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
     @Override
     public void setTitle (final @Nonnull String title)
       {
-        postsTemplate.addAttribute("title", title);
-        tagCloudTemplate.addAttribute("title", title);
+        this.title = title;
       }
 
     /*******************************************************************************************************************
@@ -101,15 +83,21 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * Renders the blog contents. See {@link HtmlTemplateBlogViewController} for more information.
      *
      * @see         HtmlTemplateBlogViewController
+     * @param       template        an optional template for the rendering
      * @param       fullPosts       the posts to be rendered in full
      * @param       leadinPosts     the posts to be rendered as lead-in text
      * @param       linkedPosts     the posts to be rendered as links
      *
      ******************************************************************************************************************/
-    public void renderPosts (final @Nonnull Aggregates fullPosts,
+    public void renderPosts (final @Nonnull Optional<String> template,
+                             final @Nonnull Aggregates fullPosts,
                              final @Nonnull Aggregates leadinPosts,
                              final @Nonnull Aggregates linkedPosts)
       {
+//        final Template postTemplate = templateHelper.getTemplate("/Templates/Blog/Post", "Post.st");
+//        postsTemplate.include("/singlePost", postTemplate);
+        final Template postsTemplate = templateHelper.getTemplate(template, "Posts.st");
+        postsTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(postsTemplate.render(fullPosts, leadinPosts, linkedPosts)));
       }
 
@@ -118,11 +106,14 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * Renders the tag cloud. See {@link HtmlTemplateBlogViewController} for more information.
      *
      * @see         HtmlTemplateBlogViewController
+     * @param       template        an optional template for the rendering
      * @param       tags            the tags to render in the cloud
      *
      ******************************************************************************************************************/
-    public void renderTagCloud (final @Nonnull Aggregates tags)
+    public void renderTagCloud (final @Nonnull Optional<String> template, final @Nonnull Aggregates tags)
       {
+        final Template tagCloudTemplate = templateHelper.getTemplate(template, "TagCloud.st");
+        tagCloudTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(tagCloudTemplate.render(tags)));
       }
   }
