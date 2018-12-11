@@ -48,7 +48,12 @@ import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate
  *
  * <p>An implementation of {@link BlogViewController} based on HTML templates.</p>
  *
- * <p>See {@link HtmlTemplateBlogView} for information about customisation of the templates.</p>
+ * <p>The templates for rendering the page can be specified by means of the following properties:</p>
+ *
+ * <ul>
+ * <li>{@code P_TEMPLATE_POSTS}: the template for rendering posts;</li>
+ * <li>{@code P_TEMPLATE_TAG_CLOUD}: the template for rendering the tag cloud.</li>
+ * </ul>
  *
  * <p>This controller calls render methods to the view by passing aggregates to be used with templates.</p>
  * <p>In case of post rendering, these three aggregates are defined:</p>
@@ -93,6 +98,12 @@ import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate
 @Slf4j
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
+    /** The relative path to the {@link Content} that contains a template for rendering posts. */
+    public static final Key<String> P_TEMPLATE_POSTS = new Key<String>("postsTemplate") {};
+
+    /** The relative path to the {@link Content} that contains a template for rendering the tag cloud. */
+    public static final Key<String> P_TEMPLATE_TAG_CLOUD = new Key<String>("tagCloudTemplate") {};
+
     @Nonnull
     private final HtmlTemplateBlogView view;
 
@@ -125,7 +136,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
                                 final @Nonnull List<Content> leadinPosts,
                                 final @Nonnull List<Content> linkedPosts)
       {
-        view.renderPosts(fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
+        view.renderPosts(getViewProperties().getProperty(P_TEMPLATE_POSTS),
+                         fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
                          leadinPosts.stream().map(p -> toAggregate(p, P_LEADIN_TEXT)).collect(toAggregates("leadinPosts")),
                          linkedPosts.stream().map(p -> toAggregate(p, P_LEADIN_TEXT)).collect(toAggregates("linkedPosts")));
       }
@@ -138,7 +150,8 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Override
     protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
-        view.renderTagCloud(tagsAndCount.stream().map(tac -> toAggregate(tac)).collect(toAggregates("tags")));
+        view.renderTagCloud(getViewProperties().getProperty(P_TEMPLATE_TAG_CLOUD),
+                            tagsAndCount.stream().map(tac -> toAggregate(tac)).collect(toAggregates("tags")));
       }
 
     /*******************************************************************************************************************

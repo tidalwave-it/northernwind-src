@@ -88,6 +88,7 @@ public class HtmlTemplateBlogViewControllerTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
+      throws Exception
       {
         site = mock(Site.class);
 
@@ -103,6 +104,9 @@ public class HtmlTemplateBlogViewControllerTest
         when(node.getProperties()).thenReturn(nodeProperties);
         when(node.getRelativeUri()).thenReturn(new ResourcePath("blog"));
         when(site.createLink(any(ResourcePath.class))).then(a -> "http://acme.com" + a.getArgument(0).toString());
+
+        mockViewProperties(viewId, P_TEMPLATE_POSTS, Optional.empty());
+        mockViewProperties(viewId, P_TEMPLATE_TAG_CLOUD, Optional.empty());
 
         requestLocaleManager = mock(RequestLocaleManager.class);
         underTest = new HtmlTemplateBlogViewController(site,  node, view, requestLocaleManager);
@@ -122,8 +126,8 @@ public class HtmlTemplateBlogViewControllerTest
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
-        mockNodeProperty(viewId, P_DATE_FORMAT, Optional.of("F-"));
-        mockNodeProperty(viewId, P_TIME_ZONE, Optional.of("GMT"));
+        mockViewProperties(viewId, P_DATE_FORMAT, Optional.of("F-"));
+        mockViewProperties(viewId, P_TIME_ZONE, Optional.of("GMT"));
 
         final MockPosts mockPosts = new MockPosts(site, null);
         mockPosts.createMockData(43);
@@ -186,9 +190,9 @@ public class HtmlTemplateBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void mockNodeProperty (final @Nonnull Id viewId,
-                                   final @Nonnull Key<String> propertyKey,
-                                   final @Nonnull Optional<String> propertyValue)
+    private void mockViewProperties (final @Nonnull Id viewId,
+                                     final @Nonnull Key<String> propertyKey,
+                                     final @Nonnull Optional<String> propertyValue)
       throws Exception
       {
 //        when(view.getId()).thenReturn(viewId);
