@@ -53,6 +53,13 @@
 
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-frontend-components</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core-default</artifactId>
             <classifier>tests</classifier>
             <scope>test</scope>
