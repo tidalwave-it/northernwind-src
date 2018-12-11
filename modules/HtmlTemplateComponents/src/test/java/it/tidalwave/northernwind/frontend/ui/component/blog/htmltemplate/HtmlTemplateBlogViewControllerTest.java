@@ -28,31 +28,34 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.time.Instant;
+import java.util.Random;
+import java.util.stream.IntStream;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.frontend.ui.component.blog.MockPosts;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
+import static it.tidalwave.northernwind.util.CollectionFunctions.split;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.is;
 
 /***********************************************************************************************************************
  *
@@ -64,7 +67,7 @@ public class HtmlTemplateBlogViewControllerTest
   {
     private HtmlTemplateBlogViewController underTest;
 
-    private BlogView view;
+    private HtmlTemplateBlogView view;
 
     private SiteNode node;
 
@@ -72,17 +75,81 @@ public class HtmlTemplateBlogViewControllerTest
 
     private RequestLocaleManager requestLocaleManager;
 
+    private ResourceProperties nodeProperties;
+
+    private Id viewId = new Id("viewId");
+
+    private final Path actualResults = Paths.get("target/test-results");
+
+    private final Path expectedResults = Paths.get("src/test/resources/expected-results");
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
       {
-        view = mock(BlogView.class);
-        node = createMockSiteNode();
         site = mock(Site.class);
+
+        final SiteFinder<Content> finder = mock(SiteFinder.class);
+        when(finder.optionalResult()).thenReturn(Optional.empty());
+        when(finder.withRelativePath(any(String.class))).thenReturn(finder);
+        when(site.find(eq(Content.class))).thenReturn(finder);
+
+        view = new HtmlTemplateBlogView(site, viewId);
+
+        nodeProperties = createMockProperties();
+        node = createMockSiteNode();
+        when(node.getProperties()).thenReturn(nodeProperties);
+        when(node.getRelativeUri()).thenReturn(new ResourcePath("blog"));
+        when(site.createLink(any(ResourcePath.class))).then(a -> "http://acme.com" + a.getArgument(0).toString());
+
         requestLocaleManager = mock(RequestLocaleManager.class);
-        underTest = new HtmlTemplateBlogViewController(view, node, site, requestLocaleManager);
+        underTest = new HtmlTemplateBlogViewController(site,  node, view, requestLocaleManager);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_render_posts()
+      throws Exception
+      {
+        // given
+        // default of RequestLocaleManager
+        final Locale locale = Locale.UK;
+        final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
+                                                                 .withZone(ZoneId.of(DEFAULT_TIMEZONE));
+        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
+        when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
+        mockNodeProperty(viewId, P_DATE_FORMAT, Optional.of("F-"));
+        mockNodeProperty(viewId, P_TIME_ZONE, Optional.of("GMT"));
+
+        final MockPosts mockPosts = new MockPosts(site, null);
+        mockPosts.createMockData(43);
+        final List<List<Content>> posts = split(mockPosts.getPosts(), 0, 3, 5, 7);
+        // when
+        underTest.renderPosts(posts.get(0), posts.get(1), posts.get(2));
+        // then
+        assertFileContents("blog.html");
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Test
+    public void must_properly_render_tag_cloud()
+      throws Exception
+      {
+        // given
+        final Random rnd = new Random(17);
+        final List<TagAndCount> tacs = IntStream.range(1, 10)
+                                                .mapToObj(i -> new TagAndCount("tag" + i, rnd.nextInt(100), "" + rnd.nextInt(10)))
+                                                .collect(toList());
+        // when
+        underTest.renderTagCloud(tacs);
+        // then
+        assertFileContents("tag_cloud.html");
       }
 
 //    /*******************************************************************************************************************
@@ -106,30 +173,14 @@ public class HtmlTemplateBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dataProvider="dateTestDataProvider")
-    public void must_properly_render_the_date (final @Nonnull String localeCode,
-                                               final @Nonnull Optional<String> dateFormat,
-                                               final @Nonnull ZonedDateTime dateTime,
-                                               final @Nonnull Optional<String> timeZone,
-                                               final @Nonnull String expectedDTRendering)
-      throws Exception
+    private void assertFileContents (final @Nonnull String fileName)
+      throws IOException
       {
-        // given
-        final Locale locale = new Locale(localeCode, localeCode);
-        final Id viewId = new Id("id");
-        // default of RequestLocaleManager
-        final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
-                                                                 .withZone(ZoneId.of(DEFAULT_TIMEZONE));
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
-        when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
-        mockNodeProperty(viewId, P_DATE_FORMAT, dateFormat);
-        mockNodeProperty(viewId, P_TIME_ZONE, timeZone);
-        // when
-        final StringBuilder builder = new StringBuilder();
-        underTest.renderDate(builder, dateTime);
-        // then
-        final String expectedValue = String.format("<span class='nw-publishDate'>%s</span>\n", expectedDTRendering);
-        assertThat(builder.toString(), is(expectedValue));
+        final Path actualPath = actualResults.resolve(fileName);
+        final Path excpectedPath = expectedResults.resolve(fileName);
+        Files.createDirectories(actualResults);
+        Files.write(actualPath, view.asBytes(UTF_8));
+        assertSameContents(excpectedPath.toFile(), actualPath.toFile());
       }
 
     /*******************************************************************************************************************
@@ -140,7 +191,7 @@ public class HtmlTemplateBlogViewControllerTest
                                    final @Nonnull Optional<String> propertyValue)
       throws Exception
       {
-        when(view.getId()).thenReturn(viewId);
+//        when(view.getId()).thenReturn(viewId);
         ResourceProperties properties = node.getPropertyGroup(viewId);
 
         if (properties == null) // not mocked yet
@@ -150,123 +201,5 @@ public class HtmlTemplateBlogViewControllerTest
           }
 
         when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @DataProvider
-    private Object[][] mainTitleTestDataProvider()
-      {
-        return new Object[][]
-          {
-            { "id1", "title1",  "<h2>title1</h2>\n"  },
-            { "id2", "title 2", "<h2>title 2</h2>\n" },
-            { "id3", "",        ""                   },
-            { "id4", "  ",      ""                   }
-          };
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @DataProvider
-    private Object[][] dateTestDataProvider()
-      {
-        final ZonedDateTime dt = Instant.ofEpochMilli(1344353463985L).atZone(ZoneId.of("GMT"));
-
-        final Optional<String> noPattern   = Optional.empty();
-        final Optional<String> pattern     = Optional.of("EEEEEEEEEE, MMMMMM d, yyyy");
-        final Optional<String> shortStyle  = Optional.of("S-");
-        final Optional<String> mediumStyle = Optional.of("M-");
-        final Optional<String> longStyle   = Optional.of("L-");
-        final Optional<String> fullStyle   = Optional.of("F-");
-
-        final Optional<String> tzNone      = Optional.empty();
-        final Optional<String> tzGMT       = Optional.of("GMT");
-        final Optional<String> tzCET       = Optional.of("CET");
-        final Optional<String> tzPDT       = Optional.of("America/Los_Angeles");
-        final Optional<String> tzGMT10     = Optional.of("GMT+10");
-
-        return new Object[][]
-          {
-           // loc.  format         value   timezone    expected value
-            { "en", noPattern,     dt,     tzNone,     "Tuesday, August 7, 2012 5:31:03 PM CEST"},
-            { "en", noPattern,     dt,     tzGMT,      "Tuesday, August 7, 2012 3:31:03 PM GMT"},
-            { "en", noPattern,     dt,     tzCET,      "Tuesday, August 7, 2012 5:31:03 PM CEST"},
-            { "en", noPattern,     dt,     tzPDT,      "Tuesday, August 7, 2012 8:31:03 AM PDT"},
-            { "en", noPattern,     dt,     tzGMT10,    "Wednesday, August 8, 2012 1:31:03 AM GMT+10:00"},
-
-            { "it", noPattern,     dt,     tzNone,     "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", noPattern,     dt,     tzGMT,      "marted\u00ec 7 agosto 2012 15:31:03 GMT"},
-            { "it", noPattern,     dt,     tzCET,      "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", noPattern,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
-            { "it", noPattern,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
-
-
-            { "en", pattern,       dt,     tzNone,     "Tuesday, August 7, 2012"},
-            { "en", pattern,       dt,     tzGMT,      "Tuesday, August 7, 2012"},
-            { "en", pattern,       dt,     tzCET,      "Tuesday, August 7, 2012"},
-            { "en", pattern,       dt,     tzPDT,      "Tuesday, August 7, 2012"},
-            { "en", pattern,       dt,     tzGMT10,    "Wednesday, August 8, 2012"},
-
-            { "it", pattern,       dt,     tzNone,     "marted\u00ec, agosto 7, 2012"}, // FIXME: should be '7 agosto'
-            { "it", pattern,       dt,     tzGMT,      "marted\u00ec, agosto 7, 2012"},
-            { "it", pattern,       dt,     tzCET,      "marted\u00ec, agosto 7, 2012"},
-            { "it", pattern,       dt,     tzPDT,      "marted\u00ec, agosto 7, 2012"},
-            { "it", pattern,       dt,     tzGMT10,    "mercoled\u00ec, agosto 8, 2012"},
-
-
-            { "en", shortStyle,    dt,     tzNone,     "8/7/12 5:31 PM"},
-            { "en", shortStyle,    dt,     tzGMT,      "8/7/12 3:31 PM"},
-            { "en", shortStyle,    dt,     tzCET,      "8/7/12 5:31 PM"},
-            { "en", shortStyle,    dt,     tzPDT,      "8/7/12 8:31 AM"},
-            { "en", shortStyle,    dt,     tzGMT10,    "8/8/12 1:31 AM"},
-
-            { "it", shortStyle,    dt,     tzNone,     "07/08/12 17:31"},
-            { "it", shortStyle,    dt,     tzGMT,      "07/08/12 15:31"},
-            { "it", shortStyle,    dt,     tzCET,      "07/08/12 17:31"},
-            { "it", shortStyle,    dt,     tzPDT,      "07/08/12 8:31"},
-            { "it", shortStyle,    dt,     tzGMT10,    "08/08/12 1:31"},
-
-
-            { "en", mediumStyle,   dt,     tzNone,     "Aug 7, 2012 5:31 PM"},
-            { "en", mediumStyle,   dt,     tzGMT,      "Aug 7, 2012 3:31 PM"},
-            { "en", mediumStyle,   dt,     tzCET,      "Aug 7, 2012 5:31 PM"},
-            { "en", mediumStyle,   dt,     tzPDT,      "Aug 7, 2012 8:31 AM"},
-            { "en", mediumStyle,   dt,     tzGMT10,    "Aug 8, 2012 1:31 AM"},
-
-            { "it", mediumStyle,   dt,     tzNone,     "7-ago-2012 17:31"},
-            { "it", mediumStyle,   dt,     tzGMT,      "7-ago-2012 15:31"},
-            { "it", mediumStyle,   dt,     tzCET,      "7-ago-2012 17:31"},
-            { "it", mediumStyle,   dt,     tzPDT,      "7-ago-2012 8:31"},
-            { "it", mediumStyle,   dt,     tzGMT10,    "8-ago-2012 1:31"},
-
-
-            { "en", longStyle,     dt,     tzNone,     "August 7, 2012 5:31:03 PM"},
-            { "en", longStyle,     dt,     tzGMT,      "August 7, 2012 3:31:03 PM"},
-            { "en", longStyle,     dt,     tzCET,      "August 7, 2012 5:31:03 PM"},
-            { "en", longStyle,     dt,     tzPDT,      "August 7, 2012 8:31:03 AM"},
-            { "en", longStyle,     dt,     tzGMT10,    "August 8, 2012 1:31:03 AM"},
-
-            { "it", longStyle,     dt,     tzNone,     "7 agosto 2012 17:31:03"},
-            { "it", longStyle,     dt,     tzGMT,      "7 agosto 2012 15:31:03"},
-            { "it", longStyle,     dt,     tzCET,      "7 agosto 2012 17:31:03"},
-            { "it", longStyle,     dt,     tzPDT,      "7 agosto 2012 8:31:03"},
-            { "it", longStyle,     dt,     tzGMT10,    "8 agosto 2012 1:31:03"},
-
-
-            { "en", fullStyle,     dt,     tzNone,     "Tuesday, August 7, 2012 5:31:03 PM CEST"},
-            { "en", fullStyle,     dt,     tzGMT,      "Tuesday, August 7, 2012 3:31:03 PM GMT"},
-            { "en", fullStyle,     dt,     tzCET,      "Tuesday, August 7, 2012 5:31:03 PM CEST"},
-            { "en", fullStyle,     dt,     tzPDT,      "Tuesday, August 7, 2012 8:31:03 AM PDT"},
-            { "en", fullStyle,     dt,     tzGMT10,    "Wednesday, August 8, 2012 1:31:03 AM GMT+10:00"},
-
-            { "it", fullStyle,     dt,     tzNone,     "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", fullStyle,     dt,     tzGMT,      "marted\u00ec 7 agosto 2012 15:31:03 GMT"},
-            { "it", fullStyle,     dt,     tzCET,      "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", fullStyle,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
-            { "it", fullStyle,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
-          };
       }
   }

@@ -30,21 +30,27 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import it.tidalwave.util.Finder8;
-import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.util.Key;
+import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -56,18 +62,85 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Wither;
 import lombok.extern.slf4j.Slf4j;
-import static lombok.AccessLevel.PACKAGE;
 import static java.util.Collections.*;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
+import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
+import static lombok.AccessLevel.PUBLIC;
 
 /***********************************************************************************************************************
+ *
+ * <p>A default implementation of the {@link BlogViewController} that is independent of the presentation technology.
+ * This class is capable to render:</p>
+ *
+ * <ul>
+ * <li>blog posts (in various ways)</li>
+ * <li>an index of the blog</li>
+ * <li>a tag cloud</li>
+ * </ul>
+ *
+ * <p>It accepts path parameters as follows:</p>
+ *
+ * <ul>
+ * <li>{@code <uri>}: selects a single post with the given uri;</li>
+ * <li>{@code <category>}: selects posts with the given category;</li>
+ * <li>{@code tags/<tag>}: selects posts with the given tag;</li>
+ * <li>{@code index}: renders a post index, with links to single posts;</li>
+ * <li>{@code index/<category>}: renders an index of posts with the given category;</li>
+ * <li>{@code index/tag/<tag>}: renders an index of posts with the given tag.</li>
+ * </ul>
+ *
+ * <p>Supported properties of the {@link SiteNode}:</p>
+ *
+ * <ul>
+ * <li>{@code P_CONTENTS}: one or more {@code Content} that contains the posts to render; they are folders and can have
+ *     sub-folders, which will be searched for in a recursive fashion;</li>
+ * <li>{@code P_MAX_FULL_ITEMS}: the max. number of posts to be rendered in full;</li>
+ * <li>{@code P_MAX_LEADIN_ITEMS}: the max. number of posts to be rendered with lead-in text;</li>
+ * <li>{@code P_MAX_ITEMS}: the max. number of posts to be rendered as links;</li>
+ * <li>{@code P_DATE_FORMAT}: the pattern for formatting date and times;</li>
+ * <li>{@code P_TIME_ZONE}: the time zone for rendering dates (defaults to CET);</li>
+ * <li>{@code P_INDEX}: if {@code true}, forces an index rendering (useful e.g. when used in sidebars);</li>
+ * <li>{@code P_TAG_CLOUD}: if {@code true}, forces a tag cloud rendering (useful e.g. when used in sidebars).</li>
+ * </ul>
+ *
+ * <p>The {@code P_DATE_FORMAT} property accepts any valid pattern in Java 8, plus the values {@code S-}, {@code M-},
+ * {@code L-}, {@code F-}, which stand for small/medium/large and full patterns for a given locale.</p>
+ *
+ * <p>Supported properties of the {@link Content}:</p>
+ *
+ * <ul>
+ * <li>{@code P_TITLE}: the title;</li>
+ * <li>{@code P_FULL_TEXT}: the full text;</li>
+ * <li>{@code P_LEADIN_TEXT}: the lead-in text;</li>
+ * <li>{@code P_ID}: the unique id;</li>
+ * <li>{@code P_IMAGE_ID}: the id of an image representative of the post;</li>
+ * <li>{@code P_PUBLISHING_DATE}: the publishing date;</li>
+ * <li>{@code P_CREATION_DATE}: the creation date;</li>
+ * <li>{@code P_TAGS}: the tags;</li>
+ * <li>{@code P_CATEGORY}: the category.</li>
+ * </ul>
+ *
+ * <p>When preparing for rendering, the following dynamic properties will be set, only if a single post is rendered:</p>
+ *
+ * <ul>
+ * <li>{@code PD_URL}: the canonical URL of the post;</li>
+ * <li>{@code PD_ID}: the unique id of the post;</li>
+ * <li>{@code PD_IMAGE_ID}: the id of the representative image.</li>
+ * </ul>
+ *
+ * <p>Concrete implementation must implement two methods for rendering the blog posts and the tag cloud:</p>
+ *
+ * <ul>
+ * <li>{@link #renderPosts(java.util.List, java.util.List, java.util.List) }</li>
+ * <li>{@link #renderTagCloud(java.util.Collection)  }</li>
+ * <ul>
  *
  * @author  Fabrizio Giudici
  *
@@ -79,8 +152,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = PACKAGE) @Getter @EqualsAndHashCode
-    protected static class TagAndCount
+    @AllArgsConstructor(access = PUBLIC) @Getter @EqualsAndHashCode
+    public static class TagAndCount
       {
         public final String tag;
         public final int count;
@@ -152,14 +225,21 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       }
 
-    protected enum RenderMode
+    private final static Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
+
+    static
       {
-        FULL, LEAD_IN, LINK
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("S-", locale -> getDateTimeFormatterFor(FormatStyle.SHORT, locale));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("M-", locale -> getDateTimeFormatterFor(FormatStyle.MEDIUM, locale));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("L-", locale -> getDateTimeFormatterFor(FormatStyle.LONG, locale));
+        DATETIME_FORMATTER_MAP_BY_STYLE.put("F-", locale -> getDateTimeFormatterFor(FormatStyle.FULL, locale));
       }
 
     protected static final List<Key<ZonedDateTime>> DATE_KEYS = Arrays.asList(P_PUBLISHING_DATE, P_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
+
+    public static final String DEFAULT_TIMEZONE = "CET";
 
     private static final int NO_LIMIT = 9999;
 
@@ -185,13 +265,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
       };
 
     @Nonnull
-    protected final BlogView view;
+    private final Site site;
 
     @Nonnull
     private final SiteNode siteNode;
 
     @Nonnull
-    private final Site site;
+    private final BlogView view;
+
+    @Nonnull
+    private final RequestLocaleManager requestLocaleManager;
 
     /* VisibleForTesting */ final List<Content> fullPosts = new ArrayList<>();
 
@@ -281,24 +364,123 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
         if (tagCloudMode)
           {
-            generateTagCloud(context, getViewProperties());
+            renderTagCloud();
           }
         else
           {
-            fullPosts.forEach(post -> addPost(post, RenderMode.FULL));
-            leadInPosts.forEach(post -> addPost(post, RenderMode.LEAD_IN));
-            linkedPosts.forEach(post -> addPost(post, RenderMode.LINK));
+            renderPosts(fullPosts, leadInPosts, linkedPosts);
           }
 
-        render();
+//        render();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Renders the blog posts. Must be implemented by concrete subclasses.
+     *
+     * @param       fullPosts       the posts to be rendered in full
+     * @param       leadinPosts     the posts to be rendered with lead in text
+     * @param       linkedPosts     the posts to be rendered as references
+     * @throws      Exception       if something fails
+     *
+     ******************************************************************************************************************/
+    protected abstract void renderPosts (@Nonnull List<Content> fullPosts,
+                                         @Nonnull List<Content> leadinPosts,
+                                         @Nonnull List<Content> linkedPosts)
+      throws Exception;
+
+    /*******************************************************************************************************************
+     *
+     * Renders the tag cloud. Must be implemented by concrete subclasses.
+     *
+     * @param       tagsAndCount    the tags
+     * @throws      Exception       if something fails
+     *
+     ******************************************************************************************************************/
+    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount)
+      throws Exception;
+
+    /*******************************************************************************************************************
+     *
+     * Creates a link for a {@link ResourcePath}.
+     *
+     * @param       path    the path
+     * @return              the link
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected final String createLink (final @Nonnull ResourcePath path)
+      {
+        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a link for a tag.
+     *
+     * @param       tag     the tag
+     * @return              the link
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected final String createTagLink (final String tag)
+      {
+        try
+          {
+            // TODO: shouldn't ResourcePath always encode incoming strings?
+            String link = site.createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
+                                                                   .appendedWith(URLEncoder.encode(tag, "UTF-8")));
+
+            // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
+            // Refactor by passing a parameter to createLink that overrides the default behaviour.
+            if (!link.endsWith("/") && !link.contains("?"))
+              {
+                link += "/";
+              }
+
+            return link;
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            log.error("", e);
+            return "";
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected final ResourceProperties getViewProperties()
+      {
+        return siteNode.getPropertyGroup(view.getId());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Formats a date with the settings taken from the configuration and the request settings.
+     *
+     * @param       dateTime        the date to render
+     * @return                      the formatted date
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected final String formatDateTime (final @Nonnull ZonedDateTime dateTime)
+      {
+        return dateTime.format(findDateTimeFormatter());
       }
 
     /*******************************************************************************************************************
      *
      * Prepares the blog posts.
      *
+     * @param       context               the rendering context
+     * @param       properties            the view properties
+     * @throws      HttpStatusException   status 404 if no post found
+     *
      ******************************************************************************************************************/
-    protected void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
+    protected final void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = indexMode ? 0        : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
@@ -308,10 +490,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {} (index: {}, tag: {}, uri: {})",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems, indexMode, tag.orElse(""), uriOrCategory.orElse(""));
 
-        final List<Content> posts = findPostsInReverseDateOrder(context, properties)
+        final List<Content> posts = findPosts(context, properties)
                 .stream()
                 .filter(post -> post.getProperty(P_TITLE).isPresent())
+                .sorted(REVERSE_DATE_COMPARATOR)
                 .collect(toList());
+
+        if (posts.isEmpty())
+          {
+            throw new HttpStatusException(SC_NOT_FOUND);
+          }
 
         final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
         fullPosts.addAll(split.get(0));
@@ -324,9 +512,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the tag cloud.
      *
      ******************************************************************************************************************/
-    private void generateTagCloud (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
+    private void renderTagCloud()
+      throws Exception
       {
-        final Collection<TagAndCount> tagsAndCount = findAllPosts(properties)
+        final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
                 .flatMap(post -> post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty)) // TODO: simplify in Java 9
                 .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
@@ -334,36 +523,21 @@ public abstract class DefaultBlogViewController implements BlogViewController
                 .stream()
                 .sorted(comparing(TagAndCount::getTag))
                 .collect(toList());
-        addTagCloud(withRanks(tagsAndCount));
+        renderTagCloud(withRanks(tagsAndCount));
       }
 
     /*******************************************************************************************************************
      *
-     * Finds all the posts.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
-      {
-        return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
-                .flatMap(path -> site.find(Content).withRelativePath(path).stream()
-                                                                          .flatMap(folder -> folder.findChildren().stream()))
-                .collect(toList());
-      }
-
-    /*******************************************************************************************************************
-     *
+     * Finds all the relevant posts, applying filtering as needed.
      *
      ******************************************************************************************************************/
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
-    private List<Content> findPostsInReverseDateOrder (final @Nonnull RenderContext context,
-                                                       final @Nonnull ResourceProperties properties)
+    private List<Content> findPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
       throws HttpStatusException
       {
         final ResourcePath pathParams = context.getPathParams(siteNode);
         final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();
-        final boolean allowEmpty = false; // indexMode || !filtering;
         final List<Content> allPosts = findAllPosts(properties);
         final List<Content> posts = new ArrayList<>();
         //
@@ -394,13 +568,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
               }
           }
 
-        if (!allowEmpty && posts.isEmpty())
-          {
-            throw new HttpStatusException(SC_NOT_FOUND);
-          }
-
-        Collections.sort(posts, REVERSE_DATE_COMPARATOR);
-
         log.debug(">>>> found {} items", posts.size());
 
         return posts;
@@ -408,15 +575,54 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
+     * Finds all the posts.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
+      {
+        return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
+                .flatMap(path -> site.find(Content).withRelativePath(path).stream()
+                                                                          .flatMap(folder -> folder.findChildren().stream()))
+                .collect(toList());
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Returns the proper {@link DateTimeFormatter}. It is built from an explicit pattern, if defined in the current
+     * {@link SiteNode}; otherwise the one provided by the {@link RequestLocaleManager} is used. The formatter is
+     * configured with the time zone defined in the {@code SiteNode}, or a default is used.
+     *
+     * @return      the {@code DateTimeFormatter}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private DateTimeFormatter findDateTimeFormatter()
+      {
+        final Locale locale = requestLocaleManager.getLocales().get(0);
+        final ResourceProperties viewProperties = getViewProperties();
+        final DateTimeFormatter dtf = viewProperties.getProperty(P_DATE_FORMAT)
+            .map(s -> s.replaceAll("EEEEE+", "EEEE"))
+            .map(s -> s.replaceAll("MMMMM+", "MMMM"))
+            .map(p -> (((p.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(p).apply(locale)
+                                          : DateTimeFormatter.ofPattern(p)).withLocale(locale)))
+            .orElse(requestLocaleManager.getDateTimeFormatter());
+
+        final String zoneId = viewProperties.getProperty(P_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
+        return dtf.withZone(ZoneId.of(zoneId));
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
     private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
       {
-        post.getProperty(P_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_ID, id));
         context.setDynamicNodeProperty(PD_TITLE, computeTitle(post));
-        post.getExposedUri().map(this::createLink)
-                .ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
+        post.getExposedUri().map(this::createLink).ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
+        post.getProperty(P_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_ID, id));
         post.getProperty(P_IMAGE_ID).ifPresent(id -> context.setDynamicNodeProperty(PD_IMAGE_ID, id));
       }
 
@@ -469,42 +675,18 @@ public abstract class DefaultBlogViewController implements BlogViewController
     /*******************************************************************************************************************
      *
      *
-     *
      ******************************************************************************************************************/
     @Nonnull
-    protected String createLink (final @Nonnull ResourcePath path)
+    private List<TagAndCount> withRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
       {
-        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected String createTagLink (final String tag)
-      {
-        try
-          {
-            // TODO: shouldn't ResourcePath always encode incoming strings?
-            String link = site.createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
-                                                                   .appendedWith(URLEncoder.encode(tag, "UTF-8")));
-
-            // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
-            // Refactor by passing a parameter to createLink that overrides the default behaviour.
-            if (!link.endsWith("/") && !link.contains("?"))
-              {
-                link += "/";
-              }
-
-            return link;
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            log.error("", e);
-            return "";
-          }
+        final List<Integer> counts = tagsAndCount.stream()
+                                                 .map(TagAndCount::getCount)
+                                                 .distinct()
+                                                 .sorted(reverseOrder())
+                                                 .collect(toList());
+        return tagsAndCount.stream()
+                           .map(tac -> tac.withRank(rankOf(tac.count, counts)))
+                           .collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -555,52 +737,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    protected abstract void addPost (@Nonnull Content post, @Nonnull RenderMode renderMode);
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    protected abstract void addTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    protected abstract void render()
-      throws Exception;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    protected ResourceProperties getViewProperties()
-      {
-        return siteNode.getPropertyGroup(view.getId());
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    private List<TagAndCount> withRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
-      {
-        final List<Integer> counts = tagsAndCount.stream()
-                                                 .map(TagAndCount::getCount)
-                                                 .distinct()
-                                                 .sorted(reverseOrder())
-                                                 .collect(toList());
-
-        return tagsAndCount.stream()
-                           .map(tac -> tac.withRank(rankOf(tac.count, counts)))
-                           .collect(toList());
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
     @Nonnull
     private static String rankOf (final int count, final List<Integer> counts)
       {
@@ -635,7 +771,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private Optional<String> filterEmptyString (final @Nonnull String s)
       {
-        final Optional<String> x = (s.equals("") ? Optional.empty() : Optional.of(s));
-        return x;
+        return s.equals("") ? Optional.empty() : Optional.of(s);
       }
   }
