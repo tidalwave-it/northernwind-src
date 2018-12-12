@@ -225,7 +225,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
       }
 
-    private final static Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
+    private static final Map<String, Function<Locale, DateTimeFormatter>> DATETIME_FORMATTER_MAP_BY_STYLE = new HashMap<>();
 
     static
       {
