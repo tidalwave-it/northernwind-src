@@ -245,19 +245,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     private static final String INDEX_PREFIX = "index";
 
-    private static final ResourcePath TAG_CLOUD = new ResourcePath("tags");
-
     private static final String TAG_PREFIX = "tag";
 
-    private Optional<String> tag = Optional.empty();
-
-    private Optional<String> uriOrCategory = Optional.empty();
-
-    private boolean indexMode = false;
-
-    private boolean tagCloudMode = false;
-
-    protected Optional<String> title = Optional.empty();
+    private static final ResourcePath TAG_CLOUD = new ResourcePath("tags");
 
     private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (p1, p2) ->
         p2.getProperty(DATE_KEYS).orElse(TIME0).compareTo(p1.getProperty(DATE_KEYS).orElse(TIME0));
@@ -274,22 +264,21 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private final RequestLocaleManager requestLocaleManager;
 
+    private Optional<String> tag = Optional.empty();
+
+    private Optional<String> uriOrCategory = Optional.empty();
+
+    private boolean indexMode = false;
+
+    private boolean tagCloudMode = false;
+
+    protected Optional<String> title = Optional.empty();
+
     /* VisibleForTesting */ final List<Content> fullPosts = new ArrayList<>();
 
     /* VisibleForTesting */ final List<Content> leadInPosts = new ArrayList<>();
 
     /* VisibleForTesting */ final List<Content> linkedPosts = new ArrayList<>();
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Finder8<SiteNode> findVirtualSiteNodes()
-      {
-        return new VirtualSiteNodeFinder(this);
-      }
 
     /*******************************************************************************************************************
      *
@@ -368,8 +357,17 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             renderPosts(fullPosts, leadInPosts, linkedPosts);
           }
+      }
 
-//        render();
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Finder8<SiteNode> findVirtualSiteNodes()
+      {
+        return new VirtualSiteNodeFinder(this);
       }
 
     /*******************************************************************************************************************

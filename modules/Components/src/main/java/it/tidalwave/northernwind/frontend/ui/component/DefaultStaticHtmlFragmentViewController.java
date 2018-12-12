@@ -48,7 +48,7 @@ import org.stringtemplate.v4.ST;
 public class DefaultStaticHtmlFragmentViewController implements StaticHtmlFragmentViewController
   {
     @Nonnull
-    private static finalHtmlFragmentView view;
+    private final StaticHtmlFragmentView view;
 
     /*******************************************************************************************************************
      *
