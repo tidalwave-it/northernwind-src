@@ -86,9 +86,9 @@ public class DefaultRedirectProcessor implements RequestProcessor
           }
       }
 
-    /* VisibleForTesting */ final static Id P_GROUP_ID = new Id("Redirector");
+    /* VisibleForTesting */ static final Id P_GROUP_ID = new Id("Redirector");
 
-    /* VisibleForTesting */ final static Key<List<String>> P_PERMANENT_REDIRECTS = new Key<List<String>>("permanentRedirects") {};
+    /* VisibleForTesting */ static final Key<List<String>> P_PERMANENT_REDIRECTS = new Key<List<String>>("permanentRedirects") {};
 
     @Inject
     private Provider<SiteProvider> siteProvider;

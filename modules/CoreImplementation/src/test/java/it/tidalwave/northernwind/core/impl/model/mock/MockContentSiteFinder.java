@@ -87,7 +87,7 @@ import static org.mockito.Mockito.*;
 public class MockContentSiteFinder extends Finder8Support<Content, SiteFinder<Content>>
                                    implements SiteFinder<Content>
   {
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private final Site site;
 
@@ -96,7 +96,7 @@ public class MockContentSiteFinder extends Finder8Support<Content, SiteFinder<Co
     private final String relativeUri;
 
     // This makes it sure that different runs with different mocked Sites use different data
-    private final static Map<Site, Map<String, Content>> SITE_CACHE = new IdentityHashMap<>();
+    private static final Map<Site, Map<String, Content>> SITE_CACHE = new IdentityHashMap<>();
 
     public static void registerTo (final @Nonnull Site site)
       {

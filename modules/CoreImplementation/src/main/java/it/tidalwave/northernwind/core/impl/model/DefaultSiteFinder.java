@@ -49,7 +49,7 @@ import lombok.ToString;
 @ToString(callSuper = true, exclude = "mapByRelativePath")
 public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYPE>> implements SiteFinder<TYPE>
   {
-    private final static long serialVersionUID = 3242345356779345L;
+    private static final long serialVersionUID = 3242345356779345L;
 
     @Nonnull
     /* package */ final Map<String, TYPE> mapByRelativePath;

@@ -52,9 +52,9 @@ class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilt
  **********************************************************************************************************************/
 public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
   {
-    private final static Consumer<GenericApplicationContext> NO_CHANGES = context -> {};
+    private static final Consumer<GenericApplicationContext> NO_CHANGES = context -> {};
 
-    private final static Consumer<GenericApplicationContext> REMOVE_LANGUAGE_POST_PROCESSORS = context ->
+    private static final Consumer<GenericApplicationContext> REMOVE_LANGUAGE_POST_PROCESSORS = context ->
       {
         context.removeBeanDefinition("parameterLanguageOverrideRequestProcessor");
         context.removeBeanDefinition("parameterLanguageOverrideLinkPostProcessor");

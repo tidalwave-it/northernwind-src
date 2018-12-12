@@ -90,7 +90,7 @@ public class Template
      *************************************************************************************************************************/
     public static class Aggregates implements Iterable<Aggregate>
       {
-        public final static Aggregates EMPTY = new Aggregates("", emptyList());
+        public static final Aggregates EMPTY = new Aggregates("", emptyList());
         
         @Getter @Nonnull
         private final String name;
