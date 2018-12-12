@@ -86,7 +86,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<SiteNode>>
                                     implements SiteFinder<SiteNode>
   {
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private final Site site;
 
@@ -95,7 +95,7 @@ public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<
     private final String relativeUri;
 
     // This makes it sure that different runs with different mocked Sites use different data
-    private final static Map<Site, Map<String, SiteNode>> SITE_CACHE = new IdentityHashMap<>();
+    private static final Map<Site, Map<String, SiteNode>> SITE_CACHE = new IdentityHashMap<>();
 
     public static void registerTo (final @Nonnull Site site)
       {

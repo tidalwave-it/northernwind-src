@@ -51,7 +51,7 @@ import javax.servlet.ServletContextListener;
  **********************************************************************************************************************/
 public class ExternalConfigurationServletContextListener implements ServletContextListener
   {
-    private final static BootLogger log = new BootLogger(ExternalConfigurationServletContextListener.class);
+    private static final BootLogger log = new BootLogger(ExternalConfigurationServletContextListener.class);
 
     /*******************************************************************************************************************
      *

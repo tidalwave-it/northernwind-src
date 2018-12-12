@@ -57,7 +57,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
   {
     // TODO: this class should not set the HTML contents... it should be a responsibility of the view.
     // Instead, it should pass unormatted objects
-    private final static String RSS_MIME_TYPE = "application/rss+xml";
+    private static final String RSS_MIME_TYPE = "application/rss+xml";
 
     private static final String TEMPLATE_LINK_SCREEN_CSS =
             "<link rel=\"stylesheet\" media=\"screen\" href=\"%s\" type=\"text/css\" />%n";
