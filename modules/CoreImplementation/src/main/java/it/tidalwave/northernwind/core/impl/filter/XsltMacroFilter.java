@@ -40,14 +40,15 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.IOUtils;
 import org.stringtemplate.v4.ST;
@@ -59,7 +60,6 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
 import it.tidalwave.northernwind.core.impl.model.Filter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
@@ -148,11 +148,6 @@ public class XsltMacroFilter implements Filter
 
         try
           {
-            final DOMResult result = new DOMResult();
-            final Transformer transformer = createTransformer();
-            // Fix for NW-100
-            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), result);
-
             final StringWriter stringWriter = new StringWriter();
 
             if (text.startsWith(DOCTYPE_HTML))
@@ -160,9 +155,12 @@ public class XsltMacroFilter implements Filter
                 stringWriter.append(DOCTYPE_HTML).append("\n");
               }
 
-            // Fix for NW-96
-            final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
-            xhtmlSerializer.serialize(result.getNode());
+            final Transformer transformer = createTransformer();
+
+            // TODO: fix for NW-96: try to use a custom subclass of ToStream as a Serializer
+
+            // Fix for NW-100
+            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), new StreamResult(stringWriter));
             return stringWriter.toString().replace("xml_lang", "xml:lang").replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)

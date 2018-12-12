@@ -229,7 +229,6 @@
         <module>Core</module>
         <module>CoreImplementation</module>
         <module>Components</module>
-        <module>HtmlPatches</module>
         <module>HtmlTemplateComponents</module>
         <module>Profiling</module>
         <module>filesystems</module>
