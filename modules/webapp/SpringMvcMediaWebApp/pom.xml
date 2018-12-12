@@ -26,9 +26,5 @@
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-frontend-media-springmvc</artifactId>
         </dependency>
-        <dependency>
-            <artifactId>it-tidalwave-northernwind-core</artifactId>
-            <groupId>it.tidalwave.northernwind</groupId>
-        </dependency>
     </dependencies>
 </project>

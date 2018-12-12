@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>4.6</version>
+        <version>4.8</version>
         <relativePath />
     </parent>
 
@@ -36,6 +36,7 @@
 
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
 
+        <tft.maven.requiredVersion>3.6.0</tft.maven.requiredVersion>
         <tft.maven.requiredJdk>[1.8.0,12)</tft.maven.requiredJdk>
         <tft.javac.source>1.8</tft.javac.source>
         <tft.javac.target>1.8</tft.javac.target>
@@ -54,6 +55,9 @@
         <log.file>target/nw.log</log.file>
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- Clirr is not compatible with JDK 8 -->
+
+        <tft.jaxb2-maven-plugin.version>1.3</tft.jaxb2-maven-plugin.version> <!-- latest breaks the build -->
+        <tft.maven-pmd-plugin.version>3.7</tft.maven-pmd-plugin.version> <!-- latest breaks the build -->
     </properties>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
