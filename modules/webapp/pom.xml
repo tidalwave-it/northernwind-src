@@ -63,26 +63,6 @@
         </dependency>
     </dependencies>
 
-    <!-- The default configuration would create jar and test-jar, with the jar contents overriding
-         the war contents when initializing -->
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>package-jar</id>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
             <id>activate-web-fragments-profile</id>

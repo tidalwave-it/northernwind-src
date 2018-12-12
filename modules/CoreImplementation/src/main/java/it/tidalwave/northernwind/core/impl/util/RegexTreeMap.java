@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  **********************************************************************************************************************/
 public class RegexTreeMap<Type> extends TreeMap<String, Type>
   {
-    private final static long serialVersionUID = 576876596539246L;
+    private static final long serialVersionUID = 576876596539246L;
 
     @Nonnull
     public static String escape (final @Nonnull String string)
