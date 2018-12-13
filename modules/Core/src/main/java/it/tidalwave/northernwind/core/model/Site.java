@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.nio.file.spi.FileSystemProvider;
 import it.tidalwave.util.Finder;
 import lombok.AccessLevel;
@@ -151,4 +152,35 @@ public interface Site
      ******************************************************************************************************************/
     @Nonnull
     public List<Locale> getConfiguredLocales();
+
+    /*******************************************************************************************************************
+     *
+     * Gets a template from a {@link Content}, whose relative path is provided; the template is retrieved through the
+     * property {@code P_TEMPLATE} of the {@code Content}. If nothing is found, a default template with the given name
+     * is loaded from the embedded resources.
+     *
+     * @param       clazz                   the class used as starting point for resolving the embedded resource path
+     * @param       templatePath            the path of the {@code Content}
+     * @param       embeddedResourceName    the name of the default embedded resource
+     * @return                              the template contents
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Template getTemplate (@Nonnull Class<?> clazz,
+                                 @Nonnull Optional<ResourcePath> templatePath,
+                                 @Nonnull String embeddedResourceName);
+
+    /*******************************************************************************************************************
+     *
+     * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieved through the
+     * property {@code P_TEMPLATE} of the {@code Content}.
+     *
+     * @param       clazz                   the class used as starting point for resolving the embedded resource path
+     * @param       templatePath            the path of the {@code Content}
+     * @return                              the template contents
+     *
+     ******************************************************************************************************************/
+    @Deprecated
+    @Nonnull
+    public Optional<String> getTemplate (@Nonnull Class<?> clazz, @Nonnull ResourcePath templatePath);
   }

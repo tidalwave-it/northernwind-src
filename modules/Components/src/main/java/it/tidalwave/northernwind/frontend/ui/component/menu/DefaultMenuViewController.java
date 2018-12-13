@@ -32,8 +32,6 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -56,22 +54,18 @@ public class DefaultMenuViewController implements MenuViewController
     @Nonnull
     protected final SiteNode siteNode;
 
-    @Nonnull @Getter
-    private final Site site;
-
-    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
-
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
     public void renderView (final @Nonnull RenderContext context)
      {
+        final Site site = siteNode.getSite();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(P_TITLE).ifPresent(view::setTitle);
-        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate)
+        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(p -> site.getTemplate(getClass(), p))
                                                    .ifPresent(view::setTemplate);
 
         viewProperties.getProperty(P_LINKS).orElse(emptyList())
