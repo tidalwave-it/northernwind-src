@@ -71,7 +71,7 @@ public class HttpStatusException extends Exception
       {
         // FIXME: inject Site
         return new HttpStatusException(SC_MOVED_TEMPORARILY)
-                  .withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
+                  .withHeader("Location", site.createLink(ResourcePath.of(relativeUri)));
       }
 
     /*******************************************************************************************************************
@@ -88,7 +88,7 @@ public class HttpStatusException extends Exception
       {
         // FIXME: inject Site
         return new HttpStatusException(SC_MOVED_PERMANENTLY)
-                  .withHeader("Location", site.createLink(new ResourcePath(relativeUri)));
+                  .withHeader("Location", site.createLink(ResourcePath.of(relativeUri)));
       }
 
     /*******************************************************************************************************************

@@ -56,6 +56,25 @@ public interface Template
         /**********************************************************************************************************************
          *
          *********************************************************************************************************************/
+        @Nonnull
+        public static Aggregate of (final @Nonnull String name, final @Nonnull Object value)
+          {
+            return new Aggregate().with(name, value);
+          }
+
+        /**********************************************************************************************************************
+         *
+         *********************************************************************************************************************/
+        @Nonnull
+        public static Aggregate of (final @Nonnull String name, final @Nonnull Optional<? extends Object> value)
+          {
+            return new Aggregate().with(name, value);
+          }
+
+        /**********************************************************************************************************************
+         *
+         *********************************************************************************************************************/
+        @Nonnull
         public Aggregate with (final @Nonnull String name, final @Nonnull Object value)
           {
             map.put(name, value);
@@ -65,6 +84,7 @@ public interface Template
         /**********************************************************************************************************************
          *
          *********************************************************************************************************************/
+        @Nonnull
         public Aggregate with (final @Nonnull String name, final @Nonnull Optional<? extends Object> value)
           {
             value.ifPresent(v -> map.put(name, v));

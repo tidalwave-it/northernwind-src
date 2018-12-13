@@ -149,7 +149,7 @@ public class MockSiteNodeSiteFinder extends Finder8Support<SiteNode, SiteFinder<
       {
         final SiteNode siteNode = createMockSiteNode(site);
         final ResourceProperties properties = createMockProperties();
-        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath("URI-" + relativePath.substring(1)));
+        when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("URI-" + relativePath.substring(1)));
         when(siteNode.getProperties()).thenReturn(properties);
 
         return siteNode;

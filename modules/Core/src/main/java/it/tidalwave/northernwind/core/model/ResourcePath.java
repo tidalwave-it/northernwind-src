@@ -32,10 +32,12 @@ import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.joining;
+import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
 
 /***********************************************************************************************************************
  *
@@ -48,17 +50,45 @@ import static java.util.Collections.*;
 @Immutable @EqualsAndHashCode
 public class ResourcePath
   {
-    public static final ResourcePath EMPTY = new ResourcePath("");
-    
+    public static final ResourcePath EMPTY = new ResourcePath();
+
     @Nonnull
     /* package */ final List<String> segments;
+
+    /*******************************************************************************************************************
+     *
+     * Creates an instance out of a string.
+     *
+     * @param  path     the path as string
+     * @return          the path
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static ResourcePath of (final @Nonnull String path)
+      {
+        return new ResourcePath(path);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates an instance out of a list of segments.
+     *
+     * @param  segments     the path as a sequence of segments
+     * @return                  the path
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static ResourcePath of (final @Nonnull List<String> segments)
+      {
+        return new ResourcePath(segments);
+      }
 
     /*******************************************************************************************************************
      *
      * Creates an empty path, that is "/".
      *
      ******************************************************************************************************************/
-    public ResourcePath()
+    private ResourcePath()
       {
         this(emptyList());
       }
@@ -70,12 +100,9 @@ public class ResourcePath
      * @param  path  the path
      *
      ******************************************************************************************************************/
-    public ResourcePath (final @Nonnull String path)
+    private ResourcePath (final @Nonnull String path)
       {
-//        this((path.equals("/") | path.equals("")) ? ImmutableList.<String>of()
-//                                                  : ImmutableList.<String>copyOf(validated(path).split("/")));
-        this((path.equals("/") | path.equals("")) ? emptyList()
-                                                  : Arrays.asList(validated(path).split("/")));
+        this((path.equals("/") | path.equals("")) ? emptyList() : asList(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -108,7 +135,7 @@ public class ResourcePath
             throw new IllegalArgumentException("The path " + path.asString() + " doesn't start with " + asString());
           }
 
-        return new ResourcePath(segments.subList(path.segments.size(), segments.size()));
+        return ResourcePath.of(segments.subList(path.segments.size(), segments.size()));
       }
 
     /*******************************************************************************************************************
@@ -180,7 +207,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath withoutLeading()
       {
-        return new ResourcePath(segments.subList(1, segments.size()));
+        return ResourcePath.of(segments.subList(1, segments.size()));
       }
 
     /*******************************************************************************************************************
@@ -194,7 +221,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath withoutTrailing()
       {
-        return new ResourcePath(segments.subList(0, segments.size() - 1));
+        return ResourcePath.of(segments.subList(0, segments.size() - 1));
       }
 
     /*******************************************************************************************************************
@@ -248,10 +275,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> builder = new ArrayList<>(path.segments);
-        builder.addAll(segments);
-        return new ResourcePath(builder);
-//        return new ResourcePath(new ImmutableList.Builder<String>().addAll(path.segments).addAll(segments).build());
+        return ResourcePath.of(concat(path.segments, this.segments));
       }
 
     /*******************************************************************************************************************
@@ -266,7 +290,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull String path)
       {
-        return prependedWith(new ResourcePath(path));
+        return prependedWith(ResourcePath.of(path));
       }
 
     /*******************************************************************************************************************
@@ -281,10 +305,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> builder = new ArrayList<>(segments);
-        builder.addAll(path.segments);
-        return new ResourcePath(builder);
-//        return new ResourcePath(new ImmutableList.Builder<String>().addAll(segments).addAll(path.segments).build());
+        return ResourcePath.of(concat(this.segments, path.segments));
       }
 
     /*******************************************************************************************************************
@@ -299,7 +320,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull String path)
       {
-        return appendedWith(new ResourcePath(path));
+        return appendedWith(ResourcePath.of(path));
       }
 
     /*******************************************************************************************************************
@@ -326,7 +347,7 @@ public class ResourcePath
               }
           }
 
-        return new ResourcePath(builder);
+        return ResourcePath.of(builder);
       }
 
     /*******************************************************************************************************************
@@ -340,22 +361,15 @@ public class ResourcePath
     @Nonnull
     public String asString()
       {
-        final StringBuilder buffer = new StringBuilder("/");
-        String separator = "";
-
-        for (final String segment : segments)
-          {
-            buffer.append(separator).append(segment);
-            separator = "/";
-          }
+        final String string = segments.stream().collect(joining("/", "/", ""));
 
         // FIXME: this check is probably redundant now that there are safety tests
-        if (buffer.toString().contains("//"))
+        if (string.contains("//"))
           {
-            throw new RuntimeException("Error in stringification: " + buffer + " - " + this);
+            throw new RuntimeException("Error in stringification: " + string + " - " + this);
           }
 
-        return buffer.toString();
+        return string;
       }
 
     /*******************************************************************************************************************
