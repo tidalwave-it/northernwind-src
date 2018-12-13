@@ -24,32 +24,32 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component;
+package it.tidalwave.northernwind.core.impl.text;
 
 import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.*;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public class TemplateHelperTest
+public class St4TemplateFactoryTest
   {
-    private TemplateHelper underTest;
+    private St4TemplateFactory underTest;
 
     private Site site;
 
@@ -63,7 +63,7 @@ public class TemplateHelperTest
 
         site = mock(Site.class);
         MockContentSiteFinder.registerTo(site);
-        underTest = new TemplateHelper(this, () -> site);
+        underTest = new St4TemplateFactory(St4TemplateFactoryTest.class, site);
       }
 
     /*******************************************************************************************************************
@@ -75,11 +75,11 @@ public class TemplateHelperTest
       {
         // given
         final String expectedResult = "Text of test template";
-        final String contentRelativePath = "/the/path";
-        final Content content = site.find(Content).withRelativePath(contentRelativePath).result();
+        final ResourcePath templatePath = new ResourcePath("/the/path");
+        final Content content = site.find(Content).withRelativePath(templatePath.asString()).result();
         when(content.getProperties().getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of(expectedResult));
         // when
-        final Optional<String> actualResult = underTest.getTemplate(contentRelativePath);
+        final Optional<String> actualResult = underTest.getTemplate(templatePath);
         // then
         assertThat(actualResult.isPresent(), is(true));
         assertThat(actualResult.get(), is(expectedResult));
@@ -92,10 +92,10 @@ public class TemplateHelperTest
     public void must_return_empty_when_Content_has_no_property()
       {
         // given
-        final String contentRelativePath = "/the/path";
+        final ResourcePath templatePath = new ResourcePath("/the/path");
         // no P_TEMPLATE configured
         // when
-        final Optional<String> actualResult = underTest.getTemplate(contentRelativePath);
+        final Optional<String> actualResult = underTest.getTemplate(templatePath);
         // then
         assertThat(actualResult.isPresent(), is(false));
       }
@@ -106,8 +106,10 @@ public class TemplateHelperTest
     @Test
     public void must_return_empty_when_no_Content_found()
       {
+        // given
+        final ResourcePath templatePath = new ResourcePath("/path/of/inexistent/content");
         // when
-        final Optional<String> template = underTest.getTemplate("/path/of/inexistent/content");
+        final Optional<String> template = underTest.getTemplate(templatePath);
         // then
         assertThat(template.isPresent(), is(false));
       }
