@@ -99,9 +99,11 @@ import lombok.extern.slf4j.Slf4j;
 
         try
           {
-            final Object view = viewConstructor.newInstance(computeConstructorArguments(viewConstructor, id, siteNode));
+            final Site site = siteNode.getSite();
+            final Object view = viewConstructor.newInstance(
+                    computeConstructorArguments(site, viewConstructor, id, siteNode));
             final ViewController controller = viewControllerConstructor.newInstance(
-                    computeConstructorArguments(viewControllerConstructor, id, siteNode, view));
+                    computeConstructorArguments(site, viewControllerConstructor, id, siteNode, view));
             controller.initialize();
             return new ViewAndController(view, controller);
           }
@@ -128,13 +130,15 @@ import lombok.extern.slf4j.Slf4j;
      * Computes the argument values for calling the given constructor. They are taken from the current
      * {@link BeanFactory}, with {@code overridingArgs} eventually overriding them.
      *
-     * @param  constructor      the constructor
-     * @param  overridingArgs   the overriding arguments
+     * @param   site            the site
+     * @param   constructor     the constructor
+     * @param   overridingArgs  the overriding arguments
      * @return                  the arguments to pass to the constructor
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Object[] computeConstructorArguments (final @Nonnull Constructor<?> constructor,
+    private Object[] computeConstructorArguments (final @Nonnull Site site,
+                                                  final @Nonnull Constructor<?> constructor,
                                                   final @Nonnull Object ... overridingArgs)
       throws NotFoundException
       {

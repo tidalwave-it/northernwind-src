@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import it.tidalwave.util.Key;
 import it.tidalwave.role.SimpleComposite8;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,9 @@ import lombok.experimental.Wither;
  **********************************************************************************************************************/
 public interface Content extends Resource, SimpleComposite8<Content>
   {
+    /** A text that is a template for something. */
+    public static final Key<String> P_TEMPLATE = new Key<String>("template") {};
+
     /*******************************************************************************************************************
      *
      * A builder of a {@link Content}.

@@ -36,7 +36,6 @@ import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.spi.SimpleFinder8Support;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryLoader;
@@ -115,11 +114,10 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      ******************************************************************************************************************/
     public DefaultGalleryViewController (final @Nonnull NodeContainerView view,
                                          final @Nonnull SiteNode siteNode,
-                                         final @Nonnull Site site,
                                          final @Nonnull RequestLocaleManager requestLocaleManager,
                                          final @Nonnull BeanFactory beanFactory)
       {
-        super(view, siteNode, site, requestLocaleManager);
+        super(view, siteNode, requestLocaleManager);
         this.siteNode = siteNode;
         this.beanFactory = beanFactory;
       }
