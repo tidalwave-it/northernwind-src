@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -66,6 +67,7 @@ public class DefaultResourceProperties implements ResourceProperties
         put(Double.class,        o -> Double.parseDouble((String)o));
         put(Boolean.class,       o -> Boolean.parseBoolean((String)o));
         put(ZonedDateTime.class, o -> ZonedDateTime.parse((String)o, ISO_ZONED_DATE_TIME));
+        put(ResourcePath.class,  o -> new ResourcePath((String)o));
       }};
 
     @Nonnull @Getter

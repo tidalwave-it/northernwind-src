@@ -34,6 +34,7 @@ import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import lombok.Getter;
@@ -70,6 +71,12 @@ public interface CompositeSiteNodeController
 
         @Delegate
         private final As asSupport = new AsSupport(this);
+
+        @Override @Nonnull
+        public Site getSite()
+          {
+            return parentSiteNode.getSite();
+          }
 
         // TODO: perhaps the methods below could be implemented by delegating to the first real SiteNode up in the
         // hierarchy.

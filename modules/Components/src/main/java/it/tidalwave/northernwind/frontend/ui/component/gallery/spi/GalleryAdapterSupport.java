@@ -30,12 +30,12 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
+import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -46,13 +46,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
-    @Nonnull @Getter
+    @Nonnull
     private final Site site;
 
     @Nonnull
     protected final ModelFactory modelFactory;
-
-    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     /*******************************************************************************************************************
      *
@@ -82,14 +80,13 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final String loadTemplate (final @Nonnull GalleryAdapterContext context,
-                                         final @Nonnull Key<String> templateName,
-                                         final @Nonnull String fallbackTemplate)
+    protected final Template loadTemplate (final @Nonnull GalleryAdapterContext context,
+                                           final @Nonnull Key<ResourcePath> templateName,
+                                           final @Nonnull String fallbackTemplate)
       {
         final GalleryView view = context.getView();
         final SiteNode siteNode = context.getSiteNode();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        return viewProperties.getProperty(templateName).flatMap(templateHelper::getTemplate)
-                             .orElseGet(() -> templateHelper.getEmbeddedTemplate(fallbackTemplate));
+        return site.getTemplate(getClass(), viewProperties.getProperty(templateName), fallbackTemplate);
       }
   }
