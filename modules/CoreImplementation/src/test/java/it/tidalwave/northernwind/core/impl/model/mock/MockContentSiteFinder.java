@@ -161,7 +161,7 @@ public class MockContentSiteFinder extends Finder8Support<Content, SiteFinder<Co
     private static ResourcePath mockedExposedUri (final @Nonnull String relativePath)
       {
         return relativePath.equals("/")
-                ? new ResourcePath()
-                : new ResourcePath("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
+                ? ResourcePath.EMPTY
+                : ResourcePath.of("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
       }
   }

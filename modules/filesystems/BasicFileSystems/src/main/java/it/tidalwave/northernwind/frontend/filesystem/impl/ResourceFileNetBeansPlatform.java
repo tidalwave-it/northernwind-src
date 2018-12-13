@@ -102,7 +102,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override @Nonnull
     public ResourcePath getPath()
       {
-        return new ResourcePath(delegate.getPath());
+        return ResourcePath.of(delegate.getPath());
       }
 
     @Override @Nonnull

@@ -126,7 +126,7 @@ public class MockModelFactory extends ModelFactorySupport
         final String path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
         final SiteNode siteNode = createMockSiteNode(site);
-        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
+        when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of(relativeUri));
         when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
         final ResourceProperties properties = createMockProperties();

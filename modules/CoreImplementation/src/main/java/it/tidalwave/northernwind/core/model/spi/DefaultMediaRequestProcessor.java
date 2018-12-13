@@ -70,7 +70,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException
       {
-        ResourcePath mediaUri = new ResourcePath(request.getRelativeUri());
+        ResourcePath mediaUri = ResourcePath.of(request.getRelativeUri());
 
         if (!mediaUri.startsWith(uriPrefix))
           {

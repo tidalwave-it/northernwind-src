@@ -112,7 +112,7 @@ public class DefaultMenuViewControllerTest
       {
         // given
         final String templateContent = "the template content";
-        final ResourcePath templatePath = new ResourcePath("/path/to/template");
+        final ResourcePath templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         mockProperty(Content, templatePath, P_TEMPLATE, templateContent);
         // when
@@ -129,7 +129,7 @@ public class DefaultMenuViewControllerTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = new ResourcePath("/path/to/template");
+        final ResourcePath templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set P_TEMPLATE
         // when
@@ -146,7 +146,7 @@ public class DefaultMenuViewControllerTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = new ResourcePath("/path/to/inexistent/template");
+        final ResourcePath templatePath = ResourcePath.of("/path/to/inexistent/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
@@ -192,8 +192,8 @@ public class DefaultMenuViewControllerTest
         // given
         when(viewProperties.getProperty(P_LINKS)).thenReturn(Optional.of(
                 Arrays.asList("/node1", "/node2", "/inexistentNode", "/node3")));
-        mockProperty(SiteNode, new ResourcePath("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
-        mockProperty(SiteNode, new ResourcePath("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
+        mockProperty(SiteNode, ResourcePath.of("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
+        mockProperty(SiteNode, ResourcePath.of("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3
         // when
         underTest.renderView(renderContext);

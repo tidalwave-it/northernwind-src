@@ -75,7 +75,7 @@ public class St4TemplateFactoryTest
       {
         // given
         final String expectedResult = "Text of test template";
-        final ResourcePath templatePath = new ResourcePath("/the/path");
+        final ResourcePath templatePath = ResourcePath.of("/the/path");
         final Content content = site.find(Content).withRelativePath(templatePath.asString()).result();
         when(content.getProperties().getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of(expectedResult));
         // when
@@ -92,7 +92,7 @@ public class St4TemplateFactoryTest
     public void must_return_empty_when_Content_has_no_property()
       {
         // given
-        final ResourcePath templatePath = new ResourcePath("/the/path");
+        final ResourcePath templatePath = ResourcePath.of("/the/path");
         // no P_TEMPLATE configured
         // when
         final Optional<String> actualResult = underTest.getTemplate(templatePath);
@@ -107,7 +107,7 @@ public class St4TemplateFactoryTest
     public void must_return_empty_when_no_Content_found()
       {
         // given
-        final ResourcePath templatePath = new ResourcePath("/path/of/inexistent/content");
+        final ResourcePath templatePath = ResourcePath.of("/path/of/inexistent/content");
         // when
         final Optional<String> template = underTest.getTemplate(templatePath);
         // then

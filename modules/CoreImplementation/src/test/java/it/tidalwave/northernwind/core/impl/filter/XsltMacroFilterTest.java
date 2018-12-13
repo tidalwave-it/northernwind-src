@@ -141,7 +141,7 @@ public class XsltMacroFilterTest
       throws IOException
       {
         final ResourceFile file = mock(ResourceFile.class);
-        when(file.getPath()).thenReturn(new ResourcePath(path));
+        when(file.getPath()).thenReturn(ResourcePath.of(path));
         when(file.asText(anyString())).thenReturn(content);
         return file;
       }

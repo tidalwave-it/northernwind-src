@@ -113,7 +113,7 @@ import lombok.Getter;
           {
             uriComputationCounter++;
 
-            relativeUri = new ResourcePath();
+            relativeUri = ResourcePath.EMPTY;
             final ResourceFile file = getResource().getFile();
 
             if (!file.equals(site.getNodeFolder()))

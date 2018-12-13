@@ -230,7 +230,7 @@ public class DefaultSiteTest
         // given
         underTest = new DefaultSite(siteBuilder);
         // when
-        final String result = underTest.createLink(new ResourcePath("link"));
+        final String result = underTest.createLink(ResourcePath.of("link"));
         // given
         assertThat(result, is("lpp3-lpp2-lpp1-/baseUrl/contextpath/link"));
       }

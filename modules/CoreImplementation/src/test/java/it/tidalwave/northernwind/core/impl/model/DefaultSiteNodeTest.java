@@ -204,7 +204,7 @@ public class DefaultSiteNodeTest
         when(resource.getFile()).thenReturn(resourceFile);
 
         final SiteNode parentSiteNode = createMockSiteNode(site);
-        when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
+        when(parentSiteNode.getRelativeUri()).thenReturn(ResourcePath.of(parentUri));
 
         final ResourceProperties properties = createMockProperties();
         when(properties.getProperty(eq(SiteNode.P_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
