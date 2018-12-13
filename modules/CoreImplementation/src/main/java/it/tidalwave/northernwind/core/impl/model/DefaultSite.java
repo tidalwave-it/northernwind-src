@@ -177,7 +177,7 @@ import lombok.extern.slf4j.Slf4j;
     @Override @Nonnull
     public String createLink (final @Nonnull ResourcePath relativeUri)
       {
-        final ResourcePath link = new ResourcePath(contextPath).appendedWith(relativeUri);
+        final ResourcePath link = ResourcePath.of(contextPath).appendedWith(relativeUri);
         String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
 
         for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)

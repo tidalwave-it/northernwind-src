@@ -159,7 +159,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
     @Nonnull
     private ResourcePath getParam (final @Nonnull RenderContext context)
       {
-        return context.getQueryParam("_escaped_fragment_").map(ResourcePath::new)
+        return context.getQueryParam("_escaped_fragment_").map(ResourcePath::of)
                                                           .orElse(context.getPathParams(siteNode));
       }
 

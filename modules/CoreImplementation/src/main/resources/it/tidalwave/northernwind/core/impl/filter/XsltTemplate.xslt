@@ -123,6 +123,10 @@
         </xsl:choose>
     </xsl:template>
 
-    %content%
+    %macros :{ macro |
+               <!-- ==== BEGIN %macro.name% ======================== -->
+               %macro.body%
+               <!-- ====   END %macro.name% ======================== -->
+             };separator="\n"%
 
 </xsl:stylesheet>

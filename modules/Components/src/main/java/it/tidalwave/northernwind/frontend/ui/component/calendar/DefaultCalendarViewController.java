@@ -145,7 +145,7 @@ public class DefaultCalendarViewController implements CalendarViewController
               {
                 // FIXME: verbose XML code below
                 final Node node = nodes.item(i);
-                final String link = site.createLink(new ResourcePath(node.getAttributes().getNamedItem("link").getNodeValue()));
+                final String link = site.createLink(ResourcePath.of(node.getAttributes().getNamedItem("link").getNodeValue()));
 
                 String linkClass = "";
                 Node typeNode = node.getAttributes().getNamedItem("type");

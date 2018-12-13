@@ -149,7 +149,7 @@ public abstract class MockFileSystemSupport
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(new ResourcePath(name));
+        when(folder.getPath()).thenReturn(ResourcePath.of(name));
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
         when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
@@ -166,7 +166,7 @@ public abstract class MockFileSystemSupport
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
-        when(folder.getPath()).thenReturn(new ResourcePath(name));
+        when(folder.getPath()).thenReturn(ResourcePath.of(name));
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(true);
         when(folder.isFolder()).thenReturn(false);
