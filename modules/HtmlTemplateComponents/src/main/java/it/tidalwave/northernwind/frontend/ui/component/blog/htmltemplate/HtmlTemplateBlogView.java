@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
@@ -89,7 +90,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       linkedPosts     the posts to be rendered as links
      *
      ******************************************************************************************************************/
-    public void renderPosts (final @Nonnull Optional<String> templatePath,
+    public void renderPosts (final @Nonnull Optional<ResourcePath> templatePath,
                              final @Nonnull Aggregates fullPosts,
                              final @Nonnull Aggregates leadinPosts,
                              final @Nonnull Aggregates linkedPosts)
@@ -110,7 +111,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       tags            the tags to render in the cloud
      *
      ******************************************************************************************************************/
-    public void renderTagCloud (final @Nonnull Optional<String> templatePath, final @Nonnull Aggregates tags)
+    public void renderTagCloud (final @Nonnull Optional<ResourcePath> templatePath, final @Nonnull Aggregates tags)
       {
         final Template tagCloudTemplate = site.getTemplate(getClass(), templatePath, "TagCloud.st");
         tagCloudTemplate.addAttribute("title", title);

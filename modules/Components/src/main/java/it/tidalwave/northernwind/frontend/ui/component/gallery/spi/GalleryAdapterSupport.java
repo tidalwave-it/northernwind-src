@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ModelFactory;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -80,7 +81,7 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      ******************************************************************************************************************/
     @Nonnull
     protected final Template loadTemplate (final @Nonnull GalleryAdapterContext context,
-                                           final @Nonnull Key<String> templateName,
+                                           final @Nonnull Key<ResourcePath> templateName,
                                            final @Nonnull String fallbackTemplate)
       {
         final GalleryView view = context.getView();

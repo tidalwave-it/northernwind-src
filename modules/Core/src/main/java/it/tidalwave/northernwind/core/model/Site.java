@@ -160,14 +160,14 @@ public interface Site
      * is loaded from the embedded resources.
      *
      * @param       clazz                   the class used as starting point for resolving the embedded resource path
-     * @param       templateRelativePath    the path of the {@code Content}
+     * @param       templatePath            the path of the {@code Content}
      * @param       embeddedResourceName    the name of the default embedded resource
      * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Nonnull
     public Template getTemplate (@Nonnull Class<?> clazz,
-                                 @Nonnull Optional<String> templateRelativePath,
+                                 @Nonnull Optional<ResourcePath> templatePath,
                                  @Nonnull String embeddedResourceName);
 
     /*******************************************************************************************************************
@@ -176,12 +176,11 @@ public interface Site
      * property {@code P_TEMPLATE} of the {@code Content}.
      *
      * @param       clazz                   the class used as starting point for resolving the embedded resource path
-     * @param       templateRelativePath    the path of the {@code Content}
+     * @param       templatePath            the path of the {@code Content}
      * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Deprecated
     @Nonnull
-    public Optional<String> getTemplate (@Nonnull Class<?> clazz,
-                                         @Nonnull final String templateRelativePath);
+    public Optional<String> getTemplate (@Nonnull Class<?> clazz, @Nonnull ResourcePath templatePath);
   }

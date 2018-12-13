@@ -190,9 +190,9 @@ public class HtmlTemplateBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void mockViewProperties (final @Nonnull Id viewId,
-                                     final @Nonnull Key<String> propertyKey,
-                                     final @Nonnull Optional<String> propertyValue)
+    private <T> void mockViewProperties (final @Nonnull Id viewId,
+                                         final @Nonnull Key<T> propertyKey,
+                                         final @Nonnull Optional<T> propertyValue)
       throws Exception
       {
 //        when(view.getId()).thenReturn(viewId);

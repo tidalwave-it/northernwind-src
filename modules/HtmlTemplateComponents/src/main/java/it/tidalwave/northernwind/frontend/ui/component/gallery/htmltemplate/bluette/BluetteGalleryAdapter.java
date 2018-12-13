@@ -58,11 +58,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
     private static final Key<String> P_COPYRIGHT = new Key<String>("copyright") {};
 
-    private static final Key<String> P_BLUETTE_TEMPLATE_PATH = new Key<String>("bluettePath") {};
+    private static final Key<ResourcePath> P_BLUETTE_TEMPLATE_PATH = new Key<ResourcePath>("bluettePath") {};
 
-    private static final Key<String> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<String>("bluetteFallbackPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteFallbackPath") {};
 
-    private static final Key<String> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<String>("bluetteLightboxFallbackPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteLightboxFallbackPath") {};
 
     @Nonnull
     private final GalleryAdapterContext context;

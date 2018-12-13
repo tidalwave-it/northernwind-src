@@ -31,6 +31,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import org.testng.annotations.BeforeMethod;
@@ -74,11 +75,11 @@ public class St4TemplateFactoryTest
       {
         // given
         final String expectedResult = "Text of test template";
-        final String contentRelativePath = "/the/path";
-        final Content content = site.find(Content).withRelativePath(contentRelativePath).result();
+        final ResourcePath templatePath = new ResourcePath("/the/path");
+        final Content content = site.find(Content).withRelativePath(templatePath.asString()).result();
         when(content.getProperties().getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of(expectedResult));
         // when
-        final Optional<String> actualResult = underTest.getTemplate(contentRelativePath);
+        final Optional<String> actualResult = underTest.getTemplate(templatePath);
         // then
         assertThat(actualResult.isPresent(), is(true));
         assertThat(actualResult.get(), is(expectedResult));
@@ -91,10 +92,10 @@ public class St4TemplateFactoryTest
     public void must_return_empty_when_Content_has_no_property()
       {
         // given
-        final String contentRelativePath = "/the/path";
+        final ResourcePath templatePath = new ResourcePath("/the/path");
         // no P_TEMPLATE configured
         // when
-        final Optional<String> actualResult = underTest.getTemplate(contentRelativePath);
+        final Optional<String> actualResult = underTest.getTemplate(templatePath);
         // then
         assertThat(actualResult.isPresent(), is(false));
       }
@@ -105,8 +106,10 @@ public class St4TemplateFactoryTest
     @Test
     public void must_return_empty_when_no_Content_found()
       {
+        // given
+        final ResourcePath templatePath = new ResourcePath("/path/of/inexistent/content");
         // when
-        final Optional<String> template = underTest.getTemplate("/path/of/inexistent/content");
+        final Optional<String> template = underTest.getTemplate(templatePath);
         // then
         assertThat(template.isPresent(), is(false));
       }

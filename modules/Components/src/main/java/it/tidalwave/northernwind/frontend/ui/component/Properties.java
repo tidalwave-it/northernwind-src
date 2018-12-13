@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component;
 
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import java.time.ZonedDateTime;
 import java.util.List;
 import it.tidalwave.util.Key;
@@ -50,9 +51,9 @@ public final class Properties
 
     public static final Key<String> P_LEADIN_TEXT = new Key<String>("leadinText") {};
 
-    public static final Key<String> P_TEMPLATE_PATH = new Key<String>("templatePath") {};
+    public static final Key<ResourcePath> P_TEMPLATE_PATH = new Key<ResourcePath>("templatePath") {};
 
-    public static final Key<String> P_WRAPPER_TEMPLATE_RESOURCE = new Key<String>("wrapperTemplate") {};
+    public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_RESOURCE = new Key<ResourcePath>("wrapperTemplate") {};
 
     public static final Key<ZonedDateTime> P_CREATION_DATE = new Key<ZonedDateTime>("creationDateTime") {};
 

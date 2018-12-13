@@ -204,7 +204,7 @@ public class MockModelFactory extends ModelFactorySupport
      * the site to return the desired template, but we should duplicate the code to read the embedded template.
      *
      * @return      site        the {@code Site}
-     * 
+     *
      ******************************************************************************************************************/
     @Nonnull
     public static Site createMockSite()
@@ -212,7 +212,7 @@ public class MockModelFactory extends ModelFactorySupport
         final Site site = mock(Site.class);
         when(site.getTemplate(any(Class.class), any(Optional.class), any(String.class))).then(i ->
                 new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1), i.getArgument(2)));
-        when(site.getTemplate(any(Class.class), any(String.class))).then(i ->
+        when(site.getTemplate(any(Class.class), any(ResourcePath.class))).then(i ->
             new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1)));
         return site;
       }

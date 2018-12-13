@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.core.model.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.*;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -62,12 +63,12 @@ public class St4TemplateFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Template getTemplate (final @Nonnull Optional<String> templateRelativePath,
+    public Template getTemplate (final @Nonnull Optional<ResourcePath> templatePath,
                                  final @Nonnull String embeddedResourceName)
       {
-        log.debug("getTemplate({}, {})", templateRelativePath, embeddedResourceName);
+        log.debug("getTemplate({}, {})", templatePath, embeddedResourceName);
         // TODO: use a cache. Implement it on Site (as a generic cache), so it gets resetted when the Site is reset.
-        return new St4Template(templateRelativePath.flatMap(this::getTemplate)
+        return new St4Template(templatePath.flatMap(this::getTemplate)
                                                    .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName)));
       }
 
@@ -77,10 +78,10 @@ public class St4TemplateFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<String> getTemplate (final @Nonnull String templateRelativePath)
+    public Optional<String> getTemplate (final @Nonnull ResourcePath templatePath)
       {
-        log.debug("getTemplate({})", templateRelativePath);
-        return site.find(Content).withRelativePath(templateRelativePath)
+        log.debug("getTemplate({})", templatePath);
+        return site.find(Content).withRelativePath(templatePath.asString())
                                  .optionalResult()
                                  .flatMap(content -> content.getProperty(P_TEMPLATE));
       }

@@ -75,8 +75,8 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final String templatePath = "/the/template/path";
-        final Content template = site.find(Content).withRelativePath(templatePath).result();
+        final ResourcePath templatePath = new ResourcePath("/the/template/path");
+        final Content template = site.find(Content).withRelativePath(templatePath.asString()).result();
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom posts template"));
         // when
@@ -93,8 +93,8 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final String templatePath = "/the/template/path";
-        final Content template = site.find(Content).withRelativePath(templatePath).result();
+        final ResourcePath templatePath = new ResourcePath("/the/template/path");
+        final Content template = site.find(Content).withRelativePath(templatePath.asString()).result();
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom tag cloud template"));
         // when

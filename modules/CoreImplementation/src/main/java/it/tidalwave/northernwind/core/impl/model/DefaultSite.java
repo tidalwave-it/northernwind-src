@@ -206,10 +206,10 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     @Override @Nonnull
     public Template getTemplate (final @Nonnull Class<?> clazz,
-                                 final @Nonnull Optional<String> templateRelativePath,
+                                 final @Nonnull Optional<ResourcePath> templatePath,
                                  final @Nonnull String embeddedResourceName)
       {
-        return getTemplateFactoryFor(clazz).getTemplate(templateRelativePath, embeddedResourceName);
+        return getTemplateFactoryFor(clazz).getTemplate(templatePath, embeddedResourceName);
       }
 
     /*******************************************************************************************************************
@@ -218,9 +218,9 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Optional<String> getTemplate (final @Nonnull Class<?> clazz, final @Nonnull String templateRelativePath)
+    public Optional<String> getTemplate (final @Nonnull Class<?> clazz, final @Nonnull ResourcePath templatePath)
       {
-        return getTemplateFactoryFor(clazz).getTemplate(templateRelativePath);
+        return getTemplateFactoryFor(clazz).getTemplate(templatePath);
       }
 
     /*******************************************************************************************************************
