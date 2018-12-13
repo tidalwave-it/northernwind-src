@@ -67,9 +67,11 @@ public class St4TemplateFactory
                                  final @Nonnull String embeddedResourceName)
       {
         log.debug("getTemplate({}, {})", templatePath, embeddedResourceName);
+        final String text = templatePath.flatMap(this::getTemplate)
+                                        .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName));
+        final char delimiter = embeddedResourceName.endsWith(".xslt") ? '%' : '$';
         // TODO: use a cache. Implement it on Site (as a generic cache), so it gets resetted when the Site is reset.
-        return new St4Template(templatePath.flatMap(this::getTemplate)
-                                                   .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName)));
+        return new St4Template(text, delimiter);
       }
 
     /*******************************************************************************************************************

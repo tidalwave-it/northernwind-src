@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.impl.filter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -49,20 +50,22 @@ import javax.xml.transform.URIResolver;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
-import org.apache.commons.io.IOUtils;
-import org.stringtemplate.v4.ST;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
 import it.tidalwave.northernwind.core.impl.model.Filter;
+import static it.tidalwave.northernwind.core.model.Resource.P_EXPOSED_URI;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
+import static it.tidalwave.northernwind.core.model.Resource.Resource;
+import it.tidalwave.northernwind.core.model.Template.Aggregate;
+import it.tidalwave.northernwind.core.model.Template.Aggregates;
+import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 
 /***********************************************************************************************************************
  *
@@ -97,21 +100,16 @@ public class XsltMacroFilter implements Filter
      ******************************************************************************************************************/
     // FIXME: this should be shared between instances
     private void initialize()
-      throws IOException, NotFoundException
       {
         log.info("Retrieving XSLT templates");
-        final String template = IOUtils.toString(getClass().getResourceAsStream("/it/tidalwave/northernwind/core/impl/filter/XsltTemplate.xslt"));
-        final StringBuilder xsltBuffer = new StringBuilder();
-
-        for (final Resource resource : siteProvider.get().getSite().find(Resource.class).withRelativePath(XSLT_TEMPLATES_PATH).results())
-          {
-            final ResourceFile file = resource.getFile();
-            log.info(">>>> {}", file.getPath().asString());
-            xsltBuffer.append(file.asText("UTF-8"));
-          }
-
-        final ST t = new ST(template, '%', '%').add("content", xsltBuffer.toString());
-        xslt = t.render();
+        final Site site = siteProvider.get().getSite();
+        final Aggregates macros = site.find(Resource).withRelativePath(XSLT_TEMPLATES_PATH)
+                                                     .stream()
+                                                     .map(r -> r.getFile())
+                                                     .map(f -> new Aggregate().with("body", asText(f)).with("name", f.getPath()))
+                                                     .collect(toAggregates("macros"));
+        xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
+        log.trace(">>>> xslt: {}", xslt);
       }
 
     /*******************************************************************************************************************
@@ -129,20 +127,13 @@ public class XsltMacroFilter implements Filter
         // FIXME: buggy and cumbersome
         if (!initialized)
           {
-            try
+            synchronized (this)
               {
-                synchronized (this)
+                if (!initialized)
                   {
-                    if (!initialized)
-                      {
-                        initialize();
-                        initialized = true;
-                      }
+                    initialize();
+                    initialized = true;
                   }
-              }
-            catch (IOException | NotFoundException e)
-              {
-                throw new RuntimeException(e);
               }
           }
 
@@ -205,6 +196,23 @@ public class XsltMacroFilter implements Filter
           }
 
         return transformer;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private String asText (final @Nonnull ResourceFile file)
+      {
+        try
+          {
+            log.info(">>>> {}", file.getPath().asString());
+            return file.asText("UTF-8");
+          }
+        catch (IOException e)
+          {
+            throw new RuntimeException(e);
+          }
       }
 
     /*******************************************************************************************************************
