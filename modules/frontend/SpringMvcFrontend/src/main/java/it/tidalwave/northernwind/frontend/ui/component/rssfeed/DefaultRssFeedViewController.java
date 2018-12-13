@@ -43,7 +43,6 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
@@ -83,11 +82,10 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      ******************************************************************************************************************/
     public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
                                          final @Nonnull SiteNode siteNode,
-                                         final @Nonnull Site site,
                                          final @Nonnull SiteProvider siteProvider,
                                          final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(site, siteNode, view, requestLocaleManager);
+        super(siteNode, view, requestLocaleManager);
         this.siteProvider = siteProvider;
         this.siteNode = siteNode;
         this.view = view;

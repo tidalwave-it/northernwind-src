@@ -53,7 +53,6 @@ import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.AllArgsConstructor;
@@ -253,9 +252,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
         p2.getProperty(DATE_KEYS).orElse(TIME0).compareTo(p1.getProperty(DATE_KEYS).orElse(TIME0));
 
     @Nonnull
-    private final Site site;
-
-    @Nonnull
     private final SiteNode siteNode;
 
     @Nonnull
@@ -340,7 +336,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
@@ -407,7 +403,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     protected final String createLink (final @Nonnull ResourcePath path)
       {
-        return site.createLink(siteNode.getRelativeUri().appendedWith(path));
+        return siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(path));
       }
 
     /*******************************************************************************************************************
@@ -424,8 +420,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
         try
           {
             // TODO: shouldn't ResourcePath always encode incoming strings?
-            String link = site.createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
-                                                                   .appendedWith(URLEncoder.encode(tag, "UTF-8")));
+            String link = siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
+                                                                                 .appendedWith(URLEncoder.encode(tag, "UTF-8")));
 
             // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
             // Refactor by passing a parameter to createLink that overrides the default behaviour.
@@ -578,8 +574,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
       {
         return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
-                .flatMap(path -> site.find(Content).withRelativePath(path).stream()
-                                                                          .flatMap(folder -> folder.findChildren().stream()))
+                .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream()
+                                                                 .flatMap(folder -> folder.findChildren().stream()))
                 .collect(toList());
       }
 

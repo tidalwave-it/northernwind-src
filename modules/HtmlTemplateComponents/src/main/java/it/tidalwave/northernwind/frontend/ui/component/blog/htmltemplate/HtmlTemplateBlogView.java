@@ -29,11 +29,11 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.Template;
+import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.Template;
-import it.tidalwave.northernwind.frontend.ui.component.Template.Aggregates;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
@@ -49,7 +49,8 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
               controlledBy=HtmlTemplateBlogViewController.class)
 public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implements BlogView
   {
-    private final TemplateHelper templateHelper;
+    @Nonnull
+    private final Site site;
 
     private String title;
 
@@ -57,14 +58,14 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      *
      * Creates an instance with the given id.
      *
-     * @param       site            the site
      * @param       id              the id of this view
+     * @param       site            the site
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogView (final @Nonnull Site site, final @Nonnull Id id)
+    public HtmlTemplateBlogView (final @Nonnull Id id, final @Nonnull Site site)
       {
         super(id);
-        templateHelper   = new TemplateHelper(this, site);
+        this.site= site;
       }
 
     /*******************************************************************************************************************
@@ -89,14 +90,14 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       linkedPosts     the posts to be rendered as links
      *
      ******************************************************************************************************************/
-    public void renderPosts (final @Nonnull Optional<String> templatePath,
+    public void renderPosts (final @Nonnull Optional<ResourcePath> templatePath,
                              final @Nonnull Aggregates fullPosts,
                              final @Nonnull Aggregates leadinPosts,
                              final @Nonnull Aggregates linkedPosts)
       {
 //        final Template postTemplate = templateHelper.getTemplate("/Templates/Blog/Post", "Post.st");
 //        postsTemplate.include("/singlePost", postTemplate);
-        final Template postsTemplate = templateHelper.getTemplate(templatePath, "Posts.st");
+        final Template postsTemplate = site.getTemplate(getClass(), templatePath, "Posts.st");
         postsTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(postsTemplate.render(fullPosts, leadinPosts, linkedPosts)));
       }
@@ -110,9 +111,9 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       tags            the tags to render in the cloud
      *
      ******************************************************************************************************************/
-    public void renderTagCloud (final @Nonnull Optional<String> templatePath, final @Nonnull Aggregates tags)
+    public void renderTagCloud (final @Nonnull Optional<ResourcePath> templatePath, final @Nonnull Aggregates tags)
       {
-        final Template tagCloudTemplate = templateHelper.getTemplate(templatePath, "TagCloud.st");
+        final Template tagCloudTemplate = site.getTemplate(getClass(), templatePath, "TagCloud.st");
         tagCloudTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(tagCloudTemplate.render(tags)));
       }

@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -59,7 +59,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
