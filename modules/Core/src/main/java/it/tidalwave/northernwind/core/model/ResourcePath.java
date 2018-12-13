@@ -32,10 +32,12 @@ import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.joining;
+import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
 
 /***********************************************************************************************************************
  *
@@ -100,7 +102,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     private ResourcePath (final @Nonnull String path)
       {
-        this((path.equals("/") | path.equals("")) ? emptyList() : Arrays.asList(validated(path).split("/")));
+        this((path.equals("/") | path.equals("")) ? emptyList() : asList(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -273,10 +275,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath prependedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> builder = new ArrayList<>(path.segments);
-        builder.addAll(segments);
-        return ResourcePath.of(builder);
-//        return ResourcePath.of(new ImmutableList.Builder<String>().addAll(path.segments).addAll(segments).build());
+        return ResourcePath.of(concat(path.segments, this.segments));
       }
 
     /*******************************************************************************************************************
@@ -306,10 +305,7 @@ public class ResourcePath
     @Nonnull
     public ResourcePath appendedWith (final @Nonnull ResourcePath path)
       {
-        final List<String> builder = new ArrayList<>(segments);
-        builder.addAll(path.segments);
-        return ResourcePath.of(builder);
-//        return ResourcePath.of(new ImmutableList.Builder<String>().addAll(segments).addAll(path.segments).build());
+        return ResourcePath.of(concat(this.segments, path.segments));
       }
 
     /*******************************************************************************************************************
@@ -365,22 +361,15 @@ public class ResourcePath
     @Nonnull
     public String asString()
       {
-        final StringBuilder buffer = new StringBuilder("/");
-        String separator = "";
-
-        for (final String segment : segments)
-          {
-            buffer.append(separator).append(segment);
-            separator = "/";
-          }
+        final String string = segments.stream().collect(joining("/", "/", ""));
 
         // FIXME: this check is probably redundant now that there are safety tests
-        if (buffer.toString().contains("//"))
+        if (string.contains("//"))
           {
-            throw new RuntimeException("Error in stringification: " + buffer + " - " + this);
+            throw new RuntimeException("Error in stringification: " + string + " - " + this);
           }
 
-        return buffer.toString();
+        return string;
       }
 
     /*******************************************************************************************************************
