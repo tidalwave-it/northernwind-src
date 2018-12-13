@@ -51,7 +51,7 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Request withRelativeUri (@Nonnull String relativeUri);
+    public Request withRelativeUri (@Nonnull String relativeUri); // TODO: should be ResourcePath
 
     /*******************************************************************************************************************
      *
@@ -71,7 +71,7 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getRelativeUri();
+    public String getRelativeUri(); // TODO: should be ResourcePath
 
     /*******************************************************************************************************************
      *

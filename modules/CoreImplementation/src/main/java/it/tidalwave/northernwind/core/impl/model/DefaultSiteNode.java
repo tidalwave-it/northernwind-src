@@ -113,7 +113,7 @@ import lombok.Getter;
           {
             uriComputationCounter++;
 
-            relativeUri = new ResourcePath();
+            relativeUri = ResourcePath.EMPTY;
             final ResourceFile file = getResource().getFile();
 
             if (!file.equals(site.getNodeFolder()))
@@ -218,7 +218,7 @@ import lombok.Getter;
         final ResourcePath parentRelativePath = getResource().getFile().getParent().getPath().urlDecoded()
                                               .relativeTo(site.getNodeFolder().getPath());
 
-        return site.find(SiteNode.class).withRelativePath(parentRelativePath.asString()).result();
+        return site.find(SiteNode.class).withRelativePath(parentRelativePath).result();
       }
 
     /*******************************************************************************************************************
