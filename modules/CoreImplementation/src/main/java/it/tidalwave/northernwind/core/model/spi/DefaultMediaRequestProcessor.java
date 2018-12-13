@@ -70,7 +70,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     public Status process (final @Nonnull Request request)
       throws NotFoundException, IOException
       {
-        ResourcePath mediaUri = new ResourcePath(request.getRelativeUri());
+        ResourcePath mediaUri = ResourcePath.of(request.getRelativeUri());
 
         if (!mediaUri.startsWith(uriPrefix))
           {
@@ -122,7 +122,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             mediaUri = mediaUri.appendedWith(size).appendedWith(mediaId + "." + extension);
           }
 
-        final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri.asString()).result();
+        final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri).result();
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
 

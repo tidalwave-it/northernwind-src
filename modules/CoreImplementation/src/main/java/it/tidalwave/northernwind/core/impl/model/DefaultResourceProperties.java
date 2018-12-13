@@ -67,7 +67,7 @@ public class DefaultResourceProperties implements ResourceProperties
         put(Double.class,        o -> Double.parseDouble((String)o));
         put(Boolean.class,       o -> Boolean.parseBoolean((String)o));
         put(ZonedDateTime.class, o -> ZonedDateTime.parse((String)o, ISO_ZONED_DATE_TIME));
-        put(ResourcePath.class,  o -> new ResourcePath((String)o));
+        put(ResourcePath.class,  o -> ResourcePath.of((String)o));
       }};
 
     @Nonnull @Getter

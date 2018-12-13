@@ -44,27 +44,23 @@ import static java.util.Arrays.asList;
 @Slf4j
 public class St4Template implements Template
   {
-    /**************************************************************************************************************************
-     *
-     *************************************************************************************************************************/
-    public St4Template (final @Nonnull String templateText)
-      {
-        log.trace("Creating template: {}", templateText);
-//        stg = new STGroup('$', '$');
-//        stg.defineTemplate("main", templateText);
-//        st = stg.getInstanceOf("main");
-        st = new ST(templateText, '$', '$');
-//        this.templateText = templateText;
-      }
-
 //    @Nonnull
 //    private final STGroup stg;
 
     @Nonnull
     private final ST st;
 
-//    @Nonnull
-//    private final String templateText;
+    /**************************************************************************************************************************
+     *
+     *************************************************************************************************************************/
+    public St4Template (final @Nonnull String templateText, final char delimiter)
+      {
+        log.trace("Creating template: {} - {}", templateText, delimiter);
+//        stg = new STGroup(delimiter, delimiter);
+//        stg.defineTemplate("main", templateText);
+//        st = stg.getInstanceOf("main");
+        st = new ST(templateText, delimiter, delimiter);
+      }
 
 //    public void include (final @Nonnull String name, final @Nonnull Template template)
 //      {

@@ -73,6 +73,8 @@ import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.Node
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -168,7 +170,7 @@ public class DefaultBlogViewControllerTest
         siteNode = createMockSiteNode(site);
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
-        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(SITE_NODE_RELATIVE_URI));
+        when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of(SITE_NODE_RELATIVE_URI));
 
         view = mock(BlogView.class);
         when(view.getId()).thenReturn(viewId);
@@ -206,7 +208,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.of(pathParams));
         underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -257,7 +259,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.of(pathParams));
         underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -282,7 +284,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.of(pathParams));
         underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -327,7 +329,7 @@ public class DefaultBlogViewControllerTest
       {
         // given
         mockPosts.createMockData(seed);
-        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath("tags"));
+        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.of("tags"));
         underTest.prepareRendering(renderContext);
         // when
         underTest.renderView(renderContext);
@@ -365,7 +367,7 @@ public class DefaultBlogViewControllerTest
         when(viewProperties.getProperty(P_MAX_FULL_ITEMS)).thenReturn(Optional.of(maxFullItems));
         when(viewProperties.getProperty(P_MAX_LEADIN_ITEMS)).thenReturn(Optional.of(maxLeadinItems));
         when(viewProperties.getProperty(P_MAX_ITEMS)).thenReturn(Optional.of(maxItems));
-        when(request.getPathParams(same(siteNode))).thenReturn(new ResourcePath(pathParams));
+        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.of(pathParams));
         // when
         underTest.prepareRendering(renderContext);
         // then
