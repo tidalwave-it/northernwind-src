@@ -168,16 +168,16 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
         final String id = String.format("nw-%s-blogpost-%s", view.getId(), dateTime.toInstant().toEpochMilli());
         final List<String> tags = post.getProperty(P_TAGS).orElse(emptyList());
 
-        return new Aggregate().with("title",        post.getProperty(P_TITLE))
-                              .with("text" ,        post.getProperty(textProperty))
-                              .with("link",         post.getExposedUri().map(this::createLink))
-                              .with("id",           id)
-                              .with("publishDate",  formatDateTime(dateTime))
-                              .with("category",     post.getProperty(P_CATEGORY))
-                              .with("tags",         tags.stream()
-                                                        .sorted()
-                                                        .map(tag -> toAggregate(tag).getMap())
-                                                        .collect(toList()));
+        return Aggregate.of(  "title",        post.getProperty(P_TITLE))
+                        .with("text" ,        post.getProperty(textProperty))
+                        .with("link",         post.getExposedUri().map(this::createLink))
+                        .with("id",           id)
+                        .with("publishDate",  formatDateTime(dateTime))
+                        .with("category",     post.getProperty(P_CATEGORY))
+                        .with("tags",         tags.stream()
+                                                  .sorted()
+                                                  .map(tag -> toAggregate(tag).getMap())
+                                                  .collect(toList()));
       }
 
     /*******************************************************************************************************************
@@ -205,6 +205,6 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Nonnull
     private Aggregate toAggregate (final @Nonnull String tag)
       {
-        return new Aggregate().with("name", tag).with("link", createTagLink(tag));
+        return Aggregate.of("name", tag).with("link", createTagLink(tag));
       }
   }

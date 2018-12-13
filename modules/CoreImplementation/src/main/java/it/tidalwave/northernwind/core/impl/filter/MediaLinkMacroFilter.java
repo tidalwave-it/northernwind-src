@@ -51,7 +51,7 @@ public class MediaLinkMacroFilter extends MacroFilter
     @Override @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
       {
-        final ResourcePath relativePath = new ResourcePath(matcher.group(1)).prependedWith("media");
+        final ResourcePath relativePath = ResourcePath.of(matcher.group(1)).prependedWith("media");
         return siteProvider.get().getSite().createLink(relativePath);
       }
   }

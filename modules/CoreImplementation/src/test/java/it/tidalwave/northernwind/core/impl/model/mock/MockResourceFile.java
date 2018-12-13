@@ -79,7 +79,7 @@ public class MockResourceFile implements ResourceFile
     @Nonnull
     public static ResourceFile folder (final @Nonnull String path)
       {
-        return new MockResourceFile(null, new ResourcePath(path), true);
+        return new MockResourceFile(null, ResourcePath.of(path), true);
       }
 
     private MockResourceFile (final @Nonnull ResourceFile parent,
