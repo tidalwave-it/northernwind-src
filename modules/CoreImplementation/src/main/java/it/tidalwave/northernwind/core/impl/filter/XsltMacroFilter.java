@@ -59,7 +59,6 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
 import it.tidalwave.northernwind.core.impl.model.Filter;
-import static it.tidalwave.northernwind.core.model.Resource.P_EXPOSED_URI;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.Resource.Resource;
@@ -106,7 +105,7 @@ public class XsltMacroFilter implements Filter
         final Aggregates macros = site.find(Resource).withRelativePath(XSLT_TEMPLATES_PATH)
                                                      .stream()
                                                      .map(r -> r.getFile())
-                                                     .map(f -> new Aggregate().with("body", asText(f)).with("name", f.getPath()))
+                                                     .map(f -> Aggregate.of("body", asText(f)).with("name", f.getPath()))
                                                      .collect(toAggregates("macros"));
         xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
         log.trace(">>>> xslt: {}", xslt);
