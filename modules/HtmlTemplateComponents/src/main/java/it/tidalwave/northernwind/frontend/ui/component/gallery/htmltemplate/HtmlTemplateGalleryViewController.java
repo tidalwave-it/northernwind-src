@@ -35,7 +35,6 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
@@ -68,13 +67,12 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      ******************************************************************************************************************/
     public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view,
                                               final @Nonnull SiteNode siteNode,
-                                              final @Nonnull Site site,
                                               final @Nonnull RequestLocaleManager requestLocaleManager,
                                               final @Nonnull ModelFactory modelFactory,
                                               final @Nonnull BeanFactory beanFactory)
       throws IOException
       {
-        super(view, siteNode, site, requestLocaleManager, beanFactory);
+        super(view, siteNode, requestLocaleManager, beanFactory);
         this.view = view;
         this.siteNode = siteNode;
 
@@ -84,12 +82,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
             public void addAttribute (final @Nonnull String name, final @Nonnull String value)
               {
                 ((TextHolder)view).addAttribute(name, value);
-              }
-
-            @Override @Nonnull
-            public Site getSite()
-              {
-                return site;
               }
 
             @Override @Nonnull
@@ -105,12 +97,12 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
               }
           };
 
-        galleryAdapter = new BluetteGalleryAdapter(site, modelFactory, context); // FIXME: get implementation from configuration
+        galleryAdapter = new BluetteGalleryAdapter(siteNode.getSite(), modelFactory, context); // FIXME: get implementation from configuration
       }
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override

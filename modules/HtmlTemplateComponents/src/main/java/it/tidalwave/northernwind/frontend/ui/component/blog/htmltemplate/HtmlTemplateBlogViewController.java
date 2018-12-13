@@ -33,16 +33,16 @@ import java.time.ZonedDateTime;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate;
+import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregates.toAggregates;
+import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 
 /***********************************************************************************************************************
  *
@@ -99,10 +99,10 @@ import static it.tidalwave.northernwind.frontend.ui.component.Template.Aggregate
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
     /** The relative path to the {@link Content} that contains a template for rendering posts. */
-    public static final Key<String> P_TEMPLATE_POSTS_PATH = new Key<String>("postsTemplate") {};
+    public static final Key<ResourcePath> P_TEMPLATE_POSTS_PATH = new Key<ResourcePath>("postsTemplate") {};
 
     /** The relative path to the {@link Content} that contains a template for rendering the tag cloud. */
-    public static final Key<String> P_TEMPLATE_TAG_CLOUD_PATH = new Key<String>("tagCloudTemplate") {};
+    public static final Key<ResourcePath> P_TEMPLATE_TAG_CLOUD_PATH = new Key<ResourcePath>("tagCloudTemplate") {};
 
     @Nonnull
     private final HtmlTemplateBlogView view;
@@ -111,18 +111,16 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      * Creates an instance,
      *
-     * @param       site                    the site
      * @param       siteNode                the {@link SiteNode} for which the view is to be rendered
      * @param       view                    the view to render
      * @param       requestLocaleManager    the {@link RequestLocaleManager}
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogViewController (final @Nonnull Site site,
-                                           final @Nonnull SiteNode siteNode,
+    public HtmlTemplateBlogViewController (final @Nonnull SiteNode siteNode,
                                            final @Nonnull HtmlTemplateBlogView view,
                                            final @Nonnull RequestLocaleManager requestLocaleManager)
       {
-        super(site, siteNode, view, requestLocaleManager);
+        super(siteNode, view, requestLocaleManager);
         this.view = view;
       }
 

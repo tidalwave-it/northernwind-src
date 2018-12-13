@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -48,9 +49,9 @@ import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
@@ -202,7 +203,7 @@ public class DefaultSiteNodeTest
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);
         when(resource.getFile()).thenReturn(resourceFile);
 
-        final SiteNode parentSiteNode = createMockSiteNode();
+        final SiteNode parentSiteNode = createMockSiteNode(site);
         when(parentSiteNode.getRelativeUri()).thenReturn(new ResourcePath(parentUri));
 
         final ResourceProperties properties = createMockProperties();

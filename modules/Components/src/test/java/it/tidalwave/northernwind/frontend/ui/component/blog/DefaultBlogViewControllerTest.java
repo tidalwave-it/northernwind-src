@@ -92,12 +92,11 @@ public class DefaultBlogViewControllerTest
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
-        public UnderTest (final @Nonnull Site site,
-                          final @Nonnull SiteNode siteNode,
+        public UnderTest (final @Nonnull SiteNode siteNode,
                           final @Nonnull BlogView view,
                           final @Nonnull RequestLocaleManager requestLocaleManager)
           {
-            super(site, siteNode, view, requestLocaleManager);
+            super(siteNode, view, requestLocaleManager);
           }
 
         @Override
@@ -153,7 +152,7 @@ public class DefaultBlogViewControllerTest
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
 
-        site = mock(Site.class);
+        site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
 
@@ -166,7 +165,7 @@ public class DefaultBlogViewControllerTest
         viewProperties = createMockProperties();
         siteNodeProperties = createMockProperties();
 
-        siteNode = mock(SiteNode.class);
+        siteNode = createMockSiteNode(site);
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
         when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(SITE_NODE_RELATIVE_URI));
@@ -183,7 +182,7 @@ public class DefaultBlogViewControllerTest
 
         mockPosts = new MockPosts(site, viewProperties);
 
-        underTest = new UnderTest(site, siteNode, view, requestLocaleManager);
+        underTest = new UnderTest(siteNode, view, requestLocaleManager);
         underTest.initialize();
       }
 

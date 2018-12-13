@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 import java.lang.reflect.Constructor;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController1;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController2;
@@ -100,7 +101,8 @@ public class DefaultViewFactoryTest
       {
         // given
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
-        final SiteNode siteNode = createMockSiteNode();
+        final Site site = createMockSite();
+        final SiteNode siteNode = createMockSiteNode(site);
         final Id id = new Id("theId");
         final ViewAndController viewAndController = mock(ViewAndController.class);
         when(viewBuilder.createViewAndController(eq(id), same(siteNode))).thenReturn(viewAndController);
@@ -123,7 +125,8 @@ public class DefaultViewFactoryTest
       {
         // given
         final ViewBuilder viewBuilder = mock(ViewBuilder.class);
-        final SiteNode siteNode = createMockSiteNode();
+        final Site site = createMockSite();
+        final SiteNode siteNode = createMockSiteNode(site);
         final Id id = new Id("theId");
         underTest.viewBuilderMapByTypeUri.put("registeredType", viewBuilder);
         // then
