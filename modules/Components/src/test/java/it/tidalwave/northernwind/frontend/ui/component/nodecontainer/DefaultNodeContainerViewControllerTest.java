@@ -378,7 +378,7 @@ public class DefaultNodeContainerViewControllerTest
                                    final @Nonnull T value)
       throws NotFoundException
       {
-        final ResourceProperties properties = site.find(type).withRelativePath(path.asString()).result().getProperties();
+        final ResourceProperties properties = site.find(type).withRelativePath(path).result().getProperties();
         when(properties.getProperty(eq(key))).thenReturn(Optional.of(value));
       }
   }

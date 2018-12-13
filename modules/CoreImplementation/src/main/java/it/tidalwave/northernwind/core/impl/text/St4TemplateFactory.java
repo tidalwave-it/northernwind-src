@@ -83,9 +83,7 @@ public class St4TemplateFactory
     public Optional<String> getTemplate (final @Nonnull ResourcePath templatePath)
       {
         log.debug("getTemplate({})", templatePath);
-        return site.find(Content).withRelativePath(templatePath.asString())
-                                 .optionalResult()
-                                 .flatMap(content -> content.getProperty(P_TEMPLATE));
+        return site.find(Content).withRelativePath(templatePath).optionalResult().flatMap(c -> c.getProperty(P_TEMPLATE));
       }
 
     /*******************************************************************************************************************

@@ -39,7 +39,6 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -54,6 +53,7 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.CoreMatchers.is;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.hamcrest.CoreMatchers.is;
 
 /***********************************************************************************************************************
  *
@@ -210,8 +210,7 @@ public class DefaultSiteNodeTest
         when(properties.getProperty(eq(SiteNode.P_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
         when(resource.getProperties()).thenReturn(properties);
 
-        final SiteFinder<SiteNode> siteNodeFinder = mock(SiteFinder.class);
-        when(siteNodeFinder.withRelativePath(anyString())).thenReturn(siteNodeFinder); // FIXME: anyString()
+        final SiteFinder<SiteNode> siteNodeFinder = createMockSiteFinder();
 //        when(siteNodeFinder.withRelativePath(eq(parentPath))).thenReturn(siteNodeFinder);
         when(siteNodeFinder.result()).thenReturn(parentSiteNode);
         when(site.find(eq(SiteNode.class))).thenReturn(siteNodeFinder);

@@ -76,7 +76,7 @@ public class St4TemplateFactoryTest
         // given
         final String expectedResult = "Text of test template";
         final ResourcePath templatePath = ResourcePath.of("/the/path");
-        final Content content = site.find(Content).withRelativePath(templatePath.asString()).result();
+        final Content content = site.find(Content).withRelativePath(templatePath).result();
         when(content.getProperties().getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of(expectedResult));
         // when
         final Optional<String> actualResult = underTest.getTemplate(templatePath);

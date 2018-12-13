@@ -56,6 +56,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.
 import static it.tidalwave.northernwind.util.CollectionFunctions.split;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
  *
@@ -92,9 +93,7 @@ public class HtmlTemplateBlogViewControllerTest
       {
         site = createMockSite();
 
-        final SiteFinder<Content> finder = mock(SiteFinder.class);
-        when(finder.optionalResult()).thenReturn(Optional.empty());
-        when(finder.withRelativePath(any(String.class))).thenReturn(finder);
+        final SiteFinder<Content> finder = createMockSiteFinder();
         when(site.find(eq(Content.class))).thenReturn(finder);
 
         view = new HtmlTemplateBlogView(viewId, site);
