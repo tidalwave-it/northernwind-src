@@ -126,7 +126,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
       {
         final Optional<String> exposedUri = getProperty(P_EXPOSED_URI);
 
-        return exposedUri.isPresent() ? exposedUri.map(ResourcePath::new)
+        return exposedUri.isPresent() ? exposedUri.map(ResourcePath::of)
                                       : getDefaultExposedUri();
       }
 
@@ -154,7 +154,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
                        .replaceAll(":", "")
                        .replaceAll("[^\\w-]*", ""))
             .map(String::toLowerCase)
-            .map(ResourcePath::new);
+            .map(ResourcePath::of);
       }
 
     /*******************************************************************************************************************

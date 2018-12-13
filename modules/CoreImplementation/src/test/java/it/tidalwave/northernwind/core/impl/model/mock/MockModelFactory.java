@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.core.impl.model.mock;
 
-import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
@@ -42,15 +41,19 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
+import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 /***********************************************************************************************************************
  *
@@ -126,7 +129,7 @@ public class MockModelFactory extends ModelFactorySupport
         final String path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
         final SiteNode siteNode = createMockSiteNode(site);
-        when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
+        when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of(relativeUri));
         when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
         final ResourceProperties properties = createMockProperties();
@@ -215,5 +218,30 @@ public class MockModelFactory extends ModelFactorySupport
         when(site.getTemplate(any(Class.class), any(ResourcePath.class))).then(i ->
             new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1)));
         return site;
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static <T> SiteFinder<T> createMockSiteFinder()
+      {
+//        try
+          {
+            final SiteFinder<T> finder = mock(SiteFinder.class);
+//            when(finder.result()).thenThrow(new NotFoundException("mock finder"));
+            when(finder.results()).thenReturn(emptyList());
+            when(finder.optionalResult()).thenReturn(Optional.empty());
+            when(finder.withRelativePath(any(String.class))).thenReturn(finder);
+            when(finder.withRelativeUri(any(String.class))).thenReturn(finder);
+            when(finder.withRelativePath(any(ResourcePath.class))).thenCallRealMethod();
+            when(finder.withRelativeUri(any(ResourcePath.class))).thenCallRealMethod();
+
+            return finder;
+          }
+//        catch (NotFoundException e)
+//          {
+//            throw new RuntimeException(e); // never happens
+//          }
       }
   }

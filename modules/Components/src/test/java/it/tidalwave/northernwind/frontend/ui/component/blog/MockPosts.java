@@ -187,7 +187,7 @@ public class MockPosts
             final ResourceProperties properties = createMockProperties();
             when(post.toString()).thenAnswer(invocation -> toString((Content)invocation.getMock()));
             when(post.getProperties()).thenReturn(properties);
-            when(post.getExposedUri()).thenReturn(Optional.of(new ResourcePath(String.format("post-%d", i))));
+            when(post.getExposedUri()).thenReturn(Optional.of(ResourcePath.of(String.format("post-%d", i))));
             when(properties.getProperty(P_PUBLISHING_DATE)).thenReturn(Optional.of(dateTime));
             when(properties.getProperty(P_TITLE)).thenReturn(Optional.of(String.format("Title #%2d", i)));
             when(properties.getProperty(P_ID)).thenReturn(Optional.of(String.format("id#%2d", i)));

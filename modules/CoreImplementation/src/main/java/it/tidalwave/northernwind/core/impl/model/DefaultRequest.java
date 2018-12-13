@@ -127,7 +127,7 @@ import lombok.ToString;
     public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
       {
         return new DefaultRequest(baseUrl,
-                                  new ResourcePath(relativeUri).urlDecoded().asString(),
+                                  ResourcePath.of(relativeUri).urlDecoded().asString(),
                                   relativeUri,
                                   parametersMap,
                                   headersMap,
@@ -155,8 +155,8 @@ import lombok.ToString;
       {
         final String siteNodeRelativeUri = siteNode.getRelativeUri().asString();
         return (relativeUri.length() <= siteNodeRelativeUri.length())
-                ? new ResourcePath()
-                : new ResourcePath(relativeUri.substring(siteNodeRelativeUri.length()));
+                ? ResourcePath.EMPTY
+                : ResourcePath.of(relativeUri.substring(siteNodeRelativeUri.length()));
       }
 
     /*******************************************************************************************************************
