@@ -90,17 +90,17 @@ public class HtmlTemplateBlogViewControllerTest
     public void setup()
       throws Exception
       {
-        site = mock(Site.class);
+        site = createMockSite();
 
         final SiteFinder<Content> finder = mock(SiteFinder.class);
         when(finder.optionalResult()).thenReturn(Optional.empty());
         when(finder.withRelativePath(any(String.class))).thenReturn(finder);
         when(site.find(eq(Content.class))).thenReturn(finder);
 
-        view = new HtmlTemplateBlogView(site, viewId);
+        view = new HtmlTemplateBlogView(viewId, site);
 
         nodeProperties = createMockProperties();
-        node = createMockSiteNode();
+        node = createMockSiteNode(site);
         when(node.getProperties()).thenReturn(nodeProperties);
         when(node.getRelativeUri()).thenReturn(new ResourcePath("blog"));
         when(site.createLink(any(ResourcePath.class))).then(a -> "http://acme.com" + a.getArgument(0).toString());
@@ -109,7 +109,7 @@ public class HtmlTemplateBlogViewControllerTest
         mockViewProperties(viewId, P_TEMPLATE_TAG_CLOUD_PATH, Optional.empty());
 
         requestLocaleManager = mock(RequestLocaleManager.class);
-        underTest = new HtmlTemplateBlogViewController(site,  node, view, requestLocaleManager);
+        underTest = new HtmlTemplateBlogViewController(node, view, requestLocaleManager);
       }
 
     /*******************************************************************************************************************

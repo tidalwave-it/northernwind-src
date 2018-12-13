@@ -95,12 +95,13 @@ public class ViewBuilderTest
     public void setup()
       throws Exception
       {
+        site = createMockSite();
         context = helper.createSpringContext();
         siteProvider = context.getBean(SiteProvider.class);
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);
 
-        siteNode = createMockSiteNode();
+        siteNode = createMockSiteNode(site);
         when(siteProvider.getSite()).thenReturn(site);
 
         id = new Id("theId");

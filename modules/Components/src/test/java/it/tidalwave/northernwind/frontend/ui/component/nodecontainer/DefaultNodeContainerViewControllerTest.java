@@ -49,7 +49,7 @@ import org.mockito.stubbing.Answer;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -91,7 +91,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         final Id viewId = new Id("id");
 
-        site = mock(Site.class);
+        site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
 
@@ -104,7 +104,7 @@ public class DefaultNodeContainerViewControllerTest
         nodeProperties = createMockProperties();
         viewProperties = createMockProperties();
 
-        final SiteNode siteNode = createMockSiteNode();
+        final SiteNode siteNode = createMockSiteNode(site);
         when(siteNode.getProperties()).thenReturn(nodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
@@ -120,7 +120,7 @@ public class DefaultNodeContainerViewControllerTest
 
         renderContext = new DefaultRenderContext(mock(Request.class), requestContext);
 
-        underTest = new DefaultNodeContainerViewController(view, siteNode, site, requestLocaleManager);
+        underTest = new DefaultNodeContainerViewController(view, siteNode, requestLocaleManager);
         underTest.initialize();
         underTest.prepareRendering(renderContext);
       }
@@ -136,7 +136,7 @@ public class DefaultNodeContainerViewControllerTest
         final String templateContent = "the template content";
         final String templatePath = "/path/to/template";
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        stubProperty(Content, templatePath, P_TEMPLATE, templateContent);
+        mockProperty(Content, templatePath, P_TEMPLATE, templateContent);
         // when
         underTest.renderView(renderContext);
         // then
@@ -319,8 +319,8 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(P_RSS_FEEDS)).thenReturn(Optional.of(
                 Arrays.asList("/feed1", "/feed2", "/inexistentFeed", "/feed3")));
-        stubProperty(SiteNode, "/feed1", P_TITLE, "Feed 1 title");
-        stubProperty(SiteNode, "/feed2", P_TITLE, "Feed 2 title");
+        mockProperty(SiteNode, "/feed1", P_TITLE, "Feed 1 title");
+        mockProperty(SiteNode, "/feed2", P_TITLE, "Feed 2 title");
         // no property for feed3
         // when
         underTest.renderView(renderContext);
@@ -358,8 +358,8 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(P_INLINED_SCRIPTS)).thenReturn(Optional.of(
                 Arrays.asList("/script1", "/script2", "/inexistentScript", "/script3")));
-        stubProperty(Content, "/script1", P_TEMPLATE, "<script>1</script>");
-        stubProperty(Content, "/script2", P_TEMPLATE, "<script>2</script>");
+        mockProperty(Content, "/script1", P_TEMPLATE, "<script>1</script>");
+        mockProperty(Content, "/script2", P_TEMPLATE, "<script>2</script>");
         // no property for script3
         // when
         underTest.renderView(renderContext);
@@ -372,7 +372,7 @@ public class DefaultNodeContainerViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private <T> void stubProperty (final @Nonnull Class<? extends Resource> type,
+    private <T> void mockProperty (final @Nonnull Class<? extends Resource> type,
                                    final @Nonnull String relativePath,
                                    final @Nonnull Key<T> key,
                                    final @Nonnull T value)

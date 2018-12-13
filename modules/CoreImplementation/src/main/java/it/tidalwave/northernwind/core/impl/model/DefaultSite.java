@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
+import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
@@ -42,19 +44,20 @@ import java.util.function.Predicate;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -194,6 +197,30 @@ import lombok.extern.slf4j.Slf4j;
     public List<Locale> getConfiguredLocales()
       {
         return new CopyOnWriteArrayList<>(configuredLocales);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Template getTemplate (final @Nonnull Class<?> clazz,
+                                 final @Nonnull Optional<String> templateRelativePath,
+                                 final @Nonnull String embeddedResourceName)
+      {
+        return getTemplateFactoryFor(clazz).getTemplate(templateRelativePath, embeddedResourceName);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Optional<String> getTemplate (final @Nonnull Class<?> clazz, final @Nonnull String templateRelativePath)
+      {
+        return getTemplateFactoryFor(clazz).getTemplate(templateRelativePath);
       }
 
     /*******************************************************************************************************************
@@ -380,5 +407,15 @@ import lombok.extern.slf4j.Slf4j;
         return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
         // don't log fileSystem.getRoot() since if fileSystem is broken it can trigger secondary errors
                             // FileUtil.toFile(fileSystem.getRoot()).getAbsolutePath() + "/"  + path);
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private St4TemplateFactory getTemplateFactoryFor (final @Nonnull Class<?> clazz)
+      {
+        // TODO: implement a cache
+        return new St4TemplateFactory(clazz, this);
       }
   }

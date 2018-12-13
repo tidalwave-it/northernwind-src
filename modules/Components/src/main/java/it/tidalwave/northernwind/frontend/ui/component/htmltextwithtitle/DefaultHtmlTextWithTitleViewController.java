@@ -33,14 +33,12 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.Content;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -58,23 +56,19 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull @Getter
-    private final Site site;
-
-    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
-
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
     public void renderView (final @Nonnull RenderContext context)
       {
+        final Site site = siteNode.getSite();
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         final String template = viewProperties.getProperty(P_WRAPPER_TEMPLATE_RESOURCE)
-                                              .flatMap(templateHelper::getTemplate)
+                                              .flatMap(p -> site.getTemplate(getClass(), p))
                                               .orElse("$content$");
         log.debug(">>>> template: {}", template);
 

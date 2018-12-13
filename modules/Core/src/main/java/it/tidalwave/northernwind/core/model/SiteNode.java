@@ -54,6 +54,17 @@ public interface SiteNode extends Resource, SimpleComposite<SiteNode>
 
     /*******************************************************************************************************************
      *
+     * Returns the {@link Site} to which this {@code SiteNode} belongs to.
+     * TODO: push up to Resource
+     * 
+     * @return   the {@code Site}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Site getSite();
+
+    /*******************************************************************************************************************
+     *
      * Returns the {@link Layout} of this {@code SiteNode}.
      *
      * @return   the {@code Layout}

@@ -46,9 +46,8 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import org.mockito.InOrder;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.core.model.SiteNode.P_NAVIGATION_LABEL;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.Content.*;
+import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.menu.MenuViewController.P_LINKS;
@@ -80,7 +79,7 @@ public class DefaultMenuViewControllerTest
       {
         final Id viewId = new Id("id");
 
-        site = mock(Site.class);
+        site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
 
@@ -91,7 +90,7 @@ public class DefaultMenuViewControllerTest
           });
 
         viewProperties = createMockProperties();
-        final SiteNode siteNode = createMockSiteNode();
+        final SiteNode siteNode = createMockSiteNode(site);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         view = mock(MenuView.class);
@@ -99,7 +98,7 @@ public class DefaultMenuViewControllerTest
 
         renderContext = new DefaultRenderContext(mock(Request.class), mock(RequestContext.class));
 
-        underTest = new DefaultMenuViewController(view, siteNode, site);
+        underTest = new DefaultMenuViewController(view, siteNode);
         underTest.initialize();
         underTest.prepareRendering(renderContext);
       }

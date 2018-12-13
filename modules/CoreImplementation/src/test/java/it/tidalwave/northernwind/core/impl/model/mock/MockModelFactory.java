@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model.mock;
 
+import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,8 @@ import lombok.extern.slf4j.Slf4j;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /***********************************************************************************************************************
  *
@@ -122,7 +125,7 @@ public class MockModelFactory extends ModelFactorySupport
         final String relativeUri = String.format("relativeUriFor:%s", folder.getPath().asString());
         final String path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
-        final SiteNode siteNode = createMockSiteNode();
+        final SiteNode siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(new ResourcePath(relativeUri));
         when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
@@ -185,11 +188,32 @@ public class MockModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static SiteNode createMockSiteNode()
+    public static SiteNode createMockSiteNode (final @Nonnull Site site)
       {
         final SiteNode siteNode = mock(SiteNode.class);
+        when(siteNode.getSite()).thenReturn(site);
         when(siteNode.getProperty(any(Key.class))).thenCallRealMethod();
         when(siteNode.getProperty(any(List.class))).thenCallRealMethod();
         return siteNode;
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a mock {@link Site} with working methods to retrieve a {@link Template}. It looks overly complex, but at
+     * the moment is needed so we can test views with their default, embedded templates (it would be simple to just mock
+     * the site to return the desired template, but we should duplicate the code to read the embedded template.
+     *
+     * @return      site        the {@code Site}
+     * 
+     ******************************************************************************************************************/
+    @Nonnull
+    public static Site createMockSite()
+      {
+        final Site site = mock(Site.class);
+        when(site.getTemplate(any(Class.class), any(Optional.class), any(String.class))).then(i ->
+                new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1), i.getArgument(2)));
+        when(site.getTemplate(any(Class.class), any(String.class))).then(i ->
+            new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1)));
+        return site;
       }
   }

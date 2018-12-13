@@ -29,14 +29,14 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
-import it.tidalwave.northernwind.frontend.ui.component.Template.Aggregates;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.extern.slf4j.Slf4j;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.core.model.Content.*;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
@@ -62,9 +62,9 @@ public class HtmlTemplateBlogViewTest
     public void setup()
       throws Exception
       {
-        site = mock(Site.class);
+        site = createMockSite();
         MockContentSiteFinder.registerTo(site);
-        underTest = new HtmlTemplateBlogView(site, viewId);
+        underTest = new HtmlTemplateBlogView(viewId, site);
       }
 
     /*******************************************************************************************************************

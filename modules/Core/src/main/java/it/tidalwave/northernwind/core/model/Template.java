@@ -24,20 +24,17 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component;
+package it.tidalwave.northernwind.core.model;
 
-import java.util.ArrayList;
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collector;
-import org.stringtemplate.v4.ST;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 
@@ -46,8 +43,7 @@ import static java.util.stream.Collectors.*;
  * @author  Fabrizio Giudici
  *
  *****************************************************************************************************************************/
-@Slf4j
-public class Template
+public interface Template
   {
     /**************************************************************************************************************************
      *
@@ -91,7 +87,7 @@ public class Template
     public static class Aggregates implements Iterable<Aggregate>
       {
         public static final Aggregates EMPTY = new Aggregates("", emptyList());
-        
+
         @Getter @Nonnull
         private final String name;
 
@@ -150,7 +146,7 @@ public class Template
         /**********************************************************************************************************************
          *
          *********************************************************************************************************************/
-        private int getSize()
+        public int getSize()
           {
             return aggregates.size();
           }
@@ -159,58 +155,11 @@ public class Template
     /**************************************************************************************************************************
      *
      *************************************************************************************************************************/
-    public Template (final @Nonnull String templateText)
-      {
-        log.trace("Creating template: {}", templateText);
-//        stg = new STGroup('$', '$');
-//        stg.defineTemplate("main", templateText);
-//        st = stg.getInstanceOf("main");
-        st = new ST(templateText, '$', '$');
-//        this.templateText = templateText;
-      }
+    public Template addAttribute (@Nonnull String name, @Nonnull String value);
 
-//    @Nonnull
-//    private final STGroup stg;
-
+    /**************************************************************************************************************************
+     *
+     *************************************************************************************************************************/
     @Nonnull
-    private final ST st;
-
-//    @Nonnull
-//    private final String templateText;
-
-//    public void include (final @Nonnull String name, final @Nonnull Template template)
-//      {
-//        stg.defineTemplate(name, template.templateText);
-//      }
-
-    /**************************************************************************************************************************
-     *
-     *************************************************************************************************************************/
-    public void addAttribute (final @Nonnull String name, final @Nonnull String value)
-      {
-        st.add(name, value);
-      }
-
-    /**************************************************************************************************************************
-     *
-     *************************************************************************************************************************/
-    public String render (final @Nonnull Aggregates ... aggregatesSet)
-      {
-        for (final Aggregates aggregates : aggregatesSet)
-          {
-            if (aggregates.getSize() == 1)
-              {
-                st.add(aggregates.getName(), asList(aggregates.iterator().next().getMap()));
-              }
-            else
-              {
-                for (final Aggregate aggregate : aggregates)
-                  {
-                    st.add(aggregates.getName(), aggregate.getMap());
-                  }
-              }
-          }
-
-        return st.render();
-      }
+    public String render (@Nonnull final Aggregates... aggregatesSet);
   }

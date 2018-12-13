@@ -52,8 +52,6 @@ public final class Properties
 
     public static final Key<String> P_TEMPLATE_PATH = new Key<String>("templatePath") {};
 
-    public static final Key<String> P_TEMPLATE = new Key<String>("template") {};
-
     public static final Key<String> P_WRAPPER_TEMPLATE_RESOURCE = new Key<String>("wrapperTemplate") {};
 
     public static final Key<ZonedDateTime> P_CREATION_DATE = new Key<ZonedDateTime>("creationDateTime") {};

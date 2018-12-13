@@ -37,13 +37,11 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -78,13 +76,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull @Getter
-    private final Site site;
-
     @Nonnull
     private final RequestLocaleManager requestLocaleManager;
-
-    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
 
     /*******************************************************************************************************************
      *
@@ -97,8 +90,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final ResourceProperties viewProperties     = getViewProperties();
         final ResourceProperties siteNodeProperties = context.getRequestContext().getNodeProperties();
-
-        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate).ifPresent(view::setTemplate);
+        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(p -> siteNode.getSite().getTemplate(getClass(), p))
+                                                                                   .ifPresent(view::setTemplate);
 
         view.addAttribute("language",         requestLocaleManager.getLocales().get(0).getLanguage());
         viewProperties.getProperty(P_DESCRIPTION).ifPresent(d -> view.addAttribute("description", d));
@@ -163,6 +156,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection()
       {
+        final Site site = siteNode.getSite();
         return streamOf(P_RSS_FEEDS)
                 .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).stream())
                 .map(node -> String.format(TEMPLATE_RSS_LINK,
@@ -181,7 +175,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     private String computeScriptsSection()
       {
         return streamOf(P_SCRIPTS)
-                .map(relativeUri -> site.createLink(new ResourcePath(relativeUri)))
+                .map(relativeUri -> siteNode.getSite().createLink(new ResourcePath(relativeUri)))
                 .map(link -> String.format(TEMPLATE_SCRIPT, link))
                 .collect(joining());
       }
@@ -195,7 +189,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     protected String computeInlinedScriptsSection()
       {
         return streamOf(P_INLINED_SCRIPTS)
-                .flatMap(path -> site.find(Content).withRelativePath(path).stream())
+                .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream())
                 .flatMap(script -> script.getProperty(P_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(joining());
       }
@@ -219,6 +213,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String createLink (final @Nonnull String relativeUri)
       {
-        return relativeUri.startsWith("http") ? relativeUri : site.createLink(new ResourcePath(relativeUri));
+        return relativeUri.startsWith("http") ? relativeUri : siteNode.getSite().createLink(new ResourcePath(relativeUri));
       }
   }

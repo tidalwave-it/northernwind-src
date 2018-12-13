@@ -54,6 +54,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.core.model.SiteNode.P_EXPOSED_URI;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -68,7 +69,7 @@ import static it.tidalwave.northernwind.core.model.SiteNode.P_EXPOSED_URI;
     @Nonnull
     private final Map<Locale, Layout> layoutMapByLocale = new HashMap<>();
 
-    @Nonnull
+    @Getter @Nonnull
     /* package */ InternalSite site;
 
     @Inject

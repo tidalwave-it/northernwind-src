@@ -28,11 +28,8 @@ package it.tidalwave.northernwind.frontend.ui.component.container;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.TemplateHelper;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
@@ -50,21 +47,16 @@ public class DefaultContainerViewController implements ContainerViewController
     @Nonnull
     private final SiteNode siteNode;
 
-    @Nonnull @Getter
-    private final Site site;
-
-    private final TemplateHelper templateHelper = new TemplateHelper(this, this::getSite);
-
     /*******************************************************************************************************************
      *
-     * {@inheritDoc }
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
     public void renderView (final @Nonnull RenderContext context)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(templateHelper::getTemplate).ifPresent(view::setTemplate);
+        viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(p -> siteNode.getSite().getTemplate(getClass(), p)).ifPresent(view::setTemplate);
         view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
       }
   }

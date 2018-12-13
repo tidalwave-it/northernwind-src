@@ -24,7 +24,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component;
+package it.tidalwave.northernwind.core.impl.text;
 
 import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
@@ -35,21 +35,20 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.*;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public class TemplateHelperTest
+public class St4TemplateFactoryTest
   {
-    private TemplateHelper underTest;
+    private St4TemplateFactory underTest;
 
     private Site site;
 
@@ -63,7 +62,7 @@ public class TemplateHelperTest
 
         site = mock(Site.class);
         MockContentSiteFinder.registerTo(site);
-        underTest = new TemplateHelper(this, () -> site);
+        underTest = new St4TemplateFactory(St4TemplateFactoryTest.class, site);
       }
 
     /*******************************************************************************************************************

@@ -24,55 +24,41 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component;
+package it.tidalwave.northernwind.core.impl.text;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import org.stringtemplate.v4.ST;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.core.model.Content.*;
 
 /***********************************************************************************************************************
  *
- * A facility class to retrieve templates.
+ * A factory of {@link Template} implementations based on StringTemplate ({@link ST}.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class TemplateHelper
+public class St4TemplateFactory
   {
     @Nonnull
-    private final Object owner;
+    private final Class<?> clazz;
 
     @Nonnull
-    private final Supplier<Site> site;
+    private final Site site;
 
     /*******************************************************************************************************************
      *
-     ******************************************************************************************************************/
-    public TemplateHelper (final @Nonnull Object owner, final @Nonnull Site site)
-      {
-        this(owner, () -> site);
-      }
-
-    /*******************************************************************************************************************
      *
-     * Gets a template from a {@link Content}, whose relative path is provided; the template is retrieved through the
-     * property {@code P_TEMPLATE} of the {@code Content}. If nothing is found, a default template with the given name
-     * is loaded from the embedded resources.
-     *
-     * @param       templateRelativePath    the path of the {@code Content}
-     * @param       embeddedResourceName    the name of the default embedded resource
-     * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -81,25 +67,22 @@ public class TemplateHelper
       {
         log.debug("getTemplate({}, {})", templateRelativePath, embeddedResourceName);
         // TODO: use a cache. Implement it on Site (as a generic cache), so it gets resetted when the Site is reset.
-        return new Template(templateRelativePath.flatMap(this::getTemplate)
-                                                .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName)));
+        return new St4Template(templateRelativePath.flatMap(this::getTemplate)
+                                                   .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName)));
       }
 
     /*******************************************************************************************************************
      *
-     * Gets a template from a {@link Content}, whose relative path is provided. The template is retrieved through the
-     * property {@code P_TEMPLATE} of the {@code Content}.
      *
-     * @param       templateRelativePath    the path of the {@code Content}
-     * @return                              the template contents
      *
      ******************************************************************************************************************/
     @Nonnull
     public Optional<String> getTemplate (final @Nonnull String templateRelativePath)
       {
-        return site.get().find(Content).withRelativePath(templateRelativePath)
-                                       .optionalResult()
-                                       .flatMap(content -> content.getProperty(P_TEMPLATE));
+        log.debug("getTemplate({})", templateRelativePath);
+        return site.find(Content).withRelativePath(templateRelativePath)
+                                 .optionalResult()
+                                 .flatMap(content -> content.getProperty(P_TEMPLATE));
       }
 
     /*******************************************************************************************************************
@@ -113,9 +96,9 @@ public class TemplateHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getEmbeddedTemplate (final @Nonnull String fileName)
+    /* visible for testing */ String getEmbeddedTemplate (final @Nonnull String fileName)
       {
-        final String packagePath = owner.getClass().getPackage().getName().replace('.', '/');
+        final String packagePath = clazz.getPackage().getName().replace('.', '/');
         final Resource resource = new ClassPathResource("/" + packagePath + "/" + fileName);
 
         try (final Reader r = new InputStreamReader(resource.getInputStream()))
