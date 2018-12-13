@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
-import org.stringtemplate.v4.ST;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -41,6 +40,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
@@ -58,11 +58,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
     private static final Key<String> P_COPYRIGHT = new Key<String>("copyright") {};
 
-    private static final Key<String> P_BLUETTE_TEMPLATE_PATH = new Key<String>("bluettePath") {};
+    private static final Key<ResourcePath> P_BLUETTE_TEMPLATE_PATH = new Key<ResourcePath>("bluettePath") {};
 
-    private static final Key<String> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<String>("bluetteFallbackPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteFallbackPath") {};
 
-    private static final Key<String> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<String>("bluetteLightboxFallbackPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteLightboxFallbackPath") {};
 
     @Nonnull
     private final GalleryAdapterContext context;
@@ -70,11 +70,11 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Inject
     private Provider<SiteProvider> siteProvider;
 
-    private final String galleryTemplate;
+    private final Template galleryTemplate;
 
-    private final String fallbackTemplate;
+    private final Template fallbackTemplate;
 
-    private final String lightboxFallbackTemplate;
+    private final Template lightboxFallbackTemplate;
 
     private String copyright = "";
 
@@ -173,13 +173,13 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
-        final ST t = new ST(galleryTemplate, '$', '$').add("caption",   item.getDescription())
-                                                      .add("previous",  previousUrl)
-                                                      .add("next",      nextUrl)
-                                                      .add("lightbox",  lightboxUrl)
-                                                      .add("home",      "/blog") // FIXME
-                                                      .add("copyright", copyright);
-        context.addAttribute("content", t.render());
+        galleryTemplate.addAttribute("caption",   item.getDescription())
+                       .addAttribute("previous",  previousUrl)
+                       .addAttribute("next",      nextUrl)
+                       .addAttribute("lightbox",  lightboxUrl)
+                       .addAttribute("home",      "/blog") // FIXME
+                       .addAttribute("copyright", copyright);
+        context.addAttribute("content", galleryTemplate.render());
       }
 
     /*******************************************************************************************************************
@@ -210,15 +210,15 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                                     + "window.location.replace('" + redirectUrl + "');\n"
                                     + "//]]>\n"
                                     + "</script>\n";
-        final ST t = new ST(fallbackTemplate, '$', '$').add("caption",   item.getDescription())
-                                                       .add("previous",  previousUrl)
-                                                       .add("next",      nextUrl)
-                                                       .add("lightbox",  lightboxUrl)
-                                                       .add("home",      "/blog") // FIXME
-                                                       .add("imageId",   imageId)
-                                                       .add("imageUrl",  imageUrl)
-                                                       .add("copyright", copyright);
-        textHolder.addAttribute("content",        t.render());
+        fallbackTemplate.addAttribute("caption",   item.getDescription())
+                        .addAttribute("previous",  previousUrl)
+                        .addAttribute("next",      nextUrl)
+                        .addAttribute("lightbox",  lightboxUrl)
+                        .addAttribute("home",      "/blog") // FIXME
+                        .addAttribute("imageId",   imageId)
+                        .addAttribute("imageUrl",  imageUrl)
+                        .addAttribute("copyright", copyright);
+        textHolder.addAttribute("content",        fallbackTemplate.render());
         // FIXME: it would be better to change the properties rather than directly touch the template attributes
         textHolder.addAttribute("description",    item.getDescription());
         textHolder.addAttribute("inlinedScripts", redirectScript);
@@ -253,9 +253,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                                     + "//]]>\n"
                                     + "</script>\n";
         final TextHolder textHolder = (TextHolder)view;
-        final ST t = new ST(lightboxFallbackTemplate, '$', '$').add("content", builder.toString())
-                                                               .add("copyright", copyright);
-        textHolder.addAttribute("content", t.render());
+        lightboxFallbackTemplate.addAttribute("content", builder.toString())
+                                .addAttribute("copyright", copyright);
+        textHolder.addAttribute("content", lightboxFallbackTemplate.render());
         textHolder.addAttribute("inlinedScripts", redirectScript);
         textHolder.addAttribute("scripts", "");
       }

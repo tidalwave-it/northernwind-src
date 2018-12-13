@@ -59,6 +59,11 @@
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core-default</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.northernwind</groupId>
+            <artifactId>it-tidalwave-northernwind-core-default</artifactId>
+            <scope>test</scope>
             <classifier>tests</classifier>
         </dependency>
     </dependencies>
