@@ -175,7 +175,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     private String computeScriptsSection()
       {
         return streamOf(P_SCRIPTS)
-                .map(relativeUri -> siteNode.getSite().createLink(new ResourcePath(relativeUri)))
+                .map(relativeUri -> siteNode.getSite().createLink(ResourcePath.of(relativeUri)))
                 .map(link -> String.format(TEMPLATE_SCRIPT, link))
                 .collect(joining());
       }
@@ -213,6 +213,6 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String createLink (final @Nonnull String relativeUri)
       {
-        return relativeUri.startsWith("http") ? relativeUri : siteNode.getSite().createLink(new ResourcePath(relativeUri));
+        return relativeUri.startsWith("http") ? relativeUri : siteNode.getSite().createLink(ResourcePath.of(relativeUri));
       }
   }

@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.spi.ExtendedFinder8Support;
 
-
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
@@ -42,4 +41,16 @@ public interface SiteFinder<T> extends ExtendedFinder8Support<T, SiteFinder<T>>
 
     @Nonnull
     public SiteFinder<T> withRelativeUri (@Nonnull String relativeUri);
+
+    @Nonnull
+    default public SiteFinder<T> withRelativePath (final @Nonnull ResourcePath relativePath)
+      {
+        return withRelativePath(relativePath.asString());
+      }
+
+    @Nonnull
+    default public SiteFinder<T> withRelativeUri (@Nonnull ResourcePath relativeUri)
+      {
+        return withRelativeUri(relativeUri.asString());
+      }
   }

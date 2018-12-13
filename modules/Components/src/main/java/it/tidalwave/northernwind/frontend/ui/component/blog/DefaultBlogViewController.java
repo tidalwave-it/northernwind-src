@@ -246,7 +246,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     private static final String TAG_PREFIX = "tag";
 
-    private static final ResourcePath TAG_CLOUD = new ResourcePath("tags");
+    private static final ResourcePath TAG_CLOUD = ResourcePath.of("tags");
 
     private static final Comparator<Content> REVERSE_DATE_COMPARATOR = (p1, p2) ->
         p2.getProperty(DATE_KEYS).orElse(TIME0).compareTo(p1.getProperty(DATE_KEYS).orElse(TIME0));

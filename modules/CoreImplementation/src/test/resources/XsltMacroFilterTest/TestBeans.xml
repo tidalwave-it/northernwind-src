@@ -48,9 +48,8 @@
     </bean>
 
     <bean id="site"
-          class="org.mockito.Mockito"
-          factory-method="mock">
-        <constructor-arg value="it.tidalwave.northernwind.core.model.Site" />
+          class="it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory"
+          factory-method="createMockSite">
     </bean>
 
     <bean id="underTest"
