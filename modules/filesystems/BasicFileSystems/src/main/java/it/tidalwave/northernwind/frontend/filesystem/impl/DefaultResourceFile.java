@@ -68,7 +68,7 @@ public class DefaultResourceFile implements ResourceFile
     @Override @Nonnull
     public ResourcePath getPath()
       {
-        return new ResourcePath(delegate.toAbsolutePath().toString());
+        return ResourcePath.of(delegate.toAbsolutePath().toString());
       }
 
     @Override
