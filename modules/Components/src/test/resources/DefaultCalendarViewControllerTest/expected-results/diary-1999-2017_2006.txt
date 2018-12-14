@@ -1,0 +1,7 @@
+ 3:  3 Provence                                                                         http://acme.com/diary/2006/03/31/      major
+ 4:  4 Provence                                                                         http://acme.com/diary/2006/04/21/      major
+ 4:  4 Côte d'Azur                                                                      http://acme.com/diary/2006/04/27/           
+ 7:  7 Lavande en Provence                                                              http://acme.com/diary/2006/07/02/      major
+ 8:  8 Toscana                                                                          http://acme.com/diary/2006/08/01/           
+ 9:  9 France and Belgium                                                               http://acme.com/diary/2006/09/11/      major
+12: 12 France and Belgium                                                               http://acme.com/diary/2006/12/10/      major

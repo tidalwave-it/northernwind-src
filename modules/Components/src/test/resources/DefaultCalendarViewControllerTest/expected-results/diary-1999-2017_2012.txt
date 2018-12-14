@@ -1,0 +1,9 @@
+ 2:  2 Maremma                                                                          http://acme.com/diary/2012/02/16/           
+ 4:  4 Papaveri in Maremma                                                              http://acme.com/diary/2012/04/29/           
+ 5:  5 Lac de Genève, Massif de la Chartreuse et Parc Naturel Régional du Vercors       http://acme.com/diary/2012/05/24/      major
+ 7:  7 Colle dell'Agnello e Parc Naturel Régional du Queyras                            http://acme.com/diary/2012/07/07/      major
+ 7:  7 Col de la Bonette e Colle della Lombarda                                         http://acme.com/diary/2012/07/19/           
+ 8:  8 Maremma                                                                          http://acme.com/diary/2012/08/01/           
+ 9:  9 Queyras et Haute Vallée de l'Ubaye                                               http://acme.com/diary/2012/09/08/           
+10: 10 Val Venosta ed Engadina                                                          http://acme.com/diary/2012/10/05/      major
+10: 10 Hautes vallées de l'Ubaye et de la Durance                                       http://acme.com/diary/2012/10/15/      major
