@@ -26,14 +26,12 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Optional;
 import java.time.Instant;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -47,12 +45,11 @@ import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.Htm
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
-import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static java.util.Arrays.asList;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
 import static org.mockito.Mockito.*;
@@ -64,6 +61,8 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class HtmlTemplateCalendarViewControllerTest
   {
+    private final FileTestHelper fileTestHelper = new FileTestHelper("HtmlTemplateCalendarViewControllerTest");
+
     private DefaultCalendarViewController underTest;
 
     private HtmlTemplateCalendarView view;
@@ -80,12 +79,6 @@ public class HtmlTemplateCalendarViewControllerTest
 
     private ResourceProperties viewProperties;
 
-    private final Path base = Paths.get("src/test/resources/HtmlTemplateCalendarViewControllerTest");
-
-    private final Path actualResults = Paths.get("target/test-results/HtmlTemplateCalendarViewControllerTest");
-
-    private final Path expectedResults = base.resolve("expected-results");
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -101,7 +94,7 @@ public class HtmlTemplateCalendarViewControllerTest
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("diary"));
         final ResourceProperties siteNodeProperties = createMockProperties();
 
-        final Path path = base.resolve("entries.xml");
+        final Path path = fileTestHelper.resolve("entries.xml");
         final String entries = new String(Files.readAllBytes(path), UTF_8);
         when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
@@ -141,19 +134,6 @@ public class HtmlTemplateCalendarViewControllerTest
         // when
         underTest.renderView(context);
         // then
-        assertFileContents("diary.xhtml");
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private void assertFileContents (final @Nonnull String fileName)
-      throws IOException
-      {
-        final Path actualPath = actualResults.resolve(fileName);
-        final Path excpectedPath = expectedResults.resolve(fileName);
-        Files.createDirectories(actualResults);
-        Files.write(actualPath, view.asBytes(UTF_8));
-        assertSameContents(excpectedPath.toFile(), actualPath.toFile());
+        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "diary.xhtml");
       }
   }

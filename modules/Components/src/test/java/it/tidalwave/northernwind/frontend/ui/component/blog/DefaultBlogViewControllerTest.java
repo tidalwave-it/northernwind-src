@@ -433,8 +433,8 @@ public class DefaultBlogViewControllerTest
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
-        mockNodeProperty(viewId, P_DATE_FORMAT, dateFormat);
-        mockNodeProperty(viewId, P_TIME_ZONE, timeZone);
+        mockViewProperty(siteNode, viewId, P_DATE_FORMAT, dateFormat);
+        mockViewProperty(siteNode, viewId, P_TIME_ZONE, timeZone);
         // when
         final String actualValue = underTest.formatDateTime(dateTime);
         // then
@@ -723,26 +723,6 @@ public class DefaultBlogViewControllerTest
             { "it", fullStyle,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
             { "it", fullStyle,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
           };
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private void mockNodeProperty (final @Nonnull Id viewId,
-                                   final @Nonnull Key<String> propertyKey,
-                                   final @Nonnull Optional<String> propertyValue)
-      throws Exception
-      {
-//        when(view.getId()).thenReturn(viewId);
-        ResourceProperties properties = siteNode.getPropertyGroup(viewId);
-
-        if (properties == null) // not mocked yet
-          {
-            properties = createMockProperties();
-            when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(properties);
-          }
-
-        when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
       }
 
     /*******************************************************************************************************************

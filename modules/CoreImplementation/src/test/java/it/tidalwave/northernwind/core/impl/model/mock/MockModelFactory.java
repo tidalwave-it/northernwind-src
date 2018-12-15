@@ -46,6 +46,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
+import it.tidalwave.util.Id;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyList;
@@ -248,5 +249,24 @@ public class MockModelFactory extends ModelFactorySupport
 //          {
 //            throw new RuntimeException(e); // never happens
 //          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public static <T> void mockViewProperty (final @Nonnull SiteNode siteNode,
+                                             final @Nonnull Id viewId,
+                                             final @Nonnull Key<T> propertyKey,
+                                             final @Nonnull Optional<T> propertyValue)
+      {
+        ResourceProperties properties = siteNode.getPropertyGroup(viewId);
+
+        if (properties == null) // in the real world can't happen, now it means not mocked yet
+          {
+            properties = createMockProperties();
+            when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(properties);
+          }
+
+        when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
       }
   }

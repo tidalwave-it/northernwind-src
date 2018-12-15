@@ -37,7 +37,6 @@ import java.time.Instant;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.InstantProvider;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -52,13 +51,13 @@ import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
 import static org.mockito.Mockito.*;
@@ -112,11 +111,7 @@ public class DefaultCalendarViewControllerTest
 
     private ResourceProperties viewProperties;
 
-    private final Path base = Paths.get("src/test/resources/DefaultCalendarViewControllerTest");
-
-    private final Path actualResults = Paths.get("target/test-results/DefaultCalendarViewControllerTest");
-
-    private final Path expectedResults = base.resolve("expected-results");
+    private final FileTestHelper fileTestHelper = new FileTestHelper("DefaultCalendarViewControllerTest");
 
     /*******************************************************************************************************************
      *
@@ -134,7 +129,7 @@ public class DefaultCalendarViewControllerTest
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("diary"));
         final ResourceProperties siteNodeProperties = createMockProperties();
 
-        final Path path = base.resolve("entries.xml");
+        final Path path = fileTestHelper.resolve("entries.xml");
         final String entries = new String(Files.readAllBytes(path), UTF_8);
         when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
@@ -233,11 +228,7 @@ public class DefaultCalendarViewControllerTest
                                                              e.getKey(), i.month, i.name, i.link, i.type.orElse(""))))
                             .collect(joining("\n"));
 
-        final Path actualPath = actualResults.resolve(fileName);
-        final Path excpectedPath = expectedResults.resolve(fileName);
-        Files.createDirectories(actualResults);
-        Files.write(actualPath, s.getBytes(UTF_8));
-        assertSameContents(excpectedPath.toFile(), actualPath.toFile());
+        fileTestHelper.assertFileContents(s.getBytes(UTF_8), fileName);
       }
 
     /*******************************************************************************************************************
