@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -36,15 +35,11 @@ import java.util.stream.IntStream;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.component.blog.MockPosts;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +49,6 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.split;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -65,6 +59,8 @@ import static org.mockito.Mockito.*;
 @Slf4j
 public class HtmlTemplateBlogViewControllerTest
   {
+    private final FileTestHelper fileTestHelper = new FileTestHelper("HtmlTemplateBlogViewControllerTest");
+
     private HtmlTemplateBlogViewController underTest;
 
     private HtmlTemplateBlogView view;
@@ -78,10 +74,6 @@ public class HtmlTemplateBlogViewControllerTest
     private ResourceProperties nodeProperties;
 
     private Id viewId = new Id("viewId");
-
-    private final Path actualResults = Paths.get("target/test-results/HtmlTemplateBlogViewControllerTest");
-
-    private final Path expectedResults = Paths.get("src/test/resources/HtmlTemplateBlogViewControllerTest/expected-results");
 
     /*******************************************************************************************************************
      *
@@ -101,10 +93,8 @@ public class HtmlTemplateBlogViewControllerTest
         node = createMockSiteNode(site);
         when(node.getProperties()).thenReturn(nodeProperties);
         when(node.getRelativeUri()).thenReturn(ResourcePath.of("blog"));
-        when(site.createLink(any(ResourcePath.class))).then(a -> "http://acme.com" + a.getArgument(0).toString());
-
-        mockViewProperties(viewId, P_TEMPLATE_POSTS_PATH, Optional.empty());
-        mockViewProperties(viewId, P_TEMPLATE_TAG_CLOUD_PATH, Optional.empty());
+        mockViewProperty(node, viewId, P_TEMPLATE_POSTS_PATH, Optional.empty());
+        mockViewProperty(node, viewId, P_TEMPLATE_TAG_CLOUD_PATH, Optional.empty());
 
         requestLocaleManager = mock(RequestLocaleManager.class);
         underTest = new HtmlTemplateBlogViewController(node, view, requestLocaleManager);
@@ -124,8 +114,8 @@ public class HtmlTemplateBlogViewControllerTest
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
-        mockViewProperties(viewId, P_DATE_FORMAT, Optional.of("F-"));
-        mockViewProperties(viewId, P_TIME_ZONE, Optional.of("GMT"));
+        mockViewProperty(node, viewId, P_DATE_FORMAT, Optional.of("F-"));
+        mockViewProperty(node, viewId, P_TIME_ZONE, Optional.of("GMT"));
 
         final MockPosts mockPosts = new MockPosts(site, null);
         mockPosts.createMockData(43);
@@ -133,7 +123,7 @@ public class HtmlTemplateBlogViewControllerTest
         // when
         underTest.renderPosts(posts.get(0), posts.get(1), posts.get(2));
         // then
-        assertFileContents("blog.xhtml");
+        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "blog.xhtml");
       }
 
     /*******************************************************************************************************************
@@ -151,7 +141,7 @@ public class HtmlTemplateBlogViewControllerTest
         // when
         underTest.renderTagCloud(tacs);
         // then
-        assertFileContents("tag_cloud.xhtml");
+        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "tag_cloud.xhtml");
       }
 
 //    /*******************************************************************************************************************
@@ -171,37 +161,4 @@ public class HtmlTemplateBlogViewControllerTest
 //        // then
 //        assertThat(builder.toString(), is(expectedRendering));
 //      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private void assertFileContents (final @Nonnull String fileName)
-      throws IOException
-      {
-        final Path actualPath = actualResults.resolve(fileName);
-        final Path excpectedPath = expectedResults.resolve(fileName);
-        Files.createDirectories(actualResults);
-        Files.write(actualPath, view.asBytes(UTF_8));
-        assertSameContents(excpectedPath.toFile(), actualPath.toFile());
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    private <T> void mockViewProperties (final @Nonnull Id viewId,
-                                         final @Nonnull Key<T> propertyKey,
-                                         final @Nonnull Optional<T> propertyValue)
-      throws Exception
-      {
-//        when(view.getId()).thenReturn(viewId);
-        ResourceProperties properties = node.getPropertyGroup(viewId);
-
-        if (properties == null) // not mocked yet
-          {
-            properties = createMockProperties();
-            when(node.getPropertyGroup(eq(viewId))).thenReturn(properties);
-          }
-
-        when(properties.getProperty(eq(propertyKey))).thenReturn(propertyValue);
-      }
   }
