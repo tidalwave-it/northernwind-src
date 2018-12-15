@@ -134,12 +134,12 @@ import static lombok.AccessLevel.PUBLIC;
  * <li>{@code PD_IMAGE_ID}: the id of the representative image.</li>
  * </ul>
  *
- * <p>Concrete implementation must implement two methods for rendering the blog posts and the tag cloud:</p>
+ * <p>Concrete implementations must provide two methods for rendering the blog posts and the tag cloud:</p>
  *
  * <ul>
  * <li>{@link #renderPosts(java.util.List, java.util.List, java.util.List) }</li>
  * <li>{@link #renderTagCloud(java.util.Collection)  }</li>
- * <ul>
+ * </ul>
  *
  * @author  Fabrizio Giudici
  *
