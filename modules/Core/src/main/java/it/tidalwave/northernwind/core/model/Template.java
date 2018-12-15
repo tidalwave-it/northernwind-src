@@ -181,5 +181,14 @@ public interface Template
      *
      *************************************************************************************************************************/
     @Nonnull
-    public String render (@Nonnull final Aggregates... aggregatesSet);
+    public String render (@Nonnull final Aggregates ... aggregatesSet);
+
+    /**************************************************************************************************************************
+     *
+     *************************************************************************************************************************/
+    @Nonnull
+    public default String render (@Nonnull final List<Aggregates> aggregatesSet)
+      {
+        return render(aggregatesSet.toArray(new Aggregates[0]));
+      }
   }

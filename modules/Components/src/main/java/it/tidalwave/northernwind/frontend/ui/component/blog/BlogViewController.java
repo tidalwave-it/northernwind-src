@@ -32,22 +32,30 @@ import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNode
 
 /***********************************************************************************************************************
  *
+ * A controller for rendering a blog.
+ *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public interface BlogViewController extends CompositeSiteNodeController, ViewController
   {
+    /** The max. number of posts to render in full. */
     public static final Key<Integer> P_MAX_FULL_ITEMS = new Key<Integer>("maxFullItems") {};
 
-    public static final Key<Integer> P_MAX_ITEMS = new Key<Integer>("maxItems") {};
-
+    /** The max. number of posts to render with lead-in text. */
     public static final Key<Integer> P_MAX_LEADIN_ITEMS = new Key<Integer>("maxLeadInItems") {};
 
+    /** The max. number of posts to render. */
+    public static final Key<Integer> P_MAX_ITEMS = new Key<Integer>("maxItems") {};
+
+    /** Flag to switch to 'index' mode. */
     public static final Key<Boolean> P_INDEX = new Key<Boolean>("index") {};
 
-    public static final Key<String> P_CATEGORY = new Key<String>("category") {};
-
+    /** Flag to switch to 'tag cloud' mode. */
     public static final Key<Boolean> P_TAG_CLOUD = new Key<Boolean>("tagCloud") {};
+
+    /** The category associated to a post. */
+    public static final Key<String> P_CATEGORY = new Key<String>("category") {};
 
     /** The id of the image to be associated with a blog post. */
     public static final Key<String> P_IMAGE_ID = new Key<String>("imageId") {};

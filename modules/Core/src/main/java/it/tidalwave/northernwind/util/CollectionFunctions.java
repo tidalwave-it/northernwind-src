@@ -64,7 +64,6 @@ public final class CollectionFunctions
         return result;
       }
 
-
     /*******************************************************************************************************************
      *
      * Return a sublist of the original {@link List}, from the given being and end index. If the end index is lower
