@@ -26,27 +26,30 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
-import it.tidalwave.util.Key;
-import it.tidalwave.northernwind.frontend.ui.ViewController;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import java.util.List;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController.Entry;
 
 /***********************************************************************************************************************
- *
- * A controller for rendering a calendar.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface CalendarViewController extends ViewController
+public interface CalendarDao
   {
-    /** The list of entries of the calendar. */
-    public static final Key<String> P_ENTRIES = new Key<String>("entries") {};
-
-    /** The selected year of the calendar. */
-    public static final Key<Integer> P_SELECTED_YEAR = new Key<Integer>("selectedYear") {};
-
-    /** The first year in the year selector of the calendar. */
-    public static final Key<Integer> P_FIRST_YEAR = new Key<Integer>("firstYear") {};
-
-    /** The last year in the year selector of the calendar. */
-    public static final Key<Integer> P_LAST_YEAR = new Key<Integer>("lastYear") {};
+    /*******************************************************************************************************************
+     *
+     * Retrieves a list of entries for the given month and year.
+     *
+     * @param       site            the site
+     * @param       entries         the configuration data
+     * @param       month           the month
+     * @param       year            the year
+     * @return                      the list
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public List<Entry> findMonthlyEntries (@Nonnull Site site, @Nonnull String entries, int month, @Nonnegative int year);
   }

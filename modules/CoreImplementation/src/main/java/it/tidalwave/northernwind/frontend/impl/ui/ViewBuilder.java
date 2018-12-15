@@ -32,10 +32,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.InstantProvider;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Site;
@@ -58,6 +60,8 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j @ToString(exclude = "beanFactory")
 /* package */ class ViewBuilder
   {
+    private final static InstantProvider REAL_INSTANT_PROVIDER = () -> Instant.now();
+
     @Inject
     private BeanFactory beanFactory;
 
@@ -162,6 +166,10 @@ import lombok.extern.slf4j.Slf4j;
             else if (BeanFactory.class.isAssignableFrom(argumentType))
               {
                 result.add(beanFactory);
+              }
+            else if (InstantProvider.class.equals(argumentType))
+              {
+                result.add(REAL_INSTANT_PROVIDER);
               }
             else
               {

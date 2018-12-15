@@ -95,12 +95,6 @@ public class DefaultNodeContainerViewControllerTest
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
 
-        when(site.createLink(any(ResourcePath.class))).then(invocation ->
-          {
-            final ResourcePath path = invocation.getArgument(0);
-            return String.format("http://acme.com%s", path.asString());
-          });
-
         nodeProperties = createMockProperties();
         viewProperties = createMockProperties();
 
@@ -326,9 +320,9 @@ public class DefaultNodeContainerViewControllerTest
         underTest.renderView(renderContext);
         // then
         verify(view).addAttribute("rssFeeds",
-            "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Feed 1 title\" href=\"http://acme.com/URI-feed1\" />\n" +
-            "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Feed 2 title\" href=\"http://acme.com/URI-feed2\" />\n" +
-            "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"http://acme.com/URI-feed3\" />\n");
+            "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Feed 1 title\" href=\"http://acme.com/URI-feed1/\" />\n" +
+            "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"Feed 2 title\" href=\"http://acme.com/URI-feed2/\" />\n" +
+            "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"http://acme.com/URI-feed3/\" />\n");
       }
 
     /*******************************************************************************************************************
