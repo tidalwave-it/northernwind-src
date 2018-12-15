@@ -1,0 +1,16 @@
+ 1:  1 Provence                                                                         http://acme.com/diary/2007/01/13/      major
+ 2:  2 Friuli Venezia Giulia                                                            http://acme.com/diary/2007/02/23/      major
+ 4:  4 Maremma                                                                          http://acme.com/diary/2007/04/15/      major
+ 4:  4 Var                                                                              http://acme.com/diary/2007/04/24/           
+ 4:  4 Maremma                                                                          http://acme.com/diary/2007/04/28/      major
+ 6:  6 Suisse                                                                           http://acme.com/diary/2007/06/24/      major
+ 7:  7 Provence                                                                         http://acme.com/diary/2007/07/06/      major
+ 7:  7 Stockholm                                                                        http://acme.com/diary/2007/07/12/           
+ 7:  7 Tall ships a Genova                                                              http://acme.com/diary/2007/07/28/           
+ 7:  7 Tall ships a Genova                                                              http://acme.com/diary/2007/07/31/           
+ 8:  8 Toscana                                                                          http://acme.com/diary/2007/08/01/      major
+ 9:  9 Suisse                                                                           http://acme.com/diary/2007/09/15/           
+10: 10 Provence                                                                         http://acme.com/diary/2007/10/12/      major
+11: 11 Maremma                                                                          http://acme.com/diary/2007/11/30/           
+12: 12 Maremma                                                                          http://acme.com/diary/2007/12/02/           
+12: 12 France                                                                           http://acme.com/diary/2007/12/08/      major

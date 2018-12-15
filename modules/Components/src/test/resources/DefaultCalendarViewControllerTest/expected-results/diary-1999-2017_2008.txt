@@ -1,0 +1,15 @@
+ 2:  2 Maremma                                                                          http://acme.com/diary/2008/02/08/           
+ 2:  2 Var                                                                              http://acme.com/diary/2008/02/23/           
+ 3:  3 Var                                                                              http://acme.com/diary/2008/03/28/           
+ 4:  4 Maremma and Senese                                                               http://acme.com/diary/2008/04/19/           
+ 5:  5 San Francisco                                                                    http://acme.com/diary/2008/05/10/      major
+ 5:  5 Rice fields                                                                      http://acme.com/diary/2008/05/23/           
+ 6:  6 Lomellina                                                                        http://acme.com/diary/2008/06/13/           
+ 6:  6 Friuli and Slovenia                                                              http://acme.com/diary/2008/06/01/           
+ 7:  7 Rhone Tour                                                                       http://acme.com/diary/2008/07/03/      major
+ 8:  8 Maremma                                                                          http://acme.com/diary/2008/08/01/           
+ 8:  8 Diaccia Botrona                                                                  http://acme.com/diary/2008/08/16/           
+10: 10 Provence                                                                         http://acme.com/diary/2008/10/04/           
+10: 10 Maremma                                                                          http://acme.com/diary/2008/10/25/           
+11: 11 Pavese                                                                           http://acme.com/diary/2008/11/08/           
+12: 12 France                                                                           http://acme.com/diary/2008/12/07/      major

@@ -70,9 +70,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.DEFAULT_TIMEZONE;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -157,12 +155,6 @@ public class DefaultBlogViewControllerTest
         site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
-
-        when(site.createLink(any(ResourcePath.class))).then(invocation ->
-          {
-            final ResourcePath path = invocation.getArgument(0);
-            return String.format("http://acme.com%s", path.asString());
-          });
 
         viewProperties = createMockProperties();
         siteNodeProperties = createMockProperties();
@@ -379,7 +371,7 @@ public class DefaultBlogViewControllerTest
 
             final String sid = String.format("%2d", id);
             verify(requestContext).setDynamicNodeProperty(eq(PD_ID),       eq("id#" + sid));
-            verify(requestContext).setDynamicNodeProperty(eq(PD_URL),      eq("http://acme.com/blogNode/post-" + sid));
+            verify(requestContext).setDynamicNodeProperty(eq(PD_URL),      eq("http://acme.com/blogNode/post-" + sid + "/"));
 
             if (mockPosts.getPosts().get(id).getProperty(P_IMAGE_ID).isPresent())
               {

@@ -1,0 +1,7 @@
+ 1:  1 Corniche de l'Estérel                                                            http://acme.com/diary/2010/01/02/           
+ 1:  1 Saint-Honorat                                                                    http://acme.com/diary/2010/01/19/           
+ 2:  2 Maremma                                                                          http://acme.com/diary/2010/02/15/           
+ 5:  5 Bourgogne (and Jura)                                                             http://acme.com/diary/2010/05/06/      major
+ 9:  9 Col della Lombarda e Vallée de la Gordolasque                                    http://acme.com/diary/2010/09/10/           
+ 9:  9 San Francisco                                                                    http://acme.com/diary/2010/09/19/      major
+10: 10 Lac Léman                                                                        http://acme.com/diary/2010/10/15/      major

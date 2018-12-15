@@ -1,0 +1,12 @@
+ 1:  1 Maremma                                                                          http://acme.com/diary/2013/01/12/           
+ 1:  1 Maremma                                                                          http://acme.com/diary/2013/01/26/           
+ 1:  1 Casei Gerola e Arenzano                                                          http://acme.com/diary/2013/01/31/           
+ 2:  2 Côte d'Azur                                                                      http://acme.com/diary/2013/02/09/           
+ 2:  2 Genova                                                                           http://acme.com/diary/2013/02/24/           
+ 4:  4 Maremma                                                                          http://acme.com/diary/2013/04/29/           
+ 5:  5 Colle della Maddalena e Embrunais                                                http://acme.com/diary/2013/05/04/           
+ 5:  5 Val d'Orcia e dintorni                                                           http://acme.com/diary/2013/05/26/      major
+ 6:  6 Provence et Vercors                                                              http://acme.com/diary/2013/06/21/      major
+ 7:  7 Provence                                                                         http://acme.com/diary/2013/07/08/      major
+10: 10 Hautes-Alpes                                                                     http://acme.com/diary/2013/10/14/           
+11: 11 Ain et Bourgogne du Sud                                                          http://acme.com/diary/2013/11/16/      major
