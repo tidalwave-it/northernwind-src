@@ -93,7 +93,6 @@ public class HtmlTemplateBlogViewControllerTest
         node = createMockSiteNode(site);
         when(node.getProperties()).thenReturn(nodeProperties);
         when(node.getRelativeUri()).thenReturn(ResourcePath.of("blog"));
-            when(site.createLink(any(ResourcePath.class))).then(a -> "http://acme.com" + a.getArgument(0).toString());
         mockViewProperty(node, viewId, P_TEMPLATE_POSTS_PATH, Optional.empty());
         mockViewProperty(node, viewId, P_TEMPLATE_TAG_CLOUD_PATH, Optional.empty());
 
