@@ -56,7 +56,7 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
  * </ul>
  *
  * <p>This controller calls render methods to the view by passing aggregates to be used with templates.</p>
- * <p>In case of post rendering, these three aggregates are defined:</p>
+ * <p>In case of post rendering, the following aggregates are defined:</p>
  *
  * <ul>
  * <li>{@code fullPosts}: the posts to be rendered in full;</li>

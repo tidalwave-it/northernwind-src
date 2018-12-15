@@ -1,0 +1,31 @@
+ 2:  2 Maremma                                                                          http://acme.com/diary/2017/02/07/           
+ 2:  2 Mimosas en Côte d'Azur                                                           http://acme.com/diary/2017/02/18/           
+ 2:  2 Fiori lungo il sentiero dell'antico acquedotto e Montoggio                       http://acme.com/diary/2017/02/25/           
+ 3:  3 Fiori lungo il sentiero dell'antico acquedotto                                   http://acme.com/diary/2017/03/02/           
+ 3:  3 Fiori a Trensasco                                                                http://acme.com/diary/2017/03/07/           
+ 3:  3 Fiori a Trensasco                                                                http://acme.com/diary/2017/03/08/           
+ 3:  3 Fiori a Sant'Ilario e sul Monte Fasce                                            http://acme.com/diary/2017/03/11/           
+ 3:  3 Fiori sul Monte Fasce                                                            http://acme.com/diary/2017/03/15/           
+ 3:  3 Fiori a Sant'Apollinare                                                          http://acme.com/diary/2017/03/18/           
+ 3:  3 Fiori a Montallegro e sul Monte Fasce                                            http://acme.com/diary/2017/03/29/           
+ 4:  4 Fiori a Ruta di Camogli                                                          http://acme.com/diary/2017/04/01/           
+ 4:  4 Fiori a Borzonasca e Favale di Malvaro                                           http://acme.com/diary/2017/04/03/           
+ 4:  4 Fiori a San Rocco di Camogli                                                     http://acme.com/diary/2017/04/08/           
+ 4:  4 Fiori a Capanne di Marcarolo                                                     http://acme.com/diary/2017/04/11/           
+ 4:  4 Fiori a Capanne di Marcarolo                                                     http://acme.com/diary/2017/04/15/           
+ 4:  4 Fiori in Maremma                                                                 http://acme.com/diary/2017/04/24/           
+ 4:  4 Fiori a Capanne di Marcarolo                                                     http://acme.com/diary/2017/04/29/           
+ 5:  5 Lago Maggiore e dintorni                                                         http://acme.com/diary/2017/05/05/           
+ 5:  5 I narcisi del Monte Fasce                                                        http://acme.com/diary/2017/05/16/           
+ 5:  5 A sud di Siena                                                                   http://acme.com/diary/2017/05/19/      major
+ 6:  6 Valli Occitane                                                                   http://acme.com/diary/2017/06/20/           
+ 7:  7 Ceillac                                                                          http://acme.com/diary/2017/07/08/      major
+ 8:  8 Toscana                                                                          http://acme.com/diary/2017/08/03/      major
+ 9:  9 Col de la Cayolle                                                                http://acme.com/diary/2017/09/08/           
+ 9:  9 Lago Maggiore                                                                    http://acme.com/diary/2017/09/13/           
+10: 10 Intorno a Siena                                                                  http://acme.com/diary/2017/10/02/      major
+10: 10 Cremona                                                                          http://acme.com/diary/2017/10/10/           
+10: 10 Bellinzona                                                                       http://acme.com/diary/2017/10/17/           
+10: 10 Automne en Haute-Provence                                                        http://acme.com/diary/2017/10/27/      major
+11: 11 Dal Lago di Garda alle Dolomiti (I)                                              http://acme.com/diary/2017/11/14/      major
+11: 11 Dal Lago di Garda alle Dolomiti (II)                                             http://acme.com/diary/2017/11/28/      major

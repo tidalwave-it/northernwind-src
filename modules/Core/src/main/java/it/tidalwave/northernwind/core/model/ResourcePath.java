@@ -102,7 +102,7 @@ public class ResourcePath
      ******************************************************************************************************************/
     private ResourcePath (final @Nonnull String path)
       {
-        this((path.equals("/") | path.equals("")) ? emptyList() : asList(validated(path).split("/")));
+        this((path.equals("/") || path.equals("")) ? emptyList() : asList(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
