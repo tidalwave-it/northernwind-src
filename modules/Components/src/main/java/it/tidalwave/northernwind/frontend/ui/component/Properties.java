@@ -53,7 +53,7 @@ public final class Properties
 
     public static final Key<ResourcePath> P_TEMPLATE_PATH = new Key<ResourcePath>("templatePath") {};
 
-    public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_RESOURCE = new Key<ResourcePath>("wrapperTemplate") {};
+    public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_PATH = new Key<ResourcePath>("wrapperTemplate") {};
 
     public static final Key<ZonedDateTime> P_CREATION_DATE = new Key<ZonedDateTime>("creationDateTime") {};
 
@@ -67,7 +67,7 @@ public final class Properties
 
     public static final Key<String> P_TIME_ZONE = new Key<String>("timeZone") {};
 
-    public static final Key<List<String>> P_CONTENTS = new Key<List<String>>("contents") {};
+    public static final Key<List<String>> P_CONTENT_PATHS = new Key<List<String>>("contents") {};
 
     public static final Key<List<String>> P_TAGS = new Key<List<String>>("tags") {};
   }

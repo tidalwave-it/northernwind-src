@@ -111,7 +111,7 @@ public class MockPosts
                 when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(e.getValue())));
               });
 
-            when(viewProperties.getProperty(eq(P_CONTENTS))).thenReturn(Optional.of(paths));
+            when(viewProperties.getProperty(eq(P_CONTENT_PATHS))).thenReturn(Optional.of(paths));
           }
 
         posts.forEach(post -> log.info(">>>> post {}", post));

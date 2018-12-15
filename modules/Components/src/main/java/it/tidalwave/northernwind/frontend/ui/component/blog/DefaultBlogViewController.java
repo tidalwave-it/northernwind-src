@@ -72,6 +72,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 import static lombok.AccessLevel.PUBLIC;
+import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
  *
@@ -98,7 +99,7 @@ import static lombok.AccessLevel.PUBLIC;
  * <p>Supported properties of the {@link SiteNode}:</p>
  *
  * <ul>
- * <li>{@code P_CONTENTS}: one or more {@code Content} that contains the posts to render; they are folders and can have
+ * <li>{@code P_CONTENT_PATHS}: one or more {@code Content} that contains the posts to render; they are folders and can have
  *     sub-folders, which will be searched for in a recursive fashion;</li>
  * <li>{@code P_MAX_FULL_ITEMS}: the max. number of posts to be rendered in full;</li>
  * <li>{@code P_MAX_LEADIN_ITEMS}: the max. number of posts to be rendered with lead-in text;</li>
@@ -573,7 +574,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
       {
-        return properties.getProperty(P_CONTENTS).orElse(emptyList()).stream()
+        return properties.getProperty(P_CONTENT_PATHS).orElse(emptyList()).stream()
                 .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream()
                                                                  .flatMap(folder -> folder.findChildren().stream()))
                 .collect(toList());
