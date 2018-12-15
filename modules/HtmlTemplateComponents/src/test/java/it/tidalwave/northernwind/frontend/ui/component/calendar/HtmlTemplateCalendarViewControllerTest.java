@@ -45,6 +45,8 @@ import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarView;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarViewController;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
 import it.tidalwave.util.Id;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

@@ -24,7 +24,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.calendar;
+package it.tidalwave.northernwind.frontend.ui.component.calendar.spi;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -50,6 +50,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController.Entry;
 import static java.util.stream.Collectors.toList;
 
@@ -70,7 +71,7 @@ public class XmlCalendarDao implements CalendarDao
     @Override @Nonnull
     public List<Entry> findMonthlyEntries (final @Nonnull Site site,
                                            final @Nonnull String entries,
-                                           final int month,
+                                           final @Nonnegative int month,
                                            final @Nonnegative int year)
       {
         try

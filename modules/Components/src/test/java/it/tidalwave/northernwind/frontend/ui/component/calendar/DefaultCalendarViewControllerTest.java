@@ -50,6 +50,8 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
