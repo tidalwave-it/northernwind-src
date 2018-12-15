@@ -56,7 +56,6 @@ import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.
 import static it.tidalwave.northernwind.util.CollectionFunctions.split;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 import static org.mockito.Mockito.*;
-import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
  *
@@ -80,9 +79,9 @@ public class HtmlTemplateBlogViewControllerTest
 
     private Id viewId = new Id("viewId");
 
-    private final Path actualResults = Paths.get("target/test-results");
+    private final Path actualResults = Paths.get("target/test-results/HtmlTemplateBlogViewControllerTest");
 
-    private final Path expectedResults = Paths.get("src/test/resources/expected-results");
+    private final Path expectedResults = Paths.get("src/test/resources/HtmlTemplateBlogViewControllerTest/expected-results");
 
     /*******************************************************************************************************************
      *
@@ -134,7 +133,7 @@ public class HtmlTemplateBlogViewControllerTest
         // when
         underTest.renderPosts(posts.get(0), posts.get(1), posts.get(2));
         // then
-        assertFileContents("blog.html");
+        assertFileContents("blog.xhtml");
       }
 
     /*******************************************************************************************************************
@@ -152,7 +151,7 @@ public class HtmlTemplateBlogViewControllerTest
         // when
         underTest.renderTagCloud(tacs);
         // then
-        assertFileContents("tag_cloud.html");
+        assertFileContents("tag_cloud.xhtml");
       }
 
 //    /*******************************************************************************************************************

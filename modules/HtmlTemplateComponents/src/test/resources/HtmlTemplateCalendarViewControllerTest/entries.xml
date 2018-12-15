@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calendar>
+    <year id="2004">
+        <month id="jan">
+            <item name="Provence" type="major" link="/diary/2004/01/02/"/>
+            <item name="Bocca di Magra" link="/diary/2004/01/24/"/>
+            <item name="Maremma" link="/diary/2004/01/31/"/>
+        </month>
+        <month id="feb">
+            <item name="Friuli Venezia Giulia" type="major" link="/diary/2004/02/06/"/>
+            <item name="Maremma" link="/diary/2004/02/24/"/>
+        </month>
+        <month id="mar">
+            <item name="Lombardia" link="/diary/2004/03/05/"/>
+            <item name="Maremma" type="major" link="/diary/2004/03/15/"/>
+        </month>
+        <month id="apr">
+            <item name="France et Hollande" type="major" link="/diary/2004/04/29/"/>
+        </month>
+        <month id="may">
+            <item name="Campi di riso" link="/diary/2004/05/18/"/>
+            <item name="Campi di riso" link="/diary/2004/05/22/"/>
+            <item name="Air show a Genova" link="/diary/2004/05/23/"/>
+            <item name="Maremma" link="/diary/2004/05/29/"/>
+        </month>
+        <month id="jun">
+            <item name="Campi di riso" link="/diary/2004/06/08/"/>
+        </month>
+        <month id="jul">
+            <item name="Campi di riso" link="/diary/2004/07/03/"/>
+            <item name="Lombardia" link="/diary/2004/07/07/"/>
+            <item name="Andalucìa" type="major" link="/diary/2004/07/15/"/>
+        </month>
+        <month id="aug">
+            <item name="Maremma" type="major" link="/diary/2004/08/01/"/>
+        </month>
+        <month id="sep">
+            <item name="Friuli Venezia Giulia" type="major" link="/diary/2004/09/18/"/>
+        </month>
+        <month id="oct">
+            <item name="Maremma" type="major" link="/diary/2004/10/23/"/>
+        </month>
+        <month id="nov">
+            <item name="Provence et Languedoc" type="major" link="/diary/2004/11/22/"/>
+        </month>
+        <month id="dec">
+            <item name="Maremma" type="major" link="/diary/2004/12/28/"/>
+        </month>
+    </year>
+    <year id="2005">
+        <month id="feb">
+            <item name="Provence" type="major" link="/diary/2005/02/10/"/>
+        </month>
+        <month id="mar">
+            <item name="Maremma" link="/diary/2005/03/13/"/>
+            <item name="Provence" type="major" link="/diary/2005/03/20/"/>
+        </month>
+        <month id="apr">
+            <item name="Toscana" type="major" link="/diary/2005/04/29/"/>
+        </month>
+        <month id="may">
+            <item name="Maremma" link="/diary/2005/05/14/"/>
+            <item name="Lomellina" link="/diary/2005/05/19/"/>
+            <item name="Provence" type="major" link="/diary/2005/05/26/"/>
+        </month>
+        <month id="jun">
+            <item name="Maremma" type="major" link="/diary/2005/06/04/"/>
+        </month>
+        <month id="jul">
+            <item name="Entracque" link="/diary/2005/07/13/"/>
+            <item name="Côte d'Azur" link="/diary/2005/07/20/"/>
+        </month>
+        <month id="aug">
+            <item name="Maremma" type="major" link="/diary/2005/08/01/"/>
+        </month>
+        <month id="sep">
+            <item name="Maremma" type="major" link="/diary/2005/09/23/"/>
+        </month>
+        <month id="oct">
+            <item name="Languedoc et Provence" type="major" link="/diary/2005/10/21/"/>
+        </month>
+    </year>
+    <year id="2006">
+        <month id="mar">
+            <item name="Provence" type="major" link="/diary/2006/03/31/"/>
+        </month>
+        <month id="apr">
+            <item name="Provence" type="major" link="/diary/2006/04/21/"/>
+            <item name="Côte d'Azur" link="/diary/2006/04/27/"/>
+        </month>
+        <month id="jul">
+            <item name="Lavande en Provence" type="major" link="/diary/2006/07/02/"/>
+        </month>
+        <month id="aug">
+            <item name="Toscana" link="/diary/2006/08/01/"/>
+        </month>
+        <month id="sep">
+            <item name="France and Belgium" type="major" link="/diary/2006/09/11/"/>
+        </month>
+        <month id="dec">
+            <item name="France and Belgium" type="major" link="/diary/2006/12/10/"/>
+        </month>
+    </year>
+    <year id="2007">
+        <month id="jan">
+            <item name="Provence" type="major" link="/diary/2007/01/13"/>
+        </month>
+        <month id="feb">
+            <item name="Friuli Venezia Giulia" type="major" link="/diary/2007/02/23"/>
+        </month>
+        <month id="apr">
+            <item name="Maremma" type="major" link="/diary/2007/04/15"/>
+            <item name="Var" link="/diary/2007/04/24"/>
+            <item name="Maremma" type="major" link="/diary/2007/04/28"/>
+        </month>
+        <month id="jun">
+            <item name="Suisse" type="major" link="/diary/2007/06/24"/>
+        </month>
+        <month id="jul">
+            <item name="Provence" type="major" link="/diary/2007/07/06"/>
+            <item name="Stockholm" link="/diary/2007/07/12"/>
+            <item name="Tall ships a Genova" link="/diary/2007/07/28"/>
+            <item name="Tall ships a Genova" link="/diary/2007/07/31"/>
+        </month>
+        <month id="aug">
+            <item name="Toscana" type="major" link="/diary/2007/08/01"/>
+        </month>
+        <month id="sep">
+            <item name="Suisse" link="/diary/2007/09/15"/>
+        </month>
+        <month id="oct">
+            <item name="Provence" type="major" link="/diary/2007/10/12"/>
+        </month>
+        <month id="nov">
+            <item name="Maremma" link="/diary/2007/11/30"/>
+        </month>
+        <month id="dec">
+            <item name="Maremma" link="/diary/2007/12/02"/>
+            <item name="France" type="major" link="/diary/2007/12/08"/>
+        </month>
+    </year>
+    <year id="2008">
+        <month id="feb">
+            <item name="Maremma" link="/diary/2008/02/08/"/>
+            <item name="Var" link="/diary/2008/02/23/"/>
+        </month>
+        <month id="mar">
+            <item name="Var" link="/diary/2008/03/28/"/>
+        </month>
+        <month id="apr">
+            <item name="Maremma and Senese" link="/diary/2008/04/19/"/>
+        </month>
+        <month id="may">
+            <item name="San Francisco" type="major" link="/diary/2008/05/10/"/>
+            <item name="Rice fields" link="/diary/2008/05/23/"/>
+        </month>
+        <month id="jun">
+            <item name="Lomellina" link="/diary/2008/06/13/"/>
+            <item name="Friuli and Slovenia" link="/diary/2008/06/01/"/>
+        </month>
+        <month id="jul">
+            <item name="Rhone Tour" type="major" link="/diary/2008/07/03/"/>
+        </month>
+        <month id="aug">
+            <item name="Maremma" link="/diary/2008/08/01/"/>
+            <item name="Diaccia Botrona" link="/diary/2008/08/16/"/>
+        </month>
+        <month id="oct">
+            <item name="Provence" link="/diary/2008/10/04/"/>
+            <item name="Maremma" link="/diary/2008/10/25/"/>
+        </month>
+        <month id="nov">
+            <item name="Pavese" link="/diary/2008/11/08/"/>
+        </month>
+        <month id="dec">
+            <item name="France" type="major" link="/diary/2008/12/07/"/>
+        </month>
+    </year>
+    <year id="2009">
+        <month id="jun">
+            <item name="Switzerland and France" type="major" link="/diary/2009/06/21/"/>
+        </month>
+        <month id="sep">
+            <item name="Birds at Viareggio" link="/diary/2009/09/26/"/>
+        </month>
+    </year>
+    <year id="2010">
+        <month id="jan">
+            <item name="Corniche de l'Estérel" link="/diary/2010/01/02/"/>
+            <item name="Saint-Honorat" link="/diary/2010/01/19/"/>
+        </month>
+        <month id="feb">
+            <item name="Maremma" link="/diary/2010/02/15/"/>
+        </month>
+        <month id="may">
+            <item name="Bourgogne (and Jura)" type="major" link="/diary/2010/05/06/"/>
+        </month>
+        <month id="sep">
+            <item name="Col della Lombarda e Vallée de la Gordolasque" link="/diary/2010/09/10/"/>
+            <item name="San Francisco" type="major" link="/diary/2010/09/19/"/>
+        </month>
+        <month id="oct">
+            <item name="Lac Léman" type="major" link="/diary/2010/10/15/"/>
+        </month>
+    </year>
+    <year id="2011">
+        <month id="jan">
+            <item name="L'Estérel" link="/diary/2011/01/13/"/>
+        </month>
+        <month id="jul">
+            <item name="Champs de lavande" link="/diary/2011/07/11/"/>
+        </month>
+        <month id="sep">
+            <item name="Gordolasque et Notre-Dame de la Menour" link="/diary/2011/09/10/"/>
+        </month>
+        <month id="nov">
+            <item name="France, Belgique et Hollande" type="major" link="/diary/2011/11/12/"/>
+        </month>
+
+    </year>
+    <year id="2012">
+        <month id="feb">
+            <item name="Maremma" link="/diary/2012/02/16/"/>
+        </month>
+        <month id="apr">
+            <item name="Papaveri in Maremma" link="/diary/2012/04/29/"/>
+        </month>
+        <month id="may">
+            <item name="Lac de Genève, Massif de la Chartreuse et Parc Naturel Régional du Vercors" type="major" link="/diary/2012/05/24/"/>
+        </month>
+        <month id="jul">
+            <item name="Colle dell'Agnello e Parc Naturel Régional du Queyras" type="major" link="/diary/2012/07/07/"/>
+            <item name="Col de la Bonette e Colle della Lombarda" link="/diary/2012/07/19/"/>
+        </month>
+        <month id="aug">
+            <item name="Maremma" link="/diary/2012/08/01/"/>
+        </month>
+        <month id="sep">
+            <item name="Queyras et Haute Vallée de l'Ubaye" link="/diary/2012/09/08/"/>
+        </month>
+        <month id="oct">
+            <item name="Val Venosta ed Engadina" type="major" link="/diary/2012/10/05/"/>
+            <item name="Hautes vallées de l'Ubaye et de la Durance" type="major" link="/diary/2012/10/15/"/>
+        </month>
+    </year>
+    <year id="2013">
+        <month id="jan">
+            <item name="Maremma" link="/diary/2013/01/12/"/>
+            <item name="Maremma" link="/diary/2013/01/26/"/>
+            <item name="Casei Gerola e Arenzano" link="/diary/2013/01/31/"/>
+        </month>
+        <month id="feb">
+            <item name="Côte d'Azur" link="/diary/2013/02/09/"/>
+            <item name="Genova" link="/diary/2013/02/24/"/>
+        </month>
+        <month id="apr">
+            <item name="Maremma" link="/diary/2013/04/29/"/>
+        </month>
+        <month id="may">
+            <item name="Colle della Maddalena e Embrunais" link="/diary/2013/05/04/"/>
+            <item name="Val d'Orcia e dintorni" type="major" link="/diary/2013/05/26/"/>
+        </month>
+        <month id="jun">
+            <item name="Provence et Vercors" type="major" link="/diary/2013/06/21/"/>
+        </month>
+        <month id="jul">
+            <item name="Provence" type="major" link="/diary/2013/07/08/"/>
+        </month>
+        <month id="oct">
+            <item name="Hautes-Alpes" link="/diary/2013/10/14/"/>
+        </month>
+        <month id="nov">
+            <item name="Ain et Bourgogne du Sud" type="major" link="/diary/2013/11/16/"/>
+        </month>
+    </year>
+    <year id="2014">
+        <month id="jan">
+            <item name="Saint-Honorat et Estérel" link="/diary/2014/01/21/"/>
+        </month>
+        <month id="feb">
+            <item name="Mareggiata a Nervi" link="/diary/2014/02/09/"/>
+            <item name="Mimosas et Côte d'Azur" link="/diary/2014/02/22/"/>
+        </month>
+        <month id="mar">
+            <item name="Alberese e Talamone" link="/diary/2014/03/08/"/>
+            <item name="Trentino ed Engadina" type="major" link="/diary/2014/03/11/"/>
+            <item name="Montagnana" link="/diary/2014/03/26/"/>
+            <item name="Lessinia" link="/diary/2014/03/29a/"/>
+            <item name="Casei Gerola" link="/diary/2014/03/29b/"/>
+        </month>
+        <month id="apr">
+            <item name="Abbaye du Thoronet et Chartreuse de la Verne" link="/diary/2014/04/05/"/>
+            <item name="Trentino ed Engadina" type="major" link="/diary/2014/04/08/"/>
+            <item name="Lac Léman" type="major" link="/diary/2014/04/23/"/>
+            <item name="Haute Provence" type="major" link="/diary/2014/04/30/"/>
+        </month>
+        <month id="may">
+            <item name="Toscana" type="major" link="/diary/2014/05/17/"/>
+            <item name="I narcisi dell'Antola" link="/diary/2014/05/24/"/>
+        </month>
+        <month id="jul">
+            <item name="Provence" type="major" link="/diary/2014/07/17/"/>
+        </month>
+        <month id="aug">
+            <item name="Toscana e Viterbese" type="major" link="/diary/2014/08/01/"/>
+        </month>
+        <month id="sep">
+            <item name="Vallon du Lauzanier et Col de la Bonette" link="/diary/2014/09/06/"/>
+        </month>
+        <month id="oct">
+            <item name="Bourgogne" type="major" link="/diary/2014/10/18/"/>
+        </month>
+        <month id="dec">
+            <item name="Côte d'Azur" type="major" link="/diary/2014/12/11/"/>
+        </month>
+    </year>
+    <year id="2015">
+        <month id="jan">
+            <item name="Marina di Alberese" link="/diary/2015/01/05/"/>
+            <item name="Esercizi genovesi" link="/diary/2015/01/24/"/>
+            <item name="Camogli" link="/diary/2015/01/30/"/>
+        </month>
+        <month id="feb">
+            <item name="Provence" link="/diary/2015/02/20/"/>
+            <item name="Mimosas en Côte d'Azur" link="/diary/2015/02/25/"/>
+        </month>
+        <month id="mar">
+            <item name="Esercizi genovesi" link="/diary/2015/03/11/"/>
+            <item name="Esercizi genovesi" link="/diary/2015/03/21/"/>
+            <item name="Fiori in Maremma" link="/diary/2015/03/28/"/>
+        </month>
+        <month id="apr">
+            <item name="Esercizi genovesi" link="/diary/2015/04/11/"/>
+        </month>
+        <month id="may">
+            <item name="Val d'Aveto" link="/diary/2015/05/16/"/>
+        </month>
+        <month id="jun">
+            <item name="Alpi Liguri" link="/diary/2015/06/06/"/>
+            <item name="Senese" type="major" link="/diary/2015/06/19/"/>
+        </month>
+        <month id="jul">
+            <item name="Val d'Escreins et Haute Vallée de l'Ubaye" link="/diary/2015/07/20/"/>
+        </month>
+        <month id="aug">
+            <item name="Toscana" type="major" link="/diary/2015/08/03/"/>
+        </month>
+        <month id="sep">
+            <item name="Venezia" link="/diary/2015/09/17/"/>
+            <item name="Hautes-Alpes" link="/diary/2015/09/19/"/>
+        </month>
+        <month id="oct">
+            <item name="Montagnola senese" type="major" link="/diary/2015/10/05/"/>
+        </month>
+        <month id="nov">
+            <item name="Oltregiogo" link="/diary/2015/11/07/"/>
+            <item name="Oltregiogo" link="/diary/2015/11/14/"/>
+            <item name="Oltregiogo" link="/diary/2015/11/18/"/>
+            <item name="Oltregiogo" link="/diary/2015/11/27/"/>
+            <item name="Maremma" link="/diary/2015/11/28/"/>
+        </month>
+        <month id="dec">
+            <item name="Sant'Apollinare" link="/diary/2015/12/12/"/>
+        </month>
+    </year>
+    <year id="2016">
+        <month id="jan">
+            <item name="Piani di Praglia" link="/diary/2016/01/04/"/>
+            <item name="Maremma" link="/diary/2016/01/29/"/>
+        </month>
+        <month id="feb">
+            <item name="Ciociaria" type="major" link="/diary/2016/02/04/"/>
+            <item name="Trentino" type="major" link="/diary/2016/02/10/"/>
+            <item name="Mimosas en Côte d'Azur" link="/diary/2016/02/20/"/>
+            <item name="Ciociaria" type="major" link="/diary/2016/02/25/"/>
+        </month>
+        <month id="mar">
+            <item name="Trentino" type="major" link="/diary/2016/03/02/"/>
+            <item name="Fiori a Lencisa" link="/diary/2016/03/12/"/>
+            <item name="Lago di Giacopiane" link="/diary/2016/03/19/"/>
+            <item name="Fiori a Lencisa" link="/diary/2016/03/26/"/>
+        </month>
+        <month id="apr">
+            <item name="Fiori in Oltregiogo" link="/diary/2016/04/02/"/>
+            <item name="Alpes-de-Haute-Provence" type="major" link="/diary/2016/04/07/"/>
+            <item name="Fiori a Capanne di Marcarolo" link="/diary/2016/04/16/"/>
+        </month>
+        <month id="may">
+            <item name="Fiori a Capanne di Marcarolo" link="/diary/2016/05/07/"/>
+            <item name="Crete Senesi e Val d'Orcia" type="major" link="/diary/2016/05/20/"/>
+        </month>
+        <month id="jul">
+            <item name="Ceillac et alentours" type="major" link="/diary/2016/07/07/"/>
+        </month>
+        <month id="aug">
+            <item name="Toscana" type="major" link="/diary/2016/08/08/"/>
+        </month>
+        <month id="sep">
+            <item name="Casei Gerola" link="/diary/2016/09/10/"/>
+            <item name="Esercizi Genovesi" link="/diary/2016/09/24/"/>
+            <item name="Vallée de l'Ubaye" link="/diary/2016/09/29/"/>
+        </month>
+        <month id="oct">
+            <item name="Col d'Allos" link="/diary/2016/10/07/"/>
+            <item name="Vallées de la Durance et de l'Ubaye" link="/diary/2016/10/18/"/>
+            <item name="Parco del Marguareis e dintorni" link="/diary/2016/10/29/"/>
+        </month>
+        <month id="nov">
+            <item name="Il mare da Sant'Apollinare" link="/diary/2016/11/01/"/>
+            <item name="Punta Falcone" link="/diary/2016/11/12/"/>
+        </month>
+    </year>
+    <year id="2017">
+        <month id="feb">
+            <item name="Maremma" link="/diary/2017/02/07/"/>
+            <item name="Mimosas en Côte d'Azur" link="/diary/2017/02/18/"/>
+            <item name="Fiori lungo il sentiero dell'antico acquedotto e Montoggio" link="/diary/2017/02/25/"/>
+        </month>
+        <month id="mar">
+            <item name="Fiori lungo il sentiero dell'antico acquedotto" link="/diary/2017/03/02/"/>
+            <item name="Fiori a Trensasco" link="/diary/2017/03/07/"/>
+            <item name="Fiori a Trensasco" link="/diary/2017/03/08/"/>
+            <item name="Fiori a Sant'Ilario e sul Monte Fasce" link="/diary/2017/03/11/"/>
+            <item name="Fiori sul Monte Fasce" link="/diary/2017/03/15/"/>
+            <item name="Fiori a Sant'Apollinare" link="/diary/2017/03/18/"/>
+            <item name="Fiori a Montallegro e sul Monte Fasce" link="/diary/2017/03/29/"/>
+        </month>
+        <month id="apr">
+            <item name="Fiori a Ruta di Camogli" link="/diary/2017/04/01/"/>
+            <item name="Fiori a Borzonasca e Favale di Malvaro" link="/diary/2017/04/03/"/>
+            <item name="Fiori a San Rocco di Camogli" link="/diary/2017/04/08/"/>
+            <item name="Fiori a Capanne di Marcarolo" link="/diary/2017/04/11/"/>
+            <item name="Fiori a Capanne di Marcarolo" link="/diary/2017/04/15/"/>
+            <item name="Fiori in Maremma" link="/diary/2017/04/24/"/>
+            <item name="Fiori a Capanne di Marcarolo" link="/diary/2017/04/29/"/>
+        </month>
+        <month id="may">
+            <item name="Lago Maggiore e dintorni" link="/diary/2017/05/05/"/>
+            <item name="I narcisi del Monte Fasce" link="/diary/2017/05/16/"/>
+            <item name="A sud di Siena" type="major" link="/diary/2017/05/19/"/>
+        </month>
+        <month id="jun">
+            <item name="Valli Occitane" link="/diary/2017/06/20/"/>
+        </month>
+        <month id="jul">
+            <item name="Ceillac" type="major" link="/diary/2017/07/08/"/>
+        </month>
+        <month id="aug">
+            <item name="Toscana" type="major" link="/diary/2017/08/03/"/>
+        </month>
+        <month id="sep">
+            <item name="Col de la Cayolle" link="/diary/2017/09/08/"/>
+            <item name="Lago Maggiore" link="/diary/2017/09/13/"/>
+        </month>
+        <month id="oct">
+            <item name="Intorno a Siena" type="major" link="/diary/2017/10/02/"/>
+            <item name="Cremona" link="/diary/2017/10/10/"/>
+            <item name="Bellinzona" link="/diary/2017/10/17/"/>
+            <item name="Automne en Haute-Provence" type="major" link="/diary/2017/10/27/"/>
+        </month>
+        <month id="nov">
+            <item name="Dal Lago di Garda alle Dolomiti (I)" type="major" link="/diary/2017/11/14/"/>
+            <item name="Dal Lago di Garda alle Dolomiti (II)" type="major" link="/diary/2017/11/28/"/>
+        </month>
+    </year>
+    <year id="2018">
+        <month id="jan">
+            <item name="Maremma" link="/diary/2018/01/09/"/>
+            <item name="Albenga" link="/diary/2018/01/13/"/>
+            <item name="Fiori a Sant'Apollinare" link="/diary/2018/01/23/"/>
+            <item name="Côte d'Azur" link="/diary/2018/01/24/"/>
+            <item name="Côte d'Azur" link="/diary/2018/01/30/"/>
+        </month>
+        <month id="feb">
+            <item name="Fiori a Torbi" link="/diary/2018/02/10/"/>
+        </month>
+        <month id="mar">
+            <item name="Ville di Corsano" link="/diary/2018/03/24/"/>
+        </month>
+    </year>
+</calendar>

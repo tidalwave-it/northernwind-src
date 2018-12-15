@@ -1,0 +1,21 @@
+ 1:  1 Provence                                                                         http://acme.com/diary/2004/01/02/      major
+ 1:  1 Bocca di Magra                                                                   http://acme.com/diary/2004/01/24/           
+ 1:  1 Maremma                                                                          http://acme.com/diary/2004/01/31/           
+ 2:  2 Friuli Venezia Giulia                                                            http://acme.com/diary/2004/02/06/      major
+ 2:  2 Maremma                                                                          http://acme.com/diary/2004/02/24/           
+ 3:  3 Lombardia                                                                        http://acme.com/diary/2004/03/05/           
+ 3:  3 Maremma                                                                          http://acme.com/diary/2004/03/15/      major
+ 4:  4 France et Hollande                                                               http://acme.com/diary/2004/04/29/      major
+ 5:  5 Campi di riso                                                                    http://acme.com/diary/2004/05/18/           
+ 5:  5 Campi di riso                                                                    http://acme.com/diary/2004/05/22/           
+ 5:  5 Air show a Genova                                                                http://acme.com/diary/2004/05/23/           
+ 5:  5 Maremma                                                                          http://acme.com/diary/2004/05/29/           
+ 6:  6 Campi di riso                                                                    http://acme.com/diary/2004/06/08/           
+ 7:  7 Campi di riso                                                                    http://acme.com/diary/2004/07/03/           
+ 7:  7 Lombardia                                                                        http://acme.com/diary/2004/07/07/           
+ 7:  7 Andalucìa                                                                        http://acme.com/diary/2004/07/15/      major
+ 8:  8 Maremma                                                                          http://acme.com/diary/2004/08/01/      major
+ 9:  9 Friuli Venezia Giulia                                                            http://acme.com/diary/2004/09/18/      major
+10: 10 Maremma                                                                          http://acme.com/diary/2004/10/23/      major
+11: 11 Provence et Languedoc                                                            http://acme.com/diary/2004/11/22/      major
+12: 12 Maremma                                                                          http://acme.com/diary/2004/12/28/      major
