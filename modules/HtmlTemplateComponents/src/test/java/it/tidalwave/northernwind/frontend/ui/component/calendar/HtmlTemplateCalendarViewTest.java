@@ -24,16 +24,18 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
+package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarView;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.emptyList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -47,9 +49,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class HtmlTemplateBlogViewTest
+public class HtmlTemplateCalendarViewTest
   {
-    private HtmlTemplateBlogView underTest;
+    private HtmlTemplateCalendarView underTest;
 
     private Site site;
 
@@ -64,7 +66,7 @@ public class HtmlTemplateBlogViewTest
       {
         site = createMockSite();
         MockContentSiteFinder.registerTo(site);
-        underTest = new HtmlTemplateBlogView(viewId, site);
+        underTest = new HtmlTemplateCalendarView(viewId, site);
       }
 
     /*******************************************************************************************************************
@@ -78,28 +80,10 @@ public class HtmlTemplateBlogViewTest
         final ResourcePath templatePath = ResourcePath.of("/the/template/path");
         final Content template = site.find(Content).withRelativePath(templatePath).result();
         final ResourceProperties properties = template.getProperties();
-        when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom posts template"));
+        when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom template"));
         // when
-        underTest.renderPosts(Optional.of(templatePath), Aggregates.EMPTY, Aggregates.EMPTY, Aggregates.EMPTY);
+        underTest.render(Optional.empty(), Optional.of(templatePath), new String[0], "", Aggregates.EMPTY, emptyList());
         // then
-        assertThat(underTest.asString(UTF_8), is("<div class='nw-viewId'>\nCustom posts template\n\n</div>"));
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_properly_render_tag_cloud_with_custom_template()
-      throws Exception
-      {
-        // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(Content).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
-        when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom tag cloud template"));
-        // when
-        underTest.renderTagCloud(Optional.of(templatePath), Aggregates.EMPTY);
-        // then
-        assertThat(underTest.asString(UTF_8), is("<div class='nw-viewId'>\nCustom tag cloud template\n\n</div>"));
+        assertThat(underTest.asString(UTF_8), is("<div class='nw-viewId'>\nCustom template\n\n</div>"));
       }
   }

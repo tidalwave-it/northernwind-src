@@ -28,40 +28,84 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.util.Locale;
-import java.text.DateFormatSymbols;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.stream.IntStream;
 import java.time.ZonedDateTime;
-import java.io.StringReader;
-import org.xml.sax.InputSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
+import java.time.ZoneId;
+import it.tidalwave.util.InstantProvider;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TITLE;
 
 /***********************************************************************************************************************
+ *
+ * <p>A default implementation of the {@link CalendarViewController} that is independent of the presentation technology.
+ * This class is capable to render a yearly calendar with items and related links.</p>
+ *
+ * <p>It accepts a single path parameter {@code year} with selects a given year; otherwise the current year is used.</p>
+ *
+ * <p>Supported properties of the {@link SiteNode}:</p>
+ *
+ * <ul>
+ * <li>{@code P_ENTRIES}: a property with XML format that describes the entries;</li>
+ * <li>{@code P_SELECTED_YEAR}: the year to render (optional, otherwise the current year is used);</li>
+ * <li>{@code P_FIRST_YEAR}: the first available year;</li>
+ * <li>{@code P_LAST_YEAR}: the last available year ;</li>
+ * <li>{@code P_TITLE}: the page title (optional).</li>
+ * </ul>
+ *
+ * <p>The property {@code P_ENTRIES} must have the following structure:</p>
+ *
+ * <pre>
+ * &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+ * &lt;calendar&gt;
+ *     &lt;year id="2004"&gt;
+ *         &lt;month id="jan"&gt;
+ *             &lt;item name="Provence" type="major" link="/diary/2004/01/02/"/&gt;
+ *             &lt;item name="Bocca di Magra" link="/diary/2004/01/24/"/&gt;
+ *             &lt;item name="Maremma" link="/diary/2004/01/31/"/&gt;
+ *         &lt;/month&gt;
+ *         ...
+ *     &lt;/year&gt;
+ *     ...
+ * &lt;/calendar&gt;
+ * </pre>
+ *
+ * <p>Concrete implementations must provide one method for rendering the calendar:</p>
+ *
+ * <ul>
+ * <li>{@link #render(int, int, int, java.util.Map)}</li>
+ * </ul>
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultCalendarViewController implements CalendarViewController
+public abstract class DefaultCalendarViewController implements CalendarViewController
   {
+    @RequiredArgsConstructor @ToString
+    public static class Entry
+      {
+        public final int month;
+        public final String name;
+        public final String link;
+        public final Optional<String> type;
+      }
+
     @Nonnull
     private final CalendarView view;
 
@@ -69,10 +113,50 @@ public class DefaultCalendarViewController implements CalendarViewController
     private final SiteNode siteNode;
 
     @Nonnull
-    private final Site site;
+    protected final RequestLocaleManager requestLocaleManager;
 
     @Nonnull
-    private final RequestLocaleManager requestLocaleManager;
+    private final CalendarDao dao;
+
+    @Nonnull
+    private final InstantProvider instantProvider;
+
+    private int year;
+
+    private int firstYear;
+
+    private int lastYear;
+
+    private final SortedMap<Integer, List<Entry>> entriesByMonth = new TreeMap<>();
+
+    /*******************************************************************************************************************
+     *
+     * Compute stuff here, to eventually fail fast.
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void prepareRendering (final @Nonnull RenderContext context)
+      throws HttpStatusException
+      {
+        final int requestedYear = getRequestedYear(context.getPathParams(siteNode));
+        final ResourceProperties siteNodeProperties = siteNode.getProperties();
+        final ResourceProperties viewProperties = getViewProperties();
+
+        year      = viewProperties.getProperty(P_SELECTED_YEAR).orElse(requestedYear);
+        firstYear = viewProperties.getProperty(P_FIRST_YEAR).orElse(Math.min(year, requestedYear));
+        lastYear  = viewProperties.getProperty(P_LAST_YEAR).orElse(getCurrentYear());
+        log.info("prepareRendering() - {} f: {} l: {} r: {} y: {}", siteNode, firstYear, lastYear, requestedYear, year);
+
+        if ((year < firstYear) || (year > lastYear))
+          {
+            throw new HttpStatusException(SC_NOT_FOUND);
+          }
+
+        entriesByMonth.putAll(siteNodeProperties.getProperty(P_ENTRIES).map(e -> findEntriesForYear(e, year))
+                                                                       .orElse(emptyMap()));
+      }
 
     /*******************************************************************************************************************
      *
@@ -81,140 +165,65 @@ public class DefaultCalendarViewController implements CalendarViewController
      ******************************************************************************************************************/
     @Override
     public void renderView (final @Nonnull RenderContext context)
-      throws Exception
       {
-        final int currentYear = getCurrentYear(context.getPathParams(siteNode));
-        final ResourceProperties siteNodeProperties = siteNode.getProperties();
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-
-//        try
-//          {
-//            siteNodeProperties.getProperty(P_ENTRIES);
-//          }
-//        catch (NotFoundException e)
-//          {
-//            throw new HttpStatusException(SC_NOT_FOUND);
-//          }
-
-        final String entries = siteNodeProperties.getProperty(P_ENTRIES).orElse("");
-        final StringBuilder builder = new StringBuilder();
-        final int selectedYear = viewProperties.getProperty(P_SELECTED_YEAR).orElse(currentYear);
-        final int firstYear = viewProperties.getProperty(P_FIRST_YEAR).orElse(Math.min(selectedYear, currentYear));
-        final int lastYear = viewProperties.getProperty(P_LAST_YEAR).orElse(Math.max(selectedYear, currentYear));
-        final int columns = 4;
-
-        builder.append("<div class='nw-calendar'>\n");
-        appendTitle(builder, siteNodeProperties);
-
-        builder.append("<table class='nw-calendar-table'>\n")
-               .append("<tbody>\n");
-
-        builder.append(String.format("<tr>%n<th colspan='%d' class='nw-calendar-title'>%d</th>%n</tr>%n", columns, selectedYear));
-
-        final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
-        final String[] shortMonthNames = DateFormatSymbols.getInstance(Locale.ENGLISH).getShortMonths();
-
-        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        final DocumentBuilder db = dbf.newDocumentBuilder();
-        final Document document = db.parse(new InputSource(new StringReader(entries)));
-        final XPathFactory xPathFactory = XPathFactory.newInstance();
-        final XPath xPath = xPathFactory.newXPath();
-
-        for (int month = 1; month <= 12; month++)
-          {
-            if ((month - 1) % columns == 0)
-              {
-                builder.append("<tr>\n");
-
-                for (int column = 0; column < columns; column++)
-                  {
-                    builder.append(String.format("<th width='%d%%'>%s</th>",
-                                                 100 / columns, monthNames[month + column - 1]));
-                  }
-
-                builder.append("</tr>\n<tr>\n");
-              }
-
-            builder.append("<td>\n<ul>\n");
-            final String pathTemplate = "/calendar/year[@id='%d']/month[@id='%s']/item";
-            final String jq1 = String.format(pathTemplate, selectedYear, shortMonthNames[month - 1].toLowerCase());
-            final XPathExpression jx1 = xPath.compile(jq1);
-            final NodeList nodes = (NodeList)jx1.evaluate(document, XPathConstants.NODESET);
-
-            for (int i = 0; i < nodes.getLength(); i++)
-              {
-                // FIXME: verbose XML code below
-                final Node node = nodes.item(i);
-                final String link = site.createLink(ResourcePath.of(node.getAttributes().getNamedItem("link").getNodeValue()));
-
-                String linkClass = "";
-                Node typeNode = node.getAttributes().getNamedItem("type");
-
-                if (typeNode != null)
-                  {
-                    linkClass = String.format(" class='nw-calendar-table-link-%s'", typeNode.getNodeValue());
-                  }
-
-                final String name = node.getAttributes().getNamedItem("name").getNodeValue();
-                builder.append(String.format("<li><a href='%s'%s>%s</a></li>%n", link, linkClass, name));
-              }
-
-            builder.append("</ul>\n</td>\n");
-
-            if ((month - 1) % columns == (columns - 1))
-              {
-                builder.append("</tr>\n");
-              }
-          }
-
-        builder.append("</tbody>\n</table>\n");
-
-        appendYearSelector(builder, firstYear, lastYear, selectedYear);
-        builder.append("</div>\n");
-        view.setContent(builder.toString());
+        render(siteNode.getProperty(P_TITLE), year, firstYear, lastYear, entriesByMonth);
       }
 
     /*******************************************************************************************************************
      *
+     * Renders the diary.
      *
+     * @param       title       a title for the page (optional)
+     * @param       year        the current year
+     * @param       firstYear   the first available year
+     * @param       lastYear    the last available year
+     * @param       byMonth     a map of entries for the current year indexed by month
      *
      ******************************************************************************************************************/
-    private void appendTitle (final @Nonnull StringBuilder builder,
-                              final @Nonnull ResourceProperties siteNodeProperties)
+    protected abstract void render (final @Nonnull Optional<String> title,
+                                    final @Nonnegative int year,
+                                    final @Nonnegative int firstYear,
+                                    final @Nonnegative int lastYear,
+                                    final @Nonnull SortedMap<Integer, List<Entry>> byMonth);
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected final ResourceProperties getViewProperties()
       {
-        siteNodeProperties.getProperty(P_TITLE).ifPresent(title -> builder.append(String.format("<h2>%s</h2>%n", title)));
+        return siteNode.getPropertyGroup(view.getId());
       }
 
     /*******************************************************************************************************************
      *
+     * Creates a link for the current year.
      *
+     * @param       year        the year
+     * @return                  the link
      *
      ******************************************************************************************************************/
-    private void appendYearSelector (final @Nonnull StringBuilder builder,
-                                     final @Nonnegative int firstYear,
-                                     final @Nonnegative int lastYear,
-                                     final @Nonnegative int selectedYear)
+    @Nonnull
+    protected final String createYearLink (final int year)
       {
-        builder.append("<div class='nw-calendar-yearselector'>\n");
-        String separator = "";
+        return siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(Integer.toString(year)));
+      }
 
-        for (int year = firstYear; year <= lastYear; year++)
-          {
-            builder.append(separator);
-            separator = " | ";
-
-            if (year != selectedYear)
-              {
-                final String url = site.createLink(siteNode.getRelativeUri().appendedWith("" + year));
-                builder.append(String.format("<a href='%s'>%d</a>%n", url, year));
-              }
-            else
-              {
-                builder.append(year);
-              }
-          }
-
-        builder.append("</div>\n");
+    /*******************************************************************************************************************
+     *
+     * Retrieves a map of entries for the given year, indexed by month.
+     *
+     * @param       entries         the configuration data
+     * @param       year            the year
+     * @return                      the map
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private Map<Integer, List<Entry>> findEntriesForYear (final @Nonnull String entries, final @Nonnegative int year)
+      {
+        return IntStream.rangeClosed(1, 12).mapToObj(Integer::valueOf)
+                .flatMap(month -> dao.findMonthlyEntries(siteNode.getSite(), entries, month, year).stream())
+                .collect(groupingBy(e -> e.month));
       }
 
     /*******************************************************************************************************************
@@ -223,7 +232,7 @@ public class DefaultCalendarViewController implements CalendarViewController
      *
      ******************************************************************************************************************/
     @Nonnegative
-    private int getCurrentYear (final @Nonnull ResourcePath pathParams)
+    private int getRequestedYear (final @Nonnull ResourcePath pathParams)
       throws HttpStatusException
       {
         if (pathParams.getSegmentCount() > 1)
@@ -233,11 +242,20 @@ public class DefaultCalendarViewController implements CalendarViewController
 
         try
           {
-            return pathParams.isEmpty() ? ZonedDateTime.now().getYear() : Integer.parseInt(pathParams.getLeading());
+            return pathParams.isEmpty() ? getCurrentYear() : Integer.parseInt(pathParams.getLeading());
           }
         catch (NumberFormatException e)
           {
-            throw new HttpStatusException(SC_NOT_FOUND);
+            throw new HttpStatusException(SC_BAD_REQUEST);
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @Nonnegative
+    private int getCurrentYear()
+      {
+        return ZonedDateTime.ofInstant(instantProvider.get(), ZoneId.of("UTC")).getYear();
       }
   }

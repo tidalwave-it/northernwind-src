@@ -213,6 +213,11 @@ public class MockModelFactory extends ModelFactorySupport
     public static Site createMockSite()
       {
         final Site site = mock(Site.class);
+        when(site.createLink(any(ResourcePath.class))).thenAnswer(i ->
+          {
+            final ResourcePath path = i.getArgument(0);
+            return "http://acme.com" + path.asString() + (path.getExtension().isEmpty() ? "/" : "");
+          });
         when(site.getTemplate(any(Class.class), any(Optional.class), any(String.class))).then(i ->
                 new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1), i.getArgument(2)));
         when(site.getTemplate(any(Class.class), any(ResourcePath.class))).then(i ->

@@ -58,6 +58,8 @@ public interface ViewController
      * Prepares the component for rendering, for instance by checking preconditions or by setting dynamic properties.
      * If the class has a superclass, remember to call {@code super.prepareRendering(context)}.
      *
+     * It should also do formal validation and eventually fail fast.
+     *
      * @param       context         the context for rendering
      * @throws      Exception       in case of problems
      *

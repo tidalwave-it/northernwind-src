@@ -1,0 +1,19 @@
+ 1:  1 Saint-Honorat et Estérel                                                         http://acme.com/diary/2014/01/21/           
+ 2:  2 Mareggiata a Nervi                                                               http://acme.com/diary/2014/02/09/           
+ 2:  2 Mimosas et Côte d'Azur                                                           http://acme.com/diary/2014/02/22/           
+ 3:  3 Alberese e Talamone                                                              http://acme.com/diary/2014/03/08/           
+ 3:  3 Trentino ed Engadina                                                             http://acme.com/diary/2014/03/11/      major
+ 3:  3 Montagnana                                                                       http://acme.com/diary/2014/03/26/           
+ 3:  3 Lessinia                                                                         http://acme.com/diary/2014/03/29a/           
+ 3:  3 Casei Gerola                                                                     http://acme.com/diary/2014/03/29b/           
+ 4:  4 Abbaye du Thoronet et Chartreuse de la Verne                                     http://acme.com/diary/2014/04/05/           
+ 4:  4 Trentino ed Engadina                                                             http://acme.com/diary/2014/04/08/      major
+ 4:  4 Lac Léman                                                                        http://acme.com/diary/2014/04/23/      major
+ 4:  4 Haute Provence                                                                   http://acme.com/diary/2014/04/30/      major
+ 5:  5 Toscana                                                                          http://acme.com/diary/2014/05/17/      major
+ 5:  5 I narcisi dell'Antola                                                            http://acme.com/diary/2014/05/24/           
+ 7:  7 Provence                                                                         http://acme.com/diary/2014/07/17/      major
+ 8:  8 Toscana e Viterbese                                                              http://acme.com/diary/2014/08/01/      major
+ 9:  9 Vallon du Lauzanier et Col de la Bonette                                         http://acme.com/diary/2014/09/06/           
+10: 10 Bourgogne                                                                        http://acme.com/diary/2014/10/18/      major
+12: 12 Côte d'Azur                                                                      http://acme.com/diary/2014/12/11/      major

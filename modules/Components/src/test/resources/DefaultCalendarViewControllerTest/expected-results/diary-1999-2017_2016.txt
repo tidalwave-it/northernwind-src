@@ -1,0 +1,25 @@
+ 1:  1 Piani di Praglia                                                                 http://acme.com/diary/2016/01/04/           
+ 1:  1 Maremma                                                                          http://acme.com/diary/2016/01/29/           
+ 2:  2 Ciociaria                                                                        http://acme.com/diary/2016/02/04/      major
+ 2:  2 Trentino                                                                         http://acme.com/diary/2016/02/10/      major
+ 2:  2 Mimosas en Côte d'Azur                                                           http://acme.com/diary/2016/02/20/           
+ 2:  2 Ciociaria                                                                        http://acme.com/diary/2016/02/25/      major
+ 3:  3 Trentino                                                                         http://acme.com/diary/2016/03/02/      major
+ 3:  3 Fiori a Lencisa                                                                  http://acme.com/diary/2016/03/12/           
+ 3:  3 Lago di Giacopiane                                                               http://acme.com/diary/2016/03/19/           
+ 3:  3 Fiori a Lencisa                                                                  http://acme.com/diary/2016/03/26/           
+ 4:  4 Fiori in Oltregiogo                                                              http://acme.com/diary/2016/04/02/           
+ 4:  4 Alpes-de-Haute-Provence                                                          http://acme.com/diary/2016/04/07/      major
+ 4:  4 Fiori a Capanne di Marcarolo                                                     http://acme.com/diary/2016/04/16/           
+ 5:  5 Fiori a Capanne di Marcarolo                                                     http://acme.com/diary/2016/05/07/           
+ 5:  5 Crete Senesi e Val d'Orcia                                                       http://acme.com/diary/2016/05/20/      major
+ 7:  7 Ceillac et alentours                                                             http://acme.com/diary/2016/07/07/      major
+ 8:  8 Toscana                                                                          http://acme.com/diary/2016/08/08/      major
+ 9:  9 Casei Gerola                                                                     http://acme.com/diary/2016/09/10/           
+ 9:  9 Esercizi Genovesi                                                                http://acme.com/diary/2016/09/24/           
+ 9:  9 Vallée de l'Ubaye                                                                http://acme.com/diary/2016/09/29/           
+10: 10 Col d'Allos                                                                      http://acme.com/diary/2016/10/07/           
+10: 10 Vallées de la Durance et de l'Ubaye                                              http://acme.com/diary/2016/10/18/           
+10: 10 Parco del Marguareis e dintorni                                                  http://acme.com/diary/2016/10/29/           
+11: 11 Il mare da Sant'Apollinare                                                       http://acme.com/diary/2016/11/01/           
+11: 11 Punta Falcone                                                                    http://acme.com/diary/2016/11/12/           
