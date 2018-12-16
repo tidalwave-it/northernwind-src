@@ -73,7 +73,7 @@ public class St4Template implements Template
      *
      *************************************************************************************************************************/
     @Override
-    public Template addAttribute (final @Nonnull String name, final @Nonnull String value)
+    public Template addAttribute (final @Nonnull String name, final @Nonnull Object value)
       {
         st.add(name, value);
         return this;
