@@ -59,7 +59,7 @@ import static org.mockito.Mockito.*;
 @Slf4j
 public class HtmlTemplateBlogViewControllerTest
   {
-    private final FileTestHelper fileTestHelper = new FileTestHelper("HtmlTemplateBlogViewControllerTest");
+    private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 
     private HtmlTemplateBlogViewController underTest;
 

@@ -61,7 +61,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class HtmlTemplateCalendarViewControllerTest
   {
-    private final FileTestHelper fileTestHelper = new FileTestHelper("HtmlTemplateCalendarViewControllerTest");
+    private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 
     private DefaultCalendarViewController underTest;
 
