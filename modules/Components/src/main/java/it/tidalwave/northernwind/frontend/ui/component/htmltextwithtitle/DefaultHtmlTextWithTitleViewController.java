@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -94,14 +93,13 @@ public abstract class DefaultHtmlTextWithTitleViewController implements HtmlText
     @Override
     public void renderView (final @Nonnull RenderContext context)
       {
-        final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final int titleLevel = viewProperties.getProperty(P_LEVEL).orElse(2);
         view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
         render(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
                 .stream()
                 .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream())
-                // FIXME: shouldn't be h2, always?
-                .map(c -> new TextWithTitle(c.getProperty(P_TITLE), c.getProperty(P_FULL_TEXT), titleLevel.getAndIncrement()))
+                .map(c -> new TextWithTitle(c.getProperty(P_TITLE), c.getProperty(P_FULL_TEXT), titleLevel))
                 .collect(toList()));
       }
 
