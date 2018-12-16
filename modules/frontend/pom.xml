@@ -6,15 +6,16 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.1-ALPHA-45-SNAPSHOT</version>
+        <version>1.1-ALPHA-46-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend</artifactId>
-    <version>1.1-ALPHA-45-SNAPSHOT</version>
+    <version>1.1-ALPHA-46-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind - Frontend</name>
+    <description>The parent POM for all front end implementations.</description>
 
     <dependencies>
         <dependency>
@@ -36,12 +37,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Redirect JUL and JCL to SFL4J -->
-        <dependency> <!-- FIXME: should be only runtime, but we have sources in this module. Move sources into a separate module. -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -64,5 +59,4 @@
         <module>SpringMvcFrontend</module>
         <module>SpringMvcMediaFrontend</module>
     </modules>
-    <description>The parent POM for all front end implementations.</description>
 </project>
