@@ -99,6 +99,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
                                                                        .mapToObj(Integer::toString)
                                                                        .collect(toList()))
                                                .collect(toList()));
+        template.addAttribute("columnWidth", 100 / columns);
         addComponent(new HtmlHolder(template.render(years)));
       }
   }

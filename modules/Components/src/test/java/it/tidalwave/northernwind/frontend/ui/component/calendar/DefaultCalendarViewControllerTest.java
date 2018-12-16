@@ -87,7 +87,8 @@ public class DefaultCalendarViewControllerTest
                                final int year,
                                final int firstYear,
                                final int lastYear,
-                               final SortedMap<Integer, List<Entry>> byMonth)
+                               final SortedMap<Integer, List<Entry>> byMonth,
+                               final int columns)
           {
             this.byMonth = byMonth;
           }

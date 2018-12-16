@@ -10,7 +10,7 @@
                 </tr>
                 $rows : { row |
                 <tr>
-                    $row:{ m | <th width='25%'>$month.(m)$</th>}; separator="\n"$
+                    $row:{ m | <th width='$columnWidth$%'>$month.(m)$</th>}; separator="\n"$
                 </tr>
                 <tr>
                 $row:{ m |

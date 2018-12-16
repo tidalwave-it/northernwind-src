@@ -114,7 +114,8 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                            final @Nonnegative int year,
                            final @Nonnegative int firstYear,
                            final @Nonnegative int lastYear,
-                           final @Nonnull SortedMap<Integer, List<Entry>> byMonth)
+                           final @Nonnull SortedMap<Integer, List<Entry>> byMonth,
+                           final @Nonnegative int columns)
       {
         final Aggregates years = IntStream.rangeClosed(firstYear, lastYear)
                                           .mapToObj(y -> toAggregate(y, y == year))
@@ -137,7 +138,7 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                     Integer.toString(year),
                     years,
                     entries,
-                    4);
+                    columns);
       }
 
     /*******************************************************************************************************************
