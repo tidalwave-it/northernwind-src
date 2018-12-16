@@ -28,14 +28,17 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import java.util.Optional;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
-import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarView;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -82,7 +85,7 @@ public class HtmlTemplateCalendarViewTest
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom template"));
         // when
-        underTest.render(Optional.empty(), Optional.of(templatePath), new String[0], "", Aggregates.EMPTY, emptyList());
+        underTest.render(Optional.empty(), Optional.of(templatePath), emptyMap(), "", Aggregates.EMPTY, emptyMap(), 4);
         // then
         assertThat(underTest.asString(UTF_8), is("<div class='nw-viewId'>\nCustom template\n\n</div>"));
       }

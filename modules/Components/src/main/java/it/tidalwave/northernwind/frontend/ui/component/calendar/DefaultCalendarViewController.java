@@ -66,7 +66,8 @@ import static it.tidalwave.northernwind.core.model.Content.P_TITLE;
  * <li>{@code P_SELECTED_YEAR}: the year to render (optional, otherwise the current year is used);</li>
  * <li>{@code P_FIRST_YEAR}: the first available year;</li>
  * <li>{@code P_LAST_YEAR}: the last available year ;</li>
- * <li>{@code P_TITLE}: the page title (optional).</li>
+ * <li>{@code P_TITLE}: the page title (optional);</li>
+ * <li>{@code P_COLUMNS}: the number of columns of the table to render (optional, defaults to 4).</li>
  * </ul>
  *
  * <p>The property {@code P_ENTRIES} must have the following structure:</p>
@@ -167,7 +168,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
     @Override
     public void renderView (final @Nonnull RenderContext context)
       {
-        render(siteNode.getProperty(P_TITLE), year, firstYear, lastYear, entriesByMonth);
+        render(siteNode.getProperty(P_TITLE), year, firstYear, lastYear, entriesByMonth, getViewProperties().getProperty(P_COLUMNS).orElse(4));
       }
 
     /*******************************************************************************************************************
@@ -179,13 +180,15 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
      * @param       firstYear   the first available year
      * @param       lastYear    the last available year
      * @param       byMonth     a map of entries for the current year indexed by month
+     * @param       columns     the number of columns of the table to render
      *
      ******************************************************************************************************************/
     protected abstract void render (final @Nonnull Optional<String> title,
                                     final @Nonnegative int year,
                                     final @Nonnegative int firstYear,
                                     final @Nonnegative int lastYear,
-                                    final @Nonnull SortedMap<Integer, List<Entry>> byMonth);
+                                    final @Nonnull SortedMap<Integer, List<Entry>> byMonth,
+                                    final @Nonnull int columns);
 
     /*******************************************************************************************************************
      *
