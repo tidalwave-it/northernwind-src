@@ -49,4 +49,7 @@ public interface CalendarViewController extends ViewController
 
     /** The last year in the year selector of the calendar. */
     public static final Key<Integer> P_LAST_YEAR = new Key<Integer>("lastYear") {};
+
+    /** The number of columns of the table with the calendar. */
+    public static final Key<Integer> P_COLUMNS = new Key<Integer>("columns") {};
   }
