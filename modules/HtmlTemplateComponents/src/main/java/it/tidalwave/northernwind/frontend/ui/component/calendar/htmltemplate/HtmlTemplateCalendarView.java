@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
@@ -39,8 +38,10 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
-import static java.util.Collections.singletonList;
-import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
+import static java.util.Arrays.asList;
+import java.util.Map;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.IntStream;
 
 /***********************************************************************************************************************
  *
@@ -73,23 +74,31 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
      * @see         HtmlTemplateCalendarViewController     *
      * @param       title           the optional title
      * @param       templatePath    an optional template (otherwise a default one is used)
-     * @param       monthNames      the name of months in the required {@code Language}
+     * @param       monthNames      the name of months in the required language
      * @param       year            the current year
      * @param       years           the available years
      * @param       entries         the items of the current year
+     * @param       columns         the columns (can be 1, 2, 3, 4, 6)
      *
      ******************************************************************************************************************/
     public void render (final @Nonnull Optional<String> title,
                         final @Nonnull Optional<ResourcePath> templatePath,
-                        final @Nonnull String[] monthNames,
+                        final @Nonnull Map<String, String> monthNames,
                         final @Nonnull String year,
                         final @Nonnull Aggregates years,
-                        final @Nonnull List<Aggregates> entries)
+                        final @Nonnull Map<String, List<Map<String, Object>>> entries,
+                        final @Nonnull int columns)
       {
         final Template template = site.getTemplate(getClass(), templatePath, "Calendar.st");
         title.ifPresent(t -> template.addAttribute("title", t));
-        template.addAttribute("year", year);
-        IntStream.rangeClosed(1, monthNames.length).forEach(i -> template.addAttribute("month" + i, monthNames[i - 1]));
-        addComponent(new HtmlHolder(template.render(concat(singletonList(years), entries))));
+        template.addAttribute("year",    year);
+        template.addAttribute("month",   monthNames);
+        template.addAttribute("entries", entries);
+        template.addAttribute("rows", IntStream.rangeClosed(1, 12 / columns)
+                                               .mapToObj(r -> IntStream.rangeClosed(1 + (r-1) * columns, r * columns)
+                                                                       .mapToObj(Integer::toString)
+                                                                       .collect(toList()))
+                                               .collect(toList()));
+        addComponent(new HtmlHolder(template.render(years)));
       }
   }

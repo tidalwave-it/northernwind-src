@@ -47,6 +47,9 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /***********************************************************************************************************************
  *
@@ -113,22 +116,28 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                            final @Nonnegative int lastYear,
                            final @Nonnull SortedMap<Integer, List<Entry>> byMonth)
       {
-        final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
         final Aggregates years = IntStream.rangeClosed(firstYear, lastYear)
                                           .mapToObj(y -> toAggregate(y, y == year))
                                           .collect(toAggregates("years"));
-        final List<Aggregates> entries = IntStream.rangeClosed(1, 12)
-                                                .mapToObj(m -> byMonth.getOrDefault(m, emptyList())
-                                                                      .stream()
-                                                                      .map(this::toAggregate)
-                                                                      .collect(toAggregates("entries" + m)))
-                                                .collect(toList());
+
+        final Map<String, String> months = new TreeMap<>();
+        final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
+        IntStream.rangeClosed(1, monthNames.length).forEach(i -> months.put("" + i, monthNames[i - 1]));
+
+        final Map<String, List<Map<String, Object>>> entries = new TreeMap<>();
+                IntStream.rangeClosed(1, 12).forEach(m -> entries.put("" + m, byMonth.getOrDefault(m, emptyList())
+                                                                                      .stream()
+                                                                                      .map(x -> toAggregate(x).getMap())
+                                                                                      .collect(toList())));
+        log.debug("monthNames: {}", months);
+        log.debug("entries:    {}", entries);
         view.render(title,
                     getViewProperties().getProperty(P_TEMPLATE_PATH),
-                    monthNames,
+                    months,
                     Integer.toString(year),
                     years,
-                    entries);
+                    entries,
+                    4);
       }
 
     /*******************************************************************************************************************

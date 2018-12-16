@@ -134,6 +134,6 @@ public class HtmlTemplateCalendarViewControllerTest
         // when
         underTest.renderView(context);
         // then
-        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "diary.xhtml");
+        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "calendar-4x3.xhtml");
       }
   }
