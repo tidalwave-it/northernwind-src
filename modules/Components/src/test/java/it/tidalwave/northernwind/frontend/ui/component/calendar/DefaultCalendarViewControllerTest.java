@@ -111,7 +111,7 @@ public class DefaultCalendarViewControllerTest
 
     private ResourceProperties viewProperties;
 
-    private final FileTestHelper fileTestHelper = new FileTestHelper("DefaultCalendarViewControllerTest");
+    private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 
     /*******************************************************************************************************************
      *

@@ -219,7 +219,7 @@ public class DefaultBlogViewControllerTest
         final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         final List<ZonedDateTime> publishingDates = allPosts
                 .stream()
-                .map(post -> post.getProperty(P_PUBLISHING_DATE).get())
+                .map(post -> post.getProperty(Content.P_PUBLISHING_DATE).get())
                 .collect(toList());
         assertSortedInReverseOrder(publishingDates);
 
