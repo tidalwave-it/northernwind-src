@@ -24,26 +24,54 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
+package it.tidalwave.northernwind.util.test;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.role.Identifiable;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
 
 /***********************************************************************************************************************
- *
- * An {@code HtmlTextWithTitleView} is a sequence of simple texts with their optional titles.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface HtmlTextWithTitleView extends Identifiable
+public class FileTestHelper
   {
+    private final Path base;
+
+    private final Path actualResults;
+
+    private final Path expectedResults;
+
+    public FileTestHelper (final @Nonnull String name)
+      {
+        base = Paths.get("src/test/resources/" + name);
+        actualResults = Paths.get("target/test-results/" + name);
+        expectedResults = base.resolve("expected-results");
+      }
+
     /*******************************************************************************************************************
      *
-     * Sets the CSS class name.
-     *
-     * @param  className  the class name
+     ******************************************************************************************************************/
+    public void assertFileContents (final @Nonnull byte[] content, final @Nonnull String fileName)
+      throws IOException
+      {
+        final Path actualPath = actualResults.resolve(fileName);
+        final Path excpectedPath = expectedResults.resolve(fileName);
+        Files.createDirectories(actualResults);
+        Files.write(actualPath, content);
+        assertSameContents(excpectedPath.toFile(), actualPath.toFile());
+      }
+
+    /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public void setClassName (@Nonnull String className);
+    @Nonnull
+    public Path resolve (final @Nonnull String segment)
+      {
+        return base.resolve(segment);
+      }
   }

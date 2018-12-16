@@ -28,6 +28,8 @@ package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.List;
+import java.time.ZonedDateTime;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.SimpleComposite8;
 import lombok.AccessLevel;
@@ -39,15 +41,44 @@ import lombok.experimental.Wither;
 
 /***********************************************************************************************************************
  *
- * A piece of content to be composed into a page.
+ * A piece of content to be used by something.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public interface Content extends Resource, SimpleComposite8<Content>
   {
-    /** A text that is a template for something. */
+    public static final Class<Content> Content = Content.class;
+
+    /** The title of this {@code Content}. */
+    public static final Key<String> P_TITLE = new Key<String>("title") {};
+
+    /** The unique id of this {@code Content}. */
+    public static final Key<String> P_ID = new Key<String>("id") {};
+
+    /** The full text contained in this {@code Content}. */
+    public static final Key<String> P_FULL_TEXT = new Key<String>("fullText") {};
+
+    /** A shortened text contained in this {@code Content}. */
+    public static final Key<String> P_LEADIN_TEXT = new Key<String>("leadinText") {};
+
+    /** A description this {@code Content}. */
+    public static final Key<String> P_DESCRIPTION = new Key<String>("description") {};
+
+    /** A contained that works as a template for something. */
     public static final Key<String> P_TEMPLATE = new Key<String>("template") {};
+
+    /** The creation date of this {@code Content}. */
+    public static final Key<ZonedDateTime> P_CREATION_DATE = new Key<ZonedDateTime>("creationDateTime") {};
+
+    /** The latest modification date of this {@code Content}. */
+    public static final Key<ZonedDateTime> P_LATEST_MODIFICATION_DATE = new Key<ZonedDateTime>("latestModificationDateTime") {};
+
+    /** The publishing date of this {@code Content}. */
+    public static final Key<ZonedDateTime> P_PUBLISHING_DATE = new Key<ZonedDateTime>("publishingDateTime") {};
+
+    /** A collection of tags associated with this {@code Content}. */
+    public static final Key<List<String>> P_TAGS = new Key<List<String>>("tags") {};
 
     /*******************************************************************************************************************
      *
@@ -80,8 +111,6 @@ public interface Content extends Resource, SimpleComposite8<Content>
             return callBack.build(this);
           }
       }
-
-    public static final Class<Content> Content = Content.class;
 
     /*******************************************************************************************************************
      *

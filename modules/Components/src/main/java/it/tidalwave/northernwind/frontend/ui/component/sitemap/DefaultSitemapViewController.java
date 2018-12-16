@@ -39,7 +39,8 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_LATEST_MODIFICATION_DATE;
+import static it.tidalwave.northernwind.core.model.Content.*;
+import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
@@ -70,7 +71,7 @@ public class DefaultSitemapViewController implements SitemapViewController
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         builder.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
-        site.find(SiteNode.class).stream().forEach(siteNode ->
+        site.find(SiteNode).stream().forEach(siteNode ->
           {
             final Layout layout = siteNode.getLayout();
 
