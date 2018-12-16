@@ -37,12 +37,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Redirect JUL and JCL to SFL4J -->
-        <dependency> <!-- FIXME: should be only runtime, but we have sources in this module. Move sources into a separate module. -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
