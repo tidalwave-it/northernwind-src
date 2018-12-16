@@ -15,6 +15,7 @@
     <version>1.1-ALPHA-45-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind - Frontend</name>
+    <description>The parent POM for all front end implementations.</description>
 
     <dependencies>
         <dependency>
@@ -64,5 +65,4 @@
         <module>SpringMvcFrontend</module>
         <module>SpringMvcMediaFrontend</module>
     </modules>
-    <description>The parent POM for all front end implementations.</description>
 </project>
