@@ -24,7 +24,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.calendar;
+package it.tidalwave.northernwind.frontend.ui.component.calendar.spi;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -51,5 +51,8 @@ public interface CalendarDao
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<Entry> findMonthlyEntries (@Nonnull Site site, @Nonnull String entries, int month, @Nonnegative int year);
+    public List<Entry> findMonthlyEntries (@Nonnull Site site,
+                                           @Nonnull String entries,
+                                           @Nonnegative int month,
+                                           @Nonnegative int year);
   }

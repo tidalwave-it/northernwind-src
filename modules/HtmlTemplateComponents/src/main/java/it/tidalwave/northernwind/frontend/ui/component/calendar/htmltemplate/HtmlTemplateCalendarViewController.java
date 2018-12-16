@@ -38,10 +38,10 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
-import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarDao;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController.Entry;
+import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
@@ -54,8 +54,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPL
  *
  * <p>The template for rendering the page can be specified by means of the property {@code P_TEMPLATE_PATH}.</p>
  *
- * <p>This controller calls render methods to the view by passing aggregates to be used with templates.</p>
- * <p>In case of post rendering, the following aggregates are defined:</p>
+ * <p>This controller calls render methods to the view by passing {@link Aggregates} to be used with templates:</p>
  *
  * <ul>
  * <li>{@code month1 ... month12}: the month names in the proper language;</li>
@@ -64,7 +63,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPL
  * <li>{@code entries1 ... entries12}: the entries for each month.</li>
  * </ul>
  *
- * <p>Each {@code entry} is composed of the following fields:</p>
+ * <p>Each {@code entry} is an {@link Aggregate} of the following fields:</p>
  *
  * <ul>
  * <li>{@code label}: the label of the entry;</li>
@@ -72,7 +71,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPL
  * <li>{@code class}: the CSS class of the entry.</li>
  * </ul>
  *
- * <p>Each {@code year} is composed of the following fields:</p>
+ * <p>Each {@code year} is an {@link Aggregate} of the following fields:</p>
  *
  * <ul>
  * <li>{@code number}: the number of the year;</li>

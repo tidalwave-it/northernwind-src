@@ -27,29 +27,59 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.stringtemplate.v4.ST;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
-import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
+import static java.util.stream.Collectors.toList;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
  *
- * A default implementation of {@link HtmlTextWithTitleViewController}.
+ * <p>A default implementation of the {@link HtmlTextWithTitleViewController} that is independent of the presentation
+ * technology. This class is capable to render a sequence of texts with their titles.</p>
+ *
+ * <p>Supported properties of the {@link SiteNode}:</p>
+ *
+ * <ul>
+ * <li>{@code P_CONTENT_PATHS}: a set of paths to {@link Content}s;</li>
+ * <li>{@code P_CLASS}: an optional CSS class name for the wrapping {@code &lt;div&gt;}.</li>
+ * </ul>
+ *
+ * <p>For each {@code Content} the following properties are used:</p>
+ *
+ * <ul>
+ * <li>{@code P_TITLE}: for rendering the title;</li>
+ * <li>{@code P_FULL_TEXT}: for rendering the text.</li>
+ * </ul>
+ *
+ * <p>Concrete implementations must provide the following method:</p>
+ *
+ * <ul>
+ * <li>{@link #render(java.util.List)}</li>
+ * </ul>
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitleViewController
+public abstract class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitleViewController
   {
+    @RequiredArgsConstructor
+    public static class TextWithTitle
+      {
+        public final Optional<String> title;
+        public final Optional<String> text;
+        public final int level;
+      }
+
     @Nonnull
     private final HtmlTextWithTitleView view;
 
@@ -64,46 +94,23 @@ public class DefaultHtmlTextWithTitleViewController implements HtmlTextWithTitle
     @Override
     public void renderView (final @Nonnull RenderContext context)
       {
-        final Site site = siteNode.getSite();
         final AtomicInteger titleLevel = new AtomicInteger(2); // TODO: read override from properties
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        final String template = viewProperties.getProperty(P_WRAPPER_TEMPLATE_RESOURCE)
-                                              .flatMap(p -> site.getTemplate(getClass(), p))
-                                              .orElse("$content$");
-        log.debug(">>>> template: {}", template);
-
-        final String html = viewProperties.getProperty(P_CONTENTS).orElse(emptyList())
-                .stream()
-                .flatMap(path -> site.find(Content).withRelativePath(path).stream())
-                .map(content -> content.getProperties())
-                // FIXME: shouldn't be h2, always?
-                .map(properties -> appendTitle(properties, "h" + titleLevel.getAndIncrement()) + appendText(properties))
-                .collect(joining());
-
-        final ST t = new ST(template, '$', '$').add("content", html);
-        view.setText(t.render());
         view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
+        render(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
+                .stream()
+                .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream())
+                // FIXME: shouldn't be h2, always?
+                .map(c -> new TextWithTitle(c.getProperty(P_TITLE), c.getProperty(P_FULL_TEXT), titleLevel.getAndIncrement()))
+                .collect(toList()));
       }
 
     /*******************************************************************************************************************
      *
-     * Appends the title.
+     * Renders the collection of texts with their titles.
+     *
+     * @param   contents    the contents to render
      *
      ******************************************************************************************************************/
-    @Nonnull
-    private static String appendTitle (final @Nonnull ResourceProperties properties, final @Nonnull String titleMarkup)
-      {
-        return properties.getProperty(P_TITLE).map(title -> String.format("<%s>%s</%s>%n", titleMarkup, title, titleMarkup)).orElse("");
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Appends the text.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static String appendText (final @Nonnull ResourceProperties properties)
-      {
-        return properties.getProperty(P_FULL_TEXT).map(text -> text + "\n").orElse("");
-      }
+    protected abstract void render (@Nonnull List<TextWithTitle> contents);
   }
