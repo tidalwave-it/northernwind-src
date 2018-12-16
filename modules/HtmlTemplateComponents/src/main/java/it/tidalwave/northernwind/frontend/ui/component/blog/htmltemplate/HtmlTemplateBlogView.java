@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.frontend.ui.component.blog.BlogView;
  *
  * <p>An implementation of {@link BlogView} based on HTML templates.</p>
  *
+ * @see     HtmlTemplateBlogViewController
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/

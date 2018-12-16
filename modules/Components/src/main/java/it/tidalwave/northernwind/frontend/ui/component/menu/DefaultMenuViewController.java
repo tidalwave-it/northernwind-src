@@ -35,6 +35,7 @@ import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
+import static it.tidalwave.northernwind.core.model.Content.P_TITLE;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
