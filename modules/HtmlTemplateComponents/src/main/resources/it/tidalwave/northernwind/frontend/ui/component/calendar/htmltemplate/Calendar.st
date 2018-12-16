@@ -6,7 +6,7 @@
         <table class='nw-calendar-table'>
             <tbody>
                 <tr>
-                    <th colspan='4' class='nw-calendar-title'>$year$</th>
+                    <th colspan='$columns$' class='nw-calendar-title'>$year$</th>
                 </tr>
                 $rows : { row |
                 <tr>

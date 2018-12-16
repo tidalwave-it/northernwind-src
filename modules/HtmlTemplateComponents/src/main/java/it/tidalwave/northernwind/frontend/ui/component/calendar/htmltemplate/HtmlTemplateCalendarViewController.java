@@ -31,7 +31,9 @@ import javax.annotation.Nonnull;
 import java.text.DateFormatSymbols;
 import java.util.Optional;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
+import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import it.tidalwave.util.InstantProvider;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -47,39 +49,13 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import static it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.Pair.*;
 
 /***********************************************************************************************************************
  *
  * <p>An implementation of {@link CalendarViewController} based on HTML templates.</p>
  *
  * <p>The template for rendering the page can be specified by means of the property {@code P_TEMPLATE_PATH}.</p>
- *
- * <p>This controller calls render methods to the view by passing {@link Aggregates} to be used with templates:</p>
- *
- * <ul>
- * <li>{@code month1 ... month12}: the month names in the proper language;</li>
- * <li>{@code selectedYear}: the year for the current rendering;</li>
- * <li>{@code years}: all the available years;</li>
- * <li>{@code entries1 ... entries12}: the entries for each month.</li>
- * </ul>
- *
- * <p>Each {@code entry} is an {@link Aggregate} of the following fields:</p>
- *
- * <ul>
- * <li>{@code label}: the label of the entry;</li>
- * <li>{@code link}: the link of the entry;</li>
- * <li>{@code class}: the CSS class of the entry.</li>
- * </ul>
- *
- * <p>Each {@code year} is an {@link Aggregate} of the following fields:</p>
- *
- * <ul>
- * <li>{@code number}: the number of the year;</li>
- * <li>{@code link}: the target URL (not present for the current year).</li>
- * </ul>
  *
  * @see     HtmlTemplateCalendarView
  * @author  Fabrizio Giudici
@@ -121,23 +97,17 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                                           .mapToObj(y -> toAggregate(y, y == year))
                                           .collect(toAggregates("years"));
 
-        final Map<String, String> months = new TreeMap<>();
         final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
-        IntStream.rangeClosed(1, monthNames.length).forEach(i -> months.put("" + i, monthNames[i - 1]));
 
-        final Map<String, List<Map<String, Object>>> entries = new TreeMap<>();
-                IntStream.rangeClosed(1, 12).forEach(m -> entries.put("" + m, byMonth.getOrDefault(m, emptyList())
-                                                                                      .stream()
-                                                                                      .map(x -> toAggregate(x).getMap())
-                                                                                      .collect(toList())));
-        log.debug("monthNames: {}", months);
-        log.debug("entries:    {}", entries);
+        final IntFunction<List<Map<String, Object>>> entriesByMonth =
+            i -> byMonth.getOrDefault(i + 1, emptyList()).stream().map(x -> toAggregate(x).getMap()).collect(toList());
+
         view.render(title,
                     getViewProperties().getProperty(P_TEMPLATE_PATH),
-                    months,
+                    indexedPairStream1(monthNames).collect(pairsToMap()),
                     Integer.toString(year),
                     years,
-                    entries,
+                    indexedPairStream1(0, 12, entriesByMonth).collect(pairsToMap()),
                     columns);
       }
 

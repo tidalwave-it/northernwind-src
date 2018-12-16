@@ -28,7 +28,9 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
@@ -38,10 +40,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
-import static java.util.Arrays.asList;
-import java.util.Map;
 import static java.util.stream.Collectors.toList;
-import java.util.stream.IntStream;
 
 /***********************************************************************************************************************
  *
@@ -83,10 +82,10 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
      ******************************************************************************************************************/
     public void render (final @Nonnull Optional<String> title,
                         final @Nonnull Optional<ResourcePath> templatePath,
-                        final @Nonnull Map<String, String> monthNames,
+                        final @Nonnull Map<Integer, String> monthNames,
                         final @Nonnull String year,
                         final @Nonnull Aggregates years,
-                        final @Nonnull Map<String, List<Map<String, Object>>> entries,
+                        final @Nonnull Map<Integer, List<Map<String, Object>>> entries,
                         final @Nonnull int columns)
       {
         final Template template = site.getTemplate(getClass(), templatePath, "Calendar.st");
@@ -94,11 +93,12 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
         template.addAttribute("year",    year);
         template.addAttribute("month",   monthNames);
         template.addAttribute("entries", entries);
-        template.addAttribute("rows", IntStream.rangeClosed(1, 12 / columns)
-                                               .mapToObj(r -> IntStream.rangeClosed(1 + (r-1) * columns, r * columns)
-                                                                       .mapToObj(Integer::toString)
-                                                                       .collect(toList()))
-                                               .collect(toList()));
+        template.addAttribute("columns", columns);
+        template.addAttribute("rows",    IntStream.rangeClosed(1, 12 / columns)
+                                                  .mapToObj(r -> IntStream.rangeClosed(1 + (r-1) * columns, r * columns)
+                                                                          .mapToObj(i -> i)
+                                                                          .collect(toList()))
+                                                  .collect(toList()));
         template.addAttribute("columnWidth", 100 / columns);
         addComponent(new HtmlHolder(template.render(years)));
       }
