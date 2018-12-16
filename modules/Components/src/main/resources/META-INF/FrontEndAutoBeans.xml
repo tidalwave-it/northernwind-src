@@ -46,6 +46,6 @@
 
     <aop:aspectj-autoproxy/>
 
-    <bean id="calendarDao" class="it.tidalwave.northernwind.frontend.ui.component.calendar.XmlCalendarDao" />
+    <bean id="calendarDao" class="it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao" />
 
 </beans>
