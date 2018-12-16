@@ -125,14 +125,9 @@ class ResourcePropertiesDelegate implements ResourceProperties
     public Optional<ResourcePath> getExposedUri()
       {
         final Optional<String> exposedUri = getProperty(P_EXPOSED_URI);
-
-        return exposedUri.isPresent() ? exposedUri.map(ResourcePath::of)
-                                      : getDefaultExposedUri();
+        return exposedUri.isPresent() ? exposedUri.map(ResourcePath::of) : getDefaultExposedUri();
+//        return getProperty(P_EXPOSED_URI).map(ResourcePath::of).orElseGet(() -> getDefaultExposedUri()); TODO
       }
-
-    // FIXME: this is declared in Frontend Components. Either move some properties in this module, or the next
-    // method can't stay here.
-    public static final Key<String> P_TITLE = new Key<String>("title") {};
 
     /*******************************************************************************************************************
      *

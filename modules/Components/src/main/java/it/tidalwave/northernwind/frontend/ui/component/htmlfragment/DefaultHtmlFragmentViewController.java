@@ -66,7 +66,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     public void renderView (final @Nonnull RenderContext context)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        view.setContent(viewProperties.getProperty(P_CONTENTS).orElse(emptyList())
+        view.setContent(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
                                       .stream()
                                       .flatMap(path -> site.find(Content).withRelativePath(path).stream())
                                       .map(content -> content.getProperties())

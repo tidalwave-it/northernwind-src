@@ -36,12 +36,13 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
+import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 
 /***********************************************************************************************************************
@@ -55,7 +56,7 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
  * <li>{@code P_TEMPLATE_TAG_CLOUD_PATH}: the template for rendering the tag cloud.</li>
  * </ul>
  *
- * <p>This controller calls render methods to the view by passing aggregates to be used with templates.</p>
+ * <p>This controller calls render methods to the view by passing {@link Aggregates} to be used with templates.</p>
  * <p>In case of post rendering, the following aggregates are defined:</p>
  *
  * <ul>
@@ -64,7 +65,7 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
  * <li>{@code linkedPosts}: the posts to be rendered as links.</li>
  * </ul>
  *
- * <p>Each item of these aggregates is composed of the following fields:</p>
+ * <p>Each item is an {@link Aggregate} of the following fields:</p>
  *
  * <ul>
  * <li>{@code title}: the title of the post;</li>
@@ -76,14 +77,14 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
  * <li>{@code tags}: a list of tags of the post.</li>
  * </ul>
  *
- * <p>Each tag is an aggregate of two attributes:</p>
+ * <p>Each tag is an {@code Aggregate} of two attributes:</p>
  *
  * <ul>
  * <li>{@code name}: the name of the tag;</li>
  * <li>{@code link}: the target URL.</li>
  * </ul>
  *
- * <p>In case of tag cloud rendering, the defined aggregate is {@code tags} and each containe tag, in addition to the
+ * <p>In case of tag cloud rendering, the {@code Aggregate} is named {@code tags} and each contained tag, in addition to the
  * previous attributes, has got:</p>
  *
  * <ul>
