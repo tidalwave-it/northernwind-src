@@ -24,34 +24,23 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.calendar;
+package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmltemplate;
 
-import java.util.Locale;
+import java.util.List;
 import java.util.Optional;
-import java.time.Instant;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.Request;
-import it.tidalwave.northernwind.core.model.RequestContext;
-import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarView;
-import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarViewController;
-import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
-import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
+import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController.TextWithTitle;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static java.util.Arrays.asList;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
+import static java.util.stream.Collectors.toList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
+import java.util.Random;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -59,25 +48,23 @@ import static org.mockito.Mockito.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public class HtmlTemplateCalendarViewControllerTest
+public class HtmlTemplateHtmlTextWithTitleViewControllerTest
   {
-    private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
+    private Id viewId = new Id("viewId");
 
-    private DefaultCalendarViewController underTest;
-
-    private HtmlTemplateCalendarView view;
+    private HtmlTemplateHtmlTextWithTitleView view;
 
     private SiteNode siteNode;
 
     private Site site;
 
-    private RequestLocaleManager requestLocaleManager;
+    private HtmlTemplateHtmlTextWithTitleViewController underTest;
 
-    private RenderContext context;
-
-    private Id viewId = new Id("viewId");
+    private RenderContext renderContext;
 
     private ResourceProperties viewProperties;
+
+    private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 
     /*******************************************************************************************************************
      *
@@ -88,35 +75,24 @@ public class HtmlTemplateCalendarViewControllerTest
       {
         site = createMockSite();
 
-        view = new HtmlTemplateCalendarView(viewId, site); // this is an integration test
-
         siteNode = createMockSiteNode(site);
-        when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("diary"));
+        when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("uri"));
         final ResourceProperties siteNodeProperties = createMockProperties();
-
-        final Path path = fileTestHelper.resolve("entries.xml");
-        final String entries = new String(Files.readAllBytes(path), UTF_8);
-        when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
         viewProperties = createMockProperties();
 
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        requestLocaleManager = mock(RequestLocaleManager.class);
-        when(requestLocaleManager.getLocales()).thenReturn(asList(Locale.ENGLISH));
-
         final Request request = mock(Request.class);
         final RequestContext requestContext = mock(RequestContext.class);
-        context = new DefaultRenderContext(request, requestContext);
+        renderContext = new DefaultRenderContext(request, requestContext);
 
-        when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.EMPTY);
+        view = new HtmlTemplateHtmlTextWithTitleView(viewId, site);
 
-        final Instant mockTime = Instant.ofEpochSecond(1502150400); // 2017/08/08
-        final CalendarDao dao = new XmlCalendarDao();
-
-        underTest = new HtmlTemplateCalendarViewController(view, siteNode, requestLocaleManager, dao, () -> mockTime);
+        underTest = new HtmlTemplateHtmlTextWithTitleViewController(view, siteNode);
         underTest.initialize();
+        underTest.prepareRendering(renderContext);
       }
 
     /*******************************************************************************************************************
@@ -127,13 +103,15 @@ public class HtmlTemplateCalendarViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(eq(P_FIRST_YEAR))).thenReturn(Optional.of(2000));
-        when(viewProperties.getProperty(eq(P_LAST_YEAR))).thenReturn(Optional.of(2018));
-        when(viewProperties.getProperty(eq(P_SELECTED_YEAR))).thenReturn(Optional.of(2013));
-        underTest.prepareRendering(context);
+        final Random rnd = new Random(43);
+        final List<TextWithTitle> twts = IntStream.rangeClosed(1, 10)
+                .mapToObj(i -> new TextWithTitle(rnd.nextDouble() < 0.3 ? Optional.empty() : Optional.of("Title #" + i),
+                                                 Optional.of("<p>text " + i + "</p>"),
+                                                 i))
+                .collect(toList());
         // when
-        underTest.renderView(context);
+        underTest.render(twts);
         // then
-        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "diary.xhtml");
+        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "text_with_title.xhtml");
       }
   }
