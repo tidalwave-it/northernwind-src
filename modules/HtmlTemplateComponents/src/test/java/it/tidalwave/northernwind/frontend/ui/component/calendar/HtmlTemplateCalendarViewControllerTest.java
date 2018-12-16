@@ -53,6 +53,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
 import static org.mockito.Mockito.*;
+import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -122,18 +123,28 @@ public class HtmlTemplateCalendarViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test
-    public void must_properly_render()
+    @Test(dataProvider = "columnProvider")
+    public void must_properly_render (final int columns)
       throws Exception
       {
         // given
         when(viewProperties.getProperty(eq(P_FIRST_YEAR))).thenReturn(Optional.of(2000));
         when(viewProperties.getProperty(eq(P_LAST_YEAR))).thenReturn(Optional.of(2018));
         when(viewProperties.getProperty(eq(P_SELECTED_YEAR))).thenReturn(Optional.of(2013));
+        when(viewProperties.getProperty(eq(P_COLUMNS))).thenReturn(Optional.of(columns));
         underTest.prepareRendering(context);
         // when
         underTest.renderView(context);
         // then
-        fileTestHelper.assertFileContents(view.asBytes(UTF_8), "diary.xhtml");
+        fileTestHelper.assertFileContents(view.asBytes(UTF_8), String.format("calendar-%dx%d.xhtml", columns, 12 / columns));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    @DataProvider
+    private Object[][] columnProvider()
+      {
+        return new Object[][] { { 1 }, { 2 }, { 3 }, { 4 }, { 6 }, { 12 } };
       }
   }
