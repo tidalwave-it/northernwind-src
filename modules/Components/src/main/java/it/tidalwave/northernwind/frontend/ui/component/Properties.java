@@ -51,4 +51,7 @@ public final class Properties
     public static final Key<String> P_DATE_FORMAT = new Key<String>("dateFormat") {};
 
     public static final Key<String> P_TIME_ZONE = new Key<String>("timeZone") {};
+
+    /** The level of a content, used to pick the heading. */
+    public static final Key<Integer> P_LEVEL = new Key<Integer>("level") {};
   }
