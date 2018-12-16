@@ -34,7 +34,6 @@ import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.Properties;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.FileTestHelper;
@@ -42,8 +41,8 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.core.model.Content.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_CONTENT_PATHS;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
@@ -125,7 +124,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
       {
         // given
         final List<String> paths = IntStream.range(0, 10).mapToObj(Integer::valueOf).map(i -> "/path/content-" + i).collect(toList());
-        mockViewProperty(siteNode, viewId, Properties.P_CONTENT_PATHS, Optional.of(paths));
+        mockViewProperty(siteNode, viewId, P_CONTENT_PATHS, Optional.of(paths));
 
         for (int i = 0; i < paths.size(); i++)
           {

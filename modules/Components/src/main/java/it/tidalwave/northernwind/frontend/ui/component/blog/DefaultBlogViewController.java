@@ -67,12 +67,11 @@ import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
-import static it.tidalwave.northernwind.core.model.Content.Content;
+import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 import static lombok.AccessLevel.PUBLIC;
-import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
  *

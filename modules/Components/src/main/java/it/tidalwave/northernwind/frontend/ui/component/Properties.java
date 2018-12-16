@@ -26,10 +26,9 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component;
 
-import it.tidalwave.northernwind.core.model.ResourcePath;
-import java.time.ZonedDateTime;
 import java.util.List;
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.*;
 
@@ -41,33 +40,15 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access=PRIVATE)
 public final class Properties
   {
-    public static final Key<String> P_TITLE = new Key<String>("title") {};
-
-    public static final Key<String> P_ID = new Key<String>("id") {};
-
-    public static final Key<String> P_DESCRIPTION = new Key<String>("description") {};
-
-    public static final Key<String> P_FULL_TEXT = new Key<String>("fullText") {};
-
-    public static final Key<String> P_LEADIN_TEXT = new Key<String>("leadinText") {};
-
     public static final Key<ResourcePath> P_TEMPLATE_PATH = new Key<ResourcePath>("templatePath") {};
 
     public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_PATH = new Key<ResourcePath>("wrapperTemplate") {};
 
-    public static final Key<ZonedDateTime> P_CREATION_DATE = new Key<ZonedDateTime>("creationDateTime") {};
-
-    public static final Key<ZonedDateTime> P_PUBLISHING_DATE = new Key<ZonedDateTime>("publishingDateTime") {};
-
-    public static final Key<ZonedDateTime> P_LATEST_MODIFICATION_DATE = new Key<ZonedDateTime>("latestModificationDateTime") {};
+    public static final Key<List<String>> P_CONTENT_PATHS = new Key<List<String>>("contents") {};
 
     public static final Key<String> P_CLASS = new Key<String>("class") {};
 
     public static final Key<String> P_DATE_FORMAT = new Key<String>("dateFormat") {};
 
     public static final Key<String> P_TIME_ZONE = new Key<String>("timeZone") {};
-
-    public static final Key<List<String>> P_CONTENT_PATHS = new Key<List<String>>("contents") {};
-
-    public static final Key<List<String>> P_TAGS = new Key<List<String>>("tags") {};
   }

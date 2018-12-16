@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TITLE;
+import static it.tidalwave.northernwind.core.model.Content.P_TITLE;
 
 /***********************************************************************************************************************
  *
