@@ -46,6 +46,7 @@ import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
  *
  * <p>An implementation of {@link CalendarView} based on HTML templates.</p>
  *
+ * @see     HtmlTemplateCalendarViewController
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/

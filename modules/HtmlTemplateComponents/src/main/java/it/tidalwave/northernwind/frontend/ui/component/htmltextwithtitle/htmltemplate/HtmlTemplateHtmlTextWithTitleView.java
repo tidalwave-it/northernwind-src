@@ -36,8 +36,8 @@ import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import static java.util.stream.Collectors.joining;
 import lombok.Getter;
+import static java.util.stream.Collectors.joining;
 
 /***********************************************************************************************************************
  *
@@ -74,7 +74,7 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
 
     /*******************************************************************************************************************
      *
-     * Renders this view.
+     * Renders this view. See {@link HtmlTemplateHtmlTextWithTitleViewController} for more information.
      *
      * @see         HtmlTemplateHtmlTextWithTitleViewController
      * @param       wrapperTemplatePath     the optional template to wrap around each item of contents
