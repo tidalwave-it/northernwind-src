@@ -1,0 +1,2 @@
+Required otherwise won't produce an empty jar and complain; on the other hand, a type 'pom' won't work for modules depending
+on this. See NW-323.
