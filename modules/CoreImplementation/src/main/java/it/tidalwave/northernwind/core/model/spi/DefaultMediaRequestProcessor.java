@@ -113,7 +113,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             // END TODO
 
             final String extension = mediaUri.getExtension(); // jpg
-            final String fileName = mediaUri.getTrailing();   // image.jpg
+//            final String fileName = mediaUri.getTrailing();   // image.jpg
             mediaUri = mediaUri.withoutTrailing();
             final String size = mediaUri.getTrailing();       // 1920
             mediaUri = mediaUri.withoutTrailing();

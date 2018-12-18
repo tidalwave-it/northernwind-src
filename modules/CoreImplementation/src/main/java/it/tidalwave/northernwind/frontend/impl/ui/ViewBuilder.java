@@ -113,12 +113,10 @@ import lombok.extern.slf4j.Slf4j;
           }
         catch (InvocationTargetException e)
           {
-            if (e.getCause() instanceof BeanCreationException) // FIXME: cumbersome
+            // FIXME: cumbersome
+            if ((e.getCause() instanceof BeanCreationException) && (e.getCause().getCause() instanceof HttpStatusException))
               {
-                if (e.getCause().getCause() instanceof HttpStatusException)
-                  {
-                    throw (HttpStatusException)e.getCause().getCause();
-                  }
+                throw (HttpStatusException)e.getCause().getCause();
               }
 
             throw new RuntimeException(e);
