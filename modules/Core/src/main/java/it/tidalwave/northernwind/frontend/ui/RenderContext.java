@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -76,14 +75,7 @@ public interface RenderContext
     @Nonnull
     default public Optional<String> getQueryParam (final @Nonnull String name)
       {
-        try
-          {
-            return Optional.of(getRequest().getParameter(name));
-          }
-        catch (NotFoundException e)
-          {
-            return Optional.empty();
-          }
+        return getRequest().getParameter(name);
       }
 
     /*******************************************************************************************************************
