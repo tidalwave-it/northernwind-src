@@ -32,7 +32,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public interface DecoratedResourceFileSystem extends ResourceFileSystem

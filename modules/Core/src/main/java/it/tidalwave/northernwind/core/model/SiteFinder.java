@@ -49,7 +49,7 @@ public interface SiteFinder<T> extends ExtendedFinder8Support<T, SiteFinder<T>>
       }
 
     @Nonnull
-    default public SiteFinder<T> withRelativeUri (@Nonnull ResourcePath relativeUri)
+    default public SiteFinder<T> withRelativeUri (final @Nonnull ResourcePath relativeUri)
       {
         return withRelativeUri(relativeUri.asString());
       }
