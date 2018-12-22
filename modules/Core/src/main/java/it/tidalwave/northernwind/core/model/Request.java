@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Locale;
-import it.tidalwave.util.NotFoundException;
+import java.util.Optional;
 
 /***********************************************************************************************************************
  *
@@ -102,8 +102,7 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getHeader (@Nonnull String headerName)
-      throws NotFoundException;
+    public Optional<String> getHeader (@Nonnull String headerName);
 
     /*******************************************************************************************************************
      *
@@ -114,8 +113,7 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<String> getMultiValuedHeader (@Nonnull String headerName)
-      throws NotFoundException;
+    public List<String> getMultiValuedHeader (@Nonnull String headerName);
 
     /*******************************************************************************************************************
      *
@@ -126,8 +124,7 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getParameter (@Nonnull String parameterName)
-      throws NotFoundException;
+    public Optional<String> getParameter (@Nonnull String parameterName);
 
     /*******************************************************************************************************************
      *
@@ -138,8 +135,7 @@ public interface Request
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<String> getMultiValuedParameter (@Nonnull String parameterName)
-      throws NotFoundException;
+    public List<String> getMultiValuedParameter (@Nonnull String parameterName);
 
     /*******************************************************************************************************************
      *

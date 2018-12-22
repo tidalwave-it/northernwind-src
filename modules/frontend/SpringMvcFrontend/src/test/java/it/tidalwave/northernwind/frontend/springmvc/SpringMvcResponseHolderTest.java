@@ -40,7 +40,7 @@ import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public class SpringMvcResponseHolderTest extends ResponseBuilderTest

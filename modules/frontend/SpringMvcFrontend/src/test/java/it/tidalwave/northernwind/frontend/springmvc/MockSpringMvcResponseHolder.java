@@ -30,7 +30,7 @@ import it.tidalwave.northernwind.core.model.spi.MockResponseHolder;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public class MockSpringMvcResponseHolder extends MockResponseHolder

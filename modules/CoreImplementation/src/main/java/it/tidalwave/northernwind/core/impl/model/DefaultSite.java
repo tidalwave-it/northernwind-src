@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -59,6 +58,7 @@ import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import it.tidalwave.northernwind.core.model.spi.RequestHolder;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
+import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

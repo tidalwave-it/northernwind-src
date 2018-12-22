@@ -27,10 +27,10 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.time.Clock;
 import java.time.Duration;
@@ -59,6 +59,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 @NotThreadSafe @Slf4j // FIXME: move to Core Default Implementation?
 public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseBuilder<RESPONSE_TYPE>
   {
+    // TODO: refactor with Key
     protected static final String HEADER_CONTENT_LENGTH = "Content-Length";
     protected static final String HEADER_ETAG = "ETag";
     protected static final String HEADER_CONTENT_TYPE = "Content-Type";
@@ -88,12 +89,12 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     protected int httpStatus = SC_OK;
 
     /** The If-None-Match header specified in the request we're responding to. */
-    @Nullable
-    protected String requestIfNoneMatch;
+    @Nonnull
+    protected Optional<String> requestIfNoneMatch = Optional.empty();
 
     /** The If-Modified-Since header specified in the request we're responding to. */
-    @Nullable
-    protected ZonedDateTime requestIfModifiedSince;
+    @Nonnull
+    protected Optional<ZonedDateTime> requestIfModifiedSince = Optional.empty();
 
     @Getter @Setter @Nonnull
     private Supplier<Clock> clockSupplier = Clock::systemDefaultZone;
@@ -221,23 +222,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Override @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> forRequest (final @Nonnull Request request)
       {
-        try // FIXME: this would be definitely better with Optional
-          {
-            this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
-          }
-        catch (NotFoundException e)
-          {
-            // never mind
-          }
-
-        try // FIXME: this would be definitely better with Optional
-          {
-            this.requestIfModifiedSince = parseDate(request.getHeader(HEADER_IF_MODIFIED_SINCE));
-          }
-        catch (NotFoundException e)
-          {
-            // never mind
-          }
+        this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
+        this.requestIfModifiedSince = request.getHeader(HEADER_IF_MODIFIED_SINCE).map(this::parseDate);
 
         return this;
       }
@@ -361,8 +347,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * @return          the header value
      *
      ******************************************************************************************************************/
-    @Nullable
-    protected abstract String getHeader (@Nonnull String header);
+    @Nonnull
+    protected abstract Optional<String> getHeader (@Nonnull String header);
 
     /*******************************************************************************************************************
      *
@@ -372,11 +358,10 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      * @return          the header value
      *
      ******************************************************************************************************************/
-    @Nullable
-    protected final ZonedDateTime getDateTimeHeader (final @Nonnull String header)
+    @Nonnull
+    protected final Optional<ZonedDateTime> getDateTimeHeader (final @Nonnull String header)
       {
-        final String value = getHeader(header);
-        return (value == null) ? null : parseDate(value);
+        return getHeader(header).map(this::parseDate);
       }
 
     /*******************************************************************************************************************
@@ -390,15 +375,15 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Nonnull
     protected ResponseBuilder<RESPONSE_TYPE> cacheSupport()
       {
-        final String eTag = getHeader(HEADER_ETAG);
-        final ZonedDateTime lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
+        final Optional<String> eTag = getHeader(HEADER_ETAG);
+        final Optional<ZonedDateTime> lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
 
         log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
         log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
 
-        if ( ((eTag != null) && eTag.equals(requestIfNoneMatch)) ||
-             ((requestIfModifiedSince != null) && (lastModified != null) &&
-              (lastModified.isBefore(requestIfModifiedSince) || lastModified.isEqual(requestIfModifiedSince))) )
+        if ( (eTag.isPresent() && eTag.equals(requestIfNoneMatch)) ||
+             (requestIfModifiedSince.isPresent() && lastModified.isPresent() &&
+              (lastModified.get().isBefore(requestIfModifiedSince.get()) || lastModified.get().isEqual(requestIfModifiedSince.get()))) )
           {
             return notModified();
           }
