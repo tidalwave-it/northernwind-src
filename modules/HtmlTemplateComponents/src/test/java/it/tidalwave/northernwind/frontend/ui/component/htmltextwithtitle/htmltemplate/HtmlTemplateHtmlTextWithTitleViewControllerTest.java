@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmlte
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.*;
@@ -40,7 +41,6 @@ import it.tidalwave.northernwind.util.test.FileTestHelper;
 import static java.util.stream.Collectors.toList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import java.util.Random;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
