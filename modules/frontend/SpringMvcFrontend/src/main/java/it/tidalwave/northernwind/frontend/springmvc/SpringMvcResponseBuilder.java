@@ -28,15 +28,15 @@ package it.tidalwave.northernwind.frontend.springmvc;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport;
+import static java.util.Collections.emptyList;
 
 /***********************************************************************************************************************
  *
@@ -55,11 +55,10 @@ public class SpringMvcResponseBuilder extends ResponseBuilderSupport<ResponseEnt
         return this;
       }
 
-    @Override @Nullable
-    protected String getHeader (final @Nonnull String header)
+    @Override @Nonnull
+    protected Optional<String> getHeader (final @Nonnull String header)
       {
-        final List<String> g = headers.get(header);
-        return ((g == null) || g.isEmpty()) ? null : g.get(0);
+        return headers.getOrDefault(header, emptyList()).stream().findFirst();
       }
 
     @Override @Nonnull

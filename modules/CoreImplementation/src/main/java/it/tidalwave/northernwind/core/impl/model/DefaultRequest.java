@@ -34,10 +34,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import static java.util.Collections.emptyList;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -76,10 +77,9 @@ import lombok.ToString;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getHeader (final @Nonnull String parameterName)
-      throws NotFoundException
+    public Optional<String> getHeader (final @Nonnull String parameterName)
       {
-        return getMultiValuedHeader(parameterName).get(0);
+        return getMultiValuedHeader(parameterName).stream().findFirst();
       }
 
     /*******************************************************************************************************************
@@ -89,9 +89,8 @@ import lombok.ToString;
      ******************************************************************************************************************/
     @Override @Nonnull
     public List<String> getMultiValuedHeader (final @Nonnull String headerName)
-      throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(headersMap.get(headerName), headerName);
+        return headersMap.getOrDefault(headerName, emptyList());
       }
 
     /*******************************************************************************************************************
@@ -100,10 +99,9 @@ import lombok.ToString;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String getParameter (final @Nonnull String headerName)
-      throws NotFoundException
+    public Optional<String> getParameter (final @Nonnull String headerName)
       {
-        return getMultiValuedParameter(headerName).get(0);
+        return getMultiValuedParameter(headerName).stream().findFirst();
       }
 
     /*******************************************************************************************************************
@@ -113,9 +111,8 @@ import lombok.ToString;
      ******************************************************************************************************************/
     @Override @Nonnull
     public List<String> getMultiValuedParameter (final @Nonnull String parameterName)
-      throws NotFoundException
       {
-        return NotFoundException.throwWhenNull(parametersMap.get(parameterName), parameterName);
+        return parametersMap.getOrDefault(parameterName, emptyList());
       }
 
     /*******************************************************************************************************************

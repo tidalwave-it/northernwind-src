@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.time.Clock;
 import java.time.Duration;
@@ -40,15 +41,13 @@ import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import lombok.RequiredArgsConstructor;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
-import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -99,16 +98,7 @@ public class ResponseBuilderTest
 
         headers = new HashMap<>();
         request = mock(Request.class);
-        when(request.getHeader(anyString())).thenAnswer(new Answer<String>()
-          {
-            @Override @Nonnull
-            public String answer (final @Nonnull InvocationOnMock invocation)
-              throws NotFoundException
-              {
-                final String name = (String)invocation.getArguments()[0];
-                return NotFoundException.throwWhenNull(headers.get(name), "Not found " + name);
-              }
-          });
+        when(request.getHeader(anyString())).thenAnswer(i -> Optional.ofNullable(headers.get(i.getArgument(0))));
 
         responseHolder = responseHolderFactory.get();
         responseHolder.setClockSupplier(() -> Clock.fixed(currentTime.toInstant(), currentTime.getZone()));
