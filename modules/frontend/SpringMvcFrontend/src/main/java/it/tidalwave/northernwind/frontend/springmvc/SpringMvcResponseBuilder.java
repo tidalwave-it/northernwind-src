@@ -40,7 +40,7 @@ import static java.util.Collections.emptyList;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @NotThreadSafe
