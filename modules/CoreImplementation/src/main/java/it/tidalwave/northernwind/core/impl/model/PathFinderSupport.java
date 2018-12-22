@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -45,6 +44,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -116,25 +116,12 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinder8Support<
     @Nonnull
     protected List<? extends T> computeResults()
       {
-        final List<T> result = new ArrayList<>();
-
-        for (final ResourceFile childFile : parentFile.findChildren().withRecursion(true).results())
-          {
-            if (childFile.isFolder())
-              {
-                try
-                  {
-                    final String relativeUri = childFile.getPath().relativeTo(resourceRootPath).urlDecoded().asString();
-                    result.add(siteProvider.get().getSite().find(typeClass).withRelativePath(relativeUri).result());
-                  }
-                catch (NotFoundException e)
-                  {
-                    log.error("", e);
-                  }
-              }
-          }
-
-        return result;
+        final Site site = siteProvider.get().getSite();
+        return parentFile.findChildren().withRecursion(true).results().stream()
+            .filter(ResourceFile::isFolder)
+            .flatMap(c -> site.find(typeClass).withRelativePath(c.getPath().relativeTo(resourceRootPath).urlDecoded())
+                              .results().stream())
+            .collect(toList());
       }
 
     /*******************************************************************************************************************
