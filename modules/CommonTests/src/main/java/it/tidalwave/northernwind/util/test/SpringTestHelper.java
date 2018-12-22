@@ -53,7 +53,7 @@ import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
  *
  * A facility that provides some common tasks for testing, such as creating a Spring context and manipulating files.
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j

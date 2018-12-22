@@ -27,9 +27,9 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -76,9 +76,9 @@ public class ResponseBuilderTestable extends ResponseBuilderSupport<byte[]>
           }
       }
 
-    @Override @Nullable
-    protected String getHeader (final @Nonnull String header)
+    @Override @Nonnull
+    protected Optional<String> getHeader (final @Nonnull String header)
       {
-        return headerMap.get(header);
+        return Optional.ofNullable(headerMap.get(header));
       }
   }
