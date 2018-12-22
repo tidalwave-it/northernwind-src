@@ -38,10 +38,12 @@ import java.util.Optional;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import static java.util.Collections.emptyList;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
@@ -50,7 +52,7 @@ import static java.util.Collections.emptyList;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Immutable @AllArgsConstructor @Getter @ToString
+@Immutable @AllArgsConstructor(access = PRIVATE) @Getter @ToString
 /* package */ class DefaultRequest implements Request
   {
     @Nonnull
@@ -70,6 +72,15 @@ import static java.util.Collections.emptyList;
 
     @Nonnull
     private final List<Locale> preferredLocales;
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    public DefaultRequest()
+      {
+        this("", "", "", new HashMap<>(), new HashMap<>(), new ArrayList<>());
+      }
 
     /*******************************************************************************************************************
      *

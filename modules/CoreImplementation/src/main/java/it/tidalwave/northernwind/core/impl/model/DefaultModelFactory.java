@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -125,7 +124,7 @@ public class DefaultModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public DefaultRequest createRequest()
       {
-        return new DefaultRequest("", "", "", new HashMap<>(), new HashMap<>(), new ArrayList<>());
+        return new DefaultRequest();
       }
 
     /*******************************************************************************************************************
