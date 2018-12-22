@@ -27,14 +27,12 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -74,21 +72,8 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return ResourceFileFinderSupport.withComputeResults(new Function<Finder, List<ResourceFile>>()
-          {
-            @Override
-            public List<ResourceFile> apply (final @Nonnull Finder f)
-              {
-                final List<ResourceFile> result = new ArrayList<>();
-
-                for (final ResourceFile child : delegate.findChildren().results())
-                  {
-                    result.add(fileSystem.createDecoratorFile(child));
-                  }
-
-                return result;
-              }
-          });
+        return ResourceFileFinderSupport.withComputeResults((f) -> delegate.findChildren().results()
+                .stream().map(child -> fileSystem.createDecoratorFile(child)).collect(toList()));
       }
 
     @Override
