@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.model;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -48,8 +49,10 @@ import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
  *
  **********************************************************************************************************************/
 @Immutable @EqualsAndHashCode
-public class ResourcePath
+public class ResourcePath implements Serializable
   {
+    private static final long serialVersionUID = 1L;
+    
     public static final ResourcePath EMPTY = new ResourcePath();
 
     @Nonnull

@@ -144,15 +144,7 @@ public class DefaultResourceProperties implements ResourceProperties
               {
                 final String[] x = s.split("\\.");
                 final Id groupId = new Id(x[0]);
-
-                Map<Key<?>, Object> otherMap = othersMap.get(groupId);
-
-                if (otherMap == null)
-                  {
-                    otherMap = new HashMap<>();
-                    othersMap.put(groupId, otherMap);
-                  }
-
+                final Map<Key<?>, Object> otherMap = othersMap.computeIfAbsent(groupId, __ -> new HashMap<>());
                 otherMap.put(new Key<String>(x[1]) {}, value);
               }
           }
