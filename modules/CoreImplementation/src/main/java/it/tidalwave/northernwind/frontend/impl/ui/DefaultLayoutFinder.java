@@ -52,10 +52,10 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
     private static final long serialVersionUID = 2354576587657345L;
 
     @Nonnull
-    private final List<Layout> children;
+    private final transient List<Layout> children;
 
     @Nonnull
-    private final Map<Id, Layout> childrenMapById;
+    private final transient Map<Id, Layout> childrenMapById;
 
     @CheckForNull
     private final Id id;

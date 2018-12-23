@@ -44,7 +44,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import lombok.AccessLevel;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +57,8 @@ import lombok.extern.slf4j.Slf4j;
 @NotThreadSafe @NoArgsConstructor(access=AccessLevel.PRIVATE) @Slf4j
 public class ProcessExecutor
   {
+    private static final String PROCESS_EXITED_WITH = "Process exited with ";
+    
     /*******************************************************************************************************************
      *
      *
@@ -127,7 +128,7 @@ public class ProcessExecutor
          *
          *
          ***************************************************************************************************************/
-        @Nonnull
+        @Nonnull @SuppressWarnings("squid:S2093")
         public Scanner filteredAndSplitBy (final @Nonnull String filterRegexp, final @Nonnull String delimiterRegexp)
           {
             final String string = filteredBy(filterRegexp).get(0);
@@ -172,7 +173,7 @@ public class ProcessExecutor
                 try
                   {
                     final int exitValue = process.exitValue();
-                    throw new IOException("Process exited with " + exitValue);
+                    throw new IOException(PROCESS_EXITED_WITH + exitValue);
                   }
                 catch (IllegalThreadStateException e) // ok, process not terminated yet
                   {
@@ -202,27 +203,26 @@ public class ProcessExecutor
         private void read()
           throws IOException
           {
-            final @Cleanup BufferedReader br = new BufferedReader(new InputStreamReader(input));
-
-            for (;;)
+            try (final BufferedReader br = new BufferedReader(new InputStreamReader(input)))
               {
-                final String s = br.readLine();
-
-                if (s == null)
+                for (;;)
                   {
-                    break;
-                  }
+                    final String s = br.readLine();
 
-                log.trace(">>>>>>>> {}", s);
-                content.add(s);
+                    if (s == null)
+                      {
+                        break;
+                      }
 
-                synchronized (this)
-                  {
-                    notifyAll();
+                    log.trace(">>>>>>>> {}", s);
+                    content.add(s);
+
+                    synchronized (this)
+                      {
+                        notifyAll();
+                      }
                   }
               }
-
-            br.close();
           }
       }
 
@@ -322,13 +322,13 @@ public class ProcessExecutor
                 environment.add(String.format("%s=%s, ", e.getKey(), e.getValue()));
               }
 
-            log.error("Process exited with " + process.exitValue());
+            log.error(PROCESS_EXITED_WITH + process.exitValue());
             log.error(">>>> executed:          {}", arguments);
             log.error(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
             log.error(">>>> environment:       {}", environment);
             log("STDOUT", stdout);
             log("STDERR", stderr);
-            throw new IOException("Process exited with " + process.exitValue());
+            throw new IOException(PROCESS_EXITED_WITH + process.exitValue());
           }
 
         return this;
