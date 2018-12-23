@@ -65,6 +65,9 @@ public class CachedURIResolver implements URIResolver
     @Getter @Setter
     private int readTimeout = 10 * 1000; // 10 secs
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Override
     public Source resolve (final String href, final String base)
       throws TransformerException
@@ -99,19 +102,21 @@ public class CachedURIResolver implements URIResolver
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void cacheDocument (final @Nonnull File cachedFile, final @Nonnull String href)
       throws IOException
       {
         log.debug(">>>> caching external document to {}", cachedFile);
         final File tempFile = File.createTempFile("temp", ".txt", new File(cacheFolderPath));
         tempFile.deleteOnExit();
-        final FileChannel channel = new RandomAccessFile(tempFile, "rw").getChannel();
         log.debug(">>>> waiting for lock...");
-        @Cleanup(value = "release") final FileLock lock = channel.lock();
-        log.debug(">>>> got lock...");
 
-        try
+        try (final FileChannel channel = new RandomAccessFile(tempFile, "rw").getChannel();
+             final FileLock lock = channel.lock())
           {
+            log.debug(">>>> got lock: {}", lock);
             FileUtils.copyURLToFile(new URL(href), tempFile, connectionTimeout, readTimeout);
             rename(tempFile, cachedFile);
           }
@@ -131,6 +136,9 @@ public class CachedURIResolver implements URIResolver
         log.debug(">>>> done");
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private static void mkdirs (final @Nonnull File folder)
       throws IOException
       {
@@ -140,6 +148,9 @@ public class CachedURIResolver implements URIResolver
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private static void rename (final @Nonnull File from, final @Nonnull File to)
       throws IOException
       {
