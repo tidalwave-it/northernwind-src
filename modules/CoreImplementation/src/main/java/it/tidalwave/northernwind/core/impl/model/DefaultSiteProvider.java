@@ -63,10 +63,16 @@ import static java.util.stream.Collectors.toList;
 @Slf4j @ToString
 public class DefaultSiteProvider implements SiteProvider
   {
+    private static final String ASTERISKS = "****************************************";
+
     private static final String DEFAULT_DOCUMENT_PATH = "/content/document";
+
     private static final String DEFAULT_MEDIA_PATH = "/content/media";
+
     private static final String DEFAULT_LIBRARY_PATH = "/content/library";
+
     private static final String DEFAULT_NODE_PATH = "/structure";
+    
     public static final String DEFAULT_CONTEXT_PATH = "/";
 
     @Inject
@@ -189,21 +195,21 @@ public class DefaultSiteProvider implements SiteProvider
       {
         try
           {
-            log.info("****************************************");
+            log.info(ASTERISKS);
             log.info("SITE INITIALIZATION STARTED");
-            log.info("****************************************");
+            log.info(ASTERISKS);
             final long time = System.currentTimeMillis();
             site.initialize();
             siteAvailable.set(true);
-            log.info("****************************************");
+            log.info(ASTERISKS);
             log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
-            log.info("****************************************");
+            log.info(ASTERISKS);
           }
         catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
           {
-            log.error("****************************************");
+            log.error(ASTERISKS);
             log.error("SITE INITIALIZATION FAILED!", e);
-            log.error("****************************************");
+            log.error(ASTERISKS);
           }
       }
 
