@@ -28,8 +28,7 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite.Visitor;
+import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import org.slf4j.Logger;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @RequiredArgsConstructor @Slf4j
-public class LayoutLoggerVisitor implements Visitor<Layout, Object>
+public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
   {
     public static enum Level
       {
@@ -88,11 +87,6 @@ public class LayoutLoggerVisitor implements Visitor<Layout, Object>
       }
 
     @Override
-    public void visit (final @Nonnull Layout layout)
-      {
-      }
-
-    @Override
     public void postVisit (final @Nonnull Layout layout)
       {
         indent--;
@@ -100,7 +94,6 @@ public class LayoutLoggerVisitor implements Visitor<Layout, Object>
 
     @Override
     public Object getValue()
-      throws NotFoundException
       {
         return new Object();
       }
