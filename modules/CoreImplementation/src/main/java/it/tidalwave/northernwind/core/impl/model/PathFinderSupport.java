@@ -68,7 +68,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinder8Support<
     private final Class<T> typeClass;
 
     @Nonnull
-    private final ResourceFile parentFile;
+    private final transient ResourceFile parentFile;
 
     @Nonnull
     private final ResourcePath resourceRootPath;
