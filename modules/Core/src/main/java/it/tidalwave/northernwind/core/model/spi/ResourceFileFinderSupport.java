@@ -50,7 +50,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
   {
     private static final long serialVersionUID = -1393470412002725841L;
 
-    protected final Function<Finder, List<ResourceFile>> computeResults;
+    protected final transient Function<Finder, List<ResourceFile>> resultComputer;
 
     @Getter
     protected final boolean recursive;
@@ -64,13 +64,13 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      * TODO: with Java 8, move to a default method of Finder
      *
-     * @param   computeResults  the producer of results
+     * @param   resultComputer  the producer of results
      * @return                  the {@code Finder}
      *
      ******************************************************************************************************************/
-    public static Finder withComputeResults (final Function<Finder, List<ResourceFile>> computeResults)
+    public static Finder withComputeResults (final Function<Finder, List<ResourceFile>> resultComputer)
       {
-        return new ResourceFileFinderSupport(computeResults);
+        return new ResourceFileFinderSupport(resultComputer);
       }
 
     /*******************************************************************************************************************
@@ -80,14 +80,14 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      * TODO: with Java 8, move to a default method of Finder
      *
      * @param   finderName      the name of the {@code Finder} (for logging purpose)
-     * @param   computeResults  the producer of results
+     * @param   resultComputer  the producer of results
      * @return                  the {@code Finder}
      *
      ******************************************************************************************************************/
     public static Finder withComputeResults (final @Nonnull String finderName,
-                                             final Function<Finder, List<ResourceFile>> computeResults)
+                                             final Function<Finder, List<ResourceFile>> resultComputer)
       {
-        return new ResourceFileFinderSupport(finderName, computeResults);
+        return new ResourceFileFinderSupport(finderName, resultComputer);
       }
 
     /*******************************************************************************************************************
@@ -95,9 +95,9 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      *
      ******************************************************************************************************************/
-    private ResourceFileFinderSupport (final Function<Finder, List<ResourceFile>> computeResults)
+    private ResourceFileFinderSupport (final Function<Finder, List<ResourceFile>> resultComputer)
       {
-        this.computeResults = computeResults;
+        this.resultComputer = resultComputer;
         this.recursive = false;
         this.name = null;
       }
@@ -108,10 +108,10 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      ******************************************************************************************************************/
     private ResourceFileFinderSupport (final @Nonnull String finderName,
-                                       final Function<Finder, List<ResourceFile>> computeResults)
+                                       final Function<Finder, List<ResourceFile>> resultComputer)
       {
         super(finderName);
-        this.computeResults = computeResults;
+        this.resultComputer = resultComputer;
         this.recursive = false;
         this.name = null;
       }
@@ -129,7 +129,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
       {
         super(other, override);
         final ResourceFileFinderSupport source = getSource(ResourceFileFinderSupport.class, other, override);
-        this.computeResults = source.computeResults;
+        this.resultComputer = source.resultComputer;
         this.recursive = source.recursive;
         this.name = source.name;
       }
@@ -142,7 +142,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
     @Override @Nonnull
     public Finder withRecursion (final boolean recursive)
       {
-        return clone(new ResourceFileFinderSupport(computeResults, recursive, name));
+        return clone(new ResourceFileFinderSupport(resultComputer, recursive, name));
       }
 
     /*******************************************************************************************************************
@@ -153,7 +153,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
     @Override @Nonnull
     public Finder withName (final @Nonnull String name)
       {
-        return clone(new ResourceFileFinderSupport(computeResults, recursive, name));
+        return clone(new ResourceFileFinderSupport(resultComputer, recursive, name));
       }
 
     /*******************************************************************************************************************
@@ -164,7 +164,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
     @Override @Nonnull
     protected List<? extends ResourceFile> computeResults()
       {
-        return Objects.requireNonNull(computeResults.apply(this));
+        return Objects.requireNonNull(resultComputer.apply(this));
       }
   }
 

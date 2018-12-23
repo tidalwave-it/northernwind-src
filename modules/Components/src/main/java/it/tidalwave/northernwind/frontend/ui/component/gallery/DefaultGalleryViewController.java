@@ -66,7 +66,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         private static final long serialVersionUID = 1L;
 
         @Nonnull
-        private final DefaultGalleryViewController controller;
+        private final transient DefaultGalleryViewController controller;
 
         public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
           {
