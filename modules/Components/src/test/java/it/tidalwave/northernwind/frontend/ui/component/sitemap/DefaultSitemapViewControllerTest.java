@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -62,7 +63,7 @@ public class DefaultSitemapViewControllerTest
           }
 
         @Override
-        protected void render (final @Nonnull List<Entry> entries)
+        protected void render (final @Nonnull Set<Entry> entries)
           {
             this.entries.addAll(entries);
           }
@@ -91,8 +92,8 @@ public class DefaultSitemapViewControllerTest
       {
         site = createMockSite();
 
-        final MockSiteNodes mockSiteNodes = new MockSiteNodes(site);
-        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%d");
+        final MockNodesForSitemap mockSiteNodes = new MockNodesForSitemap(site);
+        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
 
         final SiteFinder<SiteNode> finder = createMockSiteFinder();
         when(finder.results()).thenReturn((List)nodes);
