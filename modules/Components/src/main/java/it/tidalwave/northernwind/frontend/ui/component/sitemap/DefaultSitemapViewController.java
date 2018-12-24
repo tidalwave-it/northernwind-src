@@ -26,18 +26,22 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
@@ -46,17 +50,51 @@ import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapVie
 
 /***********************************************************************************************************************
  *
+ * <p>A default implementation of the {@link SitemapViewController} that is independent of the presentation technology.
+ * This class is capable to render the sitemap of a {@link Site}.</p>
+ *
+ * <p>Supported properties of any {@link SiteNode} in the site:</p>
+ *
+ * <ul>
+ * <li>{@code P_SITEMAP_PRIORITY}: the priority of the {@code SiteNode} - if zero, the node is ignored;</li>
+ * <li>{@code P_SITEMAP_CHILDREN_PRIORITY}: same as {@code P_SITEMAP_PRIORITY}, but for child nodes;</li>
+ * <li>{@code P_LATEST_MODIFICATION_DATE}: the date-time of the latest modification;</li>
+ * <li>{@code P_SITEMAP_CHANGE_FREQUENCY}: the supposed change frequency of the {@code SiteNode}.</li>
+ * </ul>
+ *
+ * <p>Concrete implementations must provide one method for rendering the calendar:</p>
+ *
+ * <ul>
+ * <li>{@link #render(java.util.List)}</li>
+ * </ul>
+ *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultSitemapViewController implements SitemapViewController
+public abstract class DefaultSitemapViewController implements SitemapViewController
   {
-    @Nonnull
-    protected final SitemapView view;
+    @RequiredArgsConstructor @ToString @Getter
+    protected static class Entry
+      {
+        @Nonnull
+        private final String location;
+
+        @Nonnull
+        private final ZonedDateTime lastModification;
+
+        @Nonnull
+        private final String changeFrequency;
+
+        @Nonnull
+        private final float priority;
+      }
 
     @Nonnull
-    private final Site site;
+    private final SiteNode siteNode;
+
+    @Nonnull
+    private final SitemapView view;
 
     /*******************************************************************************************************************
      *
@@ -67,13 +105,11 @@ public class DefaultSitemapViewController implements SitemapViewController
     public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        builder.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+        final List<Entry> entries = new ArrayList<>();
 
-        site.find(SiteNode).stream().forEach(siteNode ->
+        siteNode.getSite().find(SiteNode).stream().forEach(node ->
           {
-            final Layout layout = siteNode.getLayout();
+            final Layout layout = node.getLayout();
 
             // Prevents infinite recursion
             if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
@@ -83,9 +119,9 @@ public class DefaultSitemapViewController implements SitemapViewController
                 // FIXME: Would Blog benefit? It should, as it manages its own children
                 // FIXME: Places and Themes should move managePathParams=true to each children
                 // FIXME: Problem, the root gallery needs managePathParams=true to load images.xml
-                log.debug(">>>> sitemap processing {} / layout {} ...", siteNode.getRelativeUri(), layout);
+                log.debug(">>>> sitemap processing {} / layout {} ...", node.getRelativeUri(), layout);
 
-                appendUrl(builder, siteNode, null);
+                newEntry(node, null).ifPresent(entries::add);
 
                 layout.accept(new VisitorSupport<Layout, Void>()
                   {
@@ -94,19 +130,12 @@ public class DefaultSitemapViewController implements SitemapViewController
                       {
                         try
                           {
-                            final Object controller = childLayout.createViewAndController(siteNode).getController();
-
-                            if (controller instanceof CompositeSiteNodeController)
-                              {
-                                for (final SiteNode childSiteNode : ((CompositeSiteNodeController)controller).findVirtualSiteNodes().results())
-                                  {
-                                    appendUrl(builder, siteNode, childSiteNode);
-                                  }
-                              }
+                            childLayout.createViewAndController(node).getController().findVirtualSiteNodes()
+                                    .results().forEach(childNode -> newEntry(node, childNode).ifPresent(entries::add));
                           }
                         catch (HttpStatusException e)
                           {
-                            log.warn("sitemap for {} threw {}", siteNode.getRelativeUri(), e.toString());
+                            log.warn("sitemap for {} threw {}", node.getRelativeUri(), e.toString());
                           }
                         catch (Exception e)
                           {
@@ -123,39 +152,47 @@ public class DefaultSitemapViewController implements SitemapViewController
               }
           });
 
-        builder.append("</urlset>\n");
-        view.setContent(builder.toString());
-        view.setMimeType("application/xml");
+        render(entries);
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    protected abstract void render (@Nonnull List<Entry> entries);
+
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    protected final ResourceProperties getViewProperties()
+      {
+        return siteNode.getPropertyGroup(view.getId());
       }
 
     /*******************************************************************************************************************
      *
      *
      ******************************************************************************************************************/
-    private void appendUrl (final @Nonnull StringBuilder builder,
-                            final @Nonnull SiteNode siteNode,
-                            final @Nullable SiteNode childSiteNode)
+    @Nonnull
+    private Optional<Entry> newEntry (final @Nonnull SiteNode siteNode, final @CheckForNull SiteNode childSiteNode)
       {
-        final SiteNode n = (childSiteNode != null) ? childSiteNode : siteNode;
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final ResourceProperties properties = n.getProperties();
+        final SiteNode node = (childSiteNode != null) ? childSiteNode : siteNode;
+        final ResourceProperties properties = node.getProperties();
         //
         // FIXME: if you put the sitemap property straightly into the child site node, you can simplify a lot,
         // just using a single property and only peeking into a single node
         final Key<Float> priorityKey = (childSiteNode == null) ? P_SITEMAP_PRIORITY : P_SITEMAP_CHILDREN_PRIORITY;
         final float sitemapPriority = siteNode.getProperty(priorityKey).orElse(0.5f);
 
-        if (sitemapPriority > 0)
-          {
-            builder.append("  <url>\n");
-            builder.append(String.format("    <loc>%s</loc>%n", site.createLink(n.getRelativeUri())));
-            builder.append(String.format("    <lastmod>%s</lastmod>%n",
-                                         properties.getProperty(P_LATEST_MODIFICATION_DATE).orElse(TIME0).format(dateTimeFormatter)));
-            builder.append(String.format("    <changefreq>%s</changefreq>%n",
-                                         properties.getProperty(P_SITEMAP_CHANGE_FREQUENCY).orElse("daily")));
-            builder.append(String.format("    <priority>%s</priority>%n", Float.toString(sitemapPriority)));
-            builder.append("  </url>\n");
-          }
+        return (sitemapPriority == 0)
+                ? Optional.empty()
+                : Optional.of(new Entry(siteNode.getSite().createLink(node.getRelativeUri()),
+                                  properties.getProperty(P_LATEST_MODIFICATION_DATE).orElse(TIME0),
+                                  properties.getProperty(P_SITEMAP_CHANGE_FREQUENCY).orElse("daily"),
+                                  sitemapPriority));
       }
 
     /*******************************************************************************************************************

@@ -26,58 +26,64 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap.htmltemplate;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import it.tidalwave.util.Id;
+import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
-import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapView;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
+import lombok.extern.slf4j.Slf4j;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static it.tidalwave.northernwind.core.model.Content.*;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
- *
- * <p>An implementation of {@link SitemapView} based on HTML templates.</p>
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@ViewMetadata(typeUri="http://northernwind.tidalwave.it/component/Sitemap/#v1.0",
-              controlledBy=HtmlTemplateSitemapViewController.class)
-public class HtmlTemplateSitemapView extends HtmlTemplateHtmlFragmentView implements SitemapView
+@Slf4j
+public class HtmlTemplateSitemapViewTest
   {
-    @Nonnull
-    private final Site site;
+    private HtmlTemplateSitemapView underTest;
+
+    private Site site;
+
+    private Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *
-     * Creates an instance with the given id.
-     *
-     * @param       id              the id of this view
-     * @param       site            the site
-     *
      ******************************************************************************************************************/
-    public HtmlTemplateSitemapView (final @Nonnull Id id, final @Nonnull Site site)
+    @BeforeMethod
+    public void setup()
       {
-        super(id);
-        this.site= site;
+        site = createMockSite();
+        MockContentSiteFinder.registerTo(site);
+        underTest = new HtmlTemplateSitemapView(viewId, site);
       }
 
     /*******************************************************************************************************************
      *
-     * Renders the sitemap contents. See {@link HtmlTemplateSitemapViewController} for more information.
-     *
-     * @see         HtmlTemplateSitemapViewController
-     * @param       templatePath    the path of an optional template for the rendering
-     * @param       entries         the entries to render
-     *
      ******************************************************************************************************************/
-    public void render (final @Nonnull Optional<ResourcePath> templatePath, final @Nonnull Aggregates entries)
+    @Test
+    public void must_properly_render_posts_with_custom_template()
+      throws Exception
       {
-        final Template template = site.getTemplate(getClass(), templatePath, "Sitemap.st");
-        addComponent(new HtmlHolder(template.render(entries)));
+        // given
+        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
+        final Content template = site.find(Content).withRelativePath(templatePath).result();
+        final ResourceProperties properties = template.getProperties();
+        when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom template"));
+        // when
+        underTest.render(Optional.of(templatePath), Aggregates.EMPTY);
+        // then
+        assertThat(underTest.asString(UTF_8), is("Custom template\n\n"));
       }
   }
