@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery;
 
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import it.tidalwave.northernwind.frontend.ui.component.sitemap.CompositeSiteNodeController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -38,7 +37,7 @@ import lombok.ToString;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface GalleryViewController extends CompositeSiteNodeController, ViewController
+public interface GalleryViewController extends ViewController
   {
     @RequiredArgsConstructor @Getter @ToString
     public static class GalleryItem
