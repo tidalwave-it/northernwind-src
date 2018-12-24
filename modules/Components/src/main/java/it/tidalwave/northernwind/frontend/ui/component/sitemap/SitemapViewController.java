@@ -27,7 +27,10 @@
 package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
 
 /***********************************************************************************************************************
  *
@@ -36,9 +39,17 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
  **********************************************************************************************************************/
 public interface SitemapViewController extends ViewController
   {
+    /** The priority of the {@link SiteNode}. */
     public static final Key<Float> P_SITEMAP_PRIORITY = new Key<Float>("siteMap.priority") {};
 
+    /** The priority of children of the {@link SiteNode} */
     public static final Key<Float> P_SITEMAP_CHILDREN_PRIORITY = new Key<Float>("siteMap.childrenPriority") {};
 
+    /** The change frequency of {@link SiteNode} */
     public static final Key<String> P_SITEMAP_CHANGE_FREQUENCY = new Key<String>("siteMap.changeFrequency") {};
+
+    /** The optional path to the template for rendering the sitemap. This property is different than
+     * {@link P_TEMPLATE_PATH} because it refers to a specific rendering - {@code P_TEMPLATE_PATH} is for HTML pages
+     * and it's usually also set for the root node, hence inherited by a sitemap. */
+    public static final Key<ResourcePath> P_SITEMAP_TEMPLATE_PATH = new Key<ResourcePath>("sitemapTemplatePath") {};
   }
