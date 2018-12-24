@@ -29,11 +29,12 @@ package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import it.tidalwave.util.NotFoundException;
+import org.apache.commons.io.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -42,7 +43,6 @@ import org.testng.annotations.DataProvider;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
-import org.apache.commons.io.FileUtils;
 
 /***********************************************************************************************************************
  *
@@ -113,34 +113,34 @@ public class DefaultMercurialRepositoryTest
         underTest.clone(sourceRepository.toUri());
         // when
         final List<Tag> tags = underTest.getTags();
-        final Tag latestTag = underTest.getLatestTagMatching(".*");
-        final Tag latestTagMatchingP = underTest.getLatestTagMatching("p.*");
+        final Optional<Tag> latestTag = underTest.getLatestTagMatching(".*");
+        final Optional<Tag> latestTagMatchingP = underTest.getLatestTagMatching("p.*");
         // then
         assertThat(tags, is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(latestTag.getName(), is("tip"));
-        assertThat(latestTagMatchingP.getName(), is("published-0.8"));
+        assertThat(latestTag.isPresent(), is(true));
+        assertThat(latestTag.get().getName(), is("tip"));
+        assertThat(latestTagMatchingP.isPresent(), is(true));
+        assertThat(latestTagMatchingP.get().getName(), is("published-0.8"));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dependsOnMethods="must_properly_clone_a_repository",
-          expectedExceptions=NotFoundException.class)
-    public void must_throw_NotFoundException_when_asking_for_the_current_tag_in_an_empty_workarea()
+    @Test(dependsOnMethods="must_properly_clone_a_repository")
+    public void must_return_empty_Optional_when_asking_for_the_current_tag_in_an_empty_workarea()
       throws Exception
       {
         // given
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
         underTest.clone(sourceRepository.toUri());
         // when
-        underTest.getCurrentTag();
+        assertThat(underTest.getCurrentTag().isPresent(), is(false));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dependsOnMethods="must_properly_clone_a_repository",
-          dataProvider="tagSequenceUpTo0.8")
+    @Test(dependsOnMethods="must_properly_clone_a_repository", dataProvider="tagSequenceUpTo0.8")
     public void must_properly_update_to_a_tag (final @Nonnull Tag tag)
       throws Exception
       {
@@ -150,7 +150,9 @@ public class DefaultMercurialRepositoryTest
         // when
         underTest.updateTo(tag);
         // then
-        assertThat(underTest.getCurrentTag(), is(tag));
+        final Optional<Tag> currentTag = underTest.getCurrentTag();
+        assertThat(currentTag.isPresent(), is(true));
+        assertThat(currentTag.get(), is(tag));
         // TODO: assert contents
       }
 
@@ -187,16 +189,16 @@ public class DefaultMercurialRepositoryTest
         underTest.pull();
         // then
         assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(underTest.getLatestTagMatching(".*").getName(), is("tip"));
-        assertThat(underTest.getLatestTagMatching("p.*").getName(), is("published-0.8"));
+        assertThat(underTest.getLatestTagMatching(".*").get().getName(), is("tip"));
+        assertThat(underTest.getLatestTagMatching("p.*").get().getName(), is("published-0.8"));
         // given
         prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
         // when
         underTest.pull();
         // then
         assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
-        assertThat(underTest.getLatestTagMatching(".*").getName(), is("tip"));
-        assertThat(underTest.getLatestTagMatching("p.*").getName(), is("published-0.9"));
+        assertThat(underTest.getLatestTagMatching(".*").get().getName(), is("tip"));
+        assertThat(underTest.getLatestTagMatching("p.*").get().getName(), is("published-0.9"));
       }
 
     /*******************************************************************************************************************
