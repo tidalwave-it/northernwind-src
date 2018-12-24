@@ -211,6 +211,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           {
             return controller.findAllPosts(controller.getViewProperties())
                     .stream()
+                    .peek(p -> log.trace(">>>> virtual node for: {}", p.getExposedUri()))
                     .flatMap(post -> createVirtualNode(post).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplified in Java 9
                     .collect(toList());
           }

@@ -131,7 +131,7 @@ import lombok.Getter;
               }
           }
 
-        log.debug(">>>> relativeUri: {}", relativeUri.asString());
+        log.trace(">>>> relativeUri: {}", relativeUri);
 
         return relativeUri;
       }
