@@ -238,6 +238,7 @@ public class MockModelFactory extends ModelFactorySupport
 //            when(finder.result()).thenThrow(new NotFoundException("mock finder"));
             when(finder.results()).thenReturn(emptyList());
             when(finder.optionalResult()).thenReturn(Optional.empty());
+            when(finder.stream()).thenCallRealMethod();
             when(finder.withRelativePath(any(String.class))).thenReturn(finder);
             when(finder.withRelativeUri(any(String.class))).thenReturn(finder);
             when(finder.withRelativePath(any(ResourcePath.class))).thenCallRealMethod();
