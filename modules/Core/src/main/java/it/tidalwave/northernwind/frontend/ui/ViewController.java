@@ -27,6 +27,10 @@
 package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.util.Finder;
+import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.frontend.ui.spi.VirtualSiteNode;
 
 /***********************************************************************************************************************
  *
@@ -80,5 +84,24 @@ public interface ViewController
     default public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Controllers which manage composite site nodes must override this method and return a collection of
+     * {@link SiteNode}s, one for each composite content. For instance, the controller of a gallery should return the
+     * relative paths of all the media pages in the gallery; the controller of a blog should return the relative paths
+     * of all the posts.
+     *
+     * See {@link VirtualSiteNode} for a convenient implementation of {@code SiteNode} to return.
+     *
+     * @see         VirtualSiteNode
+     * @return                      the virtual nodes
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    default public Finder<SiteNode> findVirtualSiteNodes()
+      {
+        return FinderSupport.emptyFinder();
       }
   }

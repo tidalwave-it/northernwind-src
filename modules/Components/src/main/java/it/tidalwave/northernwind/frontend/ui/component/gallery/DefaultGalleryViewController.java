@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryLoader
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader.SlideShowProPlayerGalleryLoader;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.DefaultNodeContainerViewController;
 import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerView;
+import it.tidalwave.northernwind.frontend.ui.spi.VirtualSiteNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.*;
