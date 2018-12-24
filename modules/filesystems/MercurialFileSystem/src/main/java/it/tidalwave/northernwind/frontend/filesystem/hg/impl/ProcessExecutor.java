@@ -58,7 +58,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProcessExecutor
   {
     private static final String PROCESS_EXITED_WITH = "Process exited with ";
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -78,18 +78,7 @@ public class ProcessExecutor
          *
          *
          ***************************************************************************************************************/
-        @Nonnull
-        public ConsoleOutput start()
-          {
-            Executors.newSingleThreadExecutor().submit(runnable);
-            return this;
-          }
-
-        /***************************************************************************************************************
-         *
-         *
-         ***************************************************************************************************************/
-        private final Runnable runnable = new Runnable()
+        private final Runnable consoleConsumer = new Runnable()
           {
             @Override
             public void run()
@@ -112,6 +101,28 @@ public class ProcessExecutor
               }
           };
 
+        /***************************************************************************************************************
+         *
+         * Starts collection output from the external process.
+         *
+         * @return                              itself
+         *
+         ***************************************************************************************************************/
+        @Nonnull
+        public ConsoleOutput start()
+          {
+            Executors.newSingleThreadExecutor().submit(consoleConsumer);
+            return this;
+          }
+
+        /***************************************************************************************************************
+         *
+         * Waits for the completion of the launched process.
+         *
+         * @return                              itself
+         * @throws      InterruptedException    if the process was interrupted
+         *
+         ***************************************************************************************************************/
         @Nonnull
         public synchronized ConsoleOutput waitForCompleted()
           throws InterruptedException
@@ -126,23 +137,32 @@ public class ProcessExecutor
 
         /***************************************************************************************************************
          *
+         * Returns a {@link Scanner} on the latest line of output produced that matches a given regular expression,
+         * split on the given delimiter.
+         *
+         * @param       filterRegexp            the regular expression to filter output
+         * @param       delimiterRegexp         the regular expression to split the line
+         * @return                              the {@code Scanner} to parse results
          *
          ***************************************************************************************************************/
         @Nonnull @SuppressWarnings("squid:S2093")
         public Scanner filteredAndSplitBy (final @Nonnull String filterRegexp, final @Nonnull String delimiterRegexp)
           {
-            final String string = filteredBy(filterRegexp).get(0);
-            return new Scanner(string).useDelimiter(Pattern.compile(delimiterRegexp));
+            return new Scanner(filteredBy(filterRegexp).get(0)).useDelimiter(Pattern.compile(delimiterRegexp));
           }
 
         /***************************************************************************************************************
          *
+         * Returns the output produced by the launched process, filtered by the given regular expression.
+         *
+         * @param       filterRegexp            the regular expression to filter output
+         * @return                              the output lines
          *
          ***************************************************************************************************************/
         @Nonnull
-        public List<String> filteredBy (final @Nonnull String filter)
+        public List<String> filteredBy (final @Nonnull String filterRegexp)
           {
-            final Pattern p = Pattern.compile(filter);
+            final Pattern p = Pattern.compile(filterRegexp);
             final List<String> result = new ArrayList<>();
 
             for (final String s : new ArrayList<>(content))
@@ -160,6 +180,12 @@ public class ProcessExecutor
 
         /***************************************************************************************************************
          *
+         * Waits for an output line matching the given regular expression to appear.
+         *
+         * @param       regexp                  the regular expression
+         * @return                              itself
+         * @throws      IOException             if something goes wrong
+         * @throws      InterruptedException    if the process has been interrupted
          *
          ***************************************************************************************************************/
         @Nonnull
@@ -189,6 +215,7 @@ public class ProcessExecutor
 
         /***************************************************************************************************************
          *
+         * Clears the contents collected so far.
          *
          ***************************************************************************************************************/
         public void clear()
@@ -242,6 +269,11 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Specifies the executable to run. It is searched in the path.
+     *
+     * @param       executable          the executable
+     * @return                          itself
+     * @throws      IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -255,6 +287,11 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Specifies an argument to the executable. This method can be called multiple times.
+     *
+     * @param       argument            the argument
+     * @return                          itself
+     * @throws      IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -266,6 +303,11 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Specifies the working directory for the executable.
+     *
+     * @param       workingDirectory    the working directory
+     * @return                          itself
+     * @throws      IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -277,6 +319,11 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Launches the external process and starts collecting its output (which can be analyzed by calling
+     * {@link #getStdout()} and {@link #getStderr()}.
+     *
+     * @return                          itself
+     * @throws      IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -293,7 +340,7 @@ public class ProcessExecutor
 //          }
 
         log.debug(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
-        log.debug(">>>> environment:       {}", environment);
+//        log.debug(">>>> environment:       {}", environment);
         process = Runtime.getRuntime().exec(arguments.toArray(new String[0]),
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
@@ -307,6 +354,12 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Waits for the completion of the external process. If the process terminates with a non-zero status code, an
+     * {@link IOException} is thrown.
+     *
+     * @return                              itself
+     * @throws      IOException             if something goes wrong
+     * @throws      InterruptedException    if the process has been interrupted
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -336,6 +389,10 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Sends some input to the external process.
+     *
+     * @param       string          the input to send
+     * @throws      IOException     if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -374,7 +431,7 @@ public class ProcessExecutor
      *
      *
      ******************************************************************************************************************/
-    private static void log (final @Nonnull String prefix, final @Nonnull ProcessExecutor.ConsoleOutput consoleOutput)
+    private static void log (final @Nonnull String prefix, final @Nonnull ConsoleOutput consoleOutput)
       {
         for (final String line : consoleOutput.getContent())
           {

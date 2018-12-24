@@ -45,17 +45,16 @@ import lombok.ToString;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Immutable
-@ToString(callSuper = true, exclude = "mapByRelativePath")
-public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYPE>> implements SiteFinder<TYPE>
+@Immutable @ToString(callSuper = true, exclude = { "mapByRelativePath", "mapByRelativeUri" })
+public class DefaultSiteFinder<T> extends Finder8Support<T, SiteFinder<T>> implements SiteFinder<T>
   {
     private static final long serialVersionUID = 3242345356779345L;
 
     @Nonnull
-    /* package */ final Map<String, TYPE> mapByRelativePath;
+    /* package */ final Map<String, T> mapByRelativePath;
 
     @CheckForNull
-    /* package */ final RegexTreeMap<TYPE> mapByRelativeUri;
+    /* package */ final RegexTreeMap<T> mapByRelativeUri;
 
     @CheckForNull
     private final String relativePath;
@@ -73,8 +72,8 @@ public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYP
      *
      ******************************************************************************************************************/
     public DefaultSiteFinder (final @Nonnull String finderName,
-                              final @CheckForNull Map<String, TYPE> mapByRelativePath,
-                              final @CheckForNull RegexTreeMap<TYPE> mapByRelativeUri)
+                              final @CheckForNull Map<String, T> mapByRelativePath,
+                              final @CheckForNull RegexTreeMap<T> mapByRelativeUri)
       {
         super(finderName);
         this.mapByRelativePath = mapByRelativePath;
@@ -93,8 +92,8 @@ public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYP
      * @param relativeUri
      *
      ******************************************************************************************************************/
-    protected DefaultSiteFinder (final @CheckForNull Map<String, TYPE> mapByRelativePath,
-                                 final @CheckForNull RegexTreeMap<TYPE> mapByRelativeUri,
+    protected DefaultSiteFinder (final @CheckForNull Map<String, T> mapByRelativePath,
+                                 final @CheckForNull RegexTreeMap<T> mapByRelativeUri,
                                  final @CheckForNull String relativePath,
                                  final @CheckForNull String relativeUri)
       {
@@ -134,7 +133,7 @@ public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYP
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteFinder<TYPE> withRelativePath (final @Nonnull String relativePath)
+    public SiteFinder<T> withRelativePath (final @Nonnull String relativePath)
       {
         return clone(new DefaultSiteFinder<>(mapByRelativePath, mapByRelativeUri, relativePath, relativeUri));
       }
@@ -145,7 +144,7 @@ public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYP
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteFinder<TYPE> withRelativeUri (final @Nonnull String relativeUri)
+    public SiteFinder<T> withRelativeUri (final @Nonnull String relativeUri)
       {
         return clone(new DefaultSiteFinder<>(mapByRelativePath, mapByRelativeUri, relativePath, relativeUri));
       }
@@ -156,7 +155,7 @@ public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYP
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public TYPE result()
+    public T result()
       throws NotFoundException
       {
         try
@@ -188,9 +187,9 @@ public class DefaultSiteFinder<TYPE> extends Finder8Support<TYPE, SiteFinder<TYP
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected List<? extends TYPE> computeResults()
+    protected List<? extends T> computeResults()
       {
-        final List<TYPE> results = new ArrayList<>();
+        final List<T> results = new ArrayList<>();
 
         if (relativePath != null)
           {
