@@ -33,11 +33,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
+import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
@@ -56,8 +58,20 @@ import static org.mockito.Mockito.*;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class MockSiteNodes
+public class MockNodesForSitemap
   {
+    static class CollectingVisitor<T> extends VisitorSupport<T, List<T>>
+      {
+        @Getter
+        private final List<T> value = new ArrayList<>();
+
+        @Override
+        public void visit (final @Nonnull T layout)
+          {
+            value.add(layout);
+          }
+     }
+
     @Nonnull
     private final Site site;
 
@@ -140,22 +154,22 @@ public class MockSiteNodes
       {
         when(blogNode.getRelativeUri()).thenReturn(ResourcePath.of("/blog"));
         final Finder<SiteNode> blogFinder = createMockSiteFinder();
-        final List<SiteNode> blogNodes = createMockNodes(seed, count, "/blog/post-%d");
+        final List<SiteNode> blogNodes = createMockNodes(seed, count, "/blog/post-%02d");
         when(blogFinder.results()).thenReturn((List)blogNodes);
 
-        final Optional<Layout> innestLayout = blogNode.getLayout().accept(new Composite.VisitorSupport<Layout, Layout>()
+        // Simulate more than one layout that have virtual nodes, so we test that duplicated URLs are coalesced.
+        final List<Layout> layouts = blogNode.getLayout().accept(new CollectingVisitor<>()).get();
+        Stream.of(layouts.get(3), layouts.get(4)).forEach(layout ->
           {
-            @Getter
-            private Layout value;
-
-            @Override
-            public void visit (final @Nonnull Layout layout)
+            try
               {
-                value = layout;
+                final ViewController viewController = layout.createViewAndController(blogNode).getController();
+                when(viewController.findVirtualSiteNodes()).thenReturn(blogFinder);
+              }
+            catch (Exception e)
+              {
+                throw new RuntimeException(e);
               }
           });
-
-        final ViewController viewController = innestLayout.get().createViewAndController(blogNode).getController();
-        when(viewController.findVirtualSiteNodes()).thenReturn(blogFinder);
       }
   }

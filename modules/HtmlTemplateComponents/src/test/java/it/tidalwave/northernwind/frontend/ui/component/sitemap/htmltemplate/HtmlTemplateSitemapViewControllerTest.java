@@ -30,7 +30,7 @@ import java.util.List;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.sitemap.MockSiteNodes;
+import it.tidalwave.northernwind.frontend.ui.component.sitemap.MockNodesForSitemap;
 import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -68,8 +68,8 @@ public class HtmlTemplateSitemapViewControllerTest
       {
         site = createMockSite();
 
-        final MockSiteNodes mockSiteNodes = new MockSiteNodes(site);
-        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%d");
+        final MockNodesForSitemap mockSiteNodes = new MockNodesForSitemap(site);
+        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
 
         final SiteFinder<SiteNode> finder = createMockSiteFinder();
         when(finder.results()).thenReturn((List)nodes);
