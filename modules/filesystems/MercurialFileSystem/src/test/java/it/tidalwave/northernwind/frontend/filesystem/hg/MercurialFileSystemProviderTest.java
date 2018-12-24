@@ -29,12 +29,11 @@ package it.tidalwave.northernwind.frontend.filesystem.hg;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.time.ZonedDateTime;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.springframework.context.ApplicationContext;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.messagebus.MessageBus;
@@ -44,7 +43,6 @@ import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -115,7 +113,8 @@ public class MercurialFileSystemProviderTest
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        assertThat(underTest.getCurrentTag().getName(), is("published-0.8"));
+        assertThat(underTest.getCurrentTag().isPresent(), is(true));
+        assertThat(underTest.getCurrentTag().get().getName(), is("published-0.8"));
         assertThat(underTest.swapCounter, is(previousSwapCounter));
         verifyZeroInteractions(messageBus);
       }
@@ -137,7 +136,8 @@ public class MercurialFileSystemProviderTest
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        assertThat(underTest.getCurrentTag().getName(), is("published-0.9"));
+        assertThat(underTest.getCurrentTag().isPresent(), is(true));
+        assertThat(underTest.getCurrentTag().get().getName(), is("published-0.9"));
         assertThat(underTest.swapCounter, is(previousSwapCounter + 1));
         verify(messageBus).publish(is(argThat(fileSystemChangedEvent().withResourceFileSystemProvider(underTest))));
       }
@@ -146,7 +146,7 @@ public class MercurialFileSystemProviderTest
      *
      ******************************************************************************************************************/
     protected static void updateWorkAreaTo (final @Nonnull Path workArea, final @Nonnull Tag tag)
-      throws IOException
+      throws Exception
       {
         new DefaultMercurialRepository(workArea).updateTo(tag);
       }
@@ -164,16 +164,9 @@ public class MercurialFileSystemProviderTest
      *
      ******************************************************************************************************************/
     private void assertThatHasNoCurrentTag (final @Nonnull MercurialRepository repository)
-      throws IOException
+      throws Exception
       {
-        try
-          {
-            final Tag tag = repository.getCurrentTag();
-            fail("Repository should have not current tag, it has " + tag);
-          }
-        catch (NotFoundException e)
-          {
-            // ok
-          }
+        final Optional<Tag> tag = repository.getCurrentTag();
+        assertThat("Repository should have not current tag, it has " + tag, tag.isPresent(), is(false));
       }
   }
