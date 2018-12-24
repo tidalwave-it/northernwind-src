@@ -47,6 +47,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.servlet.http.HttpServletResponse.*;
 
 /***********************************************************************************************************************
@@ -193,7 +194,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
       {
         this.body = (body instanceof byte[]) ? body :
                     (body instanceof InputStream) ? body :
-                     body.toString().getBytes();
+                     body.toString().getBytes(UTF_8);
         return this;
       }
 
