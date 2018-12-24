@@ -33,11 +33,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
+import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
@@ -140,22 +142,34 @@ public class MockSiteNodes
       {
         when(blogNode.getRelativeUri()).thenReturn(ResourcePath.of("/blog"));
         final Finder<SiteNode> blogFinder = createMockSiteFinder();
-        final List<SiteNode> blogNodes = createMockNodes(seed, count, "/blog/post-%d");
+        final List<SiteNode> blogNodes = createMockNodes(seed, count, "/blog/post-%02d");
         when(blogFinder.results()).thenReturn((List)blogNodes);
 
-        final Optional<Layout> innestLayout = blogNode.getLayout().accept(new Composite.VisitorSupport<Layout, Layout>()
+        final Optional<List<Layout>> collector = blogNode.getLayout().accept(new VisitorSupport<Layout, List<Layout>>()
           {
             @Getter
-            private Layout value;
+            private final List<Layout> value = new ArrayList<>();
 
             @Override
             public void visit (final @Nonnull Layout layout)
               {
-                value = layout;
+                value.add(layout);
               }
           });
 
-        final ViewController viewController = innestLayout.get().createViewAndController(blogNode).getController();
-        when(viewController.findVirtualSiteNodes()).thenReturn(blogFinder);
+        // Simulate more than once layout that have virtual nodes, so we test that duplicated URLs are coalesced.
+        final List<Layout> layouts = collector.get();
+        Stream.of(layouts.get(3), layouts.get(4)).forEach(l ->
+          {
+            try
+              {
+                final ViewController viewController = l.createViewAndController(blogNode).getController();
+                when(viewController.findVirtualSiteNodes()).thenReturn(blogFinder);
+              }
+            catch (Exception e)
+              {
+                throw new RuntimeException(e);
+              }
+          });
       }
   }

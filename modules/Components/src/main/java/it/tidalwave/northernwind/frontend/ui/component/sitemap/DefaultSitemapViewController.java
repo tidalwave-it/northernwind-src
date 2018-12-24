@@ -29,9 +29,10 @@ package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.Composite.VisitorSupport;
@@ -41,6 +42,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -77,8 +79,8 @@ import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapVie
 @RequiredArgsConstructor @Slf4j
 public abstract class DefaultSitemapViewController implements SitemapViewController
   {
-    @RequiredArgsConstructor @ToString @Getter
-    protected static class Entry
+    @RequiredArgsConstructor @ToString @Getter @EqualsAndHashCode
+    protected static class Entry implements Comparable<Entry>
       {
         @Nonnull
         private final String location;
@@ -91,6 +93,12 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
 
         @Nonnull
         private final float priority;
+
+        @Override
+        public int compareTo (final @Nonnull Entry other)
+          {
+            return this.equals(other) ? 0 : this.location.compareTo(other.location);
+          }
       }
 
     @Nonnull
@@ -108,7 +116,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
     public void renderView (final @Nonnull RenderContext context)
       throws Exception
       {
-        final List<Entry> entries = new ArrayList<>();
+        final SortedSet<Entry> entries = new TreeSet<>();
 
         siteNode.getSite().find(SiteNode).stream().forEach(node ->
           {
@@ -168,7 +176,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      *
      *
      ******************************************************************************************************************/
-    protected abstract void render (@Nonnull List<Entry> entries);
+    protected abstract void render (@Nonnull Set<Entry> entries);
 
     /*******************************************************************************************************************
      *

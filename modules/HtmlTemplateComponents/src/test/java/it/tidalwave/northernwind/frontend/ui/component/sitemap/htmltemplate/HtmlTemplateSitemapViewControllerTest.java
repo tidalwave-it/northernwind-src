@@ -69,7 +69,7 @@ public class HtmlTemplateSitemapViewControllerTest
         site = createMockSite();
 
         final MockSiteNodes mockSiteNodes = new MockSiteNodes(site);
-        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%d");
+        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
 
         final SiteFinder<SiteNode> finder = createMockSiteFinder();
         when(finder.results()).thenReturn((List)nodes);
