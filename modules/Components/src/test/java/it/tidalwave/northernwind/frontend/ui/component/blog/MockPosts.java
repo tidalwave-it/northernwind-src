@@ -39,7 +39,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 import it.tidalwave.util.Finder8;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.ArrayListFinder8;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -88,7 +87,6 @@ public class MockPosts
      *
      ******************************************************************************************************************/
     public void createMockData (final int seed)
-      throws NotFoundException
       {
         categories = Arrays.asList(null, "category1", "category2");
         tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
