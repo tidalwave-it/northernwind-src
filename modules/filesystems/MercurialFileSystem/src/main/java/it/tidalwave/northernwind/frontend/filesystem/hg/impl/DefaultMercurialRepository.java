@@ -27,18 +27,18 @@
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
-import it.tidalwave.util.NotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -48,6 +48,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 public class DefaultMercurialRepository implements MercurialRepository
   {
+    private static final String HG = "hg";
+
     @Getter @Nonnull
     private final Path workArea;
 
@@ -69,29 +71,22 @@ public class DefaultMercurialRepository implements MercurialRepository
      ******************************************************************************************************************/
     @Override
     public void clone (final @Nonnull URI uri)
-      throws IOException
+      throws InterruptedException, IOException
       {
-        try
-          {
-            workArea.toFile().mkdirs();
+        workArea.toFile().mkdirs();
 
-            if (!workArea.toFile().exists())
-              {
-                throw new IOException("Cannot mkdirs " + workArea);
-              }
-
-            ProcessExecutor.forExecutable("hg").withArgument("clone")
-                                        .withArgument("--noupdate")
-                                        .withArgument(uri.toASCIIString())
-                                        .withArgument(".")
-                                        .withWorkingDirectory(workArea)
-                                        .start()
-                                        .waitForCompletion();
-          }
-        catch (InterruptedException e)
+        if (!workArea.toFile().exists())
           {
-            throw new IOException(e);
+            throw new IOException("Cannot mkdirs " + workArea);
           }
+
+        ProcessExecutor.forExecutable(HG).withArgument("clone")
+                                         .withArgument("--noupdate")
+                                         .withArgument(uri.toASCIIString())
+                                         .withArgument(".")
+                                         .withWorkingDirectory(workArea)
+                                         .start()
+                                         .waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -100,26 +95,22 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Tag getCurrentTag()
-      throws IOException, NotFoundException
+    public Optional<Tag> getCurrentTag()
+      throws InterruptedException, IOException
       {
         try
           {
-            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("id")
+            final ProcessExecutor executor = ProcessExecutor.forExecutable(HG).withArgument("id")
                                                                   .withWorkingDirectory(workArea)
                                                                   .start()
                                                                   .waitForCompletion();
             final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
             scanner.next();
-            return new Tag(scanner.next());
+            return Optional.of(new Tag(scanner.next()));
           }
         catch (NoSuchElementException e)
           {
-            throw new NotFoundException();
-          }
-        catch (InterruptedException e)
-          {
-            throw new IOException(e);
+            return Optional.empty();
           }
       }
 
@@ -130,22 +121,15 @@ public class DefaultMercurialRepository implements MercurialRepository
      ******************************************************************************************************************/
     @Override @Nonnull
     public List<Tag> getTags()
-      throws IOException
+      throws InterruptedException, IOException
       {
-        try
-          {
-            final ProcessExecutor executor = ProcessExecutor.forExecutable("hg").withArgument("tags")
-                                                                  .withWorkingDirectory(workArea)
-                                                                  .start()
-                                                                  .waitForCompletion();
-            final List<String> filteredBy = executor.getStdout().waitForCompleted().filteredBy("([^ ]*) *.*$");
-            Collections.reverse(filteredBy);
-            return toTagList(filteredBy);
-          }
-        catch (InterruptedException e)
-          {
-            throw new IOException(e);
-          }
+        final ProcessExecutor executor = ProcessExecutor.forExecutable(HG).withArgument("tags")
+                                                        .withWorkingDirectory(workArea)
+                                                        .start()
+                                                        .waitForCompletion();
+        final List<String> filteredBy = executor.getStdout().waitForCompleted().filteredBy("([^ ]*) *.*$");
+        Collections.reverse(filteredBy);
+        return toTagList(filteredBy);
       }
 
     /*******************************************************************************************************************
@@ -155,21 +139,14 @@ public class DefaultMercurialRepository implements MercurialRepository
      ******************************************************************************************************************/
     @Override
     public void updateTo (final @Nonnull Tag tag)
-      throws IOException
+      throws InterruptedException, IOException
       {
-        try
-          {
-            ProcessExecutor.forExecutable("hg").withArgument("update")
-                                               .withArgument("-C")
-                                               .withArgument(tag.getName())
-                                               .withWorkingDirectory(workArea)
-                                               .start()
-                                               .waitForCompletion();
-          }
-        catch (InterruptedException e)
-          {
-            throw new IOException(e);
-          }
+        ProcessExecutor.forExecutable(HG).withArgument("update")
+                                         .withArgument("-C")
+                                         .withArgument(tag.getName())
+                                         .withWorkingDirectory(workArea)
+                                         .start()
+                                         .waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -179,19 +156,12 @@ public class DefaultMercurialRepository implements MercurialRepository
      ******************************************************************************************************************/
     @Override
     public void pull()
-      throws IOException
+      throws InterruptedException, IOException
       {
-        try
-          {
-            ProcessExecutor.forExecutable("hg").withArgument("pull")
-                                               .withWorkingDirectory(workArea)
-                                               .start()
-                                               .waitForCompletion();
-          }
-        catch (InterruptedException e)
-          {
-            throw new IOException(e);
-          }
+        ProcessExecutor.forExecutable(HG).withArgument("pull")
+                                         .withWorkingDirectory(workArea)
+                                         .start()
+                                         .waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -200,38 +170,22 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Tag getLatestTagMatching (final @Nonnull String regexp)
-      throws IOException, NotFoundException
+    public Optional<Tag> getLatestTagMatching (final @Nonnull String regexp)
+      throws InterruptedException, IOException
       {
         final List<Tag> tags = getTags();
         Collections.reverse(tags);
-
-        for (final Tag tag : tags)
-          {
-            if (tag.getName().matches(regexp))
-              {
-                return tag;
-              }
-          }
-
-        throw new NotFoundException();
+        return tags.stream().filter(tag -> tag.getName().matches(regexp)).findFirst();
       }
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<Tag> toTagList (final @Nonnull List<String> strings)
+    private static List<Tag> toTagList (final @Nonnull List<String> strings)
       {
-        final List<Tag> tags = new ArrayList<>();
-
-        for (final String string : strings)
-          {
-            tags.add(new Tag(string));
-          }
-
-        return tags;
+        return strings.stream().map(Tag::new).collect(toList());
       }
   }

@@ -114,7 +114,7 @@ public class DefaultSitemapViewController implements SitemapViewController
                           }
                       }
 
-                    @Override
+                    @Override @SuppressWarnings("findbugs:NP_NONNULL_RETURN_VIOLATION")
                     public Void getValue()
                       {
                         return null;
