@@ -44,9 +44,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.*;
+import it.tidalwave.northernwind.core.model.Site;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.Stream;
 
 /***********************************************************************************************************************
  *
@@ -130,8 +133,13 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                       {
                         try
                           {
-                            childLayout.createViewAndController(node).getController().findVirtualSiteNodes()
-                                    .results().forEach(childNode -> newEntry(node, childNode).ifPresent(entries::add));
+                            entries.addAll(childLayout.createViewAndController(node).getController()
+                                .findVirtualSiteNodes()
+                                .results()
+                                .stream()
+                                .peek(e -> log.debug(">>>>>>>> added virtual node: {}", e.getRelativeUri()))
+                                .flatMap(childNode -> newEntry(node, childNode).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify with JDK 9
+                                .collect(toList()));
                           }
                         catch (HttpStatusException e)
                           {
