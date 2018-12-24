@@ -33,11 +33,18 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.DefaultSitemapViewController;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
+<<<<<<< HEAD
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
+=======
+>>>>>>> fix-for-NW-259
 
 /***********************************************************************************************************************
  *
  * <p>An implementation of {@link SitemapViewController} based on HTML templates.</p>
  *
+<<<<<<< HEAD
+ * <p>The template for rendering the page can be specified by means of the property {@code P_TEMPLATE_PATH}.</p>
+=======
  * <p>The template for rendering the page can be specified by means of the property {@code P_SITEMAP_TEMPLATE_PATH}.</p>
  *
  * <p>This controller calls render methods to the view by passing {@link Aggregates} to be used with templates.</p>
@@ -55,6 +62,7 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
  * <li>{@code changeFrequency}: the change frequency of the page;</li>
  * <li>{@code priority}: the priority of the page.</li>
  * </ul>
+>>>>>>> fix-for-NW-259
  *
  * @author  Fabrizio Giudici
  *
@@ -77,7 +85,11 @@ public class HtmlTemplateSitemapViewController extends DefaultSitemapViewControl
     protected void render (final @Nonnull List<Entry> entries)
       {
         view.setMimeType("application/xml");
+<<<<<<< HEAD
+        view.render(getViewProperties().getProperty(P_TEMPLATE_PATH),
+=======
         view.render(getViewProperties().getProperty(P_SITEMAP_TEMPLATE_PATH),
+>>>>>>> fix-for-NW-259
                     entries.stream().map(this::toAggregate).collect(toAggregates("entries")));
       }
 
