@@ -31,6 +31,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
+import java.util.Optional;
 import java.time.ZonedDateTime;
 import java.io.IOException;
 import java.io.File;
@@ -38,7 +39,6 @@ import java.nio.file.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.openide.filesystems.LocalFileSystem;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -106,7 +106,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
      ******************************************************************************************************************/
     @PostConstruct
     public void initialize()
-      throws IOException, PropertyVetoException, URISyntaxException
+      throws IOException, PropertyVetoException, URISyntaxException, InterruptedException
       {
         workArea = new File(workAreaFolder).toPath();
 
@@ -116,7 +116,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
             if (repositories[i].isEmpty())
               {
-                // FIXME: this is inefficient, since it clones both from the remote repo
+                // TODO: this is inefficient, since it clones both from the remote repo
                 repositories[i].clone(new URI(remoteRepositoryUrl));
               }
           }
@@ -138,17 +138,22 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
       {
         try
           {
-            final Tag newTag = findNewTag();
-            log.info(">>>> new tag: {}", newTag);
-            alternateRepository.updateTo(newTag);
-            swapRepositories();
-            messageBus.publish(new ResourceFileSystemChangedEvent(this, ZonedDateTime.now()));
-            alternateRepository.pull();
-            alternateRepository.updateTo(newTag);
-          }
-        catch (NotFoundException e)
-          {
-            log.info(">>>> no changes");
+            final Optional<Tag> newTag = findNewTag();
+
+            if (!newTag.isPresent())
+              {
+                log.info(">>>> no changes");
+              }
+            else
+              {
+                final Tag t = newTag.get();
+                log.info(">>>> new tag: {}", t);
+                alternateRepository.updateTo(t);
+                swapRepositories();
+                messageBus.publish(new ResourceFileSystemChangedEvent(this, ZonedDateTime.now()));
+                alternateRepository.pull();
+                alternateRepository.updateTo(t);
+              }
           }
         catch (Exception e)
           {
@@ -162,12 +167,17 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ Tag getCurrentTag()
-      throws IOException, NotFoundException
+    /* package */ Optional<Tag> getCurrentTag()
+      throws IOException, InterruptedException
       {
         return exposedRepository.getCurrentTag();
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     /* package */ Path getCurrentWorkArea()
       {
@@ -178,8 +188,8 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
      *
      * Swaps the repositories.
      *
-     * @throws IOException in case of error
-     * @throws PropertyVetoException in case of error
+     * @throws      IOException              in case of error
+     * @throws      PropertyVetoException    in case of error
      *
      ******************************************************************************************************************/
     private void swapRepositories()
@@ -199,33 +209,36 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
      *
      * Finds a new tag.
      *
-     * @return  the new tag
-     * @throws NotFoundException if no new tag is found
-     * @throws IOException in case of error
+     * @return                      the new tag
+     * @throws      IOException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Tag findNewTag()
-      throws NotFoundException, IOException
+    private Optional<Tag> findNewTag()
+      throws IOException, InterruptedException
       {
-        log.info("Checking for updates in {}...", alternateRepository.getWorkArea());
+        log.info("Checking for updates in {} ...", alternateRepository.getWorkArea());
 
         alternateRepository.pull();
-        final Tag latestTag = alternateRepository.getLatestTagMatching("^published-.*"); // NotFoundException if no tag
+        final Optional<Tag> latestTag = alternateRepository.getLatestTagMatching("^published-.*");
+        final Optional<Tag> currentTag = exposedRepository.getCurrentTag();
 
-        try
+        if (!latestTag.isPresent())
           {
-            if (!latestTag.equals(exposedRepository.getCurrentTag()))
-              {
-                return latestTag;
-              }
+            return Optional.empty();
           }
-        catch (NotFoundException e) // exposedRepository not initialized
+
+        if (!currentTag.isPresent())
           {
             log.info(">>>> repo must be initialized");
             return latestTag;
           }
 
-        throw new NotFoundException();
+        if (!latestTag.equals(currentTag))
+          {
+            return latestTag;
+          }
+
+        return Optional.empty();
       }
   }
