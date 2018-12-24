@@ -264,11 +264,11 @@ public class DefaultBlogViewControllerTest
     @Test(dataProvider = "postRenderingTestDataBadRequest",
           expectedExceptions = HttpStatusException.class,
           expectedExceptionsMessageRegExp = ".*httpStatus=400.*")
-    public void must_throw_BadRequest (final int seed,
-                                       final int maxFullItems,
-                                       final int maxLeadinItems,
-                                       final int maxItems,
-                                       final @Nonnull String pathParams)
+    public void must_throw_BadRequest_with_bad_path_params (final int seed,
+                                                            final int maxFullItems,
+                                                            final int maxLeadinItems,
+                                                            final int maxItems,
+                                                            final @Nonnull String pathParams)
       throws Exception
       {
         // given
@@ -396,7 +396,7 @@ public class DefaultBlogViewControllerTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_properly_retrieve_children_virtual_nodes()
+    public void must_properly_retrieve_virtual_nodes()
       throws Exception
       {
         // given
