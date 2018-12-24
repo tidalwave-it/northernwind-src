@@ -92,7 +92,7 @@ public class DefaultSitemapViewControllerTest
       {
         site = createMockSite();
 
-        final MockSiteNodes mockSiteNodes = new MockSiteNodes(site);
+        final MockNodesForSitemap mockSiteNodes = new MockNodesForSitemap(site);
         final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
 
         final SiteFinder<SiteNode> finder = createMockSiteFinder();

@@ -58,8 +58,20 @@ import static org.mockito.Mockito.*;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class MockSiteNodes
+public class MockNodesForSitemap
   {
+    static class CollectingVisitor<T> extends VisitorSupport<T, List<T>>
+      {
+        @Getter
+        private final List<T> value = new ArrayList<>();
+
+        @Override
+        public void visit (final @Nonnull T layout)
+          {
+            value.add(layout);
+          }
+     }
+
     @Nonnull
     private final Site site;
 
@@ -145,25 +157,13 @@ public class MockSiteNodes
         final List<SiteNode> blogNodes = createMockNodes(seed, count, "/blog/post-%02d");
         when(blogFinder.results()).thenReturn((List)blogNodes);
 
-        final Optional<List<Layout>> collector = blogNode.getLayout().accept(new VisitorSupport<Layout, List<Layout>>()
-          {
-            @Getter
-            private final List<Layout> value = new ArrayList<>();
-
-            @Override
-            public void visit (final @Nonnull Layout layout)
-              {
-                value.add(layout);
-              }
-          });
-
-        // Simulate more than once layout that have virtual nodes, so we test that duplicated URLs are coalesced.
-        final List<Layout> layouts = collector.get();
-        Stream.of(layouts.get(3), layouts.get(4)).forEach(l ->
+        // Simulate more than one layout that have virtual nodes, so we test that duplicated URLs are coalesced.
+        final List<Layout> layouts = blogNode.getLayout().accept(new CollectingVisitor<>()).get();
+        Stream.of(layouts.get(3), layouts.get(4)).forEach(layout ->
           {
             try
               {
-                final ViewController viewController = l.createViewAndController(blogNode).getController();
+                final ViewController viewController = layout.createViewAndController(blogNode).getController();
                 when(viewController.findVirtualSiteNodes()).thenReturn(blogFinder);
               }
             catch (Exception e)
