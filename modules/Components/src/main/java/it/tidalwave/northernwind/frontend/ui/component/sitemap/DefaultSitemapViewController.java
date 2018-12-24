@@ -32,10 +32,12 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
@@ -43,13 +45,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toList;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import it.tidalwave.northernwind.core.model.Site;
 import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
-import static java.util.stream.Collectors.toList;
-import java.util.stream.Stream;
 
 /***********************************************************************************************************************
  *
