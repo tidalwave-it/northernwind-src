@@ -26,8 +26,6 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -43,8 +41,8 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
-import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -92,8 +90,6 @@ public class XsltMacroFilter implements Filter
 
     private volatile boolean initialized;
 
-    private Method serializerMethod;
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -109,17 +105,6 @@ public class XsltMacroFilter implements Filter
                                .collect(toAggregates("macros"));
         xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
         log.trace(">>>> xslt: {}", xslt);
-
-        try
-          {
-            final var clazz = Thread.currentThread().getContextClassLoader().loadClass(
-                    "it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializerDecoupler");
-            serializerMethod = clazz.getMethod("serialize", Node.class, StringWriter.class);
-          }
-        catch (ClassNotFoundException | NoSuchMethodException e)
-          {
-            throw new RuntimeException(e);
-          }
       }
 
     /*******************************************************************************************************************
@@ -149,11 +134,6 @@ public class XsltMacroFilter implements Filter
 
         try
           {
-            final var result = new DOMResult();
-            final var transformer = createTransformer();
-            // Fix for NW-100
-            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), result);
-
             final var stringWriter = new StringWriter();
 
             if (text.startsWith(DOCTYPE_HTML))
@@ -161,10 +141,12 @@ public class XsltMacroFilter implements Filter
                 stringWriter.append(DOCTYPE_HTML).append("\n");
               }
 
-            // Fix for NW-96
-            // This must be accessed by reflection because the JDK 11+ compiler with --source 11 refuses to compile
-            // stuff that depends on com.sun.* classes.
-            serializerMethod.invoke(null, result.getNode(), stringWriter);
+            final var transformer = createTransformer();
+
+            // TODO: fix for NW-96: try to use a custom subclass of ToStream as a Serializer
+
+            // Fix for NW-100
+            transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), new StreamResult(stringWriter));
             return stringWriter.toString().replace("xml_lang", "xml:lang").replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)
@@ -179,7 +161,7 @@ public class XsltMacroFilter implements Filter
             log.error(xslt);
             throw new RuntimeException(e);
           }
-        catch (IOException | SAXException | ParserConfigurationException | IllegalAccessException | InvocationTargetException e)
+        catch (IOException | SAXException | ParserConfigurationException e)
           {
             throw new RuntimeException(e);
           }
@@ -190,7 +172,7 @@ public class XsltMacroFilter implements Filter
      ******************************************************************************************************************/
     @Nonnull
     private Transformer createTransformer()
-      throws TransformerConfigurationException
+            throws TransformerConfigurationException
       {
         final Source transformation = new StreamSource(new StringReader(xslt));
         final var transformer = transformerFactory.newTransformer(transformation);
@@ -231,7 +213,7 @@ public class XsltMacroFilter implements Filter
      ******************************************************************************************************************/
     @Nonnull
     private Node stringToNode (@Nonnull final String string)
-      throws IOException, SAXException, ParserConfigurationException
+            throws IOException, SAXException, ParserConfigurationException
       {
         factory.setValidating(false);
         final var builder = factory.newDocumentBuilder();
