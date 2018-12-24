@@ -38,6 +38,7 @@ import com.sun.syndication.feed.rss.Content;
 import com.sun.syndication.feed.rss.Guid;
 import com.sun.syndication.feed.rss.Item;
 import com.sun.syndication.io.WireFeedOutput;
+import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -45,9 +46,11 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
+import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.emptyMap;
 import static it.tidalwave.northernwind.core.model.Content.*;
 
 /***********************************************************************************************************************
@@ -116,11 +119,24 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      * {@inheritDoc}
      *
+     * RSS must not present their inner contents to the sitemap.
+     *
+     ******************************************************************************************************************/
+    @Override @Nonnull
+    public Finder8<SiteNode> findVirtualSiteNodes()
+      {
+        return new DefaultSiteFinder<>("empty", emptyMap(), null); // TODO: Finder8Support.emptyFinder();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
     @Override
     protected void renderPosts (List<it.tidalwave.northernwind.core.model.Content> fullPosts,
-                           List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
-                           List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
+                                List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
+                                List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
       throws Exception
       {
         fullPosts.forEach  (post -> renderPost(post, Optional.of(P_FULL_TEXT)));

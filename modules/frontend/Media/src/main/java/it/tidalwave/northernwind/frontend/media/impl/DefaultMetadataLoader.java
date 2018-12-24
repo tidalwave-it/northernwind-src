@@ -82,7 +82,7 @@ public class DefaultMetadataLoader implements MetadataLoader
     public Metadata loadMetadata (final @Nonnull ResourceFile file)
       throws IOException
       {
-        log.info("loadMetadata({})", file.getPath());
+        log.debug("loadMetadata({})", file.getPath());
         final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
         return new DefaultMetadata(file.getName(), image);
       }
