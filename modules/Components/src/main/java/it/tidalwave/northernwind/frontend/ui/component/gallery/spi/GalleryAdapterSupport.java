@@ -32,7 +32,6 @@ import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
@@ -47,7 +46,10 @@ import lombok.RequiredArgsConstructor;
 public abstract class GalleryAdapterSupport implements GalleryAdapter
   {
     @Nonnull
-    private final Site site;
+    protected final SiteNode siteNode;
+
+    @Nonnull
+    protected final GalleryView view;
 
     @Nonnull
     protected final ModelFactory modelFactory;
@@ -80,13 +82,10 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final Template loadTemplate (final @Nonnull GalleryAdapterContext context,
-                                           final @Nonnull Key<ResourcePath> templateName,
+    protected final Template loadTemplate (final @Nonnull Key<ResourcePath> templateName,
                                            final @Nonnull String fallbackTemplate)
       {
-        final GalleryView view = context.getView();
-        final SiteNode siteNode = context.getSiteNode();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
-        return site.getTemplate(getClass(), viewProperties.getProperty(templateName), fallbackTemplate);
+        return siteNode.getSite().getTemplate(getClass(), viewProperties.getProperty(templateName), fallbackTemplate);
       }
   }

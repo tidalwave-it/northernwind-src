@@ -48,6 +48,7 @@ public final class BootLogger
 
     public void log (final @Nonnull String string)
       {
+        @SuppressWarnings("squid:S106")
         final String s = String.format("%s: %s", owner.getSimpleName(), string);
         System.err.println(s);
         BUILDER.append(s).append("\n");

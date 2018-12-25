@@ -41,6 +41,7 @@ import it.tidalwave.northernwind.frontend.ui.spi.VirtualSiteNode;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@SuppressWarnings("squid:S00112")
 public interface ViewController
   {
     /*******************************************************************************************************************

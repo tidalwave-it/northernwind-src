@@ -42,6 +42,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
  **********************************************************************************************************************/
 public interface SiteNode extends Resource, SimpleComposite<SiteNode>
   {
+    @SuppressWarnings("squid:S1700")
     public static final Class<SiteNode> SiteNode = SiteNode.class;
 
     /** The label used for creating navigation links to this {@code SiteNode}. */
@@ -56,7 +57,7 @@ public interface SiteNode extends Resource, SimpleComposite<SiteNode>
      *
      * Returns the {@link Site} to which this {@code SiteNode} belongs to.
      * TODO: push up to Resource
-     * 
+     *
      * @return   the {@code Site}
      *
      ******************************************************************************************************************/

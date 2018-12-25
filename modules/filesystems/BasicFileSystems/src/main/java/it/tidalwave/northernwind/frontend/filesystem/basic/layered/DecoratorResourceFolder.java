@@ -28,13 +28,11 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.function.Function;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
@@ -45,6 +43,7 @@ import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.experimental.Delegate;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.*;
 
 /***********************************************************************************************************************
  *
@@ -79,38 +78,34 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
     @Override @Nonnull
     public Finder findChildren()
       {
-        return ResourceFileFinderSupport.withComputeResults(new Function<Finder, List<ResourceFile>>()
+        return ResourceFileFinderSupport.withComputeResults(finder ->
           {
-            @Override
-            public List<ResourceFile> apply (final @Nonnull Finder f)
+            final String name = finder.getName();
+            final boolean recursive = finder.isRecursive();
+
+            if (name != null)
               {
-                final String name = f.getName();
-                final boolean recursive = f.isRecursive();
-
-                if (name != null)
+                if (name.contains("/"))
                   {
-                    if (name.contains("/"))
-                      {
-                        throw new IllegalArgumentException("relativePath: " + name);
-                      }
+                    throw new IllegalArgumentException("relativePath: " + name);
+                  }
 
-                    final ResourceFile child = getChildrenMap().get(name);
+                final ResourceFile child = getChildrenMap().get(name);
 
-                    return (child != null) ? Collections.singletonList(child) : Collections.<ResourceFile>emptyList();
-                  }
-                //
-                // FIXME: this reproduces the behaviour before the refactoring for NW-192 - but it's (and was) wrong
-                // since it doesn't consider delegates. It should be rewritten by relying on getChildrenMap() and
-                // making it eventually support recursion.
-                //
-                else if (recursive)
-                  {
-                    return (List)delegate.findChildren().withRecursion(recursive).results();
-                  }
-                else
-                  {
-                    return new ArrayList<>(getChildrenMap().values());
-                  }
+                return (child != null) ? singletonList(child) : emptyList();
+              }
+            //
+            // FIXME: this reproduces the behaviour before the refactoring for NW-192 - but it's (and was) wrong
+            // since it doesn't consider delegates. It should be rewritten by relying on getChildrenMap() and
+            // making it eventually support recursion.
+            //
+            else if (recursive)
+              {
+                return (List)delegate.findChildren().withRecursion(recursive).results();
+              }
+            else
+              {
+                return new ArrayList<>(getChildrenMap().values());
               }
         });
       }

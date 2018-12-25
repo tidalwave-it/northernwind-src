@@ -41,7 +41,6 @@ import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.DefaultGalleryViewController;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette.BluetteGalleryAdapter;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import lombok.extern.slf4j.Slf4j;
 import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.northernwind.core.model.Content.P_TITLE;
@@ -75,29 +74,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         super(view, siteNode, requestLocaleManager, beanFactory);
         this.view = view;
         this.siteNode = siteNode;
-
-        final GalleryAdapterContext context = new GalleryAdapterContext()
-          {
-            @Override
-            public void addAttribute (final @Nonnull String name, final @Nonnull String value)
-              {
-                ((TextHolder)view).addAttribute(name, value);
-              }
-
-            @Override @Nonnull
-            public SiteNode getSiteNode()
-              {
-                return siteNode;
-              }
-
-            @Override @Nonnull
-            public GalleryView getView()
-              {
-                return view;
-              }
-          };
-
-        galleryAdapter = new BluetteGalleryAdapter(siteNode.getSite(), modelFactory, context); // FIXME: get implementation from configuration
+        galleryAdapter = new BluetteGalleryAdapter(siteNode, view, modelFactory); // FIXME: get implementation from configuration
       }
 
     /*******************************************************************************************************************
@@ -115,44 +92,45 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
         final TextHolder textHolder = (TextHolder)view;
         final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
 
-        if (param.getSegmentCount() > 1)
+        switch (param.getSegmentCount())
           {
-            throw new HttpStatusException(SC_BAD_REQUEST);
-          }
+            case 0:
+                galleryAdapter.renderGallery(items);
+                textHolder.addAttribute("title", siteNodeTitle);
+                break;
 
-        if (param.getSegmentCount() == 0)
-          {
-            galleryAdapter.renderGallery(view, items);
-            textHolder.addAttribute("title", siteNodeTitle);
-          }
-        else
-          {
-            switch (param.getLeading())
-              {
-                case "images.xml":
-                    galleryAdapter.renderCatalog(view, items);
-                    break;
+            case 1:
+                switch (param.getLeading())
+                  {
+                    case "images.xml":
+                        galleryAdapter.renderCatalog(items);
+                        break;
 
-                case "lightbox":
-                    galleryAdapter.renderLightbox(view, items);
-                    textHolder.addAttribute("title", siteNodeTitle);
-                    break;
+                    case "lightbox":
+                        galleryAdapter.renderLightbox(items);
+                        textHolder.addAttribute("title", siteNodeTitle);
+                        break;
 
-                default: // id of the gallery item to render
-                    final Id id = new Id(param.getLeading());
-                    final GalleryItem item = itemMapById.get(id);
+                    default: // id of the gallery item to render
+                        final Id id = new Id(param.getLeading());
+                        final GalleryItem item = itemMapById.get(id);
 
-                    if (item == null)
-                      {
-                        log.warn("Gallery item not found: {}", id);
-                        log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
-                        throw new HttpStatusException(SC_NOT_FOUND);
-                      }
+                        if (item == null)
+                          {
+                            log.warn("Gallery item not found: {}", id);
+                            log.debug("Gallery item not found: {}, available: {}", id, itemMapById.keySet());
+                            throw new HttpStatusException(SC_NOT_FOUND);
+                          }
 
-                    galleryAdapter.renderItem(view, item, items);
-                    textHolder.addAttribute("title", item.getDescription());
-                    break;
-              }
+                        galleryAdapter.renderItem(item, items);
+                        textHolder.addAttribute("title", item.getDescription());
+                        break;
+                  }
+
+                break;
+
+            default:
+                throw new HttpStatusException(SC_BAD_REQUEST);
           }
       }
 
