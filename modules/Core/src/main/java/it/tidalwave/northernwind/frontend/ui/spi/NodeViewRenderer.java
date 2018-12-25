@@ -28,7 +28,8 @@ package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.function.BiConsumer;
 import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.Request;
@@ -56,9 +57,10 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
     @Nonnull
     private final BiConsumer<T, T> attacher;
 
+    @Nonnull
     private final RenderContext renderContext;
 
-    private final Stack<T> components = new Stack<>();
+    private final Deque<T> componentStack = new ArrayDeque<>();
 
     @Getter
     private T rootComponent;
@@ -78,6 +80,8 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
+     *
      ******************************************************************************************************************/
     @Override
     public void preVisit (final @Nonnull Layout layout)
@@ -91,19 +95,21 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
           }
         else
           {
-            attacher.accept(components.peek(), component);
+            attacher.accept(componentStack.peek(), component);
           }
 
-        components.push(component);
+        componentStack.push(component);
       }
 
     /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
     public void postVisit (final @Nonnull Layout layout)
       {
-        components.pop();
+        componentStack.pop();
       }
 
     /*******************************************************************************************************************
