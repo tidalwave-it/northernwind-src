@@ -31,7 +31,6 @@ import java.util.List;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
 
 /***********************************************************************************************************************
@@ -61,41 +60,37 @@ public interface GalleryAdapter
      *
      * Renders a catalog of media items to be consumed by the gallery client software.
      *
-     * @param  view         the view component
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderCatalog (@Nonnull GalleryView view, @Nonnull List<GalleryItem> items)
+    public void renderCatalog (@Nonnull List<GalleryItem> items)
       throws HttpStatusException;
 
     /*******************************************************************************************************************
      *
      * Renders the gallery page.
      *
-     * @param  view         the view component
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderGallery (@Nonnull GalleryView view, @Nonnull List<GalleryItem> items);
+    public void renderGallery (@Nonnull List<GalleryItem> items);
 
     /*******************************************************************************************************************
      *
      * Renders a single page of a given gallery item.
      *
-     * @param  view         the view component
      * @param  item         the gallery item
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderItem (@Nonnull GalleryView view, @Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
+    public void renderItem (@Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
 
     /*******************************************************************************************************************
      *
      * Renders the lightbox.
      *
-     * @param  view         the view component
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderLightbox (@Nonnull GalleryView view, @Nonnull List<GalleryItem> items);
+    public void renderLightbox (@Nonnull List<GalleryItem> items);
   }
