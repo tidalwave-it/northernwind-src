@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface Filter
   {
+    @SuppressWarnings("squid:S1700")
     public static final Class<Filter> Filter = Filter.class;
 
     /*******************************************************************************************************************
@@ -48,6 +49,6 @@ public interface Filter
      * @return              the filtered text
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Nonnull @SuppressWarnings("squid:S1845")
     public String filter (@Nonnull String text, @Nonnull String mimeType);
   }

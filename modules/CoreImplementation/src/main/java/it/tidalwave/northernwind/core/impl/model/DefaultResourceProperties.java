@@ -60,6 +60,7 @@ import static java.time.format.DateTimeFormatter.*;
 @Slf4j @ToString(exclude={"propertyResolver", "asSupport"})
 public class DefaultResourceProperties implements ResourceProperties
   {
+    @SuppressWarnings("squid:S1171")
     private static final Map<Class<?>, Function<Object, Object>> CONVERTER_MAP = new HashMap<Class<?>, Function<Object, Object>>()
       {{
         put(Integer.class,       o -> Integer.parseInt((String)o));

@@ -77,7 +77,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinder8Support<
      *
      *
      ******************************************************************************************************************/
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "squid:S00112"})
     public PathFinderSupport (final @Nonnull T parentResource)
       {
         try
