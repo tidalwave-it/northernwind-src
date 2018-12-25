@@ -165,6 +165,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     @Nonnull
     private Aggregate toAggregate (final @Nonnull Content post, final @Nonnull Key<String> textProperty)
       {
+        @SuppressWarnings("squid:S3655")
         final ZonedDateTime dateTime = post.getProperty(DATE_KEYS).get();
         final String id = String.format("nw-%s-blogpost-%s", view.getId(), dateTime.toInstant().toEpochMilli());
         final List<String> tags = post.getProperty(P_TAGS).orElse(emptyList());
