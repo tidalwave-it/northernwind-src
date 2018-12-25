@@ -28,12 +28,13 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
-import java.util.Stack;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -86,7 +87,7 @@ public class DefaultLayout implements Layout, Cloneable
       {
         private DefaultLayout rootLayout;
 
-        private Stack<DefaultLayout> layouts = new Stack<>();
+        private final Deque<DefaultLayout> layoutStack = new ArrayDeque<>();
 
         @Override
         public void preVisit (final @Nonnull Layout layout)
@@ -100,16 +101,16 @@ public class DefaultLayout implements Layout, Cloneable
               }
             else
               {
-                layouts.peek().add(clone);
+                layoutStack.peek().add(clone);
               }
 
-            layouts.push(clone);
+            layoutStack.push(clone);
           }
 
         @Override
         public void postVisit (final @Nonnull Layout layout)
           {
-            layouts.pop();
+            layoutStack.pop();
           }
 
         @Override @Nonnull

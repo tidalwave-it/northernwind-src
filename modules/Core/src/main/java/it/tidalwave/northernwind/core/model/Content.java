@@ -48,6 +48,7 @@ import lombok.experimental.Wither;
  **********************************************************************************************************************/
 public interface Content extends Resource, SimpleComposite8<Content>
   {
+    @SuppressWarnings("squid:S1700")
     public static final Class<Content> Content = Content.class;
 
     /** The title of this {@code Content}. */
