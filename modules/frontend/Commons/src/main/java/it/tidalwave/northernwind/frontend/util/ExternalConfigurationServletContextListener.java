@@ -75,6 +75,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Override
     public void contextDestroyed (final @Nonnull ServletContextEvent event)
       {
+        // do nothing
       }
 
     /*******************************************************************************************************************

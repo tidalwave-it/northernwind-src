@@ -51,10 +51,10 @@ public class DefaultSiteFinder<T> extends Finder8Support<T, SiteFinder<T>> imple
     private static final long serialVersionUID = 3242345356779345L;
 
     @Nonnull
-    /* package */ final Map<String, T> mapByRelativePath;
+    /* package */ transient final Map<String, T> mapByRelativePath;
 
     @CheckForNull
-    /* package */ final RegexTreeMap<T> mapByRelativeUri;
+    /* package */ transient final RegexTreeMap<T> mapByRelativeUri;
 
     @CheckForNull
     private final String relativePath;

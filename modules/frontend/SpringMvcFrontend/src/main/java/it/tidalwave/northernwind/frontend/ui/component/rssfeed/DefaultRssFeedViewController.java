@@ -207,5 +207,6 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     @Override
     protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
+        // not meaningful for RSS
       }
   }

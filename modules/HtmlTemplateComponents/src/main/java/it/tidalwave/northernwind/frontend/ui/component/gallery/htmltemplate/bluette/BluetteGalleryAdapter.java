@@ -27,10 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate.bluette;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -39,11 +36,9 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j
+@Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
     private static final Key<String> P_COPYRIGHT = new Key<String>("copyright") {};
@@ -65,10 +60,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     private static final Key<ResourcePath> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteLightboxFallbackPath") {};
 
     @Nonnull
-    private final GalleryAdapterContext context;
-
-    @Inject
-    private Provider<SiteProvider> siteProvider;
+    private final Site site;
 
     private final Template galleryTemplate;
 
@@ -78,22 +70,24 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
 
     private String copyright = "";
 
+    private final ResourceProperties bluetteConfiguration;
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public BluetteGalleryAdapter (final @Nonnull Site site,
-                                  final @Nonnull ModelFactory modelFactory,
-                                  final @Nonnull GalleryAdapterContext context)
+    public BluetteGalleryAdapter (final @Nonnull SiteNode siteNode,
+                                  final @Nonnull GalleryView view,
+                                  final @Nonnull ModelFactory modelFactory)
       {
-        super(site, modelFactory);
-        this.context = context;
+        super(siteNode, view, modelFactory);
+        this.site = siteNode.getSite();
+        bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
 
-        galleryTemplate          = loadTemplate(context, P_BLUETTE_TEMPLATE_PATH, "bluette.txt");
-        fallbackTemplate         = loadTemplate(context, P_BLUETTE_FALLBACK_TEMPLATE_PATH, "bluetteFallback.txt");
-        lightboxFallbackTemplate = loadTemplate(context, P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH, "bluetteLightboxFallback.txt");
-        final ResourceProperties bluetteConfiguration = context.getSiteNode().getPropertyGroup(new Id("bluetteConfiguration"));
+        galleryTemplate          = loadTemplate(P_BLUETTE_TEMPLATE_PATH, "bluette.txt");
+        fallbackTemplate         = loadTemplate(P_BLUETTE_FALLBACK_TEMPLATE_PATH, "bluetteFallback.txt");
+        lightboxFallbackTemplate = loadTemplate(P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH, "bluetteLightboxFallback.txt");
         copyright = bluetteConfiguration.getProperty(P_COPYRIGHT).orElse("");
       }
 
@@ -106,13 +100,10 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     public String getInlinedScript()
       {
         final StringBuilder builder = new StringBuilder();
-        final SiteNode siteNode = context.getSiteNode();
-        final String link = siteProvider.get().getSite().createLink(siteNode.getRelativeUri().appendedWith("images.xml"));
+        final String link = site.createLink(siteNode.getRelativeUri().appendedWith("images.xml"));
 
         builder.append("<script type=\"text/javascript\">\n//<![CDATA[\n");
         builder.append(String.format("var bluetteCatalogUrl = \"%s\";%n", link));
-
-        final ResourceProperties bluetteConfiguration = siteNode.getPropertyGroup(new Id("bluetteConfiguration"));
 
         // FIXME: since key doesn't have dynamic type, we can't properly escape strings.
         for (final Key<?> key : bluetteConfiguration.getKeys())
@@ -134,7 +125,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderCatalog (final @Nonnull GalleryView view, final @Nonnull List<GalleryItem> items)
+    public void renderCatalog (final @Nonnull List<GalleryItem> items)
       throws HttpStatusException
       {
         final StringBuilder builder = new StringBuilder();
@@ -161,15 +152,14 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderGallery (final @Nonnull GalleryView view, final @Nonnull List<GalleryItem> items)
+    public void renderGallery (final @Nonnull List<GalleryItem> items)
       {
         final GalleryItem item  = items.get(0);
         final int count         = items.size();
         final int index         = items.indexOf(item);
         final int prevIndex     = (index - 1 + count) % count;
         final int nextIndex     = (index + 1) % count;
-        final Site site = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
+        final ResourcePath baseUrl = siteNode.getRelativeUri().prependedWith(site.getContextPath());
         final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
         final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
         final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
@@ -179,7 +169,8 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                        .addAttribute("lightbox",  lightboxUrl)
                        .addAttribute("home",      "/blog") // FIXME
                        .addAttribute("copyright", copyright);
-        context.addAttribute("content", galleryTemplate.render());
+        final TextHolder textHolder = (TextHolder)view;
+        textHolder.addAttribute("content", galleryTemplate.render());
       }
 
     /*******************************************************************************************************************
@@ -188,17 +179,14 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderItem (final @Nonnull GalleryView view,
-                            final @Nonnull GalleryItem item,
-                            final @Nonnull List<GalleryItem> items)
+    public void renderItem (final @Nonnull GalleryItem item, final @Nonnull List<GalleryItem> items)
       {
         final TextHolder textHolder = (TextHolder)view;
         final int count     = items.size();
         final int index     = items.indexOf(item);
         final int prevIndex = (index - 1 + count) % count;
         final int nextIndex = (index + 1) % count;
-        final Site site     = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
+        final ResourcePath baseUrl = siteNode.getRelativeUri().prependedWith(site.getContextPath());
         final String imageId     = item.getId().stringValue();
         final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(imageId)).replaceAll("/$", "");
         final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
@@ -233,10 +221,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void renderLightbox (final @Nonnull GalleryView view, final @Nonnull List<GalleryItem> items)
+    public void renderLightbox (final @Nonnull List<GalleryItem> items)
       {
-        final Site site = siteProvider.get().getSite();
-        final ResourcePath baseUrl = context.getSiteNode().getRelativeUri().prependedWith(site.getContextPath());
+        final ResourcePath baseUrl = siteNode.getRelativeUri().prependedWith(site.getContextPath());
         final StringBuilder builder = new StringBuilder();
 
         for (final GalleryItem item : items)
