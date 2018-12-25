@@ -121,7 +121,7 @@ public interface Template
         @Getter @Nonnull
         private final String name;
 
-        @Getter
+        @Getter @SuppressWarnings("squid:S1700")
         private final List<Aggregate> aggregates = new ArrayList<>();
 
         /***************************************************************************************************************

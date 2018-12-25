@@ -24,40 +24,66 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
+package it.tidalwave.northernwind.util;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import lombok.NoArgsConstructor;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
+ *
+ * A wrapper around {@link URLDecoder} and {@link URLEncoder} that internally catches
+ * {@link UnsupportedEncodingException}.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface GalleryAdapterContext
+@NoArgsConstructor(access = PRIVATE)
+public final class UrlEncoding
   {
     /*******************************************************************************************************************
      *
+     * Decodes a string in UTF-8.
      *
+     * @param   string      the string
+     * @return              the decoded string
      *
      ******************************************************************************************************************/
-    public void addAttribute (@Nonnull String name, @Nonnull String value);
+    @Nonnull @SuppressWarnings("squid:S00112")
+    public static String decodedUtf8 (final @Nonnull String string)
+      {
+        try
+          {
+            return URLDecoder.decode(string, "UTF-8");
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            throw new RuntimeException(e);
+          }
+      }
 
     /*******************************************************************************************************************
      *
+     * Encodes a string in UTF-8.
+     *
+     * @param   string      the string
+     * @return              the encoded string
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
-    public SiteNode getSiteNode();
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public GalleryView getView();
+    @Nonnull @SuppressWarnings("squid:S00112")
+    public static String encodedUtf8 (final @Nonnull String string)
+      {
+        try
+          {
+            return URLEncoder.encode(string, "UTF-8");
+          }
+        catch (UnsupportedEncodingException e)
+          {
+            throw new RuntimeException(e);
+          }
+      }
   }

@@ -72,32 +72,27 @@ public class ProcessExecutor
         @Getter
         private final List<String> content = Collections.synchronizedList(new ArrayList<String>());
 
-        private boolean completed;
+        private volatile boolean completed;
 
         /***************************************************************************************************************
          *
          *
          ***************************************************************************************************************/
-        private final Runnable consoleConsumer = new Runnable()
+        private final Runnable consoleConsumer = () ->
           {
-            @Override
-            public void run()
+            try
               {
-                try
-                  {
-                    read();
-                  }
-                catch (IOException e)
-                  {
-                    log.warn("while reading from process console", e);
-                  }
+                read();
+              }
+            catch (IOException e)
+              {
+                log.warn("while reading from process console", e);
+              }
 
+            synchronized (ConsoleOutput.this)
+              {
                 completed = true;
-
-                synchronized (ConsoleOutput.this)
-                  {
-                    ConsoleOutput.this.notifyAll();
-                  }
+                ConsoleOutput.this.notifyAll();
               }
           };
 
@@ -145,7 +140,7 @@ public class ProcessExecutor
          * @return                              the {@code Scanner} to parse results
          *
          ***************************************************************************************************************/
-        @Nonnull @SuppressWarnings("squid:S2093")
+        @Nonnull @SuppressWarnings("squid:S2095")
         public Scanner filteredAndSplitBy (final @Nonnull String filterRegexp, final @Nonnull String delimiterRegexp)
           {
             return new Scanner(filteredBy(filterRegexp).get(0)).useDelimiter(Pattern.compile(delimiterRegexp));
@@ -291,7 +286,6 @@ public class ProcessExecutor
      *
      * @param       argument            the argument
      * @return                          itself
-     * @throws      IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -307,7 +301,6 @@ public class ProcessExecutor
      *
      * @param       workingDirectory    the working directory
      * @return                          itself
-     * @throws      IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -340,7 +333,7 @@ public class ProcessExecutor
 //          }
 
         log.debug(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
-//        log.debug(">>>> environment:       {}", environment);
+        log.debug(">>>> environment:       {}", environment);
         process = Runtime.getRuntime().exec(arguments.toArray(new String[0]),
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
@@ -391,8 +384,9 @@ public class ProcessExecutor
      *
      * Sends some input to the external process.
      *
-     * @param       string          the input to send
-     * @throws      IOException     if something fails
+     * @return                              itself
+     * @param       string                  the input to send
+     * @throws      IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
