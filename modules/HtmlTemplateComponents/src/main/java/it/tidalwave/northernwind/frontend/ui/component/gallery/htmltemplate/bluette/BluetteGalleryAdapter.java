@@ -154,21 +154,24 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Override
     public void renderGallery (final @Nonnull List<GalleryItem> items)
       {
-        final GalleryItem item  = items.get(0);
-        final int count         = items.size();
-        final int index         = items.indexOf(item);
-        final int prevIndex     = (index - 1 + count) % count;
-        final int nextIndex     = (index + 1) % count;
+        final GalleryItem item     = items.get(0);
+        final int count            = items.size();
+        final int index            = items.indexOf(item);
+        final int prevIndex        = (index - 1 + count) % count;
+        final int nextIndex        = (index + 1) % count;
         final ResourcePath baseUrl = siteNode.getRelativeUri().prependedWith(site.getContextPath());
-        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
-        final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
+
+        final String previousUrl   = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
+        final String nextUrl       = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
+        final String lightboxUrl   = site.createLink(baseUrl.appendedWith("lightbox"));
+
         galleryTemplate.addAttribute("caption",   item.getDescription())
                        .addAttribute("previous",  previousUrl)
                        .addAttribute("next",      nextUrl)
                        .addAttribute("lightbox",  lightboxUrl)
                        .addAttribute("home",      "/blog") // FIXME
                        .addAttribute("copyright", copyright);
+
         final TextHolder textHolder = (TextHolder)view;
         textHolder.addAttribute("content", galleryTemplate.render());
       }
@@ -181,23 +184,25 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Override
     public void renderItem (final @Nonnull GalleryItem item, final @Nonnull List<GalleryItem> items)
       {
-        final TextHolder textHolder = (TextHolder)view;
-        final int count     = items.size();
-        final int index     = items.indexOf(item);
-        final int prevIndex = (index - 1 + count) % count;
-        final int nextIndex = (index + 1) % count;
+        final int count            = items.size();
+        final int index            = items.indexOf(item);
+        final int prevIndex        = (index - 1 + count) % count;
+        final int nextIndex        = (index + 1) % count;
         final ResourcePath baseUrl = siteNode.getRelativeUri().prependedWith(site.getContextPath());
-        final String imageId     = item.getId().stringValue();
-        final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(imageId)).replaceAll("/$", "");
-        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
-        final String lightboxUrl = site.createLink(baseUrl.appendedWith("lightbox"));
-        final String imageUrl    = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: parametrise size
+
+        final String imageId       = item.getId().stringValue();
+        final String redirectUrl   = site.createLink(baseUrl.appendedWith("#!").appendedWith(imageId)).replaceAll("/$", "");
+        final String previousUrl   = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
+        final String nextUrl       = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
+        final String lightboxUrl   = site.createLink(baseUrl.appendedWith("lightbox"));
+        
+        final String imageUrl      = "/media/stillimages/800/" + imageId + ".jpg"; // FIXME: parametrise size
         final String redirectScript = "<script type=\"text/javascript\">\n"
                                     + "//<![CDATA[\n"
                                     + "window.location.replace('" + redirectUrl + "');\n"
                                     + "//]]>\n"
                                     + "</script>\n";
+
         fallbackTemplate.addAttribute("caption",   item.getDescription())
                         .addAttribute("previous",  previousUrl)
                         .addAttribute("next",      nextUrl)
@@ -206,6 +211,8 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
                         .addAttribute("imageId",   imageId)
                         .addAttribute("imageUrl",  imageUrl)
                         .addAttribute("copyright", copyright);
+
+        final TextHolder textHolder = (TextHolder)view;
         textHolder.addAttribute("content",        fallbackTemplate.render());
         // FIXME: it would be better to change the properties rather than directly touch the template attributes
         textHolder.addAttribute("description",    item.getDescription());
