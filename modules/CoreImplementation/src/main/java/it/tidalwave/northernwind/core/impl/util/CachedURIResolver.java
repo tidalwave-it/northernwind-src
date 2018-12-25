@@ -34,16 +34,15 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.net.URL;
-import java.net.URLEncoder;
-import org.apache.commons.io.FileUtils;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
-import lombok.Cleanup;
+import org.apache.commons.io.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.util.UrlEncoding.*;
 
 /***********************************************************************************************************************
  *
@@ -83,8 +82,7 @@ public class CachedURIResolver implements URIResolver
                 mkdirs(cacheFolder);
               }
 
-            final String mangledName = URLEncoder.encode(href, "UTF-8");
-            final File cachedFile = new File(cacheFolder, mangledName);
+            final File cachedFile = new File(cacheFolder, encodedUtf8(href));
             final long elapsed = System.currentTimeMillis() - cachedFile.lastModified();
 
             log.debug(">>>> cached file is {} elapsed time is {} msec", cachedFile, elapsed);

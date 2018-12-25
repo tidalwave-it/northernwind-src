@@ -30,14 +30,12 @@ import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.List;
+import it.tidalwave.northernwind.util.UrlEncoding;
 import lombok.EqualsAndHashCode;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
 
 /***********************************************************************************************************************
@@ -52,7 +50,7 @@ import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
 public class ResourcePath implements Serializable
   {
     private static final long serialVersionUID = 1L;
-    
+
     public static final ResourcePath EMPTY = new ResourcePath();
 
     @Nonnull
@@ -336,21 +334,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public ResourcePath urlDecoded()
       {
-        final List<String> builder = new ArrayList<>();
-
-        for (final String segment : segments)
-          {
-            try
-              {
-                builder.add(URLDecoder.decode(segment, "UTF-8"));
-              }
-            catch (UnsupportedEncodingException e)
-              {
-                throw new RuntimeException(e);
-              }
-          }
-
-        return ResourcePath.of(builder);
+        return ResourcePath.of(segments.stream().map(UrlEncoding::decodedUtf8).collect(toList()));
       }
 
     /*******************************************************************************************************************
