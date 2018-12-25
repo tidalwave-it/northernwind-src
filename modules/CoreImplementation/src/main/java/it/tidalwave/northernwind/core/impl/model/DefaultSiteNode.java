@@ -50,11 +50,12 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.impl.ui.LayoutLoggerVisitor;
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
+import static it.tidalwave.northernwind.util.UrlEncoding.*;
 import static it.tidalwave.northernwind.core.model.SiteNode.P_EXPOSED_URI;
-import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -120,7 +121,7 @@ import lombok.Getter;
               {
                 try
                   {
-                    final String segment = getResource().getProperty(P_EXPOSED_URI).orElse(decode(file));
+                    final String segment = getResource().getProperty(P_EXPOSED_URI).orElse(decodedUtf8(file.getName()));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (NotFoundException e) // FIXME: for getParent()
@@ -231,21 +232,5 @@ import lombok.Getter;
         log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
         final @Cleanup InputStream is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Nonnull @SuppressWarnings("squid:S00112")
-    private static String decode (final @Nonnull ResourceFile file)
-      {
-        try
-          {
-            return java.net.URLDecoder.decode(file.getName(), "UTF-8");
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            throw new RuntimeException(e); // should never occur
-          }
       }
   }

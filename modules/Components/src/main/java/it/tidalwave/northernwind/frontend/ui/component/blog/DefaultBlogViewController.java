@@ -43,8 +43,6 @@ import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import it.tidalwave.util.Finder8;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.spi.SimpleFinder8Support;
@@ -68,6 +66,7 @@ import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
+import static it.tidalwave.northernwind.util.UrlEncoding.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
@@ -421,26 +420,18 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     protected final String createTagLink (final String tag)
       {
-        try
-          {
-            // TODO: shouldn't ResourcePath always encode incoming strings?
-            String link = siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
-                                                                                 .appendedWith(URLEncoder.encode(tag, "UTF-8")));
+        // TODO: shouldn't ResourcePath always encode incoming strings?
+        String link = siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
+                                                                             .appendedWith(encodedUtf8(tag)));
 
-            // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
-            // Refactor by passing a parameter to createLink that overrides the default behaviour.
-            if (!link.endsWith("/") && !link.contains("?"))
-              {
-                link += "/";
-              }
-
-            return link;
-          }
-        catch (UnsupportedEncodingException e)
+        // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
+        // Refactor by passing a parameter to createLink that overrides the default behaviour.
+        if (!link.endsWith("/") && !link.contains("?"))
           {
-            log.error("", e);
-            return "";
+            link += "/";
           }
+
+        return link;
       }
 
     /*******************************************************************************************************************
@@ -687,8 +678,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * Filters the {@code sourcePosts} that matches the selected {@code category}; returns all posts if the category is
-     * empty.
+     * Filters the given posts that match the selected category; returns all the posts if the category is empty.
      *
      * @param  posts          the source posts
      * @param  category       the category
