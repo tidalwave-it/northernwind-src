@@ -378,6 +378,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * @throws      Exception       if something fails
      *
      ******************************************************************************************************************/
+    @SuppressWarnings("squid:S00112")
     protected abstract void renderPosts (@Nonnull List<Content> fullPosts,
                                          @Nonnull List<Content> leadinPosts,
                                          @Nonnull List<Content> linkedPosts)
@@ -391,6 +392,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * @throws      Exception       if something fails
      *
      ******************************************************************************************************************/
+    @SuppressWarnings("squid:S00112")
     protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount)
       throws Exception;
 
@@ -512,7 +514,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
                 .flatMap(post -> post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty)) // TODO: simplify in Java 9
-                .collect(toMap(tag -> tag, TagAndCount::new, TagAndCount::reduced))
+                .collect(toMap(t -> t, TagAndCount::new, TagAndCount::reduced))
                 .values()
                 .stream()
                 .sorted(comparing(TagAndCount::getTag))
