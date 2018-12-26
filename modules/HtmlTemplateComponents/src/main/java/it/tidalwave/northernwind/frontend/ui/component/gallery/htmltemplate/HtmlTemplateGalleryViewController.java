@@ -83,10 +83,10 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void prepareRendering (final @Nonnull RenderContext context)
       throws Exception
       {
-        super.renderView(context);
+        super.prepareRendering(context);
         final ResourcePath param = getParam(context);
         log.info(">>>> pathParams: *{}*", param);
         final TextHolder textHolder = (TextHolder)view;
@@ -94,8 +94,8 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
 
         switch (param.getSegmentCount())
           {
-            case 0:
-                galleryAdapter.renderGallery(items);
+            case 0: // no args, full JS gallery
+                galleryAdapter.prepareGallery(items.get(0), items);
                 textHolder.addAttribute("title", siteNodeTitle);
                 break;
 
@@ -103,15 +103,15 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                 switch (param.getLeading())
                   {
                     case "images.xml":
-                        galleryAdapter.renderCatalog(items);
+                        galleryAdapter.prepareCatalog(items);
                         break;
 
                     case "lightbox":
-                        galleryAdapter.renderLightbox(items);
+                        galleryAdapter.prepareFallbackLightbox(items);
                         textHolder.addAttribute("title", siteNodeTitle);
                         break;
 
-                    default: // id of the gallery item to render
+                    default: // id of the gallery item to render, fallback mode
                         final Id id = new Id(param.getLeading());
                         final GalleryItem item = itemMapById.get(id);
 
@@ -122,7 +122,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                             throw new HttpStatusException(SC_NOT_FOUND);
                           }
 
-                        galleryAdapter.renderItem(item, items);
+                        galleryAdapter.prepareFallbackGallery(item, items);
                         textHolder.addAttribute("title", item.getDescription());
                         break;
                   }
@@ -132,6 +132,19 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
             default:
                 throw new HttpStatusException(SC_BAD_REQUEST);
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void renderView (final @Nonnull RenderContext context)
+      throws Exception
+      {
+        super.renderView(context);
+        galleryAdapter.render(context);
       }
 
     @Nonnull
@@ -147,7 +160,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected String computeInlinedScriptsSection()
+    protected final String computeInlinedScriptsSection()
       {
         return super.computeInlinedScriptsSection() + "\n" + galleryAdapter.getInlinedScript();
       }
