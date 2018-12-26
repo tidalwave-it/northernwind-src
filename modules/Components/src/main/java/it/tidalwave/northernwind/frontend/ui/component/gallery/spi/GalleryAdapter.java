@@ -31,6 +31,7 @@ import java.util.List;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
 
 /***********************************************************************************************************************
@@ -58,39 +59,47 @@ public interface GalleryAdapter
 
     /*******************************************************************************************************************
      *
-     * Renders a catalog of media items to be consumed by the gallery client software.
+     * Prepares a catalog of media items to be consumed by the gallery client software.
      *
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderCatalog (@Nonnull List<GalleryItem> items)
+    public void prepareCatalog (@Nonnull List<GalleryItem> items)
       throws HttpStatusException;
 
     /*******************************************************************************************************************
      *
-     * Renders the gallery page.
-     *
-     * @param  items        the list of gallery items
-     *
-     ******************************************************************************************************************/
-    public void renderGallery (@Nonnull List<GalleryItem> items);
-
-    /*******************************************************************************************************************
-     *
-     * Renders a single page of a given gallery item.
+     * Prepares the full JS page.
      *
      * @param  item         the gallery item
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderItem (@Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
+    public void prepareGallery (@Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
 
     /*******************************************************************************************************************
      *
-     * Renders the lightbox.
+     * Prepares the fallback page.
+     *
+     * @param  item         the gallery item
+     * @param  items        the list of gallery items
+     *
+     ******************************************************************************************************************/
+    public void prepareFallbackGallery (@Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
+
+    /*******************************************************************************************************************
+     *
+     * Prepares the fallback lightbox.
      *
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void renderLightbox (@Nonnull List<GalleryItem> items);
+    public void prepareFallbackLightbox (@Nonnull List<GalleryItem> items);
+
+    /*******************************************************************************************************************
+     *
+     * Renders what has been previously prepared.
+     *
+     ******************************************************************************************************************/
+    public void render (@Nonnull RenderContext context);
   }
