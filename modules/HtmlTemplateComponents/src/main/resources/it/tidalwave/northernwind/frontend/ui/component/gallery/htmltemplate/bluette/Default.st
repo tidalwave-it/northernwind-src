@@ -1,31 +1,23 @@
-    <div id="page">
-      <div id="content">
-        <div id="initialWaitingWidget"></div>
-        <div id="slideshow">
-          <div id="navigationWidgets">
-            <a id="navigationPreviousWidget" href="$previous$"></a>
-            <a id="navigationLightBoxWidget" href="$lightbox$"></a>
-            <a id="navigationHomeWidget" href="$home$"></a>
-            <a id="navigationPauseWidget"></a>
-            <a id="navigationPlayWidget"></a>
-            <a id="navigationNextWidget" href="$next$"></a>
-          </div>
-          <div id="imageRenderer">
-            <div id="divimage1"><img id="image1"></img></div>
-            <div id="divimage2"><img id="image2"></img></div>
-            <div id="imageOverlay">
-              <div id="header"></div>
-              <div id="waitingWidget"></div>
-              <div id="loadingWidget"></div>
-            </div>
-          </div>
-          <div id="title1"></div>
-          <div id="title2"></div>
-          <div id="copyright">$copyright$</div>
-        </div>
-        <div id="lightbox">
-            <span id="navigationCloseWidget">&nbsp;&nbsp;</span>
-            <div id="thumbnails"></div>
-        </div>
-      </div>
+<div id="content">
+    <noscript style="color: white; text-align: center; position: absolute; width: 100%; z-index: 30; margin-top: 2em">
+        <p>It seems that your browser does not support JavaScript (or JavaScript support is disabled).<br/>
+        You can't enjoy the full-featured slideshow in this condition.<br/>
+        Either enable JavaScript, or click <a href="$next$">here</a> for an alternate, simpler slideshow.<br/>
+        Click <a href="$home$">here</a> to go back.</p>
+    </noscript>
+    <div id="initialLoadingWidget" >
     </div>
+    <div id="slideshow">
+    </div>
+    <div id="lightbox">
+        <span id="navigationCloseWidget"> </span>
+        <div id="thumbnails">
+        </div>
+    </div>
+    <div id="imageOverlay">
+        <div id="waitingWidget">
+        </div>
+        <div id="loadingWidget">
+        </div>
+    </div>
+</div>
