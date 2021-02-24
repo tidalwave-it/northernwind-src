@@ -1,3 +1,5 @@
+# Needed for keeping JDK 8
+dist: trusty
 language: java
 jdk:
   - oraclejdk8
