@@ -206,6 +206,13 @@
         <profile>
             <id>installers</id>
         </profile>
+        <profile>
+            <id>it-tidalwave-test-report-v1</id>
+            <properties>
+                <!-- FIXME: workaround to disable some plugin that breaks site plugin - See NW-328.-->
+                <test.report>true</test.report>
+            </properties>
+        </profile>
     </profiles>
 
     <modules>
