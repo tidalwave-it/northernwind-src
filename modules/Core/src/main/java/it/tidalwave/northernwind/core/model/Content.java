@@ -37,7 +37,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -103,7 +103,7 @@ public interface Content extends Resource, SimpleComposite8<Content>
         @Nonnull
         private final CallBack callBack;
 
-        @Wither
+        @With
         private ResourceFile folder;
 
         @Nonnull

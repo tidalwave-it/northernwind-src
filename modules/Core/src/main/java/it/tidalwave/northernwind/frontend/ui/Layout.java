@@ -43,7 +43,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -76,10 +76,10 @@ public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder
         @Nonnull
         private final CallBack callBack;
 
-        @Wither
+        @With
         private Id id;
 
-        @Wither
+        @With
         private String type;
 
         @Nonnull

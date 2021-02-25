@@ -84,6 +84,7 @@
                                     <goal>unpack</goal>
                                 </goals>
                                 <configuration>
+                                    <skip>${test.report}</skip>
                                     <artifactItems>
                                         <artifactItem>
                                             <groupId>it.tidalwave.northernwind</groupId>
@@ -109,6 +110,7 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <skip>${test.report}</skip>
                             <transformationSets>
                                 <transformationSet>
                                     <dir>src/main/webapp-resources</dir>

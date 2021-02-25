@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>4.10</version>
-        <relativePath />
+        <version>4.11</version>
+        <relativePath/>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
@@ -204,6 +205,13 @@
     <profiles>
         <profile>
             <id>installers</id>
+        </profile>
+        <profile>
+            <id>it-tidalwave-test-report-v1</id>
+            <properties>
+                <!-- FIXME: workaround to disable some plugin that breaks site plugin - See NW-328.-->
+                <test.report>true</test.report>
+            </properties>
         </profile>
     </profiles>
 
