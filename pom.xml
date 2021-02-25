@@ -56,6 +56,9 @@
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- Clirr is not compatible with JDK 8 -->
 
+        <tft.logback.version>1.2.3</tft.logback.version>
+        <tft.slf4j.version>1.7.30</tft.slf4j.version>
+
         <tft.jaxb2-maven-plugin.version>1.3</tft.jaxb2-maven-plugin.version> <!-- latest breaks the build -->
         <tft.maven-pmd-plugin.version>3.7</tft.maven-pmd-plugin.version> <!-- latest breaks the build -->
     </properties>
