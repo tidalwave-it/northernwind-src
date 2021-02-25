@@ -76,6 +76,7 @@
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
+                            <skip>${test.report}</skip>
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>it.tidalwave.northernwind</groupId>

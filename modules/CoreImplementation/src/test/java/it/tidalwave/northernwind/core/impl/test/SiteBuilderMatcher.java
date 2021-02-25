@@ -37,7 +37,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -47,7 +47,7 @@ import lombok.experimental.Wither;
  *
  **********************************************************************************************************************/
 @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Wither
+@With
 public class SiteBuilderMatcher implements ArgumentMatcher<Site.Builder>
   {
     private String contextPath;
