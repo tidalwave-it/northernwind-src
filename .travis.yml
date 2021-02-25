@@ -1,5 +1,16 @@
+# Needed for keeping JDK 8
+dist: trusty
+
+before_install:
+  - wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+  - tar xzf apache-maven-3.6.3-bin.tar.gz
+  - export PATH=`pwd`/apache-maven-3.6.3/bin:$PATH
+  - echo "[extensions]" > $HOME/.hgrc
+  - echo "hgext.mq =" >> $HOME/.hgrc
 language: java
 jdk:
-  - oraclejdk8
-before_script: sh .prepare.sh
-script: mvn install -B -Pit.tidalwave-ci-v1
+  - openjdk8
+cache:
+  directories:
+    - $HOME/.m2
+script: mvn install -B -q

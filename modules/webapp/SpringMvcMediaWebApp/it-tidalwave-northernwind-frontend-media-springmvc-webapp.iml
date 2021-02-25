@@ -23,6 +23,7 @@
     <orderEntry type="library" name="Maven: com.drewnoakes:metadata-extractor:2.5.0-rc-3" level="project" />
     <orderEntry type="library" name="Maven: com.kenai.nbpwr:com-sun-media-imageio:1.1-201007271250" level="project" />
     <orderEntry type="library" name="Maven: com.sun.media:jai_imageio:1.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.media:jai_core:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.sun.media:clibwrapper_jiio:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.kenai.nbpwr:javax-annotation:1.3.7-201002241900" level="project" />
     <orderEntry type="library" name="Maven: com.drewnoakes:xmpcore-patched:5.1.0" level="project" />
