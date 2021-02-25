@@ -37,7 +37,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -71,28 +71,28 @@ public interface Site
         @Nonnull
         private final CallBack callBack;
 
-        @Wither
+        @With
         private String contextPath;
 
-        @Wither
+        @With
         private String documentPath;
 
-        @Wither
+        @With
         private String mediaPath;
 
-        @Wither
+        @With
         private String libraryPath;
 
-        @Wither
+        @With
         private String nodePath;
 
-        @Wither
+        @With
         private boolean logConfigurationEnabled;
 
-        @Wither
+        @With
         private List<Locale> configuredLocales;
 
-        @Wither
+        @With
         private List<String> ignoredFolders;
 
         @Nonnull
