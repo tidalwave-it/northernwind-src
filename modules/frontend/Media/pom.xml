@@ -44,6 +44,10 @@
                     <groupId>com.kenai.nbpwr</groupId>
                     <artifactId>org-slf4j-jdk14</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.kenai.nbpwr</groupId>
+                    <artifactId>javax-annotation</artifactId>
+                </exclusion>
                 <!-- Fix for NW-130 -->
                 <exclusion>
                     <artifactId>xmpcore</artifactId>
