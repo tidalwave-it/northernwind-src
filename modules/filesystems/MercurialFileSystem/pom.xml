@@ -66,4 +66,20 @@
             <artifactId>it-tidalwave-util-test</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <!-- Workaround for NW-330. -->
+        <profile>
+            <id>skip-hg-tests-on-travis</id>
+            <activation>
+                <property>
+                    <name>env.TRAVIS_LANGUAGE</name>
+                    <value>java</value>
+                </property>
+            </activation>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+    </profiles>
 </project>
