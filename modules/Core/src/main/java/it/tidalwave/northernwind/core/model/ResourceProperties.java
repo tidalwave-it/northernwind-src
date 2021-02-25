@@ -44,7 +44,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -77,13 +77,13 @@ public interface ResourceProperties extends As, Identifiable
         @Nonnull
         private final CallBack callBack;
 
-        @Wither
+        @With
         private Id id = new Id("");
 
-        @Wither
+        @With
         private Map<Key<?>, Object> values = Collections.emptyMap();
 
-        @Wither
+        @With
         private PropertyResolver propertyResolver = PropertyResolver.DEFAULT;
 
         @Nonnull
