@@ -34,7 +34,7 @@ import org.imajine.image.Rational;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
@@ -51,28 +51,28 @@ import org.imajine.image.metadata.XMP;
 @NoArgsConstructor @AllArgsConstructor @ToString
 class MetadataTestBuilder
   {
-    @Wither
+    @With
     private String xmpDcTitle;
 
-    @Wither
+    @With
     private String exifModel;
 
-    @Wither
+    @With
     private Rational exifFocalLength;
 
-    @Wither
+    @With
     private Rational exifExposureTime;
 
-    @Wither
+    @With
     private Rational exifFNumber;
 
-    @Wither
+    @With
     private Rational exifExposureBiasValue;
 
-    @Wither
+    @With
     private int exifIsoSpeedRatings;
 
-    @Wither
+    @With
     private String xmpAuxLensId;
 
     /*******************************************************************************************************************

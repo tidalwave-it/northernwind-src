@@ -34,7 +34,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Wither;
+import lombok.With;
 import org.mockito.ArgumentMatcher;
 
 /***********************************************************************************************************************
@@ -45,10 +45,10 @@ import org.mockito.ArgumentMatcher;
 @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor(staticName = "fileSystemChangedEvent")
 public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<ResourceFileSystemChangedEvent>
   {
-    @Wither
+    @With
     private ResourceFileSystemProvider resourceFileSystemProvider;
 
-    @Wither
+    @With
     private ZonedDateTime latestModificationTime;
 
     @Override

@@ -1,4 +1,4 @@
-![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.northernwind/northernwind.svg)
+[![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.northernwind/northernwind.svg)
 [![Build Status](https://img.shields.io/jenkins/s/http/services.tidalwave.it/ci/job/NorthernWind_Build_from_Scratch.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
 [![Test Status](https://img.shields.io/jenkins/t/http/services.tidalwave.it/ci/job/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
 [![Coverage](https://img.shields.io/jenkins/c/http/services.tidalwave.it/ci/job/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)

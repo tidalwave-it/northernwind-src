@@ -40,7 +40,7 @@ import org.imajine.image.metadata.IPTC;
 import org.imajine.image.metadata.TIFF;
 import org.imajine.image.metadata.XMP;
 import org.imajine.image.op.CreateOp;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -50,16 +50,16 @@ import lombok.experimental.Wither;
 @NoArgsConstructor @AllArgsConstructor
 class ImageTestBuilder 
   {
-    @Wither
+    @With
     private TIFF tiff;
     
-    @Wither
+    @With
     private EXIF exif;
     
-    @Wither
+    @With
     private IPTC iptc;
     
-    @Wither
+    @With
     private XMP xmp;
 
     @Nonnull

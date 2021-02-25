@@ -37,7 +37,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Wither;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -71,7 +71,7 @@ public interface Resource extends As
         @Nonnull
         private final CallBack callBack;
 
-        @Wither
+        @With
         private ResourceFile file;
 
         @Nonnull
