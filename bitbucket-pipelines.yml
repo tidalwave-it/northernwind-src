@@ -7,4 +7,4 @@ pipelines:
         caches:
           - maven
         script: # Modify the commands below to build your repository.
-          - mvn -B -DskipTests -Pinstallers,it.tidalwave-ci-v1,generate-revision-id
+          - mvn -B -Pinstallers,it.tidalwave-ci-v1,generate-revision-id
