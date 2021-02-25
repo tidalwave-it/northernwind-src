@@ -58,7 +58,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Wither;
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.Comparator.comparing;
@@ -157,7 +157,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         public final String tag;
         public final int count;
 
-        @Wither
+        @With
         public final String rank;
 
         public TagAndCount (final @Nonnull String tag)
