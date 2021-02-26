@@ -211,9 +211,36 @@
                 <test.report>true</test.report>
             </properties>
         </profile>
+        <profile>
+            <id>it.tidalwave-site-docs-maven-skin-v1</id>
+            <activation>
+                <file>
+                    <exists>src/config/activate-it.tidalwave-site-docs-maven-skin-v1-profile</exists>
+                </file>
+            </activation>
+            <properties>
+                <tft.site.skin.version>2.0.11</tft.site.skin.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.bernardomg.maven.skins</groupId>
+                                <artifactId>docs-maven-skin</artifactId>
+                                <version>${tft.site.skin.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <modules>
         <module>modules</module>
     </modules>
+
 </project>
