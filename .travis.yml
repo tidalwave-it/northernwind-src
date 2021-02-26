@@ -1,6 +1,3 @@
-# Needed for keeping JDK 8
-dist: trusty
-
 before_install:
   - wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
   - tar xzf apache-maven-3.6.3-bin.tar.gz
@@ -9,7 +6,7 @@ before_install:
   - echo "hgext.mq =" >> $HOME/.hgrc
 language: java
 jdk:
-  - openjdk8
+  - openjdk11
 cache:
   directories:
     - $HOME/.m2
