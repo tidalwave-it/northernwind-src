@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2019 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -24,10 +24,11 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +49,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.joining;
 
 /***********************************************************************************************************************
  *
@@ -70,7 +72,7 @@ public class ProcessExecutor
         private final InputStream input;
 
         @Getter
-        private final List<String> content = Collections.synchronizedList(new ArrayList<String>());
+        private final List<String> content = Collections.synchronizedList(new ArrayList<>());
 
         private volatile boolean completed;
 
@@ -297,6 +299,21 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Specifies some arguments to the executable. This method can be called multiple times.
+     *
+     * @param       arguments           the argument
+     * @return                          itself
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public ProcessExecutor withArguments (final @Nonnull String ... arguments)
+      {
+        this.arguments.addAll(Arrays.asList(arguments));
+        return this;
+      }
+
+    /*******************************************************************************************************************
+     *
      * Specifies the working directory for the executable.
      *
      * @param       workingDirectory    the working directory
@@ -323,7 +340,7 @@ public class ProcessExecutor
     public ProcessExecutor start()
       throws IOException
       {
-        log.debug(">>>> executing {} ...", arguments);
+        log.debug(">>>> executing: {}", arguments.stream().collect(joining(" ")));
 
         final List<String> environment = new ArrayList<>();
 
@@ -374,7 +391,10 @@ public class ProcessExecutor
             log.error(">>>> environment:       {}", environment);
             log("STDOUT", stdout);
             log("STDERR", stderr);
-            throw new IOException(PROCESS_EXITED_WITH + process.exitValue());
+            throw new ProcessExecutorException(PROCESS_EXITED_WITH + process.exitValue(),
+                                               process.exitValue(),
+                                               stdout.getContent(),
+                                               stderr.getContent());
           }
 
         return this;
