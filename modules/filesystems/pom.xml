@@ -19,6 +19,8 @@
 
     <modules>
         <module>BasicFileSystems</module>
+        <module>ScmFileSystem</module>
+        <module>GitFileSystem</module>
         <module>MercurialFileSystem</module>
     </modules>
 
