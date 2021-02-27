@@ -17,6 +17,11 @@
     <name>NorthernWind - Filesystems, Git</name>
     <description>The implementation of the Git filesystem.</description>
 
+    <properties>
+        <!-- Otherwise can't be released because of missing javadocs -->
+        <tft.javadoc.excludePackageNames />
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
