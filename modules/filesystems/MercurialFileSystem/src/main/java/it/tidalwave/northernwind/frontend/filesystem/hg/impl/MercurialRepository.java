@@ -143,7 +143,7 @@ public class MercurialRepository extends ScmRepositorySupport
      *
      ******************************************************************************************************************/
     @Nonnull
-      private ProcessExecutor hgCommand () throws IOException
+    private ProcessExecutor hgCommand() throws IOException
       {
         return ProcessExecutor.forExecutable(HG).withWorkingDirectory(workArea);
       }
