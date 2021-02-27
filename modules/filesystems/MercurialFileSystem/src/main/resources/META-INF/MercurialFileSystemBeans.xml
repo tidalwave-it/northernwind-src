@@ -36,8 +36,8 @@
 
     <!-- FIXME this hardwires the composition with the delegateZipFileSystemsDiscoverer - should be possible to configure the composition -->
 
-    <!--    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >-->
-    <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
+    <!--    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >-->
+    <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >
         <property name="remoteRepositoryUrl" value="${nw.remoteRepositoryUrl}" />
         <property name="workAreaFolder" value="${nw.workAreaFolder}" />
     </bean>

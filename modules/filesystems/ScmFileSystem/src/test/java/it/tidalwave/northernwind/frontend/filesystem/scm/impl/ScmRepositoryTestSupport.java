@@ -24,25 +24,28 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
+package it.tidalwave.northernwind.frontend.filesystem.scm.impl;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepository;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestRepositoryHelper.*;
+import org.testng.annotations.Test;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmPreparer.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -50,11 +53,37 @@ import static it.tidalwave.northernwind.frontend.filesystem.hg.impl.TestReposito
  *
  **********************************************************************************************************************/
 @Slf4j
-public class DefaultMercurialRepositoryTest
+public class ScmRepositoryTestSupport
   {
-    private MercurialRepository underTest;
+    private ScmRepository underTest;
 
     private Path workArea;
+
+    private final ScmPreparer repositoryPreparer;
+
+    @Nonnull
+    private final Function<Path, ? extends ScmRepository> underTestSupplier;
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public ScmRepositoryTestSupport (final @Nonnull Class<? extends ScmRepository> underTestClass,
+                                     final @Nonnull ScmPreparer repositoryPreparer)
+      {
+        this.underTestSupplier = p ->
+          {
+            try
+              {
+                return underTestClass.getDeclaredConstructor(Path.class).newInstance(p);
+              }
+            catch (Exception e)
+              {
+                throw new IllegalArgumentException(e);
+              }
+          };
+
+        this.repositoryPreparer = repositoryPreparer;
+      }
 
     /*******************************************************************************************************************
      *
@@ -63,12 +92,10 @@ public class DefaultMercurialRepositoryTest
     public void createSourceRepository()
       throws Exception
       {
-        // FIXME: on Mac OS X cloning inside the project workarea makes a strage 'merged' workarea together with
-        // the project sources
-//        workArea = new File("target/workarea").toPath();
-        workArea = Files.createTempDirectory("hg-workarea");
+        // Don't create a workarea under target, which is a subdirectory of the project source repository.
+        workArea = Files.createTempDirectory("scm-workarea");
         workArea.toFile().delete();
-        workArea = Files.createTempDirectory("hg-workarea");
+        workArea = Files.createTempDirectory("scm-workarea");
       }
 
     /*******************************************************************************************************************
@@ -79,9 +106,9 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         // Unfortuately java.nio doesn't provide recursive deletion
-        FileUtils.deleteDirectory(sourceRepository.toFile());
+        FileUtils.deleteDirectory(SOURCE_REPOSITORY_FOLDER.toFile());
         FileUtils.deleteDirectory(workArea.toFile());
-        underTest = new DefaultMercurialRepository(workArea);
+        underTest = underTestSupplier.apply(workArea);
       }
 
     /*******************************************************************************************************************
@@ -92,12 +119,13 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
         // when
-        underTest.clone(sourceRepository.toUri());
+        underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // then
-        assertThat(new File(workArea.toFile(), ".hg").exists(), is(true));
-        assertThat(new File(workArea.toFile(), ".hg").isDirectory(), is(true));
+        final File file = new File(workArea.toFile(), underTest.getConfigFolderName());
+        assertThat("Doesn't exist: " + file, file.exists(), is(true));
+        assertThat("Not a directory: " + file, file.isDirectory(), is(true));
         // TODO: assert contents in .hg
       }
 
@@ -109,8 +137,8 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-        underTest.clone(sourceRepository.toUri());
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
+        underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // when
         final List<Tag> tags = underTest.getTags();
         final Optional<Tag> latestTag = underTest.getLatestTagMatching(".*");
@@ -118,7 +146,6 @@ public class DefaultMercurialRepositoryTest
         // then
         assertThat(tags, is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(latestTag.isPresent(), is(true));
-        assertThat(latestTag.get().getName(), is("tip"));
         assertThat(latestTagMatchingP.isPresent(), is(true));
         assertThat(latestTagMatchingP.get().getName(), is("published-0.8"));
       }
@@ -131,8 +158,8 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-        underTest.clone(sourceRepository.toUri());
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
+        underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // when
         assertThat(underTest.getCurrentTag().isPresent(), is(false));
       }
@@ -145,8 +172,8 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-        underTest.clone(sourceRepository.toUri());
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
+        underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // when
         underTest.updateTo(tag);
         // then
@@ -161,14 +188,14 @@ public class DefaultMercurialRepositoryTest
      ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           dataProvider="invalidTags",
-          expectedExceptions=IOException.class,
-          expectedExceptionsMessageRegExp="Process exited with 255")
+          expectedExceptions=IllegalArgumentException.class,
+          expectedExceptionsMessageRegExp="Invalid tag: .*")
     public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
       throws Exception
       {
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-        underTest.clone(sourceRepository.toUri());
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
+        underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // when
         underTest.updateTo(tag);
       }
@@ -183,21 +210,19 @@ public class DefaultMercurialRepositoryTest
       throws Exception
       {
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_8);
-        underTest.clone(sourceRepository.toUri());
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
+        underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // when
         underTest.pull();
         // then
         assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(underTest.getLatestTagMatching(".*").get().getName(), is("tip"));
         assertThat(underTest.getLatestTagMatching("p.*").get().getName(), is("published-0.8"));
         // given
-        prepareSourceRepository(Option.UPDATE_TO_PUBLISHED_0_9);
+        repositoryPreparer.prepare(TAG_PUBLISHED_0_9);
         // when
         underTest.pull();
         // then
         assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
-        assertThat(underTest.getLatestTagMatching(".*").get().getName(), is("tip"));
         assertThat(underTest.getLatestTagMatching("p.*").get().getName(), is("published-0.9"));
       }
 

@@ -24,17 +24,13 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.net.URI;
+import java.nio.file.Path;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +42,13 @@ import static java.util.stream.Collectors.toList;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class DefaultMercurialRepository implements MercurialRepository
+public abstract class ScmRepositorySupport implements ScmRepository
   {
-    private static final String HG = "hg";
+    @Getter @Nonnull
+    private final String configFolderName;
 
     @Getter @Nonnull
-    private final Path workArea;
+    protected final Path workArea;
 
     /*******************************************************************************************************************
      *
@@ -80,38 +77,7 @@ public class DefaultMercurialRepository implements MercurialRepository
             throw new IOException("Cannot mkdirs " + workArea);
           }
 
-        ProcessExecutor.forExecutable(HG).withArgument("clone")
-                                         .withArgument("--noupdate")
-                                         .withArgument(uri.toASCIIString())
-                                         .withArgument(".")
-                                         .withWorkingDirectory(workArea)
-                                         .start()
-                                         .waitForCompletion();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Optional<Tag> getCurrentTag()
-      throws InterruptedException, IOException
-      {
-        try
-          {
-            final ProcessExecutor executor = ProcessExecutor.forExecutable(HG).withArgument("id")
-                                                                  .withWorkingDirectory(workArea)
-                                                                  .start()
-                                                                  .waitForCompletion();
-            final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
-            scanner.next();
-            return Optional.of(new Tag(scanner.next()));
-          }
-        catch (NoSuchElementException e)
-          {
-            return Optional.empty();
-          }
+        cloneRepository(uri);
       }
 
     /*******************************************************************************************************************
@@ -123,45 +89,7 @@ public class DefaultMercurialRepository implements MercurialRepository
     public List<Tag> getTags()
       throws InterruptedException, IOException
       {
-        final ProcessExecutor executor = ProcessExecutor.forExecutable(HG).withArgument("tags")
-                                                        .withWorkingDirectory(workArea)
-                                                        .start()
-                                                        .waitForCompletion();
-        final List<String> filteredBy = executor.getStdout().waitForCompleted().filteredBy("([^ ]*) *.*$");
-        Collections.reverse(filteredBy);
-        return toTagList(filteredBy);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void updateTo (final @Nonnull Tag tag)
-      throws InterruptedException, IOException
-      {
-        ProcessExecutor.forExecutable(HG).withArgument("update")
-                                         .withArgument("-C")
-                                         .withArgument(tag.getName())
-                                         .withWorkingDirectory(workArea)
-                                         .start()
-                                         .waitForCompletion();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void pull()
-      throws InterruptedException, IOException
-      {
-        ProcessExecutor.forExecutable(HG).withArgument("pull")
-                                         .withWorkingDirectory(workArea)
-                                         .start()
-                                         .waitForCompletion();
+        return listTags().stream().map(Tag::new).collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -184,8 +112,32 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Tag> toTagList (final @Nonnull List<String> strings)
-      {
-        return strings.stream().map(Tag::new).collect(toList());
-      }
+    public abstract List<String> listTags()
+      throws InterruptedException, IOException;
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public abstract void cloneRepository (@Nonnull URI uri)
+      throws InterruptedException, IOException;
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Override
+    public abstract void updateTo (@Nonnull Tag tag)
+      throws InterruptedException, IOException;
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public abstract void pull()
+      throws InterruptedException, IOException;
   }

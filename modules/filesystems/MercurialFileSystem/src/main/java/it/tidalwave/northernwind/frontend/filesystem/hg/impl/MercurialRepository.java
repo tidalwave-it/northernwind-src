@@ -28,104 +28,137 @@ package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutorException;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepositorySupport;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
+import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.reverse;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
- *
- * A repository based on Mercurial.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface MercurialRepository
+@Slf4j
+public class MercurialRepository extends ScmRepositorySupport
   {
-    public boolean isEmpty();
+    private static final String HG = "hg";
 
     /*******************************************************************************************************************
      *
-     * Clones the repo given the source URL.
      *
-     * @param       url                     the URL of the source repo
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
      *
      ******************************************************************************************************************/
-    public void clone (@Nonnull URI url)
-      throws InterruptedException, IOException;
+    public MercurialRepository (final @Nonnull Path workArea)
+      {
+        super(".hg", workArea);
+      }
 
     /*******************************************************************************************************************
      *
-     * Pulls changes from the remote repository into the working area.
-     *
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void pull()
-      throws InterruptedException, IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Returns the current tag of the working area, if present.
-     *
-     * @return                              the current tag
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
-     *
-     ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public Optional<Tag> getCurrentTag()
-      throws InterruptedException, IOException;
+      throws InterruptedException, IOException
+      {
+        try
+          {
+            final ProcessExecutor executor = hgCommand().withArgument("id").start().waitForCompletion();
+            final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
+            scanner.next();
+            return Optional.of(new Tag(scanner.next()));
+          }
+        catch (NoSuchElementException e)
+          {
+            return Optional.empty();
+          }
+      }
 
     /*******************************************************************************************************************
      *
-     * Returns all the tags of the working area.
-     *
-     * @return                              the tags
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Nonnull
-    public List<Tag> getTags()
-      throws InterruptedException, IOException;
+    public List<String> listTags()
+      throws InterruptedException, IOException
+      {
+        return hgCommand().withArgument("tags")
+                .start()
+                .waitForCompletion()
+                .getStdout()
+                .waitForCompleted()
+                .filteredBy("([^ ]*) *.*$")
+                .stream()
+                .filter(s -> !s.equals("tip"))
+                .collect(collectingAndThen(toList(), l -> { reverse(l); return l; }));
+      }
 
     /*******************************************************************************************************************
      *
-     * Returns the latest tag of the working area matching the given regular expression, if present.
+     * {@inheritDoc}
      *
-     * @param   regexp                      the regular expression
-     * @return                              the tag
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     ******************************************************************************************************************/
+    public void cloneRepository (final @Nonnull URI uri)
+      throws InterruptedException, IOException
+      {
+        hgCommand().withArguments("clone", "--noupdate", uri.toASCIIString(), ".").start().waitForCompletion();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void updateTo (final @Nonnull Tag tag)
+      throws InterruptedException, IOException
+      {
+        try
+          {
+            hgCommand().withArguments("update", "-C", tag.getName()).start().waitForCompletion();
+          }
+        catch (ProcessExecutorException e)
+          {
+            if ((e.getExitCode() == 255) && (e.getStderr().stream().anyMatch(s -> s.contains("abort: unknown revision"))))
+              {
+                throw new IllegalArgumentException("Invalid tag: " + tag.getName());
+              }
+
+            throw e;
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void pull()
+      throws InterruptedException, IOException
+      {
+        hgCommand().withArgument("pull").start().waitForCompletion();
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<Tag> getLatestTagMatching (@Nonnull String regexp)
-      throws InterruptedException, IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Updates the working area to the given tag.
-     *
-     * @param       tag                     the tag
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
-     *
-     ******************************************************************************************************************/
-    public void updateTo (@Nonnull Tag tag)
-      throws InterruptedException, IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Returns the path of the working area.
-     *
-     * @return                              the path to the working area.
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Path getWorkArea();
+    private ProcessExecutor hgCommand() throws IOException
+      {
+        return ProcessExecutor.forExecutable(HG).withWorkingDirectory(workArea);
+      }
   }

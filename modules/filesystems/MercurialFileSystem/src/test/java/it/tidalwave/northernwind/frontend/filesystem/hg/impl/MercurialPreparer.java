@@ -24,59 +24,48 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg;
+package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.time.ZonedDateTime;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.With;
-import org.mockito.ArgumentMatcher;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmPreparer;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor(staticName = "fileSystemChangedEvent")
-public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<ResourceFileSystemChangedEvent>
+public class MercurialPreparer extends ScmPreparer
   {
-    @With
-    private ResourceFileSystemProvider resourceFileSystemProvider;
-
-    @With
-    private ZonedDateTime latestModificationTime;
-
     @Override
-    public boolean matches (final @Nullable ResourceFileSystemChangedEvent event)
+    protected void doPrepare (final @Nonnull String tag)
+      throws IOException, InterruptedException
       {
-        if (event == null)
+        final Path sourceBundle = Paths.get("src/test/resources/MercurialFileSystemProviderTest/hg.bundle");
+        ProcessExecutor.forExecutable("hg")
+                .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
+                .withArguments("clone", "--noupdate", sourceBundle.toFile().getCanonicalPath(), ".")
+                .start()
+                .waitForCompletion();
+        switch (tag)
           {
-            return false;
+            case "published-0.8":
+              ProcessExecutor.forExecutable("hg")
+                      .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
+                      .withArguments("strip", "published-0.9")
+                      .start()
+                      .waitForCompletion();
+              break;
+
+            case "published-0.9":
+              break;
+
+            default:
+              throw new IllegalArgumentException("Only published-0.8 or published-0.9 allowed");
           }
-
-        if ((resourceFileSystemProvider != null) && (resourceFileSystemProvider != event.getFileSystemProvider()))
-          {
-            return false;
-          }
-
-        if ((latestModificationTime != null) && (!latestModificationTime.equals(event.getLatestModificationTime())))
-          {
-            return false;
-          }
-
-        return true;
-      }
-
-    @Override @Nonnull
-    public String toString()
-      {
-        final ResourceFileSystemChangedEvent event =
-                new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
-        return event.toString();
       }
   }
+

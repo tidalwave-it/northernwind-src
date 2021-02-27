@@ -39,7 +39,7 @@
 
     <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer" />
 
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >
         <property name="remoteRepositoryUrl" value="${test.repositoryUrl}" />
         <property name="workAreaFolder" value="${test.workAreaFolder}" />
     </bean>
