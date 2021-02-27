@@ -44,9 +44,4 @@ public class Tag
   {
     @Nonnull
     private final String name;
-
-    public boolean isTip()
-      {
-        return "tip".equals(name);
-      }
   }

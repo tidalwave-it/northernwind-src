@@ -57,7 +57,6 @@ public class MockScmRepository extends ScmRepositorySupport
           {
             final int n = Integer.parseInt(tag.replace("published-0.", ""));
             List<String> tags = createTagNames(n);
-            tags.add("tip");
             final Path configFolder = ScmPreparer.SOURCE_REPOSITORY_FOLDER.resolve(MOCKSCM);
             Files.createDirectories(configFolder);
             Files.write(configFolder.resolve("tags"), tags);

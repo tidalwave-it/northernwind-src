@@ -72,10 +72,7 @@ public abstract class ScmPreparer
           }
 
         ALL_TAGS_UP_TO_PUBLISHED_0_8.addAll(createTagNames(8).stream().distinct().map(Tag::new).collect(toList()));
-        ALL_TAGS_UP_TO_PUBLISHED_0_8.add(new Tag("tip"));
-
         ALL_TAGS_UP_TO_PUBLISHED_0_9.addAll(createTagNames(9).stream().distinct().map(Tag::new).collect(toList()));
-        ALL_TAGS_UP_TO_PUBLISHED_0_9.add(new Tag("tip"));
       }
 
     public static List<String> createTagNames (final int n)

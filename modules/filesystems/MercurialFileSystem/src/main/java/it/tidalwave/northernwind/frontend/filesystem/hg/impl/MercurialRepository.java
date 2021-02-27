@@ -99,6 +99,7 @@ public class MercurialRepository extends ScmRepositorySupport
                 .waitForCompleted()
                 .filteredBy("([^ ]*) *.*$")
                 .stream()
+                .filter(s -> !s.equals("tip"))
                 .collect(collectingAndThen(toList(), l -> { reverse(l); return l; }));
       }
 

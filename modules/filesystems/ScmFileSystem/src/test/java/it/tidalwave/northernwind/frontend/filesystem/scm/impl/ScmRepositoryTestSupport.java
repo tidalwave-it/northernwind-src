@@ -145,7 +145,6 @@ public class ScmRepositoryTestSupport
         // then
         assertThat(tags, is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
         assertThat(latestTag.isPresent(), is(true));
-        assertThat(latestTag.get().getName(), is("tip"));
         assertThat(latestTagMatchingP.isPresent(), is(true));
         assertThat(latestTagMatchingP.get().getName(), is("published-0.8"));
       }
@@ -216,7 +215,6 @@ public class ScmRepositoryTestSupport
         underTest.pull();
         // then
         assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(underTest.getLatestTagMatching(".*").get().getName(), is("tip"));
         assertThat(underTest.getLatestTagMatching("p.*").get().getName(), is("published-0.8"));
         // given
         repositoryPreparer.prepare(TAG_PUBLISHED_0_9);
@@ -224,7 +222,6 @@ public class ScmRepositoryTestSupport
         underTest.pull();
         // then
         assertThat(underTest.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_9));
-        assertThat(underTest.getLatestTagMatching(".*").get().getName(), is("tip"));
         assertThat(underTest.getLatestTagMatching("p.*").get().getName(), is("published-0.9"));
       }
 
