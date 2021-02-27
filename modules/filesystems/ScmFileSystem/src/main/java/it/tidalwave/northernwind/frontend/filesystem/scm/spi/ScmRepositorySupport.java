@@ -89,9 +89,7 @@ public abstract class ScmRepositorySupport implements ScmRepository
     public List<Tag> getTags()
       throws InterruptedException, IOException
       {
-        final List<String> filteredBy = listTags();
-        Collections.reverse(filteredBy);
-        return filteredBy.stream().map(Tag::new).collect(toList());
+        return listTags().stream().map(Tag::new).collect(toList());
       }
 
     /*******************************************************************************************************************

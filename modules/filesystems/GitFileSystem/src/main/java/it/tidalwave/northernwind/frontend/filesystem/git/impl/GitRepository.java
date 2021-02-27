@@ -34,8 +34,12 @@ import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.*;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepositorySupport;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.reverse;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -93,7 +97,9 @@ public class GitRepository extends ScmRepositorySupport
                           .waitForCompletion()
                           .getStdout()
                           .waitForCompleted()
-                          .filteredBy("([^ ]*) *.*$");
+                          .filteredBy("([^ ]*) *.*$")
+                          .stream()
+                          .collect(collectingAndThen(toList(), l -> { reverse(l); return l; }));
       }
 
     /*******************************************************************************************************************
