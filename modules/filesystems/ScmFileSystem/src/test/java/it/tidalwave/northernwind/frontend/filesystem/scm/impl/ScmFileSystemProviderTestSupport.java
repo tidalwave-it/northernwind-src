@@ -145,9 +145,9 @@ public class ScmFileSystemProviderTestSupport
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        assertThat(underTest.getCurrentTag().isPresent(), is(true));
-        assertThat(underTest.getCurrentTag().get().getName(), is("published-0.9"));
-        assertThat(underTest.getSwapCounter(), is(previousSwapCounter + 1));
+        assertThat("Not present: " + underTest.getCurrentTag(), underTest.getCurrentTag().isPresent(), is(true));
+        assertThat("Wrong name", underTest.getCurrentTag().get().getName(), is("published-0.9"));
+        assertThat("Wrong swap counter", underTest.getSwapCounter(), is(previousSwapCounter + 1));
         verify(messageBus).publish(is(argThat(fileSystemChangedEvent().withResourceFileSystemProvider(underTest))));
       }
 

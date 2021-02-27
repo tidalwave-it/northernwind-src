@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutorException;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepositorySupport;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -123,7 +124,19 @@ public class MercurialRepository extends ScmRepositorySupport
     public void updateTo (final @Nonnull Tag tag)
       throws InterruptedException, IOException
       {
-        hgCommand().withArguments("update", "-C", tag.getName()).start().waitForCompletion();
+        try
+          {
+            hgCommand().withArguments("update", "-C", tag.getName()).start().waitForCompletion();
+          }
+        catch (ProcessExecutorException e)
+          {
+            if ((e.getExitCode() == 255) && (e.getStderr().stream().anyMatch(s -> s.contains("abort: unknown revision"))))
+              {
+                throw new IllegalArgumentException("Invalid tag: " + tag.getName());
+              }
+
+            throw e;
+          }
       }
 
     /*******************************************************************************************************************

@@ -44,18 +44,18 @@ public class GitPreparer extends ScmPreparer
     protected void doPrepare (final @Nonnull String tag)
       throws IOException, InterruptedException
       {
-        final Path sourceBundle = Paths.get("src/test/resources/GitFileSystemProviderTest/hg.bundle");
-        ProcessExecutor.forExecutable("hg")
+        final Path sourceBundle = Paths.get("src/test/resources/GitFileSystemProviderTest/git.bundle");
+        ProcessExecutor.forExecutable("git")
                 .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
-                .withArguments("clone", "--noupdate", sourceBundle.toFile().getCanonicalPath(), ".")
+                .withArguments("clone", sourceBundle.toFile().getCanonicalPath(), ".")
                 .start()
                 .waitForCompletion();
         switch (tag)
           {
             case "published-0.8":
-              ProcessExecutor.forExecutable("hg")
+              ProcessExecutor.forExecutable("git")
                       .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
-                      .withArguments("strip", "published-0.9")
+                      .withArguments("tag", "-d", "published-0.9")
                       .start()
                       .waitForCompletion();
               break;
@@ -66,6 +66,6 @@ public class GitPreparer extends ScmPreparer
             default:
               throw new IllegalArgumentException("Only published-0.8 or published-0.9 allowed");
           }
+
       }
   }
-

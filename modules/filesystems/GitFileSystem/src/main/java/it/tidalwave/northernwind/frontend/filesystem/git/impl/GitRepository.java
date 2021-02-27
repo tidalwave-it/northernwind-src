@@ -28,18 +28,15 @@ package it.tidalwave.northernwind.frontend.filesystem.git.impl;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutorException;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepositorySupport;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.reverse;
-import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -49,7 +46,7 @@ import static java.util.stream.Collectors.*;
 @Slf4j
 public class GitRepository extends ScmRepositorySupport
   {
-    private static final String HG = "hg";
+    private static final String GIT = "git";
 
     /*******************************************************************************************************************
      *
@@ -58,7 +55,7 @@ public class GitRepository extends ScmRepositorySupport
      ******************************************************************************************************************/
     public GitRepository (final @Nonnull Path workArea)
       {
-        super(".hg", workArea);
+        super(".git", workArea);
       }
 
     /*******************************************************************************************************************
@@ -72,14 +69,17 @@ public class GitRepository extends ScmRepositorySupport
       {
         try
           {
-            final ProcessExecutor executor = hgCommand().withArgument("id").start().waitForCompletion();
-            final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
-            scanner.next();
-            return Optional.of(new Tag(scanner.next()));
+            final ProcessExecutor executor = gitCommand().withArguments("describe", "--tags", "--candidates=0").start().waitForCompletion();
+            return executor.getStdout().waitForCompleted().getContent().stream().findFirst().map(Tag::new);
           }
-        catch (NoSuchElementException e)
+        catch (ProcessExecutorException e)
           {
-            return Optional.empty();
+            if ((e.getExitCode() == 128) && e.getStderr().stream().anyMatch(s -> s.contains("fatal: no tag exactly matches ")))
+              {
+                return Optional.empty();
+              }
+
+            throw e;
           }
       }
 
@@ -92,15 +92,12 @@ public class GitRepository extends ScmRepositorySupport
     public List<String> listTags()
       throws InterruptedException, IOException
       {
-        return hgCommand().withArgument("tags")
-                          .start()
-                          .waitForCompletion()
-                          .getStdout()
-                          .waitForCompleted()
-                          .filteredBy("([^ ]*) *.*$")
-                          .stream()
-                          .filter(s -> !s.equals("tip"))
-                          .collect(collectingAndThen(toList(), l -> { reverse(l); return l; }));
+        return gitCommand().withArguments("tag", "-l", "--sort=v:refname")
+                           .start()
+                           .waitForCompletion()
+                           .getStdout()
+                           .waitForCompleted()
+                           .filteredBy("([^ ]*) *.*$");
       }
 
     /*******************************************************************************************************************
@@ -111,9 +108,7 @@ public class GitRepository extends ScmRepositorySupport
     public void cloneRepository (final @Nonnull URI uri)
       throws InterruptedException, IOException
       {
-        hgCommand().withArguments("clone", "--noupdate", uri.toASCIIString(), ".")
-                   .start()
-                   .waitForCompletion();
+        gitCommand().withArguments("clone", "--no-checkout", uri.toASCIIString(), ".").start().waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -125,9 +120,19 @@ public class GitRepository extends ScmRepositorySupport
     public void updateTo (final @Nonnull Tag tag)
       throws InterruptedException, IOException
       {
-        hgCommand().withArguments("update", "-C", tag.getName())
-                   .start()
-                   .waitForCompletion();
+        try
+          {
+            gitCommand().withArguments("checkout", tag.getName()).start().waitForCompletion();
+          }
+        catch (ProcessExecutorException e)
+          {
+            if ((e.getExitCode() == 1) && (e.getStderr().stream().anyMatch(s -> s.contains("did not match any file(s) known to git"))))
+              {
+                throw new IllegalArgumentException("Invalid tag: " + tag.getName());
+              }
+
+            throw e;
+          }
       }
 
     /*******************************************************************************************************************
@@ -139,7 +144,7 @@ public class GitRepository extends ScmRepositorySupport
     public void pull()
       throws InterruptedException, IOException
       {
-        hgCommand().withArgument("pull").start().waitForCompletion();
+        gitCommand().withArguments("fetch", "--all").start().waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -148,8 +153,8 @@ public class GitRepository extends ScmRepositorySupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ProcessExecutor hgCommand() throws IOException
+    private ProcessExecutor gitCommand () throws IOException
       {
-        return ProcessExecutor.forExecutable(HG).withWorkingDirectory(workArea);
+        return ProcessExecutor.forExecutable(GIT).withWorkingDirectory(workArea);
       }
   }

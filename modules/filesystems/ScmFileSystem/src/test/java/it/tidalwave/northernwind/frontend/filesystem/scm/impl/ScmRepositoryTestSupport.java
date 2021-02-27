@@ -123,8 +123,9 @@ public class ScmRepositoryTestSupport
         // when
         underTest.clone(SOURCE_REPOSITORY_FOLDER.toUri());
         // then
-        assertThat(new File(workArea.toFile(), underTest.getConfigFolderName()).exists(), is(true));
-        assertThat(new File(workArea.toFile(), underTest.getConfigFolderName()).isDirectory(), is(true));
+        final File file = new File(workArea.toFile(), underTest.getConfigFolderName());
+        assertThat("Doesn't exist: " + file, file.exists(), is(true));
+        assertThat("Not a directory: " + file, file.isDirectory(), is(true));
         // TODO: assert contents in .hg
       }
 
@@ -187,8 +188,8 @@ public class ScmRepositoryTestSupport
      ******************************************************************************************************************/
     @Test(dependsOnMethods="must_properly_clone_a_repository",
           dataProvider="invalidTags",
-          expectedExceptions=IOException.class,
-          expectedExceptionsMessageRegExp="Process exited with 255")
+          expectedExceptions=IllegalArgumentException.class,
+          expectedExceptionsMessageRegExp="Invalid tag: .*")
     public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
       throws Exception
       {

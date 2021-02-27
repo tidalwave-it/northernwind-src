@@ -99,8 +99,7 @@ public class MockScmRepository extends ScmRepositorySupport
       {
         if (!getTags().contains(tag))
           {
-            // throw new IOException("Unknown tag: " + tag.getName());
-            throw new IOException("Process exited with 255"); // FIXME
+            throw new IllegalArgumentException("Invalid tag: " + tag.getName());
           }
 
         Files.writeString(configCurrentTag, tag.getName());

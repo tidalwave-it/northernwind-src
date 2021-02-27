@@ -391,7 +391,10 @@ public class ProcessExecutor
             log.error(">>>> environment:       {}", environment);
             log("STDOUT", stdout);
             log("STDERR", stderr);
-            throw new IOException(PROCESS_EXITED_WITH + process.exitValue());
+            throw new ProcessExecutorException(PROCESS_EXITED_WITH + process.exitValue(),
+                                               process.exitValue(),
+                                               stdout.getContent(),
+                                               stderr.getContent());
           }
 
         return this;
