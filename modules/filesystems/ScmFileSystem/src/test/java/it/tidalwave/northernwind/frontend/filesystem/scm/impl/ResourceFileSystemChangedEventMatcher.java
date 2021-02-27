@@ -5,7 +5,7 @@
  * NorthernWind - lightweight CMS
  * http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
  * %%
- * Copyright (C) 2011 - 2019 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2011 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  * *********************************************************************************************************************
  *
@@ -24,7 +24,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg;
+package it.tidalwave.northernwind.frontend.filesystem.scm.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,8 +75,7 @@ public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<Re
     @Override @Nonnull
     public String toString()
       {
-        final ResourceFileSystemChangedEvent event =
-                new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
+        final ResourceFileSystemChangedEvent event = new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
         return event.toString();
       }
   }
