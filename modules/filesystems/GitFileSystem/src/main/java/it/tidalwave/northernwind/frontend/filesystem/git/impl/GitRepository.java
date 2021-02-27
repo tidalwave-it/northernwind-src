@@ -24,10 +24,9 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
+package it.tidalwave.northernwind.frontend.filesystem.git.impl;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -35,58 +34,27 @@ import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.*;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
-public class DefaultMercurialRepository implements MercurialRepository
+@Slf4j
+public class GitRepository extends ScmRepositorySupport
   {
     private static final String HG = "hg";
 
-    @Getter @Nonnull
-    private final Path workArea;
-
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     *
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean isEmpty()
+    public GitRepository (final @Nonnull Path workArea)
       {
-        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void clone (final @Nonnull URI uri)
-      throws InterruptedException, IOException
-      {
-        workArea.toFile().mkdirs();
-
-        if (!workArea.toFile().exists())
-          {
-            throw new IOException("Cannot mkdirs " + workArea);
-          }
-
-        ProcessExecutor.forExecutable(HG).withArgument("clone")
-                                         .withArgument("--noupdate")
-                                         .withArgument(uri.toASCIIString())
-                                         .withArgument(".")
-                                         .withWorkingDirectory(workArea)
-                                         .start()
-                                         .waitForCompletion();
+        super(".hg", workArea);
       }
 
     /*******************************************************************************************************************
@@ -100,10 +68,7 @@ public class DefaultMercurialRepository implements MercurialRepository
       {
         try
           {
-            final ProcessExecutor executor = ProcessExecutor.forExecutable(HG).withArgument("id")
-                                                                  .withWorkingDirectory(workArea)
-                                                                  .start()
-                                                                  .waitForCompletion();
+            final ProcessExecutor executor = hgCommand().withArgument("id").start().waitForCompletion();
             final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
             scanner.next();
             return Optional.of(new Tag(scanner.next()));
@@ -119,17 +84,29 @@ public class DefaultMercurialRepository implements MercurialRepository
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull
-    public List<Tag> getTags()
+    @Nonnull
+    public List<String> listTags()
       throws InterruptedException, IOException
       {
-        final ProcessExecutor executor = ProcessExecutor.forExecutable(HG).withArgument("tags")
-                                                        .withWorkingDirectory(workArea)
-                                                        .start()
-                                                        .waitForCompletion();
-        final List<String> filteredBy = executor.getStdout().waitForCompleted().filteredBy("([^ ]*) *.*$");
-        Collections.reverse(filteredBy);
-        return toTagList(filteredBy);
+        return hgCommand().withArgument("tags")
+                          .start()
+                          .waitForCompletion()
+                          .getStdout()
+                          .waitForCompleted()
+                          .filteredBy("([^ ]*) *.*$");
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    public void cloneRepository (final @Nonnull URI uri)
+      throws InterruptedException, IOException
+      {
+        hgCommand().withArguments("clone", "--noupdate", uri.toASCIIString(), ".")
+                   .start()
+                   .waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -141,12 +118,9 @@ public class DefaultMercurialRepository implements MercurialRepository
     public void updateTo (final @Nonnull Tag tag)
       throws InterruptedException, IOException
       {
-        ProcessExecutor.forExecutable(HG).withArgument("update")
-                                         .withArgument("-C")
-                                         .withArgument(tag.getName())
-                                         .withWorkingDirectory(workArea)
-                                         .start()
-                                         .waitForCompletion();
+        hgCommand().withArguments("update", "-C", tag.getName())
+                   .start()
+                   .waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -158,24 +132,7 @@ public class DefaultMercurialRepository implements MercurialRepository
     public void pull()
       throws InterruptedException, IOException
       {
-        ProcessExecutor.forExecutable(HG).withArgument("pull")
-                                         .withWorkingDirectory(workArea)
-                                         .start()
-                                         .waitForCompletion();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Optional<Tag> getLatestTagMatching (final @Nonnull String regexp)
-      throws InterruptedException, IOException
-      {
-        final List<Tag> tags = getTags();
-        Collections.reverse(tags);
-        return tags.stream().filter(tag -> tag.getName().matches(regexp)).findFirst();
+        hgCommand().withArgument("pull").start().waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -184,8 +141,8 @@ public class DefaultMercurialRepository implements MercurialRepository
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Tag> toTagList (final @Nonnull List<String> strings)
+    private ProcessExecutor hgCommand () throws IOException
       {
-        return strings.stream().map(Tag::new).collect(toList());
+        return ProcessExecutor.forExecutable(HG).withWorkingDirectory(workArea);
       }
   }

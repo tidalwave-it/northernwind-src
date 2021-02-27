@@ -24,33 +24,30 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
-import java.beans.PropertyVetoException;
 import java.util.Optional;
 import java.time.ZonedDateTime;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.beans.PropertyVetoException;
 import org.openide.filesystems.LocalFileSystem;
+import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
-import it.tidalwave.northernwind.frontend.filesystem.hg.impl.DefaultMercurialRepository;
-import it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialRepository;
-import it.tidalwave.northernwind.frontend.filesystem.hg.impl.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanFactory;
 
 /***********************************************************************************************************************
  *
@@ -68,7 +65,7 @@ import org.springframework.beans.factory.BeanFactory;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
-public class MercurialFileSystemProvider implements ResourceFileSystemProvider
+public abstract class ScmFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter
     private String remoteRepositoryUrl;
@@ -76,7 +73,8 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
     @Getter @Setter
     private String workAreaFolder;
 
-    /* package */ final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
+    @Getter // FIXME: public for test
+    private final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
 
     @Getter
     private final ResourceFileSystem fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
@@ -89,15 +87,18 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
     private Path workArea;
 
-    private final MercurialRepository[] repositories = new MercurialRepository[2];
+    private final ScmRepository[] repositories = new ScmRepository[2];
 
-    /* package */ MercurialRepository exposedRepository;
+    @Getter // FIXME: public for test
+    private ScmRepository exposedRepository;
 
-    /* package */ MercurialRepository alternateRepository;
+    @Getter // FIXME: public for test
+    private ScmRepository alternateRepository;
 
     private int repositorySelector;
 
-    /* package */ int swapCounter;
+    @Getter
+    int swapCounter;
 
     /*******************************************************************************************************************
      *
@@ -112,11 +113,10 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
         for (int i = 0; i < 2; i++)
           {
-            repositories[i] = new DefaultMercurialRepository(workArea.resolve("" + (i + 1)));
+            repositories[i] = createRepository(workArea.resolve("" + (i + 1)));
 
             if (repositories[i].isEmpty())
               {
-                // TODO: this is inefficient, since it clones both from the remote repo
                 repositories[i].clone(new URI(remoteRepositoryUrl));
               }
           }
@@ -167,7 +167,16 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ Optional<Tag> getCurrentTag()
+    abstract public ScmRepository createRepository (@Nonnull Path path)
+      throws IOException, InterruptedException;
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Optional<Tag> getCurrentTag() // FIXME: public for test
       throws IOException, InterruptedException
       {
         return exposedRepository.getCurrentTag();
@@ -179,7 +188,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ Path getCurrentWorkArea()
+    public Path getCurrentWorkArea() // FIXME: public for test
       {
         return exposedRepository.getWorkArea();
       }
@@ -230,7 +239,7 @@ public class MercurialFileSystemProvider implements ResourceFileSystemProvider
 
         if (!currentTag.isPresent())
           {
-            log.info(">>>> repo must be initialized");
+            log.info(">>>> repo must be initialized - latest tag: {}", latestTag.map(Tag::getName).orElse("<none>"));
             return latestTag;
           }
 
