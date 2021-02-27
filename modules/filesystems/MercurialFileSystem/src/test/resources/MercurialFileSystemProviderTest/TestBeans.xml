@@ -6,7 +6,7 @@
   NorthernWind - lightweight CMS
   http://northernwind.tidalwave.it - git clone https://bitbucket.org/tidalwave/northernwind-src.git
   %%
-  Copyright (C) 2011 - 2019 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2011 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
   %%
   *********************************************************************************************************************
 
@@ -39,7 +39,7 @@
 
     <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer" />
 
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.MercurialFileSystemProvider" >
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >
         <property name="remoteRepositoryUrl" value="${test.repositoryUrl}" />
         <property name="workAreaFolder" value="${test.workAreaFolder}" />
     </bean>
