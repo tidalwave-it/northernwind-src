@@ -32,23 +32,23 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/task
-                           http://www.springframework.org/schema/task/spring-task.xsd" >
+                           http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- FIXME this hardwires the composition with the delegateZipFileSystemsDiscoverer - should be possible to configure the composition -->
 
     <!--    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >-->
-    <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >
-        <property name="remoteRepositoryUrl" value="${nw.remoteRepositoryUrl}" />
-        <property name="workAreaFolder" value="${nw.workAreaFolder}" />
+    <bean id="localFileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider">
+        <property name="remoteRepositoryUrl" value="${nw.remoteRepositoryUrl}"/>
+        <property name="folderAsString" value="${nw.workAreaFolder}"/>
     </bean>
 
     <task:scheduled-tasks scheduler="scheduler">
         <task:scheduled ref="localFileSystemProvider" method="checkForUpdates" fixed-delay="${nw.updateCheckInterval}"/>
     </task:scheduled-tasks>
 
-    <bean id="delegateZipFileSystemsDiscoverer" class="it.tidalwave.northernwind.frontend.filesystem.basic.layered.DelegateZipFileSystemsDiscoverer" >
-        <property name="localFileSystemProvider" ref="localFileSystemProvider" />
-        <property name="fileSystemsFolder" value="${nw.fileSystemsPath}" />
+    <bean id="delegateZipFileSystemsDiscoverer" class="it.tidalwave.northernwind.frontend.filesystem.basic.layered.DelegateZipFileSystemsDiscoverer">
+        <property name="localFileSystemProvider" ref="localFileSystemProvider"/>
+        <property name="fileSystemsFolder" value="${nw.fileSystemsPath}"/>
     </bean>
 
     <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.basic.layered.LayeredFileSystemProvider">

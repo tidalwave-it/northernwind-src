@@ -30,34 +30,32 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmPreparer;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A Git implementation of the {@link ScmPreparer}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public class GitPreparer extends ScmPreparer
   {
     @Override
-    protected void doPrepare (final @Nonnull String tag)
-      throws IOException, InterruptedException
+    protected void stripChangesetsAfter (final @Nonnull String tag)
+            throws IOException, InterruptedException
       {
         final Path sourceBundle = Paths.get("src/test/resources/GitFileSystemProviderTest/git.bundle");
-        ProcessExecutor.forExecutable("git")
-                .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
-                .withArguments("clone", sourceBundle.toFile().getCanonicalPath(), ".")
-                .start()
-                .waitForCompletion();
+        gitCommand().withArguments("clone", sourceBundle.toFile().getCanonicalPath(), ".")
+                    .start()
+                    .waitForCompletion();
+
         switch (tag)
           {
             case "published-0.8":
-              ProcessExecutor.forExecutable("git")
-                      .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
-                      .withArguments("tag", "-d", "published-0.9")
-                      .start()
-                      .waitForCompletion();
+              // FIXME: this doesn't actually delete changesets, but it's enough for our testing.
+              gitCommand().withArguments("tag", "-d", "published-0.9").start().waitForCompletion();
               break;
 
             case "published-0.9":
@@ -67,5 +65,12 @@ public class GitPreparer extends ScmPreparer
               throw new IllegalArgumentException("Only published-0.8 or published-0.9 allowed");
           }
 
+      }
+
+    @Nonnull
+    private static ProcessExecutor gitCommand()
+            throws IOException
+      {
+        return ProcessExecutor.forExecutable("git").withWorkingDirectory(ScmPreparer.REPOSITORY_FOLDER);
       }
   }

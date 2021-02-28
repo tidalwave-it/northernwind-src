@@ -24,23 +24,17 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
-
-import java.util.Collection;
-import it.tidalwave.northernwind.core.model.ResourceFile;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 /***********************************************************************************************************************
  *
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface FolderDelegateExclusions extends FileDelegateExclusions
+public class ScmFileSystemProviderTest extends ScmFileSystemProviderTestSupport
   {
-    public Collection<ResourceFile> getChildren();
-
-    public ResourceFile getChildByName (String relativePath);
-
-    public ResourceFile getFileObject (String name, String ext);
-
-    public ResourceFile.Finder findChildren();
+    public ScmFileSystemProviderTest()
+      {
+        super(MockScmFileSystemProvider.class, new MockScmWorkingDirectory.Preparer());
+      }
   }

@@ -50,7 +50,7 @@ import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -77,7 +77,7 @@ public class LayeredFileSystemProviderTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void createFiles()
-      throws IOException
+            throws IOException
       {
         // 2nd filesystem overrides a single file
         createFile("TC1", "fs1", "/dir1/dir2/file1.txt");
@@ -114,7 +114,7 @@ public class LayeredFileSystemProviderTest
     @Test(dataProvider = "testCases")
     public void must_navigate_through_the_whole_filesystem (final @Nonnull String testCase,
                                                             final @Nonnull String[] fileSystemNames)
-      throws IOException
+            throws IOException
       {
         // given
         final List<ResourceFileSystemProvider> fileSystemProviders = new ArrayList<>();
@@ -154,7 +154,7 @@ public class LayeredFileSystemProviderTest
      *
      ******************************************************************************************************************/
     private void dump (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull TestResource tr)
-      throws IOException
+            throws IOException
       {
         final List<String> lines = new ArrayList<>();
         dump(fileSystem.getRoot(), lines);
@@ -166,11 +166,13 @@ public class LayeredFileSystemProviderTest
      *
      ******************************************************************************************************************/
     private static void dump (final @Nonnull ResourceFile file, final @Nonnull List<String> lines)
-      throws IOException
+            throws IOException
       {
         if (file.isData())
           {
-            lines.add(String.format("path: %s; content: %s", file.getPath().asString(), file.asText("UTF-8").replace("\n", "")));
+            lines.add(String.format("path: %s; content: %s",
+                                    file.getPath().asString(),
+                                    file.asText("UTF-8").replace("\n", "")));
           }
         else
           {
@@ -187,7 +189,7 @@ public class LayeredFileSystemProviderTest
     private static void createFile (final @Nonnull String testCase,
                                     final @Nonnull String fileSystemName,
                                     final @Nonnull String path)
-      throws IOException
+            throws IOException
       {
         final Path file = Paths.get(FS_BASE, testCase + fileSystemName, path);
         Files.createDirectories(file.getParent());
