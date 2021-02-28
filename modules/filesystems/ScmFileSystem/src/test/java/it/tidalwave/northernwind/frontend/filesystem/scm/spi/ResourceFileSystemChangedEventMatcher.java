@@ -24,25 +24,59 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.impl;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.file.Path;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmFileSystemProvider;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepository;
+import javax.annotation.Nullable;
+import java.time.ZonedDateTime;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.With;
+import org.mockito.ArgumentMatcher;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public class MockScmFileSystemProvider extends ScmFileSystemProvider
+@AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor(staticName = "fileSystemChangedEvent")
+public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<ResourceFileSystemChangedEvent>
   {
-    @Override @Nonnull
-    public ScmRepository createRepository (final @Nonnull Path workArea)
-      throws IOException
+    @With
+    private ResourceFileSystemProvider resourceFileSystemProvider;
+
+    @With
+    private ZonedDateTime latestModificationTime;
+
+    @Override
+    public boolean matches (final @Nullable ResourceFileSystemChangedEvent event)
       {
-        return new MockScmRepository(workArea);
+        if (event == null)
+          {
+            return false;
+          }
+
+        if ((resourceFileSystemProvider != null) && (resourceFileSystemProvider != event.getFileSystemProvider()))
+          {
+            return false;
+          }
+
+        if ((latestModificationTime != null) && (!latestModificationTime.equals(event.getLatestModificationTime())))
+          {
+            return false;
+          }
+
+        return true;
+      }
+
+    @Override @Nonnull
+    public String toString()
+      {
+        final ResourceFileSystemChangedEvent event =
+                new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
+        return event.toString();
       }
   }

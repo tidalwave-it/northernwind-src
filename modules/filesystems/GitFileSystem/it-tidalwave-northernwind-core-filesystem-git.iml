@@ -16,8 +16,6 @@
     <orderEntry type="library" name="Maven: it.tidalwave.thesefoolishthings:it-tidalwave-messagebus:3.1-ALPHA-6" level="project" />
     <orderEntry type="library" name="Maven: it.tidalwave.thesefoolishthings:it-tidalwave-util-java8supplement:3.1-ALPHA-6" level="project" />
     <orderEntry type="library" name="Maven: it.tidalwave.thesefoolishthings:it-tidalwave-role:3.1-ALPHA-6" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aspects:5.3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.9.6" level="project" />
     <orderEntry type="module" module-name="it-tidalwave-northernwind-core-filesystem-basic" />
     <orderEntry type="library" name="Maven: org.netbeans.api:org-openide-filesystems:RELEASE80" level="project" />
     <orderEntry type="library" name="Maven: org.netbeans.api:org-openide-util:RELEASE80" level="project" />
@@ -62,5 +60,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.9.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.9.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aspects:5.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.9.6" level="project" />
   </component>
 </module>

@@ -24,41 +24,43 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
+package it.tidalwave.northernwind.frontend.filesystem.git.impl;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.io.IOException;
-import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.net.URI;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutorException;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectorySupport;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A Git implementation of {@link it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectory}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
-public abstract class ScmRepositorySupport implements ScmRepository
+@Slf4j
+public class GitWorkingDirectory extends ScmWorkingDirectorySupport
   {
-    @Getter @Nonnull
-    private final String configFolderName;
-
-    @Getter @Nonnull
-    protected final Path workArea;
+    private static final String GIT = "git";
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
+     * Creates a new instance for the given folder.
+     *
+     * @param folder the folder
      *
      ******************************************************************************************************************/
-    @Override
-    public boolean isEmpty()
+    public GitWorkingDirectory (final @Nonnull Path folder)
       {
-        return !workArea.toFile().exists() || (workArea.toFile().list().length == 0);
+        super(".git", folder);
       }
 
     /*******************************************************************************************************************
@@ -66,71 +68,56 @@ public abstract class ScmRepositorySupport implements ScmRepository
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public void clone (final @Nonnull URI uri)
-      throws InterruptedException, IOException
+    @Override @Nonnull
+    public Optional<Tag> getCurrentTag()
+            throws InterruptedException, IOException
       {
-        workArea.toFile().mkdirs();
-
-        if (!workArea.toFile().exists())
+        try
           {
-            throw new IOException("Cannot mkdirs " + workArea);
+            final ProcessExecutor executor =
+                    gitCommand().withArguments("describe", "--tags", "--candidates=0").start().waitForCompletion();
+            return executor.getStdout().waitForCompleted().getContent().stream().findFirst().map(Tag::new);
           }
+        catch (ProcessExecutorException e)
+          {
+            if ((e.getExitCode() == 128) &&
+                e.getStderr().stream().anyMatch(s -> s.contains("fatal: no tag exactly matches ")))
+              {
+                return Optional.empty();
+              }
 
-        cloneRepository(uri);
+            throw e;
+          }
       }
 
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public List<Tag> getTags()
-      throws InterruptedException, IOException
-      {
-        return listTags().stream().map(Tag::new).collect(toList());
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override @Nonnull
-    public Optional<Tag> getLatestTagMatching (final @Nonnull String regexp)
-      throws InterruptedException, IOException
-      {
-        final List<Tag> tags = getTags();
-        Collections.reverse(tags);
-        return tags.stream().filter(tag -> tag.getName().matches(regexp)).findFirst();
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
      *
      ******************************************************************************************************************/
     @Nonnull
-    public abstract List<String> listTags()
-      throws InterruptedException, IOException;
+    public List<String> listTags()
+            throws InterruptedException, IOException
+      {
+        return gitCommand().withArguments("tag", "-l", "--sort=v:refname")
+                           .start()
+                           .waitForCompletion()
+                           .getStdout()
+                           .waitForCompleted()
+                           .filteredBy("([^ ]*) *.*$");
+      }
 
     /*******************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
-    public abstract void cloneRepository (@Nonnull URI uri)
-      throws InterruptedException, IOException;
-
-    /*******************************************************************************************************************
-     *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override
-    public abstract void updateTo (@Nonnull Tag tag)
-      throws InterruptedException, IOException;
+    public void cloneFrom (final @Nonnull URI uri)
+            throws InterruptedException, IOException
+      {
+        Files.createDirectories(folder);
+        gitCommand().withArguments("clone", "--no-checkout", uri.toASCIIString(), ".").start().waitForCompletion();
+      }
 
     /*******************************************************************************************************************
      *
@@ -138,6 +125,49 @@ public abstract class ScmRepositorySupport implements ScmRepository
      *
      ******************************************************************************************************************/
     @Override
-    public abstract void pull()
-      throws InterruptedException, IOException;
+    public void checkOut (final @Nonnull Tag tag)
+            throws InterruptedException, IOException
+      {
+        try
+          {
+            gitCommand().withArguments("checkout", tag.getName()).start().waitForCompletion();
+          }
+        catch (ProcessExecutorException e)
+          {
+            if ((e.getExitCode() == 1) &&
+                (e.getStderr().stream().anyMatch(s -> s.contains("did not match any file(s) known to git"))))
+              {
+                throw new IllegalArgumentException("Invalid tag: " + tag.getName());
+              }
+
+            throw e;
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void fetchChangesets()
+            throws InterruptedException, IOException
+      {
+        gitCommand().withArguments("fetch", "--all").start().waitForCompletion();
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates an executor for git.
+     *
+     * @return the executor
+     * @throws IOException in case of error
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private ProcessExecutor gitCommand()
+            throws IOException
+      {
+        return ProcessExecutor.forExecutable(GIT).withWorkingDirectory(folder);
+      }
   }

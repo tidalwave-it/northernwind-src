@@ -24,21 +24,17 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.impl;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.time.ZonedDateTime;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmFileSystemProvider;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepository;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
@@ -48,26 +44,26 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
-import static it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmPreparer.*;
-import static it.tidalwave.northernwind.frontend.filesystem.scm.impl.ResourceFileSystemChangedEventMatcher.*;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer.*;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ResourceFileSystemChangedEventMatcher.*;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A support class for writing tests of implementations of {@link ScmFileSystemProvider}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
 public class ScmFileSystemProviderTestSupport
   {
     @Nonnull
-    private final Class<? extends ScmFileSystemProvider> underTestClass;
+    private final Class<? extends ScmFileSystemProvider> classUnderTest;
 
     @Nonnull
-    private final ScmPreparer repositoryPreparer;
+    private final ScmPreparer scmPreparer;
 
     private final SpringTestHelper springHelper = new SpringTestHelper(this);
-
-    private ApplicationContext context;
 
     private ScmFileSystemProvider underTest;
 
@@ -78,15 +74,15 @@ public class ScmFileSystemProviderTestSupport
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
+            throws Exception
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
-        repositoryPreparer.prepare(TAG_PUBLISHED_0_8);
+        scmPreparer.prepareAtTag(TAG_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
-        properties.put("test.repositoryUrl", SOURCE_REPOSITORY_FOLDER.toUri().toASCIIString());
-        properties.put("test.workAreaFolder", Files.createTempDirectory("workarea").toFile().getAbsolutePath());
-        context = springHelper.createSpringContext(properties);
-        underTest = context.getBean(underTestClass);
+        properties.put("test.repositoryUrl", REPOSITORY_FOLDER.toUri().toString());
+        properties.put("test.workAreaFolder", Files.createTempDirectory("working-dir").toFile().getAbsolutePath());
+        final ApplicationContext context = springHelper.createSpringContext(properties);
+        underTest = context.getBean(classUnderTest);
         messageBus = context.getBean(MessageBus.class);
       }
 
@@ -95,69 +91,71 @@ public class ScmFileSystemProviderTestSupport
      ******************************************************************************************************************/
     @Test
     public void must_properly_initialize()
-      throws Exception
+            throws Exception
       {
         // given the initialization
         // then
         assertInvariantPostConditions();
-        assertThat(underTest.getExposedRepository().getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThat(underTest.getAlternateRepository().getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
-        assertThatHasNoCurrentTag(underTest.getExposedRepository());
-        assertThatHasNoCurrentTag(underTest.getAlternateRepository());
-        assertThat(underTest.getSwapCounter(), is(0));
+        assertThat(underTest.exposedWorkingDirectory.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThat(underTest.alternateWorkingDirectory.getTags(), is(ALL_TAGS_UP_TO_PUBLISHED_0_8));
+        assertThatHasNoCurrentTag(underTest.exposedWorkingDirectory);
+        assertThatHasNoCurrentTag(underTest.alternateWorkingDirectory);
+        assertThat(underTest.swapCounter, is(0));
         verifyZeroInteractions(messageBus);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dependsOnMethods="must_properly_initialize")
+    @Test(dependsOnMethods = "must_properly_initialize")
     public void checkForUpdates_must_do_nothing_when_there_are_no_updates()
-      throws Exception
+            throws Exception
       {
         // given
-        updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
-        final int previousSwapCounter = underTest.getSwapCounter();
+        populateWorkingDirectory(underTest.exposedWorkingDirectory.getFolder(), new Tag("published-0.8"));
+        final int previousSwapCounter = underTest.swapCounter;
         // when
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        assertThat(underTest.getCurrentTag().isPresent(), is(true));
-        assertThat(underTest.getCurrentTag().get().getName(), is("published-0.8"));
-        assertThat(underTest.getSwapCounter(), is(previousSwapCounter));
+        final Optional<Tag> currentTag = underTest.exposedWorkingDirectory.getCurrentTag();
+        assertThat("Tag not present", currentTag.isPresent(), is(true));
+        assertThat("Wrong tag: ", currentTag.get().getName(), is("published-0.8"));
+        assertThat("Wrong swap counter", underTest.swapCounter, is(previousSwapCounter));
         verifyZeroInteractions(messageBus);
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    @Test(dependsOnMethods="must_properly_initialize")
+    @Test(dependsOnMethods = "must_properly_initialize")
     public void checkForUpdates_must_update_and_fire_event_when_there_are_updates()
-      throws Exception
+            throws Exception
       {
         // given
-        updateWorkAreaTo(underTest.getCurrentWorkArea(), new Tag("published-0.8"));
-        final int previousSwapCounter = underTest.getSwapCounter();
-        repositoryPreparer.prepare(TAG_PUBLISHED_0_9);
-        final ZonedDateTime now = ZonedDateTime.now();
-//        DateTimeUtils.setCurrentMillisFixed(now.getMillis());
+        populateWorkingDirectory(underTest.exposedWorkingDirectory.getFolder(), new Tag("published-0.8"));
+        final int previousSwapCounter = underTest.swapCounter;
+        scmPreparer.prepareAtTag(TAG_PUBLISHED_0_9);
+        //final ZonedDateTime now = ZonedDateTime.now();
+        //DateTimeUtils.setCurrentMillisFixed(now.getMillis());
         // when
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        assertThat("Not present: " + underTest.getCurrentTag(), underTest.getCurrentTag().isPresent(), is(true));
-        assertThat("Wrong name", underTest.getCurrentTag().get().getName(), is("published-0.9"));
-        assertThat("Wrong swap counter", underTest.getSwapCounter(), is(previousSwapCounter + 1));
+        final Optional<Tag> currentTag = underTest.exposedWorkingDirectory.getCurrentTag();
+        assertThat("Tag not present", currentTag.isPresent(), is(true));
+        assertThat("Wrong tag: ", currentTag.get().getName(), is("published-0.9"));
+        assertThat("Wrong swap counter", underTest.swapCounter, is(previousSwapCounter + 1));
         verify(messageBus).publish(is(argThat(fileSystemChangedEvent().withResourceFileSystemProvider(underTest))));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    protected void updateWorkAreaTo (final @Nonnull Path workArea, final @Nonnull Tag tag)
-      throws Exception
+    protected void populateWorkingDirectory (final @Nonnull Path folder, final @Nonnull Tag tag)
+            throws Exception
       {
-        underTestClass.newInstance().createRepository(workArea).updateTo(tag);
+        classUnderTest.getConstructor().newInstance().createWorkingDirectory(folder).checkOut(tag);
       }
 
     /*******************************************************************************************************************
@@ -165,17 +163,19 @@ public class ScmFileSystemProviderTestSupport
      ******************************************************************************************************************/
     private void assertInvariantPostConditions()
       {
-        assertThat(underTest.getExposedRepository().getWorkArea(), is(not(underTest.getAlternateRepository().getWorkArea())));
-        assertThat(underTest.getFileSystemDelegate().getRootDirectory().toPath(), is(underTest.getExposedRepository().getWorkArea()));
+        assertThat(underTest.exposedWorkingDirectory.getFolder(),
+                   is(not(underTest.alternateWorkingDirectory.getFolder())));
+        assertThat(underTest.fileSystemDelegate.getRootDirectory().toPath(),
+                   is(underTest.exposedWorkingDirectory.getFolder()));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertThatHasNoCurrentTag (final @Nonnull ScmRepository repository)
-      throws Exception
+    private void assertThatHasNoCurrentTag (final @Nonnull ScmWorkingDirectory workingDirectory)
+            throws Exception
       {
-        final Optional<Tag> tag = repository.getCurrentTag();
+        final Optional<Tag> tag = workingDirectory.getCurrentTag();
         assertThat("Repository should have not current tag, it has " + tag, tag.isPresent(), is(false));
       }
   }

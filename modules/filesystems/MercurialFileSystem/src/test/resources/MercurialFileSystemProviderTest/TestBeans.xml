@@ -32,16 +32,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context.xsd" >
+                           http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Turns on @Autowired, @PostConstruct, etc. -->
-    <context:annotation-config />
+    <context:annotation-config/>
 
-    <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer" />
+    <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer"/>
 
-    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider" >
-        <property name="remoteRepositoryUrl" value="${test.repositoryUrl}" />
-        <property name="workAreaFolder" value="${test.workAreaFolder}" />
+    <bean id="fileSystemProvider" class="it.tidalwave.northernwind.frontend.filesystem.hg.impl.MercurialFileSystemProvider">
+        <property name="remoteRepositoryUrl" value="${test.repositoryUrl}"/>
+        <property name="folderAsString" value="${test.workAreaFolder}"/>
     </bean>
 
     <bean id="applicationMessageBus" class="org.mockito.Mockito" factory-method="mock">
@@ -49,9 +49,9 @@
     </bean>
 
     <bean id="contextManager"
-          class="it.tidalwave.role.spi.DefaultContextManager" />
+          class="it.tidalwave.role.spi.DefaultContextManager"/>
 
     <bean id="contextManagerProvider"
-          class="it.tidalwave.role.spring.spi.SpringContextManagerProvider" />
+          class="it.tidalwave.role.spring.spi.SpringContextManagerProvider"/>
 
 </beans>

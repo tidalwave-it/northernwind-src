@@ -26,11 +26,11 @@
  */
 package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
-import it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmFileSystemProviderTestSupport;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmFileSystemProviderTestSupport;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public class MercurialFileSystemProviderTest extends ScmFileSystemProviderTestSupport
