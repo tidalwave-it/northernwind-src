@@ -58,10 +58,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Slf4j @ToString(of="delegate")
+@Configurable @Slf4j @ToString(of = "delegate")
 public class ResourceFileNetBeansPlatform implements ResourceFile
   {
     interface Exclusions
@@ -119,7 +119,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
 
     @Override @Nonnull
     public ResourceFile createFolder (@Nonnull String name)
-      throws IOException
+            throws IOException
       {
         return fileSystem.createResourceFile(delegate.createFolder(name));
       }
@@ -127,36 +127,31 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return ResourceFileFinderSupport.withComputeResults(getClass().getSimpleName(),
-                new Function<Finder, List<ResourceFile>>()
+        return ResourceFileFinderSupport.withComputeResults(getClass().getSimpleName(), f ->
           {
-            @Override
-            public List<ResourceFile> apply (final @Nonnull Finder f)
+            final String name = f.getName();
+            final boolean recursive = f.isRecursive();
+
+            final List<ResourceFile> result = new ArrayList<>();
+
+            if (name != null)
               {
-                final String name = f.getName();
-                final boolean recursive = f.isRecursive();
+                final FileObject child = delegate.getFileObject(name);
 
-                final List<ResourceFile> result = new ArrayList<>();
-
-                if (name != null)
+                if (child != null)
                   {
-                    final FileObject child = delegate.getFileObject(name);
-
-                    if (child != null)
-                      {
-                        result.add(fileSystem.createResourceFile(child));
-                      }
+                    result.add(fileSystem.createResourceFile(child));
                   }
-                else
-                  {
-                    for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
-                      {
-                        result.add(fileSystem.createResourceFile(child));
-                      }
-                  }
-
-                return result;
               }
+            else
+              {
+                for (final FileObject child : Collections.list(delegate.getChildren(recursive)))
+                  {
+                    result.add(fileSystem.createResourceFile(child));
+                  }
+              }
+
+            return result;
           });
       }
 
@@ -184,7 +179,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
 
     @Override
     public void copyTo (final @Nonnull ResourceFile targetFolder)
-      throws IOException
+            throws IOException
       {
         FileUtil.copyFile(delegate, ((ResourceFileNetBeansPlatform)targetFolder).delegate, delegate.getName());
       }

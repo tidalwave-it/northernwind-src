@@ -29,20 +29,20 @@ package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmFileSystemProvider;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepository;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectory;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A Mercurial implementation of {@link ScmFileSystemProvider}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
 public class MercurialFileSystemProvider extends ScmFileSystemProvider
   {
     @Override @Nonnull
-    public ScmRepository createRepository (final @Nonnull Path path)
+    public ScmWorkingDirectory createWorkingDirectory (final @Nonnull Path path)
       {
-        return new MercurialRepository(path);
+        return new MercurialWorkingDirectory(path);
       }
   }

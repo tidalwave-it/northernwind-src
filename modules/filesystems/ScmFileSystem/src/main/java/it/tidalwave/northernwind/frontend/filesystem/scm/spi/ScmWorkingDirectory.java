@@ -35,100 +35,114 @@ import java.net.URI;
 
 /***********************************************************************************************************************
  *
- * A repository based on Git.
+ * This interface defines the operations required for accessing a working directory of a repository.
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface ScmRepository
+public interface ScmWorkingDirectory
   {
-    public boolean isEmpty();
-
-    @Nonnull
-    public String getConfigFolderName();
-
     /*******************************************************************************************************************
      *
-     * Clones the repo given the source URL.
+     * Clones the contents from a given repository.
      *
-     * @param       url                     the URL of the source repo
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * @param  url                     the URL of the source repo
+     * @throws InterruptedException    if the operation has been interrupted
+     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
-    public void clone (@Nonnull URI url)
-      throws InterruptedException, IOException;
+    public void cloneFrom (@Nonnull URI url)
+            throws InterruptedException, IOException;
 
     /*******************************************************************************************************************
      *
-     * Pulls changes from the remote repository into the working area.
+     * Fetches changesets from the remote repository.
      *
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * @throws InterruptedException    if the operation has been interrupted
+     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
-    public void pull()
-      throws InterruptedException, IOException;
+    public void fetchChangesets()
+            throws InterruptedException, IOException;
 
     /*******************************************************************************************************************
      *
-     * Returns the current tag of the working area, if present.
+     * Returns the current tag of this repository, if present.
      *
-     * @return                              the current tag
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * @return the current tag
+     * @throws InterruptedException    if the operation has been interrupted
+     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
     public Optional<Tag> getCurrentTag()
-      throws InterruptedException, IOException;
+            throws InterruptedException, IOException;
 
     /*******************************************************************************************************************
      *
-     * Returns all the tags of the working area.
+     * Checks out the given tag.
      *
-     * @return                              the tags
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * @param  tag                     the tag
+     * @throws InterruptedException    if the operation has been interrupted
+     * @throws IOException             if something fails
+     *
+     ******************************************************************************************************************/
+    public void checkOut (@Nonnull Tag tag)
+            throws InterruptedException, IOException;
+
+    /*******************************************************************************************************************
+     *
+     * Returns all the tags in this repository.
+     *
+     * @return the tags
+     * @throws InterruptedException    if the operation has been interrupted
+     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
     public List<Tag> getTags()
-      throws InterruptedException, IOException;
+            throws InterruptedException, IOException;
 
     /*******************************************************************************************************************
      *
-     * Returns the latest tag of the working area matching the given regular expression, if present.
+     * Returns the latest tag in this repository matching the given regular expression, if present.
      *
-     * @param   regexp                      the regular expression
-     * @return                              the tag
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
+     * @param  regexp                  the regular expression
+     * @return the tag
+     * @throws InterruptedException    if the operation has been interrupted
+     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
     public Optional<Tag> getLatestTagMatching (@Nonnull String regexp)
-      throws InterruptedException, IOException;
-
-    /*******************************************************************************************************************
-     *
-     * Updates the working area to the given tag.
-     *
-     * @param       tag                     the tag
-     * @throws      InterruptedException    if the operation has been interrupted
-     * @throws      IOException             if something fails
-     *
-     ******************************************************************************************************************/
-    public void updateTo (@Nonnull Tag tag)
-      throws InterruptedException, IOException;
+            throws InterruptedException, IOException;
 
     /*******************************************************************************************************************
      *
      * Returns the path of the working area.
      *
-     * @return                              the path to the working area.
+     * @return the path to the working area
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Path getWorkArea();
+    public Path getFolder();
+
+    /*******************************************************************************************************************
+     *
+     * Returns whether the repository is empty.
+     *
+     * @return whether the repository is empty
+     *
+     ******************************************************************************************************************/
+    public boolean isEmpty();
+
+    /*******************************************************************************************************************
+     *
+     * Returns the name of the configuration folder (e.g. {@code .git} or {@code .hg}.
+     *
+     * @return the name of the configuration folder
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public String getConfigFolderName();
   }
