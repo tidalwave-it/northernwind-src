@@ -24,20 +24,19 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.impl;
+package it.tidalwave.northernwind.frontend.filesystem.git.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectoryTestSupport;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
-public class ScmRepositoryTest extends ScmRepositoryTestSupport
+public class GitWorkingDirectoryTest extends ScmWorkingDirectoryTestSupport
   {
-    public ScmRepositoryTest()
+    public GitWorkingDirectoryTest()
       {
-        super(MockScmRepository.class, new MockScmRepository.Preparer());
+        super(GitWorkingDirectory.class, new GitPreparer());
       }
   }

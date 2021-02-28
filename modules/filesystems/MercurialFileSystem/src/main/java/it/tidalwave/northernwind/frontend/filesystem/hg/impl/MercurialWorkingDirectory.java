@@ -24,38 +24,46 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.git.impl;
+package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Scanner;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.net.URI;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutorException;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepositorySupport;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectorySupport;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.Tag;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A Mercurial implementation of {@link it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectory}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @Slf4j
-public class GitRepository extends ScmRepositorySupport
+public class MercurialWorkingDirectory extends ScmWorkingDirectorySupport
   {
-    private static final String GIT = "git";
+    private static final String HG = "hg";
 
     /*******************************************************************************************************************
      *
+     * Creates a new instance for the given folder.
      *
+     * @param folder the folder
      *
      ******************************************************************************************************************/
-    public GitRepository (final @Nonnull Path workArea)
+    public MercurialWorkingDirectory (final @Nonnull Path folder)
       {
-        super(".git", workArea);
+        super(".hg", folder);
       }
 
     /*******************************************************************************************************************
@@ -65,21 +73,18 @@ public class GitRepository extends ScmRepositorySupport
      ******************************************************************************************************************/
     @Override @Nonnull
     public Optional<Tag> getCurrentTag()
-      throws InterruptedException, IOException
+            throws InterruptedException, IOException
       {
         try
           {
-            final ProcessExecutor executor = gitCommand().withArguments("describe", "--tags", "--candidates=0").start().waitForCompletion();
-            return executor.getStdout().waitForCompleted().getContent().stream().findFirst().map(Tag::new);
+            final ProcessExecutor executor = hgCommand().withArgument("id").start().waitForCompletion();
+            final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
+            scanner.next();
+            return Optional.of(new Tag(scanner.next()));
           }
-        catch (ProcessExecutorException e)
+        catch (NoSuchElementException e)
           {
-            if ((e.getExitCode() == 128) && e.getStderr().stream().anyMatch(s -> s.contains("fatal: no tag exactly matches ")))
-              {
-                return Optional.empty();
-              }
-
-            throw e;
+            return Optional.empty();
           }
       }
 
@@ -90,14 +95,17 @@ public class GitRepository extends ScmRepositorySupport
      ******************************************************************************************************************/
     @Nonnull
     public List<String> listTags()
-      throws InterruptedException, IOException
+            throws InterruptedException, IOException
       {
-        return gitCommand().withArguments("tag", "-l", "--sort=v:refname")
-                           .start()
-                           .waitForCompletion()
-                           .getStdout()
-                           .waitForCompleted()
-                           .filteredBy("([^ ]*) *.*$");
+        return hgCommand().withArgument("tags")
+                          .start()
+                          .waitForCompletion()
+                          .getStdout()
+                          .waitForCompleted()
+                          .filteredBy("([^ ]*) *.*$")
+                          .stream()
+                          .filter(s -> !s.equals("tip"))
+                          .collect(collectingAndThen(toList(), ScmWorkingDirectorySupport::reversed));
       }
 
     /*******************************************************************************************************************
@@ -105,10 +113,11 @@ public class GitRepository extends ScmRepositorySupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void cloneRepository (final @Nonnull URI uri)
-      throws InterruptedException, IOException
+    public void cloneFrom (final @Nonnull URI uri)
+            throws InterruptedException, IOException
       {
-        gitCommand().withArguments("clone", "--no-checkout", uri.toASCIIString(), ".").start().waitForCompletion();
+        Files.createDirectories(folder);
+        hgCommand().withArguments("clone", "--noupdate", uri.toASCIIString(), ".").start().waitForCompletion();
       }
 
     /*******************************************************************************************************************
@@ -117,16 +126,17 @@ public class GitRepository extends ScmRepositorySupport
      *
      ******************************************************************************************************************/
     @Override
-    public void updateTo (final @Nonnull Tag tag)
-      throws InterruptedException, IOException
+    public void checkOut (final @Nonnull Tag tag)
+            throws InterruptedException, IOException
       {
         try
           {
-            gitCommand().withArguments("checkout", tag.getName()).start().waitForCompletion();
+            hgCommand().withArguments("update", "-C", tag.getName()).start().waitForCompletion();
           }
         catch (ProcessExecutorException e)
           {
-            if ((e.getExitCode() == 1) && (e.getStderr().stream().anyMatch(s -> s.contains("did not match any file(s) known to git"))))
+            if ((e.getExitCode() == 255) &&
+                (e.getStderr().stream().anyMatch(s -> s.contains("abort: unknown revision"))))
               {
                 throw new IllegalArgumentException("Invalid tag: " + tag.getName());
               }
@@ -141,20 +151,24 @@ public class GitRepository extends ScmRepositorySupport
      *
      ******************************************************************************************************************/
     @Override
-    public void pull()
-      throws InterruptedException, IOException
+    public void fetchChangesets()
+            throws InterruptedException, IOException
       {
-        gitCommand().withArguments("fetch", "--all").start().waitForCompletion();
+        hgCommand().withArgument("pull").start().waitForCompletion();
       }
 
     /*******************************************************************************************************************
      *
+     * Creates an executor for Mercurial.
      *
+     * @return the executor
+     * @throws IOException in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ProcessExecutor gitCommand () throws IOException
+    private ProcessExecutor hgCommand()
+            throws IOException
       {
-        return ProcessExecutor.forExecutable(GIT).withWorkingDirectory(workArea);
+        return ProcessExecutor.forExecutable(HG).withWorkingDirectory(folder);
       }
   }

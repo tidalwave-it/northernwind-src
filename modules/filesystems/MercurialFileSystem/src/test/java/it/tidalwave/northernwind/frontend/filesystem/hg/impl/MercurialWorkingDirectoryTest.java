@@ -24,17 +24,19 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.impl;
+package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
+
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectoryTestSupport;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public class ScmFileSystemProviderTest extends ScmFileSystemProviderTestSupport
+public class MercurialWorkingDirectoryTest extends ScmWorkingDirectoryTestSupport
   {
-    public ScmFileSystemProviderTest()
+    public MercurialWorkingDirectoryTest()
       {
-        super(MockScmFileSystemProvider.class, new MockScmRepository.Preparer());
+        super(MercurialWorkingDirectory.class, new MercurialPreparer());
       }
   }

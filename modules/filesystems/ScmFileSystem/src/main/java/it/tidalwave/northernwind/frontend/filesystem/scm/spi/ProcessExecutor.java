@@ -53,21 +53,27 @@ import static java.util.stream.Collectors.joining;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A helper class for launching an external process and handling its output.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NotThreadSafe @NoArgsConstructor(access=AccessLevel.PRIVATE) @Slf4j
+@NotThreadSafe @NoArgsConstructor(access = AccessLevel.PRIVATE) @Slf4j
 public class ProcessExecutor
   {
     private static final String PROCESS_EXITED_WITH = "Process exited with ";
 
     /*******************************************************************************************************************
      *
+     * A container of the console output of the process.
      *
      ******************************************************************************************************************/
-    @RequiredArgsConstructor(access=AccessLevel.PACKAGE)
+    @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
     public class ConsoleOutput
       {
+        @Nonnull
+        private final String name;
+
         @Nonnull
         private final InputStream input;
 
@@ -76,11 +82,8 @@ public class ProcessExecutor
 
         private volatile boolean completed;
 
-        /***************************************************************************************************************
-         *
-         *
-         ***************************************************************************************************************/
-        private final Runnable consoleConsumer = () ->
+        /** The consumer for output. */
+        private final Runnable consoleConsumer =() ->
           {
             try
               {
@@ -102,7 +105,7 @@ public class ProcessExecutor
          *
          * Starts collection output from the external process.
          *
-         * @return                              itself
+         * @return itself
          *
          ***************************************************************************************************************/
         @Nonnull
@@ -116,13 +119,13 @@ public class ProcessExecutor
          *
          * Waits for the completion of the launched process.
          *
-         * @return                              itself
-         * @throws      InterruptedException    if the process was interrupted
+         * @return itself
+         * @throws InterruptedException    if the process was interrupted
          *
          ***************************************************************************************************************/
         @Nonnull
         public synchronized ConsoleOutput waitForCompleted()
-          throws InterruptedException
+                throws InterruptedException
           {
             while (!completed)
               {
@@ -139,7 +142,7 @@ public class ProcessExecutor
          *
          * @param       filterRegexp            the regular expression to filter output
          * @param       delimiterRegexp         the regular expression to split the line
-         * @return                              the {@code Scanner} to parse results
+         * @return the {@code Scanner} to parse results
          *
          ***************************************************************************************************************/
         @Nonnull @SuppressWarnings("squid:S2095")
@@ -153,7 +156,7 @@ public class ProcessExecutor
          * Returns the output produced by the launched process, filtered by the given regular expression.
          *
          * @param       filterRegexp            the regular expression to filter output
-         * @return                              the output lines
+         * @return the output lines
          *
          ***************************************************************************************************************/
         @Nonnull
@@ -179,15 +182,15 @@ public class ProcessExecutor
          *
          * Waits for an output line matching the given regular expression to appear.
          *
-         * @param       regexp                  the regular expression
-         * @return                              itself
-         * @throws      IOException             if something goes wrong
-         * @throws      InterruptedException    if the process has been interrupted
+         * @param  regexp                  the regular expression
+         * @return itself
+         * @throws IOException             if something goes wrong
+         * @throws InterruptedException    if the process has been interrupted
          *
          ***************************************************************************************************************/
         @Nonnull
         public ConsoleOutput waitFor (final @Nonnull String regexp)
-          throws InterruptedException, IOException
+                throws InterruptedException, IOException
           {
             log.debug("waitFor({})", regexp);
 
@@ -222,14 +225,15 @@ public class ProcessExecutor
 
         /***************************************************************************************************************
          *
+         * Reads the output until it's completed.
          *
          ***************************************************************************************************************/
         private void read()
-          throws IOException
+                throws IOException
           {
             try (final BufferedReader br = new BufferedReader(new InputStreamReader(input)))
               {
-                for (;;)
+                for (; ; )
                   {
                     final String s = br.readLine();
 
@@ -238,7 +242,7 @@ public class ProcessExecutor
                         break;
                       }
 
-                    log.trace(">>>>>>>> {}", s);
+                    log.trace(">>>>>>>> {}: {}", name, s);
                     content.add(s);
 
                     synchronized (this)
@@ -250,32 +254,38 @@ public class ProcessExecutor
           }
       }
 
+    /** The arguments to pass to the external process. */
     private final List<String> arguments = new ArrayList<>();
 
+    /** The working directory for the external process. */
     private Path workingDirectory = new File(".").toPath();
 
+    /** The external process. */
     private Process process;
 
+    /** The processor of stdout. */
     @Getter
     private ConsoleOutput stdout;
 
+    /** The processor of stderr. */
     @Getter
     private ConsoleOutput stderr;
 
+    /** The writer to feed the process' stdin. */
     private PrintWriter stdin;
 
     /*******************************************************************************************************************
      *
      * Specifies the executable to run. It is searched in the path.
      *
-     * @param       executable          the executable
-     * @return                          itself
-     * @throws      IOException         if something goes wrong
+     * @param  executable          the executable
+     * @return itself
+     * @throws IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
     public static ProcessExecutor forExecutable (final @Nonnull String executable)
-      throws IOException
+            throws IOException
       {
         final ProcessExecutor executor = new ProcessExecutor();
         executor.arguments.add(findPathFor(executable));
@@ -284,10 +294,10 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Specifies an argument to the executable. This method can be called multiple times.
+     * Specifies a single argument for the executable. This method can be called multiple times.
      *
-     * @param       argument            the argument
-     * @return                          itself
+     * @param  argument            the argument
+     * @return itself
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -299,14 +309,14 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Specifies some arguments to the executable. This method can be called multiple times.
+     * Specifies some arguments for the executable. This method can be called multiple times.
      *
-     * @param       arguments           the argument
-     * @return                          itself
+     * @param  arguments           the argument
+     * @return itself
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ProcessExecutor withArguments (final @Nonnull String ... arguments)
+    public ProcessExecutor withArguments (final @Nonnull String... arguments)
       {
         this.arguments.addAll(Arrays.asList(arguments));
         return this;
@@ -316,8 +326,8 @@ public class ProcessExecutor
      *
      * Specifies the working directory for the executable.
      *
-     * @param       workingDirectory    the working directory
-     * @return                          itself
+     * @param  workingDirectory    the working directory
+     * @return itself
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -330,17 +340,17 @@ public class ProcessExecutor
     /*******************************************************************************************************************
      *
      * Launches the external process and starts collecting its output (which can be analyzed by calling
-     * {@link #getStdout()} and {@link #getStderr()}.
+     * {@code getStdout()} and {@code getStderr()}.
      *
-     * @return                          itself
-     * @throws      IOException         if something goes wrong
+     * @return itself
+     * @throws IOException         if something goes wrong
      *
      ******************************************************************************************************************/
     @Nonnull
     public ProcessExecutor start()
-      throws IOException
+            throws IOException
       {
-        log.debug(">>>> executing: {}", arguments.stream().collect(joining(" ")));
+        log.debug(">>>> executing: {}", String.join(" ", arguments));
 
         final List<String> environment = new ArrayList<>();
 
@@ -355,9 +365,9 @@ public class ProcessExecutor
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
 
-        stdout = new ConsoleOutput(process.getInputStream()).start();
-        stderr = new ConsoleOutput(process.getErrorStream()).start();
-        stdin  = new PrintWriter(process.getOutputStream(), true);
+        stdout = new ConsoleOutput("STDOUT", process.getInputStream()).start();
+        stderr = new ConsoleOutput("STDERR", process.getErrorStream()).start();
+        stdin = new PrintWriter(process.getOutputStream(), true);
 
         return this;
       }
@@ -367,14 +377,15 @@ public class ProcessExecutor
      * Waits for the completion of the external process. If the process terminates with a non-zero status code, an
      * {@link IOException} is thrown.
      *
-     * @return                              itself
-     * @throws      IOException             if something goes wrong
-     * @throws      InterruptedException    if the process has been interrupted
+     * @return itself
+     * @throws ProcessExecutorException if the process terminates with a non zero exit code
+     * @throws IOException             if something went wrong
+     * @throws InterruptedException    if the process has been interrupted
      *
      ******************************************************************************************************************/
     @Nonnull
     public ProcessExecutor waitForCompletion()
-      throws IOException, InterruptedException
+            throws IOException, InterruptedException
       {
         if (process.waitFor() != 0)
           {
@@ -385,16 +396,16 @@ public class ProcessExecutor
                 environment.add(String.format("%s=%s, ", e.getKey(), e.getValue()));
               }
 
-            log.error(PROCESS_EXITED_WITH + process.exitValue());
-            log.error(">>>> executed:          {}", arguments);
-            log.error(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
-            log.error(">>>> environment:       {}", environment);
-            log("STDOUT", stdout);
-            log("STDERR", stderr);
+            log.warn(PROCESS_EXITED_WITH + process.exitValue());
+            log.debug(">>>> executed:          {}", arguments);
+            log.debug(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
+            log.debug(">>>> environment:       {}", environment);
+            // log("STDOUT", stdout);
+            // log("STDERR", stderr);
             throw new ProcessExecutorException(PROCESS_EXITED_WITH + process.exitValue(),
                                                process.exitValue(),
-                                               stdout.getContent(),
-                                               stderr.getContent());
+                                               stdout.waitForCompleted().getContent(),
+                                               stderr.waitForCompleted().getContent());
           }
 
         return this;
@@ -404,14 +415,14 @@ public class ProcessExecutor
      *
      * Sends some input to the external process.
      *
-     * @return                              itself
-     * @param       string                  the input to send
-     * @throws      IOException             if something fails
+     * @param  string                  the input to send
+     * @return itself
+     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
     public ProcessExecutor send (final @Nonnull String string)
-      throws IOException
+            throws IOException
       {
         log.info(">>>> sending '{}'...", string);
         stdin.println(string);
@@ -420,11 +431,16 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Scans the {@code PATH} for finding the absolute path of the given executable.
+     *
+     * @param executable the executable to search for
+     * @return the absolute path
+     * @throws IOException if the executable can't be found
      *
      ******************************************************************************************************************/
     @Nonnull
     private static String findPathFor (final @Nonnull String executable)
-      throws IOException
+            throws IOException
       {
         final String pathEnv = System.getenv("PATH") + File.pathSeparator + "/usr/local/bin";
 
@@ -443,6 +459,10 @@ public class ProcessExecutor
 
     /*******************************************************************************************************************
      *
+     * Logs a whole console output.
+     *
+     * @param prefix a log prefix
+     * @param consoleOutput the output
      *
      ******************************************************************************************************************/
     private static void log (final @Nonnull String prefix, final @Nonnull ConsoleOutput consoleOutput)
