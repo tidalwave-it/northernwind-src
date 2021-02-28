@@ -24,21 +24,25 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.git.impl;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
-import it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmRepositoryTestSupport;
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A mock implementationf of {@link ScmFileSystemProvider}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
-public class GitRepositoryTest extends ScmRepositoryTestSupport
+public class MockScmFileSystemProvider extends ScmFileSystemProvider
   {
-    public GitRepositoryTest ()
+    @Override @Nonnull
+    public ScmWorkingDirectory createWorkingDirectory (final @Nonnull Path workArea)
+            throws IOException
       {
-        super(GitRepository.class, new GitPreparer());
+        return new MockScmWorkingDirectory(workArea);
       }
   }

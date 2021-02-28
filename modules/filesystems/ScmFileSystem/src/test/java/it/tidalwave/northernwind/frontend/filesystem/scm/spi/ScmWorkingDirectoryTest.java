@@ -24,21 +24,17 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.hg.impl;
-
-import it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmRepositoryTestSupport;
-import lombok.extern.slf4j.Slf4j;
+package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
-public class MercurialRepositoryTest extends ScmRepositoryTestSupport
+public class ScmWorkingDirectoryTest extends ScmWorkingDirectoryTestSupport
   {
-    public MercurialRepositoryTest ()
+    public ScmWorkingDirectoryTest()
       {
-        super(MercurialRepository.class, new MercurialPreparer());
+        super(MockScmWorkingDirectory.class, new MockScmWorkingDirectory.Preparer());
       }
   }

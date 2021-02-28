@@ -29,20 +29,20 @@ package it.tidalwave.northernwind.frontend.filesystem.git.impl;
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmFileSystemProvider;
-import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmRepository;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectory;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * An implementation of {@link ScmFileSystemProvider} based on git.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
 public class GitFileSystemProvider extends ScmFileSystemProvider
   {
     @Override @Nonnull
-    public ScmRepository createRepository (final @Nonnull Path path)
+    public ScmWorkingDirectory createWorkingDirectory (final @Nonnull Path path)
       {
-        return new GitRepository(path);
+        return new GitWorkingDirectory(path);
       }
   }

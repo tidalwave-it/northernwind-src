@@ -45,14 +45,14 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
 public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
   {
     @Nonnull
-    private final List<? extends ResourceFileSystemProvider> delegates;
+    private final List<ResourceFileSystemProvider> delegates;
 
     private final FileSystemProvidersProvider fileSystemProvidersProvider;
 
@@ -83,15 +83,16 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
         log.trace("findResource({})", name);
         ResourceFile result = null;
 
-            // FIXME: move to init!
+        // FIXME: move to init!
         if (fileSystemProvidersProvider != null)
           {
             delegates.clear();
-            final List fileSystemProviders = fileSystemProvidersProvider.getFileSystemProviders();
+            final List<? extends ResourceFileSystemProvider> fileSystemProviders = fileSystemProvidersProvider.getFileSystemProviders();
             delegates.addAll(fileSystemProviders);
           }
 
-        for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
+        for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size());
+             i.hasPrevious(); )
           {
             try
               {
@@ -134,7 +135,10 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
         if (decorator == null)
           {
             decorator = (delegateFile.isData() ? new DecoratorResourceFile(this, delegateFile)
-                                               : new DecoratorResourceFolder(this, delegates, delegateFile.getPath(), delegateFile));
+                                               : new DecoratorResourceFolder(this,
+                                                                             delegates,
+                                                                             delegateFile.getPath(),
+                                                                             delegateFile));
             delegateLightWeightMap.put(delegateFile, decorator);
           }
 

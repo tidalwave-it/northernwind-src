@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
@@ -65,7 +65,8 @@ public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
         return createResourceFile(fileSystem.findResource(path));
       }
 
-    /* package */ synchronized ResourceFile createResourceFile (final @Nonnull FileObject fileObject)
+    /* package */
+    synchronized ResourceFile createResourceFile (final @Nonnull FileObject fileObject)
       {
         if (fileObject == null)
           {
