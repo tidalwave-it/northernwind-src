@@ -51,54 +51,61 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * The implementation relies upon two alternate repositories to perform atomic changes:
+ * A {@code ResourceFileSystemProvider} based on a SCM. This is an abstract support class that needs to be extended
+ * by concrete implementations (such as Git or Mercurial).
+ * This provider polls for changes in the SCM that are made available with a new tag named
+ * {@code published-<version>} and fetches them. In order to atomically expose changes, in spite of the fact that the
+ * underlying operation might require some time to update all files, two working directories are used:
  *
  * <ol>
- *     <li>the <code>exposedRepository</code> is the one whose contents are used for publishing, and it's never touched
- *     </li>
- *     <li>the <code>alternateRepository</code> is kept behind the scenes and it's used for updates</li>
+ *     <li>the {@code exposedWorkingDirectory} is exposed and not affected by next change;</li>
+ *     <li>the {@code alternateWorkingDirectory} is kept behind the scenes and updated; when its update is completed, the
+ *     two repositories are swapped and a {@link ResourceFileSystemChangedEvent} is fired.</li>
  * </ol>
  *
- * When there are changes in the <code>alternateRepository</code>, the two repositories are swapped.
- *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 @NotThreadSafe @Slf4j
 public abstract class ScmFileSystemProvider implements ResourceFileSystemProvider
   {
+    /** The URL of the remote repository. */
     @Getter @Setter
     private String remoteRepositoryUrl;
 
+    /** The folder of the local work area. */
     @Getter @Setter
-    private String workAreaFolder;
+    private String folderAsString;
 
-    @Getter // FIXME: public for test
-    private final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
+    /** The path of the working directory. */
+    private Path folder;
+
+    /** The file system used to map the local work area. */
+    /* visible for tests */ final LocalFileSystem fileSystemDelegate = new LocalFileSystem();
 
     @Getter
     private final ResourceFileSystem fileSystem = new ResourceFileSystemNetBeansPlatform(fileSystemDelegate);
 
+    private final ScmWorkingDirectory[] workingDirectories = new ScmWorkingDirectory[2];
+
+    /** The exposed working directory. */
+    /* visible for tests */ ScmWorkingDirectory exposedWorkingDirectory;
+
+    /** The alternate working directory. */
+    /* visible for tests */ ScmWorkingDirectory alternateWorkingDirectory;
+
+    /** The index of the exposed repository (0 or 1). */
+    private int repositorySelector;
+
+    /** A counter of swaps, used for testing. */
+    /* visible for tests */int swapCounter;
+
     @Inject
     private BeanFactory beanFactory;
 
-//    @Inject @Named("applicationMessageBus") FIXME doesn't work in the test
+    /** The message bus where to fire events. */
+    //    @Inject @Named("applicationMessageBus") FIXME doesn't work in the test
     private MessageBus messageBus;
-
-    private Path workArea;
-
-    private final ScmRepository[] repositories = new ScmRepository[2];
-
-    @Getter // FIXME: public for test
-    private ScmRepository exposedRepository;
-
-    @Getter // FIXME: public for test
-    private ScmRepository alternateRepository;
-
-    private int repositorySelector;
-
-    @Getter
-    int swapCounter;
 
     /*******************************************************************************************************************
      *
@@ -106,18 +113,18 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
      *
      ******************************************************************************************************************/
     @PostConstruct
-    public void initialize()
-      throws IOException, PropertyVetoException, URISyntaxException, InterruptedException
+    private void initialize()
+            throws IOException, PropertyVetoException, URISyntaxException, InterruptedException
       {
-        workArea = new File(workAreaFolder).toPath();
+        folder = new File(folderAsString).toPath();
 
         for (int i = 0; i < 2; i++)
           {
-            repositories[i] = createRepository(workArea.resolve("" + (i + 1)));
+            workingDirectories[i] = createWorkingDirectory(folder.resolve("" + (i + 1)));
 
-            if (repositories[i].isEmpty())
+            if (workingDirectories[i].isEmpty())
               {
-                repositories[i].clone(new URI(remoteRepositoryUrl));
+                workingDirectories[i].cloneFrom(new URI(remoteRepositoryUrl));
               }
           }
 
@@ -129,16 +136,14 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
 
     /*******************************************************************************************************************
      *
-     * Checks whether there are incoming changes. Changes are detected when there's a new tag whose name follows the
-     * pattern 'published-<version>'. Changes are pulled in the alternate repository, then repositories are swapped, at
-     * last the alternateRepository is updated too.
+     * Checks whether there are incoming changes. See the class' documentation for more information.
      *
      ******************************************************************************************************************/
     public void checkForUpdates()
       {
         try
           {
-            final Optional<Tag> newTag = findNewTag();
+            final Optional<Tag> newTag = fetchChangesetsAndSearchForNewTag();
 
             if (!newTag.isPresent())
               {
@@ -146,91 +151,74 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
               }
             else
               {
-                final Tag t = newTag.get();
-                log.info(">>>> new tag: {}", t);
-                alternateRepository.updateTo(t);
+                final Tag tag = newTag.get();
+                log.info(">>>> new tag: {}", tag);
+                alternateWorkingDirectory.checkOut(tag);
                 swapRepositories();
                 messageBus.publish(new ResourceFileSystemChangedEvent(this, ZonedDateTime.now()));
-                alternateRepository.pull();
-                alternateRepository.updateTo(t);
+                alternateWorkingDirectory.fetchChangesets();
+                alternateWorkingDirectory.checkOut(tag);
               }
           }
         catch (Exception e)
           {
-            log.warn(">>>> error when checking for updates in " + alternateRepository.getWorkArea(), e);
+            log.warn(">>>> error when checking for updates in " + alternateWorkingDirectory.getFolder(), e);
           }
       }
 
     /*******************************************************************************************************************
      *
+     * Creates a new {@link ScmWorkingDirectory} at the given path.
      *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    abstract public ScmRepository createRepository (@Nonnull Path path)
-      throws IOException, InterruptedException;
-
-    /*******************************************************************************************************************
-     *
-     *
+     * @param path the path of the repository.
+     * @return a {@code ScmWorkingDirectory}
+     * @throws IOException if an I/O error occurs
+     * @throws InterruptedException if a timeout occurs
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<Tag> getCurrentTag() // FIXME: public for test
-      throws IOException, InterruptedException
-      {
-        return exposedRepository.getCurrentTag();
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Path getCurrentWorkArea() // FIXME: public for test
-      {
-        return exposedRepository.getWorkArea();
-      }
+    abstract public ScmWorkingDirectory createWorkingDirectory (@Nonnull Path path)
+            throws IOException, InterruptedException;
 
     /*******************************************************************************************************************
      *
      * Swaps the repositories.
      *
-     * @throws      IOException              in case of error
-     * @throws      PropertyVetoException    in case of error
+     * @throws IOException              in case of error
+     * @throws PropertyVetoException    in case of error
      *
      ******************************************************************************************************************/
     private void swapRepositories()
-      throws IOException, PropertyVetoException
+            throws IOException, PropertyVetoException
       {
-        exposedRepository = repositories[repositorySelector];
+        exposedWorkingDirectory = workingDirectories[repositorySelector];
         repositorySelector = (repositorySelector + 1) % 2;
-        alternateRepository = repositories[repositorySelector];
-        fileSystemDelegate.setRootDirectory(exposedRepository.getWorkArea().toFile());
+        alternateWorkingDirectory = workingDirectories[repositorySelector];
+        fileSystemDelegate.setRootDirectory(exposedWorkingDirectory.getFolder().toFile());
         swapCounter++;
 
-        log.info("New exposed repository:   {}", exposedRepository.getWorkArea());
-        log.info("New alternate repository: {}", alternateRepository.getWorkArea());
+        log.info("New exposed working directory:   {}", exposedWorkingDirectory.getFolder());
+        log.info("New alternate working directory: {}", alternateWorkingDirectory.getFolder());
       }
 
     /*******************************************************************************************************************
      *
-     * Finds a new tag.
+     * Fetches changesets from the repository and searches for a new tag.
      *
-     * @return                      the new tag
-     * @throws      IOException     in case of error
+     * @return the new tag
+     * @throws IOException              in case of error
+     * @throws InterruptedException     in case of error
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Optional<Tag> findNewTag()
-      throws IOException, InterruptedException
+    private Optional<Tag> fetchChangesetsAndSearchForNewTag()
+            throws IOException, InterruptedException
       {
-        log.info("Checking for updates in {} ...", alternateRepository.getWorkArea());
+        log.info("Checking for updates in {} ...", alternateWorkingDirectory.getFolder());
 
-        alternateRepository.pull();
-        final Optional<Tag> latestTag = alternateRepository.getLatestTagMatching("^published-.*");
-        final Optional<Tag> currentTag = exposedRepository.getCurrentTag();
+        alternateWorkingDirectory.fetchChangesets();
+        final Optional<Tag> latestTag = alternateWorkingDirectory.getLatestTagMatching("^published-.*");
+        final Optional<Tag> currentTag = exposedWorkingDirectory.getCurrentTag();
 
         if (!latestTag.isPresent())
           {

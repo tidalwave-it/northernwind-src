@@ -30,34 +30,31 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import it.tidalwave.northernwind.frontend.filesystem.scm.impl.ScmPreparer;
+import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * A Mercurial implementation of the {@link ScmPreparer}.
+ *
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public class MercurialPreparer extends ScmPreparer
   {
     @Override
-    protected void doPrepare (final @Nonnull String tag)
-      throws IOException, InterruptedException
+    protected void stripChangesetsAfter (final @Nonnull String tag)
+            throws IOException, InterruptedException
       {
         final Path sourceBundle = Paths.get("src/test/resources/MercurialFileSystemProviderTest/hg.bundle");
-        ProcessExecutor.forExecutable("hg")
-                .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
-                .withArguments("clone", "--noupdate", sourceBundle.toFile().getCanonicalPath(), ".")
-                .start()
-                .waitForCompletion();
+        hgCommand().withArguments("clone", "--noupdate", sourceBundle.toFile().getCanonicalPath(), ".")
+                   .start()
+                   .waitForCompletion();
+
         switch (tag)
           {
             case "published-0.8":
-              ProcessExecutor.forExecutable("hg")
-                      .withWorkingDirectory(ScmPreparer.SOURCE_REPOSITORY_FOLDER)
-                      .withArguments("strip", "published-0.9")
-                      .start()
-                      .waitForCompletion();
+              hgCommand().withArguments("strip", "published-0.9").start().waitForCompletion();
               break;
 
             case "published-0.9":
@@ -66,6 +63,13 @@ public class MercurialPreparer extends ScmPreparer
             default:
               throw new IllegalArgumentException("Only published-0.8 or published-0.9 allowed");
           }
+      }
+
+    @Nonnull
+    private static ProcessExecutor hgCommand()
+            throws IOException
+      {
+        return ProcessExecutor.forExecutable("hg").withWorkingDirectory(ScmPreparer.REPOSITORY_FOLDER);
       }
   }
 

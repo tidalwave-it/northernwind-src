@@ -46,13 +46,13 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A provider for the {@link NwFileSystem} that clones a source provider into a local NwFileSystem for performance
- * purposes...
+ * A provider for the {@link ResourceFileSystemProvider} that clones a source provider into a local
+ * {@code ResourceFileSystemProvider} for performance purposes...
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(of = { "rootPath" })
+@Slf4j @ToString(of = {"rootPath"})
 public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
@@ -72,25 +72,26 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      ******************************************************************************************************************/
     private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener =
             new Listener<ResourceFileSystemChangedEvent>()
-      {
-        @Override
-        public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
-          {
-            if (event.getFileSystemProvider() == sourceProvider)
               {
-                try
+                @Override
+                public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
                   {
-                    log.info("Detected file change, regenerating local file system...");
-                    generateLocalFileSystem();
-                    messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this, ZonedDateTime.now()));
+                    if (event.getFileSystemProvider() == sourceProvider)
+                      {
+                        try
+                          {
+                            log.info("Detected file change, regenerating local file system...");
+                            generateLocalFileSystem();
+                            messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this,
+                                                                                  ZonedDateTime.now()));
+                          }
+                        catch (IOException e)
+                          {
+                            log.error("While resetting site: ", e);
+                          }
+                      }
                   }
-                catch (IOException e)
-                  {
-                    log.error("While resetting site: ", e);
-                  }
-              }
-          }
-      };
+              };
 
     /*******************************************************************************************************************
      *
@@ -99,7 +100,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      ******************************************************************************************************************/
     @Override @Nonnull
     public synchronized ResourceFileSystem getFileSystem()
-      throws IOException
+            throws IOException
       {
         return targetProvider.getFileSystem();
       }
@@ -110,7 +111,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize()
-      throws IOException
+            throws IOException
       {
         log.info("initialize()");
         generateLocalFileSystem();
@@ -122,7 +123,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     private void generateLocalFileSystem()
-      throws IOException
+            throws IOException
       {
         log.info("generateLocalFileSystem()");
 
@@ -148,7 +149,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     private void emptyFolder (final @Nonnull ResourceFile folder)
-      throws IOException
+            throws IOException
       {
         log.trace("emptyFolder({}, {}", folder);
 
@@ -163,7 +164,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     private void copyFolder (final @Nonnull ResourceFile sourceFolder, final @Nonnull ResourceFile targetFolder)
-      throws IOException
+            throws IOException
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
 

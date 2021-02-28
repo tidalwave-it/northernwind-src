@@ -47,10 +47,10 @@ import static java.util.Collections.*;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(of="delegate")
+@Slf4j @ToString(of = "delegate")
 class DecoratorResourceFolder extends DecoratedResourceFileSupport
   {
     @Nonnull
@@ -59,7 +59,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
     @Nonnull
     private final List<? extends ResourceFileSystemProvider> delegates;
 
-    @Delegate(types=ResourceFile.class, excludes=FolderDelegateExclusions.class) @Nonnull
+    @Delegate(types = ResourceFile.class, excludes = FolderDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
     private SortedMap<String, ResourceFile> childrenMap;
@@ -91,7 +91,6 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
                   }
 
                 final ResourceFile child = getChildrenMap().get(name);
-
                 return (child != null) ? singletonList(child) : emptyList();
               }
             //
@@ -107,7 +106,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
               {
                 return new ArrayList<>(getChildrenMap().values());
               }
-        });
+          });
       }
 
     @Nonnull
@@ -117,7 +116,8 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
           {
             childrenMap = new TreeMap<>();
 
-            for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size()); i.hasPrevious(); )
+            for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size());
+                 i.hasPrevious(); )
               {
                 try
                   {
