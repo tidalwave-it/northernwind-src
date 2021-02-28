@@ -52,12 +52,12 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * A provider for a local {@link NwFileSystem}.
+ * A provider for a local {@link ResourceFileSystemProvider}.
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(of = { "zipFilePath", "latestModified", "changeWasDetected" })
+@Slf4j @ToString(of = {"zipFilePath", "latestModified", "changeWasDetected"})
 public class ZipFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
@@ -95,7 +95,8 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
                 getFileSystem(); // force initialization
                 final File zipFile = fileSystemDelegate.getJarFile();
                 final ZonedDateTime timestamp = Instant.ofEpochMilli(zipFile.lastModified()).atZone(ZoneId.of("GMT"));
-    //            log.debug(">>>> checking zip file latest modification: was {}, is now {}", latestModified, timestamp);
+                //            log.debug(">>>> checking zip file latest modification: was {}, is now {}",
+                //            latestModified, timestamp);
 
                 if (!changeWasDetected)
                   {
@@ -104,7 +105,8 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
                         latestModified = timestamp;
                         changeWasDetected = true;
                         log.info("Detected change of {}: last modified time: {} - waiting for it to become stable",
-                                 zipFile, latestModified);
+                                 zipFile,
+                                 latestModified);
                       }
                   }
                 else
@@ -112,8 +114,11 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
                     if (timestamp.isAfter(latestModified))
                       {
                         latestModified = timestamp;
-                        log.info("Detected unstable change of {}: last modified time: {} - waiting for it to become stable",
-                                 zipFile, latestModified);
+                        log.info(
+                                "Detected unstable change of {}: last modified time: {} - waiting for it to become " +
+                                "stable",
+                                zipFile,
+                                latestModified);
                       }
                     else
                       {
@@ -139,7 +144,7 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
      ******************************************************************************************************************/
     @Override @Nonnull
     public synchronized ResourceFileSystem getFileSystem()
-      throws IOException
+            throws IOException
       {
         if (fileSystem == null)
           {
