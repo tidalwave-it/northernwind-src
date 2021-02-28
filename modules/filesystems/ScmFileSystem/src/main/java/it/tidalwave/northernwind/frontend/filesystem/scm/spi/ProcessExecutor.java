@@ -72,6 +72,9 @@ public class ProcessExecutor
     public class ConsoleOutput
       {
         @Nonnull
+        private final String name;
+
+        @Nonnull
         private final InputStream input;
 
         @Getter
@@ -239,7 +242,7 @@ public class ProcessExecutor
                         break;
                       }
 
-                    log.trace(">>>>>>>> {}", s);
+                    log.trace(">>>>>>>> {}: {}", name, s);
                     content.add(s);
 
                     synchronized (this)
@@ -362,8 +365,8 @@ public class ProcessExecutor
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
 
-        stdout = new ConsoleOutput(process.getInputStream()).start();
-        stderr = new ConsoleOutput(process.getErrorStream()).start();
+        stdout = new ConsoleOutput("STDOUT", process.getInputStream()).start();
+        stderr = new ConsoleOutput("STDERR", process.getErrorStream()).start();
         stdin = new PrintWriter(process.getOutputStream(), true);
 
         return this;
@@ -393,16 +396,16 @@ public class ProcessExecutor
                 environment.add(String.format("%s=%s, ", e.getKey(), e.getValue()));
               }
 
-            log.error(PROCESS_EXITED_WITH + process.exitValue());
-            log.error(">>>> executed:          {}", arguments);
-            log.error(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
-            log.error(">>>> environment:       {}", environment);
-            log("STDOUT", stdout);
-            log("STDERR", stderr);
+            log.warn(PROCESS_EXITED_WITH + process.exitValue());
+            log.debug(">>>> executed:          {}", arguments);
+            log.debug(">>>> working directory: {}", workingDirectory.toFile().getCanonicalPath());
+            log.debug(">>>> environment:       {}", environment);
+            // log("STDOUT", stdout);
+            // log("STDERR", stderr);
             throw new ProcessExecutorException(PROCESS_EXITED_WITH + process.exitValue(),
                                                process.exitValue(),
-                                               stdout.getContent(),
-                                               stderr.getContent());
+                                               stdout.waitForCompleted().getContent(),
+                                               stderr.waitForCompleted().getContent());
           }
 
         return this;
