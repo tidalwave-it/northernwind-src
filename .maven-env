@@ -1,0 +1,4 @@
+JAVA_HOME=$JAVA11_HOME
+
+#MAVEN_ARGS="-fae -DtestFailureIgnore=true -Pit.tidalwave-metrics-v2,it-tidalwave-test-report-v1 -Dtft.profile.metrics.sonarGoal="
+#MAVEN_ARGS="site:site -Dtest.report=true"
