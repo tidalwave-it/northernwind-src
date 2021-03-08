@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/HtmlPatches/it-tidalwave-html-patches.iml" filepath="$PROJECT_DIR$/modules/HtmlPatches/it-tidalwave-html-patches.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/CommonTests/it-tidalwave-northernwind-common-tests.iml" filepath="$PROJECT_DIR$/modules/CommonTests/it-tidalwave-northernwind-common-tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/Core/it-tidalwave-northernwind-core.iml" filepath="$PROJECT_DIR$/modules/Core/it-tidalwave-northernwind-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/CoreImplementation/it-tidalwave-northernwind-core-default.iml" filepath="$PROJECT_DIR$/modules/CoreImplementation/it-tidalwave-northernwind-core-default.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/filesystems/BasicFileSystems/it-tidalwave-northernwind-core-filesystem-basic.iml" filepath="$PROJECT_DIR$/modules/filesystems/BasicFileSystems/it-tidalwave-northernwind-core-filesystem-basic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/filesystems/GitFileSystem/it-tidalwave-northernwind-core-filesystem-git.iml" filepath="$PROJECT_DIR$/modules/filesystems/GitFileSystem/it-tidalwave-northernwind-core-filesystem-git.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/filesystems/MercurialFileSystem/it-tidalwave-northernwind-core-filesystem-hg.iml" filepath="$PROJECT_DIR$/modules/filesystems/MercurialFileSystem/it-tidalwave-northernwind-core-filesystem-hg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/filesystems/ScmFileSystem/it-tidalwave-northernwind-core-filesystem-scm.iml" filepath="$PROJECT_DIR$/modules/filesystems/ScmFileSystem/it-tidalwave-northernwind-core-filesystem-scm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/Marshalling/it-tidalwave-northernwind-core-marshalling-default.iml" filepath="$PROJECT_DIR$/modules/Marshalling/it-tidalwave-northernwind-core-marshalling-default.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/Profiling/it-tidalwave-northernwind-core-profiling.iml" filepath="$PROJECT_DIR$/modules/Profiling/it-tidalwave-northernwind-core-profiling.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/filesystems/it-tidalwave-northernwind-filesystem.iml" filepath="$PROJECT_DIR$/modules/filesystems/it-tidalwave-northernwind-filesystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/frontend/it-tidalwave-northernwind-frontend.iml" filepath="$PROJECT_DIR$/modules/frontend/it-tidalwave-northernwind-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/frontend/Commons/it-tidalwave-northernwind-frontend-commons.iml" filepath="$PROJECT_DIR$/modules/frontend/Commons/it-tidalwave-northernwind-frontend-commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/Components/it-tidalwave-northernwind-frontend-components.iml" filepath="$PROJECT_DIR$/modules/Components/it-tidalwave-northernwind-frontend-components.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/HtmlTemplateComponents/it-tidalwave-northernwind-frontend-components-htmltemplate.iml" filepath="$PROJECT_DIR$/modules/HtmlTemplateComponents/it-tidalwave-northernwind-frontend-components-htmltemplate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/frontend/Media/it-tidalwave-northernwind-frontend-media.iml" filepath="$PROJECT_DIR$/modules/frontend/Media/it-tidalwave-northernwind-frontend-media.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/frontend/SpringMvcMediaFrontend/it-tidalwave-northernwind-frontend-media-springmvc.iml" filepath="$PROJECT_DIR$/modules/frontend/SpringMvcMediaFrontend/it-tidalwave-northernwind-frontend-media-springmvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/webapp/SpringMvcMediaWebApp/it-tidalwave-northernwind-frontend-media-springmvc-webapp.iml" filepath="$PROJECT_DIR$/modules/webapp/SpringMvcMediaWebApp/it-tidalwave-northernwind-frontend-media-springmvc-webapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/frontend/SpringMvcFrontend/it-tidalwave-northernwind-frontend-springmvc.iml" filepath="$PROJECT_DIR$/modules/frontend/SpringMvcFrontend/it-tidalwave-northernwind-frontend-springmvc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/webapp/SpringMvcWebApp/it-tidalwave-northernwind-frontend-springmvc-webapp.iml" filepath="$PROJECT_DIR$/modules/webapp/SpringMvcWebApp/it-tidalwave-northernwind-frontend-springmvc-webapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/webapp/Commons/it-tidalwave-northernwind-frontend-webapp-commons.iml" filepath="$PROJECT_DIR$/modules/webapp/Commons/it-tidalwave-northernwind-frontend-webapp-commons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/it-tidalwave-northernwind-modules.iml" filepath="$PROJECT_DIR$/modules/it-tidalwave-northernwind-modules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/webapp/it-tidalwave-northernwind-webapp.iml" filepath="$PROJECT_DIR$/modules/webapp/it-tidalwave-northernwind-webapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/northernwind-src.iml" filepath="$PROJECT_DIR$/.idea/northernwind-src.iml" />
+    </modules>
+  </component>
+</project>

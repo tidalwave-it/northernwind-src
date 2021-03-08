@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/modules/CommonTests/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Components/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Components/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/CoreImplementation/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/CoreImplementation/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/HtmlPatches/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/HtmlTemplateComponents/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/HtmlTemplateComponents/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Marshalling/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Marshalling/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Profiling/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/Profiling/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/BasicFileSystems/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/BasicFileSystems/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/GitFileSystem/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/GitFileSystem/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/MercurialFileSystem/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/MercurialFileSystem/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/filesystems/ScmFileSystem/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/frontend/Commons/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/frontend/Media/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/frontend/Media/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/frontend/SpringMvcFrontend/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/frontend/SpringMvcFrontend/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/frontend/SpringMvcMediaFrontend/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/webapp/Commons/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
