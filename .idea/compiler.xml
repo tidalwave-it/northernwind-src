@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="it-tidalwave-northernwind-core-filesystem-git" />
+        <module name="it-tidalwave-northernwind-frontend-media-springmvc-webapp" />
+        <module name="it-tidalwave-northernwind-frontend-springmvc" />
+        <module name="it-tidalwave-northernwind-core-marshalling-default" />
+        <module name="it-tidalwave-northernwind-core-filesystem-scm" />
+        <module name="it-tidalwave-northernwind-core" />
+        <module name="it-tidalwave-northernwind-frontend-commons" />
+        <module name="it-tidalwave-html-patches" />
+        <module name="it-tidalwave-northernwind-core-filesystem-basic" />
+        <module name="it-tidalwave-northernwind-frontend-components-htmltemplate" />
+        <module name="it-tidalwave-northernwind-frontend-webapp-commons" />
+        <module name="it-tidalwave-northernwind-common-tests" />
+        <module name="it-tidalwave-northernwind-core-profiling" />
+        <module name="it-tidalwave-northernwind-frontend-media-springmvc" />
+        <module name="it-tidalwave-northernwind-core-filesystem-hg" />
+        <module name="it-tidalwave-northernwind-frontend-springmvc-webapp" />
+        <module name="it-tidalwave-northernwind-core-default" />
+        <module name="it-tidalwave-northernwind-frontend-media" />
+        <module name="it-tidalwave-northernwind-frontend-components" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="it-tidalwave-html-patches" target="1.8" />
+      <module name="it-tidalwave-northernwind-common-tests" target="1.8" />
+      <module name="it-tidalwave-northernwind-core" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-default" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-filesystem-basic" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-filesystem-git" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-filesystem-hg" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-filesystem-scm" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-marshalling-default" target="1.8" />
+      <module name="it-tidalwave-northernwind-core-profiling" target="1.8" />
+      <module name="it-tidalwave-northernwind-filesystem" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-commons" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-components" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-components-htmltemplate" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-media" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-media-springmvc" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-media-springmvc-webapp" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-springmvc" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-springmvc-webapp" target="1.8" />
+      <module name="it-tidalwave-northernwind-frontend-webapp-commons" target="1.8" />
+      <module name="it-tidalwave-northernwind-modules" target="1.8" />
+      <module name="it-tidalwave-northernwind-webapp" target="1.8" />
+      <module name="northernwind-src" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="it-tidalwave-html-patches" options="-Xlint:none" />
+      <module name="it-tidalwave-northernwind-common-tests" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-default" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-filesystem-basic" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-filesystem-git" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-filesystem-hg" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-filesystem-scm" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-marshalling-default" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-core-profiling" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-commons" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-components" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-components-htmltemplate" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-media" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-media-springmvc" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-media-springmvc-webapp" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-springmvc" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-springmvc-webapp" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend-webapp-commons" options="-Xlint:all" />
+    </option>
+  </component>
+</project>

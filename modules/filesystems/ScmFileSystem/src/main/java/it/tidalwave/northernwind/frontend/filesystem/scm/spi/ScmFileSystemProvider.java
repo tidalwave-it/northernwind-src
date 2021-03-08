@@ -160,6 +160,14 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
                 alternateWorkingDirectory.checkOut(tag);
               }
           }
+        catch (ProcessExecutorException e)
+          {
+            log.warn(">>>> error when checking for updates in {}: exit code is {}",
+                     alternateWorkingDirectory.getFolder(),
+                     e.getExitCode());
+            e.getStdout().forEach(s -> log.warn(">>>> STDOUT: {}", s));
+            e.getStderr().forEach(s -> log.warn(">>>> STDERR: {}", s));
+          }
         catch (Exception e)
           {
             log.warn(">>>> error when checking for updates in " + alternateWorkingDirectory.getFolder(), e);
