@@ -69,10 +69,15 @@
 
     <repositories>
         <!-- Until we depend on the NetBeans Platform FileSystem -->
-        <repository>
+        <!-- repository>
             <id>netbeans</id>
             <name>NetBeans Platform Maven Repository</name>
             <url>http://bits.netbeans.org/maven2/</url>
+        </repository -->
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans Platform Maven Repository</name>
+            <url>http://netbeans.apidesign.org/maven2/</url>
         </repository>
     </repositories>
 
