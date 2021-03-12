@@ -71,27 +71,27 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener =
-            new Listener<ResourceFileSystemChangedEvent>()
-              {
-                @Override
-                public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
-                  {
-                    if (event.getFileSystemProvider() == sourceProvider)
-                      {
-                        try
-                          {
-                            log.info("Detected file change, regenerating local file system...");
-                            generateLocalFileSystem();
-                            messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this,
-                                                                                  ZonedDateTime.now()));
-                          }
-                        catch (IOException e)
-                          {
-                            log.error("While resetting site: ", e);
-                          }
-                      }
-                  }
-              };
+      new Listener<ResourceFileSystemChangedEvent>()
+        {
+          @Override
+          public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
+            {
+              if (event.getFileSystemProvider() == sourceProvider)
+                {
+                  try
+                    {
+                      log.info("Detected file change, regenerating local file system...");
+                      generateLocalFileSystem();
+                      messageBus.publish(new ResourceFileSystemChangedEvent(LocalCopyFileSystemProvider.this,
+                                                                            ZonedDateTime.now()));
+                    }
+                  catch (IOException e)
+                    {
+                      log.error("While resetting site: ", e);
+                    }
+                }
+            }
+        };
 
     /*******************************************************************************************************************
      *
