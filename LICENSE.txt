@@ -1,7 +1,7 @@
 NorthernWind
 ============
 
-Copyright (C) 2011 - 2019 by Tidalwave s.a.s. (http://tidalwave.it)
+Copyright (C) 2011 - 2021 by Tidalwave s.a.s. (http://tidalwave.it)
 
 Licensed under the Apache License, Version 2.0 (the "License"); 
 you may not use this file except in compliance with the License. 
