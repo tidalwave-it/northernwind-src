@@ -1,4 +1,4 @@
 JAVA_HOME=$JAVA11_HOME
 
 # MAVEN_ARGS="-fae -DtestFailureIgnore=true -Pit.tidalwave-metrics-v2"
-MAVEN_ARGS="-Dxxtft.disableJavaDocs=true -Pit-tidalwave-site-v1"
+# MAVEN_ARGS="-Dxxtft.disableJavaDocs=true -Pit-tidalwave-site-v1"
