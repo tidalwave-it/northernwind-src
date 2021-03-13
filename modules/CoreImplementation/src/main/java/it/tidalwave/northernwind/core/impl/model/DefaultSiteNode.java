@@ -55,7 +55,6 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.util.UrlEncoding.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.P_EXPOSED_URI;
 
 /***********************************************************************************************************************
  *
@@ -95,11 +94,17 @@ import static it.tidalwave.northernwind.core.model.SiteNode.P_EXPOSED_URI;
     public DefaultSiteNode (final @Nonnull ModelFactory modelFactory,
                             final @Nonnull InternalSite site,
                             final @Nonnull ResourceFile file)
-      throws IOException, NotFoundException
       {
         super(modelFactory, file);
         this.site = site;
-        loadLayouts();
+        try
+          {
+            loadLayouts();
+          }
+        catch (IOException | NotFoundException e)
+          {
+            throw new RuntimeException(e);
+          }
       }
 
     /*******************************************************************************************************************
