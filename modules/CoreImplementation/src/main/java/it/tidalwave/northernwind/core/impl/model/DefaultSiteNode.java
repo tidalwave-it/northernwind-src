@@ -53,7 +53,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.Unmarshallable.Unmarshallable;
+import static it.tidalwave.role.io.Unmarshallable.Unmarshallable;
 import static it.tidalwave.northernwind.util.UrlEncoding.*;
 
 /***********************************************************************************************************************
