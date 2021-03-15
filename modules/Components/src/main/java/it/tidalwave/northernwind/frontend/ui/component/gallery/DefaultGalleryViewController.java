@@ -32,9 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.BeanFactory;
-import it.tidalwave.util.Finder8;
+import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.spi.SimpleFinder8Support;
+import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
@@ -57,12 +57,12 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
   {
     /*******************************************************************************************************************
      *
-     * A {@link Finder8} which returns virtual {@link SiteNode}s representing the multiple contents served by the
+     * A {@link Finder} which returns virtual {@link SiteNode}s representing the multiple contents served by the
      * {@link SiteNode} associated to this controller. This is typically used to create site maps.
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor
-    private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
+    private static class VirtualSiteNodeFinder extends SimpleFinderSupport<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
@@ -147,7 +147,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findVirtualSiteNodes()
+    public Finder<SiteNode> findVirtualSiteNodes()
       {
         return new VirtualSiteNodeFinder(this);
       }

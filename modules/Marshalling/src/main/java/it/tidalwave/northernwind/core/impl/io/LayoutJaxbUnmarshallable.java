@@ -35,7 +35,7 @@ import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.dci.annotation.DciRole;
-import it.tidalwave.role.Unmarshallable;
+import it.tidalwave.role.io.Unmarshallable;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
