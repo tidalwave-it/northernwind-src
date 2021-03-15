@@ -34,7 +34,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import it.tidalwave.util.Finder8Support;
+import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -84,7 +84,7 @@ import static org.mockito.Mockito.*;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor
-public class MockContentSiteFinder extends Finder8Support<Content, SiteFinder<Content>>
+public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Content>>
                                    implements SiteFinder<Content>
   {
     private static final long serialVersionUID = 1L;

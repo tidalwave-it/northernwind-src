@@ -40,7 +40,7 @@ import lombok.Getter;
  *
  * A partial implementation of (@link SiteNode}.
  *
- * @author  Fabrizio Giudici
+ * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public abstract class SiteNodeSupport implements SiteNode
@@ -54,8 +54,7 @@ public abstract class SiteNodeSupport implements SiteNode
     @Delegate
     private final AsSupport as = new AsSupport(this);
 
-    public SiteNodeSupport (final @Nonnull ModelFactory modelFactory,
-                            final @Nonnull ResourceFile file)
+    public SiteNodeSupport (final @Nonnull ModelFactory modelFactory, final @Nonnull ResourceFile file)
       {
         this.modelFactory = modelFactory;
         this.resource = modelFactory.createResource().withFile(file).build();

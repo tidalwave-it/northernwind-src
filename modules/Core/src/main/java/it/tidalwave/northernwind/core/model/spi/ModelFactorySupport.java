@@ -83,7 +83,6 @@ public class ModelFactorySupport implements ModelFactory,
      ******************************************************************************************************************/
     @Override @Nonnull
     public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
-      throws IOException, NotFoundException
       {
         throw new UnsupportedOperationException("Not supported.");
       }
