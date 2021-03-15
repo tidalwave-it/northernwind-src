@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.dci.annotation.DciRole;
-import it.tidalwave.role.Marshallable;
+import it.tidalwave.role.io.Marshallable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;

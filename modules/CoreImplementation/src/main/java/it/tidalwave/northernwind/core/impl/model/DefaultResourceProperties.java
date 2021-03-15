@@ -297,7 +297,8 @@ public class DefaultResourceProperties implements ResourceProperties
 
     /*******************************************************************************************************************
      *
-     *
+     * Converts a property value from String to its expected value. This is because properties are read by unmarshaller
+     * as string.
      *
      ******************************************************************************************************************/
     @Nonnull
@@ -305,6 +306,11 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         try
           {
+            if (key.getType().isAssignableFrom(value.getClass()))
+              {
+                return key.getType().cast(value);
+              }
+
             if (key.toString().equals("Key[tags]")) // workaround as Zephyr stores it as a comma-separated string
               {
                 return (T)asList(((String)value).split(","));

@@ -124,7 +124,6 @@ public class MockModelFactory extends ModelFactorySupport
      ******************************************************************************************************************/
     @Override @Nonnull
     public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
-            throws IOException, NotFoundException
       {
         final String relativeUri = String.format("relativeUriFor:%s", folder.getPath().asString());
         final String path = folder.getPath().asString();

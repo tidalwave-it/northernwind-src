@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.text.Normalizer;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Finder8;
+import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -111,7 +111,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<Content> findChildren()
+    public Finder<Content> findChildren()
       {
         return new PathFinderSupport<>(this);
       }

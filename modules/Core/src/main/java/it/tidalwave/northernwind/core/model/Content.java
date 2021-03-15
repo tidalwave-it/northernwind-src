@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.List;
 import java.time.ZonedDateTime;
 import it.tidalwave.util.Key;
-import it.tidalwave.role.SimpleComposite8;
+import it.tidalwave.role.SimpleComposite;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,7 +46,7 @@ import lombok.With;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface Content extends Resource, SimpleComposite8<Content>
+public interface Content extends Resource, SimpleComposite<Content>
   {
     @SuppressWarnings("squid:S1700")
     public static final Class<Content> Content = Content.class;

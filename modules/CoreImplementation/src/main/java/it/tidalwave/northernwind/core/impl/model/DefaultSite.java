@@ -316,29 +316,22 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     private void createSiteNode (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
       {
-        try
-          {
-            final SiteNode siteNode = modelFactory.createSiteNode(this, folder);
-            nodeMapByRelativePath.put(relativePath.asString(), siteNode);
+        final SiteNode siteNode = modelFactory.createSiteNode(this, folder);
+        nodeMapByRelativePath.put(relativePath.asString(), siteNode);
 
-            if (!siteNode.isPlaceHolder())
-              {
-                final ResourcePath relativeUri = siteNode.getRelativeUri();
-                // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
-                if ("true".equals(siteNode.getProperty(SiteNode.P_MANAGES_PATH_PARAMS).orElse("false")))
-                  {
-                    final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
-                    nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
-                  }
-                else
-                  {
-                    nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
-                  }
-              }
-          }
-        catch (IOException | NotFoundException e)
+        if (!siteNode.isPlaceHolder())
           {
-            throw new RuntimeException(e);
+            final ResourcePath relativeUri = siteNode.getRelativeUri();
+            // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
+            if ("true".equals(siteNode.getProperty(SiteNode.P_MANAGES_PATH_PARAMS).orElse("false")))
+              {
+                final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
+                nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
+              }
+            else
+              {
+                nodeMapByRelativeUri.put(relativeUri.asString(), siteNode);
+              }
           }
       }
 
