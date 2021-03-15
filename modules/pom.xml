@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>northernwind</artifactId>
-        <version>1.2-ALPHA-4-SNAPSHOT</version>
+        <version>1.2-ALPHA-5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-modules</artifactId>
-    <version>1.2-ALPHA-4-SNAPSHOT</version>
+    <version>1.2-ALPHA-5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind (modules)</name>
     <description>The parent POM for modules.</description>
@@ -29,7 +29,7 @@
         <netbeans.version>RELEASE80</netbeans.version>
         <rome.version>1.0.0</rome.version>
         <stringtemplate.version>4.1</stringtemplate.version>
-        <thesefoolishthings.version>3.1-ALPHA-6</thesefoolishthings.version>
+        <thesefoolishthings.version>3.2-ALPHA-1</thesefoolishthings.version>
         <xmpcore.version>5.1.0</xmpcore.version>
 
         <tft.aspectjrt.version>1.9.6</tft.aspectjrt.version>

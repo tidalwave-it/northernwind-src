@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Finder;
-import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.spi.VirtualSiteNode;
 
@@ -103,6 +102,6 @@ public interface ViewController
     @Nonnull
     default public Finder<SiteNode> findVirtualSiteNodes()
       {
-        return FinderSupport.emptyFinder();
+        return Finder.empty();
       }
   }

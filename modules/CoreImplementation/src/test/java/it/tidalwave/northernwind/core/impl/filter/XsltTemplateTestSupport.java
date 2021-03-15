@@ -44,11 +44,11 @@ import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import it.tidalwave.util.Finder8Support;
+import it.tidalwave.util.spi.FinderSupport;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor
-class MockResourceFinder extends Finder8Support<Resource, SiteFinder<Resource>> implements SiteFinder<Resource>
+class MockResourceFinder extends FinderSupport<Resource, SiteFinder<Resource>> implements SiteFinder<Resource>
   {
     private static final long serialVersionUID = 1692141469939523431L;
 

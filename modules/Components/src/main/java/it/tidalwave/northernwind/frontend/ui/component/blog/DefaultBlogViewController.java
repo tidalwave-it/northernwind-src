@@ -43,9 +43,9 @@ import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import it.tidalwave.util.Finder8;
+import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.spi.SimpleFinder8Support;
+import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -185,13 +185,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     /*******************************************************************************************************************
      *
-     * A {@link Finder8} which returns virtual {@link SiteNode}s representing the multiple contents served by the
+     * A {@link Finder} which returns virtual {@link SiteNode}s representing the multiple contents served by the
      * {@link SiteNode} associated to this controller. This is typically used to create site maps.
      *
      ******************************************************************************************************************/
     // TODO: add eventual localized versions
     @RequiredArgsConstructor
-    private static class VirtualSiteNodeFinder extends SimpleFinder8Support<SiteNode>
+    private static class VirtualSiteNodeFinder extends SimpleFinderSupport<SiteNode>
       {
         private static final long serialVersionUID = 1L;
 
@@ -362,7 +362,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findVirtualSiteNodes()
+    public Finder<SiteNode> findVirtualSiteNodes()
       {
         return new VirtualSiteNodeFinder(this);
       }
