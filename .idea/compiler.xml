@@ -11,8 +11,8 @@
         <module name="it-tidalwave-northernwind-frontend-media-springmvc-webapp" />
         <module name="it-tidalwave-northernwind-frontend-springmvc" />
         <module name="it-tidalwave-northernwind-core-marshalling-default" />
-        <module name="it-tidalwave-northernwind-core-filesystem-scm" />
         <module name="it-tidalwave-northernwind-core" />
+        <module name="it-tidalwave-northernwind-core-filesystem-scm" />
         <module name="it-tidalwave-northernwind-frontend-commons" />
         <module name="it-tidalwave-html-patches" />
         <module name="it-tidalwave-northernwind-core-filesystem-basic" />
@@ -24,8 +24,8 @@
         <module name="it-tidalwave-northernwind-core-filesystem-hg" />
         <module name="it-tidalwave-northernwind-frontend-springmvc-webapp" />
         <module name="it-tidalwave-northernwind-core-default" />
-        <module name="it-tidalwave-northernwind-frontend-media" />
         <module name="it-tidalwave-northernwind-frontend-components" />
+        <module name="it-tidalwave-northernwind-frontend-media" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -52,6 +52,7 @@
       <module name="it-tidalwave-northernwind-frontend-webapp-commons" target="1.8" />
       <module name="it-tidalwave-northernwind-modules" target="1.8" />
       <module name="it-tidalwave-northernwind-webapp" target="1.8" />
+      <module name="northernwind" target="1.8" />
       <module name="northernwind-src" target="1.8" />
     </bytecodeTargetLevel>
   </component>

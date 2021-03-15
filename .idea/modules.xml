@@ -25,7 +25,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/webapp/Commons/it-tidalwave-northernwind-frontend-webapp-commons.iml" filepath="$PROJECT_DIR$/modules/webapp/Commons/it-tidalwave-northernwind-frontend-webapp-commons.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/it-tidalwave-northernwind-modules.iml" filepath="$PROJECT_DIR$/modules/it-tidalwave-northernwind-modules.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/webapp/it-tidalwave-northernwind-webapp.iml" filepath="$PROJECT_DIR$/modules/webapp/it-tidalwave-northernwind-webapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/northernwind-src.iml" filepath="$PROJECT_DIR$/.idea/northernwind-src.iml" />
+      <module fileurl="file://$PROJECT_DIR$/northernwind.iml" filepath="$PROJECT_DIR$/northernwind.iml" />
     </modules>
   </component>
 </project>

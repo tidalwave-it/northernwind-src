@@ -38,8 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
-import it.tidalwave.util.Finder8;
-import it.tidalwave.util.spi.ArrayListFinder8;
+import it.tidalwave.util.Finder;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -106,7 +105,7 @@ public class MockPosts
                  .forEach(e ->
               {
                 final Content blogFolder = site.find(Content).withRelativePath(e.getKey()).optionalResult().get();
-                when(blogFolder.findChildren()).thenReturn((Finder8)(new ArrayListFinder8<>(e.getValue())));
+                when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(e.getValue()));
               });
 
             when(viewProperties.getProperty(eq(P_CONTENT_PATHS))).thenReturn(Optional.of(paths));
