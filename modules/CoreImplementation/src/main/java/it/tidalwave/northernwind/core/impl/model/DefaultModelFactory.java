@@ -100,7 +100,6 @@ public class DefaultModelFactory extends ModelFactorySupport
      ******************************************************************************************************************/
     @Override @Nonnull
     public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
-      throws IOException, NotFoundException
       {
         return new DefaultSiteNode(this, (DefaultSite)site, folder);
       }

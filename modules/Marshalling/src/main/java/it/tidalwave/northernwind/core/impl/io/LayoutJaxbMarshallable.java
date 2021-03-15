@@ -33,7 +33,7 @@ import java.io.OutputStream;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.role.Marshallable;
+import it.tidalwave.role.io.Marshallable;
 import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;

@@ -38,7 +38,7 @@ import com.sun.syndication.feed.rss.Content;
 import com.sun.syndication.feed.rss.Guid;
 import com.sun.syndication.feed.rss.Item;
 import com.sun.syndication.io.WireFeedOutput;
-import it.tidalwave.util.Finder8;
+import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -123,9 +123,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder8<SiteNode> findVirtualSiteNodes()
+    public Finder<SiteNode> findVirtualSiteNodes()
       {
-        return new DefaultSiteFinder<>("empty", emptyMap(), null); // TODO: Finder8Support.emptyFinder();
+        return new DefaultSiteFinder<>("empty", emptyMap(), null); // TODO: FinderSupport.emptyFinder();
       }
 
     /*******************************************************************************************************************

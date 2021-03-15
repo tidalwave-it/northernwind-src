@@ -83,8 +83,7 @@ public interface ModelFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public SiteNode createSiteNode (@Nonnull Site site, @Nonnull ResourceFile folder)
-      throws IOException, NotFoundException;
+    public SiteNode createSiteNode (@Nonnull Site site, @Nonnull ResourceFile folder);
 
     /*******************************************************************************************************************
      *
