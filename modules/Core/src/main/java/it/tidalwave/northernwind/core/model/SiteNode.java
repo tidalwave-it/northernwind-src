@@ -43,7 +43,7 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 public interface SiteNode extends Resource, SimpleComposite<SiteNode>
   {
     @SuppressWarnings("squid:S1700")
-    public static final Class<SiteNode> SiteNode = SiteNode.class;
+    public static final Class<SiteNode> _SiteNode_ = SiteNode.class;
 
     /** The label used for creating navigation links to this {@code SiteNode}. */
     public static final Key<String> P_NAVIGATION_LABEL = new Key<String>("navigationLabel") {};

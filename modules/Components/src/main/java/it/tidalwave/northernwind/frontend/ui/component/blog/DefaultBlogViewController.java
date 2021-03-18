@@ -569,8 +569,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
       {
         return properties.getProperty(P_CONTENT_PATHS).orElse(emptyList()).stream()
-                .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream()
-                                                                 .flatMap(folder -> folder.findChildren().stream()))
+                .flatMap(path -> siteNode.getSite().find(_Content_).withRelativePath(path).stream()
+                                                                   .flatMap(folder -> folder.findChildren().stream()))
                 .collect(toList());
       }
 

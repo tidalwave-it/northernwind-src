@@ -49,7 +49,7 @@ import lombok.With;
 public interface Content extends Resource, SimpleComposite<Content>
   {
     @SuppressWarnings("squid:S1700")
-    public static final Class<Content> Content = Content.class;
+    public static final Class<Content> _Content_ = Content.class;
 
     /** The title of this {@code Content}. */
     public static final Key<String> P_TITLE = new Key<String>("title") {};

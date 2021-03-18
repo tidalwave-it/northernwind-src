@@ -50,7 +50,7 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
@@ -130,7 +130,7 @@ public class DefaultNodeContainerViewControllerTest
         final String templateContent = "the template content";
         final ResourcePath templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        mockProperty(Content, templatePath, P_TEMPLATE, templateContent);
+        mockProperty(_Content_, templatePath, P_TEMPLATE, templateContent);
         // when
         underTest.renderView(renderContext);
         // then
@@ -313,8 +313,8 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(P_RSS_FEEDS)).thenReturn(Optional.of(
                 Arrays.asList("/feed1", "/feed2", "/inexistentFeed", "/feed3")));
-        mockProperty(SiteNode, ResourcePath.of("/feed1"), P_TITLE, "Feed 1 title");
-        mockProperty(SiteNode, ResourcePath.of("/feed2"), P_TITLE, "Feed 2 title");
+        mockProperty(_SiteNode_, ResourcePath.of("/feed1"), P_TITLE, "Feed 1 title");
+        mockProperty(_SiteNode_, ResourcePath.of("/feed2"), P_TITLE, "Feed 2 title");
         // no property for feed3
         // when
         underTest.renderView(renderContext);
@@ -352,8 +352,8 @@ public class DefaultNodeContainerViewControllerTest
         // given
         when(viewProperties.getProperty(P_INLINED_SCRIPTS)).thenReturn(Optional.of(
                 Arrays.asList("/script1", "/script2", "/inexistentScript", "/script3")));
-        mockProperty(Content, ResourcePath.of("/script1"), P_TEMPLATE, "<script>1</script>");
-        mockProperty(Content, ResourcePath.of("/script2"), P_TEMPLATE, "<script>2</script>");
+        mockProperty(_Content_, ResourcePath.of("/script1"), P_TEMPLATE, "<script>1</script>");
+        mockProperty(_Content_, ResourcePath.of("/script2"), P_TEMPLATE, "<script>2</script>");
         // no property for script3
         // when
         underTest.renderView(renderContext);

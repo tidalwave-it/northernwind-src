@@ -36,7 +36,6 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.component.sitemap.DefaultSitemapViewController.Entry;
 import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

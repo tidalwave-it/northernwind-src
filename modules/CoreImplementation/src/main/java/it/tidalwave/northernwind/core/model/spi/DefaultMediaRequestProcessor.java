@@ -43,7 +43,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
-import static it.tidalwave.northernwind.core.model.Media.Media;
+import static it.tidalwave.northernwind.core.model.Media._Media_;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
@@ -122,7 +122,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             mediaUri = mediaUri.appendedWith(size).appendedWith(mediaId + "." + extension);
           }
 
-        final Media media = siteProvider.get().getSite().find(Media).withRelativePath(mediaUri).result();
+        final Media media = siteProvider.get().getSite().find(_Media_).withRelativePath(mediaUri).result();
         final ResourceFile file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
 

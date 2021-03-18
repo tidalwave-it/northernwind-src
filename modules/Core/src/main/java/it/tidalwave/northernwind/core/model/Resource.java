@@ -49,6 +49,8 @@ import lombok.With;
  **********************************************************************************************************************/
 public interface Resource extends As
   {
+    public static final Class<Resource> _Resource_ = Resource.class;
+
     /*******************************************************************************************************************
      *
      * A builder of a {@link Resource}.
@@ -88,8 +90,6 @@ public interface Resource extends As
     /** This property, controls whether this resource is a placeholder. See {@link #isPlaceHolder} for more information
      */
     public static final Key<Boolean> P_PLACE_HOLDER = new Key<Boolean>("placeHolder") {};
-
-    public static final Class<Resource> Resource = Resource.class;
 
     /*******************************************************************************************************************
      *
