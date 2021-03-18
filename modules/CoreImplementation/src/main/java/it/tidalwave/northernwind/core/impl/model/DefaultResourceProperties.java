@@ -36,6 +36,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -48,6 +49,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Arrays.asList;
 import static java.time.format.DateTimeFormatter.*;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -74,7 +76,9 @@ public class DefaultResourceProperties implements ResourceProperties
     @Nonnull @Getter
     private final Id id;
 
-    private final Map<Key<?>, Object> propertyMap = new HashMap<>();
+    /* Use String as key, and not Key. In this way properties can be managed both in an untyped fashion - e.g. by means
+    of Key.of("foo", Object.class) - and typed at the same time - e.g. Key.of("foo", Boolean.class). */
+    private final Map<String, Object> propertyMap = new HashMap<>();
 
     private final Map<Id, DefaultResourceProperties> groupMap = new HashMap<>();
 
@@ -124,33 +128,33 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     public DefaultResourceProperties (final @Nonnull Id id,
-                                      final @Nonnull Map<Key<?>, Object> map,
+                                      final @Nonnull Map<String, Object> map,
                                       final @Nonnull PropertyResolver propertyResolver)
       {
         this.id = id;
         this.propertyResolver = propertyResolver;
 
-        final Map<Id, Map<Key<?>, Object>> othersMap = new HashMap<>();
+        final Map<Id, Map<String, Object>> othersMap = new HashMap<>();
 
-        for (final Entry<Key<?>, Object> entry : map.entrySet())
+        for (final Entry<String, Object> entry : map.entrySet())
           {
-            final String s = entry.getKey().stringValue();
+            final String s = entry.getKey();
             final Object value = entry.getValue();
 
             if (!s.contains("."))
               {
-                propertyMap.put(new Key<String>(s) {}, value);
+                propertyMap.put(s, value);
               }
             else
               {
                 final String[] x = s.split("\\.");
                 final Id groupId = new Id(x[0]);
-                final Map<Key<?>, Object> otherMap = othersMap.computeIfAbsent(groupId, __ -> new HashMap<>());
-                otherMap.put(new Key<String>(x[1]) {}, value);
+                final Map<String, Object> otherMap = othersMap.computeIfAbsent(groupId, __ -> new HashMap<>());
+                otherMap.put(x[1], value);
               }
           }
 
-        for (final Entry<Id, Map<Key<?>, Object>> entry : othersMap.entrySet())
+        for (final Entry<Id, Map<String, Object>> entry : othersMap.entrySet())
           {
             groupMap.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
           }
@@ -166,12 +170,17 @@ public class DefaultResourceProperties implements ResourceProperties
       {
         try
           {
-            final Object value = propertyMap.get(key);
+            final Object value = propertyMap.get(key.getName());
             return Optional.of(convertValue(key, (value != null) ? value : propertyResolver.resolveProperty(id, key)));
           }
-        catch (NotFoundException | IOException e)
+        catch (IOException e)
           {
-            log.trace("", e);
+            log.trace("Could not resolve property", e);
+            return Optional.empty();
+          }
+        catch (NotFoundException e)
+          {
+            log.trace("Could not resolve property {}", e.getMessage());
             return Optional.empty();
           }
       }
@@ -197,7 +206,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public Collection<Key<?>> getKeys()
       {
-        return new CopyOnWriteArrayList<>(propertyMap.keySet());
+        return propertyMap.keySet().stream().map(Key::of).collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -206,7 +215,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Collection<Id> getGroupIds()
+    public Collection<Id> getGroupIds() // FIXME: should be a Set
       {
         return new CopyOnWriteArrayList<>(groupMap.keySet());
       }
@@ -220,7 +229,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public <T> DefaultResourceProperties withProperty (final @Nonnull Key<T> key, final @Nonnull T value)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
-        result.propertyMap.put(key, value); // FIXME: clone property
+        result.propertyMap.put(key.getName(), value); // FIXME: clone property
         return result;
       }
 
@@ -233,7 +242,7 @@ public class DefaultResourceProperties implements ResourceProperties
     public DefaultResourceProperties withoutProperty (final @Nonnull Key<?> key)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
-        result.propertyMap.remove(key);
+        result.propertyMap.remove(key.getName());
         return result;
       }
 
@@ -267,9 +276,9 @@ public class DefaultResourceProperties implements ResourceProperties
 
         ResourceProperties result = new DefaultResourceProperties(this);
 
-        for (final Entry<Key<?>, Object> entry : otherProperties.propertyMap.entrySet())
+        for (final Entry<String, Object> entry : otherProperties.propertyMap.entrySet())
           {
-            result = result.withProperty((Key<Object>)entry.getKey(), entry.getValue());
+            result = result.withProperty(Key.of(entry.getKey()), entry.getValue());
           }
 
         for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
@@ -304,18 +313,20 @@ public class DefaultResourceProperties implements ResourceProperties
     @Nonnull
     /* visible for testing */ static <T> T convertValue (final @Nonnull Key<T> key, final @Nonnull Object value)
       {
+        log.trace("convertValue({}, {})", key, value);
+        T result = null;
+
         try
           {
             if (key.getType().isAssignableFrom(value.getClass()))
               {
-                return key.getType().cast(value);
+                result = key.getType().cast(value);
               }
-
-            if (key.toString().equals("Key[tags]")) // workaround as Zephyr stores it as a comma-separated string
+            else if (key.getName().equals("tags")) // workaround as Zephyr stores it as a comma-separated string
               {
-                return (T)asList(((String)value).split(","));
+                result = (T)asList(((String)value).split(","));
               }
-//            if (value instanceof List)
+//            else if (value instanceof List)
 //              {
 //                final List<Object> list = (List<Object>)value;
 //                Class<?> elementType = String.class; // FIXME: should get the generic of the list
@@ -324,10 +335,13 @@ public class DefaultResourceProperties implements ResourceProperties
 //                              .map(i -> CONVERTER_MAP.getOrDefault(elementType, o -> o).apply(value))
 //                              .collect(toList());
 //              }
-//            else
+            else
               {
-                return (T)CONVERTER_MAP.getOrDefault(key.getType(), o -> o).apply(value);
+                result = (T)CONVERTER_MAP.getOrDefault(key.getType(), o -> o).apply(value);
               }
+
+            log.trace(">>>> returning {} ({})", result, result.getClass().getName());
+            return result;
           }
         catch (Exception e)
           {

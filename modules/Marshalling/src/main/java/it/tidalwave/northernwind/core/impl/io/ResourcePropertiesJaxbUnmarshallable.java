@@ -33,6 +33,8 @@ import java.io.InputStream;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -49,22 +51,17 @@ import it.tidalwave.northernwind.core.model.ModelFactory;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@DciRole(datumType = ResourceProperties.class) @Configurable
+@DciRole(datumType = ResourceProperties.class) @Configurable @RequiredArgsConstructor @Slf4j
 public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
   {
+    @Nonnull
+    private final ResourceProperties owner;
+
     @Inject
     private ModelFactory modelFactory;
 
     @Inject
     private Unmarshaller unmarshaller;
-
-    /*******************************************************************************************************************
-     *
-     *
-     ******************************************************************************************************************/
-    public ResourcePropertiesJaxbUnmarshallable (final @Nonnull ResourceProperties resourceProperties)
-      {
-      }
 
     /*******************************************************************************************************************
      *
@@ -105,8 +102,8 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
         for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
           {
             final ValuesJaxb values = propertyJaxb.getValues();
-            properties = properties.withProperty(new Key<Object>(propertyJaxb.getName()) {},
-                                                ((values != null) ? values.getValue() : propertyJaxb.getValue()));
+            properties = properties.withProperty(Key.of(propertyJaxb.getName()),
+                                                 (values != null) ? values.getValue() : propertyJaxb.getValue());
           }
 
         for (final PropertiesJaxb propertiesJaxb2 : propertiesJaxb.getProperties())

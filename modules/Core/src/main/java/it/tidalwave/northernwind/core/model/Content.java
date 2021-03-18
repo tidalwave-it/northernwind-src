@@ -52,31 +52,31 @@ public interface Content extends Resource, SimpleComposite<Content>
     public static final Class<Content> _Content_ = Content.class;
 
     /** The title of this {@code Content}. */
-    public static final Key<String> P_TITLE = new Key<String>("title") {};
+    public static final Key<String> P_TITLE = Key.of("title", String.class);
 
     /** The unique id of this {@code Content}. */
-    public static final Key<String> P_ID = new Key<String>("id") {};
+    public static final Key<String> P_ID = Key.of("id", String.class);
 
     /** The full text contained in this {@code Content}. */
-    public static final Key<String> P_FULL_TEXT = new Key<String>("fullText") {};
+    public static final Key<String> P_FULL_TEXT = Key.of("fullText", String.class);
 
     /** A shortened text contained in this {@code Content}. */
-    public static final Key<String> P_LEADIN_TEXT = new Key<String>("leadinText") {};
+    public static final Key<String> P_LEADIN_TEXT = Key.of("leadinText", String.class);
 
     /** A description this {@code Content}. */
-    public static final Key<String> P_DESCRIPTION = new Key<String>("description") {};
+    public static final Key<String> P_DESCRIPTION = Key.of("description", String.class);
 
     /** A contained that works as a template for something. */
-    public static final Key<String> P_TEMPLATE = new Key<String>("template") {};
+    public static final Key<String> P_TEMPLATE = Key.of("template", String.class);
 
     /** The creation date of this {@code Content}. */
-    public static final Key<ZonedDateTime> P_CREATION_DATE = new Key<ZonedDateTime>("creationDateTime") {};
+    public static final Key<ZonedDateTime> P_CREATION_DATE = Key.of("creationDateTime", ZonedDateTime.class);
 
     /** The latest modification date of this {@code Content}. */
-    public static final Key<ZonedDateTime> P_LATEST_MODIFICATION_DATE = new Key<ZonedDateTime>("latestModificationDateTime") {};
+    public static final Key<ZonedDateTime> P_LATEST_MODIFICATION_DATE = Key.of("latestModificationDateTime", ZonedDateTime.class);
 
     /** The publishing date of this {@code Content}. */
-    public static final Key<ZonedDateTime> P_PUBLISHING_DATE = new Key<ZonedDateTime>("publishingDateTime") {};
+    public static final Key<ZonedDateTime> P_PUBLISHING_DATE = Key.of("publishingDateTime", ZonedDateTime.class);
 
     /** A collection of tags associated with this {@code Content}. */
     public static final Key<List<String>> P_TAGS = new Key<List<String>>("tags") {};
