@@ -27,8 +27,8 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import java.util.Map;
 
 /***********************************************************************************************************************
  *
@@ -44,9 +44,9 @@ public class MockFileSystemWithOnlyIgnoredFiles extends EmptyMockFileSystem
     
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem,
-                       final @Nonnull Map<String, String> resourceProperties)
+                       final @Nonnull MockModelFactory.PropertySetter propertySetter)
       {
-        super.setUp(fileSystem, resourceProperties);
+        super.setUp(fileSystem, propertySetter);
         createMockFolder(fileSystem, documentFolder, "ignored1");
         createMockFolder(fileSystem, nodeFolder, "ignored2");
       }

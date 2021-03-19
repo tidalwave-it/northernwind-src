@@ -43,7 +43,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
 import static org.springframework.core.Ordered.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
@@ -79,7 +79,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
           {
             final String relativeUri = request.getRelativeUri();
             final Site site = siteProvider.get().getSite();
-            final SiteNode node = site.find(SiteNode).withRelativeUri(relativeUri).result();
+            final SiteNode node = site.find(_SiteNode_).withRelativeUri(relativeUri).result();
             requestContext.setNode(node);
             siteView.renderSiteNode(request, node);
             //

@@ -58,25 +58,25 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
 @Slf4j
 public class BluetteGalleryAdapter extends GalleryAdapterSupport
   {
-    private static final Key<String> P_COPYRIGHT = new Key<String>("copyright") {};
+    private static final Key<String> P_COPYRIGHT = Key.of("copyright", String.class);
 
-    private static final Key<ResourcePath> P_BLUETTE_TEMPLATE_PATH = new Key<ResourcePath>("bluettePath") {};
+    private static final Key<ResourcePath> P_BLUETTE_TEMPLATE_PATH = Key.of("bluettePath", ResourcePath.class);
 
     /** The path to the template for fallback rendering of a single gallery page, when JavaScript is not available. */
-    private static final Key<ResourcePath> P_BLUETTE_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteFallbackPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_FALLBACK_TEMPLATE_PATH = Key.of("bluetteFallbackPath", ResourcePath.class);
 
     /** The path to the template for fallback rendering of the light box, when JavaScript is not available. */
-    private static final Key<ResourcePath> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = new Key<ResourcePath>("bluetteLightboxFallbackPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_LIGHTBOX_FALLBACK_TEMPLATE_PATH = Key.of("bluetteLightboxFallbackPath", ResourcePath.class);
 
     /** The path to the template for the script that redirects a page to the dynamic counterpart (with #!). */
-    private static final Key<ResourcePath> P_BLUETTE_REDIRECT_SCRIPT_TEMPLATE_PATH = new Key<ResourcePath>("bluetteRedirectScriptPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_REDIRECT_SCRIPT_TEMPLATE_PATH = Key.of("bluetteRedirectScriptPath", ResourcePath.class);
 
     /** The path to the template for the image catalog. */
-    private static final Key<ResourcePath> P_BLUETTE_CATALOG_TEMPLATE_PATH = new Key<ResourcePath>("bluetteCatalogPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_CATALOG_TEMPLATE_PATH = Key.of("bluetteCatalogPath", ResourcePath.class);
 
-    private static final Key<ResourcePath> P_BLUETTE_VARIABLES_TEMPLATE_PATH = new Key<ResourcePath>("bluetteVariablesPath") {};
+    private static final Key<ResourcePath> P_BLUETTE_VARIABLES_TEMPLATE_PATH = Key.of("bluetteVariablesPath", ResourcePath.class);
 
-    private static final Key<String> P_CATALOG_URL = new Key<String>("bluetteCatalogUrl") {};
+    private static final Key<String> P_CATALOG_URL = Key.of("bluetteCatalogUrl", String.class);
 
     @Nonnull
     private final Site site;

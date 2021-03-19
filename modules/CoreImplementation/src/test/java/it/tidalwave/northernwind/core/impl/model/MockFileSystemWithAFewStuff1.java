@@ -27,12 +27,11 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static it.tidalwave.northernwind.core.impl.model.MockFileSystemSupport.assertItem;
 
 /***********************************************************************************************************************
  *
@@ -48,9 +47,9 @@ public class MockFileSystemWithAFewStuff1 extends EmptyMockFileSystem
 
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem,
-                       final @Nonnull Map<String, String> resourceProperties)
+                       final @Nonnull MockModelFactory.PropertySetter propertySetter)
       {
-        super.setUp(fileSystem, resourceProperties);
+        super.setUp(fileSystem, propertySetter);
         // FIXME: this is flat, create some hierarchy
         createMockFolder(fileSystem, documentFolder, "document1");
         createMockFolder(fileSystem, documentFolder, "document2");
@@ -58,7 +57,7 @@ public class MockFileSystemWithAFewStuff1 extends EmptyMockFileSystem
         createMockFolder(fileSystem, nodeFolder, "node1");
         createMockFolder(fileSystem, nodeFolder, "node2");
         createMockFolder(fileSystem, nodeFolder, "node3");
-        resourceProperties.put("/structure/node3." + SiteNode.P_MANAGES_PATH_PARAMS.stringValue(), "true");
+        propertySetter.setProperty("/structure/node3", SiteNode.P_MANAGES_PATH_PARAMS, true);
         createMockFolder(fileSystem, nodeFolder, "node4");
         createMockFile(fileSystem, mediaFolder, "media1");
         createMockFile(fileSystem, mediaFolder, "media2");
