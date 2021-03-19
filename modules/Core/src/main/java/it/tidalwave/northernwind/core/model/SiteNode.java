@@ -50,8 +50,7 @@ public interface SiteNode extends Resource, SimpleComposite<SiteNode>
 
     /** If sets to true, this property makes the {@code SiteNode} capable to match not only its {@code /relativeUri},
      *  but also {@code /relativeUri/something/else}; it is meant for nodes that accept REST path-style params. */
-    // FIXME: must be Boolean
-    public static final Key<String> P_MANAGES_PATH_PARAMS = Key.of("managesPathParams", String.class);
+    public static final Key<Boolean> P_MANAGES_PATH_PARAMS = Key.of("managesPathParams", Boolean.class);
 
     /*******************************************************************************************************************
      *
