@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 
 /***********************************************************************************************************************
@@ -158,7 +158,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         final Site site = siteNode.getSite();
         return streamOf(P_RSS_FEEDS)
-                .flatMap(relativePath -> site.find(SiteNode).withRelativePath(relativePath).stream())
+                .flatMap(relativePath -> site.find(_SiteNode_).withRelativePath(relativePath).stream())
                 .map(node -> String.format(TEMPLATE_RSS_LINK,
                                            RSS_MIME_TYPE,
                                            node.getProperty(P_TITLE).orElse("RSS"),
@@ -189,7 +189,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     protected String computeInlinedScriptsSection()
       {
         return streamOf(P_INLINED_SCRIPTS)
-                .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream())
+                .flatMap(path -> siteNode.getSite().find(_Content_).withRelativePath(path).stream())
                 .flatMap(script -> script.getProperty(P_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
                 .collect(joining());
       }

@@ -43,6 +43,8 @@ import lombok.With;
  **********************************************************************************************************************/
 public interface Media extends Resource
   {
+    public static final Class<Media> _Media_ = Media.class;
+
     /*******************************************************************************************************************
      *
      * A builder of a {@link Content}.
@@ -74,6 +76,4 @@ public interface Media extends Resource
             return callBack.build(this);
           }
       }
-
-    public static final Class<Media> Media = Media.class;
   }

@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 public interface Filter
   {
     @SuppressWarnings("squid:S1700")
-    public static final Class<Filter> Filter = Filter.class;
+    public static final Class<Filter> _Filter_ = Filter.class;
 
     /*******************************************************************************************************************
      *

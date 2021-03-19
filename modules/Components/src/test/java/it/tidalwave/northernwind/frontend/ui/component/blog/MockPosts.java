@@ -104,7 +104,7 @@ public class MockPosts
                  .stream()
                  .forEach(e ->
               {
-                final Content blogFolder = site.find(Content).withRelativePath(e.getKey()).optionalResult().get();
+                final Content blogFolder = site.find(_Content_).withRelativePath(e.getKey()).optionalResult().get();
                 when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(e.getValue()));
               });
 
