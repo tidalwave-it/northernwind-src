@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
@@ -76,7 +77,7 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     public abstract void setUp (@Nonnull ResourceFileSystem fileSystem,
-                                @Nonnull Map<String, String> resourceProperties);
+                                @Nonnull MockModelFactory.PropertySetter propertySetter);
 
     /*******************************************************************************************************************
      *
@@ -188,7 +189,7 @@ public abstract class MockFileSystemSupport
           }
         else
           {
-            assertThat(key + " -> " + map.keySet(), map.get(key), is(notNullValue()));
+            assertThat("Missing item: " + key + " in " + map.keySet(), map.get(key), is(notNullValue()));
             assertThat(map.get(key).toString(), is(expectedValue));
           }
       }

@@ -100,10 +100,10 @@ import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggrega
 public class HtmlTemplateBlogViewController extends DefaultBlogViewController
   {
     /** The relative path to the {@link Content} that contains a template for rendering posts. */
-    public static final Key<ResourcePath> P_TEMPLATE_POSTS_PATH = new Key<ResourcePath>("postsTemplate") {};
+    public static final Key<ResourcePath> P_TEMPLATE_POSTS_PATH = Key.of("postsTemplate", ResourcePath.class);
 
     /** The relative path to the {@link Content} that contains a template for rendering the tag cloud. */
-    public static final Key<ResourcePath> P_TEMPLATE_TAG_CLOUD_PATH = new Key<ResourcePath>("tagCloudTemplate") {};
+    public static final Key<ResourcePath> P_TEMPLATE_TAG_CLOUD_PATH = Key.of("tagCloudTemplate", ResourcePath.class);
 
     @Nonnull
     private final HtmlTemplateBlogView view;

@@ -39,23 +39,23 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 public interface BlogViewController extends ViewController
   {
     /** The max. number of posts to render in full. */
-    public static final Key<Integer> P_MAX_FULL_ITEMS = new Key<Integer>("maxFullItems") {};
+    public static final Key<Integer> P_MAX_FULL_ITEMS = Key.of("maxFullItems", Integer.class);
 
     /** The max. number of posts to render with lead-in text. */
-    public static final Key<Integer> P_MAX_LEADIN_ITEMS = new Key<Integer>("maxLeadInItems") {};
+    public static final Key<Integer> P_MAX_LEADIN_ITEMS = Key.of("maxLeadInItems", Integer.class);
 
     /** The max. number of posts to render. */
-    public static final Key<Integer> P_MAX_ITEMS = new Key<Integer>("maxItems") {};
+    public static final Key<Integer> P_MAX_ITEMS = Key.of("maxItems", Integer.class);
 
     /** Flag to switch to 'index' mode. */
-    public static final Key<Boolean> P_INDEX = new Key<Boolean>("index") {};
+    public static final Key<Boolean> P_INDEX = Key.of("index", Boolean.class);
 
     /** Flag to switch to 'tag cloud' mode. */
-    public static final Key<Boolean> P_TAG_CLOUD = new Key<Boolean>("tagCloud") {};
+    public static final Key<Boolean> P_TAG_CLOUD = Key.of("tagCloud", Boolean.class);
 
     /** The category associated to a post. */
-    public static final Key<String> P_CATEGORY = new Key<String>("category") {};
+    public static final Key<String> P_CATEGORY = Key.of("category", String.class);
 
     /** The id of the image to be associated with a blog post. */
-    public static final Key<String> P_IMAGE_ID = new Key<String>("imageId") {};
+    public static final Key<String> P_IMAGE_ID = Key.of("imageId", String.class);
   }

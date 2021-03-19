@@ -36,7 +36,7 @@ import java.util.TreeMap;
 import java.util.stream.IntStream;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
-import it.tidalwave.util.InstantProvider;
+import it.tidalwave.util.TimeProvider;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -121,7 +121,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
     private final CalendarDao dao;
 
     @Nonnull
-    private final InstantProvider instantProvider;
+    private final TimeProvider timeProvider;
 
     private int year;
 
@@ -260,6 +260,6 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
     @Nonnegative
     private int getCurrentYear()
       {
-        return ZonedDateTime.ofInstant(instantProvider.get(), ZoneId.of("UTC")).getYear();
+        return ZonedDateTime.ofInstant(timeProvider.get(), ZoneId.of("UTC")).getYear();
       }
   }

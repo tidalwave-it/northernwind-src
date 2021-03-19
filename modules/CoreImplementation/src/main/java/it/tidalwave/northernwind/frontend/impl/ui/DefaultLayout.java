@@ -39,10 +39,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.Parameters;
 import it.tidalwave.util.spi.AsSupport;
-import it.tidalwave.role.Composite.Visitor;
-import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -139,8 +136,6 @@ public class DefaultLayout implements Layout, Cloneable
      ******************************************************************************************************************/
     public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
       {
-        Parameters.checkNonNull(id, "id");
-        Parameters.checkNonNull(typeUri, "typeUri");
         this.id = id;
         this.typeUri = typeUri;
       }

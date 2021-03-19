@@ -40,18 +40,18 @@ import static lombok.AccessLevel.*;
 @NoArgsConstructor(access=PRIVATE)
 public final class Properties
   {
-    public static final Key<ResourcePath> P_TEMPLATE_PATH = new Key<ResourcePath>("templatePath") {};
+    public static final Key<ResourcePath> P_TEMPLATE_PATH = Key.of("templatePath", ResourcePath.class);
 
-    public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_PATH = new Key<ResourcePath>("wrapperTemplate") {};
+    public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_PATH = Key.of("wrapperTemplate", ResourcePath.class);
 
     public static final Key<List<String>> P_CONTENT_PATHS = new Key<List<String>>("contents") {};
 
-    public static final Key<String> P_CLASS = new Key<String>("class") {};
+    public static final Key<String> P_CLASS = Key.of("class", String.class);
 
-    public static final Key<String> P_DATE_FORMAT = new Key<String>("dateFormat") {};
+    public static final Key<String> P_DATE_FORMAT = Key.of("dateFormat", String.class);
 
-    public static final Key<String> P_TIME_ZONE = new Key<String>("timeZone") {};
+    public static final Key<String> P_TIME_ZONE = Key.of("timeZone", String.class);
 
     /** The level of a content, used to pick the heading. */
-    public static final Key<Integer> P_LEVEL = new Key<Integer>("level") {};
+    public static final Key<Integer> P_LEVEL = Key.of("level", Integer.class);
   }

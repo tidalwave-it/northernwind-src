@@ -49,7 +49,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
@@ -118,7 +118,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
       {
         final SortedSet<Entry> entries = new TreeSet<>();
 
-        siteNode.getSite().find(SiteNode).stream().forEach(node ->
+        siteNode.getSite().find(_SiteNode_).stream().forEach(node ->
           {
             final Layout layout = node.getLayout();
 
