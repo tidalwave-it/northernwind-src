@@ -128,7 +128,8 @@ public class DefaultHtmlTextWithTitleViewControllerTest
 
         for (int i = 0; i < paths.size(); i++)
           {
-            final ResourceProperties properties = site.find(Content).withRelativePath(paths.get(i)).result().getProperties();
+            final ResourceProperties properties =
+                    site.find(_Content_).withRelativePath(paths.get(i)).result().getProperties();
             when(properties.getProperty(P_TITLE)).thenReturn(Optional.of("Title #" + i));
             when(properties.getProperty(P_FULL_TEXT)).thenReturn(Optional.of(String.format("Full text #%d", i)));
           }

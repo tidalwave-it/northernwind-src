@@ -27,7 +27,7 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import static org.hamcrest.CoreMatchers.is;
@@ -59,7 +59,7 @@ public class EmptyMockFileSystem extends MockFileSystemSupport
 
     @Override
     public void setUp (final @Nonnull ResourceFileSystem fileSystem,
-                       final @Nonnull Map<String, String> resourceProperties)
+                       final @Nonnull MockModelFactory.PropertySetter propertySetter)
       {
         contentFolder  = createRootMockFolder(fileSystem, "/content");
         documentFolder = createMockFolder(fileSystem, contentFolder, "/document");

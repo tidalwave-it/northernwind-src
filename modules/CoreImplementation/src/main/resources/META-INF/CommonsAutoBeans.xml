@@ -46,4 +46,7 @@
     <bean id="contextManagerProvider"
           class="it.tidalwave.role.spring.spi.SpringContextManagerProvider" />
 
+    <bean id="timeProvider" class="it.tidalwave.util.TimeProvider"
+          factory-method="getInstance"/>
+
 </beans>

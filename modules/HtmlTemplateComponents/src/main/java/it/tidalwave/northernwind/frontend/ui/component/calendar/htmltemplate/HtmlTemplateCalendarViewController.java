@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
-import it.tidalwave.util.InstantProvider;
+import it.tidalwave.util.TimeProvider;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
@@ -74,9 +74,9 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                                                final @Nonnull SiteNode siteNode,
                                                final @Nonnull RequestLocaleManager requestLocaleManager,
                                                final @Nonnull CalendarDao dao,
-                                               final @Nonnull InstantProvider instantProvider)
+                                               final @Nonnull TimeProvider timeProvider)
       {
-        super(view, siteNode, requestLocaleManager, dao, instantProvider);
+        super(view, siteNode, requestLocaleManager, dao, timeProvider);
         this.view = view;
       }
 

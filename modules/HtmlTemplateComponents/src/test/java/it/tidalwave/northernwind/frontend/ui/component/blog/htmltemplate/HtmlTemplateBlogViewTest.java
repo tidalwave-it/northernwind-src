@@ -76,7 +76,7 @@ public class HtmlTemplateBlogViewTest
       {
         // given
         final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(Content).withRelativePath(templatePath).result();
+        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom posts template"));
         // when
@@ -94,7 +94,7 @@ public class HtmlTemplateBlogViewTest
       {
         // given
         final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(Content).withRelativePath(templatePath).result();
+        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom tag cloud template"));
         // when

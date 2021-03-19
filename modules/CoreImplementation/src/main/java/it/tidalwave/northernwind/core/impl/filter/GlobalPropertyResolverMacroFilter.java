@@ -38,7 +38,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import static org.springframework.core.Ordered.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
  *
@@ -65,9 +65,9 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
           {
             // FIXME: should be pushed into @PostConstruct, but can't - see NW-224
             final Site site = siteProvider.get().getSite();
-            final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result(); // See NW-223
+            final SiteNode rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result(); // See NW-223
             // END FIXME
-            final Key<String> key = new Key<String>(matcher.group(1)) {};
+            final Key<String> key = Key.of(matcher.group(1), String.class);
             return rootSiteNode.getProperty(key).orElse("");
           }
         catch (NotFoundException  e)

@@ -114,7 +114,7 @@ public class DefaultMenuViewControllerTest
         final String templateContent = "the template content";
         final ResourcePath templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
-        mockProperty(Content, templatePath, P_TEMPLATE, templateContent);
+        mockProperty(_Content_, templatePath, P_TEMPLATE, templateContent);
         // when
         underTest.renderView(renderContext);
         // then
@@ -192,8 +192,8 @@ public class DefaultMenuViewControllerTest
         // given
         when(viewProperties.getProperty(P_LINKS)).thenReturn(Optional.of(
                 Arrays.asList("/node1", "/node2", "/inexistentNode", "/node3")));
-        mockProperty(SiteNode, ResourcePath.of("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
-        mockProperty(SiteNode, ResourcePath.of("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
+        mockProperty(_SiteNode_, ResourcePath.of("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
+        mockProperty(_SiteNode_, ResourcePath.of("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3
         // when
         underTest.renderView(renderContext);

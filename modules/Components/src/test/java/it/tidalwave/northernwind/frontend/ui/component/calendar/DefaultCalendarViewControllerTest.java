@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.InstantProvider;
+import it.tidalwave.util.TimeProvider;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -77,9 +77,9 @@ public class DefaultCalendarViewControllerTest
                           final SiteNode siteNode,
                           final RequestLocaleManager requestLocaleManager,
                           final CalendarDao dao,
-                          final InstantProvider instantProvider)
+                          final TimeProvider timeProvider)
           {
-            super(view, siteNode, requestLocaleManager, dao, instantProvider);
+            super(view, siteNode, requestLocaleManager, dao, timeProvider);
           }
 
         @Override
