@@ -63,14 +63,15 @@ import static java.util.stream.Collectors.toList;
 public class DefaultResourceProperties implements ResourceProperties
   {
     @SuppressWarnings("squid:S1171")
-    private static final Map<Class<?>, Function<Object, Object>> CONVERTER_MAP = new HashMap<Class<?>, Function<Object, Object>>()
+    private static final Map<Class<?>, Function<String, Object>> CONVERTER_MAP =
+            new HashMap<Class<?>, Function<String, Object>>()
       {{
-        put(Integer.class,       o -> Integer.parseInt((String)o));
-        put(Float.class,         o -> Float.parseFloat((String)o));
-        put(Double.class,        o -> Double.parseDouble((String)o));
-        put(Boolean.class,       o -> Boolean.parseBoolean((String)o));
-        put(ZonedDateTime.class, o -> ZonedDateTime.parse((String)o, ISO_ZONED_DATE_TIME));
-        put(ResourcePath.class,  o -> ResourcePath.of((String)o));
+        put(Integer.class,       o -> Integer.parseInt(o));
+        put(Float.class,         o -> Float.parseFloat(o));
+        put(Double.class,        o -> Double.parseDouble(o));
+        put(Boolean.class,       o -> Boolean.parseBoolean(o));
+        put(ZonedDateTime.class, o -> ZonedDateTime.parse(o, ISO_ZONED_DATE_TIME));
+        put(ResourcePath.class,  o -> ResourcePath.of(o));
       }};
 
     @Nonnull @Getter
@@ -337,7 +338,7 @@ public class DefaultResourceProperties implements ResourceProperties
 //              }
             else
               {
-                result = (T)CONVERTER_MAP.getOrDefault(key.getType(), o -> o).apply(value);
+                result = (T)CONVERTER_MAP.getOrDefault(key.getType(), o -> o).apply((String)value);
               }
 
             log.trace(">>>> returning {} ({})", result, result.getClass().getName());
