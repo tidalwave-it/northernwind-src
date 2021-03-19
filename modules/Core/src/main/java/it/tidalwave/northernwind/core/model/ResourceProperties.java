@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.io.IOException;
 import it.tidalwave.util.As;
@@ -39,6 +40,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Identifiable;
+import it.tidalwave.util.TypeSafeMap;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -80,7 +82,7 @@ public interface ResourceProperties extends As, Identifiable
         @With
         private Id id = new Id("");
 
-        @With
+        @With @Deprecated
         private Map<String, Object> values = Collections.emptyMap();
 
         @With
@@ -90,6 +92,18 @@ public interface ResourceProperties extends As, Identifiable
         public ResourceProperties build()
           {
             return callBack.build(this);
+          }
+
+        /***************************************************************************************************************
+         *
+         * TODO: deprecate withValues(Map<String, Object>) and rename this to withValues().
+         *
+         **************************************************************************************************************/
+        @Nonnull
+        public Builder withSafeValues (final @Nonnull TypeSafeMap values)
+          {
+            return withValues(values.asMap().entrySet().stream()
+                                    .collect(Collectors.toMap(e -> e.getKey().getName(), e -> e.getValue())));
           }
       }
 
