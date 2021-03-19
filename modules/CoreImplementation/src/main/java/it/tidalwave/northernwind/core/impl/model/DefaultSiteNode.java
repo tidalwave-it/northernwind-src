@@ -53,7 +53,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.io.Unmarshallable.Unmarshallable;
+import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
 import static it.tidalwave.northernwind.util.UrlEncoding.*;
 
 /***********************************************************************************************************************
@@ -224,7 +224,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
         final ResourcePath parentRelativePath = getResource().getFile().getParent().getPath().urlDecoded()
                                               .relativeTo(site.getNodeFolder().getPath());
 
-        return site.find(SiteNode.class).withRelativePath(parentRelativePath).result();
+        return site.find(_SiteNode_).withRelativePath(parentRelativePath).result();
       }
 
     /*******************************************************************************************************************
@@ -236,6 +236,6 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
       {
         log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
         final @Cleanup InputStream is = layoutFile.getInputStream();
-        return modelFactory.createLayout().build().as(Unmarshallable).unmarshal(is);
+        return modelFactory.createLayout().build().as(_Unmarshallable_).unmarshal(is);
       }
   }

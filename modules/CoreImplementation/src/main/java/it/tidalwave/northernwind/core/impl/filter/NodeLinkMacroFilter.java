@@ -37,7 +37,7 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
  *
@@ -63,7 +63,7 @@ public class NodeLinkMacroFilter extends MacroFilter
       {
         final String relativePath = matcher.group(1);
         final Site site = siteProvider.get().getSite();
-        final SiteNode siteNode = site.find(SiteNode).withRelativePath(relativePath).result();
+        final SiteNode siteNode = site.find(_SiteNode_).withRelativePath(relativePath).result();
         return site.createLink(siteNode.getRelativeUri());
       }
   }

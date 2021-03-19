@@ -38,7 +38,7 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 public interface NodeContainerViewController extends ViewController
   {
     /** The prefix to prepend to the HTML title. */
-    public static final Key<String> P_TITLE_PREFIX = new Key<String>("titlePrefix") {};
+    public static final Key<String> P_TITLE_PREFIX = Key.of("titlePrefix", String.class);
 
     /** The list of relative paths or URLs for screen CSS style sheets. */
     public static final Key<List<String>> P_SCREEN_STYLE_SHEETS = new Key<List<String>>("screenStyleSheets") {};
@@ -56,14 +56,14 @@ public interface NodeContainerViewController extends ViewController
     public static final Key<List<String>> P_INLINED_SCRIPTS = new Key<List<String>>("inlinedScripts") {};
 
     /** Dynamic property generated during rendering with the title of the blog post. */
-    public static final Key<String> PD_TITLE = new Key<String>("@title") {};
+    public static final Key<String> PD_TITLE = Key.of("@title", String.class);
 
     /** Dynamic property generated during rendering with the permalink of the blog post. */
-    public static final Key<String> PD_URL = new Key<String>("@url") {};
+    public static final Key<String> PD_URL = Key.of("@url", String.class);
 
     /** Dynamic property generated during rendering with the unique id of the blog post. */
-    public static final Key<String> PD_ID = new Key<String>("@id") {};
+    public static final Key<String> PD_ID = Key.of("@id", String.class);
 
     /** Dynamic property generated during rendering with the id of the primary image to be associated to this view. */
-    public static final Key<String> PD_IMAGE_ID = new Key<String>("@imageId") {};
+    public static final Key<String> PD_IMAGE_ID = Key.of("@imageId", String.class);
   }

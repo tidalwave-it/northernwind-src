@@ -134,7 +134,7 @@ public class DefaultSiteTest
       throws Exception
       {
         // given
-        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getPropertySetter());
         underTest = new DefaultSite(siteBuilder);
         // when
         underTest.initialize();
@@ -151,7 +151,7 @@ public class DefaultSiteTest
       {
         // given
         final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getPropertySetter());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
@@ -171,7 +171,7 @@ public class DefaultSiteTest
       {
         // given
         final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getPropertySetter());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
@@ -191,7 +191,7 @@ public class DefaultSiteTest
       {
         // given
         final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getPropertySetter());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
@@ -211,7 +211,7 @@ public class DefaultSiteTest
       {
         // given
         final MockFileSystemSupport fsTestSupport = new EmptyMockFileSystem();
-        fsTestSupport.setUp(resourceFileSystem, modelFactory.getResourceProperties());
+        fsTestSupport.setUp(resourceFileSystem, modelFactory.getPropertySetter());
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when

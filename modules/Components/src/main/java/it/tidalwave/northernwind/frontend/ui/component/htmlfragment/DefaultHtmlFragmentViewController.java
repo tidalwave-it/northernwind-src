@@ -68,7 +68,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.setContent(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
                                       .stream()
-                                      .flatMap(path -> site.find(Content).withRelativePath(path).stream())
+                                      .flatMap(path -> site.find(_Content_).withRelativePath(path).stream())
                                       .map(content -> content.getProperties())
                                       .map(properties -> properties.getProperty(P_FULL_TEXT) // TODO: use multi-key
                                                                    .orElse(properties.getProperty(P_TEMPLATE)
