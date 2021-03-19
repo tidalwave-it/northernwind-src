@@ -18,6 +18,14 @@
     <description>The parent POM for modules.</description>
 
     <properties>
+        <tft.javac.source>1.8</tft.javac.source>
+        <tft.javac.target>1.8</tft.javac.target>
+        <tft.test.maxMemory>1024M</tft.test.maxMemory>
+
+        <main.webapp.contextPath>/nw</main.webapp.contextPath>
+        <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
+        <log.file>target/nw.log</log.file>
+
         <activation.version>1.1.1</activation.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
