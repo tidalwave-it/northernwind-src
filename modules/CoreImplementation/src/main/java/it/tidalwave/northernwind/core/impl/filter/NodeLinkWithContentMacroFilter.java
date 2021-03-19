@@ -41,8 +41,8 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.model.Content.Content;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.Content._Content_;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
  *
@@ -87,8 +87,8 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
         final Optional<String> language = Optional.ofNullable(matcher.group("language"));
 
         final Site site = siteProvider.get().getSite();
-        final SiteNode siteNode = site.find(SiteNode).withRelativePath(relativePath).result();
-        final Content content = site.find(Content).withRelativePath(contentRelativePath).result();
+        final SiteNode siteNode = site.find(_SiteNode_).withRelativePath(relativePath).result();
+        final Content content = site.find(_Content_).withRelativePath(contentRelativePath).result();
         final ResourcePath nodePath = siteNode.getRelativeUri();
         final ResourcePath contentPath = content.getExposedUri().orElseThrow(() -> new NotFoundException("Content with no exposed URI"));
         final String link = site.createLink(nodePath.appendedWith(contentPath));

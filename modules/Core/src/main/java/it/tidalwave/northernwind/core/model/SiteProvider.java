@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
 public interface SiteProvider
   {
     @SuppressWarnings("squid:S1700")
-    public static final Class<SiteProvider> SiteProvider = SiteProvider.class;
+    public static final Class<SiteProvider> _SiteProvider_ = SiteProvider.class;
 
     /*******************************************************************************************************************
      *

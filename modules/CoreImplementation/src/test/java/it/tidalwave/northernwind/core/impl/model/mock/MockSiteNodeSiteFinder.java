@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.RequiredArgsConstructor;
 import static org.mockito.Mockito.*;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
@@ -99,7 +99,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
 
     public static void registerTo (final @Nonnull Site site)
       {
-        when(site.find(eq(SiteNode))).thenReturn(new MockSiteNodeSiteFinder(site));
+        when(site.find(eq(_SiteNode_))).thenReturn(new MockSiteNodeSiteFinder(site));
       }
 
     private MockSiteNodeSiteFinder (final @Nonnull Site site)

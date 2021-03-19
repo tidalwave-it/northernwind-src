@@ -98,7 +98,7 @@ public abstract class DefaultHtmlTextWithTitleViewController implements HtmlText
         view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
         render(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
                 .stream()
-                .flatMap(path -> siteNode.getSite().find(Content).withRelativePath(path).stream())
+                .flatMap(path -> siteNode.getSite().find(_Content_).withRelativePath(path).stream())
                 .map(c -> new TextWithTitle(c.getProperty(P_TITLE), c.getProperty(P_FULL_TEXT), titleLevel))
                 .collect(toList()));
       }

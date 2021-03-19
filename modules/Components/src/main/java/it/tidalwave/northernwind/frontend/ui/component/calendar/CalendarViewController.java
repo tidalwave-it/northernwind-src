@@ -39,17 +39,17 @@ import it.tidalwave.northernwind.frontend.ui.ViewController;
 public interface CalendarViewController extends ViewController
   {
     /** The list of entries of the calendar. */
-    public static final Key<String> P_ENTRIES = new Key<String>("entries") {};
+    public static final Key<String> P_ENTRIES = Key.of("entries", String.class);
 
     /** The selected year of the calendar. */
-    public static final Key<Integer> P_SELECTED_YEAR = new Key<Integer>("selectedYear") {};
+    public static final Key<Integer> P_SELECTED_YEAR = Key.of("selectedYear", Integer.class);
 
     /** The first year in the year selector of the calendar. */
-    public static final Key<Integer> P_FIRST_YEAR = new Key<Integer>("firstYear") {};
+    public static final Key<Integer> P_FIRST_YEAR = Key.of("firstYear", Integer.class);
 
     /** The last year in the year selector of the calendar. */
-    public static final Key<Integer> P_LAST_YEAR = new Key<Integer>("lastYear") {};
+    public static final Key<Integer> P_LAST_YEAR = Key.of("lastYear", Integer.class);
 
     /** The number of columns of the table with the calendar. */
-    public static final Key<Integer> P_COLUMNS = new Key<Integer>("columns") {};
+    public static final Key<Integer> P_COLUMNS = Key.of("columns", Integer.class);
   }

@@ -48,7 +48,10 @@ import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
 import it.tidalwave.util.Id;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
 import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -64,8 +67,22 @@ import static org.mockito.ArgumentMatchers.eq;
 @Slf4j
 public class MockModelFactory extends ModelFactorySupport
   {
+    private final Map<String, Object> resourceProperties = new HashMap<>();
+
+    public static interface PropertySetter
+      {
+        public <T> void setProperty (@Nonnull String path, @Nonnull Key<T> key, @Nonnull T value);
+      }
+
     @Getter
-    private Map<String, String> resourceProperties = new HashMap<>();
+    private final PropertySetter propertySetter = new PropertySetter()
+      {
+        @Override
+        public <T> void setProperty (@Nonnull String path, @Nonnull Key<T> key, @Nonnull T value)
+          {
+            resourceProperties.put(path + "." + key.getName(), value);
+          }
+      };
 
     /*******************************************************************************************************************
      *
@@ -117,6 +134,19 @@ public class MockModelFactory extends ModelFactorySupport
         return media;
       }
 
+    @RequiredArgsConstructor(staticName = "of")
+    static class KeyMatcher<T> implements ArgumentMatcher<Key<T>>
+      {
+        @Nonnull
+        private final String name;
+
+        @Override
+        public boolean matches (final Key<T> key)
+          {
+            return key != null && key.getName().equals(name);
+          }
+      };
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -136,14 +166,15 @@ public class MockModelFactory extends ModelFactorySupport
         when(siteNode.getProperties()).thenReturn(properties);
 
         // FIXME: drop this - instead find the required SiteNode and stub its properties; see comments of MockContentSiteFinder
-        for (final Map.Entry<String, String> e : resourceProperties.entrySet())
+        for (final Map.Entry<String, Object> e : resourceProperties.entrySet())
           {
             if (e.getKey().startsWith(path + "."))
               {
                 final String propertyName = e.getKey().substring(path.length() + 1);
-                final Key<String> propertyKey = new Key<String>(propertyName) {};
-                log.trace(">>>>>>>> setting property {} = {}", propertyKey.stringValue(), e.getValue());
-                when(properties.getProperty(eq(propertyKey))).thenReturn(Optional.of(e.getValue()));
+                log.trace(">>>>>>>> setting property {} = {}", propertyName, e.getValue());
+                // ResourceProperties index by key name, not (name, type)
+                // FIXME This mocking got too complex
+                when(properties.getProperty(argThat(KeyMatcher.of(propertyName)))).thenReturn(Optional.of(e.getValue()));
               }
           }
 

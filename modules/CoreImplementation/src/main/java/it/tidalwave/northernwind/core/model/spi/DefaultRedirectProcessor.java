@@ -47,7 +47,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
-import static it.tidalwave.northernwind.core.model.SiteNode.SiteNode;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
  *
@@ -108,7 +108,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
       throws IOException, NotFoundException
       {
         site = siteProvider.get().getSite();
-        final SiteNode rootSiteNode = site.find(SiteNode).withRelativeUri("/").result();
+        final SiteNode rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result();
         final ResourceProperties rootSiteNodeProperties = rootSiteNode.getProperties();
         final ResourceProperties properties = rootSiteNodeProperties.getGroup(P_GROUP_ID);
 
