@@ -81,7 +81,7 @@ public interface ResourceProperties extends As, Identifiable
         private Id id = new Id("");
 
         @With
-        private Map<Key<?>, Object> values = Collections.emptyMap();
+        private Map<String, Object> values = Collections.emptyMap();
 
         @With
         private PropertyResolver propertyResolver = PropertyResolver.DEFAULT;

@@ -71,7 +71,7 @@ public class DefaultMenuViewController implements MenuViewController
 
         viewProperties.getProperty(P_LINKS).orElse(emptyList())
                 .stream()
-                .flatMap(path -> site.find(SiteNode).withRelativePath(path).stream())
+                .flatMap(path -> site.find(_SiteNode_).withRelativePath(path).stream())
                 .forEach(node -> view.addLink(node.getProperty(P_NAVIGATION_LABEL).orElse("no nav. label"), // FIXME
                                               site.createLink(node.getRelativeUri())));
       }

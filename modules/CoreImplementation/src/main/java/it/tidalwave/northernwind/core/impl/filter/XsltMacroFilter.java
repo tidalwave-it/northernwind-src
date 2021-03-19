@@ -61,7 +61,7 @@ import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
 import it.tidalwave.northernwind.core.impl.model.Filter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
-import static it.tidalwave.northernwind.core.model.Resource.Resource;
+import static it.tidalwave.northernwind.core.model.Resource._Resource_;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
@@ -102,11 +102,12 @@ public class XsltMacroFilter implements Filter
       {
         log.info("Retrieving XSLT templates");
         final Site site = siteProvider.get().getSite();
-        final Aggregates macros = site.find(Resource).withRelativePath(XSLT_TEMPLATES_PATH)
-                                                     .stream()
-                                                     .map(r -> r.getFile())
-                                                     .map(f -> Aggregate.of("body", asText(f)).with("name", f.getPath()))
-                                                     .collect(toAggregates("macros"));
+        final Aggregates macros = site.find(_Resource_).withRelativePath(XSLT_TEMPLATES_PATH)
+                                                       .stream()
+                                                       .map(r -> r.getFile())
+                                                       .map(f -> Aggregate.of("body", asText(f)).with("name",
+                                                                                                     f.getPath()))
+                                                       .collect(toAggregates("macros"));
         xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
         log.trace(">>>> xslt: {}", xslt);
       }

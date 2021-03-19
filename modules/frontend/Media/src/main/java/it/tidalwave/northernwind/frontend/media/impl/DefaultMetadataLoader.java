@@ -43,7 +43,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static org.imajine.image.op.ReadOp.Type.METADATA;
-import static it.tidalwave.northernwind.core.model.Media.Media;
+import static it.tidalwave.northernwind.core.model.Media._Media_;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
 
 /***********************************************************************************************************************
@@ -104,7 +104,7 @@ public class DefaultMetadataLoader implements MetadataLoader
         return properties.getProperty(P_MEDIA_PATHS).orElse(emptyList())
                 .stream()
                 .map(pathTemplate -> String.format(pathTemplate, mediaId.stringValue()))
-                .flatMap(path -> site.find(Media).withRelativePath(path).stream())
+                .flatMap(path -> site.find(_Media_).withRelativePath(path).stream())
                 .findFirst();
       }
   }

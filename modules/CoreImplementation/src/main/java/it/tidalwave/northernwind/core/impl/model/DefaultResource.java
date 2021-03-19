@@ -46,7 +46,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.io.Unmarshallable.Unmarshallable;
+import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
 
 /***********************************************************************************************************************
  *
@@ -120,8 +120,8 @@ import static it.tidalwave.role.io.Unmarshallable.Unmarshallable;
                     log.trace(">>>> reading properties from {} ({})...", propertyFile.getPath().asString(), locale);
                     @Cleanup final InputStream is = propertyFile.getInputStream();
                     final ResourceProperties tempProperties =
-                        modelFactory.createProperties().build().as(Unmarshallable).unmarshal(is);
-        //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(Unmarshallable).unmarshal(is);
+                        modelFactory.createProperties().build().as(_Unmarshallable_).unmarshal(is);
+        //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(_Unmarshallable_).unmarshal(is);
                     log.trace(">>>>>>>> read properties: {} ({})", tempProperties, locale);
                     properties = properties.merged(tempProperties);
                     tmpPlaceHolder &= !propertyFile.getParent().equals(file);
