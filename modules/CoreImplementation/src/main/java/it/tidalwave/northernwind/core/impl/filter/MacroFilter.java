@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.impl.model.Filter;

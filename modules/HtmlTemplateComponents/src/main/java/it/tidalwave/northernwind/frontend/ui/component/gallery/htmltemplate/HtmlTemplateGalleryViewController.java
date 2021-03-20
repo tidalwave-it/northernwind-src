@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;

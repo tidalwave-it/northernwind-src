@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.util;
 
 import javax.annotation.Nonnull;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import lombok.NoArgsConstructor;

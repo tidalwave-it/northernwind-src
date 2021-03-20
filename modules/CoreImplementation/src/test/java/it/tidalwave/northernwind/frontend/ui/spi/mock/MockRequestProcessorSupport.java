@@ -27,9 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import lombok.Setter;

@@ -31,7 +31,6 @@ import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
-import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;

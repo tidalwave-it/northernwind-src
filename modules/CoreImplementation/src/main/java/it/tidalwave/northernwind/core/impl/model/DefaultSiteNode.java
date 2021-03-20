@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;

@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Id;

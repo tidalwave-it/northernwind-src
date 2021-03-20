@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

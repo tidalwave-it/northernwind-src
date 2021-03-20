@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;

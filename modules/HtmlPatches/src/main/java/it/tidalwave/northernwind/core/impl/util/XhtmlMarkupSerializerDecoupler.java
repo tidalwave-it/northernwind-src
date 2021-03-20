@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.util;
 import java.io.IOException;
 import java.io.StringWriter;
 import lombok.NoArgsConstructor;
-import org.xml.sax.SAXException;
 import javax.annotation.Nonnull;
 import org.w3c.dom.Node;
 import it.tidalwave.northernwind.core.impl.patches.XHTMLSerializer;

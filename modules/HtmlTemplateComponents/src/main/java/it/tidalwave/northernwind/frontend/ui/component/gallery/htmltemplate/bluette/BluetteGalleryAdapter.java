@@ -33,7 +33,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;

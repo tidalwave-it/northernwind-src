@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
