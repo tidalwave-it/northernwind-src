@@ -61,14 +61,7 @@ public abstract class MockFileSystemSupport
   {
     private static Finder listFinder (final @Nonnull Collection<ResourceFile> results)
       {
-        return ResourceFileFinderSupport.withComputeResults(new Function<>()
-          {
-            @Override
-            public List<ResourceFile> apply (ResourceFile.Finder input)
-              {
-                return new ArrayList<>(results);
-              }
-          });
+        return ResourceFileFinderSupport.withComputeResults(input -> new ArrayList<>(results));
       }
 
     @Nonnull

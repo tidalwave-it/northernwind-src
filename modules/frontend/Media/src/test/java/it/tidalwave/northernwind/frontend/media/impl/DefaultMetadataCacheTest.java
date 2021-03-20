@@ -115,14 +115,8 @@ public class DefaultMetadataCacheTest
         when(metadataLoader.findMediaResourceFile(same(siteNodeProperties), eq(mediaId))).thenReturn(mediaFile);
 
         // Don't use 'thenReturn(new DefaultMetadata(image))' as a new instance must be created each time
-        when(metadataLoader.loadMetadata(same(mediaFile))).thenAnswer(new Answer<DefaultMetadata>()
-          {
-            @Override
-            public DefaultMetadata answer (final @Nonnull InvocationOnMock invocation)
-              {
-                return new DefaultMetadata("media.jpg", image);
-              }
-          });
+        when(metadataLoader.loadMetadata(same(mediaFile))).thenAnswer(
+                (Answer<DefaultMetadata>)invocation -> new DefaultMetadata("media.jpg", image));
 
         assertThat(underTest.getMedatataExpirationTime(), is(DefaultMetadataCache.DEFAULT_METADATA_EXPIRATION_TIME));
         initialTime = Instant.ofEpochMilli(1369080000000L).atZone(ZoneId.of("GMT"));

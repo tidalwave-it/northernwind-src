@@ -95,16 +95,7 @@ public class DefaultSiteNodeTest
         resource = createMockResource();
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
-
-        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, new Resource.Builder.CallBack()
-          {
-            @Override
-            public Resource build(Resource.Builder builder)
-              {
-                return resource;
-              }
-          }));
-
+        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, builder -> resource));
         when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.ENGLISH));
 
         final ResourceFile nodeFolder = MockResourceFile.folder("structure");
@@ -112,15 +103,11 @@ public class DefaultSiteNodeTest
 
         emptyPlaceHolderLayout = mock(Layout.class);
 //        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
-        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, new Layout.Builder.CallBack()
-          {
-            @Override
-            public Layout build (final @Nonnull Layout.Builder builder)
-              {
-                assertThat(builder.getType(), is("emptyPlaceholder"));
-                return emptyPlaceHolderLayout;
-              }
-          }));
+        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, builder ->
+        {
+          assertThat(builder.getType(), is("emptyPlaceholder"));
+          return emptyPlaceHolderLayout;
+        }));
 
         underTest = new DefaultSiteNode(modelFactory, site, resourceFile);
       }
