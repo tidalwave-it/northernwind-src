@@ -113,7 +113,6 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      ******************************************************************************************************************/
     @Override
     public void renderView (final @Nonnull RenderContext context)
-      throws Exception
       {
         final SortedSet<Entry> entries = new TreeSet<>();
 

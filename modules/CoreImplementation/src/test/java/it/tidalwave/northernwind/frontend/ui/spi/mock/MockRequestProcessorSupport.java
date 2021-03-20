@@ -51,7 +51,6 @@ public class MockRequestProcessorSupport implements RequestProcessor
     @Override
     @SneakyThrows
     public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException
       {
         if (throwable != null) 
           {

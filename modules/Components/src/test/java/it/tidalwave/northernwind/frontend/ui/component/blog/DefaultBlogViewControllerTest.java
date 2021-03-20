@@ -397,7 +397,6 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_retrieve_virtual_nodes()
-      throws Exception
       {
         // given
         mockPosts.createMockData(45);
@@ -424,7 +423,6 @@ public class DefaultBlogViewControllerTest
                                                final @Nonnull ZonedDateTime dateTime,
                                                final @Nonnull Optional<String> timeZone,
                                                final @Nonnull String expectedValue)
-      throws Exception
       {
         // given
         final Locale locale = new Locale(localeCode, localeCode);

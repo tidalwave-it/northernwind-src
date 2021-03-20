@@ -388,12 +388,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the tag cloud. Must be implemented by concrete subclasses.
      *
      * @param       tagsAndCount    the tags
-     * @throws      Exception       if something fails
      *
      ******************************************************************************************************************/
     @SuppressWarnings("squid:S00112")
-    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount)
-      throws Exception;
+    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
 
     /*******************************************************************************************************************
      *
@@ -521,7 +519,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
     private List<Content> findPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
-      throws HttpStatusException
       {
         final ResourcePath pathParams = context.getPathParams(siteNode);
         final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();

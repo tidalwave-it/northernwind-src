@@ -73,7 +73,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      ******************************************************************************************************************/
     @Override @Nonnull
     public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException
+      throws NotFoundException, HttpStatusException
       {
         try
           {

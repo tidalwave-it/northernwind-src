@@ -113,7 +113,7 @@ public interface ResourceProperties extends As, Identifiable
           {
             @Override
             public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
-              throws NotFoundException, IOException
+              throws NotFoundException
               {
                 throw new NotFoundException(key.stringValue());
               }

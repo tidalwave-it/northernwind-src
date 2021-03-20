@@ -102,7 +102,7 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
      ******************************************************************************************************************/
     @Nonnull
     protected String filter (final @Nonnull Matcher matcher)
-      throws NotFoundException, IOException
+      throws NotFoundException
       {
         return "";
       }
@@ -119,7 +119,7 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
           {
             return filter(matcher);
           }
-        catch (NotFoundException | IOException e)
+        catch (NotFoundException e)
           {
             log.error("", e);
             return "";

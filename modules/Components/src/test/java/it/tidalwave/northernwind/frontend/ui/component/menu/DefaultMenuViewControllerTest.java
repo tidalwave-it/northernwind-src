@@ -126,7 +126,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_property_set()
-      throws Exception
       {
         // given
         final ResourcePath templatePath = ResourcePath.of("/path/to/template");
@@ -143,7 +142,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_Content()
-      throws Exception
       {
         // given
         final ResourcePath templatePath = ResourcePath.of("/path/to/inexistent/template");
@@ -159,7 +157,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title()
-      throws Exception
       {
         // given
         when(viewProperties.getProperty(P_TITLE)).thenReturn(Optional.of("the title"));
@@ -174,7 +171,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title_when_unspecified()
-      throws Exception
       {
         // when
         underTest.renderView(renderContext);

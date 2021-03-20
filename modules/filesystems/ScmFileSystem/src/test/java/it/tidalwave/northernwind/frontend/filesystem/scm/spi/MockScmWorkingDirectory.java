@@ -69,7 +69,6 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
     private final Path configCurrentTag;
 
     public MockScmWorkingDirectory (final @Nonnull Path workArea)
-            throws IOException
       {
         super(MOCKSCM, workArea);
         configFolder = workArea.resolve(MOCKSCM);

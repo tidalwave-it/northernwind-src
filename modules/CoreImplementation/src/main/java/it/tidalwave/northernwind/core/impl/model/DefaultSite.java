@@ -239,7 +239,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     /* package */ void initialize()
-      throws IOException, NotFoundException, PropertyVetoException
+      throws IOException, NotFoundException
       {
         log.info("initialize()");
 

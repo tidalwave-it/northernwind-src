@@ -181,12 +181,11 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
      * @param path the path of the repository.
      * @return a {@code ScmWorkingDirectory}
      * @throws IOException if an I/O error occurs
-     * @throws InterruptedException if a timeout occurs
      *
      ******************************************************************************************************************/
     @Nonnull
     abstract public ScmWorkingDirectory createWorkingDirectory (@Nonnull Path path)
-            throws IOException, InterruptedException;
+            throws IOException;
 
     /*******************************************************************************************************************
      *

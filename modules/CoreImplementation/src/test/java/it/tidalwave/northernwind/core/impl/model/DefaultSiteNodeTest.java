@@ -86,7 +86,6 @@ public class DefaultSiteNodeTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         context = helper.createSpringContext();
         site = context.getBean(InternalSite.class);
@@ -196,7 +195,7 @@ public class DefaultSiteNodeTest
                                                 final @Nonnull String fileName,
                                                 final @Nonnull String parentUri,
                                                 final @Nonnull String parentPath)
-      throws IOException, NotFoundException
+            throws NotFoundException
       {
         final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);

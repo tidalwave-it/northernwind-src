@@ -95,7 +95,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setUp()
-      throws Exception
       {
         context = helper.createSpringContext();
 

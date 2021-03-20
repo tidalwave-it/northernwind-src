@@ -64,7 +64,6 @@ public class DefaultMetadataTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         context = helper.createSpringContext();
         context.getBean(MetadataInterpolatorFactory.class); // initialize it

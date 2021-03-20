@@ -60,7 +60,6 @@ public class HtmlTemplateBlogViewTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         site = createMockSite();
         MockContentSiteFinder.registerTo(site);

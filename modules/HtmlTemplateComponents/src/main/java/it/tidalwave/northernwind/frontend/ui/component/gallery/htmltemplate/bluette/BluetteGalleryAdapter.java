@@ -171,7 +171,6 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      ******************************************************************************************************************/
     @Override
     public void prepareCatalog (final @Nonnull List<GalleryItem> items)
-      throws HttpStatusException
       {
         final Aggregates entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
         rendered = catalogTemplate.render(entries);

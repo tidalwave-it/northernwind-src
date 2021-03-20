@@ -416,12 +416,10 @@ public class ProcessExecutor
      *
      * @param  string                  the input to send
      * @return itself
-     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
     public ProcessExecutor send (final @Nonnull String string)
-            throws IOException
       {
         log.info(">>>> sending '{}'...", string);
         stdin.println(string);

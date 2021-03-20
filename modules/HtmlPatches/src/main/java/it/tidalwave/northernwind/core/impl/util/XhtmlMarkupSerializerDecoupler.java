@@ -44,7 +44,7 @@ import static lombok.AccessLevel.PRIVATE;
 public final class XhtmlMarkupSerializerDecoupler extends XHTMLSerializer
   {
     public static void serialize (final @Nonnull Node node, final @Nonnull StringWriter stringWriter)
-        throws IOException, SAXException
+        throws IOException
       {
         final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
         xhtmlSerializer.serialize(node);

@@ -64,8 +64,7 @@ public interface GalleryAdapter
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void prepareCatalog (@Nonnull List<GalleryItem> items)
-      throws HttpStatusException;
+    public void prepareCatalog (@Nonnull List<GalleryItem> items);
 
     /*******************************************************************************************************************
      *

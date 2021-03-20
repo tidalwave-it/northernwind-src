@@ -105,7 +105,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
      ******************************************************************************************************************/
 //    @PostConstruct // FIXME: see NW-224
     /* VisibleForTesting */ void initialize()
-      throws IOException, NotFoundException
+            throws NotFoundException
       {
         site = siteProvider.get().getSite();
         final SiteNode rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result();
@@ -143,7 +143,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
                       {
                         initialize();
                       }
-                    catch (NotFoundException | IOException e)
+                    catch (NotFoundException e)
                       {
                         throw new RuntimeException(e);
                       }

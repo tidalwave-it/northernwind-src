@@ -90,7 +90,6 @@ public class DefaultSiteProviderTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_create_the_Site()
-      throws Exception
       {
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
@@ -155,7 +154,6 @@ public class DefaultSiteProviderTest
      ******************************************************************************************************************/
     @Test
     public void must_use_no_context_path_when_ServletContext_is_not_available()
-      throws Exception
       {
         // given
         ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");

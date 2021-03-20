@@ -163,7 +163,6 @@ class DefaultMetadata implements Metadata
      ******************************************************************************************************************/
     @Nonnull
     private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
-      throws IOException
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();

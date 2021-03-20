@@ -109,7 +109,6 @@ public class DefaultSiteTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_construct()
-      throws Exception
       {
         // when
         underTest = new DefaultSite(siteBuilder);
@@ -225,7 +224,6 @@ public class DefaultSiteTest
      ******************************************************************************************************************/
     @Test
     public void must_create_correct_links()
-      throws Exception
       {
         // given
         underTest = new DefaultSite(siteBuilder);

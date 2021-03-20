@@ -101,7 +101,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
           {
             loadLayouts();
           }
-        catch (IOException | NotFoundException e)
+        catch (IOException e)
           {
             throw new RuntimeException(e);
           }
@@ -171,7 +171,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      ******************************************************************************************************************/
     @Nonnull
     private void loadLayouts()
-      throws IOException, NotFoundException
+      throws IOException
       {
         for (final Locale locale : localeRequestManager.getLocales())
           {

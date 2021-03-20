@@ -86,8 +86,8 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize() // FIXME: gets called twice
-      throws IOException,
-             NoSuchMethodException, InvocationTargetException, InstantiationException,
+      throws
+      NoSuchMethodException, InvocationTargetException, InstantiationException,
              IllegalArgumentException, IllegalAccessException, SecurityException
       {
         final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);

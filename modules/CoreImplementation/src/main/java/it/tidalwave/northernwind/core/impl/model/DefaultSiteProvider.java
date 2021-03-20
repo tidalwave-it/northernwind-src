@@ -205,7 +205,7 @@ public class DefaultSiteProvider implements SiteProvider
             log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
             log.info(ASTERISKS);
           }
-        catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
+        catch (IOException | NotFoundException | RuntimeException e)
           {
             log.error(ASTERISKS);
             log.error("SITE INITIALIZATION FAILED!", e);

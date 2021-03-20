@@ -80,7 +80,6 @@ public class HtmlTemplateBlogViewControllerTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         site = createMockSite();
 

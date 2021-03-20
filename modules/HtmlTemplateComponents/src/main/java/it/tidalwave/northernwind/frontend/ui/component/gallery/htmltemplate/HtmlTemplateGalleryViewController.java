@@ -69,7 +69,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                                               final @Nonnull RequestLocaleManager requestLocaleManager,
                                               final @Nonnull ModelFactory modelFactory,
                                               final @Nonnull BeanFactory beanFactory)
-      throws IOException
       {
         super(view, siteNode, requestLocaleManager, beanFactory);
         this.view = view;

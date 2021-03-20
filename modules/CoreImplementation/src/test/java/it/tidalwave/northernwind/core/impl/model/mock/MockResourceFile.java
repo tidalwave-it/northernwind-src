@@ -139,19 +139,19 @@ public class MockResourceFile implements ResourceFile
       }
 
     @Override
-    public InputStream getInputStream() throws FileNotFoundException
+    public InputStream getInputStream()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public String asText(String encoding) throws IOException
+    public String asText(String encoding)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public byte[] asBytes() throws IOException
+    public byte[] asBytes()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
@@ -169,7 +169,7 @@ public class MockResourceFile implements ResourceFile
       }
 
     @Override
-    public void delete() throws IOException
+    public void delete()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
