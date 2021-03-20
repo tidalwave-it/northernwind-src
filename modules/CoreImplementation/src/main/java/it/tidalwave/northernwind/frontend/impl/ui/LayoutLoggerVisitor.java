@@ -47,10 +47,10 @@ public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
         DEBUG
           {
             @Override
-            protected void log (final @Nonnull Logger log,
-                                final @Nonnull String template,
-                                final @Nonnull Object arg1,
-                                final @Nonnull Object arg2)
+            protected void log (@Nonnull final Logger log,
+                                @Nonnull final String template,
+                                @Nonnull final Object arg1,
+                                @Nonnull final Object arg2)
               {
                 log.debug(template, arg1, arg2);
               }
@@ -58,10 +58,10 @@ public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
         INFO
           {
             @Override
-            protected void log (final @Nonnull Logger log,
-                                final @Nonnull String template,
-                                final @Nonnull Object arg1,
-                                final @Nonnull Object arg2)
+            protected void log (@Nonnull final Logger log,
+                                @Nonnull final String template,
+                                @Nonnull final Object arg1,
+                                @Nonnull final Object arg2)
               {
                 log.info(template, arg1, arg2);
               }
@@ -81,13 +81,13 @@ public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
     private final Level logLevel;
 
     @Override
-    public void preVisit (final @Nonnull Layout layout)
+    public void preVisit (@Nonnull final Layout layout)
       {
         logLevel.log(log, "{}{}", SPACES.substring(0, indent++ * 2), layout);
       }
 
     @Override
-    public void postVisit (final @Nonnull Layout layout)
+    public void postVisit (@Nonnull final Layout layout)
       {
         indent--;
       }

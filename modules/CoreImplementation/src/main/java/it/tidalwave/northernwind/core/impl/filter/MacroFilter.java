@@ -56,7 +56,7 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
      * @param   regex     the regular expression
      *
      ******************************************************************************************************************/
-    public MacroFilter (final @Nonnull String regex)
+    public MacroFilter (@Nonnull final String regex)
       {
         pattern = Pattern.compile(regex);
       }
@@ -67,7 +67,7 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
+    public String filter (@Nonnull final String text, @Nonnull final String mimeType)
       {
         final Matcher matcher = pattern.matcher(text);
         final StringBuffer buffer = new StringBuffer();
@@ -100,7 +100,7 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
+    protected String filter (@Nonnull final Matcher matcher)
       throws NotFoundException
       {
         return "";
@@ -112,7 +112,7 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String doFilter (final @Nonnull Matcher matcher)
+    private String doFilter (@Nonnull final Matcher matcher)
       {
         try
           {

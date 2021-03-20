@@ -63,7 +63,7 @@ public class LayoutJaxbMarshallable implements Marshallable
      *
      *
      ******************************************************************************************************************/
-    public LayoutJaxbMarshallable (final @Nonnull Layout ownerLayout)
+    public LayoutJaxbMarshallable (@Nonnull final Layout ownerLayout)
       {
         this.ownerLayout = ownerLayout;
       }
@@ -74,7 +74,7 @@ public class LayoutJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Override
-    public void marshal (final @Nonnull OutputStream os)
+    public void marshal (@Nonnull final OutputStream os)
       throws IOException
       {
         try
@@ -96,7 +96,7 @@ public class LayoutJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ComponentJaxb marshal (final @Nonnull Layout layout)
+    private ComponentJaxb marshal (@Nonnull final Layout layout)
       {
         final ComponentJaxb componentJaxb = objectFactory.createComponentJaxb();
         componentJaxb.setId(layout.getId().stringValue());

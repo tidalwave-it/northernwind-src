@@ -63,11 +63,11 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      *
      ******************************************************************************************************************/
-    public HtmlTemplateGalleryViewController (final @Nonnull GalleryView view,
-                                              final @Nonnull SiteNode siteNode,
-                                              final @Nonnull RequestLocaleManager requestLocaleManager,
-                                              final @Nonnull ModelFactory modelFactory,
-                                              final @Nonnull BeanFactory beanFactory)
+    public HtmlTemplateGalleryViewController (@Nonnull final GalleryView view,
+                                              @Nonnull final SiteNode siteNode,
+                                              @Nonnull final RequestLocaleManager requestLocaleManager,
+                                              @Nonnull final ModelFactory modelFactory,
+                                              @Nonnull final BeanFactory beanFactory)
       {
         super(view, siteNode, requestLocaleManager, beanFactory);
         this.view = view;
@@ -81,7 +81,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareRendering (final @Nonnull RenderContext context)
+    public void prepareRendering (@Nonnull final RenderContext context)
       throws Exception
       {
         super.prepareRendering(context);
@@ -138,7 +138,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       throws Exception
       {
         super.renderView(context);
@@ -146,7 +146,7 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       }
 
     @Nonnull
-    private ResourcePath getParam (final @Nonnull RenderContext context)
+    private ResourcePath getParam (@Nonnull final RenderContext context)
       {
         return context.getQueryParam("_escaped_fragment_").map(ResourcePath::of)
                                                           .orElse(context.getPathParams(siteNode));

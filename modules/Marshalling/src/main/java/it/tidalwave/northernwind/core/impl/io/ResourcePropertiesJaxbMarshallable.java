@@ -67,7 +67,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      *
      *
      ******************************************************************************************************************/
-    public ResourcePropertiesJaxbMarshallable (final @Nonnull ResourceProperties resourceProperties)
+    public ResourcePropertiesJaxbMarshallable (@Nonnull final ResourceProperties resourceProperties)
       {
         this.resourceProperties = resourceProperties;
       }
@@ -78,7 +78,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Override
-    public void marshal (final @Nonnull OutputStream os)
+    public void marshal (@Nonnull final OutputStream os)
       throws IOException
       {
         try
@@ -97,7 +97,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties)
+    private PropertiesJaxb marshal (@Nonnull final ResourceProperties properties)
       {
         final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();
         final Id id = properties.getId();

@@ -57,9 +57,9 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void doFilter (final @Nonnull ServletRequest request,
-                          final @Nonnull ServletResponse response,
-                          final @Nonnull FilterChain chain)
+    public void doFilter (@Nonnull final ServletRequest request,
+                          @Nonnull final ServletResponse response,
+                          @Nonnull final FilterChain chain)
       throws IOException, ServletException
       {
         addNorthernWindHeader(request, response);
@@ -71,7 +71,7 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
      *
      *
      ******************************************************************************************************************/
-    private void addNorthernWindHeader (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
+    private void addNorthernWindHeader (@Nonnull final ServletRequest request, @Nonnull final ServletResponse response)
       {
         if (bootThrowable == null)
           {

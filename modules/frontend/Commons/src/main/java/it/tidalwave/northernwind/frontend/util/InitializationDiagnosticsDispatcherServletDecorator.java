@@ -63,7 +63,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      ******************************************************************************************************************/
     @Override
-    public void init (final @Nonnull ServletConfig config)
+    public void init (@Nonnull final ServletConfig config)
       throws ServletException
       {
         super.init(config);
@@ -82,7 +82,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      ******************************************************************************************************************/
     @Override
-    protected void service (final @Nonnull HttpServletRequest request, final @Nonnull HttpServletResponse response)
+    protected void service (@Nonnull final HttpServletRequest request, @Nonnull final HttpServletResponse response)
       throws ServletException, IOException
       {
         if (bootThrowable == null)
@@ -100,7 +100,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Throwable findUpperCauseWithMessage (final @Nonnull Throwable throwable)
+    private Throwable findUpperCauseWithMessage (@Nonnull final Throwable throwable)
       {
         Throwable cause = throwable;
 
@@ -121,7 +121,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      *
      ******************************************************************************************************************/
-    private void sendProcessingError (final @Nonnull Throwable t, final @Nonnull HttpServletResponse response)
+    private void sendProcessingError (@Nonnull final Throwable t, @Nonnull final HttpServletResponse response)
       throws IOException
       {
         response.setStatus(500);

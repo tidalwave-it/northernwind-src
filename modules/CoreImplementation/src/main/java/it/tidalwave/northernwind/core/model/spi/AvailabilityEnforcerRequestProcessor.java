@@ -60,7 +60,7 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
     private ResponseHolder<?> responseHolder;
 
     @Override @Nonnull
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       {
         if (siteProvider.get().isSiteAvailable())
           {

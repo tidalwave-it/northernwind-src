@@ -54,14 +54,14 @@ public abstract class ResourceSupport implements Resource
     @Delegate
     private final As asSupport = new AsSupport(this);
 
-    public ResourceSupport (final @Nonnull Resource.Builder builder)
+    public ResourceSupport (@Nonnull final Resource.Builder builder)
       {
         this.modelFactory = builder.getModelFactory();
         this.file = builder.getFile();
       }
 
     @Override @Nonnull
-    public final ResourceProperties getPropertyGroup (final @Nonnull Id id)
+    public final ResourceProperties getPropertyGroup (@Nonnull final Id id)
       {
         return getProperties().getGroup(id);
       }

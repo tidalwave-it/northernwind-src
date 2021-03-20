@@ -68,15 +68,15 @@ public class HtmlTemplateSitemapViewController extends DefaultSitemapViewControl
     @Nonnull
     private final HtmlTemplateSitemapView view;
 
-    public HtmlTemplateSitemapViewController (final @Nonnull SiteNode siteNode,
-                                              final @Nonnull HtmlTemplateSitemapView view)
+    public HtmlTemplateSitemapViewController (@Nonnull final SiteNode siteNode,
+                                              @Nonnull final HtmlTemplateSitemapView view)
       {
         super(siteNode, view);
         this.view = view;
       }
 
     @Override
-    protected void render (final @Nonnull Set<Entry> entries)
+    protected void render (@Nonnull final Set<Entry> entries)
       {
         view.setMimeType("application/xml");
         view.render(getViewProperties().getProperty(P_SITEMAP_TEMPLATE_PATH),
@@ -84,7 +84,7 @@ public class HtmlTemplateSitemapViewController extends DefaultSitemapViewControl
       }
 
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull Entry entry)
+    private Aggregate toAggregate (@Nonnull final Entry entry)
       {
         return Aggregate.of("location",         entry.getLocation())
                       .with("lastModification", entry.getLastModification().format(FORMATTER))

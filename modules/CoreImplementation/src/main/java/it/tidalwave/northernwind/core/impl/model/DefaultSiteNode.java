@@ -90,9 +90,9 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      * @param  relativeUri   the bound URI
      *
      ******************************************************************************************************************/
-    public DefaultSiteNode (final @Nonnull ModelFactory modelFactory,
-                            final @Nonnull InternalSite site,
-                            final @Nonnull ResourceFile file)
+    public DefaultSiteNode (@Nonnull final ModelFactory modelFactory,
+                            @Nonnull final InternalSite site,
+                            @Nonnull final ResourceFile file)
       {
         super(modelFactory, file);
         this.site = site;
@@ -228,11 +228,11 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private DefaultLayout loadLayout (final @Nonnull ResourceFile layoutFile)
+    private DefaultLayout loadLayout (@Nonnull final ResourceFile layoutFile)
       throws IOException
       {
         log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
-        final @Cleanup InputStream is = layoutFile.getInputStream();
+        @Cleanup final InputStream is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(_Unmarshallable_).unmarshal(is);
       }
   }

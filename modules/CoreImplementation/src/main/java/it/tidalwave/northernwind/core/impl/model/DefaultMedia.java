@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @ToString(callSuper = true)
 /* package */ class DefaultMedia extends MediaSupport
   {
-    public DefaultMedia (final @Nonnull Media.Builder builder)
+    public DefaultMedia (@Nonnull final Media.Builder builder)
       {
         super(builder);
       }

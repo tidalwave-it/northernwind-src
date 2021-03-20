@@ -253,7 +253,7 @@ public class DefaultMetadataCacheTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void setTime (final @Nonnull ZonedDateTime dateTime)
+    private void setTime (@Nonnull final ZonedDateTime dateTime)
       {
         mockClock = Clock.fixed(dateTime.toInstant(), dateTime.getZone());
         log.info("==== Time set to           {}", ZonedDateTime.now(mockClock));

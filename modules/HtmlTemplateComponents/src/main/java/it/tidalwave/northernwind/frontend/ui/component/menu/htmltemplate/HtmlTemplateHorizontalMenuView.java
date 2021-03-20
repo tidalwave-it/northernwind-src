@@ -59,7 +59,7 @@ public class HtmlTemplateHorizontalMenuView extends HtmlHolder implements MenuVi
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateHorizontalMenuView (final @Nonnull Id id) 
+    public HtmlTemplateHorizontalMenuView (@Nonnull final Id id)
       {
         super(id);
         this.id = id;

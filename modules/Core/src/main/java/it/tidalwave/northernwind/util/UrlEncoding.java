@@ -52,7 +52,7 @@ public final class UrlEncoding
      *
      ******************************************************************************************************************/
     @Nonnull @SuppressWarnings("squid:S00112")
-    public static String decodedUtf8 (final @Nonnull String string)
+    public static String decodedUtf8 (@Nonnull final String string)
       {
         return URLDecoder.decode(string, UTF_8);
       }
@@ -67,7 +67,7 @@ public final class UrlEncoding
      *
      ******************************************************************************************************************/
     @Nonnull @SuppressWarnings("squid:S00112")
-    public static String encodedUtf8 (final @Nonnull String string)
+    public static String encodedUtf8 (@Nonnull final String string)
       {
         return URLEncoder.encode(string, UTF_8);
       }

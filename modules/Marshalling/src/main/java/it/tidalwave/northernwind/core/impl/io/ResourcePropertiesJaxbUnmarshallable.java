@@ -69,7 +69,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public ResourceProperties unmarshal (final @Nonnull InputStream is)
+    public ResourceProperties unmarshal (@Nonnull final InputStream is)
       throws IOException
       {
         try
@@ -94,7 +94,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceProperties unmarshal (final @Nonnull PropertiesJaxb propertiesJaxb)
+    private ResourceProperties unmarshal (@Nonnull final PropertiesJaxb propertiesJaxb)
       {
         final Id id = new Id((propertiesJaxb.getId() != null) ? propertiesJaxb.getId() : "");
         ResourceProperties properties = modelFactory.createProperties().withId(id).build();

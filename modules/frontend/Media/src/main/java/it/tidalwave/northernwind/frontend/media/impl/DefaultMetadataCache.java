@@ -103,8 +103,8 @@ public class DefaultMetadataCache implements MetadataCache
      ******************************************************************************************************************/
     // FIXME: shouldn't synchronize the whole method, only map manipulation
     @Override @Nonnull
-    public synchronized Metadata findMetadataById (final @Nonnull Id mediaId,
-                                                   final @Nonnull ResourceProperties siteNodeProperties)
+    public synchronized Metadata findMetadataById (@Nonnull final Id mediaId,
+                                                   @Nonnull final ResourceProperties siteNodeProperties)
       throws NotFoundException, IOException
       {
         log.debug("findMetadataById({}, ...)", mediaId);

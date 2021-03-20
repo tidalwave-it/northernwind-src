@@ -58,9 +58,9 @@ public class DefaultInheritanceHelper implements InheritanceHelper
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<ResourceFile> getInheritedPropertyFiles (final @Nonnull ResourceFile folder,
-                                                         final @Nonnull Locale locale,
-                                                         final @Nonnull String propertyFileName)
+    public List<ResourceFile> getInheritedPropertyFiles (@Nonnull final ResourceFile folder,
+                                                         @Nonnull final Locale locale,
+                                                         @Nonnull final String propertyFileName)
       {
         log.trace("getInheritedPropertyFiles({}, {})", folder.getPath(), propertyFileName);
 
@@ -84,10 +84,10 @@ public class DefaultInheritanceHelper implements InheritanceHelper
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private List<ResourceFile> getFiles (final @Nonnull String prefix,
-                                         final @Nonnull String propertyFileName,
-                                         final @Nonnull ResourceFile folder,
-                                         final @Nonnull List<String> suffixes)
+    private List<ResourceFile> getFiles (@Nonnull final String prefix,
+                                         @Nonnull final String propertyFileName,
+                                         @Nonnull final ResourceFile folder,
+                                         @Nonnull final List<String> suffixes)
       {
         final List<ResourceFile> files = new ArrayList<>();
 
@@ -113,7 +113,7 @@ public class DefaultInheritanceHelper implements InheritanceHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<ResourceFile> getHierarchyFolders (final @Nonnull ResourceFile folder)
+    private List<ResourceFile> getHierarchyFolders (@Nonnull final ResourceFile folder)
       {
         final List<ResourceFile> folders = new ArrayList<>();
 

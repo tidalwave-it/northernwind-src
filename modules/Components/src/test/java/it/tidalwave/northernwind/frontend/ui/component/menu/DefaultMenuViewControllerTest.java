@@ -204,10 +204,10 @@ public class DefaultMenuViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private <T> void mockProperty (final @Nonnull Class<? extends Resource> type,
-                                   final @Nonnull ResourcePath path,
-                                   final @Nonnull Key<T> key,
-                                   final @Nonnull T value)
+    private <T> void mockProperty (@Nonnull final Class<? extends Resource> type,
+                                   @Nonnull final ResourcePath path,
+                                   @Nonnull final Key<T> key,
+                                   @Nonnull final T value)
       throws NotFoundException
       {
         final ResourceProperties properties = site.find(type).withRelativePath(path).result().getProperties();

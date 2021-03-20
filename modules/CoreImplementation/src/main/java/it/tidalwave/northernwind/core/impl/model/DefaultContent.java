@@ -67,7 +67,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     @Nonnull
     @Override
-    public <T> Optional<T> getProperty (final @Nonnull Key<T> key)
+    public <T> Optional<T> getProperty (@Nonnull final Key<T> key)
       {
         try
           {
@@ -101,7 +101,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      * @param   builder   the builder
      *
      ******************************************************************************************************************/
-    public DefaultContent (final @Nonnull Content.Builder builder)
+    public DefaultContent (@Nonnull final Content.Builder builder)
       {
         super(builder);
       }
@@ -159,7 +159,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String deAccent (final @Nonnull String string)
+    public String deAccent (@Nonnull final String string)
       {
         final String nfdNormalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
         final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");

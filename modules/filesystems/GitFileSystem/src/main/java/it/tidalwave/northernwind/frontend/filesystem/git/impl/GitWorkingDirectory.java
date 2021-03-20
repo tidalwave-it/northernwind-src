@@ -58,7 +58,7 @@ public class GitWorkingDirectory extends ScmWorkingDirectorySupport
      * @param folder the folder
      *
      ******************************************************************************************************************/
-    public GitWorkingDirectory (final @Nonnull Path folder)
+    public GitWorkingDirectory (@Nonnull final Path folder)
       {
         super(".git", folder);
       }
@@ -112,7 +112,7 @@ public class GitWorkingDirectory extends ScmWorkingDirectorySupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void cloneFrom (final @Nonnull URI uri)
+    public void cloneFrom (@Nonnull final URI uri)
             throws InterruptedException, IOException
       {
         Files.createDirectories(folder);
@@ -125,7 +125,7 @@ public class GitWorkingDirectory extends ScmWorkingDirectorySupport
      *
      ******************************************************************************************************************/
     @Override
-    public void checkOut (final @Nonnull Tag tag)
+    public void checkOut (@Nonnull final Tag tag)
             throws InterruptedException, IOException
       {
         try

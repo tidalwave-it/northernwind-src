@@ -71,7 +71,7 @@ public class DefaultSiteViewController implements SiteViewController
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public <RESPONSE_TYPE> RESPONSE_TYPE processRequest (final @Nonnull Request request)
+    public <RESPONSE_TYPE> RESPONSE_TYPE processRequest (@Nonnull final Request request)
       {
         try
           {

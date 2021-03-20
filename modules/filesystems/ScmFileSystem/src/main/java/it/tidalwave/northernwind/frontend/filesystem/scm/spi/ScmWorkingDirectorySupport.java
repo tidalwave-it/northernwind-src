@@ -82,7 +82,7 @@ public abstract class ScmWorkingDirectorySupport implements ScmWorkingDirectory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Optional<Tag> getLatestTagMatching (final @Nonnull String regexp)
+    public Optional<Tag> getLatestTagMatching (@Nonnull final String regexp)
             throws InterruptedException, IOException
       {
         final List<Tag> tags = getTags();
@@ -109,7 +109,7 @@ public abstract class ScmWorkingDirectorySupport implements ScmWorkingDirectory
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected static <T> List<T> reversed (final @Nonnull List<T> list)
+    protected static <T> List<T> reversed (@Nonnull final List<T> list)
       {
         Collections.reverse(list);
         return list;

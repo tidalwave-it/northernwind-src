@@ -83,13 +83,13 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override
-    public void setContent (final @Nonnull Content content)
+    public void setContent (@Nonnull final Content content)
       {
         contentHolder.set(content);
       }
 
     @Override
-    public void setNode (final @Nonnull SiteNode node)
+    public void setNode (@Nonnull final SiteNode node)
       {
         nodeHolder.set(node);
         dynamicNodePropertiesHolder.set(modelFactory.createProperties().build());
@@ -116,7 +116,7 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Override
-    public <Type> void setDynamicNodeProperty (final @Nonnull Key<Type> key, final @Nonnull Type value)
+    public <Type> void setDynamicNodeProperty (@Nonnull final Key<Type> key, @Nonnull final Type value)
       {
         final ResourceProperties properties = dynamicNodePropertiesHolder.get();
         dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
@@ -129,7 +129,7 @@ public class DefaultRequestContext implements RequestContext
       }
 
     @Nonnull
-    private static String toString (final @CheckForNull Resource resource)
+    private static String toString (@CheckForNull final Resource resource)
       {
         return (resource == null) ? "null" : resource.getFile().getPath().asString();
       }

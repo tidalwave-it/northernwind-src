@@ -139,7 +139,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareRendering (final @Nonnull RenderContext context)
+    public void prepareRendering (@Nonnull final RenderContext context)
       throws HttpStatusException
       {
         final int requestedYear = getRequestedYear(context.getPathParams(siteNode));
@@ -166,7 +166,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       {
         render(siteNode.getProperty(P_TITLE), year, firstYear, lastYear, entriesByMonth, getViewProperties().getProperty(P_COLUMNS).orElse(4));
       }
@@ -183,11 +183,11 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
      * @param       columns     the number of columns of the table to render
      *
      ******************************************************************************************************************/
-    protected abstract void render (final @Nonnull Optional<String> title,
-                                    final @Nonnegative int year,
-                                    final @Nonnegative int firstYear,
-                                    final @Nonnegative int lastYear,
-                                    final @Nonnull SortedMap<Integer, List<Entry>> byMonth,
+    protected abstract void render (@Nonnull final Optional<String> title,
+                                    @Nonnegative final int year,
+                                    @Nonnegative final int firstYear,
+                                    @Nonnegative final int lastYear,
+                                    @Nonnull final SortedMap<Integer, List<Entry>> byMonth,
                                     final int columns);
 
     /*******************************************************************************************************************
@@ -223,7 +223,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Map<Integer, List<Entry>> findEntriesForYear (final @Nonnull String entries, final @Nonnegative int year)
+    private Map<Integer, List<Entry>> findEntriesForYear (@Nonnull final String entries, @Nonnegative final int year)
       {
         return IntStream.rangeClosed(1, 12).boxed()
                 .flatMap(month -> dao.findMonthlyEntries(siteNode.getSite(), entries, month, year).stream())
@@ -236,7 +236,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
      *
      ******************************************************************************************************************/
     @Nonnegative
-    private int getRequestedYear (final @Nonnull ResourcePath pathParams)
+    private int getRequestedYear (@Nonnull final ResourcePath pathParams)
       throws HttpStatusException
       {
         if (pathParams.getSegmentCount() > 1)
