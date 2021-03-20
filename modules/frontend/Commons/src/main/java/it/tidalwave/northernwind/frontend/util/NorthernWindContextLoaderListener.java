@@ -78,7 +78,7 @@ public class NorthernWindContextLoaderListener extends ContextLoaderListener
         private final ServletContext delegate;
 
         @Override
-        public String getInitParameter (final @Nonnull String name)
+        public String getInitParameter (@Nonnull final String name)
           {
             final String value = name.equals(CONTEXT_CONFIG_LOCATION)
                     ? (String)getAttribute("nw.contextConfigLocation")
@@ -96,7 +96,7 @@ public class NorthernWindContextLoaderListener extends ContextLoaderListener
      *
      ******************************************************************************************************************/
     @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event)
+    public void contextInitialized (@Nonnull final ServletContextEvent event)
       {
         try
           {
@@ -115,7 +115,7 @@ public class NorthernWindContextLoaderListener extends ContextLoaderListener
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event)
+    public void contextDestroyed (@Nonnull final ServletContextEvent event)
       {
         delegate.contextDestroyed(event);
       }

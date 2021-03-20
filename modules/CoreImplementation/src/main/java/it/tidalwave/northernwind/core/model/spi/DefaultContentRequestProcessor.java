@@ -71,7 +71,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       throws NotFoundException, HttpStatusException
       {
         try
@@ -99,7 +99,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
      * FIXME: could be dropped and replaced with a configurable redirect?
      *
      ******************************************************************************************************************/
-    private void enforceTrailingSlash (final @Nonnull String relativeUri, final @Nonnull Site site)
+    private void enforceTrailingSlash (@Nonnull final String relativeUri, @Nonnull final Site site)
       throws HttpStatusException
       {
         final String originalRelativeUri = requestHolder.get().getOriginalRelativeUri();

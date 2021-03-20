@@ -49,7 +49,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String postProcess (final @Nonnull String link)
+    public String postProcess (@Nonnull final String link)
       {
         // Ask to the request processor, not to the LocaleManager, because we need to replicate an explicitly set
         // language in the request, only if present.
@@ -62,7 +62,7 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String postProcess (final @Nonnull String link, final @Nonnull String language)
+    public String postProcess (@Nonnull final String link, @Nonnull final String language)
       {
         final String parameterName = plorp.getParameterName();
         final String regexp = "([\\?&])(" + parameterName + "=[a-z,0-9]*)";

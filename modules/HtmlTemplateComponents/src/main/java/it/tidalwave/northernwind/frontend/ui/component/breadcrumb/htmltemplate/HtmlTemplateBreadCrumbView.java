@@ -46,7 +46,7 @@ public class HtmlTemplateBreadCrumbView extends HtmlHolder implements BreadCrumb
     @Getter @Nonnull
     private final Id id;
 
-    public HtmlTemplateBreadCrumbView (final @Nonnull Id id) 
+    public HtmlTemplateBreadCrumbView (@Nonnull final Id id)
       {
         super(id);
         this.id = id;

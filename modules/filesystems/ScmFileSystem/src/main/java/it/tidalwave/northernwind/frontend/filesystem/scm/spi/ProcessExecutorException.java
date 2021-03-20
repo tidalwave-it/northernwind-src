@@ -54,10 +54,10 @@ public class ProcessExecutorException extends IOException
     @Getter @Nonnull
     private final List<String> stderr;
 
-    protected ProcessExecutorException (final @Nonnull String message,
+    protected ProcessExecutorException (@Nonnull final String message,
                                         final int exitCode,
-                                        final @Nonnull List<String> stdout,
-                                        final @Nonnull List<String> stderr)
+                                        @Nonnull final List<String> stdout,
+                                        @Nonnull final List<String> stderr)
       {
         super(message);
         this.exitCode = exitCode;

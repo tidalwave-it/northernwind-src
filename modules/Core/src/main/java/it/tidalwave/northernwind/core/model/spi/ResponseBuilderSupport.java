@@ -114,7 +114,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withHeaders (final @Nonnull Map<String, String> headers)
+    public ResponseBuilder<RESPONSE_TYPE> withHeaders (@Nonnull final Map<String, String> headers)
       {
         ResponseBuilder<RESPONSE_TYPE> result = this;
 
@@ -132,7 +132,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withContentType (final @Nonnull String contentType)
+    public ResponseBuilder<RESPONSE_TYPE> withContentType (@Nonnull final String contentType)
       {
         return withHeader(HEADER_CONTENT_TYPE, contentType);
       }
@@ -154,7 +154,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withContentDisposition (final @Nonnull String contentDisposition)
+    public ResponseBuilder<RESPONSE_TYPE> withContentDisposition (@Nonnull final String contentDisposition)
       {
         return withHeader(HEADER_CONTENT_DISPOSITION, contentDisposition);
       }
@@ -165,7 +165,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withExpirationTime (final @Nonnull Duration duration)
+    public ResponseBuilder<RESPONSE_TYPE> withExpirationTime (@Nonnull final Duration duration)
       {
         final ZonedDateTime expirationTime = ZonedDateTime.now(clockSupplier.get()).plus(duration);
         return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime))
@@ -178,7 +178,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (final @Nonnull ZonedDateTime time)
+    public ResponseBuilder<RESPONSE_TYPE> withLatestModifiedTime (@Nonnull final ZonedDateTime time)
       {
         return withHeader(HEADER_LAST_MODIFIED, createFormatter(PATTERN_RFC1123).format(time))
               .withHeader(HEADER_ETAG, String.format("\"%d\"", time.toInstant().toEpochMilli()));
@@ -190,7 +190,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withBody (final @Nonnull Object body)
+    public ResponseBuilder<RESPONSE_TYPE> withBody (@Nonnull final Object body)
       {
         this.body = (body instanceof byte[]) ? body :
                     (body instanceof InputStream) ? body :
@@ -204,7 +204,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> fromFile (final @Nonnull ResourceFile file)
+    public ResponseBuilder<RESPONSE_TYPE> fromFile (@Nonnull final ResourceFile file)
       throws IOException
       {
         final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
@@ -221,7 +221,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forRequest (final @Nonnull Request request)
+    public ResponseBuilder<RESPONSE_TYPE> forRequest (@Nonnull final Request request)
       {
         this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
         this.requestIfModifiedSince = request.getHeader(HEADER_IF_MODIFIED_SINCE).map(this::parseDate);
@@ -235,7 +235,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull NotFoundException e)
+    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull final NotFoundException e)
       {
         log.info("NOT FOUND: {}", e.toString());
         return forException(new HttpStatusException(SC_NOT_FOUND));
@@ -247,7 +247,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull Throwable e)
+    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull final Throwable e)
       {
         log.error("", e);
         return forException(new HttpStatusException(SC_INTERNAL_SERVER_ERROR));
@@ -259,7 +259,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> forException (final @Nonnull HttpStatusException e)
+    public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull final HttpStatusException e)
       {
         String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
 
@@ -302,7 +302,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> permanentRedirect (final @Nonnull String url)
+    public ResponseBuilder<RESPONSE_TYPE> permanentRedirect (@Nonnull final String url)
       {
         return withHeader(HEADER_LOCATION, url)
               .withStatus(SC_MOVED_PERMANENTLY);
@@ -360,7 +360,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final Optional<ZonedDateTime> getDateTimeHeader (final @Nonnull String header)
+    protected final Optional<ZonedDateTime> getDateTimeHeader (@Nonnull final String header)
       {
         return getHeader(header).map(this::parseDate);
       }
@@ -413,7 +413,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ZonedDateTime parseDate (final @Nonnull String string)
+    private ZonedDateTime parseDate (@Nonnull final String string)
       {
         for (final String dateFormat : DATE_FORMATS)
           {
@@ -437,7 +437,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* package */ static DateTimeFormatter createFormatter (final @Nonnull String template)
+    /* package */ static DateTimeFormatter createFormatter (@Nonnull final String template)
       {
         return DateTimeFormatter.ofPattern(template, Locale.US).withZone(ZoneId.of("GMT"));
       }

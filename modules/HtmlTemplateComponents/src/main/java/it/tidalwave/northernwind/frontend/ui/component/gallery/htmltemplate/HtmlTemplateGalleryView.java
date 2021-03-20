@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.frontend.ui.component.nodecontainer.htmltemplat
               controlledBy=HtmlTemplateGalleryViewController.class)
 public class HtmlTemplateGalleryView extends HtmlTemplateNodeContainerView_2 implements GalleryView
   {
-    public HtmlTemplateGalleryView (final @Nonnull Id id) 
+    public HtmlTemplateGalleryView (@Nonnull final Id id)
       {
         super(id);
       }

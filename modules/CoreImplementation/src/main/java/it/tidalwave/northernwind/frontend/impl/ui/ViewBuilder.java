@@ -70,8 +70,8 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    public ViewBuilder (final @Nonnull Class<?> viewClass,
-                        final @Nonnull Class<? extends ViewController> viewControllerClass)
+    public ViewBuilder (@Nonnull final Class<?> viewClass,
+                        @Nonnull final Class<? extends ViewController> viewControllerClass)
       throws
       IllegalArgumentException, SecurityException
       {
@@ -91,7 +91,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull Id id, final @Nonnull SiteNode siteNode)
+    public ViewAndController createViewAndController (@Nonnull final Id id, @Nonnull final SiteNode siteNode)
       throws HttpStatusException
       {
         log.debug("createViewAndController({}, {})", id, siteNode);
@@ -134,9 +134,9 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Object[] computeConstructorArguments (final @Nonnull Site site,
-                                                  final @Nonnull Constructor<?> constructor,
-                                                  final @Nonnull Object ... overridingArgs)
+    private Object[] computeConstructorArguments (@Nonnull final Site site,
+                                                  @Nonnull final Constructor<?> constructor,
+                                                  @Nonnull final Object ... overridingArgs)
       {
         final List<Object> result = new ArrayList<>();
 

@@ -71,7 +71,7 @@ public class NorthernWindTestSupport
         setupContext(ctx -> {});
       }
 
-    protected void setupContext (final @Nonnull Consumer<GenericApplicationContext> modifier)
+    protected void setupContext (@Nonnull final Consumer<GenericApplicationContext> modifier)
       {
         context      = helper.createSpringContext(modifier);
         siteProvider = context.getBean(SiteProvider.class);

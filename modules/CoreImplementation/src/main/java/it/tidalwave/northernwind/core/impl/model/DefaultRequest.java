@@ -87,7 +87,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Optional<String> getHeader (final @Nonnull String parameterName)
+    public Optional<String> getHeader (@Nonnull final String parameterName)
       {
         return getMultiValuedHeader(parameterName).stream().findFirst();
       }
@@ -98,7 +98,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<String> getMultiValuedHeader (final @Nonnull String headerName)
+    public List<String> getMultiValuedHeader (@Nonnull final String headerName)
       {
         return headersMap.getOrDefault(headerName, emptyList());
       }
@@ -109,7 +109,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Optional<String> getParameter (final @Nonnull String headerName)
+    public Optional<String> getParameter (@Nonnull final String headerName)
       {
         return getMultiValuedParameter(headerName).stream().findFirst();
       }
@@ -120,7 +120,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<String> getMultiValuedParameter (final @Nonnull String parameterName)
+    public List<String> getMultiValuedParameter (@Nonnull final String parameterName)
       {
         return parametersMap.getOrDefault(parameterName, emptyList());
       }
@@ -131,7 +131,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultRequest withRelativeUri (final @Nonnull String relativeUri)
+    public DefaultRequest withRelativeUri (@Nonnull final String relativeUri)
       {
         return new DefaultRequest(baseUrl,
                                   ResourcePath.of(relativeUri).urlDecoded().asString(),
@@ -147,7 +147,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public DefaultRequest withBaseUrl (final @Nonnull String baseUrl)
+    public DefaultRequest withBaseUrl (@Nonnull final String baseUrl)
       {
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap, headersMap, preferredLocales);
       }
@@ -158,7 +158,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourcePath getPathParams (final @Nonnull SiteNode siteNode)
+    public ResourcePath getPathParams (@Nonnull final SiteNode siteNode)
       {
         final String siteNodeRelativeUri = siteNode.getRelativeUri().asString();
         return (relativeUri.length() <= siteNodeRelativeUri.length())
@@ -171,7 +171,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public DefaultRequest withParameterMap (final @Nonnull Map<String, String[]> httpParameterMap)
+    public DefaultRequest withParameterMap (@Nonnull final Map<String, String[]> httpParameterMap)
       {
         final Map<String, List<String>> parameterMap = new HashMap<>();
 
@@ -188,7 +188,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public DefaultRequest withHeaderMap (final @Nonnull Map<String, List<String>>  headersMap)
+    public DefaultRequest withHeaderMap (@Nonnull final Map<String, List<String>>  headersMap)
       {
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap,  headersMap, preferredLocales);
       }
@@ -198,7 +198,7 @@ import static lombok.AccessLevel.PRIVATE;
      *
      ******************************************************************************************************************/
     @Nonnull
-    public DefaultRequest withPreferredLocales (final @Nonnull List<Locale> preferredLocales)
+    public DefaultRequest withPreferredLocales (@Nonnull final List<Locale> preferredLocales)
       {
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parametersMap,  headersMap, preferredLocales);
       }

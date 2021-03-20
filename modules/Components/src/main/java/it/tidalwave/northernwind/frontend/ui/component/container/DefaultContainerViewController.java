@@ -53,7 +53,7 @@ public class DefaultContainerViewController implements ContainerViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(p -> siteNode.getSite().getTemplate(getClass(), p)).ifPresent(view::setTemplate);

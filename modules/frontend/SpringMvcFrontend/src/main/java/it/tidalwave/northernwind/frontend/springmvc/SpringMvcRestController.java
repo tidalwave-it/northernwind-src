@@ -52,7 +52,7 @@ public class SpringMvcRestController
     private ModelFactory modelFactory;
 
     @RequestMapping(value = "/**", method = GET) @Nonnull
-    public ResponseEntity<?> get (final @Nonnull HttpServletRequest request)
+    public ResponseEntity<?> get (@Nonnull final HttpServletRequest request)
       {
         return siteViewController.processRequest(modelFactory.createRequestFrom(request));
       }

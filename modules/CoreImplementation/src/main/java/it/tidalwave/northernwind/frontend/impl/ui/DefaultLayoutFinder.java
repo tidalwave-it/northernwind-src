@@ -68,7 +68,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
      * @param childrenMapById   the map of children indexed by their id
      *
      ******************************************************************************************************************/
-    public DefaultLayoutFinder (final @Nonnull List<Layout> children, final @Nonnull Map<Id, Layout> childrenMapById)
+    public DefaultLayoutFinder (@Nonnull final List<Layout> children, @Nonnull final Map<Id, Layout> childrenMapById)
       {
         this.children = children;
         this.childrenMapById = childrenMapById;
@@ -84,7 +84,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
      *
      ******************************************************************************************************************/
     // FIXME: should be protected
-    public DefaultLayoutFinder (final @Nonnull DefaultLayoutFinder other, final @Nonnull Object override)
+    public DefaultLayoutFinder (@Nonnull final DefaultLayoutFinder other, @Nonnull final Object override)
       {
         super(other, override);
         final DefaultLayoutFinder source = getSource(DefaultLayoutFinder.class, other, override);
@@ -99,7 +99,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public LayoutFinder withId (final @Nonnull Id id)
+    public LayoutFinder withId (@Nonnull final Id id)
       {
         return clone(new DefaultLayoutFinder(children, childrenMapById, id));
       }

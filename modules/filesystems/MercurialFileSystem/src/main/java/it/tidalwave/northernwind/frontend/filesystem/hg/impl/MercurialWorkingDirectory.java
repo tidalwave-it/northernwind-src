@@ -61,7 +61,7 @@ public class MercurialWorkingDirectory extends ScmWorkingDirectorySupport
      * @param folder the folder
      *
      ******************************************************************************************************************/
-    public MercurialWorkingDirectory (final @Nonnull Path folder)
+    public MercurialWorkingDirectory (@Nonnull final Path folder)
       {
         super(".hg", folder);
       }
@@ -113,7 +113,7 @@ public class MercurialWorkingDirectory extends ScmWorkingDirectorySupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void cloneFrom (final @Nonnull URI uri)
+    public void cloneFrom (@Nonnull final URI uri)
             throws InterruptedException, IOException
       {
         Files.createDirectories(folder);
@@ -126,7 +126,7 @@ public class MercurialWorkingDirectory extends ScmWorkingDirectorySupport
      *
      ******************************************************************************************************************/
     @Override
-    public void checkOut (final @Nonnull Tag tag)
+    public void checkOut (@Nonnull final Tag tag)
             throws InterruptedException, IOException
       {
         try

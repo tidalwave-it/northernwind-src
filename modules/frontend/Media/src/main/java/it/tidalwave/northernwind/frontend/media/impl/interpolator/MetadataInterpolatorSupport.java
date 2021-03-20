@@ -49,7 +49,7 @@ public abstract class MetadataInterpolatorSupport implements MetadataInterpolato
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected static String formatted (final @CheckForNull String string)
+    protected static String formatted (@CheckForNull final String string)
       {
         return (string != null) ? string : "";
       }
@@ -58,7 +58,7 @@ public abstract class MetadataInterpolatorSupport implements MetadataInterpolato
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected static String lookup (final @Nonnull Map<String, String> map, @CheckForNull String string)
+    protected static String lookup (@Nonnull final Map<String, String> map, @CheckForNull String string)
       {
         final String value = map.get(string);
         return formatted((value != null) ? value : string);

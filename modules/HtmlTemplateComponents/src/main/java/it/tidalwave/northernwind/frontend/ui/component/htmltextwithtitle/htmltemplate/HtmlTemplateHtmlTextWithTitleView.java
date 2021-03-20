@@ -65,7 +65,7 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
      * @param       site    the {@link Site}
      *
      ******************************************************************************************************************/
-    public HtmlTemplateHtmlTextWithTitleView (final @Nonnull Id id, final @Nonnull Site site)
+    public HtmlTemplateHtmlTextWithTitleView (@Nonnull final Id id, @Nonnull final Site site)
       {
         super(id);
         this.id = id;
@@ -82,9 +82,9 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
      * @param       contents                the contents to render
      *
      ******************************************************************************************************************/
-    public void render (final @Nonnull Optional<ResourcePath> wrapperTemplatePath,
-                        final @Nonnull Optional<ResourcePath> templatePath,
-                        final @Nonnull Aggregates contents)
+    public void render (@Nonnull final Optional<ResourcePath> wrapperTemplatePath,
+                        @Nonnull final Optional<ResourcePath> templatePath,
+                        @Nonnull final Aggregates contents)
       {
         addComponent(new HtmlHolder(contents.stream().map(a ->
           {

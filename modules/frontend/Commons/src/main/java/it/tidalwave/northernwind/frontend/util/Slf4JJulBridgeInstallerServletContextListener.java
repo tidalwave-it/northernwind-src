@@ -51,7 +51,7 @@ public class Slf4JJulBridgeInstallerServletContextListener implements ServletCon
      *
      ******************************************************************************************************************/
     @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event)
+    public void contextInitialized (@Nonnull final ServletContextEvent event)
       {
         final Logger rootLogger = LogManager.getLogManager().getLogger("");
         final Handler[] handlers = rootLogger.getHandlers();
@@ -70,7 +70,7 @@ public class Slf4JJulBridgeInstallerServletContextListener implements ServletCon
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event)
+    public void contextDestroyed (@Nonnull final ServletContextEvent event)
       {
         // do nothing
       }

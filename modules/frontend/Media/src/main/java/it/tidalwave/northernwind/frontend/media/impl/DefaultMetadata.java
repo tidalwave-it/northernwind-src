@@ -71,7 +71,7 @@ class DefaultMetadata implements Metadata
      *
      *
      ******************************************************************************************************************/
-    public DefaultMetadata (final @Nonnull String mediaName, final @Nonnull EditableImage image)
+    public DefaultMetadata (@Nonnull final String mediaName, @Nonnull final EditableImage image)
       {
         this.mediaName = mediaName;
         this.image = image;
@@ -83,7 +83,7 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> T getDirectory (final @Nonnull Class<T> metadataClass)
+    public <T> T getDirectory (@Nonnull final Class<T> metadataClass)
       {
         return image.getMetadata(metadataClass);
       }
@@ -94,8 +94,8 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String interpolateString (final @Nonnull String template,
-                                     final @Nonnull ResourceProperties properties)
+    public String interpolateString (@Nonnull final String template,
+                                     @Nonnull final ResourceProperties properties)
       {
         if (log.isDebugEnabled())
           {
@@ -160,7 +160,7 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Map<String, String> getLensMap (final @Nonnull ResourceProperties siteNodeProperties)
+    private Map<String, String> getLensMap (@Nonnull final ResourceProperties siteNodeProperties)
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();

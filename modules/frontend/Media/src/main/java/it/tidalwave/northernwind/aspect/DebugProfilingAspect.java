@@ -46,7 +46,7 @@ public class DebugProfilingAspect
   {
 //    @Around("execution(@it.tidalwave.northernwind.aspect.DebugProfiling * *(..))") FIXME: requires aspectj plugin 1.5
     @Around("execution(* it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.getMetadataString(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
+    public Object advice (@Nonnull final ProceedingJoinPoint pjp)
       throws Throwable
       {
         log.debug("getMetadataString({})", pjp.getArgs());
@@ -65,8 +65,8 @@ public class DebugProfilingAspect
     
     // See http://stackoverflow.com/questions/2559255/spring-aop-how-to-get-the-annotations-of-the-adviced-method
     @Nonnull
-    private static <T extends Annotation> T getAnnotation (final @Nonnull ProceedingJoinPoint pjp, 
-                                                           final @Nonnull Class<T> annotationClass)
+    private static <T extends Annotation> T getAnnotation (@Nonnull final ProceedingJoinPoint pjp,
+                                                           @Nonnull final Class<T> annotationClass)
       throws NoSuchMethodException
       {
         final MethodSignature methodSignature = (MethodSignature)pjp.getSignature();

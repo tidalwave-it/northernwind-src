@@ -83,8 +83,8 @@ public class HtmlTemplateHtmlTextWithTitleViewController extends DefaultHtmlText
      * @param       siteNode    the associated {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public HtmlTemplateHtmlTextWithTitleViewController (final @Nonnull HtmlTemplateHtmlTextWithTitleView view,
-                                                        final @Nonnull SiteNode siteNode)
+    public HtmlTemplateHtmlTextWithTitleViewController (@Nonnull final HtmlTemplateHtmlTextWithTitleView view,
+                                                        @Nonnull final SiteNode siteNode)
       {
         super(view, siteNode);
         this.siteNode = siteNode;
@@ -97,7 +97,7 @@ public class HtmlTemplateHtmlTextWithTitleViewController extends DefaultHtmlText
      *
      ******************************************************************************************************************/
     @Override
-    protected void render (final @Nonnull List<TextWithTitle> txts)
+    protected void render (@Nonnull final List<TextWithTitle> txts)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.render(viewProperties.getProperty(P_WRAPPER_TEMPLATE_PATH),
@@ -109,7 +109,7 @@ public class HtmlTemplateHtmlTextWithTitleViewController extends DefaultHtmlText
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull TextWithTitle content)
+    private Aggregate toAggregate (@Nonnull final TextWithTitle content)
       {
         return Aggregate.of("title", content.title).with("text", content.text).with("level", content.level);
       }

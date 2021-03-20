@@ -122,7 +122,7 @@ public class MockPosts
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static List<ZonedDateTime> createMockDateTimes (final @Nonnegative int count, final int seed)
+    public static List<ZonedDateTime> createMockDateTimes (@Nonnegative final int count, final int seed)
       {
         final ZonedDateTime base = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"));
         final List<ZonedDateTime> dates = new Random(seed).ints(count, 0, 10 * 365 * 24 * 60)
@@ -164,10 +164,10 @@ public class MockPosts
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static List<Content> createMockPosts (final @Nonnegative int count,
-                                                 final @Nonnull List<ZonedDateTime> dateTimes,
-                                                 final @Nonnull List<String> categories,
-                                                 final @Nonnull List<String> tags,
+    public static List<Content> createMockPosts (@Nonnegative final int count,
+                                                 @Nonnull final List<ZonedDateTime> dateTimes,
+                                                 @Nonnull final List<String> categories,
+                                                 @Nonnull final List<String> tags,
                                                  final int seed)
       {
         final List<Content> posts = new ArrayList<>();
@@ -216,7 +216,7 @@ public class MockPosts
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String toString (final @Nonnull Content post)
+    private static String toString (@Nonnull final Content post)
       {
         final String title        = post.getProperty(P_TITLE).orElse("???");
         final String exposedUri   = post.getExposedUri().map(ResourcePath::asString).orElse("???");

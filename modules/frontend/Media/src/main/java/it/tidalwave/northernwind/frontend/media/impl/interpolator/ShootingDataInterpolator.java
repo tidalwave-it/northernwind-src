@@ -49,7 +49,7 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
       }
 
     @Override @Nonnull
-    public String interpolate (final @Nonnull String template, final @Nonnull Context context)
+    public String interpolate (@Nonnull final String template, @Nonnull final Context context)
       {
         final TIFF tiff = context.getMetadata().getDirectory(TIFF.class);
         final EXIF exif = context.getMetadata().getDirectory(EXIF.class);

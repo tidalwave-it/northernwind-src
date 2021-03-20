@@ -46,7 +46,7 @@ public class FileTestHelper
 
     private final Path expectedResults;
 
-    public FileTestHelper (final @Nonnull String name)
+    public FileTestHelper (@Nonnull final String name)
       {
         base = Paths.get("src/test/resources/" + name);
         actualResults = Paths.get("target/test-results/" + name);
@@ -56,7 +56,7 @@ public class FileTestHelper
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public void assertFileContents (final @Nonnull byte[] content, final @Nonnull String fileName)
+    public void assertFileContents (@Nonnull final byte[] content, @Nonnull final String fileName)
       throws IOException
       {
         final Path actualPath = actualResults.resolve(fileName);
@@ -70,7 +70,7 @@ public class FileTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Path resolve (final @Nonnull String segment)
+    public Path resolve (@Nonnull final String segment)
       {
         return base.resolve(segment);
       }

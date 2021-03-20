@@ -64,7 +64,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static ResourcePath of (final @Nonnull String path)
+    public static ResourcePath of (@Nonnull final String path)
       {
         return new ResourcePath(path);
       }
@@ -78,7 +78,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static ResourcePath of (final @Nonnull List<String> segments)
+    public static ResourcePath of (@Nonnull final List<String> segments)
       {
         return new ResourcePath(segments);
       }
@@ -100,7 +100,7 @@ public class ResourcePath implements Serializable
      * @param  path  the path
      *
      ******************************************************************************************************************/
-    private ResourcePath (final @Nonnull String path)
+    private ResourcePath (@Nonnull final String path)
       {
         this((path.equals("/") || path.equals("")) ? emptyList() : List.of(validated(path).split("/")));
       }
@@ -112,7 +112,7 @@ public class ResourcePath implements Serializable
      * @param  segments  the segments
      *
      ******************************************************************************************************************/
-    /* package */ ResourcePath (final @Nonnull List<String> segments)
+    /* package */ ResourcePath (@Nonnull final List<String> segments)
       {
         this.segments = validated(segments);
       }
@@ -128,7 +128,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath relativeTo (final @Nonnull ResourcePath path)
+    public ResourcePath relativeTo (@Nonnull final ResourcePath path)
       {
         if (!segments.subList(0, path.segments.size()).equals(path.segments))
           {
@@ -176,7 +176,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String getSegment (final @Nonnegative int index)
+    public String getSegment (@Nonnegative final int index)
       {
         return segments.get(index);
       }
@@ -232,7 +232,7 @@ public class ResourcePath implements Serializable
      * @return                 {@code true} if this path starts with the given leading segment
      *
      ******************************************************************************************************************/
-    public boolean startsWith (final @Nonnull String leadingSegment)
+    public boolean startsWith (@Nonnull final String leadingSegment)
       {
         return !segments.isEmpty() && getLeading().equals(leadingSegment);
       }
@@ -273,7 +273,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath prependedWith (final @Nonnull ResourcePath path)
+    public ResourcePath prependedWith (@Nonnull final ResourcePath path)
       {
         return ResourcePath.of(concat(path.segments, this.segments));
       }
@@ -288,7 +288,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath prependedWith (final @Nonnull String path)
+    public ResourcePath prependedWith (@Nonnull final String path)
       {
         return prependedWith(ResourcePath.of(path));
       }
@@ -303,7 +303,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath appendedWith (final @Nonnull ResourcePath path)
+    public ResourcePath appendedWith (@Nonnull final ResourcePath path)
       {
         return ResourcePath.of(concat(this.segments, path.segments));
       }
@@ -318,7 +318,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResourcePath appendedWith (final @Nonnull String path)
+    public ResourcePath appendedWith (@Nonnull final String path)
       {
         return appendedWith(ResourcePath.of(path));
       }
@@ -382,7 +382,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String validated (final @Nonnull String path)
+    private static String validated (@Nonnull final String path)
       {
         if (path.startsWith("http:") || path.startsWith("https:"))
           {
@@ -399,7 +399,7 @@ public class ResourcePath implements Serializable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<String> validated (final @Nonnull List<String> segments)
+    private static List<String> validated (@Nonnull final List<String> segments)
       {
         for (final String segment : segments)
           {

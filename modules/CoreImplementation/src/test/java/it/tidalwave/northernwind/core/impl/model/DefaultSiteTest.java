@@ -127,7 +127,7 @@ public class DefaultSiteTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "fileSystems")
-    public void must_properly_initialize (final @Nonnull MockFileSystemSupport fsTestSupport)
+    public void must_properly_initialize (@Nonnull final MockFileSystemSupport fsTestSupport)
       throws Exception
       {
         // given

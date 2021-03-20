@@ -70,11 +70,11 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public HtmlTemplateCalendarViewController (final @Nonnull HtmlTemplateCalendarView view,
-                                               final @Nonnull SiteNode siteNode,
-                                               final @Nonnull RequestLocaleManager requestLocaleManager,
-                                               final @Nonnull CalendarDao dao,
-                                               final @Nonnull TimeProvider timeProvider)
+    public HtmlTemplateCalendarViewController (@Nonnull final HtmlTemplateCalendarView view,
+                                               @Nonnull final SiteNode siteNode,
+                                               @Nonnull final RequestLocaleManager requestLocaleManager,
+                                               @Nonnull final CalendarDao dao,
+                                               @Nonnull final TimeProvider timeProvider)
       {
         super(view, siteNode, requestLocaleManager, dao, timeProvider);
         this.view = view;
@@ -87,11 +87,11 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
      ******************************************************************************************************************/
     @Override
     protected void render (@Nonnull final Optional<String> title,
-                           final @Nonnegative int year,
-                           final @Nonnegative int firstYear,
-                           final @Nonnegative int lastYear,
-                           final @Nonnull SortedMap<Integer, List<Entry>> byMonth,
-                           final @Nonnegative int columns)
+                           @Nonnegative final int year,
+                           @Nonnegative final int firstYear,
+                           @Nonnegative final int lastYear,
+                           @Nonnull final SortedMap<Integer, List<Entry>> byMonth,
+                           @Nonnegative final int columns)
       {
         final Aggregates years = IntStream.rangeClosed(firstYear, lastYear)
                                           .mapToObj(y -> toAggregate(y, y == year))
@@ -115,7 +115,7 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull Entry entry)
+    private Aggregate toAggregate (@Nonnull final Entry entry)
       {
         return Aggregate.of(  "label", entry.name)
                         .with("link",  entry.link)

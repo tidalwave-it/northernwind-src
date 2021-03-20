@@ -56,13 +56,13 @@ public class DefaultSitemapViewControllerTest
         @Nonnull
         private final List<Entry> entries = new ArrayList<>();
 
-        public UnderTest (final @Nonnull SiteNode node, final @Nonnull SitemapView view)
+        public UnderTest (@Nonnull final SiteNode node, @Nonnull final SitemapView view)
           {
             super(node, view);
           }
 
         @Override
-        protected void render (final @Nonnull Set<Entry> entries)
+        protected void render (@Nonnull final Set<Entry> entries)
           {
             this.entries.addAll(entries);
           }

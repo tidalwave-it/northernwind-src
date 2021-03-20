@@ -106,7 +106,7 @@ public class ScmWorkingDirectoryTestSupport
      *
      ******************************************************************************************************************/
     @Test(dependsOnMethods = "must_properly_clone_a_repository", dataProvider = "changesets")
-    public void must_properly_enumerate_tags (final @Nonnull String tagName, final List<Tag> expectedTags)
+    public void must_properly_enumerate_tags (@Nonnull final String tagName, final List<Tag> expectedTags)
             throws Exception
       {
         // given
@@ -141,7 +141,7 @@ public class ScmWorkingDirectoryTestSupport
      *
      ******************************************************************************************************************/
     @Test(dependsOnMethods = "must_properly_clone_a_repository", dataProvider = "tagSequenceUpTo0.8")
-    public void must_properly_checkout (final @Nonnull Tag tag)
+    public void must_properly_checkout (@Nonnull final Tag tag)
             throws Exception
       {
         // given
@@ -162,7 +162,7 @@ public class ScmWorkingDirectoryTestSupport
           dataProvider = "invalidTags",
           expectedExceptions = IllegalArgumentException.class,
           expectedExceptionsMessageRegExp = "Invalid tag: .*")
-    public void must_throw_exception_when_try_to_update_to_an_invalid_tag (final @Nonnull Tag tag)
+    public void must_throw_exception_when_try_to_update_to_an_invalid_tag (@Nonnull final Tag tag)
             throws Exception
       {
         // given
@@ -176,7 +176,7 @@ public class ScmWorkingDirectoryTestSupport
      *
      ******************************************************************************************************************/
     @Test(dependsOnMethods = "must_properly_clone_a_repository", dataProvider = "changesets")
-    public void must_properly_fetch_changesets (final @Nonnull String tagName, final List<Tag> expectedTags)
+    public void must_properly_fetch_changesets (@Nonnull final String tagName, final List<Tag> expectedTags)
             throws Exception
       {
         // given

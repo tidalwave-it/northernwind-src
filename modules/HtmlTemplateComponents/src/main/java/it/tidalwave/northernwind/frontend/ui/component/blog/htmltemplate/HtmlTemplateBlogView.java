@@ -63,7 +63,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       site            the site
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogView (final @Nonnull Id id, final @Nonnull Site site)
+    public HtmlTemplateBlogView (@Nonnull final Id id, @Nonnull final Site site)
       {
         super(id);
         this.site= site;
@@ -75,7 +75,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      *
      ******************************************************************************************************************/
     @Override
-    public void setTitle (final @Nonnull String title)
+    public void setTitle (@Nonnull final String title)
       {
         this.title = title;
       }
@@ -91,10 +91,10 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       linkedPosts     the posts to be rendered as links
      *
      ******************************************************************************************************************/
-    public void renderPosts (final @Nonnull Optional<ResourcePath> templatePath,
-                             final @Nonnull Aggregates fullPosts,
-                             final @Nonnull Aggregates leadinPosts,
-                             final @Nonnull Aggregates linkedPosts)
+    public void renderPosts (@Nonnull final Optional<ResourcePath> templatePath,
+                             @Nonnull final Aggregates fullPosts,
+                             @Nonnull final Aggregates leadinPosts,
+                             @Nonnull final Aggregates linkedPosts)
       {
 //        final Template postTemplate = templateHelper.getTemplate("/Templates/Blog/Post", "Post.st");
 //        postsTemplate.include("/singlePost", postTemplate);
@@ -112,7 +112,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      * @param       tags            the tags to render in the cloud
      *
      ******************************************************************************************************************/
-    public void renderTagCloud (final @Nonnull Optional<ResourcePath> templatePath, final @Nonnull Aggregates tags)
+    public void renderTagCloud (@Nonnull final Optional<ResourcePath> templatePath, @Nonnull final Aggregates tags)
       {
         final Template tagCloudTemplate = site.getTemplate(getClass(), templatePath, "TagCloud.st");
         tagCloudTemplate.addAttribute("title", title);

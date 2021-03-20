@@ -77,9 +77,9 @@ public class DefaultMetadataTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "metadataProvider")
-    public void must_properly_interpolate_metadata_string (final @Nonnull MetadataTestBuilder metadataBuilder,
-                                                           final @Nonnull String template,
-                                                           final @Nonnull String expectedResult)
+    public void must_properly_interpolate_metadata_string (@Nonnull final MetadataTestBuilder metadataBuilder,
+                                                           @Nonnull final String template,
+                                                           @Nonnull final String expectedResult)
       throws Exception
       {
         // given

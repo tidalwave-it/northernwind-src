@@ -55,7 +55,7 @@ public class HtmlTemplateHtmlFragmentView extends HtmlHolder implements HtmlFrag
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateHtmlFragmentView (final @Nonnull Id id) 
+    public HtmlTemplateHtmlFragmentView (@Nonnull final Id id)
       {
         super(id);
         this.id = id;

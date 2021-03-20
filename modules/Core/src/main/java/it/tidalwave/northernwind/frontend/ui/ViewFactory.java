@@ -65,7 +65,7 @@ public interface ViewFactory
          *
          **************************************************************************************************************/
         @Nonnull
-        public Object renderView (final @Nonnull RenderContext context)
+        public Object renderView (@Nonnull final RenderContext context)
           throws Exception
           {
             controller.renderView(context);

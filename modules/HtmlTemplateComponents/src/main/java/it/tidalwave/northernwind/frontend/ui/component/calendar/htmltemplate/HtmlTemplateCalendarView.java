@@ -60,7 +60,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public HtmlTemplateCalendarView (final @Nonnull Id id, final @Nonnull Site site)
+    public HtmlTemplateCalendarView (@Nonnull final Id id, @Nonnull final Site site)
       {
         super(id);
         this.site = site;
@@ -80,12 +80,12 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
      * @param       columns         the columns (can be 1, 2, 3, 4, 6)
      *
      ******************************************************************************************************************/
-    public void render (final @Nonnull Optional<String> title,
-                        final @Nonnull Optional<ResourcePath> templatePath,
-                        final @Nonnull Map<Integer, String> monthNames,
-                        final @Nonnull String year,
-                        final @Nonnull Aggregates years,
-                        final @Nonnull Map<Integer, List<Map<String, Object>>> entries,
+    public void render (@Nonnull final Optional<String> title,
+                        @Nonnull final Optional<ResourcePath> templatePath,
+                        @Nonnull final Map<Integer, String> monthNames,
+                        @Nonnull final String year,
+                        @Nonnull final Aggregates years,
+                        @Nonnull final Map<Integer, List<Map<String, Object>>> entries,
                         final int columns)
       {
         final Template template = site.getTemplate(getClass(), templatePath, "Calendar.st");

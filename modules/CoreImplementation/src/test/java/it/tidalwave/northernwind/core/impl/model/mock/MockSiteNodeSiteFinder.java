@@ -96,19 +96,19 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
     // This makes it sure that different runs with different mocked Sites use different data
     private static final Map<Site, Map<String, SiteNode>> SITE_CACHE = new IdentityHashMap<>();
 
-    public static void registerTo (final @Nonnull Site site)
+    public static void registerTo (@Nonnull final Site site)
       {
         when(site.find(eq(_SiteNode_))).thenReturn(new MockSiteNodeSiteFinder(site));
       }
 
-    private MockSiteNodeSiteFinder (final @Nonnull Site site)
+    private MockSiteNodeSiteFinder (@Nonnull final Site site)
       {
         this.site         = site;
         this.relativePath = null;
         this.relativeUri  = null;
       }
 
-    public MockSiteNodeSiteFinder (final @Nonnull MockSiteNodeSiteFinder other, final @Nonnull Object override)
+    public MockSiteNodeSiteFinder (@Nonnull final MockSiteNodeSiteFinder other, @Nonnull final Object override)
       {
         super(other, override);
         final MockSiteNodeSiteFinder source = getSource(MockSiteNodeSiteFinder.class, other, override);
@@ -118,13 +118,13 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
       }
 
     @Override @Nonnull
-    public SiteFinder<SiteNode> withRelativePath (final @Nonnull String relativePath)
+    public SiteFinder<SiteNode> withRelativePath (@Nonnull final String relativePath)
       {
         return clone(new MockSiteNodeSiteFinder(site, relativePath, relativeUri));
       }
 
     @Override @Nonnull
-    public SiteFinder<SiteNode> withRelativeUri (final @Nonnull String relativeUri)
+    public SiteFinder<SiteNode> withRelativeUri (@Nonnull final String relativeUri)
       {
         return clone(new MockSiteNodeSiteFinder(site, relativePath, relativeUri));
       }
@@ -144,7 +144,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
       }
 
     @Nonnull
-    private SiteNode createMockSiteNodeWithPath (final @Nonnull String relativePath)
+    private SiteNode createMockSiteNodeWithPath (@Nonnull final String relativePath)
       {
         final SiteNode siteNode = createMockSiteNode(site);
         final ResourceProperties properties = createMockProperties();

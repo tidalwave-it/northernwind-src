@@ -45,7 +45,7 @@ public class RegexTreeMap<Type> extends TreeMap<String, Type>
     private static final long serialVersionUID = 576876596539246L;
 
     @Nonnull
-    public static String escape (final @Nonnull String string)
+    public static String escape (@Nonnull final String string)
       {
         final StringBuilder builder = new StringBuilder();
 
@@ -65,18 +65,18 @@ public class RegexTreeMap<Type> extends TreeMap<String, Type>
       }
 
     @Override
-    public Type put (final @Nonnull String string, final Type value)
+    public Type put (@Nonnull final String string, final Type value)
       {
         return super.put(Pattern.quote(string), value);
       }
 
-    public Type putRegex (final @Nonnull String regex, final Type value)
+    public Type putRegex (@Nonnull final String regex, final Type value)
       {
         return super.put(regex, value);
       }
 
     @Override
-    public Type get (final @Nonnull Object value)
+    public Type get (@Nonnull final Object value)
       {
         final String stringValue = (String)value;
         Type result = super.get(Pattern.quote(stringValue)); // first try a direct match that is fast
