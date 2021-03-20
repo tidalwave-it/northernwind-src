@@ -96,7 +96,7 @@ public class HtmlTemplateCalendarViewControllerTest
         final ResourceProperties siteNodeProperties = createMockProperties();
 
         final Path path = fileTestHelper.resolve("entries.xml");
-        final String entries = new String(Files.readAllBytes(path), UTF_8);
+        final String entries = Files.readString(path);
         when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
         viewProperties = createMockProperties();
