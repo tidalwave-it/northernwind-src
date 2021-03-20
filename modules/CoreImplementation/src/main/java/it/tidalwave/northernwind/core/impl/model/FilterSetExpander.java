@@ -49,7 +49,7 @@ public class FilterSetExpander implements Filter
     @PostConstruct
     /* package */ void initialize()
       {
-        Collections.sort(filters, new AnnotationAwareOrderComparator());
+        filters.sort(new AnnotationAwareOrderComparator());
       }
 
     @Override @Nonnull

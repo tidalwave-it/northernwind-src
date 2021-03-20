@@ -139,7 +139,7 @@ public class DefaultSiteViewController implements SiteViewController
     @PostConstruct
     /* package */ void initialize()
       {
-        Collections.sort(requestProcessors, new AnnotationAwareOrderComparator());
+        requestProcessors.sort(new AnnotationAwareOrderComparator());
         log.info(">>>> requestProcessors:");
         requestProcessors.forEach(p -> log.info(">>>>>>>> {}", p));
       }
