@@ -76,7 +76,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
      *
      ******************************************************************************************************************/
     @SuppressWarnings({"squid:S00112"})
-    public PathFinderSupport (final @Nonnull T parentResource)
+    public PathFinderSupport (@Nonnull final T parentResource)
       {
         try
           {
@@ -96,7 +96,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
      * Clone constructor.
      *
      ******************************************************************************************************************/
-    public PathFinderSupport (final @Nonnull PathFinderSupport<T> other, final @Nonnull Object override)
+    public PathFinderSupport (@Nonnull final PathFinderSupport<T> other, @Nonnull final Object override)
       {
         super(other, override);
         final PathFinderSupport<T> source = getSource(PathFinderSupport.class, other, override);
@@ -127,7 +127,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Class<T> getInterface (final @Nonnull T resource)
+    private Class<T> getInterface (@Nonnull final T resource)
       {
         for (Class<?> type = resource.getClass(); type != null; type = type.getSuperclass())
           {

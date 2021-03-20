@@ -97,7 +97,7 @@ public class SpringTestHelper
          * @throws  IOException     in case of error
          *
          **************************************************************************************************************/
-        public void writeToActualFile (final @Nonnull String ... strings)
+        public void writeToActualFile (@Nonnull final String ... strings)
           throws IOException
           {
             writeToActualFile(List.of(strings));
@@ -111,7 +111,7 @@ public class SpringTestHelper
          * @throws  IOException     in case of error
          *
          **************************************************************************************************************/
-        public void writeToActualFile (final @Nonnull Iterable<String> strings)
+        public void writeToActualFile (@Nonnull final Iterable<String> strings)
           throws IOException
           {
             Files.write(actualFile, strings, UTF_8);
@@ -125,7 +125,7 @@ public class SpringTestHelper
          * @throws  IOException     in case of error
          *
          **************************************************************************************************************/
-        public void writeToActualFile (final @Nonnull byte[] bytes)
+        public void writeToActualFile (@Nonnull final byte[] bytes)
           throws IOException
           {
             Files.write(actualFile, bytes);
@@ -160,7 +160,7 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ApplicationContext createSpringContext (final @Nonnull String ... configurationFiles)
+    public ApplicationContext createSpringContext (@Nonnull final String ... configurationFiles)
       {
         return createSpringContext(Collections.emptyMap(), configurationFiles);
       }
@@ -176,8 +176,8 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
-                                                   final @Nonnull String ... configurationFiles)
+    public ApplicationContext createSpringContext (@Nonnull final Map<String, Object> properties,
+                                                   @Nonnull final String ... configurationFiles)
       {
         return createSpringContext(properties, context -> {}, new ArrayList<>(List.of(configurationFiles)));
       }
@@ -193,8 +193,8 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ApplicationContext createSpringContext (final @Nonnull Consumer<GenericApplicationContext> modifier,
-                                                   final @Nonnull String ... configurationFiles)
+    public ApplicationContext createSpringContext (@Nonnull final Consumer<GenericApplicationContext> modifier,
+                                                   @Nonnull final String ... configurationFiles)
       {
         return createSpringContext(Collections.emptyMap(), modifier, configurationFiles);
       }
@@ -211,9 +211,9 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
-                                                   final @Nonnull Consumer<GenericApplicationContext> modifier,
-                                                   final @Nonnull String ... configurationFiles)
+    public ApplicationContext createSpringContext (@Nonnull final Map<String, Object> properties,
+                                                   @Nonnull final Consumer<GenericApplicationContext> modifier,
+                                                   @Nonnull final String ... configurationFiles)
       {
         return createSpringContext(properties, modifier, new ArrayList<>(List.of(configurationFiles)));
       }
@@ -222,9 +222,9 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
-                                                    final @Nonnull Consumer<GenericApplicationContext> modifier,
-                                                    final @Nonnull Collection<String> configurationFiles)
+    private ApplicationContext createSpringContext (@Nonnull final Map<String, Object> properties,
+                                                    @Nonnull final Consumer<GenericApplicationContext> modifier,
+                                                    @Nonnull final Collection<String> configurationFiles)
       {
         configurationFiles.add(test.getClass().getSimpleName() + "/TestBeans.xml");
 
@@ -251,7 +251,7 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Path resourceFileFor (final @Nonnull String resourceName)
+    public Path resourceFileFor (@Nonnull final String resourceName)
       {
         final String testName = test.getClass().getSimpleName();
         return Paths.get("target/test-classes", testName, "test-resources", resourceName);
@@ -268,7 +268,7 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String readStringFromResource (final @Nonnull String resourceName)
+    public String readStringFromResource (@Nonnull final String resourceName)
       throws IOException
       {
         final Path file = resourceFileFor(resourceName);
@@ -302,7 +302,7 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    public TestResource testResourceFor (final @Nonnull String resourceName)
+    public TestResource testResourceFor (@Nonnull final String resourceName)
       throws IOException
       {
         final String testName = test.getClass().getSimpleName();
@@ -316,7 +316,7 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Path findExpectedFilePath (final @Nonnull String resourceName)
+    private Path findExpectedFilePath (@Nonnull final String resourceName)
       throws IOException
       {
         for (Class<?> testClass = test.getClass(); testClass != null; testClass = testClass.getSuperclass())

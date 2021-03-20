@@ -129,7 +129,7 @@ public class XsltMacroFilter implements Filter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
+    public String filter (@Nonnull final String text, @Nonnull final String mimeType)
       {
         if (!mimeType.equals("application/xhtml+xml"))
           {
@@ -216,7 +216,7 @@ public class XsltMacroFilter implements Filter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String asText (final @Nonnull ResourceFile file)
+    private String asText (@Nonnull final ResourceFile file)
       {
         try
           {
@@ -233,7 +233,7 @@ public class XsltMacroFilter implements Filter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Node stringToNode (final @Nonnull String string)
+    private Node stringToNode (@Nonnull final String string)
       throws IOException, SAXException, ParserConfigurationException
       {
         factory.setValidating(false);

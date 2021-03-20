@@ -90,17 +90,17 @@ public class DefaultBlogViewControllerTest
 
         public final List<TagAndCount> tagsAndCount = new ArrayList<>();
 
-        public UnderTest (final @Nonnull SiteNode siteNode,
-                          final @Nonnull BlogView view,
-                          final @Nonnull RequestLocaleManager requestLocaleManager)
+        public UnderTest (@Nonnull final SiteNode siteNode,
+                          @Nonnull final BlogView view,
+                          @Nonnull final RequestLocaleManager requestLocaleManager)
           {
             super(siteNode, view, requestLocaleManager);
           }
 
         @Override
-        protected void renderPosts (final @Nonnull List<Content> fullPosts,
-                                    final @Nonnull List<Content> leadinPosts,
-                                    final @Nonnull List<Content> linkedPosts)
+        protected void renderPosts (@Nonnull final List<Content> fullPosts,
+                                    @Nonnull final List<Content> leadinPosts,
+                                    @Nonnull final List<Content> linkedPosts)
           {
             _fullPosts.addAll(fullPosts);
             _leadInPosts.addAll(leadinPosts);
@@ -108,7 +108,7 @@ public class DefaultBlogViewControllerTest
           }
 
         @Override
-        protected void renderTagCloud (final @Nonnull Collection<TagAndCount> tagsAndCount)
+        protected void renderTagCloud (@Nonnull final Collection<TagAndCount> tagsAndCount)
           {
             this.tagsAndCount.addAll(tagsAndCount);
           }
@@ -186,11 +186,11 @@ public class DefaultBlogViewControllerTest
                                             final int maxFullItems,
                                             final int maxLeadinItems,
                                             final int maxItems,
-                                            final @Nonnull String pathParams,
-                                            final @Nonnull String expectedTitle,
-                                            final @Nonnull List<Integer> expectedFullPostIds,
-                                            final @Nonnull List<Integer> expectedLeadInPostIds,
-                                            final @Nonnull List<Integer> expectedLinkedPostIds)
+                                            @Nonnull final String pathParams,
+                                            @Nonnull final String expectedTitle,
+                                            @Nonnull final List<Integer> expectedFullPostIds,
+                                            @Nonnull final List<Integer> expectedLeadInPostIds,
+                                            @Nonnull final List<Integer> expectedLinkedPostIds)
       throws Exception
       {
         // given
@@ -241,7 +241,7 @@ public class DefaultBlogViewControllerTest
                                      final int maxFullItems,
                                      final int maxLeadinItems,
                                      final int maxItems,
-                                     final @Nonnull String pathParams)
+                                     @Nonnull final String pathParams)
       throws Exception
       {
         // given
@@ -266,7 +266,7 @@ public class DefaultBlogViewControllerTest
                                                             final int maxFullItems,
                                                             final int maxLeadinItems,
                                                             final int maxItems,
-                                                            final @Nonnull String pathParams)
+                                                            @Nonnull final String pathParams)
       throws Exception
       {
         // given
@@ -345,11 +345,11 @@ public class DefaultBlogViewControllerTest
                                                       final int maxFullItems,
                                                       final int maxLeadinItems,
                                                       final int maxItems,
-                                                      final @Nonnull String pathParams,
-                                                      final @Nonnull String expectedTitle,
-                                                      final @Nonnull List<Integer> expectedFullPostIds,
-                                                      final @Nonnull List<Integer> expectedLeadInPostIds,
-                                                      final @Nonnull List<Integer> expectedLinkedPostIds)
+                                                      @Nonnull final String pathParams,
+                                                      @Nonnull final String expectedTitle,
+                                                      @Nonnull final List<Integer> expectedFullPostIds,
+                                                      @Nonnull final List<Integer> expectedLeadInPostIds,
+                                                      @Nonnull final List<Integer> expectedLinkedPostIds)
       throws Exception
       {
         // given
@@ -416,11 +416,11 @@ public class DefaultBlogViewControllerTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider="dateTestDataProvider")
-    public void must_properly_render_the_date (final @Nonnull String localeCode,
-                                               final @Nonnull Optional<String> dateFormat,
-                                               final @Nonnull ZonedDateTime dateTime,
-                                               final @Nonnull Optional<String> timeZone,
-                                               final @Nonnull String expectedValue)
+    public void must_properly_render_the_date (@Nonnull final String localeCode,
+                                               @Nonnull final Optional<String> dateFormat,
+                                               @Nonnull final ZonedDateTime dateTime,
+                                               @Nonnull final Optional<String> timeZone,
+                                               @Nonnull final String expectedValue)
       {
         // given
         final Locale locale = new Locale(localeCode, localeCode);
@@ -724,7 +724,7 @@ public class DefaultBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertSortedInReverseOrder (final @Nonnull List<ZonedDateTime> dates)
+    private void assertSortedInReverseOrder (@Nonnull final List<ZonedDateTime> dates)
       {
         final List<ZonedDateTime> sorted = dates.stream()
                                                 .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
@@ -735,7 +735,7 @@ public class DefaultBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static List<Integer> getPostIds (final @Nonnull List<Content> posts)
+    private static List<Integer> getPostIds (@Nonnull final List<Content> posts)
       {
         return posts.stream().map(Object::toString)
                              .map(s -> s.replaceAll("^.*Title # *([0-9]+).*$", "$1"))

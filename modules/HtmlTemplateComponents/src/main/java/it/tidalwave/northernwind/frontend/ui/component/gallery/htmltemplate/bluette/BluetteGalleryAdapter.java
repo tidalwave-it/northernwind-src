@@ -124,9 +124,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      *
      ******************************************************************************************************************/
-    public BluetteGalleryAdapter (final @Nonnull SiteNode siteNode,
-                                  final @Nonnull GalleryView view,
-                                  final @Nonnull ModelFactory modelFactory)
+    public BluetteGalleryAdapter (@Nonnull final SiteNode siteNode,
+                                  @Nonnull final GalleryView view,
+                                  @Nonnull final ModelFactory modelFactory)
       {
         super(siteNode, view, modelFactory);
         this.site = siteNode.getSite();
@@ -168,7 +168,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareCatalog (final @Nonnull List<GalleryItem> items)
+    public void prepareCatalog (@Nonnull final List<GalleryItem> items)
       {
         final Aggregates entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
         rendered = catalogTemplate.render(entries);
@@ -182,7 +182,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      ******************************************************************************************************************/
     // TODO: Could we manage #! params here and select the proper item?
     @Override
-    public void prepareGallery (final @Nonnull GalleryItem item, final @Nonnull List<GalleryItem> items)
+    public void prepareGallery (@Nonnull final GalleryItem item, @Nonnull final List<GalleryItem> items)
       {
         prepare(item, items, defaultTemplate);
         rendered = defaultTemplate.render();
@@ -194,7 +194,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareFallbackGallery (final @Nonnull GalleryItem item, final @Nonnull List<GalleryItem> items)
+    public void prepareFallbackGallery (@Nonnull final GalleryItem item, @Nonnull final List<GalleryItem> items)
       {
         prepare(item, items, fallbackTemplate);
         rendered = fallbackTemplate.render();
@@ -206,7 +206,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareFallbackLightbox (final @Nonnull List<GalleryItem> items)
+    public void prepareFallbackLightbox (@Nonnull final List<GalleryItem> items)
       {
         final Aggregates entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
         final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(lightboxSegmentUri)).replaceAll("/$", "");
@@ -221,7 +221,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void render (final @Nonnull RenderContext context)
+    public void render (@Nonnull final RenderContext context)
       {
         final TextHolder textHolder = (TextHolder)view;
 
@@ -242,9 +242,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     private void prepare (// final @Nonnull RenderContext context,
-                          final @Nonnull GalleryItem item,
-                          final @Nonnull List<GalleryItem> items,
-                          final @Nonnull Template template)
+                          @Nonnull final GalleryItem item,
+                          @Nonnull final List<GalleryItem> items,
+                          @Nonnull final Template template)
       {
         final int count          = items.size();
         final int index          = items.indexOf(item);
@@ -287,7 +287,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull GalleryItem item)
+    private Aggregate toAggregate (@Nonnull final GalleryItem item)
       {
         final String id   = item.getId().stringValue();
         final String link = site.createLink(baseUrl.appendedWith(id));
@@ -301,8 +301,8 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static Optional<Aggregate> toAggregate (final @Nonnull ResourceProperties properties,
-                                                    final @Nonnull Key<?> key)
+    private static Optional<Aggregate> toAggregate (@Nonnull final ResourceProperties properties,
+                                                    @Nonnull final Key<?> key)
       {
         // A space in front of [ ] makes them interpreted as a string and not a list.
         return properties.getProperty(key).map(v -> Aggregate.of("name", key.stringValue()).with("value", v.toString().replace("[", " [")));
@@ -312,7 +312,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String createImageLink (final @Nonnull String id, final @Nonnegative int size)
+    private String createImageLink (@Nonnull final String id, @Nonnegative final int size)
       {
         return site.createLink(ResourcePath.of(String.format("/media/stillimages/%d/%s.jpg", size, id)));
       }

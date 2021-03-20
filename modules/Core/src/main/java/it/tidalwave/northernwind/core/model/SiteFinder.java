@@ -43,13 +43,13 @@ public interface SiteFinder<T> extends ExtendedFinderSupport<T, SiteFinder<T>>
     public SiteFinder<T> withRelativeUri (@Nonnull String relativeUri);
 
     @Nonnull
-    default public SiteFinder<T> withRelativePath (final @Nonnull ResourcePath relativePath)
+    public default SiteFinder<T> withRelativePath (@Nonnull final ResourcePath relativePath)
       {
         return withRelativePath(relativePath.asString());
       }
 
     @Nonnull
-    default public SiteFinder<T> withRelativeUri (final @Nonnull ResourcePath relativeUri)
+    public default SiteFinder<T> withRelativeUri (@Nonnull final ResourcePath relativeUri)
       {
         return withRelativeUri(relativeUri.asString());
       }

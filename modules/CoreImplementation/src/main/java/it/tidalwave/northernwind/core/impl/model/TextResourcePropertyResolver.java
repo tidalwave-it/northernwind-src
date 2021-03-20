@@ -89,7 +89,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
      *
      *
      ******************************************************************************************************************/
-    public TextResourcePropertyResolver (final @Nonnull ResourceFile folder)
+    public TextResourcePropertyResolver (@Nonnull final ResourceFile folder)
       {
         this.folder = folder;
       }
@@ -101,7 +101,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
      ******************************************************************************************************************/
     @Nonnull
     @Override @SuppressWarnings("unchecked")
-    public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> propertyName)
+    public <Type> Type resolveProperty (@Nonnull final Id propertyGroupId, @Nonnull final Key<Type> propertyName)
       throws NotFoundException, IOException
       {
         log.trace("resolveProperty({})", propertyName);
@@ -126,7 +126,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceFile findLocalizedFile (final @Nonnull String fileName)
+    private ResourceFile findLocalizedFile (@Nonnull final String fileName)
       throws NotFoundException
       {
         log.trace("findLocalizedFile({})", fileName);

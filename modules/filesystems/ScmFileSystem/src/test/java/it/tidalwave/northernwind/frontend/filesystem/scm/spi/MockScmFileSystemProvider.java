@@ -39,7 +39,7 @@ import java.nio.file.Path;
 public class MockScmFileSystemProvider extends ScmFileSystemProvider
   {
     @Override @Nonnull
-    public ScmWorkingDirectory createWorkingDirectory (final @Nonnull Path workArea)
+    public ScmWorkingDirectory createWorkingDirectory (@Nonnull final Path workArea)
       {
         return new MockScmWorkingDirectory(workArea);
       }

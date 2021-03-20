@@ -83,7 +83,7 @@ public class MockModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource build (final @Nonnull Resource.Builder builder)
+    public Resource build (@Nonnull final Resource.Builder builder)
       {
         final Resource resource = createMockResource();
         final String path = builder.getFile().getPath().asString();
@@ -99,7 +99,7 @@ public class MockModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content build (final @Nonnull Content.Builder builder)
+    public Content build (@Nonnull final Content.Builder builder)
       {
         final Content content = createMockContent();
         final ResourceProperties properties = createMockProperties();
@@ -117,7 +117,7 @@ public class MockModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media build (final @Nonnull Media.Builder builder)
+    public Media build (@Nonnull final Media.Builder builder)
       {
         final Media media = mock(Media.class);
         final String path = builder.getFile().getPath().asString();
@@ -146,7 +146,7 @@ public class MockModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
+    public SiteNode createSiteNode (@Nonnull final Site site, @Nonnull final ResourceFile folder)
       {
         final String relativeUri = String.format("relativeUriFor:%s", folder.getPath().asString());
         final String path = folder.getPath().asString();
@@ -215,7 +215,7 @@ public class MockModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static SiteNode createMockSiteNode (final @Nonnull Site site)
+    public static SiteNode createMockSiteNode (@Nonnull final Site site)
       {
         final SiteNode siteNode = mock(SiteNode.class);
         when(siteNode.getSite()).thenReturn(site);
@@ -278,10 +278,10 @@ public class MockModelFactory extends ModelFactorySupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static <T> void mockViewProperty (final @Nonnull SiteNode siteNode,
-                                             final @Nonnull Id viewId,
-                                             final @Nonnull Key<T> propertyKey,
-                                             final @Nonnull Optional<T> propertyValue)
+    public static <T> void mockViewProperty (@Nonnull final SiteNode siteNode,
+                                             @Nonnull final Id viewId,
+                                             @Nonnull final Key<T> propertyKey,
+                                             @Nonnull final Optional<T> propertyValue)
       {
         ResourceProperties properties = siteNode.getPropertyGroup(viewId);
 

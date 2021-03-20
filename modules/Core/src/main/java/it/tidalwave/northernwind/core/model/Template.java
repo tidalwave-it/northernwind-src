@@ -58,7 +58,7 @@ public interface Template
          *
          **************************************************************************************************************/
         @Nonnull
-        public static Aggregate of (final @Nonnull String name, final @Nonnull Object value)
+        public static Aggregate of (@Nonnull final String name, @Nonnull final Object value)
           {
             return new Aggregate().with(name, value);
           }
@@ -67,7 +67,7 @@ public interface Template
          *
          **************************************************************************************************************/
         @Nonnull
-        public static Aggregate of (final @Nonnull String name, final @Nonnull Optional<?> value)
+        public static Aggregate of (@Nonnull final String name, @Nonnull final Optional<?> value)
           {
             return new Aggregate().with(name, value);
           }
@@ -76,7 +76,7 @@ public interface Template
          *
          **************************************************************************************************************/
         @Nonnull
-        public Aggregate with (final @Nonnull String name, final @Nonnull Object value)
+        public Aggregate with (@Nonnull final String name, @Nonnull final Object value)
           {
             map.put(name, value);
             return this;
@@ -86,7 +86,7 @@ public interface Template
          *
          **************************************************************************************************************/
         @Nonnull
-        public Aggregate with (final @Nonnull String name, final @Nonnull Optional<?> value)
+        public Aggregate with (@Nonnull final String name, @Nonnull final Optional<?> value)
           {
             value.ifPresent(v -> map.put(name, v));
             return this;
@@ -96,7 +96,7 @@ public interface Template
          *
          **************************************************************************************************************/
         @Nonnull
-        public Optional<Object> get (final @Nonnull String name)
+        public Optional<Object> get (@Nonnull final String name)
           {
             return Optional.ofNullable(map.get(name));
           }
@@ -127,7 +127,7 @@ public interface Template
         /***************************************************************************************************************
          *
          **************************************************************************************************************/
-        public Aggregates (final @Nonnull String name, final @Nonnull List<Aggregate> aggregates)
+        public Aggregates (@Nonnull final String name, @Nonnull final List<Aggregate> aggregates)
           {
             this.name = name;
             this.aggregates.addAll(aggregates);
@@ -177,7 +177,7 @@ public interface Template
          *
          **************************************************************************************************************/
         @Nonnull
-        public static Collector<Aggregate, ?, Aggregates> toAggregates (final @Nonnull String name)
+        public static Collector<Aggregate, ?, Aggregates> toAggregates (@Nonnull final String name)
           {
             return collectingAndThen(toList(), list -> new Aggregates(name, list));
           }

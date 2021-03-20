@@ -52,7 +52,7 @@ public final class CollectionFunctions
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> List<T>   concat (final @Nonnull Collection<T>... collections)
+    public static <T> List<T>   concat (@Nonnull final Collection<T>... collections)
       {
         final List<T> result = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public final class CollectionFunctions
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> List<T> safeSubList (final @Nonnull List<T> list, final int from, final int to)
+    public static <T> List<T> safeSubList (@Nonnull final List<T> list, final int from, final int to)
       {
         final int to2 = Math.min(list.size(), to);
         return (from >= to2) ? emptyList() : list.subList(from, to2);
@@ -94,7 +94,7 @@ public final class CollectionFunctions
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> List<List<T>> split (final @Nonnull List<T> list, final int ... boundary)
+    public static <T> List<List<T>> split (@Nonnull final List<T> list, final int ... boundary)
       {
         final List<List<T>> result = new ArrayList<>();
 

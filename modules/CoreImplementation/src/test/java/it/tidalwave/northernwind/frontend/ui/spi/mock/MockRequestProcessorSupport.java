@@ -48,7 +48,7 @@ public class MockRequestProcessorSupport implements RequestProcessor
     @Nonnull
     @Override
     @SneakyThrows
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       {
         if (throwable != null) 
           {

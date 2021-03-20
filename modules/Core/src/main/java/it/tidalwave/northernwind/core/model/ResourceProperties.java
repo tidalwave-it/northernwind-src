@@ -99,7 +99,7 @@ public interface ResourceProperties extends As, Identifiable
          *
          **************************************************************************************************************/
         @Nonnull
-        public Builder withSafeValues (final @Nonnull TypeSafeMap values)
+        public Builder withSafeValues (@Nonnull final TypeSafeMap values)
           {
             return withValues(values.asMap().entrySet().stream()
                                     .collect(Collectors.toMap(e -> e.getKey().getName(), Map.Entry::getValue)));
@@ -144,7 +144,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    default public <T> Optional<T> getProperty (final @Nonnull List<Key<T>> keys)
+    public default <T> Optional<T> getProperty (@Nonnull final List<Key<T>> keys)
       {
         return keys.stream().flatMap(key -> getProperty(key).stream()).findFirst();
       }

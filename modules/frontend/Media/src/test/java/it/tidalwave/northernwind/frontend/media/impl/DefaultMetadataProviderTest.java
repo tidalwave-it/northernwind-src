@@ -88,9 +88,9 @@ public class DefaultMetadataProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void dumpTags (final @Nonnull List<String> strings,
-                           final @Nonnull String directoryName,
-                           final @Nonnull Directory directory)
+    private void dumpTags (@Nonnull final List<String> strings,
+                           @Nonnull final String directoryName,
+                           @Nonnull final Directory directory)
       {
         for (final int tag : directory.getTagCodes())
           {

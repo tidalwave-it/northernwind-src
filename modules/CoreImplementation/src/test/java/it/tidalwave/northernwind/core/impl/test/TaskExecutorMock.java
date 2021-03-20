@@ -41,7 +41,7 @@ public class TaskExecutorMock implements TaskExecutor
     private Runnable task;
 
     @Override
-    public void execute (final @Nonnull Runnable task)
+    public void execute (@Nonnull final Runnable task)
       {
         this.task = task;
       }

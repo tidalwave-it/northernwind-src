@@ -152,7 +152,7 @@ public class ScmFileSystemProviderTestSupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    protected void populateWorkingDirectory (final @Nonnull Path folder, final @Nonnull Tag tag)
+    protected void populateWorkingDirectory (@Nonnull final Path folder, @Nonnull final Tag tag)
             throws Exception
       {
         classUnderTest.getConstructor().newInstance().createWorkingDirectory(folder).checkOut(tag);
@@ -172,7 +172,7 @@ public class ScmFileSystemProviderTestSupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertThatHasNoCurrentTag (final @Nonnull ScmWorkingDirectory workingDirectory)
+    private void assertThatHasNoCurrentTag (@Nonnull final ScmWorkingDirectory workingDirectory)
             throws Exception
       {
         final Optional<Tag> tag = workingDirectory.getCurrentTag();

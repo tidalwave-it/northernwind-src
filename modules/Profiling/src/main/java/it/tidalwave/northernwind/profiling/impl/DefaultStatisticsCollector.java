@@ -79,13 +79,13 @@ public class DefaultStatisticsCollector implements StatisticsCollector
     private final ThreadLocal<Sample> sampleHolder = new ThreadLocal<>();
 
     @Override
-    public void onRequestBegin (final @Nonnull Request request)
+    public void onRequestBegin (@Nonnull final Request request)
       {
         sampleHolder.set(new Sample());
       }
 
     @Override
-    public void onRequestEnd (final @Nonnull Request request)
+    public void onRequestEnd (@Nonnull final Request request)
       {
         final Sample sample = sampleHolder.get();
         sample.stop();

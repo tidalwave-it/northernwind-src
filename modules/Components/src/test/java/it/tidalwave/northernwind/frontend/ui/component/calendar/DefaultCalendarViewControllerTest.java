@@ -220,7 +220,7 @@ public class DefaultCalendarViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertFileContents (final @Nonnull String fileName)
+    private void assertFileContents (@Nonnull final String fileName)
       throws IOException
       {
         final String s = underTest.byMonth.entrySet().stream().flatMap(e ->
