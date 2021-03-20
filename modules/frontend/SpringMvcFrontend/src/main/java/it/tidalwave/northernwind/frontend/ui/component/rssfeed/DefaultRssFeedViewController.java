@@ -134,9 +134,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderPosts (List<it.tidalwave.northernwind.core.model.Content> fullPosts,
-                                List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
-                                List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
+    protected void renderPosts (@Nonnull List<it.tidalwave.northernwind.core.model.Content> fullPosts,
+                                @Nonnull List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
+                                @Nonnull List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
       throws Exception
       {
         fullPosts.forEach  (post -> renderPost(post, Optional.of(P_FULL_TEXT)));
@@ -175,7 +175,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         final Content content = new Content();
         // FIXME: text/xhtml?
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
-        textProperty.ifPresent(p -> postProperties.getProperty(p).ifPresent(content::setValue));
+        textProperty.flatMap(postProperties::getProperty).ifPresent(content::setValue);
         item.setTitle(postProperties.getProperty(P_TITLE).orElse(""));
 //        item.setAuthor("author " + i); TODO
         item.setPubDate(Date.from(blogDateTime.toInstant()));
@@ -205,7 +205,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
+    protected void renderTagCloud (@Nonnull final Collection<TagAndCount> tagsAndCount)
       {
         // not meaningful for RSS
       }

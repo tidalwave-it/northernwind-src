@@ -65,7 +65,6 @@ public class EmbeddedMediaMetadataProviderTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         context = helper.createSpringContext();
         underTest = context.getBean(EmbeddedMediaMetadataProvider.class);

@@ -58,14 +58,13 @@ public class HtmlTemplateCalendarViewTest
 
     private Site site;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         site = createMockSite();
         MockContentSiteFinder.registerTo(site);

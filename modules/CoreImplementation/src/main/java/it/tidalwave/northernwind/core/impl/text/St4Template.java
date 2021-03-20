@@ -32,7 +32,7 @@ import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.asList;
+import java.util.List;
 
 /******************************************************************************************************************************
  *
@@ -91,7 +91,7 @@ public class St4Template implements Template
           {
             if (aggregates.getSize() == 1)
               {
-                st.add(aggregates.getName(), asList(aggregates.iterator().next().getMap()));
+                st.add(aggregates.getName(), List.of(aggregates.iterator().next().getMap()));
               }
             else
               {

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
@@ -193,7 +192,7 @@ public class LayeredFileSystemProviderTest
       {
         final Path file = Paths.get(FS_BASE, testCase + fileSystemName, path);
         Files.createDirectories(file.getParent());
-        Files.write(file, Arrays.asList(fileSystemName + ": " + path));
+        Files.write(file, List.of(fileSystemName + ": " + path));
         log.info("Created {} - {}:{}", testCase, fileSystemName, path);
       }
   }

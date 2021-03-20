@@ -93,7 +93,6 @@ public class ViewBuilderTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         site = createMockSite();
         context = helper.createSpringContext();

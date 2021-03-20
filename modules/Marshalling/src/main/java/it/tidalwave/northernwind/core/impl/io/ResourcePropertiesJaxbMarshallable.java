@@ -98,7 +98,6 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
      ******************************************************************************************************************/
     @Nonnull
     private PropertiesJaxb marshal (final @Nonnull ResourceProperties properties)
-      throws IOException
       {
         final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();
         final Id id = properties.getId();

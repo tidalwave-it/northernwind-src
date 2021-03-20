@@ -48,9 +48,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
   {
-    public static final Key<List<String>> P_LENS_IDS = new Key<List<String>>("lensIds") {};
+    public static final Key<List<String>> P_LENS_IDS = new Key<>("lensIds") {};
 
-    public static final Key<List<String>> P_MEDIA_PATHS = new Key<List<String>>("mediaPaths") {};
+    public static final Key<List<String>> P_MEDIA_PATHS = new Key<>("mediaPaths") {};
 
     public static final Id P_GROUP_ID = new Id("EmbeddedMediaMetadataProvider");
 

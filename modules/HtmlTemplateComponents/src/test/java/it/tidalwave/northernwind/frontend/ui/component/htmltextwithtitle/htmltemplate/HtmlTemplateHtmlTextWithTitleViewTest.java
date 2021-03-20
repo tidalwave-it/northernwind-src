@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmltemplate;
 
+import java.util.List;
 import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Content;
@@ -39,7 +40,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.extern.slf4j.Slf4j;
 import it.tidalwave.northernwind.util.test.FileTestHelper;
-import static java.util.Arrays.asList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -61,14 +61,13 @@ public class HtmlTemplateHtmlTextWithTitleViewTest
 
     private Site site;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         site = createMockSite();
         MockContentSiteFinder.registerTo(site);
@@ -88,7 +87,7 @@ public class HtmlTemplateHtmlTextWithTitleViewTest
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("$title$ $text$ $level$"));
 
-        final Aggregates aggregates = new Aggregates("content", asList(
+        final Aggregates aggregates = new Aggregates("content", List.of(
             Aggregate.of("title", "title").with("text", "text").with("level", 2)));
 
         // when
@@ -110,7 +109,7 @@ public class HtmlTemplateHtmlTextWithTitleViewTest
         final ResourceProperties properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("<div class='my'>\n  $content$\n</div>"));
 
-        final Aggregates aggregates = new Aggregates("content", asList(
+        final Aggregates aggregates = new Aggregates("content", List.of(
             Aggregate.of("title", "title 1").with("text", "text 1").with("level", 2),
             Aggregate.of("title", "title 2").with("text", "text 2").with("level", 2),
             Aggregate.of("title", "title 3").with("text", "text 3").with("level", 2)));

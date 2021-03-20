@@ -86,7 +86,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
                         final @Nonnull String year,
                         final @Nonnull Aggregates years,
                         final @Nonnull Map<Integer, List<Map<String, Object>>> entries,
-                        final @Nonnull int columns)
+                        final int columns)
       {
         final Template template = site.getTemplate(getClass(), templatePath, "Calendar.st");
         title.ifPresent(t -> template.addAttribute("title", t));
@@ -96,7 +96,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
         template.addAttribute("columns", columns);
         template.addAttribute("rows",    IntStream.rangeClosed(1, 12 / columns)
                                                   .mapToObj(r -> IntStream.rangeClosed(1 + (r-1) * columns, r * columns)
-                                                                          .mapToObj(i -> i)
+                                                                          .boxed()
                                                                           .collect(toList()))
                                                   .collect(toList()));
         template.addAttribute("columnWidth", 100 / columns);

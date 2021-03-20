@@ -50,7 +50,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class HtmlTemplateHtmlTextWithTitleViewControllerTest
   {
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     private HtmlTemplateHtmlTextWithTitleView view;
 

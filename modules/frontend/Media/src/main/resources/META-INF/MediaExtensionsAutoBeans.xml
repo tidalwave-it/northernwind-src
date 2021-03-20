@@ -48,7 +48,7 @@
     <bean id="metadataCache"
           class="it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataCache"
           lazy-init="true">
-        <property name="medatataExpirationTime" value="${nw.media.metadata.expirationTime}" />
+        <property name="metadataExpirationTime" value="${nw.media.metadata.expirationTime}" />
     </bean>
 
     <bean id="metadataLoader"

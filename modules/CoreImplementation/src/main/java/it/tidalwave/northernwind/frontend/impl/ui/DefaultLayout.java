@@ -115,7 +115,7 @@ public class DefaultLayout implements Layout, Cloneable
           {
             return rootLayout;
           }
-      };
+      }
 
     /*******************************************************************************************************************
      *

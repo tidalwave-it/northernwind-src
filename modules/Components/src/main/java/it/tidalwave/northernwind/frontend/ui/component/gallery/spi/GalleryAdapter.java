@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 import javax.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
@@ -64,8 +63,7 @@ public interface GalleryAdapter
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void prepareCatalog (@Nonnull List<GalleryItem> items)
-      throws HttpStatusException;
+    public void prepareCatalog (@Nonnull List<GalleryItem> items);
 
     /*******************************************************************************************************************
      *

@@ -14,7 +14,8 @@
     <artifactId>it-tidalwave-northernwind-frontend-commons</artifactId>
     <version>1.2-ALPHA-7-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Frontend Commons</name>
+    <name>NorthernWind :: Frontend :: Commons</name>
+    <description>Utilities used by the front end implementations.</description>
 
     <dependencies>
         <dependency>
@@ -51,5 +52,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <description>Utilities used by the front end implementations.</description>
 </project>

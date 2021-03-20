@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Id;
@@ -88,7 +87,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
 
     /* VisibleForTesting */ static final Id P_GROUP_ID = new Id("Redirector");
 
-    /* VisibleForTesting */ static final Key<List<String>> P_PERMANENT_REDIRECTS = new Key<List<String>>("permanentRedirects") {};
+    /* VisibleForTesting */ static final Key<List<String>> P_PERMANENT_REDIRECTS = new Key<>("permanentRedirects") {};
 
     @Inject
     private Provider<SiteProvider> siteProvider;
@@ -105,7 +104,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
      ******************************************************************************************************************/
 //    @PostConstruct // FIXME: see NW-224
     /* VisibleForTesting */ void initialize()
-      throws IOException, NotFoundException
+            throws NotFoundException
       {
         site = siteProvider.get().getSite();
         final SiteNode rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result();
@@ -143,7 +142,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
                       {
                         initialize();
                       }
-                    catch (NotFoundException | IOException e)
+                    catch (NotFoundException e)
                       {
                         throw new RuntimeException(e);
                       }

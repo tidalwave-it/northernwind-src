@@ -188,7 +188,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
                                     final @Nonnegative int firstYear,
                                     final @Nonnegative int lastYear,
                                     final @Nonnull SortedMap<Integer, List<Entry>> byMonth,
-                                    final @Nonnull int columns);
+                                    final int columns);
 
     /*******************************************************************************************************************
      *
@@ -225,7 +225,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
     @Nonnull
     private Map<Integer, List<Entry>> findEntriesForYear (final @Nonnull String entries, final @Nonnegative int year)
       {
-        return IntStream.rangeClosed(1, 12).mapToObj(Integer::valueOf)
+        return IntStream.rangeClosed(1, 12).boxed()
                 .flatMap(month -> dao.findMonthlyEntries(siteNode.getSite(), entries, month, year).stream())
                 .collect(groupingBy(e -> e.month));
       }

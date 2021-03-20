@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -62,7 +61,7 @@ public interface ResourceProperties extends As, Identifiable
      * A builder of a {@link ResourceProperties}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor @SuppressWarnings("FieldMayBeFinal")
     @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
@@ -103,7 +102,7 @@ public interface ResourceProperties extends As, Identifiable
         public Builder withSafeValues (final @Nonnull TypeSafeMap values)
           {
             return withValues(values.asMap().entrySet().stream()
-                                    .collect(Collectors.toMap(e -> e.getKey().getName(), e -> e.getValue())));
+                                    .collect(Collectors.toMap(e -> e.getKey().getName(), Map.Entry::getValue)));
           }
       }
 
@@ -111,9 +110,10 @@ public interface ResourceProperties extends As, Identifiable
       {
         public static PropertyResolver DEFAULT = new PropertyResolver()
           {
+            @Nonnull
             @Override
             public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
-              throws NotFoundException, IOException
+              throws NotFoundException
               {
                 throw new NotFoundException(key.stringValue());
               }
@@ -146,7 +146,7 @@ public interface ResourceProperties extends As, Identifiable
     @Nonnull
     default public <T> Optional<T> getProperty (final @Nonnull List<Key<T>> keys)
       {
-        return keys.stream().flatMap(key -> getProperty(key).map(Stream::of).orElseGet(Stream::empty)).findFirst(); // FIXME: simplify in Java 9
+        return keys.stream().flatMap(key -> getProperty(key).stream()).findFirst();
       }
 
     /*******************************************************************************************************************
