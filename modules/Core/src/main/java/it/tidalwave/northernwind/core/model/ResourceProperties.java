@@ -62,7 +62,7 @@ public interface ResourceProperties extends As, Identifiable
      * A builder of a {@link ResourceProperties}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor @SuppressWarnings("FieldMayBeFinal")
     @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
