@@ -101,7 +101,6 @@ public class MockPosts
             posts.stream()
                  .collect(groupingBy(__ -> paths.get(rnd.nextInt(paths.size()))))
                  .entrySet()
-                 .stream()
                  .forEach(e ->
               {
                 final Content blogFolder = site.find(_Content_).withRelativePath(e.getKey()).optionalResult().get();

@@ -115,9 +115,9 @@ public class DefaultResourceProperties implements ResourceProperties
         this.id = otherProperties.id;
         this.propertyResolver = otherProperties.propertyResolver;
 
-        otherProperties.propertyMap.entrySet().stream().forEach(e ->
+        otherProperties.propertyMap.entrySet().forEach(e ->
                 propertyMap.put(e.getKey(), e.getValue())); // FIXME: clone the property
-        otherProperties.groupMap.entrySet().stream().forEach(e ->
+        otherProperties.groupMap.entrySet().forEach(e ->
                 groupMap.put(e.getKey(), new DefaultResourceProperties(e.getValue())));
       }
 

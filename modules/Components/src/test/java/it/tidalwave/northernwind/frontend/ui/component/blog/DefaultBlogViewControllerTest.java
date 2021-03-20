@@ -307,7 +307,7 @@ public class DefaultBlogViewControllerTest
                             .stream()
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
-        actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
+        actualTacs.forEach(tac -> log.info(">>>> {} ", tac));
         assertThat(actualTacs, is(expectedTacs));
       }
 
@@ -335,7 +335,7 @@ public class DefaultBlogViewControllerTest
                             .stream()
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
-        actualTacs.stream().forEach(tac -> log.info(">>>> {} ", tac));
+        actualTacs.forEach(tac -> log.info(">>>> {} ", tac));
         assertThat(actualTacs, is(expectedTacs));
       }
 

@@ -96,7 +96,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
         template.addAttribute("columns", columns);
         template.addAttribute("rows",    IntStream.rangeClosed(1, 12 / columns)
                                                   .mapToObj(r -> IntStream.rangeClosed(1 + (r-1) * columns, r * columns)
-                                                                          .mapToObj(i -> i)
+                                                                          .boxed()
                                                                           .collect(toList()))
                                                   .collect(toList()));
         template.addAttribute("columnWidth", 100 / columns);

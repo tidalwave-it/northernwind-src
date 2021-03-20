@@ -112,6 +112,6 @@ public class DefaultViewFactory implements ViewFactory
     private void logConfiguration()
       {
         log.info("View definitions:");
-        viewBuilderMapByTypeUri.values().stream().forEach(viewBuilder -> log.info(">>>> {}", viewBuilder));
+        viewBuilderMapByTypeUri.values().forEach(viewBuilder -> log.info(">>>> {}", viewBuilder));
       }
   }
