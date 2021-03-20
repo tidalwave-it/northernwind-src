@@ -53,7 +53,7 @@ public class St4Template implements Template
     /**************************************************************************************************************************
      *
      *************************************************************************************************************************/
-    public St4Template (final @Nonnull String templateText, final char delimiter)
+    public St4Template (@Nonnull final String templateText, final char delimiter)
       {
         log.trace("Creating template: {} - {}", templateText, delimiter);
 //        stg = new STGroup(delimiter, delimiter);
@@ -73,7 +73,7 @@ public class St4Template implements Template
      *
      *************************************************************************************************************************/
     @Override
-    public Template addAttribute (final @Nonnull String name, final @Nonnull Object value)
+    public Template addAttribute (@Nonnull final String name, @Nonnull final Object value)
       {
         st.add(name, value);
         return this;
@@ -85,7 +85,7 @@ public class St4Template implements Template
      *
      *************************************************************************************************************************/
     @Override @Nonnull
-    public String render (final @Nonnull Aggregates ... aggregatesSet)
+    public String render (@Nonnull final Aggregates ... aggregatesSet)
       {
         for (final Aggregates aggregates : aggregatesSet)
           {

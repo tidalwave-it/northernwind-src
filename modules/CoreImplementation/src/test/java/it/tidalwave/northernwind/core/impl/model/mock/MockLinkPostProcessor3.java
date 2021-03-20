@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
 public class MockLinkPostProcessor3 implements LinkPostProcessor
   {
     @Override @Nonnull
-    public String postProcess (final @Nonnull String link) 
+    public String postProcess (@Nonnull final String link)
       {
         return String.format("lpp3-%s", link);
       }

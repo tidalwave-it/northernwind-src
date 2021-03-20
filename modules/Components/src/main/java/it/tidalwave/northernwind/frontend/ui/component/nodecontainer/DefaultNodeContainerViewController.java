@@ -85,7 +85,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       throws Exception
       {
         final ResourceProperties viewProperties     = getViewProperties();
@@ -200,7 +200,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Stream<String> streamOf (final @Nonnull Key<List<String>> key)
+    private Stream<String> streamOf (@Nonnull final Key<List<String>> key)
       {
         return getViewProperties().getProperty(key).orElse(emptyList()).stream();
       }
@@ -211,7 +211,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String createLink (final @Nonnull String relativeUri)
+    private String createLink (@Nonnull final String relativeUri)
       {
         return relativeUri.startsWith("http") ? relativeUri : siteNode.getSite().createLink(ResourcePath.of(relativeUri));
       }

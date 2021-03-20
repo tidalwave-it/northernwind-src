@@ -46,7 +46,7 @@ public final class BootLogger
 
     private final Class<?> owner;
 
-    public void log (final @Nonnull String string)
+    public void log (@Nonnull final String string)
       {
         @SuppressWarnings("squid:S106")
         final String s = String.format("%s: %s", owner.getSimpleName(), string);
@@ -54,7 +54,7 @@ public final class BootLogger
         BUILDER.append(s).append("\n");
       }
 
-    public void log (final @Nonnull Throwable t)
+    public void log (@Nonnull final Throwable t)
       {
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw);

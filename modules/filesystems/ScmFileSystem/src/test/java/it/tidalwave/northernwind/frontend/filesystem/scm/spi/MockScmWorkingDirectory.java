@@ -49,7 +49,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
     public static class Preparer extends ScmPreparer
       {
         @Override
-        protected void stripChangesetsAfter (final @Nonnull String tag)
+        protected void stripChangesetsAfter (@Nonnull final String tag)
                 throws IOException
           {
             final int n = Integer.parseInt(tag.replace("published-0.", ""));
@@ -68,7 +68,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
 
     private final Path configCurrentTag;
 
-    public MockScmWorkingDirectory (final @Nonnull Path workArea)
+    public MockScmWorkingDirectory (@Nonnull final Path workArea)
       {
         super(MOCKSCM, workArea);
         configFolder = workArea.resolve(MOCKSCM);
@@ -90,7 +90,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
       }
 
     @Override
-    public void checkOut (final @Nonnull Tag tag)
+    public void checkOut (@Nonnull final Tag tag)
             throws IOException, InterruptedException
       {
         if (!getTags().contains(tag))
@@ -109,7 +109,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
       }
 
     @Override
-    public void cloneFrom (final @Nonnull URI uri)
+    public void cloneFrom (@Nonnull final URI uri)
             throws IOException
       {
         Files.createDirectories(configFolder);

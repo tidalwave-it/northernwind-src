@@ -71,7 +71,7 @@ public class SpringMvcSiteView implements SiteView
      *
      ******************************************************************************************************************/
     @Override
-    public void renderSiteNode (final @Nonnull Request request, final @Nonnull SiteNode siteNode)
+    public void renderSiteNode (@Nonnull final Request request, @Nonnull final SiteNode siteNode)
       {
         log.info("renderSiteNode({})", siteNode);
         httpStatus.set(HttpStatus.OK);
@@ -99,7 +99,7 @@ public class SpringMvcSiteView implements SiteView
      *
      ******************************************************************************************************************/
     @Nonnull
-    private TextHolder createErrorView (final @Nonnull Layout layout, final @Nonnull Throwable t)
+    private TextHolder createErrorView (@Nonnull final Layout layout, @Nonnull final Throwable t)
       {
         log.warn("While processing " + layout, t);
         final HttpStatus status = (t instanceof HttpStatusException)
@@ -112,7 +112,7 @@ public class SpringMvcSiteView implements SiteView
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void attach (final @Nonnull TextHolder parent, final @Nonnull TextHolder child)
+    private void attach (@Nonnull final TextHolder parent, @Nonnull final TextHolder child)
       {
         parent.addComponent(child);
       }

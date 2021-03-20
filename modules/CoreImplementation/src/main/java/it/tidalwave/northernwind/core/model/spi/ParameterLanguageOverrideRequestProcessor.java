@@ -62,7 +62,7 @@ public class ParameterLanguageOverrideRequestProcessor implements RequestProcess
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       {
         request.getParameter(parameterName).ifPresent(locale ->
           {

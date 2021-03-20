@@ -75,7 +75,7 @@ import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
      *
      *
      ******************************************************************************************************************/
-    public DefaultResource (final @Nonnull Resource.Builder builder)
+    public DefaultResource (@Nonnull final Resource.Builder builder)
       {
         super(builder);
         propertyResolver = new TextResourcePropertyResolver(getFile());
@@ -145,8 +145,8 @@ import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
      * FIXME: move to ResourceProperties!
      *
      ******************************************************************************************************************/
-    private void logProperties (final @Nonnull String indent,
-                                final @Nonnull ResourceProperties properties)
+    private void logProperties (@Nonnull final String indent,
+                                @Nonnull final ResourceProperties properties)
       {
         log.debug("{} property items:", indent);
 

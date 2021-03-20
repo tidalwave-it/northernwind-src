@@ -63,8 +63,8 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
      *
      *
      ******************************************************************************************************************/
-    protected GalleryLoaderSupport (final @Nonnull BeanFactory beanFactory,
-                                    final @Nonnull ResourceProperties properties)
+    protected GalleryLoaderSupport (@Nonnull final BeanFactory beanFactory,
+                                    @Nonnull final ResourceProperties properties)
       {
         this.beanFactory = beanFactory;
         this.properties = properties;
@@ -81,7 +81,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
      *
      ******************************************************************************************************************/
     @Nonnull
-    public GalleryItem createItem (final @Nonnull Id mediaId)
+    public GalleryItem createItem (@Nonnull final Id mediaId)
       {
         return new GalleryItem(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$XMP.dc.title$", properties));
       }

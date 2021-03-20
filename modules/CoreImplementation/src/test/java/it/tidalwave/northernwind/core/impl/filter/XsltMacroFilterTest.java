@@ -100,7 +100,7 @@ public class XsltMacroFilterTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "fileNames")
-    public void must_filter_XHTML_resources (final @Nonnull String fileName)
+    public void must_filter_XHTML_resources (@Nonnull final String fileName)
       throws IOException
       {
         // given
@@ -137,7 +137,7 @@ public class XsltMacroFilterTest
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static ResourceFile createMockTextFileOfPathAndContent (final @Nonnull String path, final @Nonnull String content)
+    private static ResourceFile createMockTextFileOfPathAndContent (@Nonnull final String path, @Nonnull final String content)
       throws IOException
       {
         final ResourceFile file = mock(ResourceFile.class);
@@ -149,7 +149,7 @@ public class XsltMacroFilterTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void createMockResource (final @Nonnull Site site, final @Nonnull ResourceFile file)
+    private static void createMockResource (@Nonnull final Site site, @Nonnull final ResourceFile file)
       {
         final Resource resource = mock(Resource.class);
         when(resource.getFile()).thenReturn(file);

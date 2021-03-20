@@ -158,13 +158,13 @@ public abstract class DefaultBlogViewController implements BlogViewController
         @With
         public final String rank;
 
-        public TagAndCount (final @Nonnull String tag)
+        public TagAndCount (@Nonnull final String tag)
           {
             this(tag, 1, "");
           }
 
         @Nonnull
-        public TagAndCount reduced (final @Nonnull TagAndCount other)
+        public TagAndCount reduced (@Nonnull final TagAndCount other)
           {
             if (!this.tag.equals(other.tag))
               {
@@ -196,7 +196,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         @Nonnull
         private final transient DefaultBlogViewController controller;
 
-        public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
+        public VirtualSiteNodeFinder (@Nonnull final VirtualSiteNodeFinder other, @Nonnull final Object override)
           {
             super(other, override);
             final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
@@ -214,7 +214,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
 
         @Nonnull
-        private Optional<VirtualSiteNode> createVirtualNode (final @Nonnull Content post)
+        private Optional<VirtualSiteNode> createVirtualNode (@Nonnull final Content post)
           {
             final SiteNode siteNode = controller.siteNode;
             return post.getExposedUri().map(uri -> new VirtualSiteNode(siteNode,
@@ -281,7 +281,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareRendering (final @Nonnull RenderContext context)
+    public void prepareRendering (@Nonnull final RenderContext context)
       throws HttpStatusException
       {
         log.info("prepareRendering(RenderContext) for {}", siteNode);
@@ -339,7 +339,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       throws Exception
       {
         log.info("renderView() for {}", siteNode);
@@ -400,7 +400,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final String createLink (final @Nonnull ResourcePath path)
+    protected final String createLink (@Nonnull final ResourcePath path)
       {
         return siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(path));
       }
@@ -449,7 +449,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final String formatDateTime (final @Nonnull ZonedDateTime dateTime)
+    protected final String formatDateTime (@Nonnull final ZonedDateTime dateTime)
       {
         return dateTime.format(findDateTimeFormatter());
       }
@@ -463,7 +463,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * @throws      HttpStatusException   status 404 if no post found
      *
      ******************************************************************************************************************/
-    protected final void prepareBlogPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
+    protected final void prepareBlogPosts (@Nonnull final RenderContext context, @Nonnull final ResourceProperties properties)
       throws HttpStatusException
       {
         final int maxFullItems   = indexMode ? 0        : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
@@ -515,7 +515,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
-    private List<Content> findPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
+    private List<Content> findPosts (@Nonnull final RenderContext context, @Nonnull final ResourceProperties properties)
       {
         final ResourcePath pathParams = context.getPathParams(siteNode);
         final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();
@@ -560,7 +560,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<Content> findAllPosts (final @Nonnull ResourceProperties properties)
+    private List<Content> findAllPosts (@Nonnull final ResourceProperties properties)
       {
         return properties.getProperty(P_CONTENT_PATHS).orElse(emptyList()).stream()
                 .flatMap(path -> siteNode.getSite().find(_Content_).withRelativePath(path).stream()
@@ -598,7 +598,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
+    private void setDynamicProperties (@Nonnull final RenderContext context, @Nonnull final Content post)
       {
         context.setDynamicNodeProperty(PD_TITLE, computeTitle(post));
         post.getExposedUri().map(this::createLink).ifPresent(l -> context.setDynamicNodeProperty(PD_URL, l));
@@ -610,7 +610,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private void setTitle (final @Nonnull RenderContext context)
+    private void setTitle (@Nonnull final RenderContext context)
       {
         if (tagCloudMode)
           {
@@ -640,7 +640,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String computeTitle (final @Nonnull Content post)
+    private String computeTitle (@Nonnull final Content post)
       {
         final String prefix    = siteNode.getProperty(P_TITLE).orElse("");
         final String title     = post.getProperty(P_TITLE).orElse("");
@@ -654,7 +654,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<TagAndCount> withRanks (final @Nonnull Collection<TagAndCount> tagsAndCount)
+    private List<TagAndCount> withRanks (@Nonnull final Collection<TagAndCount> tagsAndCount)
       {
         final List<Integer> counts = tagsAndCount.stream()
                                                  .map(TagAndCount::getCount)
@@ -676,8 +676,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Content> filteredByCategory (final @Nonnull List<Content> posts,
-                                                     final @Nonnull Optional<String> category)
+    private static List<Content> filteredByCategory (@Nonnull final List<Content> posts,
+                                                     @Nonnull final Optional<String> category)
       {
         return posts.stream().filter(post -> hasCategory(post, category)).collect(toList());
       }
@@ -693,7 +693,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Content> filteredByTag (final @Nonnull List<Content> posts, final @Nonnull String tag)
+    private static List<Content> filteredByTag (@Nonnull final List<Content> posts, @Nonnull final String tag)
       {
         return posts.stream().filter(post -> hasTag(post, tag)).collect(toList());
       }
@@ -703,8 +703,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static Optional<Content> filteredByExposedUri (final @Nonnull List<Content> posts,
-                                                           final @Nonnull ResourcePath exposedUri)
+    private static Optional<Content> filteredByExposedUri (@Nonnull final List<Content> posts,
+                                                           @Nonnull final ResourcePath exposedUri)
       {
         return posts.stream().filter(post -> post.getExposedUri().map(exposedUri::equals).orElse(false)).findFirst();
       }
@@ -725,7 +725,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private static boolean hasCategory (final @Nonnull Content post, final @Nonnull Optional<String> category)
+    private static boolean hasCategory (@Nonnull final Content post, @Nonnull final Optional<String> category)
       {
         return category.isEmpty() || post.getProperty(P_CATEGORY).equals(category);
       }
@@ -734,7 +734,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    private static boolean hasTag (final @Nonnull Content post, final @Nonnull String tag)
+    private static boolean hasTag (@Nonnull final Content post, @Nonnull final String tag)
       {
         return post.getProperty(P_TAGS).orElse(emptyList()).contains(tag);
       }
@@ -745,7 +745,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Optional<String> filterEmptyString (final @Nonnull String s)
+    private Optional<String> filterEmptyString (@Nonnull final String s)
       {
         return s.equals("") ? Optional.empty() : Optional.of(s);
       }

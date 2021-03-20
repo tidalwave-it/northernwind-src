@@ -59,7 +59,7 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
       }
 
     @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
+    protected String filter (@Nonnull final Matcher matcher)
       {
         try
           {

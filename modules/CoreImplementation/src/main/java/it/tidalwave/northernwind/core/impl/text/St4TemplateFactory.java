@@ -63,8 +63,8 @@ public class St4TemplateFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Template getTemplate (final @Nonnull Optional<ResourcePath> templatePath,
-                                 final @Nonnull String embeddedResourceName)
+    public Template getTemplate (@Nonnull final Optional<ResourcePath> templatePath,
+                                 @Nonnull final String embeddedResourceName)
       {
         log.debug("getTemplate({}, {})", templatePath, embeddedResourceName);
         final String text = templatePath.flatMap(this::getTemplate)
@@ -80,7 +80,7 @@ public class St4TemplateFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<String> getTemplate (final @Nonnull ResourcePath templatePath)
+    public Optional<String> getTemplate (@Nonnull final ResourcePath templatePath)
       {
         log.debug("getTemplate({})", templatePath);
         return site.find(_Content_).withRelativePath(templatePath).optionalResult().flatMap(c -> c.getProperty(P_TEMPLATE));
@@ -97,7 +97,7 @@ public class St4TemplateFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* visible for testing */ String getEmbeddedTemplate (final @Nonnull String fileName)
+    /* visible for testing */ String getEmbeddedTemplate (@Nonnull final String fileName)
       {
         final String packagePath = clazz.getPackage().getName().replace('.', '/');
         final Resource resource = new ClassPathResource("/" + packagePath + "/" + fileName);

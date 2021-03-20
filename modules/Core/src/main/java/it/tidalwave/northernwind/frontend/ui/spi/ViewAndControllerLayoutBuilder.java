@@ -74,7 +74,7 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
      *
      ******************************************************************************************************************/
     @Override
-    public void visit (final @Nonnull Layout layout)
+    public void visit (@Nonnull final Layout layout)
       {
         try
           {
@@ -101,7 +101,7 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Optional<ViewAndController> getViewAndControllerFor (final @Nonnull Layout layout)
+    public Optional<ViewAndController> getViewAndControllerFor (@Nonnull final Layout layout)
       {
         return Optional.ofNullable(viewAndControllerMapByLayout.get(layout));
       }

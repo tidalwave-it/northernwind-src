@@ -54,7 +54,7 @@ public abstract class MediaSupport implements Media
     @Delegate
     private final As asSupport = new AsSupport(this);
 
-    public MediaSupport (final @Nonnull Media.Builder builder)
+    public MediaSupport (@Nonnull final Media.Builder builder)
       {
         this.modelFactory = builder.getModelFactory();
         resource = modelFactory.createResource().withFile(builder.getFile()).build();

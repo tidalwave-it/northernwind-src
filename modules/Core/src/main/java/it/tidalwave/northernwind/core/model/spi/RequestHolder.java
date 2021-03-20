@@ -44,7 +44,7 @@ public class RequestHolder implements RequestResettable // FIXME: consider mergi
         requestHolder.remove();
       }
 
-    public void set (final @Nonnull Request request)
+    public void set (@Nonnull final Request request)
       {
         requestHolder.set(request);
       }

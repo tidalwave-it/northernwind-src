@@ -60,7 +60,7 @@ public class HtmlTemplateSitemapView extends HtmlTemplateHtmlFragmentView implem
      * @param       site            the site
      *
      ******************************************************************************************************************/
-    public HtmlTemplateSitemapView (final @Nonnull Id id, final @Nonnull Site site)
+    public HtmlTemplateSitemapView (@Nonnull final Id id, @Nonnull final Site site)
       {
         super(id);
         this.site= site;
@@ -75,7 +75,7 @@ public class HtmlTemplateSitemapView extends HtmlTemplateHtmlFragmentView implem
      * @param       entries         the entries to render
      *
      ******************************************************************************************************************/
-    public void render (final @Nonnull Optional<ResourcePath> templatePath, final @Nonnull Aggregates entries)
+    public void render (@Nonnull final Optional<ResourcePath> templatePath, @Nonnull final Aggregates entries)
       {
         final Template template = site.getTemplate(getClass(), templatePath, "Sitemap.st");
         addComponent(new HtmlHolder(template.render(entries)));

@@ -84,7 +84,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      * @return                  the {@code Finder}
      *
      ******************************************************************************************************************/
-    public static Finder withComputeResults (final @Nonnull String finderName,
+    public static Finder withComputeResults (@Nonnull final String finderName,
                                              final Function<Finder, List<ResourceFile>> resultComputer)
       {
         return new ResourceFileFinderSupport(finderName, resultComputer);
@@ -107,7 +107,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      *
      ******************************************************************************************************************/
-    private ResourceFileFinderSupport (final @Nonnull String finderName,
+    private ResourceFileFinderSupport (@Nonnull final String finderName,
                                        final Function<Finder, List<ResourceFile>> resultComputer)
       {
         super(finderName);
@@ -125,7 +125,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      ******************************************************************************************************************/
     // FIXME: should be protected
-    public ResourceFileFinderSupport (final @Nonnull ResourceFileFinderSupport other, final @Nonnull Object override)
+    public ResourceFileFinderSupport (@Nonnull final ResourceFileFinderSupport other, @Nonnull final Object override)
       {
         super(other, override);
         final ResourceFileFinderSupport source = getSource(ResourceFileFinderSupport.class, other, override);
@@ -151,7 +151,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Finder withName (final @Nonnull String name)
+    public Finder withName (@Nonnull final String name)
       {
         return clone(new ResourceFileFinderSupport(resultComputer, recursive, name));
       }

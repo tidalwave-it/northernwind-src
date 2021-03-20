@@ -103,7 +103,7 @@ public class CachedURIResolver implements URIResolver
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void cacheDocument (final @Nonnull File cachedFile, final @Nonnull String href)
+    private void cacheDocument (@Nonnull final File cachedFile, @Nonnull final String href)
       throws IOException
       {
         log.debug(">>>> caching external document to {}", cachedFile);
@@ -137,7 +137,7 @@ public class CachedURIResolver implements URIResolver
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void mkdirs (final @Nonnull File folder)
+    private static void mkdirs (@Nonnull final File folder)
       throws IOException
       {
         if (!folder.mkdirs())
@@ -149,7 +149,7 @@ public class CachedURIResolver implements URIResolver
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void rename (final @Nonnull File from, final @Nonnull File to)
+    private static void rename (@Nonnull final File from, @Nonnull final File to)
       throws IOException
       {
         if (!from.renameTo(to))

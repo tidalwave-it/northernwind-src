@@ -72,7 +72,7 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       {
         final String relativePath = request.getRelativeUri();
 

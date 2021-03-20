@@ -51,16 +51,16 @@ import static org.hamcrest.CoreMatchers.*;
 public abstract class ScmPreparer
   {
     /** The folder where the test repository is stored. */
-    public final static Path REPOSITORY_FOLDER;
+    public static final Path REPOSITORY_FOLDER;
 
-    public final static Tag TAG_PUBLISHED_0_8 = new Tag("published-0.8");
+    public static final Tag TAG_PUBLISHED_0_8 = new Tag("published-0.8");
 
-    public final static Tag TAG_PUBLISHED_0_9 = new Tag("published-0.9");
+    public static final Tag TAG_PUBLISHED_0_9 = new Tag("published-0.9");
 
-    public final static List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_8 =
+    public static final List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_8 =
             createTagNames(8).stream().map(Tag::new).collect(toList());
 
-    public final static List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_9 =
+    public static final List<Tag> ALL_TAGS_UP_TO_PUBLISHED_0_9 =
             createTagNames(9).stream().map(Tag::new).collect(toList());
 
     static
@@ -98,7 +98,7 @@ public abstract class ScmPreparer
      * @throws Exception  in case of error
      *
      ******************************************************************************************************************/
-    public void prepareAtTag (final @Nonnull Tag tag)
+    public void prepareAtTag (@Nonnull final Tag tag)
             throws Exception
       {
         log.info("======== Preparing repository at {} with {}", REPOSITORY_FOLDER.toFile().getCanonicalPath(), tag);

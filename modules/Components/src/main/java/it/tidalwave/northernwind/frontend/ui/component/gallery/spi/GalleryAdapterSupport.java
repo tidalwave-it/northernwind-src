@@ -60,7 +60,7 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties getExtraViewProperties (final @Nonnull Id viewId)
+    public ResourceProperties getExtraViewProperties (@Nonnull final Id viewId)
       {
         return modelFactory.createProperties().withId(viewId).build();
       }
@@ -82,8 +82,8 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final Template loadTemplate (final @Nonnull Key<ResourcePath> templateName,
-                                           final @Nonnull String fallbackTemplate)
+    protected final Template loadTemplate (@Nonnull final Key<ResourcePath> templateName,
+                                           @Nonnull final String fallbackTemplate)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         return siteNode.getSite().getTemplate(getClass(), viewProperties.getProperty(templateName), fallbackTemplate);

@@ -41,7 +41,7 @@ import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmWorkingDirectory
 public class GitFileSystemProvider extends ScmFileSystemProvider
   {
     @Override @Nonnull
-    public ScmWorkingDirectory createWorkingDirectory (final @Nonnull Path path)
+    public ScmWorkingDirectory createWorkingDirectory (@Nonnull final Path path)
       {
         return new GitWorkingDirectory(path);
       }

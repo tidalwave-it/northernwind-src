@@ -47,20 +47,20 @@ public class HtmlHolder extends TextHolder
      * @param  name  the component name
      *
      ******************************************************************************************************************/
-    public HtmlHolder (final @Nonnull Id id) 
+    public HtmlHolder (@Nonnull final Id id)
       {
         super(id);
         addAttribute("style", NW + id.stringValue());
         setMimeType("text/html");
       }
     
-    public HtmlHolder (final @Nonnull String html) 
+    public HtmlHolder (@Nonnull final String html)
       {
         super(html);
         setMimeType("text/html");
       }
     
-    public void setClassName (final @Nonnull String className)
+    public void setClassName (@Nonnull final String className)
       {
         addAttribute("style", className);
       }

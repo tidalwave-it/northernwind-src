@@ -92,7 +92,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
         private final float priority;
 
         @Override
-        public int compareTo (final @Nonnull Entry other)
+        public int compareTo (@Nonnull final Entry other)
           {
             return this.equals(other) ? 0 : this.location.compareTo(other.location);
           }
@@ -110,7 +110,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       {
         final SortedSet<Entry> entries = new TreeSet<>();
 
@@ -133,7 +133,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                 layout.accept(new VisitorSupport<Layout, Void>()
                   {
                     @Override
-                    public void visit (final @Nonnull Layout childLayout)
+                    public void visit (@Nonnull final Layout childLayout)
                       {
                         try
                           {
@@ -190,7 +190,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Optional<Entry> newEntry (final @Nonnull SiteNode siteNode, final @CheckForNull SiteNode childSiteNode)
+    private Optional<Entry> newEntry (@Nonnull final SiteNode siteNode, @CheckForNull final SiteNode childSiteNode)
       {
         final SiteNode node = (childSiteNode != null) ? childSiteNode : siteNode;
         final ResourceProperties properties = node.getProperties();
@@ -213,7 +213,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static Throwable rootCause (final @Nonnull Throwable t)
+    private static Throwable rootCause (@Nonnull final Throwable t)
       {
         final Throwable cause = t.getCause();
         return (cause != null) ? rootCause(cause) : t;

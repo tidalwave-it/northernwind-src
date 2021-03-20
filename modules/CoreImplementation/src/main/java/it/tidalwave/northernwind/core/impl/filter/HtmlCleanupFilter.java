@@ -48,7 +48,7 @@ public class HtmlCleanupFilter implements Filter
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
+    public String filter (@Nonnull final String text, @Nonnull final String mimeType)
       {
         try
           {
@@ -63,7 +63,7 @@ public class HtmlCleanupFilter implements Filter
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public static String formatHtml (final @Nonnull String text)
+    public static String formatHtml (@Nonnull final String text)
       throws IOException
       {
         final StringWriter sw = new StringWriter();

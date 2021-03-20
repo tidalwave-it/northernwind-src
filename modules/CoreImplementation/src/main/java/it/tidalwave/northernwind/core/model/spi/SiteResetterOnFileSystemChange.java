@@ -57,7 +57,7 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
     private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<>()
       {
         @Override
-        public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
+        public void notify (@Nonnull final ResourceFileSystemChangedEvent event)
           {
             // FIXME: the originator of the event could be a child filesystem in case of composite filesystems.
             // Either the event is listened by the parent and reposted, or we must be able to find whether a

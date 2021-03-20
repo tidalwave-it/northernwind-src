@@ -64,10 +64,10 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
 
     private SortedMap<String, ResourceFile> childrenMap;
 
-    public DecoratorResourceFolder (final @Nonnull LayeredResourceFileSystem fileSystem,
-                                    final @Nonnull List<? extends ResourceFileSystemProvider> delegates,
-                                    final @Nonnull ResourcePath path,
-                                    final @Nonnull ResourceFile delegate)
+    public DecoratorResourceFolder (@Nonnull final LayeredResourceFileSystem fileSystem,
+                                    @Nonnull final List<? extends ResourceFileSystemProvider> delegates,
+                                    @Nonnull final ResourcePath path,
+                                    @Nonnull final ResourceFile delegate)
       {
         super(fileSystem, delegate);
         this.path = path;
