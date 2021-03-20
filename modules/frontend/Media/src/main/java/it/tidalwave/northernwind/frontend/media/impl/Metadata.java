@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
@@ -48,8 +47,7 @@ public interface Metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String interpolateString (@Nonnull String template, @Nonnull ResourceProperties properties)
-      throws IOException;
+    public String interpolateString (@Nonnull String template, @Nonnull ResourceProperties properties);
 
     /*******************************************************************************************************************
      *

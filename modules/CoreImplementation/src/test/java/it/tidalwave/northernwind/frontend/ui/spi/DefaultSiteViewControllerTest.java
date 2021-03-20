@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -126,7 +125,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_all_RequestProcessors_in_normal_scenario()
-      throws Exception
       {
         // when
         Object result = underTest.processRequest(request);
@@ -156,7 +154,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_one_breaks()
-      throws Exception
       {
         // given
         mockRequestProcessor3.setStatus(Status.BREAK);
@@ -260,7 +257,6 @@ public class DefaultSiteViewControllerTest
      *
      ******************************************************************************************************************/
     protected void commonExceptionTestSequence()
-      throws HttpStatusException, IOException, NotFoundException
       {
         final Object result = underTest.processRequest(request);
         assertThat(result, sameInstance(response));

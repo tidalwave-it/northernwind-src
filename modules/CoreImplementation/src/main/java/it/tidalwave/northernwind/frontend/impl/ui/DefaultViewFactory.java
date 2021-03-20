@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 import it.tidalwave.util.Id;
@@ -85,9 +84,7 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize() // FIXME: gets called twice
-      throws
-      NoSuchMethodException, InvocationTargetException, InstantiationException,
-             IllegalArgumentException, IllegalAccessException, SecurityException
+      throws IllegalArgumentException, SecurityException
       {
         final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
 

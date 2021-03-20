@@ -498,7 +498,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     private void renderTagCloud()
-      throws Exception
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()

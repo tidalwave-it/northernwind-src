@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.io.IOException;
 import org.imajine.image.EditableImage;
 import org.imajine.image.metadata.EXIF;
 import org.imajine.image.metadata.IPTC;
@@ -97,7 +96,6 @@ class DefaultMetadata implements Metadata
     @Override @Nonnull
     public String interpolateString (final @Nonnull String template,
                                      final @Nonnull ResourceProperties properties)
-      throws IOException
       {
         if (log.isDebugEnabled())
           {
