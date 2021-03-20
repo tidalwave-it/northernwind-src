@@ -200,7 +200,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
 
             if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
               {
-                log.debug(">>>> layout for {} ():", getResource().getFile().getPath().asString(), locale);
+                log.debug(">>>> layout for {} {}:", getResource().getFile().getPath().asString(), locale);
                 layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
               }
 

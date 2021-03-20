@@ -151,7 +151,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
     private void emptyFolder (final @Nonnull ResourceFile folder)
             throws IOException
       {
-        log.trace("emptyFolder({}, {}", folder);
+        log.trace("emptyFolder({}", folder);
 
         for (final ResourceFile child : folder.findChildren().results())
           {
