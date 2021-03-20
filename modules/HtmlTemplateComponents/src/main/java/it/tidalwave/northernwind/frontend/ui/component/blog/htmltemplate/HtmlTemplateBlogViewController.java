@@ -150,7 +150,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
       {
         view.renderTagCloud(getViewProperties().getProperty(P_TEMPLATE_TAG_CLOUD_PATH),
-                            tagsAndCount.stream().map(tac -> toAggregate(tac)).collect(toAggregates("tags")));
+                            tagsAndCount.stream().map(this::toAggregate).collect(toAggregates("tags")));
       }
 
     /*******************************************************************************************************************

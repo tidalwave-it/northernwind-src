@@ -739,7 +739,7 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     private static List<Integer> getPostIds (final @Nonnull List<Content> posts)
       {
-        return posts.stream().map(c -> c.toString())
+        return posts.stream().map(Object::toString)
                              .map(s -> s.replaceAll("^.*Title # *([0-9]+).*$", "$1"))
                              .map(Integer::parseInt)
                              .collect(toList());

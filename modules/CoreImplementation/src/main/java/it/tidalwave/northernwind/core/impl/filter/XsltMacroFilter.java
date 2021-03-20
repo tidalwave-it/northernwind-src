@@ -55,6 +55,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -105,11 +106,10 @@ public class XsltMacroFilter implements Filter
         log.info("Retrieving XSLT templates");
         final Site site = siteProvider.get().getSite();
         final Aggregates macros = site.find(_Resource_).withRelativePath(XSLT_TEMPLATES_PATH)
-                                                       .stream()
-                                                       .map(r -> r.getFile())
-                                                       .map(f -> Aggregate.of("body", asText(f)).with("name",
-                                                                                                     f.getPath()))
-                                                       .collect(toAggregates("macros"));
+                                      .stream()
+                                      .map(Resource::getFile)
+                                      .map(f -> Aggregate.of("body", asText(f)).with("name", f.getPath()))
+                                      .collect(toAggregates("macros"));
         xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
         log.trace(">>>> xslt: {}", xslt);
 

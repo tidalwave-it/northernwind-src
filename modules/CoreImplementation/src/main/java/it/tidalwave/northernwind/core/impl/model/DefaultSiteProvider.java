@@ -220,7 +220,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Nonnull
     /* package */ String getContextPath()
       {
-        return servletContext.map(ctx -> ctx.getContextPath()).orElse(DEFAULT_CONTEXT_PATH);
+        return servletContext.map(ServletContext::getContextPath).orElse(DEFAULT_CONTEXT_PATH);
 //            log.warn("Running in a non-web environment, set contextPath = {}", DEFAULT_CONTEXT_PATH);
       }
   }

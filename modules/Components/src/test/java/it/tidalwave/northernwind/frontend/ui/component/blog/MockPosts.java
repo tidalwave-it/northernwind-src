@@ -221,8 +221,8 @@ public class MockPosts
     private static String toString (final @Nonnull Content post)
       {
         final String title        = post.getProperty(P_TITLE).orElse("???");
-        final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
-        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(d -> d.toString()).orElse("???");
+        final String exposedUri   = post.getExposedUri().map(ResourcePath::asString).orElse("???");
+        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(ZonedDateTime::toString).orElse("???");
         final String imageId      = post.getProperty(P_IMAGE_ID).orElse("");
         final String category     = post.getProperty(P_CATEGORY).orElse("");
         final Object tags         = post.getProperty(P_TAGS).orElse(emptyList());

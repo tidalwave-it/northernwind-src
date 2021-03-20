@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
 import java.io.IOException;
+import it.tidalwave.northernwind.core.model.Resource;
 import org.imajine.image.EditableImage;
 import org.imajine.image.op.ReadOp;
 import it.tidalwave.util.Id;
@@ -70,7 +71,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       throws NotFoundException
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
-        return findMedia(mediaId, properties).map(m -> m.getFile()).orElseThrow(NotFoundException::new); // FIXME
+        return findMedia(mediaId, properties).map(Resource::getFile).orElseThrow(NotFoundException::new); // FIXME
       }
 
     /*******************************************************************************************************************

@@ -65,12 +65,12 @@ public class DefaultResourceProperties implements ResourceProperties
     private static final Map<Class<?>, Function<String, Object>> CONVERTER_MAP =
         new HashMap<>()
           {{
-            put(Integer.class,        o -> Integer.parseInt(o));
-            put(Float.class,          o -> Float.parseFloat(o));
-            put(Double.class,         o -> Double.parseDouble(o));
-            put(Boolean.class,        o -> Boolean.parseBoolean(o));
+            put(Integer.class,        Integer::parseInt);
+            put(Float.class,          Float::parseFloat);
+            put(Double.class,         Double::parseDouble);
+            put(Boolean.class,        Boolean::parseBoolean);
             put(ZonedDateTime.class,  o -> ZonedDateTime.parse(o, ISO_ZONED_DATE_TIME));
-            put(ResourcePath.class,   o -> ResourcePath.of(o));
+            put(ResourcePath.class,   ResourcePath::of);
           }};
 
     @Nonnull @Getter

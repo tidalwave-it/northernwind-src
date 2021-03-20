@@ -638,7 +638,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             title = getViewProperties().getProperty(P_TITLE).map(String::trim).flatMap(this::filterEmptyString);
           }
 
-        title.ifPresent(s -> view.setTitle(s));
+        title.ifPresent(view::setTitle);
         title.ifPresent(s -> context.setDynamicNodeProperty(PD_TITLE, s));
       }
 

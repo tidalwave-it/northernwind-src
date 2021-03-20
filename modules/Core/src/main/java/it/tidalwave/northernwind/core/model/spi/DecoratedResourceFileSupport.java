@@ -72,8 +72,8 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return ResourceFileFinderSupport.withComputeResults((f) -> delegate.findChildren().results()
-                .stream().map(child -> fileSystem.createDecoratorFile(child)).collect(toList()));
+        return ResourceFileFinderSupport.withComputeResults(f ->
+              delegate.findChildren().results().stream().map(fileSystem::createDecoratorFile).collect(toList()));
       }
 
     @Override
