@@ -67,7 +67,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     private String uriPrefix = "media"; // FIXME
 
     @Override @Nonnull
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       throws NotFoundException, IOException
       {
         ResourcePath mediaUri = ResourcePath.of(request.getRelativeUri());

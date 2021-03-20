@@ -48,7 +48,7 @@ public abstract class FilterSupport implements Filter
      *
      ******************************************************************************************************************/
     @Override
-    public void init (final @Nonnull FilterConfig filterConfig)
+    public void init (@Nonnull final FilterConfig filterConfig)
       {
         bootThrowable = (Throwable)filterConfig.getServletContext().getAttribute(ATTRIBUTE_BOOT_THROWABLE);
       }

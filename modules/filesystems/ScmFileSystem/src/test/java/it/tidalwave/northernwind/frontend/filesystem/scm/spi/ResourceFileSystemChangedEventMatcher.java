@@ -52,7 +52,7 @@ public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<Re
     private ZonedDateTime latestModificationTime;
 
     @Override
-    public boolean matches (final @Nullable ResourceFileSystemChangedEvent event)
+    public boolean matches (@Nullable final ResourceFileSystemChangedEvent event)
       {
         if (event == null)
           {

@@ -80,7 +80,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
+    public SiteNode createSiteNode (@Nonnull final Site site, @Nonnull final ResourceFile folder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -113,7 +113,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Request createRequestFrom (final @Nonnull HttpServletRequest hsr)
+    public Request createRequestFrom (@Nonnull final HttpServletRequest hsr)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -157,7 +157,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties build (final @Nonnull ResourceProperties.Builder builder)
+    public ResourceProperties build (@Nonnull final ResourceProperties.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -168,7 +168,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Site build (final @Nonnull Site.Builder builder)
+    public Site build (@Nonnull final Site.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -179,7 +179,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout build (final @Nonnull Layout.Builder builder)
+    public Layout build (@Nonnull final Layout.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -190,7 +190,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource build (final @Nonnull Resource.Builder builder)
+    public Resource build (@Nonnull final Resource.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -201,7 +201,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content build (final @Nonnull Content.Builder builder)
+    public Content build (@Nonnull final Content.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }
@@ -212,7 +212,7 @@ public class ModelFactorySupport implements ModelFactory,
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media build (final @Nonnull Media.Builder builder)
+    public Media build (@Nonnull final Media.Builder builder)
       {
         throw new UnsupportedOperationException("Not supported.");
       }

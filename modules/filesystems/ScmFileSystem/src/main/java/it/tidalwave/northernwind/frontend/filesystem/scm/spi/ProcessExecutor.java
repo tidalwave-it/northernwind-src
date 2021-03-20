@@ -144,7 +144,7 @@ public class ProcessExecutor
          *
          ***************************************************************************************************************/
         @Nonnull @SuppressWarnings("squid:S2095")
-        public Scanner filteredAndSplitBy (final @Nonnull String filterRegexp, final @Nonnull String delimiterRegexp)
+        public Scanner filteredAndSplitBy (@Nonnull final String filterRegexp, @Nonnull final String delimiterRegexp)
           {
             return new Scanner(filteredBy(filterRegexp).get(0)).useDelimiter(Pattern.compile(delimiterRegexp));
           }
@@ -158,7 +158,7 @@ public class ProcessExecutor
          *
          ***************************************************************************************************************/
         @Nonnull
-        public List<String> filteredBy (final @Nonnull String filterRegexp)
+        public List<String> filteredBy (@Nonnull final String filterRegexp)
           {
             final Pattern p = Pattern.compile(filterRegexp);
             final List<String> result = new ArrayList<>();
@@ -187,7 +187,7 @@ public class ProcessExecutor
          *
          ***************************************************************************************************************/
         @Nonnull
-        public ConsoleOutput waitFor (final @Nonnull String regexp)
+        public ConsoleOutput waitFor (@Nonnull final String regexp)
                 throws InterruptedException, IOException
           {
             log.debug("waitFor({})", regexp);
@@ -282,7 +282,7 @@ public class ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static ProcessExecutor forExecutable (final @Nonnull String executable)
+    public static ProcessExecutor forExecutable (@Nonnull final String executable)
             throws IOException
       {
         final ProcessExecutor executor = new ProcessExecutor();
@@ -299,7 +299,7 @@ public class ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ProcessExecutor withArgument (final @Nonnull String argument)
+    public ProcessExecutor withArgument (@Nonnull final String argument)
       {
         arguments.add(argument);
         return this;
@@ -314,7 +314,7 @@ public class ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ProcessExecutor withArguments (final @Nonnull String... arguments)
+    public ProcessExecutor withArguments (@Nonnull final String... arguments)
       {
         this.arguments.addAll(List.of(arguments));
         return this;
@@ -329,7 +329,7 @@ public class ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ProcessExecutor withWorkingDirectory (final @Nonnull Path workingDirectory)
+    public ProcessExecutor withWorkingDirectory (@Nonnull final Path workingDirectory)
       {
         this.workingDirectory = workingDirectory;
         return this;
@@ -418,7 +418,7 @@ public class ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ProcessExecutor send (final @Nonnull String string)
+    public ProcessExecutor send (@Nonnull final String string)
       {
         log.info(">>>> sending '{}'...", string);
         stdin.println(string);
@@ -435,7 +435,7 @@ public class ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String findPathFor (final @Nonnull String executable)
+    private static String findPathFor (@Nonnull final String executable)
             throws IOException
       {
         final String pathEnv = System.getenv("PATH") + File.pathSeparator + "/usr/local/bin";
@@ -461,7 +461,7 @@ public class ProcessExecutor
      * @param consoleOutput the output
      *
      ******************************************************************************************************************/
-    private static void log (final @Nonnull String prefix, final @Nonnull ConsoleOutput consoleOutput)
+    private static void log (@Nonnull final String prefix, @Nonnull final ConsoleOutput consoleOutput)
       {
         for (final String line : consoleOutput.getContent())
           {

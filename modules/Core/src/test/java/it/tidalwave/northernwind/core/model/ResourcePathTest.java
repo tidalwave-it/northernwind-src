@@ -86,9 +86,9 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "segmentProvider",
           dependsOnMethods = "must_properly_create_an_empty_path")
-    public void must_properly_create_an_empty_path_from_string (final @Nonnull String pathAsString,
-                                                                final @Nonnull String expectedAsString,
-                                                                final @Nonnull List<String> expectedSegments)
+    public void must_properly_create_an_empty_path_from_string (@Nonnull final String pathAsString,
+                                                                @Nonnull final String expectedAsString,
+                                                                @Nonnull final List<String> expectedSegments)
       {
         // when
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -105,7 +105,7 @@ public class ResourcePathTest
           dependsOnMethods = "must_properly_create_an_empty_path",
           expectedExceptions = IllegalArgumentException.class,
           expectedExceptionsMessageRegExp = "\\QResourcePath can't hold a URL\\E")
-    public void must_reject_invalid_paths (final @Nonnull String invalidPathAsString)
+    public void must_reject_invalid_paths (@Nonnull final String invalidPathAsString)
       {
         final ResourcePath underTest = ResourcePath.of(invalidPathAsString);
       }
@@ -115,8 +115,8 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "asStringProvider",
           dependsOnMethods = { "must_properly_create_an_empty_path", "must_properly_create_an_empty_path_from_string" })
-    public void must_properly_compute_asString (final @Nonnull List<String> segments,
-                                                final @Nonnull String expectedAsString)
+    public void must_properly_compute_asString (@Nonnull final List<String> segments,
+                                                @Nonnull final String expectedAsString)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(segments);
@@ -131,9 +131,9 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "relativePathProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_compute_relative_paths (final @Nonnull String pathAsString,
-                                                      final @Nonnull String parentPathAsString,
-                                                      final @Nonnull String expectedPathAsString)
+    public void must_properly_compute_relative_paths (@Nonnull final String pathAsString,
+                                                      @Nonnull final String parentPathAsString,
+                                                      @Nonnull final String expectedPathAsString)
       {
         // given
         final ResourcePath parentPath = ResourcePath.of(parentPathAsString);
@@ -150,8 +150,8 @@ public class ResourcePathTest
     @Test(dataProvider = "nonRelativePathProvider",
           dependsOnMethods = "must_properly_compute_asString",
           expectedExceptions = IllegalArgumentException.class)
-    public void must_properly_reject_non_relative_paths (final @Nonnull String pathAsString,
-                                                         final @Nonnull String parentPathAsString)
+    public void must_properly_reject_non_relative_paths (@Nonnull final String pathAsString,
+                                                         @Nonnull final String parentPathAsString)
       {
         // given
         final ResourcePath parentPath = ResourcePath.of(parentPathAsString);
@@ -164,9 +164,9 @@ public class ResourcePathTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "leadingAndTrailingProvider")
-    public void must_properly_compute_leading_segment (final @Nonnull String pathAsString,
-                                                       final @Nonnull String expectedLeadingSegment,
-                                                       final @Nonnull String expectedTrailingSegment)
+    public void must_properly_compute_leading_segment (@Nonnull final String pathAsString,
+                                                       @Nonnull final String expectedLeadingSegment,
+                                                       @Nonnull final String expectedTrailingSegment)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -180,9 +180,9 @@ public class ResourcePathTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "leadingAndTrailingProvider")
-    public void must_properly_compute_trailing_segment (final @Nonnull String pathAsString,
-                                                        final @Nonnull String expectedLeadingSegment,
-                                                        final @Nonnull String expectedTrailingSegment)
+    public void must_properly_compute_trailing_segment (@Nonnull final String pathAsString,
+                                                        @Nonnull final String expectedLeadingSegment,
+                                                        @Nonnull final String expectedTrailingSegment)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -197,9 +197,9 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "withoutLeadingAndTrailingProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_compute_without_leading (final @Nonnull String pathAsString,
-                                                       final @Nonnull String expectedPathWithoutLeadingAsString,
-                                                       final @Nonnull String expectedPathWithoutTrailingAsString)
+    public void must_properly_compute_without_leading (@Nonnull final String pathAsString,
+                                                       @Nonnull final String expectedPathWithoutLeadingAsString,
+                                                       @Nonnull final String expectedPathWithoutTrailingAsString)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -214,9 +214,9 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "withoutLeadingAndTrailingProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_compute_without_trailing (final @Nonnull String path,
-                                                        final @Nonnull String expectedPathWithoutLeadingAsString,
-                                                        final @Nonnull String expectedPathWithoutTrailingAsString)
+    public void must_properly_compute_without_trailing (@Nonnull final String path,
+                                                        @Nonnull final String expectedPathWithoutLeadingAsString,
+                                                        @Nonnull final String expectedPathWithoutTrailingAsString)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(path);
@@ -230,8 +230,8 @@ public class ResourcePathTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "startsWithProvider")
-    public void must_properly_compute_startsWith (final @Nonnull String pathAsString,
-                                                  final @Nonnull String leadingSegment,
+    public void must_properly_compute_startsWith (@Nonnull final String pathAsString,
+                                                  @Nonnull final String leadingSegment,
                                                   final boolean expectedResult)
       {
         // given
@@ -247,10 +247,10 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_append_path (final @Nonnull String pathAsString,
-                                           final @Nonnull String secondPathAsString,
-                                           final @Nonnull String expectedAppendedPathAsString,
-                                           final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_append_path (@Nonnull final String pathAsString,
+                                           @Nonnull final String secondPathAsString,
+                                           @Nonnull final String expectedAppendedPathAsString,
+                                           @Nonnull final String expectedPrependedPathAsString)
       {
         // given
         final ResourcePath appendingPath = ResourcePath.of(secondPathAsString);
@@ -266,10 +266,10 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_append_string (final @Nonnull String pathAsString,
-                                             final @Nonnull String secondPathAsString,
-                                             final @Nonnull String expectedAppendedPathAsString,
-                                             final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_append_string (@Nonnull final String pathAsString,
+                                             @Nonnull final String secondPathAsString,
+                                             @Nonnull final String expectedAppendedPathAsString,
+                                             @Nonnull final String expectedPrependedPathAsString)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -284,10 +284,10 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_prepend_path (final @Nonnull String pathAsString,
-                                            final @Nonnull String secondPathAsString,
-                                            final @Nonnull String expectedAppendedPathAsString,
-                                            final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_prepend_path (@Nonnull final String pathAsString,
+                                            @Nonnull final String secondPathAsString,
+                                            @Nonnull final String expectedAppendedPathAsString,
+                                            @Nonnull final String expectedPrependedPathAsString)
       {
         // given
         final ResourcePath prependingPath = ResourcePath.of(secondPathAsString);
@@ -303,10 +303,10 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "appendPrependProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_prepend_string (final @Nonnull String pathAsString,
-                                              final @Nonnull String secondPathAsString,
-                                              final @Nonnull String expectedAppendedPathAsString,
-                                              final @Nonnull String expectedPrependedPathAsString)
+    public void must_properly_prepend_string (@Nonnull final String pathAsString,
+                                              @Nonnull final String secondPathAsString,
+                                              @Nonnull final String expectedAppendedPathAsString,
+                                              @Nonnull final String expectedPrependedPathAsString)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -321,9 +321,9 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "segmentProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_count_segments (final @Nonnull String pathAsString,
-                                              final @Nonnull String expectedAsString,
-                                              final @Nonnull List<String> expectedSegments)
+    public void must_properly_count_segments (@Nonnull final String pathAsString,
+                                              @Nonnull final String expectedAsString,
+                                              @Nonnull final List<String> expectedSegments)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -337,8 +337,8 @@ public class ResourcePathTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "extensionProvider")
-    public void must_properly_compute_extension (final @Nonnull String pathAsString,
-                                                 final @Nonnull String expectedExtension)
+    public void must_properly_compute_extension (@Nonnull final String pathAsString,
+                                                 @Nonnull final String expectedExtension)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);
@@ -353,8 +353,8 @@ public class ResourcePathTest
      ******************************************************************************************************************/
     @Test(dataProvider = "urlEncodedPathProvider",
           dependsOnMethods = "must_properly_compute_asString")
-    public void must_properly_url_decode (final @Nonnull String plainPathAsString,
-                                          final @Nonnull String encodedPathAsString)
+    public void must_properly_url_decode (@Nonnull final String plainPathAsString,
+                                          @Nonnull final String encodedPathAsString)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(encodedPathAsString);

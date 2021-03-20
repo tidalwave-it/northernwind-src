@@ -66,8 +66,8 @@ public class DefaultMetadataLoader implements MetadataLoader
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceFile findMediaResourceFile (final @Nonnull ResourceProperties siteNodeProperties,
-                                               final @Nonnull Id mediaId)
+    public ResourceFile findMediaResourceFile (@Nonnull final ResourceProperties siteNodeProperties,
+                                               @Nonnull final Id mediaId)
       throws NotFoundException
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
@@ -80,7 +80,7 @@ public class DefaultMetadataLoader implements MetadataLoader
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Metadata loadMetadata (final @Nonnull ResourceFile file)
+    public Metadata loadMetadata (@Nonnull final ResourceFile file)
       throws IOException
       {
         log.debug("loadMetadata({})", file.getPath());
@@ -98,7 +98,7 @@ public class DefaultMetadataLoader implements MetadataLoader
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Optional<Media> findMedia (final @Nonnull Id mediaId, final @Nonnull ResourceProperties properties)
+    private Optional<Media> findMedia (@Nonnull final Id mediaId, @Nonnull final ResourceProperties properties)
       {
         final Site site = siteProvider.get().getSite();
 

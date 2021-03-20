@@ -97,19 +97,19 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
     // This makes it sure that different runs with different mocked Sites use different data
     private static final Map<Site, Map<String, Content>> SITE_CACHE = new IdentityHashMap<>();
 
-    public static void registerTo (final @Nonnull Site site)
+    public static void registerTo (@Nonnull final Site site)
       {
         when(site.find(eq(_Content_))).thenReturn(new MockContentSiteFinder(site));
       }
 
-    private MockContentSiteFinder (final @Nonnull Site site)
+    private MockContentSiteFinder (@Nonnull final Site site)
       {
         this.site         = site;
         this.relativePath = null;
         this.relativeUri  = null;
       }
 
-    public MockContentSiteFinder (final @Nonnull MockContentSiteFinder other, final @Nonnull Object override)
+    public MockContentSiteFinder (@Nonnull final MockContentSiteFinder other, @Nonnull final Object override)
       {
         super(other, override);
         final MockContentSiteFinder source = getSource(MockContentSiteFinder.class, other, override);
@@ -119,13 +119,13 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
       }
 
     @Override @Nonnull
-    public SiteFinder<Content> withRelativePath (final @Nonnull String relativePath)
+    public SiteFinder<Content> withRelativePath (@Nonnull final String relativePath)
       {
         return clone(new MockContentSiteFinder(site, relativePath, relativeUri));
       }
 
     @Override @Nonnull
-    public SiteFinder<Content> withRelativeUri (final @Nonnull String relativeUri)
+    public SiteFinder<Content> withRelativeUri (@Nonnull final String relativeUri)
       {
         return clone(new MockContentSiteFinder(site, relativePath, relativeUri));
       }
@@ -145,7 +145,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
       }
 
     @Nonnull
-    private Content createMockContentWithPath (final @Nonnull String relativePath)
+    private Content createMockContentWithPath (@Nonnull final String relativePath)
       {
         final Content content = createMockContent();
         final ResourceProperties properties = createMockProperties();
@@ -157,7 +157,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
 
     // TODO: this could be injected as a function, so only some specific tests use it
     @Nonnull
-    private static ResourcePath mockedExposedUri (final @Nonnull String relativePath)
+    private static ResourcePath mockedExposedUri (@Nonnull final String relativePath)
       {
         return relativePath.equals("/")
                 ? ResourcePath.EMPTY

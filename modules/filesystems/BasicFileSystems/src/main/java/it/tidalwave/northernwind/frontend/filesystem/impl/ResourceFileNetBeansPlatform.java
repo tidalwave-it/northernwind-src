@@ -90,8 +90,8 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     @Delegate
     private final As asSupport = new AsSupport(this);
 
-    public ResourceFileNetBeansPlatform (final @Nonnull ResourceFileSystemNetBeansPlatform fileSystem,
-                                         final @Nonnull FileObject delegate)
+    public ResourceFileNetBeansPlatform (@Nonnull final ResourceFileSystemNetBeansPlatform fileSystem,
+                                         @Nonnull final FileObject delegate)
       {
         this.fileSystem = fileSystem;
         this.delegate = delegate;
@@ -177,7 +177,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Override
-    public void copyTo (final @Nonnull ResourceFile targetFolder)
+    public void copyTo (@Nonnull final ResourceFile targetFolder)
             throws IOException
       {
         FileUtil.copyFile(delegate, ((ResourceFileNetBeansPlatform)targetFolder).delegate, delegate.getName());

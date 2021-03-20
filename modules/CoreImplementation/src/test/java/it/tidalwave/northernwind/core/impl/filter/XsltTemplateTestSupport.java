@@ -133,7 +133,7 @@ public class XsltTemplateTestSupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    protected void test (final @Nonnull String sourceFileName)
+    protected void test (@Nonnull final String sourceFileName)
       throws IOException
       {
         final File sourceFile = new File("src/test/resources/" + sourceFileName);

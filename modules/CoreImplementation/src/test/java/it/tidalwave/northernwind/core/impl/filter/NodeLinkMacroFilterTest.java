@@ -70,7 +70,7 @@ public class NodeLinkMacroFilterTest extends NorthernWindTestSupport
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "textProvider")
-    public void must_perform_the_proper_substitutions (final @Nonnull String text, final @Nonnull String expected)
+    public void must_perform_the_proper_substitutions (@Nonnull final String text, @Nonnull final String expected)
       {
         // given
         final NodeLinkMacroFilter underTest = context.getBean(NodeLinkMacroFilter.class);

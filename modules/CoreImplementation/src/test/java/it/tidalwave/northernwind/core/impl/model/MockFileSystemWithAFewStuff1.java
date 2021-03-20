@@ -46,8 +46,8 @@ public class MockFileSystemWithAFewStuff1 extends EmptyMockFileSystem
       }
 
     @Override
-    public void setUp (final @Nonnull ResourceFileSystem fileSystem,
-                       final @Nonnull MockModelFactory.PropertySetter propertySetter)
+    public void setUp (@Nonnull final ResourceFileSystem fileSystem,
+                       @Nonnull final MockModelFactory.PropertySetter propertySetter)
       {
         super.setUp(fileSystem, propertySetter);
         // FIXME: this is flat, create some hierarchy
@@ -69,7 +69,7 @@ public class MockFileSystemWithAFewStuff1 extends EmptyMockFileSystem
       }
 
     @Override
-    public void performAssertions (final @Nonnull DefaultSite underTest)
+    public void performAssertions (@Nonnull final DefaultSite underTest)
       {
         assertThat(underTest.documentMapByRelativePath.size(), is(4));
         assertItem(underTest.documentMapByRelativePath, "/",          "Content(path=/content/document)");

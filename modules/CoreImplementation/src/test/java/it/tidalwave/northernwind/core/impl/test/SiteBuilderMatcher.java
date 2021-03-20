@@ -59,7 +59,7 @@ public class SiteBuilderMatcher implements ArgumentMatcher<Site.Builder>
     private List<String> ignoredFolders;
 
     @Override
-    public boolean matches (final @Nullable Site.Builder siteBuilder)
+    public boolean matches (@Nullable final Site.Builder siteBuilder)
       {
         // Test properties set in the Spring beans file
 //        final Site.Builder siteBuilder = (Site.Builder)item;

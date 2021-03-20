@@ -45,8 +45,8 @@ class DecoratorResourceFile extends DecoratedResourceFileSupport
     @Delegate(types = ResourceFile.class, excludes = FileDelegateExclusions.class) @Nonnull
     private final ResourceFile delegate;
 
-    public DecoratorResourceFile (final @Nonnull LayeredResourceFileSystem fileSystem,
-                                  final @Nonnull ResourceFile delegate)
+    public DecoratorResourceFile (@Nonnull final LayeredResourceFileSystem fileSystem,
+                                  @Nonnull final ResourceFile delegate)
       {
         super(fileSystem, delegate);
         this.delegate = delegate;

@@ -65,7 +65,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
         private final String regex;
         private final String replacement;
 
-        public Mapping (final @Nonnull String configuration)
+        public Mapping (@Nonnull final String configuration)
           {
             final String[] parts = configuration.split(" -> ");
             regex = parts[0];
@@ -73,7 +73,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
           }
 
         @Nonnull
-        public String replace (final @Nonnull String string)
+        public String replace (@Nonnull final String string)
           {
             return string.replaceAll(regex, replacement);
           }
@@ -129,7 +129,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Status process (final @Nonnull Request request)
+    public Status process (@Nonnull final Request request)
       throws HttpStatusException
       {
         if (siteProvider.get().isSiteAvailable()) // FIXME no "/" SiteNode available at this point

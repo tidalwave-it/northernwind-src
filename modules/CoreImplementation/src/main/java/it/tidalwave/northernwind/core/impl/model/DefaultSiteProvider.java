@@ -189,7 +189,7 @@ public class DefaultSiteProvider implements SiteProvider
      *
      *
      ******************************************************************************************************************/
-    private void initialize (final @Nonnull DefaultSite site)
+    private void initialize (@Nonnull final DefaultSite site)
       {
         try
           {

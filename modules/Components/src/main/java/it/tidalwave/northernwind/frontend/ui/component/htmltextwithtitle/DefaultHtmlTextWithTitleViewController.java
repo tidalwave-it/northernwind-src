@@ -91,7 +91,7 @@ public abstract class DefaultHtmlTextWithTitleViewController implements HtmlText
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
       {
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         final int titleLevel = viewProperties.getProperty(P_LEVEL).orElse(2);

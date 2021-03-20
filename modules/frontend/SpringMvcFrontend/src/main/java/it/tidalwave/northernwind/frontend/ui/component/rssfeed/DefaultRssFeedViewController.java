@@ -83,10 +83,10 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      *
      ******************************************************************************************************************/
-    public DefaultRssFeedViewController (final @Nonnull RssFeedView view,
-                                         final @Nonnull SiteNode siteNode,
-                                         final @Nonnull SiteProvider siteProvider,
-                                         final @Nonnull RequestLocaleManager requestLocaleManager)
+    public DefaultRssFeedViewController (@Nonnull final RssFeedView view,
+                                         @Nonnull final SiteNode siteNode,
+                                         @Nonnull final SiteProvider siteProvider,
+                                         @Nonnull final RequestLocaleManager requestLocaleManager)
       {
         super(siteNode, view, requestLocaleManager);
         this.siteProvider = siteProvider;
@@ -107,7 +107,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareRendering (final @Nonnull RenderContext context)
+    public void prepareRendering (@Nonnull final RenderContext context)
       throws HttpStatusException
       {
         // do not call super!
@@ -160,8 +160,8 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    protected void renderPost (final @Nonnull it.tidalwave.northernwind.core.model.Content post,
-                               final @Nonnull Optional<Key<String>> textProperty)
+    protected void renderPost (@Nonnull final it.tidalwave.northernwind.core.model.Content post,
+                               @Nonnull final Optional<Key<String>> textProperty)
       {
         final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first

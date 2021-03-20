@@ -117,9 +117,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      * @param       requestLocaleManager    the {@link RequestLocaleManager}
      *
      ******************************************************************************************************************/
-    public HtmlTemplateBlogViewController (final @Nonnull SiteNode siteNode,
-                                           final @Nonnull HtmlTemplateBlogView view,
-                                           final @Nonnull RequestLocaleManager requestLocaleManager)
+    public HtmlTemplateBlogViewController (@Nonnull final SiteNode siteNode,
+                                           @Nonnull final HtmlTemplateBlogView view,
+                                           @Nonnull final RequestLocaleManager requestLocaleManager)
       {
         super(siteNode, view, requestLocaleManager);
         this.view = view;
@@ -131,9 +131,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderPosts (final @Nonnull List<Content> fullPosts,
-                                final @Nonnull List<Content> leadinPosts,
-                                final @Nonnull List<Content> linkedPosts)
+    protected void renderPosts (@Nonnull final List<Content> fullPosts,
+                                @Nonnull final List<Content> leadinPosts,
+                                @Nonnull final List<Content> linkedPosts)
       {
         view.renderPosts(getViewProperties().getProperty(P_TEMPLATE_POSTS_PATH),
                          fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
@@ -163,7 +163,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull Content post, final @Nonnull Key<String> textProperty)
+    private Aggregate toAggregate (@Nonnull final Content post, @Nonnull final Key<String> textProperty)
       {
         @SuppressWarnings("squid:S3655")
         final ZonedDateTime dateTime = post.getProperty(DATE_KEYS).get();
@@ -191,7 +191,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull TagAndCount tagAndCount)
+    private Aggregate toAggregate (@Nonnull final TagAndCount tagAndCount)
       {
         return toAggregate(tagAndCount.tag).with("rank", tagAndCount.rank).with("count", tagAndCount.count);
       }
@@ -205,7 +205,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (final @Nonnull String tag)
+    private Aggregate toAggregate (@Nonnull final String tag)
       {
         return Aggregate.of("name", tag).with("link", createTagLink(tag));
       }

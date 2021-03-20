@@ -69,10 +69,10 @@ public class XmlCalendarDao implements CalendarDao
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public List<Entry> findMonthlyEntries (final @Nonnull Site site,
-                                           final @Nonnull String entries,
-                                           final @Nonnegative int month,
-                                           final @Nonnegative int year)
+    public List<Entry> findMonthlyEntries (@Nonnull final Site site,
+                                           @Nonnull final String entries,
+                                           @Nonnegative final int month,
+                                           @Nonnegative final int year)
       {
         try
           {
@@ -99,7 +99,7 @@ public class XmlCalendarDao implements CalendarDao
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Entry toEntry (final @Nonnull Site site, final @Nonnull Node node, final int month)
+    private Entry toEntry (@Nonnull final Site site, @Nonnull final Node node, final int month)
       {
         final String uri = node.getAttributes().getNamedItem("link").getNodeValue();
         final Optional<String> type = Optional.ofNullable(node.getAttributes().getNamedItem("type")).map(Node::getNodeValue);

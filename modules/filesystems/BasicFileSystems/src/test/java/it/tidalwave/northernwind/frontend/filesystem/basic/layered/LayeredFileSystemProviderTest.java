@@ -111,8 +111,8 @@ public class LayeredFileSystemProviderTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "testCases")
-    public void must_navigate_through_the_whole_filesystem (final @Nonnull String testCase,
-                                                            final @Nonnull String[] fileSystemNames)
+    public void must_navigate_through_the_whole_filesystem (@Nonnull final String testCase,
+                                                            @Nonnull final String[] fileSystemNames)
             throws IOException
       {
         // given
@@ -152,7 +152,7 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void dump (final @Nonnull ResourceFileSystem fileSystem, final @Nonnull TestResource tr)
+    private void dump (@Nonnull final ResourceFileSystem fileSystem, @Nonnull final TestResource tr)
             throws IOException
       {
         final List<String> lines = new ArrayList<>();
@@ -164,7 +164,7 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void dump (final @Nonnull ResourceFile file, final @Nonnull List<String> lines)
+    private static void dump (@Nonnull final ResourceFile file, @Nonnull final List<String> lines)
             throws IOException
       {
         if (file.isData())
@@ -185,9 +185,9 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void createFile (final @Nonnull String testCase,
-                                    final @Nonnull String fileSystemName,
-                                    final @Nonnull String path)
+    private static void createFile (@Nonnull final String testCase,
+                                    @Nonnull final String fileSystemName,
+                                    @Nonnull final String path)
             throws IOException
       {
         final Path file = Paths.get(FS_BASE, testCase + fileSystemName, path);

@@ -62,7 +62,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
           }
 
         @Override
-        protected void render (final @Nonnull List<TextWithTitle> contents)
+        protected void render (@Nonnull final List<TextWithTitle> contents)
           {
             this.contents = contents;
           }
