@@ -186,7 +186,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_NotFoundException()
-      throws Exception
       {
         // given
         final NotFoundException e = new NotFoundException();
@@ -204,7 +203,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_HttpStatusException_with_SC_FOUND()
-      throws Exception
       {
         // given
         final HttpStatusException e = new HttpStatusException(SC_FOUND);
@@ -222,7 +220,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_HttpStatusException_with_generic_Http_status()
-      throws Exception
       {
         // given
         final HttpStatusException e = new HttpStatusException(SC_NOT_ACCEPTABLE);
@@ -240,7 +237,6 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_call_some_RequestProcessors_when_RuntimeException()
-      throws Exception
       {
         // given
         final RuntimeException e = new RuntimeException("Purportedly thrown exception");

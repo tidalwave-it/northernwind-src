@@ -67,7 +67,6 @@ public class DefaultViewFactoryTest
      ******************************************************************************************************************/
     @Test
     public void must_discover_and_properly_register_annotated_views()
-      throws Exception
       {
         // when
         underTest.setLogConfigurationEnabled(true);
