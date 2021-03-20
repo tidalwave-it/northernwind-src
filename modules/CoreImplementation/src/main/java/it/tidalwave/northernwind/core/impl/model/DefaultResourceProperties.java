@@ -165,7 +165,7 @@ public class DefaultResourceProperties implements ResourceProperties
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull @SuppressWarnings("unchecked")
+    @Override @Nonnull
     public <T> Optional<T> getProperty (@Nonnull Key<T> key)
       {
         try

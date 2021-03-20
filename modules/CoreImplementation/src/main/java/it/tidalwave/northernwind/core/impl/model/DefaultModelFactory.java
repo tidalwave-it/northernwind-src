@@ -129,7 +129,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull @SuppressWarnings("unchecked")
+    @Override @Nonnull
     public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest)
       {
         String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
