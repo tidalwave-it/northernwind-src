@@ -56,7 +56,7 @@ public class MediaMetadataXsltAdapter
     private Provider<SiteProvider> siteProvider;
 
     @Nonnull
-    private MediaMetadataProvider mediaMetadataProvider;
+    private final MediaMetadataProvider mediaMetadataProvider;
 
     /*******************************************************************************************************************
      *

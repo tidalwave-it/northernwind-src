@@ -86,7 +86,7 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
      *
      ******************************************************************************************************************/
     @Override
-    protected void render (final Optional<String> title,
+    protected void render (@Nonnull final Optional<String> title,
                            final @Nonnegative int year,
                            final @Nonnegative int firstYear,
                            final @Nonnegative int lastYear,

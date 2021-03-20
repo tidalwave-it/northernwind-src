@@ -26,21 +26,16 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import it.tidalwave.util.spring.ClassScanner;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.core.type.filter.TypeFilter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.*;
 
 /***********************************************************************************************************************
  *
- * An implementation of {@link MetadataInterpolatorFactory} that scannes the class path for candidates.
+ * An implementation of {@link MetadataInterpolatorFactory} that scans the class path for candidates.
  *
  * @author  Fabrizio Giudici
  *
@@ -57,19 +52,14 @@ public class ScanningMetadataInterpolatorFactory implements MetadataInterpolator
         interpolators.clear();
         log.info("Scanning for metadata interpolators...");
 
-        final ClassScanner scanner = new ClassScanner().withIncludeFilter(new TypeFilter()
+        // FIXME: doesn't check through the whole hierarchy
+        final ClassScanner scanner = new ClassScanner().withIncludeFilter((metadataReader, metadataReaderFactory) ->
           {
-            // FIXME: doesn't check through the whole hierarchy
-            @Override
-            public boolean match (final @Nonnull MetadataReader metadataReader,
-                                  final @Nonnull MetadataReaderFactory metadataReaderFactory)
-              {
-                final List<String> interfaceNames = asList(metadataReader.getClassMetadata().getInterfaceNames());
-                final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
+            final List<String> interfaceNames = List.of(metadataReader.getClassMetadata().getInterfaceNames());
+            final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
 
-                return interfaceNames.contains(MetadataInterpolator.class.getName()) ||
-                       ((superClassName != null) && superClassName.equals(MetadataInterpolatorSupport.class.getName()));
-              }
+            return interfaceNames.contains(MetadataInterpolator.class.getName()) ||
+                   ((superClassName != null) && superClassName.equals(MetadataInterpolatorSupport.class.getName()));
           });
 
         for (final Class<?> clazz : scanner.findClasses())

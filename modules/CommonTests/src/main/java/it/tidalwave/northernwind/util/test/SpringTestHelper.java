@@ -28,9 +28,9 @@ package it.tidalwave.northernwind.util.test;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.io.FileNotFoundException;
@@ -100,7 +100,7 @@ public class SpringTestHelper
         public void writeToActualFile (final @Nonnull String ... strings)
           throws IOException
           {
-            writeToActualFile(Arrays.asList(strings));
+            writeToActualFile(List.of(strings));
           }
 
         /***************************************************************************************************************
@@ -179,7 +179,7 @@ public class SpringTestHelper
     public ApplicationContext createSpringContext (final @Nonnull Map<String, Object> properties,
                                                    final @Nonnull String ... configurationFiles)
       {
-        return createSpringContext(properties, context -> {}, new ArrayList<>(Arrays.asList(configurationFiles)));
+        return createSpringContext(properties, context -> {}, new ArrayList<>(List.of(configurationFiles)));
       }
 
     /*******************************************************************************************************************
@@ -215,7 +215,7 @@ public class SpringTestHelper
                                                    final @Nonnull Consumer<GenericApplicationContext> modifier,
                                                    final @Nonnull String ... configurationFiles)
       {
-        return createSpringContext(properties, modifier, new ArrayList<>(Arrays.asList(configurationFiles)));
+        return createSpringContext(properties, modifier, new ArrayList<>(List.of(configurationFiles)));
       }
 
     /*******************************************************************************************************************
@@ -235,7 +235,7 @@ public class SpringTestHelper
         context.load(configurationFiles.toArray(new String[0]));
         modifier.accept(context);
         context.refresh();
-        log.info("Beans: {}", Arrays.asList(context.getBeanFactory().getBeanDefinitionNames()));
+        log.info("Beans: {}", List.of(context.getBeanFactory().getBeanDefinitionNames()));
 
         return context;
       }
@@ -289,7 +289,7 @@ public class SpringTestHelper
      *
      * Create a {@link TestResource} for the given name. The actual file will be created under
      * {@code target/test-artifacts/test-class-simple-name/resourceName}. The expected file should be
-     * placed in {@code src/test/resources/test-class-simple-name/expected-resoults/resource-name}. Note that the file
+     * placed in {@code src/test/resources/test-class-simple-name/expected-results/resource-name}. Note that the file
      * actually loaded is the one under {@code target/test-classes} copied there (and eventually filtered) by Maven.
      * The {@code test-class-simple-name} is tried first with the current test, and then with its eventual
      * super-classes; this allows to extend existing test suites. Note that if the resource files for a super class are

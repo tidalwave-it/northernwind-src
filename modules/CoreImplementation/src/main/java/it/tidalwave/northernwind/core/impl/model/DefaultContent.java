@@ -65,6 +65,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
     private final ResourceProperties delegate;
 
+    @Nonnull
     @Override
     public <T> Optional<T> getProperty (final @Nonnull Key<T> key)
       {

@@ -33,7 +33,6 @@ import java.io.Serializable;
 import java.util.List;
 import it.tidalwave.northernwind.util.UrlEncoding;
 import lombok.EqualsAndHashCode;
-import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
@@ -103,7 +102,7 @@ public class ResourcePath implements Serializable
      ******************************************************************************************************************/
     private ResourcePath (final @Nonnull String path)
       {
-        this((path.equals("/") || path.equals("")) ? emptyList() : asList(validated(path).split("/")));
+        this((path.equals("/") || path.equals("")) ? emptyList() : List.of(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************

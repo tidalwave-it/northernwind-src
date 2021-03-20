@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
@@ -58,8 +57,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
   {
     private static final long serialVersionUID = 2345536092354546452L;
 
-    private static final List<Class<?>> ALLOWED_TYPES =
-            Arrays.<Class<?>>asList(Content.class, SiteNode.class, Media.class);
+    private static final List<Class<?>> ALLOWED_TYPES = List.of(Content.class, SiteNode.class, Media.class);
 
     @Inject
     private transient Provider<SiteProvider> siteProvider;
@@ -77,7 +75,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
      *
      *
      ******************************************************************************************************************/
-    @SuppressWarnings({"unchecked", "squid:S00112"})
+    @SuppressWarnings({"squid:S00112"})
     public PathFinderSupport (final @Nonnull T parentResource)
       {
         try

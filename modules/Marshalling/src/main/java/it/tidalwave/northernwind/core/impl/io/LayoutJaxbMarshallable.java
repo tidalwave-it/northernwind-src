@@ -97,7 +97,6 @@ public class LayoutJaxbMarshallable implements Marshallable
      ******************************************************************************************************************/
     @Nonnull
     private ComponentJaxb marshal (final @Nonnull Layout layout)
-      throws IOException
       {
         final ComponentJaxb componentJaxb = objectFactory.createComponentJaxb();
         componentJaxb.setId(layout.getId().stringValue());

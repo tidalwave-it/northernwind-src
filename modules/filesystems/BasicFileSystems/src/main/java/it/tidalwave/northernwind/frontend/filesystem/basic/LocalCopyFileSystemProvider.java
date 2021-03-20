@@ -71,7 +71,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener =
-      new Listener<ResourceFileSystemChangedEvent>()
+      new Listener<>()
         {
           @Override
           public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
@@ -151,7 +151,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
     private void emptyFolder (final @Nonnull ResourceFile folder)
             throws IOException
       {
-        log.trace("emptyFolder({}, {}", folder);
+        log.trace("emptyFolder({}", folder);
 
         for (final ResourceFile child : folder.findChildren().results())
           {

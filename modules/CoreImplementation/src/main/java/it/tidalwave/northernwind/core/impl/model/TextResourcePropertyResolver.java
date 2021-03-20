@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -74,7 +73,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configurable @Slf4j
 public class TextResourcePropertyResolver implements ResourceProperties.PropertyResolver
   {
-    private static final List<String> EXTENSIONS = Arrays.asList(".xhtml", ".html", ".xml", ".txt");
+    private static final List<String> EXTENSIONS = List.of(".xhtml", ".html", ".xml", ".txt");
 
     @Inject
     private RequestLocaleManager localeRequestManager;
@@ -100,6 +99,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Nonnull
     @Override @SuppressWarnings("unchecked")
     public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> propertyName)
       throws NotFoundException, IOException

@@ -14,7 +14,7 @@
     <artifactId>it-tidalwave-northernwind-core-filesystem-scm</artifactId>
     <version>1.2-ALPHA-7-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Filesystems, SCM</name>
+    <name>NorthernWind :: Filesystems :: SCM</name>
     <description>Support classes for SCM filesystems.</description>
 
     <dependencies>

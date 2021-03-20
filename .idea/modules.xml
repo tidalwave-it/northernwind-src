@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/HtmlPatches/it-tidalwave-html-patches.iml" filepath="$PROJECT_DIR$/modules/HtmlPatches/it-tidalwave-html-patches.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/CommonTests/it-tidalwave-northernwind-common-tests.iml" filepath="$PROJECT_DIR$/modules/CommonTests/it-tidalwave-northernwind-common-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/Core/it-tidalwave-northernwind-core.iml" filepath="$PROJECT_DIR$/modules/Core/it-tidalwave-northernwind-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/CoreImplementation/it-tidalwave-northernwind-core-default.iml" filepath="$PROJECT_DIR$/modules/CoreImplementation/it-tidalwave-northernwind-core-default.iml" />

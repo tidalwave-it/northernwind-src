@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
 import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.*;
@@ -39,7 +39,7 @@ import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderL
  **********************************************************************************************************************/
 public abstract class FilterSupport implements Filter
   {
-    @CheckForNull
+    @Nullable
     protected Throwable bootThrowable;
 
     /*******************************************************************************************************************

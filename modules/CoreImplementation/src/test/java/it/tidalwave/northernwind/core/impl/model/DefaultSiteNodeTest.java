@@ -28,8 +28,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
@@ -51,7 +50,6 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.CoreMatchers.is;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -87,7 +85,6 @@ public class DefaultSiteNodeTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         context = helper.createSpringContext();
         site = context.getBean(InternalSite.class);
@@ -98,32 +95,19 @@ public class DefaultSiteNodeTest
         resource = createMockResource();
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
-
-        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, new Resource.Builder.CallBack()
-          {
-            @Override
-            public Resource build(Resource.Builder builder)
-              {
-                return resource;
-              }
-          }));
-
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.ENGLISH));
+        when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, builder -> resource));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         final ResourceFile nodeFolder = MockResourceFile.folder("structure");
         when(site.getNodeFolder()).thenReturn(nodeFolder);
 
         emptyPlaceHolderLayout = mock(Layout.class);
 //        when(modelFactory.createLayout(any(Id.class), eq("emptyPlaceholder"))).thenReturn(emptyPlaceHolderLayout);
-        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, new Layout.Builder.CallBack()
-          {
-            @Override
-            public Layout build (final @Nonnull Layout.Builder builder)
-              {
-                assertThat(builder.getType(), is("emptyPlaceholder"));
-                return emptyPlaceHolderLayout;
-              }
-          }));
+        when(modelFactory.createLayout()).thenReturn(new Layout.Builder(modelFactory, builder ->
+        {
+          assertThat(builder.getType(), is("emptyPlaceholder"));
+          return emptyPlaceHolderLayout;
+        }));
 
         underTest = new DefaultSiteNode(modelFactory, site, resourceFile);
       }
@@ -197,7 +181,7 @@ public class DefaultSiteNodeTest
                                                 final @Nonnull String fileName,
                                                 final @Nonnull String parentUri,
                                                 final @Nonnull String parentPath)
-      throws IOException, NotFoundException
+            throws NotFoundException
       {
         final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);

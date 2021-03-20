@@ -30,9 +30,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
@@ -61,13 +59,7 @@ public abstract class MockFileSystemSupport
   {
     private static Finder listFinder (final @Nonnull Collection<ResourceFile> results)
       {
-        return ResourceFileFinderSupport.withComputeResults(new Function<ResourceFile.Finder, List<ResourceFile>>() {
-            @Override
-            public List<ResourceFile> apply(ResourceFile.Finder input)
-              {
-                return new ArrayList<>(results);
-              }
-        });
+        return ResourceFileFinderSupport.withComputeResults(input -> new ArrayList<>(results));
       }
 
     @Nonnull
@@ -153,7 +145,7 @@ public abstract class MockFileSystemSupport
         when(folder.getPath()).thenReturn(ResourcePath.of(name));
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
-        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
+        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<>()));
         when(folder.toString()).thenReturn(name);
 
         return folder;
@@ -171,7 +163,7 @@ public abstract class MockFileSystemSupport
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(true);
         when(folder.isFolder()).thenReturn(false);
-        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
+        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<>()));
 
         return folder;
       }

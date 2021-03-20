@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,10 +54,10 @@ public class LocalFileSystemProvider implements ResourceFileSystemProvider
     @Getter @Setter @Nonnull
     private String rootPath = "";
 
-    @CheckForNull
+    @Nullable
     private ResourceFileSystem fileSystem;
 
-    @CheckForNull
+    @Nullable
     private LocalFileSystem fileSystemDelegate;
 
     /*******************************************************************************************************************

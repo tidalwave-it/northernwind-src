@@ -41,19 +41,19 @@ public interface NodeContainerViewController extends ViewController
     public static final Key<String> P_TITLE_PREFIX = Key.of("titlePrefix", String.class);
 
     /** The list of relative paths or URLs for screen CSS style sheets. */
-    public static final Key<List<String>> P_SCREEN_STYLE_SHEETS = new Key<List<String>>("screenStyleSheets") {};
+    public static final Key<List<String>> P_SCREEN_STYLE_SHEETS = new Key<>("screenStyleSheets") {};
 
     /** The list of relative paths or URLs for print CSS style sheets. */
-    public static final Key<List<String>> P_PRINT_STYLE_SHEETS = new Key<List<String>>("printStyleSheets") {};
+    public static final Key<List<String>> P_PRINT_STYLE_SHEETS = new Key<>("printStyleSheets") {};
 
     /** The list of relative paths for inlined RSS feeds. */
-    public static final Key<List<String>> P_RSS_FEEDS = new Key<List<String>>("rssFeeds") {};
+    public static final Key<List<String>> P_RSS_FEEDS = new Key<>("rssFeeds") {};
 
     /** The list of relative paths or URLs for external JavaScript scripts. */
-    public static final Key<List<String>> P_SCRIPTS = new Key<List<String>>("scripts") {};
+    public static final Key<List<String>> P_SCRIPTS = new Key<>("scripts") {};
 
     /** The list of relative paths for inlined JavaScript scripts. */
-    public static final Key<List<String>> P_INLINED_SCRIPTS = new Key<List<String>>("inlinedScripts") {};
+    public static final Key<List<String>> P_INLINED_SCRIPTS = new Key<>("inlinedScripts") {};
 
     /** Dynamic property generated during rendering with the title of the blog post. */
     public static final Key<String> PD_TITLE = Key.of("@title", String.class);

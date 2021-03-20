@@ -68,7 +68,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
           }
       }
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     private HtmlTextWithTitleView view;
 
@@ -123,7 +123,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
       throws Exception
       {
         // given
-        final List<String> paths = IntStream.range(0, 10).mapToObj(Integer::valueOf).map(i -> "/path/content-" + i).collect(toList());
+        final List<String> paths = IntStream.range(0, 10).mapToObj(i -> "/path/content-" + i).collect(toList());
         mockViewProperty(siteNode, viewId, P_CONTENT_PATHS, Optional.of(paths));
 
         for (int i = 0; i < paths.size(); i++)

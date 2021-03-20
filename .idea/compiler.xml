@@ -14,6 +14,7 @@
         <module name="it-tidalwave-northernwind-core" />
         <module name="it-tidalwave-northernwind-core-filesystem-scm" />
         <module name="it-tidalwave-northernwind-frontend-commons" />
+        <module name="it-tidalwave-html-patches" />
         <module name="it-tidalwave-northernwind-core-filesystem-basic" />
         <module name="it-tidalwave-northernwind-frontend-components-htmltemplate" />
         <module name="it-tidalwave-northernwind-frontend-webapp-commons" />
@@ -51,7 +52,7 @@
       <module name="it-tidalwave-northernwind-frontend-webapp-commons" target="11" />
       <module name="it-tidalwave-northernwind-modules" target="11" />
       <module name="it-tidalwave-northernwind-webapp" target="11" />
-      <module name="northernwind" target="11" />
+      <module name="northernwind" target="1.8" />
       <module name="northernwind-src" target="1.8" />
     </bytecodeTargetLevel>
   </component>

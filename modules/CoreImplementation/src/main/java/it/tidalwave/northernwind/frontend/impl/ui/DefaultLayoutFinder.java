@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
     @Nonnull
     private final transient Map<Id, Layout> childrenMapById;
 
-    @CheckForNull
+    @Nullable
     private final Id id;
 
     /*******************************************************************************************************************

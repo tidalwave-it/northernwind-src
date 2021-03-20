@@ -52,7 +52,7 @@ public final class CollectionFunctions
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> List<T> concat (final @Nonnull Collection<T>... collections)
+    public static <T> List<T>   concat (final @Nonnull Collection<T>... collections)
       {
         final List<T> result = new ArrayList<>();
 

@@ -24,54 +24,28 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.util;
+package it.tidalwave.northernwind.core.impl.util;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import lombok.NoArgsConstructor;
 import javax.annotation.Nonnull;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-import org.slf4j.bridge.SLF4JBridgeHandler;
-import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.Node;
+import it.tidalwave.northernwind.core.impl.patches.XHTMLSerializer;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
- *
- * Installs the Slf4J bridge for JUL. Needed only if a library using JUL is deployed into a webapp.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
-public class Slf4JJulBrigdeInstallerServletContextListener implements ServletContextListener
+@NoArgsConstructor(access = PRIVATE)
+public final class XhtmlMarkupSerializerDecoupler extends XHTMLSerializer
   {
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event)
+    public static void serialize (final @Nonnull Node node, final @Nonnull StringWriter stringWriter)
+        throws IOException
       {
-        final Logger rootLogger = LogManager.getLogManager().getLogger("");
-        final Handler[] handlers = rootLogger.getHandlers();
-
-        for (int i = 0; i < handlers.length; i++)
-          {
-            rootLogger.removeHandler(handlers[i]);
-          }
-
-        SLF4JBridgeHandler.install();
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event)
-      {
-        // do nothing
+        final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
+        xhtmlSerializer.serialize(node);
       }
   }

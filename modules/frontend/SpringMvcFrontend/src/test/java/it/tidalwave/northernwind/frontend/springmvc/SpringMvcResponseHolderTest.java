@@ -35,8 +35,6 @@ import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderTest;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
  *
@@ -68,7 +66,7 @@ public class SpringMvcResponseHolderTest extends ResponseBuilderTest
         final PrintWriter pw = new PrintWriter(baos); // FIXME: charset?
         pw.printf("HTTP/1.1 %d%n", responseEntity.getStatusCode().value());
         headers.entrySet().stream()
-                          .sorted(comparing(Entry::getKey))
+                          .sorted(Entry.comparingByKey())
                           .forEach(e -> pw.printf("%s: %s%n", e.getKey(), e.getValue().get(0)));
         pw.println();
         pw.flush();
