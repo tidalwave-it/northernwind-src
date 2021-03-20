@@ -501,7 +501,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
-                .flatMap(post -> post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty)) // TODO: simplify in Java 9
+                .flatMap(post -> post.getProperty(P_TAGS).stream().flatMap(Collection::stream))
                 .collect(toMap(t -> t, TagAndCount::new, TagAndCount::reduced))
                 .values()
                 .stream()
@@ -730,7 +730,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasCategory (final @Nonnull Content post, final @Nonnull Optional<String> category)
       {
-        return !category.isPresent() || post.getProperty(P_CATEGORY).equals(category);
+        return category.isEmpty() || post.getProperty(P_CATEGORY).equals(category);
       }
 
     /*******************************************************************************************************************
