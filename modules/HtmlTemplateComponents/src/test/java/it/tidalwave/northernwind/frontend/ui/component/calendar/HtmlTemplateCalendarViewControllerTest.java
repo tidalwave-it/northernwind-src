@@ -76,7 +76,7 @@ public class HtmlTemplateCalendarViewControllerTest
 
     private RenderContext context;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     private ResourceProperties viewProperties;
 

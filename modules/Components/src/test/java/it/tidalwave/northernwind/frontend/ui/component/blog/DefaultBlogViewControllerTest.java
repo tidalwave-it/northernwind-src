@@ -141,7 +141,7 @@ public class DefaultBlogViewControllerTest
 
     private MockPosts mockPosts;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *

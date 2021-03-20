@@ -73,7 +73,7 @@ public class HtmlTemplateBlogViewControllerTest
 
     private ResourceProperties nodeProperties;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *

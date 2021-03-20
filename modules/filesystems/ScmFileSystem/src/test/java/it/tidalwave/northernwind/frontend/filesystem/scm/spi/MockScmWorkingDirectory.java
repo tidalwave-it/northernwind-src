@@ -60,13 +60,13 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
           }
       }
 
-    private Path configFolder;
+    private final Path configFolder;
 
-    private Path configUri;
+    private final Path configUri;
 
-    private Path configTags;
+    private final Path configTags;
 
-    private Path configCurrentTag;
+    private final Path configCurrentTag;
 
     public MockScmWorkingDirectory (final @Nonnull Path workArea)
             throws IOException

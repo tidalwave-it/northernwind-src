@@ -61,7 +61,7 @@ public class HtmlTemplateHtmlTextWithTitleViewTest
 
     private Site site;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *
