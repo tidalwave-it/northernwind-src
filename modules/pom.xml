@@ -18,8 +18,9 @@
     <description>The parent POM for modules.</description>
 
     <properties>
-        <tft.javac.source>1.8</tft.javac.source>
-        <tft.javac.target>1.8</tft.javac.target>
+        <tft.javac.source>11</tft.javac.source>
+        <tft.javac.target>11</tft.javac.target>
+        <tft.javac.release>11</tft.javac.release>
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
 
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
@@ -37,7 +38,7 @@
         <netbeans.version>RELEASE80</netbeans.version>
         <rome.version>1.0.0</rome.version>
         <stringtemplate.version>4.1</stringtemplate.version>
-        <thesefoolishthings.version>3.2-ALPHA-4</thesefoolishthings.version>
+        <thesefoolishthings.version>3.2-ALPHA-5-SNAPSHOT</thesefoolishthings.version>
         <xmpcore.version>5.1.0</xmpcore.version>
 
         <tft.aspectjrt.version>1.9.6</tft.aspectjrt.version>

@@ -36,7 +36,6 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -73,8 +72,8 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     public ViewBuilder (final @Nonnull Class<?> viewClass,
                         final @Nonnull Class<? extends ViewController> viewControllerClass)
-      throws NoSuchMethodException, InvocationTargetException, InstantiationException,
-             IllegalArgumentException, IllegalAccessException, SecurityException
+      throws
+      IllegalArgumentException, SecurityException
       {
         viewConstructor = viewClass.getConstructors()[0];
         viewControllerConstructor = (Constructor<ViewController>)viewControllerClass.getConstructors()[0];
@@ -138,7 +137,6 @@ import lombok.extern.slf4j.Slf4j;
     private Object[] computeConstructorArguments (final @Nonnull Site site,
                                                   final @Nonnull Constructor<?> constructor,
                                                   final @Nonnull Object ... overridingArgs)
-      throws NotFoundException
       {
         final List<Object> result = new ArrayList<>();
 

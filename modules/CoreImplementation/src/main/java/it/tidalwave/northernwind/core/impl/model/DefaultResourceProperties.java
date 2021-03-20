@@ -31,12 +31,12 @@ import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -47,7 +47,6 @@ import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.asList;
 import static java.time.format.DateTimeFormatter.*;
 import static java.util.stream.Collectors.toList;
 
@@ -64,15 +63,15 @@ public class DefaultResourceProperties implements ResourceProperties
   {
     @SuppressWarnings("squid:S1171")
     private static final Map<Class<?>, Function<String, Object>> CONVERTER_MAP =
-            new HashMap<Class<?>, Function<String, Object>>()
-      {{
-        put(Integer.class,       o -> Integer.parseInt(o));
-        put(Float.class,         o -> Float.parseFloat(o));
-        put(Double.class,        o -> Double.parseDouble(o));
-        put(Boolean.class,       o -> Boolean.parseBoolean(o));
-        put(ZonedDateTime.class, o -> ZonedDateTime.parse(o, ISO_ZONED_DATE_TIME));
-        put(ResourcePath.class,  o -> ResourcePath.of(o));
-      }};
+        new HashMap<>()
+          {{
+            put(Integer.class,        Integer::parseInt);
+            put(Float.class,          Float::parseFloat);
+            put(Double.class,         Double::parseDouble);
+            put(Boolean.class,        Boolean::parseBoolean);
+            put(ZonedDateTime.class,  o -> ZonedDateTime.parse(o, ISO_ZONED_DATE_TIME));
+            put(ResourcePath.class,   ResourcePath::of);
+          }};
 
     @Nonnull @Getter
     private final Id id;
@@ -116,10 +115,8 @@ public class DefaultResourceProperties implements ResourceProperties
         this.id = otherProperties.id;
         this.propertyResolver = otherProperties.propertyResolver;
 
-        otherProperties.propertyMap.entrySet().stream().forEach(e ->
-                propertyMap.put(e.getKey(), e.getValue())); // FIXME: clone the property
-        otherProperties.groupMap.entrySet().stream().forEach(e ->
-                groupMap.put(e.getKey(), new DefaultResourceProperties(e.getValue())));
+        otherProperties.propertyMap.forEach(propertyMap::put); // FIXME: clone the property
+        otherProperties.groupMap.forEach((k, v) -> groupMap.put(k, new DefaultResourceProperties(v)));
       }
 
     /*******************************************************************************************************************
@@ -166,7 +163,7 @@ public class DefaultResourceProperties implements ResourceProperties
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull @SuppressWarnings("unchecked")
+    @Override @Nonnull
     public <T> Optional<T> getProperty (@Nonnull Key<T> key)
       {
         try
@@ -315,7 +312,7 @@ public class DefaultResourceProperties implements ResourceProperties
     /* visible for testing */ static <T> T convertValue (final @Nonnull Key<T> key, final @Nonnull Object value)
       {
         log.trace("convertValue({}, {})", key, value);
-        T result = null;
+        T result;
 
         try
           {
@@ -325,7 +322,7 @@ public class DefaultResourceProperties implements ResourceProperties
               }
             else if (key.getName().equals("tags")) // workaround as Zephyr stores it as a comma-separated string
               {
-                result = (T)asList(((String)value).split(","));
+                result = (T)List.of(((String)value).split(","));
               }
 //            else if (value instanceof List)
 //              {

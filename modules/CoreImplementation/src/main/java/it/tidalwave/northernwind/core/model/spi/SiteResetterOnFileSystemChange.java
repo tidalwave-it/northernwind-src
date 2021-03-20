@@ -54,7 +54,7 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
     @Inject @Named("applicationMessageBus")
     private MessageBus messageBus;
 
-    private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<ResourceFileSystemChangedEvent>()
+    private final Listener<ResourceFileSystemChangedEvent> listener = new Listener<>()
       {
         @Override
         public void notify (final @Nonnull ResourceFileSystemChangedEvent event)
@@ -70,8 +70,8 @@ public class SiteResetterOnFileSystemChange // TODO: rename to SiteReloaderOnFil
 
 //            if (event.getFileSystemProvider() == siteProvider.get().getSite().getFileSystemProvider())
 //              {
-                log.info("Detected file change, resetting site...");
-                siteProvider.get().reload();
+            log.info("Detected file change, resetting site...");
+            siteProvider.get().reload();
 //              }
           }
       };

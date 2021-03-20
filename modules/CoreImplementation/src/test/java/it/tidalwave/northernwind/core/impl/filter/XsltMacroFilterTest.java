@@ -156,7 +156,6 @@ public class XsltMacroFilterTest
 
         final Map<String, Resource> map = new HashMap<>();
         map.put(file.getPath().asString(), resource);
-        when(site.find(eq(Resource.class))).thenReturn(
-                new DefaultSiteFinder<>("mockFinder", map, new RegexTreeMap<Resource>()));
+        when(site.find(eq(Resource.class))).thenReturn(new DefaultSiteFinder<>("mockFinder", map, new RegexTreeMap<>()));
       }
   }

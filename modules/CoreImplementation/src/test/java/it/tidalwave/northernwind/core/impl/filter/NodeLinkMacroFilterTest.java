@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.impl.filter;
 
 import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.List;
 import lombok.experimental.Delegate;
 import lombok.Getter;
@@ -64,7 +63,7 @@ public class NodeLinkMacroFilterTest extends NorthernWindTestSupport
         final List<List<String>> matches = underTest.getHelper().getMatches();
         // then
         assertThat(matches.size(), is(1));
-        assertThat(matches.get(0), is(Arrays.asList("/Blog")));
+        assertThat(matches.get(0), is(List.of("/Blog")));
       }
 
     /*******************************************************************************************************************

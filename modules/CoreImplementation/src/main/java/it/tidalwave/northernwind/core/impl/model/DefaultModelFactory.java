@@ -27,13 +27,11 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -47,7 +45,6 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.util.NotFoundException;
 import lombok.ToString;
 
 /***********************************************************************************************************************
@@ -131,7 +128,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Override @Nonnull @SuppressWarnings("unchecked")
+    @Override @Nonnull
     public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest)
       {
         String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
@@ -190,7 +187,7 @@ public class DefaultModelFactory extends ModelFactorySupport
           {
             final String headerName = e.nextElement();
             final String headerValue = httpServletRequest.getHeader(headerName); // FIXME: lacks support for multivalue
-            headerMap.put(headerName, Arrays.asList(headerValue));
+            headerMap.put(headerName, List.of(headerValue));
           }
 
         return headerMap;

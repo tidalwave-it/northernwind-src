@@ -60,10 +60,10 @@ public class FileTestHelper
       throws IOException
       {
         final Path actualPath = actualResults.resolve(fileName);
-        final Path excpectedPath = expectedResults.resolve(fileName);
+        final Path expectedPath = expectedResults.resolve(fileName);
         Files.createDirectories(actualResults);
         Files.write(actualPath, content);
-        assertSameContents(excpectedPath.toFile(), actualPath.toFile());
+        assertSameContents(expectedPath.toFile(), actualPath.toFile());
       }
 
     /*******************************************************************************************************************

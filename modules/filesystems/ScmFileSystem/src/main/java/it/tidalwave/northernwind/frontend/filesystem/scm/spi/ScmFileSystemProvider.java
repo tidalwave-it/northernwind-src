@@ -145,7 +145,7 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
           {
             final Optional<Tag> newTag = fetchChangesetsAndSearchForNewTag();
 
-            if (!newTag.isPresent())
+            if (newTag.isEmpty())
               {
                 log.info(">>>> no changes");
               }
@@ -180,13 +180,10 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
      *
      * @param path the path of the repository.
      * @return a {@code ScmWorkingDirectory}
-     * @throws IOException if an I/O error occurs
-     * @throws InterruptedException if a timeout occurs
      *
      ******************************************************************************************************************/
     @Nonnull
-    abstract public ScmWorkingDirectory createWorkingDirectory (@Nonnull Path path)
-            throws IOException, InterruptedException;
+    abstract public ScmWorkingDirectory createWorkingDirectory (@Nonnull Path path);
 
     /*******************************************************************************************************************
      *
@@ -228,12 +225,12 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
         final Optional<Tag> latestTag = alternateWorkingDirectory.getLatestTagMatching("^published-.*");
         final Optional<Tag> currentTag = exposedWorkingDirectory.getCurrentTag();
 
-        if (!latestTag.isPresent())
+        if (latestTag.isEmpty())
           {
             return Optional.empty();
           }
 
-        if (!currentTag.isPresent())
+        if (currentTag.isEmpty())
           {
             log.info(">>>> repo must be initialized - latest tag: {}", latestTag.map(Tag::getName).orElse("<none>"));
             return latestTag;

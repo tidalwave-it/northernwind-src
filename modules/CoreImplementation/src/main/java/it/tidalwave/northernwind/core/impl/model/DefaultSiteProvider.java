@@ -30,9 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -178,7 +176,7 @@ public class DefaultSiteProvider implements SiteProvider
     /* package */ void initialize()
       {
         log.info("initialize()");
-        ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
+        ignoredFolders.addAll(List.of(ignoredFoldersAsString.trim().split(File.pathSeparator)));
         configuredLocales.addAll(Stream.of(localesAsString.split(","))
                                        .map(String::trim)
                                        .map(Locale::new)
@@ -205,7 +203,7 @@ public class DefaultSiteProvider implements SiteProvider
             log.info("SITE INITIALIZATION COMPLETED (in {} msec)", System.currentTimeMillis() - time);
             log.info(ASTERISKS);
           }
-        catch (IOException | NotFoundException | PropertyVetoException | RuntimeException e)
+        catch (IOException | NotFoundException | RuntimeException e)
           {
             log.error(ASTERISKS);
             log.error("SITE INITIALIZATION FAILED!", e);
@@ -221,7 +219,7 @@ public class DefaultSiteProvider implements SiteProvider
     @Nonnull
     /* package */ String getContextPath()
       {
-        return servletContext.map(ctx -> ctx.getContextPath()).orElse(DEFAULT_CONTEXT_PATH);
+        return servletContext.map(ServletContext::getContextPath).orElse(DEFAULT_CONTEXT_PATH);
 //            log.warn("Running in a non-web environment, set contextPath = {}", DEFAULT_CONTEXT_PATH);
       }
   }

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -178,7 +177,7 @@ import static lombok.AccessLevel.PRIVATE;
 
         for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
           {
-            parameterMap.put(entry.getKey(), Arrays.asList(entry.getValue()));
+            parameterMap.put(entry.getKey(), List.of(entry.getValue()));
           }
 
         return new DefaultRequest(baseUrl, relativeUri, originalRelativeUri, parameterMap,  headersMap, preferredLocales);

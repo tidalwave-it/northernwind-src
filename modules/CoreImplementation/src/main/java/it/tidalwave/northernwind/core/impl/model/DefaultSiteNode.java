@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
@@ -101,7 +100,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
           {
             loadLayouts();
           }
-        catch (IOException | NotFoundException e)
+        catch (IOException e)
           {
             throw new RuntimeException(e);
           }
@@ -169,16 +168,15 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
     private void loadLayouts()
-      throws IOException, NotFoundException
+      throws IOException
       {
         for (final Locale locale : localeRequestManager.getLocales())
           {
             Layout layout = null;
             // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
             // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
-            // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
+            // On the other hand, inheritanceHelper encapsulates the local override policy, which applies also to Properties...
             final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(getResource().getFile(),
                                                                                                locale,
                                                                                                "Components");
@@ -200,7 +198,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
 
             if (site.isLogConfigurationEnabled() || log.isDebugEnabled())
               {
-                log.debug(">>>> layout for {} ():", getResource().getFile().getPath().asString(), locale);
+                log.debug(">>>> layout for {} {}:", getResource().getFile().getPath().asString(), locale);
                 layout.accept(new LayoutLoggerVisitor(LayoutLoggerVisitor.Level.INFO));
               }
 
@@ -214,7 +212,6 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      *
      * @return  the parent node
      * @throws  NotFoundException               if the parent doesn't exist
-     * @throws  UnsupportedEncodingException
      *
      ******************************************************************************************************************/
     @Nonnull

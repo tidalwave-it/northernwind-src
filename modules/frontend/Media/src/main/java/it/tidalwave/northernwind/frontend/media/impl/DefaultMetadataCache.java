@@ -69,7 +69,7 @@ public class DefaultMetadataCache implements MetadataCache
         private final ZonedDateTime creationTime = ZonedDateTime.now(clock.get());
 
         @Nonnull
-        private ZonedDateTime expirationTime = creationTime.plusSeconds(medatataExpirationTime);
+        private ZonedDateTime expirationTime = creationTime.plusSeconds(metadataExpirationTime);
 
         /***************************************************************************************************************
          *
@@ -78,7 +78,7 @@ public class DefaultMetadataCache implements MetadataCache
          **************************************************************************************************************/
         public void postponeExpirationTime()
           {
-            expirationTime = ZonedDateTime.now(clock.get()).plusSeconds(medatataExpirationTime);
+            expirationTime = ZonedDateTime.now(clock.get()).plusSeconds(metadataExpirationTime);
           }
       }
 
@@ -87,9 +87,9 @@ public class DefaultMetadataCache implements MetadataCache
     @Getter @Setter @Nonnull
     private Supplier<Clock> clock = Clock::systemDefaultZone;
 
-    /** Expiration time for metadata in seconds; after this time, medatata are reloaded. */
+    /** Expiration time for metadata in seconds; after this time, metadata are reloaded. */
     @Getter @Setter @Nonnegative
-    private int medatataExpirationTime = DEFAULT_METADATA_EXPIRATION_TIME;
+    private int metadataExpirationTime = DEFAULT_METADATA_EXPIRATION_TIME;
 
     @Inject
     private MetadataLoader metadataLoader;
@@ -139,7 +139,7 @@ public class DefaultMetadataCache implements MetadataCache
 
         if (metadata == null)
           {
-            log.debug(">>>> loading medatata...");
+            log.debug(">>>> loading metadata...");
             metadata = new ExpirableMetadata(metadataLoader.loadMetadata(file));
             metadataMapById.put(mediaId, metadata);
           }
