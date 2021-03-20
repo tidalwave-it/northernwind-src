@@ -100,7 +100,7 @@ public class HttpStatusException extends Exception
      ******************************************************************************************************************/
     public HttpStatusException (final int httpStatus)
       {
-        this(httpStatus, Collections.<String, String>emptyMap());
+        this(httpStatus, Collections.emptyMap());
       }
 
     /*******************************************************************************************************************

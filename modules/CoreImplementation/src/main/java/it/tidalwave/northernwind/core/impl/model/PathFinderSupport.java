@@ -58,8 +58,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
   {
     private static final long serialVersionUID = 2345536092354546452L;
 
-    private static final List<Class<?>> ALLOWED_TYPES =
-            Arrays.<Class<?>>asList(Content.class, SiteNode.class, Media.class);
+    private static final List<Class<?>> ALLOWED_TYPES = Arrays.asList(Content.class, SiteNode.class, Media.class);
 
     @Inject
     private transient Provider<SiteProvider> siteProvider;

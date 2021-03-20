@@ -138,7 +138,7 @@ public class MockModelFactory extends ModelFactorySupport
           {
             return key != null && key.getName().equals(name);
           }
-      };
+      }
 
     /*******************************************************************************************************************
      *
@@ -243,9 +243,9 @@ public class MockModelFactory extends ModelFactorySupport
             return "http://acme.com" + path.asString() + (path.getExtension().isEmpty() ? "/" : "");
           });
         when(site.getTemplate(any(Class.class), any(Optional.class), any(String.class))).then(i ->
-                new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1), i.getArgument(2)));
+                new St4TemplateFactory(i.getArgument(0), site).getTemplate(i.getArgument(1), i.getArgument(2)));
         when(site.getTemplate(any(Class.class), any(ResourcePath.class))).then(i ->
-            new St4TemplateFactory((Class<?>)i.getArgument(0), site).getTemplate(i.getArgument(1)));
+            new St4TemplateFactory(i.getArgument(0), site).getTemplate(i.getArgument(1)));
         return site;
       }
 
