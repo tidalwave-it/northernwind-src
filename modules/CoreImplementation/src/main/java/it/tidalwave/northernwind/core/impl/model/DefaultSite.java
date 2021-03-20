@@ -383,7 +383,7 @@ import lombok.extern.slf4j.Slf4j;
     private static void logConfiguration (final @Nonnull String name, Map<String, ?> propertyMap)
       {
         log.info(name);
-        propertyMap.entrySet().forEach(entry -> log.info(">>>> {}: {}", entry.getKey(), entry.getValue()));
+        propertyMap.forEach((key, value) -> log.info(">>>> {}: {}", key, value));
       }
 
     /*******************************************************************************************************************

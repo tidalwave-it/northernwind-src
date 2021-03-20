@@ -100,12 +100,11 @@ public class MockPosts
           {
             posts.stream()
                  .collect(groupingBy(__ -> paths.get(rnd.nextInt(paths.size()))))
-                 .entrySet()
-                 .forEach(e ->
-              {
-                final Content blogFolder = site.find(_Content_).withRelativePath(e.getKey()).optionalResult().get();
-                when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(e.getValue()));
-              });
+                 .forEach((key, value) ->
+                    {
+                      final Content blogFolder = site.find(_Content_).withRelativePath(key).optionalResult().get();
+                      when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(value));
+                    });
 
             when(viewProperties.getProperty(eq(P_CONTENT_PATHS))).thenReturn(Optional.of(paths));
           }
