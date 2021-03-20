@@ -43,7 +43,7 @@ import lombok.RequiredArgsConstructor;
     private final MenuView view;
 
     @Nonnull
-    private String title = "";
+    private final String title = "";
 
     public void setTitle (final @Nonnull String title)
       {

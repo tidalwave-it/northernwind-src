@@ -27,16 +27,15 @@
 package it.tidalwave.northernwind.util;
 
 import javax.annotation.Nonnull;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import lombok.NoArgsConstructor;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
- * A wrapper around {@link URLDecoder} and {@link URLEncoder} that internally catches
- * {@link UnsupportedEncodingException}.
+ * A wrapper around {@link URLDecoder} and {@link URLEncoder} so functional descriptors can be used.
  *
  * @author  Fabrizio Giudici
  *
@@ -55,14 +54,7 @@ public final class UrlEncoding
     @Nonnull @SuppressWarnings("squid:S00112")
     public static String decodedUtf8 (final @Nonnull String string)
       {
-        try
-          {
-            return URLDecoder.decode(string, "UTF-8");
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            throw new RuntimeException(e);
-          }
+        return URLDecoder.decode(string, UTF_8);
       }
 
     /*******************************************************************************************************************
@@ -77,13 +69,6 @@ public final class UrlEncoding
     @Nonnull @SuppressWarnings("squid:S00112")
     public static String encodedUtf8 (final @Nonnull String string)
       {
-        try
-          {
-            return URLEncoder.encode(string, "UTF-8");
-          }
-        catch (UnsupportedEncodingException e)
-          {
-            throw new RuntimeException(e);
-          }
+        return URLEncoder.encode(string, UTF_8);
       }
   }

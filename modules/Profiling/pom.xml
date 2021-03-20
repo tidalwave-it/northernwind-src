@@ -14,7 +14,7 @@
     <artifactId>it-tidalwave-northernwind-core-profiling</artifactId>
     <version>1.2-ALPHA-7-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>NorthernWind - Profiling</name>
+    <name>NorthernWind :: Profiling</name>
     <description>This module collects elapsed times for processing requests and builds up some statistics.</description>
 
     <properties>

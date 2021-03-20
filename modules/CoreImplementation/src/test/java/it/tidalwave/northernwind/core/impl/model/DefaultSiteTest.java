@@ -27,7 +27,7 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.northernwind.core.model.Content;
@@ -48,8 +48,6 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 
@@ -102,8 +100,8 @@ public class DefaultSiteTest
                                         .withLibraryPath("/content/library")
                                         .withNodePath("/structure")
                                         .withLogConfigurationEnabled(true)
-                                        .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                                        .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"));
+                                        .withConfiguredLocales(List.of(new Locale("en"), new Locale("it"), new Locale("fr")))
+                                        .withIgnoredFolders(List.of("ignored1", "ignored2"));
       }
 
     /*******************************************************************************************************************
@@ -111,7 +109,6 @@ public class DefaultSiteTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_construct()
-      throws Exception
       {
         // when
         underTest = new DefaultSite(siteBuilder);
@@ -122,8 +119,8 @@ public class DefaultSiteTest
         assertThat(underTest.libraryPath, is("/content/library"));
         assertThat(underTest.nodePath, is("/structure"));
         assertThat(underTest.logConfigurationEnabled, is(true));
-        assertThat(underTest.getConfiguredLocales(), is(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr"))));
-        assertThat(underTest.ignoredFolders, is(Arrays.asList("ignored1", "ignored2")));
+        assertThat(underTest.getConfiguredLocales(), is(List.of(new Locale("en"), new Locale("it"), new Locale("fr"))));
+        assertThat(underTest.ignoredFolders, is(List.of("ignored1", "ignored2")));
       }
 
     /*******************************************************************************************************************
@@ -227,7 +224,6 @@ public class DefaultSiteTest
      ******************************************************************************************************************/
     @Test
     public void must_create_correct_links()
-      throws Exception
       {
         // given
         underTest = new DefaultSite(siteBuilder);

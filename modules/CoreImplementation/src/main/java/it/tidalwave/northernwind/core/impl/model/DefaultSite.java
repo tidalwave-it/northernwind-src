@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -239,7 +238,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     /* package */ void initialize()
-      throws IOException, NotFoundException, PropertyVetoException
+      throws IOException, NotFoundException
       {
         log.info("initialize()");
 
@@ -384,7 +383,7 @@ import lombok.extern.slf4j.Slf4j;
     private static void logConfiguration (final @Nonnull String name, Map<String, ?> propertyMap)
       {
         log.info(name);
-        propertyMap.entrySet().stream().forEach(entry -> log.info(">>>> {}: {}", entry.getKey(), entry.getValue()));
+        propertyMap.forEach((key, value) -> log.info(">>>> {}: {}", key, value));
       }
 
     /*******************************************************************************************************************

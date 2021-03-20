@@ -58,7 +58,6 @@ public class ScanningMetadataInterpolatorFactoryTest
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         context = helper.createSpringContext();
         underTest = context.getBean(MetadataInterpolatorFactory.class);

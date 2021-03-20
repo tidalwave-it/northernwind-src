@@ -46,7 +46,7 @@ public interface MetadataLoader
     @Nonnull
     public ResourceFile findMediaResourceFile (@Nonnull ResourceProperties siteNodeProperties, 
                                                @Nonnull Id mediaId) 
-      throws NotFoundException, IOException;
+      throws NotFoundException;
     
     /*******************************************************************************************************************
      *

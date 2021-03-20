@@ -55,23 +55,26 @@ class MockResourceFinder extends FinderSupport<Resource, SiteFinder<Resource>> i
     @Nonnull
     private final List<? extends Resource> results;
 
-    public MockResourceFinder(List<? extends Resource> results)
+    public MockResourceFinder(@Nonnull List<? extends Resource> results)
       {
         this.results = results;
       }
 
+    @Nonnull
     @Override
-    public MockResourceFinder withRelativePath(String relativePath)
+    public MockResourceFinder withRelativePath(@Nonnull String relativePath)
       {
         return this;
       }
 
+    @Nonnull
     @Override
-    public MockResourceFinder withRelativeUri(String relativeUri)
+    public MockResourceFinder withRelativeUri(@Nonnull String relativeUri)
       {
         return this;
       }
 
+    @Nonnull
     @Override
     protected List<? extends Resource> computeResults()
       {

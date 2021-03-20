@@ -129,7 +129,7 @@ public class MockNodesForSitemap
             when(layout.accept(any(Composite.Visitor.class))).thenAnswer(invocation ->
               {
                 final Composite.Visitor<Layout, ?> visitor = invocation.getArgument(0);
-                childrenLayouts.forEach(cl -> visitor.visit(cl));
+                childrenLayouts.forEach(visitor::visit);
                 return Optional.ofNullable(visitor.getValue());
               });
 

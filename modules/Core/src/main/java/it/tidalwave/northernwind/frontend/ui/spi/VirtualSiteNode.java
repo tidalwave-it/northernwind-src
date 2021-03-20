@@ -74,18 +74,21 @@ public class VirtualSiteNode implements SiteNode
 
     // TODO: perhaps the methods below could be implemented by delegating to the first real SiteNode up in the
     // hierarchy.
+    @Nonnull
     @Override
     public Layout getLayout()
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
+    @Nonnull
     @Override
     public ResourceFile getFile()
       {
         throw new UnsupportedOperationException("Not supported.");
       }
 
+    @Nonnull
     @Override
     public ResourceProperties getPropertyGroup (final @Nonnull Id id)
       {

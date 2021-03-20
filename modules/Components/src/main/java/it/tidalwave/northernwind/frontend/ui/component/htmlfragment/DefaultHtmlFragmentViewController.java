@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -69,7 +70,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
         view.setContent(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
                                       .stream()
                                       .flatMap(path -> site.find(_Content_).withRelativePath(path).stream())
-                                      .map(content -> content.getProperties())
+                                      .map(Resource::getProperties)
                                       .map(properties -> properties.getProperty(P_FULL_TEXT) // TODO: use multi-key
                                                                    .orElse(properties.getProperty(P_TEMPLATE)
                                                                                      .orElse("")))

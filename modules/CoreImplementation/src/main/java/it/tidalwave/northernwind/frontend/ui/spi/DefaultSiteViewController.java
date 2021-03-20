@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.spi;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
@@ -139,7 +138,7 @@ public class DefaultSiteViewController implements SiteViewController
     @PostConstruct
     /* package */ void initialize()
       {
-        Collections.sort(requestProcessors, new AnnotationAwareOrderComparator());
+        requestProcessors.sort(new AnnotationAwareOrderComparator());
         log.info(">>>> requestProcessors:");
         requestProcessors.forEach(p -> log.info(">>>>>>>> {}", p));
       }

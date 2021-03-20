@@ -79,7 +79,7 @@ public interface Content extends Resource, SimpleComposite<Content>
     public static final Key<ZonedDateTime> P_PUBLISHING_DATE = Key.of("publishingDateTime", ZonedDateTime.class);
 
     /** A collection of tags associated with this {@code Content}. */
-    public static final Key<List<String>> P_TAGS = new Key<List<String>>("tags") {};
+    public static final Key<List<String>> P_TAGS = new Key<>("tags") {};
 
     /*******************************************************************************************************************
      *
