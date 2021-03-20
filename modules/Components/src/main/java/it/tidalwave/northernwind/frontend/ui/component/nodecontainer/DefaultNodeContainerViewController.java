@@ -190,7 +190,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         return streamOf(P_INLINED_SCRIPTS)
                 .flatMap(path -> siteNode.getSite().find(_Content_).withRelativePath(path).stream())
-                .flatMap(script -> script.getProperty(P_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                .flatMap(script -> script.getProperty(P_TEMPLATE).stream())
                 .collect(joining());
       }
 

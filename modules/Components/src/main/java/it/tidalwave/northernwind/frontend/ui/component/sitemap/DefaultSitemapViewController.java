@@ -144,7 +144,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                                 .results()
                                 .stream()
                                 .peek(e -> log.debug(">>>>>>>> added virtual node: {}", e.getRelativeUri()))
-                                .flatMap(childNode -> newEntry(node, childNode).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify with JDK 9
+                                .flatMap(childNode -> newEntry(node, childNode).stream())
                                 .collect(toList()));
                           }
                         catch (HttpStatusException e)

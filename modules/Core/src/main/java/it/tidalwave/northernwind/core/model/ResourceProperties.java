@@ -146,7 +146,7 @@ public interface ResourceProperties extends As, Identifiable
     @Nonnull
     default public <T> Optional<T> getProperty (final @Nonnull List<Key<T>> keys)
       {
-        return keys.stream().flatMap(key -> getProperty(key).map(Stream::of).orElseGet(Stream::empty)).findFirst(); // FIXME: simplify in Java 9
+        return keys.stream().flatMap(key -> getProperty(key).stream()).findFirst();
       }
 
     /*******************************************************************************************************************
