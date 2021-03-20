@@ -177,7 +177,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
             Layout layout = null;
             // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
             // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
-            // On the other hand, inheritanceHelper encapsulates the local ovverride policy, which applies also to Properties...
+            // On the other hand, inheritanceHelper encapsulates the local override policy, which applies also to Properties...
             final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(getResource().getFile(),
                                                                                                locale,
                                                                                                "Components");

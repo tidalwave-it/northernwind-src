@@ -162,7 +162,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/inexistent/template");
+        final ResourcePath templatePath = ResourcePath.of("/path/to/nonexistent/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
@@ -312,7 +312,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_RSS_FEEDS)).thenReturn(Optional.of(
-                Arrays.asList("/feed1", "/feed2", "/inexistentFeed", "/feed3")));
+                Arrays.asList("/feed1", "/feed2", "/nonexistentFeed", "/feed3")));
         mockProperty(_SiteNode_, ResourcePath.of("/feed1"), P_TITLE, "Feed 1 title");
         mockProperty(_SiteNode_, ResourcePath.of("/feed2"), P_TITLE, "Feed 2 title");
         // no property for feed3
@@ -351,7 +351,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_INLINED_SCRIPTS)).thenReturn(Optional.of(
-                Arrays.asList("/script1", "/script2", "/inexistentScript", "/script3")));
+                Arrays.asList("/script1", "/script2", "/nonexistentScript", "/script3")));
         mockProperty(_Content_, ResourcePath.of("/script1"), P_TEMPLATE, "<script>1</script>");
         mockProperty(_Content_, ResourcePath.of("/script2"), P_TEMPLATE, "<script>2</script>");
         // no property for script3

@@ -288,7 +288,7 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     @Test(dataProvider = "tagCloudRenderingTestData")
     public void must_properly_render_tag_cloud (final int seed,
-                                                final List<TagAndCount> expectedTacs)
+                                                final List<TagAndCount> expectedTags)
       throws Exception
       {
         // given
@@ -308,7 +308,7 @@ public class DefaultBlogViewControllerTest
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
         actualTacs.forEach(tac -> log.info(">>>> {} ", tac));
-        assertThat(actualTacs, is(expectedTacs));
+        assertThat(actualTacs, is(expectedTags));
       }
 
     /*******************************************************************************************************************
@@ -316,7 +316,7 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     @Test(dataProvider = "tagCloudRenderingTestData")
     public void must_properly_render_tag_cloud2 (final int seed, // TODO: dup code from the previous test
-                                                final List<TagAndCount> expectedTacs)
+                                                final List<TagAndCount> expectedTags)
       throws Exception
       {
         // given
@@ -336,7 +336,7 @@ public class DefaultBlogViewControllerTest
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
         actualTacs.forEach(tac -> log.info(">>>> {} ", tac));
-        assertThat(actualTacs, is(expectedTacs));
+        assertThat(actualTacs, is(expectedTags));
       }
 
     /*******************************************************************************************************************
@@ -549,10 +549,10 @@ public class DefaultBlogViewControllerTest
         return new Object[][]
           {
            // seed full leadin max  pathParams
-            { 45,  10,  7,     30,  "/inexistent",            },
-            { 45,  10,  7,     30,  "/tag/inexistent",        },
-            { 45,  10,  7,     30,  "/index/inexistent",      },
-            { 45,  10,  7,     30,  "/index/tag/inexistent",  }
+            { 45,  10,  7,     30,  "/nonexistent",            },
+            { 45,  10,  7,     30,  "/tag/nonexistent",        },
+            { 45,  10,  7,     30,  "/index/nonexistent",      },
+            { 45,  10,  7,     30,  "/index/tag/nonexistent",  }
           };
       }
 

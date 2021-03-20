@@ -36,7 +36,7 @@ import static java.util.Arrays.*;
 
 /***********************************************************************************************************************
  *
- * An implementation of {@link MetadataInterpolatorFactory} that scannes the class path for candidates.
+ * An implementation of {@link MetadataInterpolatorFactory} that scans the class path for candidates.
  *
  * @author  Fabrizio Giudici
  *

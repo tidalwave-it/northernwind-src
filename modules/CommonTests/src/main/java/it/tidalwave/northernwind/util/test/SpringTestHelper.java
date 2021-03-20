@@ -289,7 +289,7 @@ public class SpringTestHelper
      *
      * Create a {@link TestResource} for the given name. The actual file will be created under
      * {@code target/test-artifacts/test-class-simple-name/resourceName}. The expected file should be
-     * placed in {@code src/test/resources/test-class-simple-name/expected-resoults/resource-name}. Note that the file
+     * placed in {@code src/test/resources/test-class-simple-name/expected-results/resource-name}. Note that the file
      * actually loaded is the one under {@code target/test-classes} copied there (and eventually filtered) by Maven.
      * The {@code test-class-simple-name} is tried first with the current test, and then with its eventual
      * super-classes; this allows to extend existing test suites. Note that if the resource files for a super class are

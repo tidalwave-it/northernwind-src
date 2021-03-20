@@ -136,7 +136,7 @@ public class MockPosts
 
     /*******************************************************************************************************************
      *
-     * Create the given number of mock {@link Content} instances represeting blog posts.
+     * Create the given number of mock {@link Content} instances representing blog posts.
      * Each one is assigned:
      *
      * <ul>

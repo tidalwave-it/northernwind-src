@@ -144,7 +144,7 @@ public class DefaultMenuViewControllerTest
     public void must_not_set_the_template_when_no_Content()
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/inexistent/template");
+        final ResourcePath templatePath = ResourcePath.of("/path/to/nonexistent/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
@@ -187,7 +187,7 @@ public class DefaultMenuViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_LINKS)).thenReturn(Optional.of(
-                Arrays.asList("/node1", "/node2", "/inexistentNode", "/node3")));
+                Arrays.asList("/node1", "/node2", "/nonexistentNode", "/node3")));
         mockProperty(_SiteNode_, ResourcePath.of("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
         mockProperty(_SiteNode_, ResourcePath.of("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3

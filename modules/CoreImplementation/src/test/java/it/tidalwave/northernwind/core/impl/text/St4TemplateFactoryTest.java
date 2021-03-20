@@ -106,7 +106,7 @@ public class St4TemplateFactoryTest
     public void must_return_empty_when_no_Content_found()
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/of/inexistent/content");
+        final ResourcePath templatePath = ResourcePath.of("/path/of/nonexistent/content");
         // when
         final Optional<String> template = underTest.getTemplate(templatePath);
         // then

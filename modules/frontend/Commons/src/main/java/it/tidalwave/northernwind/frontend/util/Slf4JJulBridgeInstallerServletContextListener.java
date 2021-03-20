@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class Slf4JJulBrigdeInstallerServletContextListener implements ServletContextListener
+public class Slf4JJulBridgeInstallerServletContextListener implements ServletContextListener
   {
     /*******************************************************************************************************************
      *

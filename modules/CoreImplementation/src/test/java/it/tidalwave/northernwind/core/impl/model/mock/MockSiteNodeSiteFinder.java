@@ -54,7 +54,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
         MockSiteNodeSiteFinder.registerTo(site);
  * </pre>
  *
- * It will return mock {@link SiteNode} instances for any relative path that doesn't contain {@code "inexistent"}. It's
+ * It will return mock {@link SiteNode} instances for any relative path that doesn't contain {@code "nonexistent"}. It's
  * guaranteed that the same mocked instance is always returned for any path, thus they can be stubbed which code like
  * this:
  *
@@ -135,7 +135,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
       {
         assert relativePath != null : "relativePath is null";
 
-        if (relativePath.contains("inexistent"))
+        if (relativePath.contains("nonexistent"))
           {
             return Collections.emptyList();
           }

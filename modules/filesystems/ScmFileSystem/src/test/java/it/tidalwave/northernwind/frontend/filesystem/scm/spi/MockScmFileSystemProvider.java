@@ -31,7 +31,7 @@ import java.nio.file.Path;
 
 /***********************************************************************************************************************
  *
- * A mock implementationf of {@link ScmFileSystemProvider}.
+ * A mock implementation of {@link ScmFileSystemProvider}.
  *
  * @author Fabrizio Giudici
  *
