@@ -57,19 +57,14 @@ public class ScanningMetadataInterpolatorFactory implements MetadataInterpolator
         interpolators.clear();
         log.info("Scanning for metadata interpolators...");
 
-        final ClassScanner scanner = new ClassScanner().withIncludeFilter(new TypeFilter()
+        // FIXME: doesn't check through the whole hierarchy
+        final ClassScanner scanner = new ClassScanner().withIncludeFilter((metadataReader, metadataReaderFactory) ->
           {
-            // FIXME: doesn't check through the whole hierarchy
-            @Override
-            public boolean match (final @Nonnull MetadataReader metadataReader,
-                                  final @Nonnull MetadataReaderFactory metadataReaderFactory)
-              {
-                final List<String> interfaceNames = asList(metadataReader.getClassMetadata().getInterfaceNames());
-                final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
+            final List<String> interfaceNames = asList(metadataReader.getClassMetadata().getInterfaceNames());
+            final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
 
-                return interfaceNames.contains(MetadataInterpolator.class.getName()) ||
-                       ((superClassName != null) && superClassName.equals(MetadataInterpolatorSupport.class.getName()));
-              }
+            return interfaceNames.contains(MetadataInterpolator.class.getName()) ||
+                   ((superClassName != null) && superClassName.equals(MetadataInterpolatorSupport.class.getName()));
           });
 
         for (final Class<?> clazz : scanner.findClasses())

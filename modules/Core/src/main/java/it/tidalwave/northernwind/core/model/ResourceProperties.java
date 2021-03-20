@@ -103,7 +103,7 @@ public interface ResourceProperties extends As, Identifiable
         public Builder withSafeValues (final @Nonnull TypeSafeMap values)
           {
             return withValues(values.asMap().entrySet().stream()
-                                    .collect(Collectors.toMap(e -> e.getKey().getName(), e -> e.getValue())));
+                                    .collect(Collectors.toMap(e -> e.getKey().getName(), Map.Entry::getValue)));
           }
       }
 

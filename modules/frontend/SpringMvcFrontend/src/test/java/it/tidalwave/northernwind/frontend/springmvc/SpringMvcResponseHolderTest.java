@@ -67,7 +67,7 @@ public class SpringMvcResponseHolderTest extends ResponseBuilderTest
         final PrintWriter pw = new PrintWriter(baos); // FIXME: charset?
         pw.printf("HTTP/1.1 %d%n", responseEntity.getStatusCode().value());
         headers.entrySet().stream()
-                          .sorted(comparing(Entry::getKey))
+                          .sorted(Entry.comparingByKey())
                           .forEach(e -> pw.printf("%s: %s%n", e.getKey(), e.getValue().get(0)));
         pw.println();
         pw.flush();

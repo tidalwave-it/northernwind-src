@@ -628,10 +628,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
               {
                 title = Optional.of(String.format("Posts tagged as '%s'", tag.get()));
               }
-            else if (uriOrCategory.isPresent())
-              {
-                title = Optional.of(String.format("Posts in category '%s'", uriOrCategory.get()));
-              }
+            else uriOrCategory.ifPresent(s -> title = Optional.of(String.format("Posts in category '%s'", s)));
           }
         else
           {
