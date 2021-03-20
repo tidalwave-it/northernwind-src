@@ -29,6 +29,8 @@ package it.tidalwave.northernwind.core.impl.filter;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.io.IOException;
 import java.io.StringReader;
@@ -57,7 +59,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializer;
 import it.tidalwave.northernwind.core.impl.model.Filter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
@@ -94,6 +95,8 @@ public class XsltMacroFilter implements Filter
 
     private volatile boolean initialized = false;
 
+    private Method serializerMethod;
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -110,6 +113,17 @@ public class XsltMacroFilter implements Filter
                                                        .collect(toAggregates("macros"));
         xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
         log.trace(">>>> xslt: {}", xslt);
+
+        try
+          {
+            final Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(
+                    "it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializerDecoupler");
+            serializerMethod = clazz.getMethod("serialize", Node.class, StringWriter.class);
+          }
+        catch (ClassNotFoundException | NoSuchMethodException e)
+          {
+            throw new RuntimeException(e);
+          }
       }
 
     /*******************************************************************************************************************
@@ -152,8 +166,9 @@ public class XsltMacroFilter implements Filter
               }
 
             // Fix for NW-96
-            final XhtmlMarkupSerializer xhtmlSerializer = new XhtmlMarkupSerializer(stringWriter);
-            xhtmlSerializer.serialize(result.getNode());
+            // This must be accessed by reflection because the JDK 11+ compiler with --source 11 refuses to compile
+            // stuff that depends on com.sun.* classes.
+            serializerMethod.invoke(null, result.getNode(), stringWriter);
             return stringWriter.toString().replace("xml_lang", "xml:lang").replace(" xmlns=\"\"", ""); // FIXME:
           }
         catch (SAXParseException e)
@@ -168,7 +183,7 @@ public class XsltMacroFilter implements Filter
             log.error(xslt);
             throw new RuntimeException(e);
           }
-        catch (IOException | SAXException | ParserConfigurationException e)
+        catch (IOException | SAXException | ParserConfigurationException | IllegalAccessException | InvocationTargetException e)
           {
             throw new RuntimeException(e);
           }
