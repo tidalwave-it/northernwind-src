@@ -55,7 +55,6 @@ import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -140,7 +139,7 @@ public class DefaultCalendarViewControllerTest
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         requestLocaleManager = mock(RequestLocaleManager.class);
-        when(requestLocaleManager.getLocales()).thenReturn(asList(Locale.ENGLISH));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         request = mock(Request.class);
         final RequestContext requestContext = mock(RequestContext.class);

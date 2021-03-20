@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -142,7 +141,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
           }
 
         final Map<String, Content> contentMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return Arrays.asList(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContentWithPath));
+        return List.of(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContentWithPath));
       }
 
     @Nonnull

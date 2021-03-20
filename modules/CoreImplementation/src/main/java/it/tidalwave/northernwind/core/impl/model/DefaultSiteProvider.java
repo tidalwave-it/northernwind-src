@@ -31,7 +31,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -177,7 +176,7 @@ public class DefaultSiteProvider implements SiteProvider
     /* package */ void initialize()
       {
         log.info("initialize()");
-        ignoredFolders.addAll(Arrays.asList(ignoredFoldersAsString.trim().split(File.pathSeparator)));
+        ignoredFolders.addAll(List.of(ignoredFoldersAsString.trim().split(File.pathSeparator)));
         configuredLocales.addAll(Stream.of(localesAsString.split(","))
                                        .map(String::trim)
                                        .map(Locale::new)

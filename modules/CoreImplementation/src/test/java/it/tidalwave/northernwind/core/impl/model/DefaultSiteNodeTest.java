@@ -28,7 +28,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
@@ -96,7 +96,7 @@ public class DefaultSiteNodeTest
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
         when(resource.getFile()).thenReturn(resourceFile);
         when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, builder -> resource));
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.ENGLISH));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         final ResourceFile nodeFolder = MockResourceFile.folder("structure");
         when(site.getNodeFolder()).thenReturn(nodeFolder);

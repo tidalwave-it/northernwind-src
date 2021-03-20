@@ -27,7 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
@@ -187,7 +187,7 @@ public class DefaultMenuViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_LINKS)).thenReturn(Optional.of(
-                Arrays.asList("/node1", "/node2", "/nonexistentNode", "/node3")));
+                List.of("/node1", "/node2", "/nonexistentNode", "/node3")));
         mockProperty(_SiteNode_, ResourcePath.of("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
         mockProperty(_SiteNode_, ResourcePath.of("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3

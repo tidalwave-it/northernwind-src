@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -141,7 +140,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
           }
 
         final Map<String, SiteNode> nodeMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return Arrays.asList(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNodeWithPath));
+        return List.of(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNodeWithPath));
       }
 
     @Nonnull

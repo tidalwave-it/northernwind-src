@@ -32,7 +32,6 @@ import java.util.List;
 import it.tidalwave.util.spring.ClassScanner;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.*;
 
 /***********************************************************************************************************************
  *
@@ -56,7 +55,7 @@ public class ScanningMetadataInterpolatorFactory implements MetadataInterpolator
         // FIXME: doesn't check through the whole hierarchy
         final ClassScanner scanner = new ClassScanner().withIncludeFilter((metadataReader, metadataReaderFactory) ->
           {
-            final List<String> interfaceNames = asList(metadataReader.getClassMetadata().getInterfaceNames());
+            final List<String> interfaceNames = List.of(metadataReader.getClassMetadata().getInterfaceNames());
             final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
 
             return interfaceNames.contains(MetadataInterpolator.class.getName()) ||

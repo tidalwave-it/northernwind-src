@@ -27,7 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import it.tidalwave.util.Key;
@@ -107,7 +107,7 @@ public class DefaultNodeContainerViewControllerTest
         doAnswer(logInvocation).when(view).addAttribute(any(String.class), any(String.class));
 
         final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(Locale.US));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.US));
 
         final RequestContext requestContext = mock(RequestContext.class);
         when(requestContext.getNodeProperties()).thenReturn(nodeProperties);
@@ -276,7 +276,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_SCREEN_STYLE_SHEETS))
-                .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
+                .thenReturn(Optional.of(List.of("/css/1.css", "/css/2.css")));
         // when
         underTest.renderView(renderContext);
         // then
@@ -294,7 +294,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_PRINT_STYLE_SHEETS))
-                .thenReturn(Optional.of(Arrays.asList("/css/1.css", "/css/2.css")));
+                .thenReturn(Optional.of(List.of("/css/1.css", "/css/2.css")));
         // when
         underTest.renderView(renderContext);
         // then
@@ -312,7 +312,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_RSS_FEEDS)).thenReturn(Optional.of(
-                Arrays.asList("/feed1", "/feed2", "/nonexistentFeed", "/feed3")));
+                List.of("/feed1", "/feed2", "/nonexistentFeed", "/feed3")));
         mockProperty(_SiteNode_, ResourcePath.of("/feed1"), P_TITLE, "Feed 1 title");
         mockProperty(_SiteNode_, ResourcePath.of("/feed2"), P_TITLE, "Feed 2 title");
         // no property for feed3
@@ -333,7 +333,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        when(viewProperties.getProperty(P_SCRIPTS)).thenReturn(Optional.of(Arrays.asList("/js/1.js", "/js/2.js")));
+        when(viewProperties.getProperty(P_SCRIPTS)).thenReturn(Optional.of(List.of("/js/1.js", "/js/2.js")));
         // when
         underTest.renderView(renderContext);
         // then
@@ -351,7 +351,7 @@ public class DefaultNodeContainerViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_INLINED_SCRIPTS)).thenReturn(Optional.of(
-                Arrays.asList("/script1", "/script2", "/nonexistentScript", "/script3")));
+                List.of("/script1", "/script2", "/nonexistentScript", "/script3")));
         mockProperty(_Content_, ResourcePath.of("/script1"), P_TEMPLATE, "<script>1</script>");
         mockProperty(_Content_, ResourcePath.of("/script2"), P_TEMPLATE, "<script>2</script>");
         // no property for script3

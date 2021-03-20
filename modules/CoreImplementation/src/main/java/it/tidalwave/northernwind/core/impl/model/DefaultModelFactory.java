@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -188,7 +187,7 @@ public class DefaultModelFactory extends ModelFactorySupport
           {
             final String headerName = e.nextElement();
             final String headerValue = httpServletRequest.getHeader(headerName); // FIXME: lacks support for multivalue
-            headerMap.put(headerName, Arrays.asList(headerValue));
+            headerMap.put(headerName, List.of(headerValue));
           }
 
         return headerMap;

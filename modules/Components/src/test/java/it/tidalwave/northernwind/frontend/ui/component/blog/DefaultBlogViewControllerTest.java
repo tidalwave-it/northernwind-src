@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -61,7 +60,6 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.asList;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.util.CollectionFunctions.*;
@@ -429,7 +427,7 @@ public class DefaultBlogViewControllerTest
         // default of RequestLocaleManager
         final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockViewProperty(siteNode, viewId, P_DATE_FORMAT, dateFormat);
         mockViewProperty(siteNode, viewId, P_TIME_ZONE, timeZone);
@@ -451,45 +449,45 @@ public class DefaultBlogViewControllerTest
         return new Object[][]
           {
            // seed full leadin max  pathParams          title   expected post ids (full / leadIn / linked)
-            { 45,  10,  7,     30,  "",                 "",     asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
-                                                                asList(12, 64, 39, 25,  4, 19, 32),
-                                                                asList( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
+            { 45,  10,  7,     30,  "",                 "",     List.of(69, 57, 63, 86, 44, 89, 18, 73, 16, 94),
+                                                                List.of(12, 64, 39, 25,  4, 19, 32),
+                                                                List.of( 3, 71, 80, 11, 99, 97, 62, 96, 38, 13, 90, 21, 48) },
 
             { 45,  10,  7,     30,  "/post-10",         "Title #10",
-                                                                asList(10),
-                                                                asList(),
-                                                                asList() },
+                                                                List.of(10),
+                                                                List.of(),
+                                                                List.of() },
 
             { 45,  10,  7,     30,  "/post-11",         "Title #11",
-                                                                asList(11),
-                                                                asList(),
-                                                                asList() },
+                                                                List.of(11),
+                                                                List.of(),
+                                                                List.of() },
 
             { 45,  10,  7,     30,  "/post-43",         "Title #43",
-                                                                asList(43),
-                                                                asList(),
-                                                                asList() },
+                                                                List.of(43),
+                                                                List.of(),
+                                                                List.of() },
 
-            { 45,  10,  7,     30,  "/tag/tag3",        "",     asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
-                                                                asList(21, 84, 30, 55, 74, 78, 45),
-                                                                asList(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
+            { 45,  10,  7,     30,  "/tag/tag3",        "",     List.of(44, 18, 16, 94, 25, 19, 32, 71, 11, 99),
+                                                                List.of(21, 84, 30, 55, 74, 78, 45),
+                                                                List.of(51, 43, 72, 68, 37, 46, 85, 77, 26, 76, 47, 17, 65) },
 
-            { 45,  10,  7,     30,  "/tag/tag5",        "",     asList(57, 63, 89, 18, 94, 39, 25, 19, 32,  3),
-                                                                asList(71, 11, 62, 38, 13, 21, 84),
-                                                                asList(36, 30, 14, 74,  7, 31, 45, 52, 83,  2, 72, 68,  9) },
+            { 45,  10,  7,     30,  "/tag/tag5",        "",     List.of(57, 63, 89, 18, 94, 39, 25, 19, 32,  3),
+                                                                List.of(71, 11, 62, 38, 13, 21, 84),
+                                                                List.of(36, 30, 14, 74,  7, 31, 45, 52, 83,  2, 72, 68,  9) },
 
-            { 45,  10,  7,     30,  "/category1",       "",     asList(44, 18, 12, 25, 19, 71, 99, 97, 90, 48),
-                                                                asList(75, 84, 54, 42, 15, 45, 51),
-                                                                asList(83, 72, 58, 26, 95, 28, 60, 93, 56, 59, 82, 91)     },
+            { 45,  10,  7,     30,  "/category1",       "",     List.of(44, 18, 12, 25, 19, 71, 99, 97, 90, 48),
+                                                                List.of(75, 84, 54, 42, 15, 45, 51),
+                                                                List.of(83, 72, 58, 26, 95, 28, 60, 93, 56, 59, 82, 91)     },
 
-            { 45,  10,  7,     30,  "/category2",       "",     asList(89, 94, 64,  3, 80, 38, 30, 29,  6, 14),
-                                                                asList(74, 78, 34, 43, 24, 52, 41),
-                                                                asList(46, 79, 85, 76, 53, 47, 65, 66, 61, 35, 49, 92, 23) },
+            { 45,  10,  7,     30,  "/category2",       "",     List.of(89, 94, 64,  3, 80, 38, 30, 29,  6, 14),
+                                                                List.of(74, 78, 34, 43, 24, 52, 41),
+                                                                List.of(46, 79, 85, 76, 53, 47, 65, 66, 61, 35, 49, 92, 23) },
 
             { 45,  10,  7,     30,  "/index",           "Post index",
-                                                                asList(),
-                                                                asList(),
-                                                                asList(69, 57, 63, 86, 44, 89, 18, 73, 16, 94, 12, 64, 39,
+                                                                List.of(),
+                                                                List.of(),
+                                                                List.of(69, 57, 63, 86, 44, 89, 18, 73, 16, 94, 12, 64, 39,
                                                                        25,  4, 19, 32,  3, 71, 80, 11, 99, 97, 62, 96, 38,
                                                                        13, 90, 21, 48, 75, 10, 84, 36, 30, 54, 29, 55,  6,
                                                                        42, 14, 74, 87, 20, 15,  7, 31, 78, 34, 45, 51, 43,
@@ -499,44 +497,44 @@ public class DefaultBlogViewControllerTest
                                                                        82, 81, 98, 50, 67, 22,  8,  0, 91) },
 
             { 45,  10,  7,     30,  "/index/tag/tag3",  "Posts tagged as 'tag3'",
-                                                                asList(),
-                                                                asList(),
-                                                                asList(44, 18, 16, 94, 25, 19, 32, 71, 11, 99, 21, 84, 30,
+                                                                List.of(),
+                                                                List.of(),
+                                                                List.of(44, 18, 16, 94, 25, 19, 32, 71, 11, 99, 21, 84, 30,
                                                                        55, 74, 78, 45, 51, 43, 72, 68, 37, 46, 85, 77, 26,
                                                                        76, 47, 17, 65, 70, 66,  1, 35, 28, 49, 60, 92, 27,
                                                                        93, 56, 98, 67, 91) },
 
             { 45,  10,  7,     30,  "/index/tag/tag5",  "Posts tagged as 'tag5'",
-                                                                asList(),
-                                                                asList(),
-                                                                asList(57, 63, 89, 18, 94, 39, 25, 19, 32,  3, 71, 11, 62,
+                                                                List.of(),
+                                                                List.of(),
+                                                                List.of(57, 63, 89, 18, 94, 39, 25, 19, 32,  3, 71, 11, 62,
                                                                        38, 13, 21, 84, 36, 30, 14, 74,  7, 31, 45, 52, 83,
                                                                         2, 72, 68,  9, 37, 58, 79, 85, 77, 26, 88, 76, 47,
                                                                        17, 65, 70, 66, 40, 95, 28, 49, 27, 56, 59, 50, 22) },
 
             { 45,  10,  7,     30,  "/index/category1", "Posts in category 'category1'",
-                                                                asList(),
-                                                                asList(),
-                                                                asList(44, 18, 12, 25, 19, 71, 99, 97, 90, 48, 75, 84, 54,
+                                                                List.of(),
+                                                                List.of(),
+                                                                List.of(44, 18, 12, 25, 19, 71, 99, 97, 90, 48, 75, 84, 54,
                                                                        42, 15, 45, 51, 83, 72, 58, 26, 95, 28, 60, 93, 56,
                                                                        59, 82, 91) },
 
             { 45,  10,  7,     30,  "/index/category2", "Posts in category 'category2'",
-                                                                asList(),
-                                                                asList(),
-                                                                asList(89, 94, 64,  3, 80, 38, 30, 29,  6, 14, 74, 78, 34,
+                                                                List.of(),
+                                                                List.of(),
+                                                                List.of(89, 94, 64,  3, 80, 38, 30, 29,  6, 14, 74, 78, 34,
                                                                        43, 24, 52, 41, 46, 79, 85, 76, 53, 47, 65, 66, 61,
                                                                        35, 49, 92, 23, 27, 8) },
 
             { 45,  10,  7,     30,  "/tags",            "Tags",
-                                                                asList(),
-                                                                asList(),
-                                                                asList() },
+                                                                List.of(),
+                                                                List.of(),
+                                                                List.of() },
 
 
-            { 87,  10,  7,     30,  "",                 "",     asList(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
-                                                                asList(30, 36, 22,  0, 35, 44, 49),
-                                                                asList(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
+            { 87,  10,  7,     30,  "",                 "",     List.of(88, 47, 25, 80, 28,  9, 13,  3, 43, 51),
+                                                                List.of(30, 36, 22,  0, 35, 44, 49),
+                                                                List.of(61, 29, 18, 90, 15, 32, 69, 45, 82, 20, 92, 33, 99) }
           };
       }
 
@@ -581,27 +579,27 @@ public class DefaultBlogViewControllerTest
         return new Object[][]
           {
            // seed  expected result
-            { 45,   asList(new TagAndCount("tag8",  58, "1"),
-                           new TagAndCount("tag9",  57, "2"),
-                           new TagAndCount("tag1",  54, "3"),
-                           new TagAndCount("tag10", 52, "4"),
-                           new TagAndCount("tag5",  52, "4"),
-                           new TagAndCount("tag7",  52, "4"),
-                           new TagAndCount("tag2",  48, "5"),
-                           new TagAndCount("tag4",  47, "6"),
-                           new TagAndCount("tag3",  44, "7"),
-                           new TagAndCount("tag6",  41, "8")) },
+            { 45,   List.of(new TagAndCount("tag8",  58, "1"),
+                            new TagAndCount("tag9",  57, "2"),
+                            new TagAndCount("tag1",  54, "3"),
+                            new TagAndCount("tag10", 52, "4"),
+                            new TagAndCount("tag5",  52, "4"),
+                            new TagAndCount("tag7",  52, "4"),
+                            new TagAndCount("tag2",  48, "5"),
+                            new TagAndCount("tag4",  47, "6"),
+                            new TagAndCount("tag3",  44, "7"),
+                            new TagAndCount("tag6",  41, "8")) },
 
-            { 87,   asList(new TagAndCount("tag10", 55, "1"),
-                           new TagAndCount("tag1",  53, "2"),
-                           new TagAndCount("tag8",  52, "3"),
-                           new TagAndCount("tag9",  52, "3"),
-                           new TagAndCount("tag3",  48, "4"),
-                           new TagAndCount("tag4",  46, "5"),
-                           new TagAndCount("tag5",  46, "5"),
-                           new TagAndCount("tag2",  44, "6"),
-                           new TagAndCount("tag6",  43, "7"),
-                           new TagAndCount("tag7",  43, "7")) }
+            { 87,   List.of(new TagAndCount("tag10", 55, "1"),
+                            new TagAndCount("tag1",  53, "2"),
+                            new TagAndCount("tag8",  52, "3"),
+                            new TagAndCount("tag9",  52, "3"),
+                            new TagAndCount("tag3",  48, "4"),
+                            new TagAndCount("tag4",  46, "5"),
+                            new TagAndCount("tag5",  46, "5"),
+                            new TagAndCount("tag2",  44, "6"),
+                            new TagAndCount("tag6",  43, "7"),
+                            new TagAndCount("tag7",  43, "7")) }
             };
       }
 

@@ -87,13 +87,13 @@ public class MockPosts
      ******************************************************************************************************************/
     public void createMockData (final int seed)
       {
-        categories = Arrays.asList(null, "category1", "category2");
+        categories = Arrays.asList(null, "category1", "category2"); // List.of() doesn't allow null
         tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
         dates = createMockDateTimes(100, seed);
         posts = createMockPosts(100, dates, categories, tags, seed);
 
         // Distribute all the posts to different folders
-        final List<String> paths = Arrays.asList("/blog", "/blog/folder1", "/blog/folder2");
+        final List<String> paths = List.of("/blog", "/blog/folder1", "/blog/folder2");
         final Random rnd = new Random(seed);
 
         if (viewProperties != null)

@@ -26,6 +26,7 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.time.Instant;
@@ -48,7 +49,6 @@ import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarD
 import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static java.util.Arrays.asList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
@@ -105,7 +105,7 @@ public class HtmlTemplateCalendarViewControllerTest
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         requestLocaleManager = mock(RequestLocaleManager.class);
-        when(requestLocaleManager.getLocales()).thenReturn(asList(Locale.ENGLISH));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         final Request request = mock(Request.class);
         final RequestContext requestContext = mock(RequestContext.class);

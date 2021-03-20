@@ -26,7 +26,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.ServletContext;
@@ -101,8 +101,8 @@ public class DefaultSiteProviderTest
                 .withLibraryPath("testLibraryPath")
                 .withNodePath("testNodePath")
                 .withConfigurationEnabled(true)
-                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
+                .withConfiguredLocales(List.of(new Locale("en"), new Locale("it"), new Locale("fr")))
+                .withIgnoredFolders(List.of("ignored1", "ignored2"))));
         // the executor that initializes Site hasn't been started here
         assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));

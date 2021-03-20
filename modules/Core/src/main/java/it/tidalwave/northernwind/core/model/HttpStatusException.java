@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +48,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 public class HttpStatusException extends Exception
   {
     /** Status codes that don't imply an error. */
-    private static final List<Integer> GOOD_CODES = Arrays.asList(SC_FOUND, SC_MOVED_PERMANENTLY, SC_MOVED_TEMPORARILY);
+    private static final List<Integer> GOOD_CODES = List.of(SC_FOUND, SC_MOVED_PERMANENTLY, SC_MOVED_TEMPORARILY);
 
     @Getter
     private final int httpStatus;

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -317,7 +316,7 @@ public class ProcessExecutor
     @Nonnull
     public ProcessExecutor withArguments (final @Nonnull String... arguments)
       {
-        this.arguments.addAll(Arrays.asList(arguments));
+        this.arguments.addAll(List.of(arguments));
         return this;
       }
 

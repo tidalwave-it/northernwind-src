@@ -61,7 +61,7 @@ public class DefaultResourcePropertiesTest
             { new Key<Float>("") {},          "3.4",      3.4f  },
             { new Key<Double>("") {},         "5.2",      5.2   },
             { new Key<ZonedDateTime>("") {},  "2012-02-23T21:24:00.000+01:00", ZonedDateTime.parse("2012-02-23T21:24:00.000+01:00", ISO_ZONED_DATE_TIME)  },
-//            { new Key<List<Integer>>("") {},   asList("1", "2"), asList(1, 2) },
+//            { new Key<List<Integer>>("") {},   List.of("1", "2"), List.of(1, 2) },
           };
       }
 }

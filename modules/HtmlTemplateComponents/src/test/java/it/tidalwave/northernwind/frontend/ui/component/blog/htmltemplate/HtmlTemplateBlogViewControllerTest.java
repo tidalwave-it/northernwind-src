@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -111,7 +110,7 @@ public class HtmlTemplateBlogViewControllerTest
         final Locale locale = Locale.UK;
         final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockViewProperty(node, viewId, P_DATE_FORMAT, Optional.of("F-"));
         mockViewProperty(node, viewId, P_TIME_ZONE, Optional.of("GMT"));

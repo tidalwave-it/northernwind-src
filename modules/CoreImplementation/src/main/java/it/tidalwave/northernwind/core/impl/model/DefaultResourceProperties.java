@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -46,7 +47,6 @@ import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Arrays.asList;
 import static java.time.format.DateTimeFormatter.*;
 import static java.util.stream.Collectors.toList;
 
@@ -322,7 +322,7 @@ public class DefaultResourceProperties implements ResourceProperties
               }
             else if (key.getName().equals("tags")) // workaround as Zephyr stores it as a comma-separated string
               {
-                result = (T)asList(((String)value).split(","));
+                result = (T)List.of(((String)value).split(","));
               }
 //            else if (value instanceof List)
 //              {

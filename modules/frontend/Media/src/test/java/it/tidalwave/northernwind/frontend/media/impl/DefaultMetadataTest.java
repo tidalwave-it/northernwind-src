@@ -27,7 +27,7 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.imajine.image.Rational;
 import org.springframework.context.ApplicationContext;
@@ -69,7 +69,7 @@ public class DefaultMetadataTest
         context.getBean(MetadataInterpolatorFactory.class); // initialize it
         properties = createMockProperties();
         final ResourceProperties resourceProperties = createMockProperties();
-        when(resourceProperties.getProperty(P_LENS_IDS)).thenReturn(Optional.of(Arrays.asList("1:Lens1", "2:Lens2")));
+        when(resourceProperties.getProperty(P_LENS_IDS)).thenReturn(Optional.of(List.of("1:Lens1", "2:Lens2")));
         when(properties.getGroup(P_GROUP_ID)).thenReturn(resourceProperties);
       }
 
