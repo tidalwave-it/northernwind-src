@@ -38,7 +38,6 @@ import java.io.StringWriter;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -240,7 +239,6 @@ public class XsltMacroFilter implements Filter
         factory.setValidating(false);
         final DocumentBuilder builder = factory.newDocumentBuilder();
         final InputSource source = new InputSource(new StringReader(string));
-        final Document document = builder.parse(source);
-        return document;
+        return builder.parse(source);
       }
   }
