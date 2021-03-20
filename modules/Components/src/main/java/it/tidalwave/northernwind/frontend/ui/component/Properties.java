@@ -44,7 +44,7 @@ public final class Properties
 
     public static final Key<ResourcePath> P_WRAPPER_TEMPLATE_PATH = Key.of("wrapperTemplate", ResourcePath.class);
 
-    public static final Key<List<String>> P_CONTENT_PATHS = new Key<List<String>>("contents") {};
+    public static final Key<List<String>> P_CONTENT_PATHS = new Key<>("contents") {};
 
     public static final Key<String> P_CLASS = Key.of("class", String.class);
 

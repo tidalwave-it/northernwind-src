@@ -112,10 +112,10 @@ public class DefaultSiteFinder<T> extends FinderSupport<T, SiteFinder<T>> implem
      *
      ******************************************************************************************************************/
     // FIXME: should be protected
-    public DefaultSiteFinder (final @Nonnull DefaultSiteFinder other, final @Nonnull Object override)
+    public DefaultSiteFinder (final @Nonnull DefaultSiteFinder<T> other, final @Nonnull Object override)
       {
         super(other, override);
-        final DefaultSiteFinder source = getSource(DefaultSiteFinder.class, other, override);
+        final DefaultSiteFinder<T> source = getSource(DefaultSiteFinder.class, other, override);
         this.mapByRelativePath = source.mapByRelativePath;
         this.mapByRelativeUri = source.mapByRelativeUri;
         this.relativePath = source.relativePath;

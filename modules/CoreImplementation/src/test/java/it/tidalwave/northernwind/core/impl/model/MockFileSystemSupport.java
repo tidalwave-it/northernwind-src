@@ -61,13 +61,14 @@ public abstract class MockFileSystemSupport
   {
     private static Finder listFinder (final @Nonnull Collection<ResourceFile> results)
       {
-        return ResourceFileFinderSupport.withComputeResults(new Function<ResourceFile.Finder, List<ResourceFile>>() {
+        return ResourceFileFinderSupport.withComputeResults(new Function<>()
+          {
             @Override
-            public List<ResourceFile> apply(ResourceFile.Finder input)
+            public List<ResourceFile> apply (ResourceFile.Finder input)
               {
                 return new ArrayList<>(results);
               }
-        });
+          });
       }
 
     @Nonnull
@@ -153,7 +154,7 @@ public abstract class MockFileSystemSupport
         when(folder.getPath()).thenReturn(ResourcePath.of(name));
         when(folder.isData()).thenReturn(false);
         when(folder.isFolder()).thenReturn(true);
-        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
+        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<>()));
         when(folder.toString()).thenReturn(name);
 
         return folder;
@@ -171,7 +172,7 @@ public abstract class MockFileSystemSupport
         when(folder.toString()).thenReturn(name);
         when(folder.isData()).thenReturn(true);
         when(folder.isFolder()).thenReturn(false);
-        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<ResourceFile>()));
+        when(folder.findChildren()).thenReturn(listFinder(new ArrayList<>()));
 
         return folder;
       }

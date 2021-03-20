@@ -71,7 +71,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      ******************************************************************************************************************/
     private final Listener<ResourceFileSystemChangedEvent> sourceProviderChangeListener =
-      new Listener<ResourceFileSystemChangedEvent>()
+      new Listener<>()
         {
           @Override
           public void notify (final @Nonnull ResourceFileSystemChangedEvent event)

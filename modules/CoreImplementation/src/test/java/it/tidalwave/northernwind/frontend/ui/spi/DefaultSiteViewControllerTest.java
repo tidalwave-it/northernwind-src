@@ -106,7 +106,7 @@ public class DefaultSiteViewControllerTest
         responseHolder = context.getBean(ResponseHolder.class);
         responseBuilder = context.getBean(ResponseBuilder.class);
         when(responseHolder.get()).thenReturn(response);
-        when(responseHolder.response()).thenReturn(responseBuilder);
+        when(responseHolder.response()).thenReturn( responseBuilder);
         when(responseBuilder.forException(any(NotFoundException.class))).thenReturn(responseBuilder);
         when(responseBuilder.forException(any(HttpStatusException.class))).thenReturn(responseBuilder);
         when(responseBuilder.forException(any(Throwable.class))).thenReturn(responseBuilder);

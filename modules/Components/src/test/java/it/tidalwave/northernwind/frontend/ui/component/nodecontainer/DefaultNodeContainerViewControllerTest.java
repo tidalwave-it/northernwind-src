@@ -76,7 +76,7 @@ public class DefaultNodeContainerViewControllerTest
 
     private RenderContext renderContext;
 
-    private final Answer logInvocation = invocation ->
+    private final Answer<Void> logInvocation = invocation ->
       {
         log.info(">>>> view.addAttribute(\"{}\", \"{}\")", invocation.getArgument(0), invocation.getArgument(1));
         return null;

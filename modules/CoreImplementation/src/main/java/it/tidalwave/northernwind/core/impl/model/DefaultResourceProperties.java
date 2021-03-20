@@ -63,15 +63,15 @@ public class DefaultResourceProperties implements ResourceProperties
   {
     @SuppressWarnings("squid:S1171")
     private static final Map<Class<?>, Function<String, Object>> CONVERTER_MAP =
-            new HashMap<Class<?>, Function<String, Object>>()
-      {{
-        put(Integer.class,       o -> Integer.parseInt(o));
-        put(Float.class,         o -> Float.parseFloat(o));
-        put(Double.class,        o -> Double.parseDouble(o));
-        put(Boolean.class,       o -> Boolean.parseBoolean(o));
-        put(ZonedDateTime.class, o -> ZonedDateTime.parse(o, ISO_ZONED_DATE_TIME));
-        put(ResourcePath.class,  o -> ResourcePath.of(o));
-      }};
+        new HashMap<>()
+          {{
+            put(Integer.class,        o -> Integer.parseInt(o));
+            put(Float.class,          o -> Float.parseFloat(o));
+            put(Double.class,         o -> Double.parseDouble(o));
+            put(Boolean.class,        o -> Boolean.parseBoolean(o));
+            put(ZonedDateTime.class,  o -> ZonedDateTime.parse(o, ISO_ZONED_DATE_TIME));
+            put(ResourcePath.class,   o -> ResourcePath.of(o));
+          }};
 
     @Nonnull @Getter
     private final Id id;

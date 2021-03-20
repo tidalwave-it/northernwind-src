@@ -59,7 +59,7 @@ public class Pair<A, B>
     @Nonnull
     public static <A, B> Pair<A, B> of (final @Nonnull A a, final @Nonnull B b)
       {
-        return new Pair(a, b);
+        return new Pair<A, B>(a, b);
       }
 
     /*******************************************************************************************************************

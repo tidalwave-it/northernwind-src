@@ -78,18 +78,18 @@ public class DefaultViewFactoryTest
 
         final ViewBuilder viewBuilder1 = underTest.viewBuilderMapByTypeUri.get("type1");
         assertThat(viewBuilder1, is(not(nullValue())));
-        assertThat(viewBuilder1.viewConstructor,           is((Constructor)MockView1.class.getConstructors()[0]));
-        assertThat(viewBuilder1.viewControllerConstructor, is((Constructor)MockController1.class.getConstructors()[0]));
+        assertThat(viewBuilder1.viewConstructor,           is(MockView1.class.getConstructors()[0]));
+        assertThat(viewBuilder1.viewControllerConstructor, is(MockController1.class.getConstructors()[0]));
 
         final ViewBuilder viewBuilder2 = underTest.viewBuilderMapByTypeUri.get("type2");
         assertThat(viewBuilder2, is(not(nullValue())));
-        assertThat(viewBuilder2.viewConstructor,           is((Constructor)MockView2.class.getConstructors()[0]));
-        assertThat(viewBuilder2.viewControllerConstructor, is((Constructor)MockController2.class.getConstructors()[0]));
+        assertThat(viewBuilder2.viewConstructor,           is(MockView2.class.getConstructors()[0]));
+        assertThat(viewBuilder2.viewControllerConstructor, is(MockController2.class.getConstructors()[0]));
 
         final ViewBuilder viewBuilder3 = underTest.viewBuilderMapByTypeUri.get("type3");
         assertThat(viewBuilder3, is(not(nullValue())));
-        assertThat(viewBuilder3.viewConstructor,           is((Constructor)MockView3.class.getConstructors()[0]));
-        assertThat(viewBuilder3.viewControllerConstructor, is((Constructor)MockController3.class.getConstructors()[0]));
+        assertThat(viewBuilder3.viewConstructor,           is(MockView3.class.getConstructors()[0]));
+        assertThat(viewBuilder3.viewControllerConstructor, is(MockController3.class.getConstructors()[0]));
       }
 
     /*******************************************************************************************************************
