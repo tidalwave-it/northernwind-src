@@ -14,7 +14,7 @@
     <artifactId>it-tidalwave-northernwind-filesystem</artifactId>
     <version>1.2-ALPHA-7-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>NorthernWind - Filesystems</name>
+    <name>NorthernWind :: Filesystems</name>
     <description>The parent POM for all filesystem modules.</description>
 
     <modules>

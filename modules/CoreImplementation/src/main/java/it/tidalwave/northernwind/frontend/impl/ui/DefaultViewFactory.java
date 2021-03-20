@@ -28,10 +28,8 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
-import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spring.ClassScanner;
@@ -86,9 +84,7 @@ public class DefaultViewFactory implements ViewFactory
      ******************************************************************************************************************/
     @PostConstruct
     /* package */ void initialize() // FIXME: gets called twice
-      throws IOException,
-             NoSuchMethodException, InvocationTargetException, InstantiationException,
-             IllegalArgumentException, IllegalAccessException, SecurityException
+      throws IllegalArgumentException, SecurityException
       {
         final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
 
@@ -113,6 +109,6 @@ public class DefaultViewFactory implements ViewFactory
     private void logConfiguration()
       {
         log.info("View definitions:");
-        viewBuilderMapByTypeUri.values().stream().forEach(viewBuilder -> log.info(">>>> {}", viewBuilder));
+        viewBuilderMapByTypeUri.values().forEach(viewBuilder -> log.info(">>>> {}", viewBuilder));
       }
   }

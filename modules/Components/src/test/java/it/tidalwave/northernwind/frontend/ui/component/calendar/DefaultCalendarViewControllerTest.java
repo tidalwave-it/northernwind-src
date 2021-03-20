@@ -55,7 +55,6 @@ import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -69,7 +68,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class DefaultCalendarViewControllerTest
   {
-    class UnderTest extends DefaultCalendarViewController
+    static class UnderTest extends DefaultCalendarViewController
       {
         public Map<Integer, List<Entry>> byMonth;
 
@@ -83,11 +82,11 @@ public class DefaultCalendarViewControllerTest
           }
 
         @Override
-        protected void render (final Optional<String> title,
+        protected void render (@Nonnull final Optional<String> title,
                                final int year,
                                final int firstYear,
                                final int lastYear,
-                               final SortedMap<Integer, List<Entry>> byMonth,
+                               @Nonnull final SortedMap<Integer, List<Entry>> byMonth,
                                final int columns)
           {
             this.byMonth = byMonth;
@@ -108,7 +107,7 @@ public class DefaultCalendarViewControllerTest
 
     private RenderContext context;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     private ResourceProperties viewProperties;
 
@@ -131,7 +130,7 @@ public class DefaultCalendarViewControllerTest
         final ResourceProperties siteNodeProperties = createMockProperties();
 
         final Path path = fileTestHelper.resolve("entries.xml");
-        final String entries = new String(Files.readAllBytes(path), UTF_8);
+        final String entries = Files.readString(path);
         when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
         viewProperties = createMockProperties();
@@ -140,7 +139,7 @@ public class DefaultCalendarViewControllerTest
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         requestLocaleManager = mock(RequestLocaleManager.class);
-        when(requestLocaleManager.getLocales()).thenReturn(asList(Locale.ENGLISH));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         request = mock(Request.class);
         final RequestContext requestContext = mock(RequestContext.class);

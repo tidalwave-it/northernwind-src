@@ -87,26 +87,24 @@ public class MockPosts
      ******************************************************************************************************************/
     public void createMockData (final int seed)
       {
-        categories = Arrays.asList(null, "category1", "category2");
+        categories = Arrays.asList(null, "category1", "category2"); // List.of() doesn't allow null
         tags  = IntStream.rangeClosed(1, 10).mapToObj(i -> "tag" + i).collect(toList());
         dates = createMockDateTimes(100, seed);
         posts = createMockPosts(100, dates, categories, tags, seed);
 
         // Distribute all the posts to different folders
-        final List<String> paths = Arrays.asList("/blog", "/blog/folder1", "/blog/folder2");
+        final List<String> paths = List.of("/blog", "/blog/folder1", "/blog/folder2");
         final Random rnd = new Random(seed);
 
         if (viewProperties != null)
           {
             posts.stream()
                  .collect(groupingBy(__ -> paths.get(rnd.nextInt(paths.size()))))
-                 .entrySet()
-                 .stream()
-                 .forEach(e ->
-              {
-                final Content blogFolder = site.find(_Content_).withRelativePath(e.getKey()).optionalResult().get();
-                when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(e.getValue()));
-              });
+                 .forEach((key, value) ->
+                    {
+                      final Content blogFolder = site.find(_Content_).withRelativePath(key).optionalResult().get();
+                      when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(value));
+                    });
 
             when(viewProperties.getProperty(eq(P_CONTENT_PATHS))).thenReturn(Optional.of(paths));
           }
@@ -138,7 +136,7 @@ public class MockPosts
 
     /*******************************************************************************************************************
      *
-     * Create the given number of mock {@link Content} instances represeting blog posts.
+     * Create the given number of mock {@link Content} instances representing blog posts.
      * Each one is assigned:
      *
      * <ul>
@@ -221,8 +219,8 @@ public class MockPosts
     private static String toString (final @Nonnull Content post)
       {
         final String title        = post.getProperty(P_TITLE).orElse("???");
-        final String exposedUri   = post.getExposedUri().map(r -> r.asString()).orElse("???");
-        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(d -> d.toString()).orElse("???");
+        final String exposedUri   = post.getExposedUri().map(ResourcePath::asString).orElse("???");
+        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(ZonedDateTime::toString).orElse("???");
         final String imageId      = post.getProperty(P_IMAGE_ID).orElse("");
         final String category     = post.getProperty(P_CATEGORY).orElse("");
         final Object tags         = post.getProperty(P_TAGS).orElse(emptyList());

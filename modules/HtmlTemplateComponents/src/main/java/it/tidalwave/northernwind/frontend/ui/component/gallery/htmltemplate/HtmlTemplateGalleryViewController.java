@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.component.gallery.htmltemplate;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -69,7 +68,6 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                                               final @Nonnull RequestLocaleManager requestLocaleManager,
                                               final @Nonnull ModelFactory modelFactory,
                                               final @Nonnull BeanFactory beanFactory)
-      throws IOException
       {
         super(view, siteNode, requestLocaleManager, beanFactory);
         this.view = view;

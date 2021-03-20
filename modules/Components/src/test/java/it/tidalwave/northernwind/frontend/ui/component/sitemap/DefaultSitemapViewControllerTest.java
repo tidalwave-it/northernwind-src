@@ -51,7 +51,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class DefaultSitemapViewControllerTest
   {
-    class UnderTest extends DefaultSitemapViewController
+    static class UnderTest extends DefaultSitemapViewController
       {
         @Nonnull
         private final List<Entry> entries = new ArrayList<>();
@@ -78,7 +78,7 @@ public class DefaultSitemapViewControllerTest
 
     private RenderContext context;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 

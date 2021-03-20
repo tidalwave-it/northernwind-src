@@ -80,7 +80,7 @@ public interface ViewFactory
      * @param   viewTypeUri         the view type URI
      * @param   viewId              the view id
      * @param   siteNode            the node this view is created for
-     * @return
+     * @return                      the new pair
      * @throws  NotFoundException   if no view component is found
      * @throws  HttpStatusException if a component asked to return a specific HTTP status
      *

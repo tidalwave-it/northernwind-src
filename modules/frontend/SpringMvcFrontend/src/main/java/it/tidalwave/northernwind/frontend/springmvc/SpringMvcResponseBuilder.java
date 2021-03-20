@@ -69,9 +69,9 @@ public class SpringMvcResponseBuilder extends ResponseBuilderSupport<ResponseEnt
       }
 
     @Override @Nonnull
-    public ResponseBuilder withContentLength (final @Nonnegative long contentLenght)
+    public ResponseBuilder withContentLength (final @Nonnegative long contentLength)
       {
-        headers.setContentLength(contentLenght);
+        headers.setContentLength(contentLength);
         return this;
       }
 

@@ -44,16 +44,7 @@ public interface MediaMetadataProvider
      * A default implementation that always returns an empty string.
      *
      ******************************************************************************************************************/
-    public static final MediaMetadataProvider VOID = new MediaMetadataProvider()
-      {
-        @Override
-        public String getMetadataString (final @Nonnull Id id,
-                                         final @Nonnull String format,
-                                         final @Nonnull ResourceProperties properties)
-          {
-            return format;
-          }
-      };
+    public static final MediaMetadataProvider VOID = (id, format, properties) -> format;
 
     /*******************************************************************************************************************
      *

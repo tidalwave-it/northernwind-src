@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class Slf4JJulBrigdeInstallerServletContextListener implements ServletContextListener
+public class Slf4JJulBridgeInstallerServletContextListener implements ServletContextListener
   {
     /*******************************************************************************************************************
      *
@@ -56,9 +56,9 @@ public class Slf4JJulBrigdeInstallerServletContextListener implements ServletCon
         final Logger rootLogger = LogManager.getLogManager().getLogger("");
         final Handler[] handlers = rootLogger.getHandlers();
 
-        for (int i = 0; i < handlers.length; i++)
+        for (final Handler handler : handlers)
           {
-            rootLogger.removeHandler(handlers[i]);
+            rootLogger.removeHandler(handler);
           }
 
         SLF4JBridgeHandler.install();

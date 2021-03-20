@@ -27,9 +27,6 @@
 package it.tidalwave.northernwind.frontend.ui.spi.mock;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import lombok.Setter;
@@ -48,10 +45,10 @@ public class MockRequestProcessorSupport implements RequestProcessor
     @Setter
     private Throwable throwable;
     
+    @Nonnull
     @Override
     @SneakyThrows
     public Status process (final @Nonnull Request request)
-      throws NotFoundException, IOException, HttpStatusException
       {
         if (throwable != null) 
           {

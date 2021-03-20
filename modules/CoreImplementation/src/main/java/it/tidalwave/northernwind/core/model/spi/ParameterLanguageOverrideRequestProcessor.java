@@ -32,7 +32,6 @@ import java.util.Locale;
 import java.util.Optional;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;

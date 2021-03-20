@@ -27,7 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
@@ -126,7 +126,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_property_set()
-      throws Exception
       {
         // given
         final ResourcePath templatePath = ResourcePath.of("/path/to/template");
@@ -143,10 +142,9 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_not_set_the_template_when_no_Content()
-      throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/inexistent/template");
+        final ResourcePath templatePath = ResourcePath.of("/path/to/nonexistent/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
@@ -159,7 +157,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title()
-      throws Exception
       {
         // given
         when(viewProperties.getProperty(P_TITLE)).thenReturn(Optional.of("the title"));
@@ -174,7 +171,6 @@ public class DefaultMenuViewControllerTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_set_the_title_when_unspecified()
-      throws Exception
       {
         // when
         underTest.renderView(renderContext);
@@ -191,7 +187,7 @@ public class DefaultMenuViewControllerTest
       {
         // given
         when(viewProperties.getProperty(P_LINKS)).thenReturn(Optional.of(
-                Arrays.asList("/node1", "/node2", "/inexistentNode", "/node3")));
+                List.of("/node1", "/node2", "/nonexistentNode", "/node3")));
         mockProperty(_SiteNode_, ResourcePath.of("/node1"), P_NAVIGATION_LABEL, "Node 1 title");
         mockProperty(_SiteNode_, ResourcePath.of("/node2"), P_NAVIGATION_LABEL, "Node 2 title");
         // no property for node3
