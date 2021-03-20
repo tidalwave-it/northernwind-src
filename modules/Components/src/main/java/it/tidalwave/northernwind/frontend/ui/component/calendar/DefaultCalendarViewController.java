@@ -188,7 +188,7 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
                                     final @Nonnegative int firstYear,
                                     final @Nonnegative int lastYear,
                                     final @Nonnull SortedMap<Integer, List<Entry>> byMonth,
-                                    final @Nonnull int columns);
+                                    final int columns);
 
     /*******************************************************************************************************************
      *

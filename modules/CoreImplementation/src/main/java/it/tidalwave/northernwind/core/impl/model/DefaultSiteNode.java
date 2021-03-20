@@ -168,7 +168,6 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
     private void loadLayouts()
       throws IOException
       {

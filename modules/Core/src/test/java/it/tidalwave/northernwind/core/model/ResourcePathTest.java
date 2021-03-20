@@ -232,7 +232,7 @@ public class ResourcePathTest
     @Test(dataProvider = "startsWithProvider")
     public void must_properly_compute_startsWith (final @Nonnull String pathAsString,
                                                   final @Nonnull String leadingSegment,
-                                                  final @Nonnull boolean expectedResult)
+                                                  final boolean expectedResult)
       {
         // given
         final ResourcePath underTest = ResourcePath.of(pathAsString);

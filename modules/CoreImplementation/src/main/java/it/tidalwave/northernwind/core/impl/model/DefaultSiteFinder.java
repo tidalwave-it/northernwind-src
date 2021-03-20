@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,13 +54,13 @@ public class DefaultSiteFinder<T> extends FinderSupport<T, SiteFinder<T>> implem
     @Nonnull
     /* package */ transient final Map<String, T> mapByRelativePath;
 
-    @CheckForNull
+    @Nullable
     /* package */ transient final RegexTreeMap<T> mapByRelativeUri;
 
-    @CheckForNull
+    @Nullable
     private final String relativePath;
 
-    @CheckForNull
+    @Nullable
     private final String relativeUri;
 
     /*******************************************************************************************************************
@@ -214,7 +215,6 @@ public class DefaultSiteFinder<T> extends FinderSupport<T, SiteFinder<T>> implem
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
     private static <Type> void addResults (final @Nonnull List<Type> results,
                                            final @Nonnull Map<String, Type> map,
                                            final @Nonnull String relativePath)

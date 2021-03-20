@@ -134,9 +134,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderPosts (List<it.tidalwave.northernwind.core.model.Content> fullPosts,
-                                List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
-                                List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
+    protected void renderPosts (@Nonnull List<it.tidalwave.northernwind.core.model.Content> fullPosts,
+                                @Nonnull List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
+                                @Nonnull List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
       throws Exception
       {
         fullPosts.forEach  (post -> renderPost(post, Optional.of(P_FULL_TEXT)));
@@ -205,7 +205,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderTagCloud (final Collection<TagAndCount> tagsAndCount)
+    protected void renderTagCloud (@Nonnull final Collection<TagAndCount> tagsAndCount)
       {
         // not meaningful for RSS
       }

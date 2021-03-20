@@ -110,6 +110,7 @@ public interface ResourceProperties extends As, Identifiable
       {
         public static PropertyResolver DEFAULT = new PropertyResolver()
           {
+            @Nonnull
             @Override
             public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
               throws NotFoundException

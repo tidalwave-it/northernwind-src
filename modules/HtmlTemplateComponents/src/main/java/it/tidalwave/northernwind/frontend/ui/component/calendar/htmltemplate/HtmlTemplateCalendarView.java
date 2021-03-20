@@ -86,7 +86,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
                         final @Nonnull String year,
                         final @Nonnull Aggregates years,
                         final @Nonnull Map<Integer, List<Map<String, Object>>> entries,
-                        final @Nonnull int columns)
+                        final int columns)
       {
         final Template template = site.getTemplate(getClass(), templatePath, "Calendar.st");
         title.ifPresent(t -> template.addAttribute("title", t));

@@ -48,7 +48,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
 
     public static class Preparer extends ScmPreparer
       {
-        @Override @Nonnull
+        @Override
         protected void stripChangesetsAfter (final @Nonnull String tag)
                 throws IOException
           {
@@ -89,7 +89,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
         return Optional.of(new Tag(Files.readString(configCurrentTag)));
       }
 
-    @Override @Nonnull
+    @Override
     public void checkOut (final @Nonnull Tag tag)
             throws IOException, InterruptedException
       {
@@ -108,7 +108,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
         return Files.readAllLines(configTags);
       }
 
-    @Override @Nonnull
+    @Override
     public void cloneFrom (final @Nonnull URI uri)
             throws IOException
       {
@@ -117,7 +117,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
         fetchChangesets();
       }
 
-    @Override @Nonnull
+    @Override
     public void fetchChangesets()
             throws IOException
       {

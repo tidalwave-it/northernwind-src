@@ -61,8 +61,9 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
         return fileSystem.createDecoratorFile(delegate.getParent());
       }
 
+    @Nonnull
     @Override
-    public ResourceFile createFolder (final String name)
+    public ResourceFile createFolder (@Nonnull final String name)
       throws IOException
       {
 //        log.trace("createFolder({})", name);

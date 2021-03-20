@@ -598,7 +598,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
     private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
       {
         context.setDynamicNodeProperty(PD_TITLE, computeTitle(post));

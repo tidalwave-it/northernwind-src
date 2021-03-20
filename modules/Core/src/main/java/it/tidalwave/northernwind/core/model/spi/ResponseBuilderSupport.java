@@ -143,7 +143,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withContentLength (final @Nonnull long contentLength)
+    public ResponseBuilder<RESPONSE_TYPE> withContentLength (final long contentLength)
       {
         return withHeader(HEADER_CONTENT_LENGTH, "" + contentLength);
       }
@@ -290,7 +290,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withStatus (final @Nonnull int httpStatus)
+    public ResponseBuilder<RESPONSE_TYPE> withStatus (final int httpStatus)
       {
         this.httpStatus = httpStatus;
         return this;

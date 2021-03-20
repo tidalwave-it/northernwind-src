@@ -26,11 +26,11 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import javax.annotation.Nullable;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +54,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
   {
     private final DispatcherServlet delegate = new DispatcherServlet();
 
-    @CheckForNull
+    @Nullable
     private Throwable bootThrowable;
 
     /*******************************************************************************************************************

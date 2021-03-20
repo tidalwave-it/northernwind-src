@@ -82,11 +82,11 @@ public class DefaultCalendarViewControllerTest
           }
 
         @Override
-        protected void render (final Optional<String> title,
+        protected void render (@Nonnull final Optional<String> title,
                                final int year,
                                final int firstYear,
                                final int lastYear,
-                               final SortedMap<Integer, List<Entry>> byMonth,
+                               @Nonnull final SortedMap<Integer, List<Entry>> byMonth,
                                final int columns)
           {
             this.byMonth = byMonth;

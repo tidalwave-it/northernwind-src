@@ -99,6 +99,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
+    @Nonnull
     @Override @SuppressWarnings("unchecked")
     public <Type> Type resolveProperty (final @Nonnull Id propertyGroupId, final @Nonnull Key<Type> propertyName)
       throws NotFoundException, IOException

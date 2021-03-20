@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.filesystem.impl;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -170,7 +169,8 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
         return Instant.ofEpochMilli(millis).atZone(ZoneId.of("GMT"));
       }
 
-    @Override @CheckForNull
+    @Nonnull
+    @Override
     public File toFile()
       {
         return FileUtil.toFile(delegate);

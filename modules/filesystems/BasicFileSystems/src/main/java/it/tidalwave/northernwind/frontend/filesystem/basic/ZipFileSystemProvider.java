@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.filesystem.basic;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Timer;
@@ -66,10 +66,10 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
     @Getter @Setter
     private long modificationCheckInterval = 5000;
 
-    @CheckForNull
+    @Nullable
     private ResourceFileSystem fileSystem;
 
-    @CheckForNull
+    @Nullable
     private JarFileSystem fileSystemDelegate;
 
     private ZonedDateTime latestModified;

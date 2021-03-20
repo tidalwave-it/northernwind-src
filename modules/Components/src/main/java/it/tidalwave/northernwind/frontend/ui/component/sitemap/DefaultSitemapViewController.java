@@ -89,7 +89,6 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
         @Nonnull
         private final String changeFrequency;
 
-        @Nonnull
         private final float priority;
 
         @Override
@@ -156,6 +155,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                           }
                       }
 
+                    @Nonnull
                     @Override @SuppressWarnings("findbugs:NP_NONNULL_RETURN_VIOLATION")
                     public Void getValue()
                       {

@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.core.impl.model.mock;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.time.ZonedDateTime;
@@ -49,7 +48,7 @@ public class MockResourceFile implements ResourceFile
   {
     private final boolean directory;
 
-    @Getter @CheckForNull
+    @Nonnull @Getter
     private final ResourceFile parent;
 
     @Getter @Nonnull
@@ -112,6 +111,7 @@ public class MockResourceFile implements ResourceFile
         return hash;
       }
 
+    @Nonnull
     @Override
     public ResourceFileSystem getFileSystem()
       {
@@ -130,36 +130,42 @@ public class MockResourceFile implements ResourceFile
         return !directory;
       }
 
+    @Nonnull
     @Override
     public String getMimeType()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
     public InputStream getInputStream()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
-    public String asText(String encoding)
+    public String asText(@Nonnull String encoding)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
     public byte[] asBytes()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
     public ZonedDateTime getLatestModificationTime()
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
     public File toFile()
       {
@@ -172,18 +178,20 @@ public class MockResourceFile implements ResourceFile
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
-    public ResourceFile createFolder(String name)
+    public ResourceFile createFolder(@Nonnull String name)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public void copyTo(ResourceFile targetFolder)
+    public void copyTo(@Nonnull ResourceFile targetFolder)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
+    @Nonnull
     @Override
     public Finder findChildren()
       {
