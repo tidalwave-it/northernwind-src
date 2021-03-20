@@ -67,20 +67,20 @@ public class MockResourceFile implements ResourceFile
 //      }
 
     @Nonnull
-    public static ResourceFile folder (final @Nonnull ResourceFile parent, final @Nonnull String fileName)
+    public static ResourceFile folder (@Nonnull final ResourceFile parent, @Nonnull final String fileName)
       {
         final ResourcePath parentPath = parent.getPath();
         return new MockResourceFile(parent, parentPath.appendedWith(fileName), true);
       }
 
     @Nonnull
-    public static ResourceFile folder (final @Nonnull String path)
+    public static ResourceFile folder (@Nonnull final String path)
       {
         return new MockResourceFile(null, ResourcePath.of(path), true);
       }
 
-    private MockResourceFile (final @Nonnull ResourceFile parent,
-                              final @Nonnull ResourcePath path,
+    private MockResourceFile (@Nonnull final ResourceFile parent,
+                              @Nonnull final ResourcePath path,
                               final boolean directory)
       {
         this.parent = parent;

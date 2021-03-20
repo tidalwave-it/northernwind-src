@@ -63,7 +63,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Resource build (final @Nonnull Resource.Builder builder)
+    public Resource build (@Nonnull final Resource.Builder builder)
       {
         return new DefaultResource(builder);
       }
@@ -74,7 +74,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Content build (final @Nonnull Content.Builder builder)
+    public Content build (@Nonnull final Content.Builder builder)
       {
         return new DefaultContent(builder);
       }
@@ -85,7 +85,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Media build (final @Nonnull Media.Builder builder)
+    public Media build (@Nonnull final Media.Builder builder)
       {
         return new DefaultMedia(builder);
       }
@@ -96,7 +96,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public SiteNode createSiteNode (final @Nonnull Site site, final @Nonnull ResourceFile folder)
+    public SiteNode createSiteNode (@Nonnull final Site site, @Nonnull final ResourceFile folder)
       {
         return new DefaultSiteNode(this, (DefaultSite)site, folder);
       }
@@ -107,7 +107,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout build (final @Nonnull Layout.Builder builder)
+    public Layout build (@Nonnull final Layout.Builder builder)
       {
         return new DefaultLayout(builder);
       }
@@ -129,7 +129,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Request createRequestFrom (final @Nonnull HttpServletRequest httpServletRequest)
+    public Request createRequestFrom (@Nonnull final HttpServletRequest httpServletRequest)
       {
         String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
         relativeUri = relativeUri.equals("") ? "/" : relativeUri;
@@ -146,7 +146,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties build (final @Nonnull ResourceProperties.Builder builder)
+    public ResourceProperties build (@Nonnull final ResourceProperties.Builder builder)
       {
         return new DefaultResourceProperties(builder);
 //        return new DefaultResourceProperties(id, DefaultResourceProperties.PropertyResolver.DEFAULT);
@@ -158,7 +158,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Site build (final @Nonnull Site.Builder builder)
+    public Site build (@Nonnull final Site.Builder builder)
       {
         return new DefaultSite(builder);
       }
@@ -168,7 +168,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String getBaseUrl (final @Nonnull HttpServletRequest httpServletRequest)
+    private static String getBaseUrl (@Nonnull final HttpServletRequest httpServletRequest)
       {
         return httpServletRequest.getRequestURL().toString().replaceAll(":.*", "")
                 + "://" + httpServletRequest.getHeader("Host");
@@ -179,7 +179,7 @@ public class DefaultModelFactory extends ModelFactorySupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static Map<String, List<String>> toMap (final @Nonnull HttpServletRequest httpServletRequest)
+    private static Map<String, List<String>> toMap (@Nonnull final HttpServletRequest httpServletRequest)
       {
         final Map<String, List<String>> headerMap = new HashMap<>();
 

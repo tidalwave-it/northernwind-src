@@ -43,7 +43,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class DefaultResourcePropertiesTest
   {
     @Test(dataProvider = "values")
-    public void testConvertValue (final @Nonnull Key<?> key, final @Nonnull Object value, final @Nonnull Object expectedValue)
+    public void testConvertValue (@Nonnull final Key<?> key, @Nonnull final Object value, @Nonnull final Object expectedValue)
       {
         // when
         final Object actualValue = DefaultResourceProperties.convertValue(key, value);

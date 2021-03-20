@@ -69,7 +69,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         @Nonnull
         private final transient DefaultGalleryViewController controller;
 
-        public VirtualSiteNodeFinder (final @Nonnull VirtualSiteNodeFinder other, final @Nonnull Object override)
+        public VirtualSiteNodeFinder (@Nonnull final VirtualSiteNodeFinder other, @Nonnull final Object override)
           {
             super(other, override);
             final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
@@ -88,7 +88,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
           }
 
         @Nonnull
-        private VirtualSiteNode createVirtualNode (final @Nonnull SiteNode siteNode, final String relativeUri)
+        private VirtualSiteNode createVirtualNode (@Nonnull final SiteNode siteNode, final String relativeUri)
           {
             return new VirtualSiteNode(siteNode,
                                        siteNode.getRelativeUri().appendedWith(relativeUri),
@@ -113,10 +113,10 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      *
      ******************************************************************************************************************/
-    public DefaultGalleryViewController (final @Nonnull NodeContainerView view,
-                                         final @Nonnull SiteNode siteNode,
-                                         final @Nonnull RequestLocaleManager requestLocaleManager,
-                                         final @Nonnull BeanFactory beanFactory)
+    public DefaultGalleryViewController (@Nonnull final NodeContainerView view,
+                                         @Nonnull final SiteNode siteNode,
+                                         @Nonnull final RequestLocaleManager requestLocaleManager,
+                                         @Nonnull final BeanFactory beanFactory)
       {
         super(view, siteNode, requestLocaleManager);
         this.siteNode = siteNode;

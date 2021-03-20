@@ -78,7 +78,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
      *
      ******************************************************************************************************************/
     @Override @CheckForNull
-    public ResourceFile findFileByPath (final @Nonnull String name)
+    public ResourceFile findFileByPath (@Nonnull final String name)
       {
         log.trace("findResource({})", name);
         ResourceFile result = null;
@@ -123,7 +123,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public synchronized ResourceFile createDecoratorFile (final @Nonnull ResourceFile delegateFile)
+    public synchronized ResourceFile createDecoratorFile (@Nonnull final ResourceFile delegateFile)
       {
         if (delegateFile == null)
           {

@@ -49,7 +49,7 @@ public class HtmlTemplateContainerView extends HtmlTemplateHtmlFragmentView impl
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateContainerView (final @Nonnull Id id) 
+    public HtmlTemplateContainerView (@Nonnull final Id id)
       {
         super(id);
 //        setCaption(typeUri); TODO:for debugging purposes, add everything into a captioned Panel

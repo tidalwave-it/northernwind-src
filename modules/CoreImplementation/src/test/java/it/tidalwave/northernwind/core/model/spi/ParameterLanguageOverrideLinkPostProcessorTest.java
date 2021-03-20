@@ -67,9 +67,9 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "linkProvider")
-    public void must_properly_postProcess (final @Nonnull String link,
-                                           final @Nonnull String parameterValue,
-                                           final @Nonnull String expectedResult)
+    public void must_properly_postProcess (@Nonnull final String link,
+                                           @Nonnull final String parameterValue,
+                                           @Nonnull final String expectedResult)
       {
         // when
         final String result = underTest.postProcess(link, parameterValue);

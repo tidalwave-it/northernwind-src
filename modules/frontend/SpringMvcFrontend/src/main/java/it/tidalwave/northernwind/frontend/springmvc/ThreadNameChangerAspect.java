@@ -43,7 +43,7 @@ public class ThreadNameChangerAspect
     private int counter;
 
     @Around("execution(* it.tidalwave.northernwind.frontend.springmvc.SpringMvcRestController.get(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
+    public Object advice (@Nonnull final ProceedingJoinPoint pjp)
       throws Throwable
       {
         final Thread thread = Thread.currentThread();

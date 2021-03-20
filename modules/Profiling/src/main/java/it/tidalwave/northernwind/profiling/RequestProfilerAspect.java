@@ -47,7 +47,7 @@ public class RequestProfilerAspect
     private StatisticsCollector statisticsCollector;
 
     @Around("execution(* it.tidalwave.northernwind.frontend.ui.spi.DefaultSiteViewController.processRequest(..))")
-    public Object advice (final @Nonnull ProceedingJoinPoint pjp)
+    public Object advice (@Nonnull final ProceedingJoinPoint pjp)
       throws Throwable
       {
         final Request request = (Request)pjp.getArgs()[0];

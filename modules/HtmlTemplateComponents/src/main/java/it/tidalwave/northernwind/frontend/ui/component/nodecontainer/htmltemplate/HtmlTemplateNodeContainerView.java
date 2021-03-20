@@ -53,7 +53,7 @@ public class HtmlTemplateNodeContainerView extends HtmlHolder implements NodeCon
      * @param  id  the id
      *
      ******************************************************************************************************************/
-    public HtmlTemplateNodeContainerView (final @Nonnull Id id) 
+    public HtmlTemplateNodeContainerView (@Nonnull final Id id)
       {
         super(id);
         this.id = id;

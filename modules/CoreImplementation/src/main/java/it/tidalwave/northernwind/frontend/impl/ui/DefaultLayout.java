@@ -87,7 +87,7 @@ public class DefaultLayout implements Layout, Cloneable
         private final Deque<DefaultLayout> layoutStack = new ArrayDeque<>();
 
         @Override
-        public void preVisit (final @Nonnull Layout layout)
+        public void preVisit (@Nonnull final Layout layout)
           {
             final DefaultLayout clone = new DefaultLayout(((DefaultLayout)layout).id,
                                                           ((DefaultLayout)layout).typeUri);
@@ -105,7 +105,7 @@ public class DefaultLayout implements Layout, Cloneable
           }
 
         @Override
-        public void postVisit (final @Nonnull Layout layout)
+        public void postVisit (@Nonnull final Layout layout)
           {
             layoutStack.pop();
           }
@@ -134,7 +134,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      *
      ******************************************************************************************************************/
-    public DefaultLayout (final @Nonnull Id id, final @Nonnull String typeUri)
+    public DefaultLayout (@Nonnull final Id id, @Nonnull final String typeUri)
       {
         this.id = id;
         this.typeUri = typeUri;
@@ -145,7 +145,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      *
      ******************************************************************************************************************/
-    public DefaultLayout (final @Nonnull Builder builder)
+    public DefaultLayout (@Nonnull final Builder builder)
       {
         this.id = builder.getId();
         this.typeUri = builder.getType();
@@ -168,7 +168,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout withOverride (final @Nonnull Layout override)
+    public Layout withOverride (@Nonnull final Layout override)
       {
         final DefaultLayout result = clone();
         result.applyOverride(((DefaultLayout)override).clone());
@@ -181,7 +181,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Layout withChild (final @Nonnull Layout layout)
+    public Layout withChild (@Nonnull final Layout layout)
       {
         final DefaultLayout clone = clone();
         clone.children.add(layout);
@@ -206,7 +206,7 @@ public class DefaultLayout implements Layout, Cloneable
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void add (final @Nonnull Layout layout) // FIXME: drop this - used only by the CloneVisitor and Infoglue converter
+    public void add (@Nonnull final Layout layout) // FIXME: drop this - used only by the CloneVisitor and Infoglue converter
       {
         children.add(layout); // FIXME: clone
         childrenMapById.put(layout.getId(), layout);// FIXME: clone
@@ -218,7 +218,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull SiteNode siteNode)
+    public ViewAndController createViewAndController (@Nonnull final SiteNode siteNode)
       throws NotFoundException, HttpStatusException
       {
         return viewFactory.createViewAndController(typeUri, id, siteNode);
@@ -230,7 +230,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull // TODO: push up to CompositeSupport
-    public <T> Optional<T> accept (final @Nonnull Visitor<Layout, T> visitor)
+    public <T> Optional<T> accept (@Nonnull final Visitor<Layout, T> visitor)
       {
         visitor.preVisit(this);
         visitor.visit(this);
@@ -269,7 +269,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     // Here everything is already cloned
-    private void applyOverride (final @Nonnull Layout override)
+    private void applyOverride (@Nonnull final Layout override)
       {
         final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
         this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final

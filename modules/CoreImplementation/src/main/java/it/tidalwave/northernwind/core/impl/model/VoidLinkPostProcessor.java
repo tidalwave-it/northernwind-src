@@ -40,7 +40,7 @@ import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 public class VoidLinkPostProcessor implements LinkPostProcessor
   {
     @Override @Nonnull
-    public String postProcess (final @Nonnull String link)
+    public String postProcess (@Nonnull final String link)
       {
         return link;
       }

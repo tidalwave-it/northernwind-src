@@ -92,7 +92,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull ResourceProperties.Builder builder)
+    public DefaultResourceProperties (@Nonnull final ResourceProperties.Builder builder)
       {
         this.id = builder.getId();
         this.propertyResolver = builder.getPropertyResolver();
@@ -110,7 +110,7 @@ public class DefaultResourceProperties implements ResourceProperties
      * Deep clone constructor.
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull DefaultResourceProperties otherProperties)
+    public DefaultResourceProperties (@Nonnull final DefaultResourceProperties otherProperties)
       {
         this.id = otherProperties.id;
         this.propertyResolver = otherProperties.propertyResolver;
@@ -125,9 +125,9 @@ public class DefaultResourceProperties implements ResourceProperties
      * since that approach doesn't support nested groups.
      *
      ******************************************************************************************************************/
-    public DefaultResourceProperties (final @Nonnull Id id,
-                                      final @Nonnull Map<String, Object> map,
-                                      final @Nonnull PropertyResolver propertyResolver)
+    public DefaultResourceProperties (@Nonnull final Id id,
+                                      @Nonnull final Map<String, Object> map,
+                                      @Nonnull final PropertyResolver propertyResolver)
       {
         this.id = id;
         this.propertyResolver = propertyResolver;
@@ -189,7 +189,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties getGroup (final @Nonnull Id id)
+    public ResourceProperties getGroup (@Nonnull final Id id)
       {
         final DefaultResourceProperties properties = groupMap.get(id);
         return properties != null ? properties : new DefaultResourceProperties(this);
@@ -224,7 +224,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> DefaultResourceProperties withProperty (final @Nonnull Key<T> key, final @Nonnull T value)
+    public <T> DefaultResourceProperties withProperty (@Nonnull final Key<T> key, @Nonnull final T value)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
         result.propertyMap.put(key.getName(), value); // FIXME: clone property
@@ -237,7 +237,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultResourceProperties withoutProperty (final @Nonnull Key<?> key)
+    public DefaultResourceProperties withoutProperty (@Nonnull final Key<?> key)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
         result.propertyMap.remove(key.getName());
@@ -250,7 +250,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public DefaultResourceProperties withProperties (final @Nonnull ResourceProperties properties)
+    public DefaultResourceProperties withProperties (@Nonnull final ResourceProperties properties)
       {
         final DefaultResourceProperties result = new DefaultResourceProperties(this);
         result.groupMap.put(properties.getId(), new DefaultResourceProperties((DefaultResourceProperties)properties));
@@ -296,7 +296,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties withId (final @Nonnull Id id)
+    public ResourceProperties withId (@Nonnull final Id id)
       {
         return new DefaultResourceProperties(this);
 //        return new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
@@ -309,7 +309,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Nonnull
-    /* visible for testing */ static <T> T convertValue (final @Nonnull Key<T> key, final @Nonnull Object value)
+    /* visible for testing */ static <T> T convertValue (@Nonnull final Key<T> key, @Nonnull final Object value)
       {
         log.trace("convertValue({}, {})", key, value);
         T result;

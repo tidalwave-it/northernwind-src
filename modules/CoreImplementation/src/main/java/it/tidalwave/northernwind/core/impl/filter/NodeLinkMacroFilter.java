@@ -58,7 +58,7 @@ public class NodeLinkMacroFilter extends MacroFilter
       }
 
     @Override @Nonnull
-    protected String filter (final @Nonnull Matcher matcher)
+    protected String filter (@Nonnull final Matcher matcher)
       throws NotFoundException
       {
         final String relativePath = matcher.group(1);

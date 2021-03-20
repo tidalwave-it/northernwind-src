@@ -52,7 +52,7 @@ public interface ViewController
      * @throws      Exception       in case of problems
      *
      ******************************************************************************************************************/
-    default public void initialize()
+    public default void initialize()
       throws Exception
       {
       }
@@ -68,7 +68,7 @@ public interface ViewController
      * @throws      Exception       in case of problems
      *
      ******************************************************************************************************************/
-    default public void prepareRendering (final @Nonnull RenderContext context)
+    public default void prepareRendering (@Nonnull final RenderContext context)
       throws Exception
       {
       }
@@ -81,7 +81,7 @@ public interface ViewController
      * @throws      Exception       in case of problems - it will cause a fatal error (such as HTTP status 500)
      *
      ******************************************************************************************************************/
-    default public void renderView (final @Nonnull RenderContext context)
+    public default void renderView (@Nonnull final RenderContext context)
       throws Exception
       {
       }
@@ -100,7 +100,7 @@ public interface ViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    default public Finder<SiteNode> findVirtualSiteNodes()
+    public default Finder<SiteNode> findVirtualSiteNodes()
       {
         return Finder.empty();
       }

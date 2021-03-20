@@ -62,7 +62,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      *
      ******************************************************************************************************************/
-    public LayoutJaxbUnmarshallable (final @Nonnull Layout layout)
+    public LayoutJaxbUnmarshallable (@Nonnull final Layout layout)
       {
       }
 
@@ -72,7 +72,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public Layout unmarshal (final @Nonnull InputStream is)
+    public Layout unmarshal (@Nonnull final InputStream is)
       throws IOException
       {
         try
@@ -97,7 +97,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Layout unmarshal (final @Nonnull ComponentJaxb componentJaxb)
+    private Layout unmarshal (@Nonnull final ComponentJaxb componentJaxb)
       {
         Layout layout = modelFactory.createLayout().withId(new Id(componentJaxb.getId()))
                                                    .withType(componentJaxb.getType())

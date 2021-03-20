@@ -57,7 +57,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RequiredArgsConstructor @ToString
 public abstract class MockFileSystemSupport
   {
-    private static Finder listFinder (final @Nonnull Collection<ResourceFile> results)
+    private static Finder listFinder (@Nonnull final Collection<ResourceFile> results)
       {
         return ResourceFileFinderSupport.withComputeResults(input -> new ArrayList<>(results));
       }
@@ -80,8 +80,8 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ResourceFile createRootMockFolder (final @Nonnull ResourceFileSystem fileSystem,
-                                                 final @Nonnull String name)
+    protected ResourceFile createRootMockFolder (@Nonnull final ResourceFileSystem fileSystem,
+                                                 @Nonnull final String name)
       {
         final ResourceFile folder = createMockFolder(name);
         when(fileSystem.findFileByPath(eq(name))).thenReturn(folder);
@@ -92,9 +92,9 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ResourceFile createMockFolder (final @Nonnull ResourceFileSystem fileSystem,
-                                             final @Nonnull ResourceFile parentFolder,
-                                             final @Nonnull String name)
+    protected ResourceFile createMockFolder (@Nonnull final ResourceFileSystem fileSystem,
+                                             @Nonnull final ResourceFile parentFolder,
+                                             @Nonnull final String name)
       {
         final ResourcePath path = parentFolder.getPath().appendedWith(name);
 
@@ -115,9 +115,9 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected ResourceFile createMockFile (final @Nonnull ResourceFileSystem fileSystem,
-                                           final @Nonnull ResourceFile parentFolder,
-                                           final @Nonnull String name)
+    protected ResourceFile createMockFile (@Nonnull final ResourceFileSystem fileSystem,
+                                           @Nonnull final ResourceFile parentFolder,
+                                           @Nonnull final String name)
       {
         final ResourcePath path = parentFolder.getPath().appendedWith(name);
 
@@ -138,7 +138,7 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceFile createMockFolder (final @Nonnull String name)
+    private ResourceFile createMockFolder (@Nonnull final String name)
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
@@ -155,7 +155,7 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceFile createMockFile (final @Nonnull String name)
+    private ResourceFile createMockFile (@Nonnull final String name)
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
@@ -171,9 +171,9 @@ public abstract class MockFileSystemSupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    protected static void assertItem (final @Nonnull Map<String, ?> map,
-                                      final @Nonnull String key,
-                                      final @CheckForNull String expectedValue)
+    protected static void assertItem (@Nonnull final Map<String, ?> map,
+                                      @Nonnull final String key,
+                                      @CheckForNull final String expectedValue)
       {
         if (expectedValue == null)
           {

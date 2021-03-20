@@ -61,7 +61,7 @@ public class DefaultMenuViewController implements MenuViewController
      *
      ******************************************************************************************************************/
     @Override
-    public void renderView (final @Nonnull RenderContext context)
+    public void renderView (@Nonnull final RenderContext context)
      {
         final Site site = siteNode.getSite();
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
