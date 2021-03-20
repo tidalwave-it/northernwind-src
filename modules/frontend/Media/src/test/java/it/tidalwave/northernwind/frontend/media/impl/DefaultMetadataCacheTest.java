@@ -44,7 +44,6 @@ import it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataCache.Expira
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;

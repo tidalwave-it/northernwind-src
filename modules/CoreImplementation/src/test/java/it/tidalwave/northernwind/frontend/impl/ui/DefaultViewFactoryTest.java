@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import java.lang.reflect.Constructor;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Site;

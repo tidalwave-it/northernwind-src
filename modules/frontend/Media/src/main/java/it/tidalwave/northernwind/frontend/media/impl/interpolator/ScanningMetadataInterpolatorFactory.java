@@ -26,14 +26,10 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import it.tidalwave.util.spring.ClassScanner;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.core.type.filter.TypeFilter;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Arrays.*;

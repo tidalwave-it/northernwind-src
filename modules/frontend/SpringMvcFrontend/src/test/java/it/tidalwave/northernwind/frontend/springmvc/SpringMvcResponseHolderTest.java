@@ -35,7 +35,6 @@ import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderTest;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import static java.util.Comparator.comparing;
 
 /***********************************************************************************************************************
  *
