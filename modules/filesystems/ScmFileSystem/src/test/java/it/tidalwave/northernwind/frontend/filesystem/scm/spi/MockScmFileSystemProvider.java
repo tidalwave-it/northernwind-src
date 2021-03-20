@@ -27,12 +27,11 @@
 package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.nio.file.Path;
 
 /***********************************************************************************************************************
  *
- * A mock implementationf of {@link ScmFileSystemProvider}.
+ * A mock implementation of {@link ScmFileSystemProvider}.
  *
  * @author Fabrizio Giudici
  *
@@ -41,7 +40,6 @@ public class MockScmFileSystemProvider extends ScmFileSystemProvider
   {
     @Override @Nonnull
     public ScmWorkingDirectory createWorkingDirectory (final @Nonnull Path workArea)
-            throws IOException
       {
         return new MockScmWorkingDirectory(workArea);
       }

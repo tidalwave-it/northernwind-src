@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -46,7 +45,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
- * A mock implementation of {@SiteFinder<SiteNode>} which must be called with
+ * A mock implementation of {@link SiteFinder<SiteNode>} which must be called with
  * {@link #withRelativePath(java.lang.String)}. The typical initialisation is:
  *
  * <pre>
@@ -54,7 +53,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
         MockSiteNodeSiteFinder.registerTo(site);
  * </pre>
  *
- * It will return mock {@link SiteNode} instances for any relative path that doesn't contain {@code "inexistent"}. It's
+ * It will return mock {@link SiteNode} instances for any relative path that doesn't contain {@code "nonexistent"}. It's
  * guaranteed that the same mocked instance is always returned for any path, thus they can be stubbed which code like
  * this:
  *
@@ -135,13 +134,13 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
       {
         assert relativePath != null : "relativePath is null";
 
-        if (relativePath.contains("inexistent"))
+        if (relativePath.contains("nonexistent"))
           {
             return Collections.emptyList();
           }
 
         final Map<String, SiteNode> nodeMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return Arrays.asList(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNodeWithPath));
+        return List.of(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNodeWithPath));
       }
 
     @Nonnull

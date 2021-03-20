@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -73,14 +72,13 @@ public class HtmlTemplateBlogViewControllerTest
 
     private ResourceProperties nodeProperties;
 
-    private Id viewId = new Id("viewId");
+    private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
     public void setup()
-      throws Exception
       {
         site = createMockSite();
 
@@ -112,7 +110,7 @@ public class HtmlTemplateBlogViewControllerTest
         final Locale locale = Locale.UK;
         final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
                                                                  .withZone(ZoneId.of(DEFAULT_TIMEZONE));
-        when(requestLocaleManager.getLocales()).thenReturn(Arrays.asList(locale));
+        when(requestLocaleManager.getLocales()).thenReturn(List.of(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockViewProperty(node, viewId, P_DATE_FORMAT, Optional.of("F-"));
         mockViewProperty(node, viewId, P_TIME_ZONE, Optional.of("GMT"));
@@ -135,11 +133,11 @@ public class HtmlTemplateBlogViewControllerTest
       {
         // given
         final Random rnd = new Random(17);
-        final List<TagAndCount> tacs = IntStream.range(1, 10)
+        final List<TagAndCount> tags = IntStream.range(1, 10)
                                                 .mapToObj(i -> new TagAndCount("tag" + i, rnd.nextInt(100), "" + rnd.nextInt(10)))
                                                 .collect(toList());
         // when
-        underTest.renderTagCloud(tacs);
+        underTest.renderTagCloud(tags);
         // then
         fileTestHelper.assertFileContents(view.asBytes(UTF_8), "tag_cloud.xhtml");
       }

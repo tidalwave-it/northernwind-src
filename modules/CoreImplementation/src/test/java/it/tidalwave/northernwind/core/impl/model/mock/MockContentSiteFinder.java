@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -47,7 +46,7 @@ import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
- * A mock implementation of {@SiteFinder<Content>} which must be called with
+ * A mock implementation of {@link SiteFinder<Content>} which must be called with
  * {@link #withRelativePath(java.lang.String)}. The typical initialisation is:
  *
  * <pre>
@@ -55,7 +54,7 @@ import static org.mockito.Mockito.*;
         MockContentSiteFinder.registerTo(site);
  * </pre>
  *
- * It will return mock {@link Content} instances for any relative path that doesn't contain {@code "inexistent"}. It's
+ * It will return mock {@link Content} instances for any relative path that doesn't contain {@code "nonexistent"}. It's
  * guaranteed that the same mocked instance is always returned for any path, thus they can be stubbed which code like
  * this:
  *
@@ -136,13 +135,13 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
       {
         assert relativePath != null : "relativePath is null";
 
-        if (relativePath.contains("inexistent"))
+        if (relativePath.contains("nonexistent"))
           {
             return Collections.emptyList();
           }
 
         final Map<String, Content> contentMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return Arrays.asList(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContentWithPath));
+        return List.of(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContentWithPath));
       }
 
     @Nonnull

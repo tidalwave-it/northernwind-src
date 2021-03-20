@@ -54,7 +54,7 @@ import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 public class DefaultNodeContainerViewController implements NodeContainerViewController
   {
     // TODO: this class should not set the HTML contents... it should be a responsibility of the view.
-    // Instead, it should pass unormatted objects
+    // Instead, it should pass unformatted objects
     private static final String RSS_MIME_TYPE = "application/rss+xml";
 
     private static final String TEMPLATE_LINK_SCREEN_CSS =
@@ -190,7 +190,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
       {
         return streamOf(P_INLINED_SCRIPTS)
                 .flatMap(path -> siteNode.getSite().find(_Content_).withRelativePath(path).stream())
-                .flatMap(script -> script.getProperty(P_TEMPLATE).map(Stream::of).orElseGet(Stream::empty)) // FIXME: simplify in Java 9
+                .flatMap(script -> script.getProperty(P_TEMPLATE).stream())
                 .collect(joining());
       }
 

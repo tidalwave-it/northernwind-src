@@ -26,7 +26,7 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.io.IOException;
 import javax.servlet.ServletContext;
@@ -39,14 +39,8 @@ import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
 import it.tidalwave.northernwind.core.impl.test.TaskExecutorMock;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
@@ -96,7 +90,6 @@ public class DefaultSiteProviderTest
      ******************************************************************************************************************/
     @Test
     public void must_properly_create_the_Site()
-      throws Exception
       {
         // given
         underTest = context.getBean(DefaultSiteProvider.class);
@@ -108,8 +101,8 @@ public class DefaultSiteProviderTest
                 .withLibraryPath("testLibraryPath")
                 .withNodePath("testNodePath")
                 .withConfigurationEnabled(true)
-                .withConfiguredLocales(Arrays.asList(new Locale("en"), new Locale("it"), new Locale("fr")))
-                .withIgnoredFolders(Arrays.asList("ignored1", "ignored2"))));
+                .withConfiguredLocales(List.of(new Locale("en"), new Locale("it"), new Locale("fr")))
+                .withIgnoredFolders(List.of("ignored1", "ignored2"))));
         // the executor that initializes Site hasn't been started here
         assertThat(underTest.getSite(), sameInstance(site));
         assertThat(underTest.isSiteAvailable(), is(false));
@@ -161,7 +154,6 @@ public class DefaultSiteProviderTest
      ******************************************************************************************************************/
     @Test
     public void must_use_no_context_path_when_ServletContext_is_not_available()
-      throws Exception
       {
         // given
         ((DefaultListableBeanFactory)context.getBeanFactory()).removeBeanDefinition("servletContext");

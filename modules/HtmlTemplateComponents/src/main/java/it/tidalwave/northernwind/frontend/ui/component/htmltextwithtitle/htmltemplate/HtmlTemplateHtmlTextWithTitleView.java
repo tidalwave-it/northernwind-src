@@ -92,8 +92,8 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
             final Template wrapperTemplate = site.getTemplate(getClass(), wrapperTemplatePath, "Wrapper.st");
 
             a.get("title").ifPresent(t -> textTemplate.addAttribute("title", t.toString()));
-            a.get("text").ifPresent(t -> textTemplate.addAttribute("text", t.toString()));;
-            a.get("level").ifPresent(l -> textTemplate.addAttribute("level", l.toString()));;
+            a.get("text").ifPresent(t -> textTemplate.addAttribute("text", t.toString()));
+            a.get("level").ifPresent(l -> textTemplate.addAttribute("level", l.toString()));
 
             return wrapperTemplate.addAttribute("content", textTemplate.render()).render();
           }).collect(joining("\n"))));

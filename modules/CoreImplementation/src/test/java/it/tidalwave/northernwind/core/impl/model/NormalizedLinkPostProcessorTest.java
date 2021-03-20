@@ -56,7 +56,6 @@ public class NormalizedLinkPostProcessorTest
      ******************************************************************************************************************/
     @Test(dataProvider = "links")
     public void must_create_correct_links (final @Nonnull String link, final @Nonnull String expectedResult)
-      throws Exception
       {
         // when
         final String result = underTest.postProcess(link);

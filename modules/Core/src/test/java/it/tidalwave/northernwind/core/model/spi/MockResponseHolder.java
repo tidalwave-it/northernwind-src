@@ -54,6 +54,7 @@ public class MockResponseHolder extends ResponseHolder<byte[]>
         this(ResponseBuilderTestable::new);
       }
 
+    @Nonnull
     @Override
     public ResponseBuilder response()
       {

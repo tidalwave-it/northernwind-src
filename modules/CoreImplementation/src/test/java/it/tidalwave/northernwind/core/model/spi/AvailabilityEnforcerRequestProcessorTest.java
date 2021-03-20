@@ -75,7 +75,6 @@ public class AvailabilityEnforcerRequestProcessorTest extends NorthernWindTestSu
      ******************************************************************************************************************/
     @Test
     public void must_do_nothing_when_site_is_available()
-      throws Exception
       {
         // given
         when(siteProvider.isSiteAvailable()).thenReturn(true);

@@ -61,8 +61,9 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
         return fileSystem.createDecoratorFile(delegate.getParent());
       }
 
+    @Nonnull
     @Override
-    public ResourceFile createFolder (final String name)
+    public ResourceFile createFolder (@Nonnull final String name)
       throws IOException
       {
 //        log.trace("createFolder({})", name);
@@ -72,8 +73,8 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
     @Override @Nonnull
     public Finder findChildren()
       {
-        return ResourceFileFinderSupport.withComputeResults((f) -> delegate.findChildren().results()
-                .stream().map(child -> fileSystem.createDecoratorFile(child)).collect(toList()));
+        return ResourceFileFinderSupport.withComputeResults(f ->
+              delegate.findChildren().results().stream().map(fileSystem::createDecoratorFile).collect(toList()));
       }
 
     @Override

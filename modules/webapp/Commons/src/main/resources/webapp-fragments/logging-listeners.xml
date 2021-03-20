@@ -29,6 +29,6 @@
 <!-- LogBack status viewer -->
 <fragment>
     <listener>
-        <listener-class>it.tidalwave.northernwind.frontend.util.Slf4JJulBrigdeInstallerServletContextListener</listener-class>
+        <listener-class>it.tidalwave.northernwind.frontend.util.Slf4JJulBridgeInstallerServletContextListener</listener-class>
     </listener>
 </fragment>

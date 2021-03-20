@@ -72,7 +72,6 @@ public class NorthernWindResponseHeaderFilter extends FilterSupport
      *
      ******************************************************************************************************************/
     private void addNorthernWindHeader (final @Nonnull ServletRequest request, final @Nonnull ServletResponse response)
-      throws IOException, ServletException
       {
         if (bootThrowable == null)
           {

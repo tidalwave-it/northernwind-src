@@ -141,8 +141,8 @@ public interface Request
      *
      * Returns the path params.
      *
-     * @param  siteNode
-     * @return           the path params
+     * @param  siteNode   the owner of the params
+     * @return            the path params
      *
      ******************************************************************************************************************/
     @Nonnull

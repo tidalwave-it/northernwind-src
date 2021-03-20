@@ -26,17 +26,18 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import javax.annotation.Nullable;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.DispatcherServlet;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.*;
 
 /***********************************************************************************************************************
@@ -53,7 +54,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
   {
     private final DispatcherServlet delegate = new DispatcherServlet();
 
-    @CheckForNull
+    @Nullable
     private Throwable bootThrowable;
 
     /*******************************************************************************************************************
@@ -125,7 +126,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
       {
         response.setStatus(500);
         response.setContentType("text/html");
-        final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, "UTF-8"));
+        final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, UTF_8));
         pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n");
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");
         pw.print(t.toString());

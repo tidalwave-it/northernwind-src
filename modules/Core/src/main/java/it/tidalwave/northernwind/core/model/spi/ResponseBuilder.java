@@ -90,7 +90,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withContentLength (@Nonnull long contentLength);
+    public ResponseBuilder<RESPONSE_TYPE> withContentLength (long contentLength);
 
     /*******************************************************************************************************************
      *
@@ -204,7 +204,7 @@ public interface ResponseBuilder<RESPONSE_TYPE>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public ResponseBuilder<RESPONSE_TYPE> withStatus (@Nonnull int httpStatus);
+    public ResponseBuilder<RESPONSE_TYPE> withStatus (int httpStatus);
 
     /*******************************************************************************************************************
      *

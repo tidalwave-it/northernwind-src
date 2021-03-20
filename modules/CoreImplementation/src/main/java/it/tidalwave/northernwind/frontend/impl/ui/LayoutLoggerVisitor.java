@@ -92,6 +92,7 @@ public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
         indent--;
       }
 
+    @Nonnull
     @Override
     public Object getValue()
       {

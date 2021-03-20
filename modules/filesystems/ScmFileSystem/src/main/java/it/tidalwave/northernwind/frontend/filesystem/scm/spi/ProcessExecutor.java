@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +48,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.joining;
 
 /***********************************************************************************************************************
  *
@@ -318,7 +316,7 @@ public class ProcessExecutor
     @Nonnull
     public ProcessExecutor withArguments (final @Nonnull String... arguments)
       {
-        this.arguments.addAll(Arrays.asList(arguments));
+        this.arguments.addAll(List.of(arguments));
         return this;
       }
 
@@ -417,12 +415,10 @@ public class ProcessExecutor
      *
      * @param  string                  the input to send
      * @return itself
-     * @throws IOException             if something fails
      *
      ******************************************************************************************************************/
     @Nonnull
     public ProcessExecutor send (final @Nonnull String string)
-            throws IOException
       {
         log.info(">>>> sending '{}'...", string);
         stdin.println(string);

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Stream;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneId;
@@ -209,10 +207,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
         protected List<? extends SiteNode> computeResults()
           {
             return controller.findAllPosts(controller.getViewProperties())
-                    .stream()
-                    .peek(p -> log.trace(">>>> virtual node for: {}", p.getExposedUri()))
-                    .flatMap(post -> createVirtualNode(post).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplified in Java 9
-                    .collect(toList());
+                             .stream()
+                             .peek(p -> log.trace(">>>> virtual node for: {}", p.getExposedUri()))
+                             .flatMap(post -> createVirtualNode(post).stream())
+                             .collect(toList());
           }
 
         @Nonnull
@@ -235,7 +233,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         DATETIME_FORMATTER_MAP_BY_STYLE.put("F-", locale -> getDateTimeFormatterFor(FormatStyle.FULL, locale));
       }
 
-    protected static final List<Key<ZonedDateTime>> DATE_KEYS = Arrays.asList(P_PUBLISHING_DATE, P_CREATION_DATE);
+    protected static final List<Key<ZonedDateTime>> DATE_KEYS = List.of(P_PUBLISHING_DATE, P_CREATION_DATE);
 
     public static final ZonedDateTime TIME0 = Instant.ofEpochMilli(0).atZone(ZoneId.of("GMT"));
 
@@ -388,12 +386,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
      * Renders the tag cloud. Must be implemented by concrete subclasses.
      *
      * @param       tagsAndCount    the tags
-     * @throws      Exception       if something fails
      *
      ******************************************************************************************************************/
     @SuppressWarnings("squid:S00112")
-    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount)
-      throws Exception;
+    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
 
     /*******************************************************************************************************************
      *
@@ -500,11 +496,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     private void renderTagCloud()
-      throws Exception
       {
         final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
-                .flatMap(post -> post.getProperty(P_TAGS).map(List::stream).orElseGet(Stream::empty)) // TODO: simplify in Java 9
+                .flatMap(post -> post.getProperty(P_TAGS).stream().flatMap(Collection::stream))
                 .collect(toMap(t -> t, TagAndCount::new, TagAndCount::reduced))
                 .values()
                 .stream()
@@ -521,7 +516,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     // TODO: use some short circuit to prevent from loading unnecessary data
     @Nonnull
     private List<Content> findPosts (final @Nonnull RenderContext context, final @Nonnull ResourceProperties properties)
-      throws HttpStatusException
       {
         final ResourcePath pathParams = context.getPathParams(siteNode);
         final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();
@@ -604,7 +598,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
     private void setDynamicProperties (final @Nonnull RenderContext context, final @Nonnull Content post)
       {
         context.setDynamicNodeProperty(PD_TITLE, computeTitle(post));
@@ -631,17 +624,14 @@ public abstract class DefaultBlogViewController implements BlogViewController
               {
                 title = Optional.of(String.format("Posts tagged as '%s'", tag.get()));
               }
-            else if (uriOrCategory.isPresent())
-              {
-                title = Optional.of(String.format("Posts in category '%s'", uriOrCategory.get()));
-              }
+            else uriOrCategory.ifPresent(s -> title = Optional.of(String.format("Posts in category '%s'", s)));
           }
         else
           {
             title = getViewProperties().getProperty(P_TITLE).map(String::trim).flatMap(this::filterEmptyString);
           }
 
-        title.ifPresent(s -> view.setTitle(s));
+        title.ifPresent(view::setTitle);
         title.ifPresent(s -> context.setDynamicNodeProperty(PD_TITLE, s));
       }
 
@@ -737,7 +727,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private static boolean hasCategory (final @Nonnull Content post, final @Nonnull Optional<String> category)
       {
-        return !category.isPresent() || post.getProperty(P_CATEGORY).equals(category);
+        return category.isEmpty() || post.getProperty(P_CATEGORY).equals(category);
       }
 
     /*******************************************************************************************************************

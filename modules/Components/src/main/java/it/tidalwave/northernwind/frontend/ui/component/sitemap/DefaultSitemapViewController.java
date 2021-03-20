@@ -33,9 +33,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 import it.tidalwave.util.Key;
-import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -91,7 +89,6 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
         @Nonnull
         private final String changeFrequency;
 
-        @Nonnull
         private final float priority;
 
         @Override
@@ -114,7 +111,6 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      ******************************************************************************************************************/
     @Override
     public void renderView (final @Nonnull RenderContext context)
-      throws Exception
       {
         final SortedSet<Entry> entries = new TreeSet<>();
 
@@ -146,7 +142,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                                 .results()
                                 .stream()
                                 .peek(e -> log.debug(">>>>>>>> added virtual node: {}", e.getRelativeUri()))
-                                .flatMap(childNode -> newEntry(node, childNode).map(Stream::of).orElseGet(Stream::empty)) // TODO: simplify with JDK 9
+                                .flatMap(childNode -> newEntry(node, childNode).stream())
                                 .collect(toList()));
                           }
                         catch (HttpStatusException e)
@@ -159,6 +155,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                           }
                       }
 
+                    @Nonnull
                     @Override @SuppressWarnings("findbugs:NP_NONNULL_RETURN_VIOLATION")
                     public Void getValue()
                       {
