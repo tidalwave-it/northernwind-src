@@ -27,8 +27,6 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import it.tidalwave.util.Key;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import javax.annotation.Nonnull;

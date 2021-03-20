@@ -39,7 +39,6 @@ import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.hamcrest.CoreMatchers.is;
 
 /***********************************************************************************************************************

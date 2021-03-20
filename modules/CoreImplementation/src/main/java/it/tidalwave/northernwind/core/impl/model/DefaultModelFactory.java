@@ -33,7 +33,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -47,7 +46,6 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.util.NotFoundException;
 import lombok.ToString;
 
 /***********************************************************************************************************************
