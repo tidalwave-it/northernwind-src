@@ -314,7 +314,7 @@ public class DefaultResourceProperties implements ResourceProperties
     /* visible for testing */ static <T> T convertValue (final @Nonnull Key<T> key, final @Nonnull Object value)
       {
         log.trace("convertValue({}, {})", key, value);
-        T result = null;
+        T result;
 
         try
           {
