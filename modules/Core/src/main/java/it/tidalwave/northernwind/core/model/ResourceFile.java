@@ -149,7 +149,7 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
      * @throws  FileNotFoundException  if the physical data can't be accessed
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Nonnull @SuppressWarnings("RedundantThrows")
     public InputStream getInputStream()
       throws FileNotFoundException;
 
@@ -162,7 +162,7 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
      * @throws  IOException  if an I/O error occurs
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Nonnull @SuppressWarnings("RedundantThrows")
     public String asText (@Nonnull String encoding)
       throws IOException;
 
@@ -174,7 +174,7 @@ public interface ResourceFile extends As, Composite<ResourceFile, ResourceFile.F
      * @throws  IOException  if an I/O error occurs
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Nonnull @SuppressWarnings("RedundantThrows")
     public byte[] asBytes()
       throws IOException;
 
