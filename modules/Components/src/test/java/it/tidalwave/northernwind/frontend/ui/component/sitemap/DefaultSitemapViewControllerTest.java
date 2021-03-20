@@ -51,7 +51,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class DefaultSitemapViewControllerTest
   {
-    class UnderTest extends DefaultSitemapViewController
+    static class UnderTest extends DefaultSitemapViewController
       {
         @Nonnull
         private final List<Entry> entries = new ArrayList<>();

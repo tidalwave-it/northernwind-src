@@ -69,7 +69,7 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class DefaultCalendarViewControllerTest
   {
-    class UnderTest extends DefaultCalendarViewController
+    static class UnderTest extends DefaultCalendarViewController
       {
         public Map<Integer, List<Entry>> byMonth;
 
