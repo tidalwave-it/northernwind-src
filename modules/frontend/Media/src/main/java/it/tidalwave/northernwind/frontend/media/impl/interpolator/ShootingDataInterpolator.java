@@ -46,7 +46,7 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
       }
 
     @Override @Nonnull
-    public String interpolate (final @Nonnull String template, final @Nonnull Context context)
+    public String interpolate (@Nonnull final String template, @Nonnull final Context context)
       {
         final EXIF exif = context.getMetadata().getDirectory(EXIF.class);
         final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();

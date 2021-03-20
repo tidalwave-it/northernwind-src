@@ -66,7 +66,7 @@ public class HttpStatusException extends Exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static HttpStatusException temporaryRedirect (final @Nonnull Site site, final @Nonnull String relativeUri)
+    public static HttpStatusException temporaryRedirect (@Nonnull final Site site, @Nonnull final String relativeUri)
       {
         // FIXME: inject Site
         return new HttpStatusException(SC_MOVED_TEMPORARILY)
@@ -83,7 +83,7 @@ public class HttpStatusException extends Exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static HttpStatusException permanentRedirect (final @Nonnull Site site, final @Nonnull String relativeUri)
+    public static HttpStatusException permanentRedirect (@Nonnull final Site site, @Nonnull final String relativeUri)
       {
         // FIXME: inject Site
         return new HttpStatusException(SC_MOVED_PERMANENTLY)
@@ -106,7 +106,7 @@ public class HttpStatusException extends Exception
      *
      *
      ******************************************************************************************************************/
-    private HttpStatusException (final int httpStatus, final @Nonnull Map<String, String> headers)
+    private HttpStatusException (final int httpStatus, @Nonnull final Map<String, String> headers)
       {
         super(String.format("httpStatus=%d, headers=%s", httpStatus, headers));
         this.httpStatus = httpStatus;
@@ -123,7 +123,7 @@ public class HttpStatusException extends Exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public HttpStatusException withHeader (final @Nonnull String name, final @Nonnull String value)
+    public HttpStatusException withHeader (@Nonnull final String name, @Nonnull final String value)
       {
         final Map<String, String> newHeaders = new HashMap<>(headers);
         newHeaders.put(name, value);

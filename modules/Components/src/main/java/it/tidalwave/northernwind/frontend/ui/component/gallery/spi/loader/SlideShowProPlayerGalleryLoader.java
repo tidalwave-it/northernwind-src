@@ -68,14 +68,14 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
 
     private static final String XPATH_IMG = "/gallery/album/img";
 
-    public SlideShowProPlayerGalleryLoader (final @Nonnull BeanFactory beanFactory,
-                                            final @Nonnull ResourceProperties properties)
+    public SlideShowProPlayerGalleryLoader (@Nonnull final BeanFactory beanFactory,
+                                            @Nonnull final ResourceProperties properties)
       {
         super(beanFactory, properties);
       }
 
     @Override @Nonnull
-    public List<GalleryItem> loadGallery (final @Nonnull SiteNode siteNode)
+    public List<GalleryItem> loadGallery (@Nonnull final SiteNode siteNode)
       {
         final List<GalleryItem> items = new ArrayList<>();
 

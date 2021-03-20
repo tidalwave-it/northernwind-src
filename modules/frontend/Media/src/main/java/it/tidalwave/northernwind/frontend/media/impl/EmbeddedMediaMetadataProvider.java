@@ -64,9 +64,9 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
      ******************************************************************************************************************/
     // FIXME: should use the Metadata API of blueMarine, but we have first to make it work with Spring and its DI.
     @Override @Nonnull @DebugProfiling(message = "metadata retrieved")
-    public String getMetadataString (final @Nonnull Id mediaId,
-                                     final @Nonnull String template,
-                                     final @Nonnull ResourceProperties properties)
+    public String getMetadataString (@Nonnull final Id mediaId,
+                                     @Nonnull final String template,
+                                     @Nonnull final ResourceProperties properties)
       {
         try
           {

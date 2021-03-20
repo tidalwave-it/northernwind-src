@@ -63,8 +63,8 @@ public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "matchesDataProvider")
-    public void must_find_the_correct_matches (final @Nonnull String text,
-                                               final @Nonnull List<String> expectedMatches)
+    public void must_find_the_correct_matches (@Nonnull final String text,
+                                               @Nonnull final List<String> expectedMatches)
       {
         // given
         final NodeLinkWithContentMacroFilterFixture underTest = new NodeLinkWithContentMacroFilterFixture();
@@ -80,9 +80,9 @@ public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "textProvider")
-    public void must_perform_the_proper_substitutions (final @Nonnull String text,
-                                                       final @Nonnull Consumer<GenericApplicationContext> config,
-                                                       final @Nonnull String expected)
+    public void must_perform_the_proper_substitutions (@Nonnull final String text,
+                                                       @Nonnull final Consumer<GenericApplicationContext> config,
+                                                       @Nonnull final String expected)
       {
         // given
         setupContext(config);

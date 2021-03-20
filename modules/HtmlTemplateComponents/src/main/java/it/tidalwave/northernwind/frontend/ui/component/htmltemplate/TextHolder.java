@@ -83,7 +83,7 @@ public class TextHolder
      * @param  name  the component name
      *
      ******************************************************************************************************************/
-    public TextHolder (final @Nonnull Id id)
+    public TextHolder (@Nonnull final Id id)
       {
         attributeMap.put("content", "");
 
@@ -97,25 +97,25 @@ public class TextHolder
           }
       }
 
-    public TextHolder (final @Nonnull String html)
+    public TextHolder (@Nonnull final String html)
       {
         addAttribute("content", html);
         template = "$content$";
       }
 
 //    @Override
-    public void setContent (final @Nonnull String content)
+    public void setContent (@Nonnull final String content)
       {
         addAttribute("content", content);
 //        setValue(html);
       }
 
-    public void addComponent (final @Nonnull TextHolder child)
+    public void addComponent (@Nonnull final TextHolder child)
       {
         contents.add(child);
       }
 
-    public void addAttribute (final @Nonnull String name, final @Nonnull String value)
+    public void addAttribute (@Nonnull final String name, @Nonnull final String value)
       {
         attributeMap.put(name, value);
       }
@@ -133,13 +133,13 @@ public class TextHolder
 //      }
 
     @Nonnull
-    public byte[] asBytes (final @Nonnull Charset charset)
+    public byte[] asBytes (@Nonnull final Charset charset)
       {
         return asString(charset).getBytes(charset);
       }
 
     @Nonnull
-    public String asString (final @Nonnull Charset charset)
+    public String asString (@Nonnull final Charset charset)
       {
         ST t = new ST(template, '$', '$');
 
@@ -187,7 +187,7 @@ public class TextHolder
                 throw new FileNotFoundException();
               }
 
-            final @Cleanup Reader r = new InputStreamReader(resource.getInputStream());
+            @Cleanup final Reader r = new InputStreamReader(resource.getInputStream());
             final CharBuffer charBuffer = CharBuffer.allocate((int)resource.contentLength());
             final int length = r.read(charBuffer);
             r.close();

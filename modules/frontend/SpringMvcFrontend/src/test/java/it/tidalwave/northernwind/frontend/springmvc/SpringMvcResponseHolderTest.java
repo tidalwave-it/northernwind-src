@@ -55,7 +55,7 @@ public class SpringMvcResponseHolderTest extends ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Override
-    protected void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
+    protected void assertContents (@Nonnull final ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
         final SpringTestHelper.TestResource tr = helper.testResourceFor(fileName);

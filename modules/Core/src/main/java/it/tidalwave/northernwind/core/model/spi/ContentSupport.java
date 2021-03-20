@@ -59,7 +59,7 @@ public abstract class ContentSupport implements Content
     @Nonnull
     protected final ModelFactory modelFactory;
 
-    public ContentSupport (final @Nonnull Content.Builder builder)
+    public ContentSupport (@Nonnull final Content.Builder builder)
       {
         this.modelFactory = builder.getModelFactory();
         this.resource = modelFactory.createResource().withFile(builder.getFolder()).build();

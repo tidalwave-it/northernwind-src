@@ -59,7 +59,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      ******************************************************************************************************************/
     @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event)
+    public void contextInitialized (@Nonnull final ServletContextEvent event)
       {
         final ServletContext servletContext = event.getServletContext();
         final String configurationPath = getConfigurationPath(servletContext) + "/configuration.properties";
@@ -73,7 +73,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event)
+    public void contextDestroyed (@Nonnull final ServletContextEvent event)
       {
         // do nothing
       }
@@ -82,8 +82,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      *
      ******************************************************************************************************************/
-    protected void loadProperties (final @Nonnull ServletContext servletContext,
-                                   final @Nonnull String configurationFile)
+    protected void loadProperties (@Nonnull final ServletContext servletContext,
+                                   @Nonnull final String configurationFile)
       {
         final File file = new File(configurationFile);
         final Properties properties = new Properties();
@@ -144,7 +144,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getConfigurationPath (final @Nonnull ServletContext servletContext)
+    private String getConfigurationPath (@Nonnull final ServletContext servletContext)
       {
         String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
 
@@ -180,7 +180,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      * Loads properties from the system properties.
      *
      ******************************************************************************************************************/
-    private static void loadPropertiesFromSystemProperties (final @Nonnull Properties properties)
+    private static void loadPropertiesFromSystemProperties (@Nonnull final Properties properties)
       {
         log.log("using system properties");
 
@@ -201,7 +201,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      * Loads properties from a file.
      *
      ******************************************************************************************************************/
-    private static void loadProperties (final @Nonnull Properties properties, final File file)
+    private static void loadProperties (@Nonnull final Properties properties, final File file)
       throws IOException
       {
         log.log("reading properties from " + file);
@@ -217,8 +217,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      * Puts the properties into the ServletContext, as attributes.
      *
      ******************************************************************************************************************/
-    private static void putPropertiesIntoServletContext (final @Nonnull ServletContext servletContext,
-                                                         final @Nonnull Properties properties)
+    private static void putPropertiesIntoServletContext (@Nonnull final ServletContext servletContext,
+                                                         @Nonnull final Properties properties)
       {
         log.log("Copying properties to servlet context as attributes");
         final String nwcontextConfigLocation = computeConfigLocation(properties);

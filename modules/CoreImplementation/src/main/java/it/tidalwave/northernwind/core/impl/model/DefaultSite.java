@@ -142,7 +142,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      *
      ******************************************************************************************************************/
-    protected DefaultSite (final @Nonnull Site.Builder siteBuilder)
+    protected DefaultSite (@Nonnull final Site.Builder siteBuilder)
       {
         this.modelFactory = siteBuilder.getModelFactory();
         this.contextPath = siteBuilder.getContextPath();
@@ -161,7 +161,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull @SuppressWarnings("unchecked")
-    public <Type> SiteFinder<Type> find (final @Nonnull Class<Type> type)
+    public <Type> SiteFinder<Type> find (@Nonnull final Class<Type> type)
       {
         final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
         final RegexTreeMap<Type> relativeUriMap = (RegexTreeMap<Type>)relativeUriMapsByType.get(type);
@@ -174,7 +174,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public String createLink (final @Nonnull ResourcePath relativeUri)
+    public String createLink (@Nonnull final ResourcePath relativeUri)
       {
         final ResourcePath link = ResourcePath.of(contextPath).appendedWith(relativeUri);
         String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
@@ -204,9 +204,9 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Template getTemplate (final @Nonnull Class<?> clazz,
-                                 final @Nonnull Optional<ResourcePath> templatePath,
-                                 final @Nonnull String embeddedResourceName)
+    public Template getTemplate (@Nonnull final Class<?> clazz,
+                                 @Nonnull final Optional<ResourcePath> templatePath,
+                                 @Nonnull final String embeddedResourceName)
       {
         return getTemplateFactoryFor(clazz).getTemplate(templatePath, embeddedResourceName);
       }
@@ -217,7 +217,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public Optional<String> getTemplate (final @Nonnull Class<?> clazz, final @Nonnull ResourcePath templatePath)
+    public Optional<String> getTemplate (@Nonnull final Class<?> clazz, @Nonnull final ResourcePath templatePath)
       {
         return getTemplateFactoryFor(clazz).getTemplate(templatePath);
       }
@@ -289,7 +289,7 @@ import lombok.extern.slf4j.Slf4j;
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void createContent (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+    private void createContent (@Nonnull final ResourceFile folder, @Nonnull final ResourcePath relativePath)
       {
         documentMapByRelativePath.put(relativePath.asString(), modelFactory.createContent().withFolder(folder).build());
       }
@@ -297,7 +297,7 @@ import lombok.extern.slf4j.Slf4j;
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void createMedia (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+    private void createMedia (@Nonnull final ResourceFile file, @Nonnull final ResourcePath relativePath)
       {
         mediaMapByRelativePath.put(relativePath.asString(), modelFactory.createMedia().withFile(file).build());
       }
@@ -305,7 +305,7 @@ import lombok.extern.slf4j.Slf4j;
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void createResource (final @Nonnull ResourceFile file, final @Nonnull ResourcePath relativePath)
+    private void createResource (@Nonnull final ResourceFile file, @Nonnull final ResourcePath relativePath)
       {
         libraryMapByRelativePath.put(relativePath.asString(), modelFactory.createResource().withFile(file).build());
       }
@@ -313,7 +313,7 @@ import lombok.extern.slf4j.Slf4j;
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void createSiteNode (final @Nonnull ResourceFile folder, final @Nonnull ResourcePath relativePath)
+    private void createSiteNode (@Nonnull final ResourceFile folder, @Nonnull final ResourcePath relativePath)
       {
         final SiteNode siteNode = modelFactory.createSiteNode(this, folder);
         nodeMapByRelativePath.put(relativePath.asString(), siteNode);
@@ -343,9 +343,9 @@ import lombok.extern.slf4j.Slf4j;
      * @param  consumer    the consumer
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull ResourceFile folder,
-                           final @Nonnull Predicate<ResourceFile> fileFilter,
-                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> consumer)
+    private void traverse (@Nonnull final ResourceFile folder,
+                           @Nonnull final Predicate<ResourceFile> fileFilter,
+                           @Nonnull final BiConsumer<ResourceFile, ResourcePath> consumer)
       {
         traverse(folder.getPath(), folder, fileFilter, consumer);
       }
@@ -359,10 +359,10 @@ import lombok.extern.slf4j.Slf4j;
      * @param  consumer    the consumer
      *
      ******************************************************************************************************************/
-    private void traverse (final @Nonnull ResourcePath rootPath,
-                           final @Nonnull ResourceFile file,
-                           final @Nonnull Predicate<ResourceFile> fileFilter,
-                           final @Nonnull BiConsumer<ResourceFile, ResourcePath> consumer)
+    private void traverse (@Nonnull final ResourcePath rootPath,
+                           @Nonnull final ResourceFile file,
+                           @Nonnull final Predicate<ResourceFile> fileFilter,
+                           @Nonnull final BiConsumer<ResourceFile, ResourcePath> consumer)
       {
         log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, consumer);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
@@ -380,7 +380,7 @@ import lombok.extern.slf4j.Slf4j;
      * Logs the configuration contained in the given map of properties.
      *
      ******************************************************************************************************************/
-    private static void logConfiguration (final @Nonnull String name, Map<String, ?> propertyMap)
+    private static void logConfiguration (@Nonnull final String name, Map<String, ?> propertyMap)
       {
         log.info(name);
         propertyMap.forEach((key, value) -> log.info(">>>> {}: {}", key, value));
@@ -392,8 +392,8 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static ResourceFile findMandatoryFolder (final @Nonnull ResourceFileSystem fileSystem,
-                                                     final @Nonnull String path)
+    private static ResourceFile findMandatoryFolder (@Nonnull final ResourceFileSystem fileSystem,
+                                                     @Nonnull final String path)
       throws NotFoundException
       {
         return NotFoundException.throwWhenNull(fileSystem.findFileByPath(path), "Cannot find folder: " + path);
@@ -405,7 +405,7 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     @Nonnull
-    private St4TemplateFactory getTemplateFactoryFor (final @Nonnull Class<?> clazz)
+    private St4TemplateFactory getTemplateFactoryFor (@Nonnull final Class<?> clazz)
       {
         // TODO: implement a cache
         return new St4TemplateFactory(clazz, this);

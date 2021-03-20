@@ -140,11 +140,11 @@ public class DefaultSiteNodeTest
      *
      ******************************************************************************************************************/
     @Test(dependsOnMethods = "must_properly_initialize_with_no_layout", dataProvider = "uriProvider")
-    public void getRelativeUri_must_return_a_correct_value (final @CheckForNull String exposedUri,
-                                                            final @Nonnull String fileName,
-                                                            final @Nonnull String parentUri,
-                                                            final @Nonnull String parentPath,
-                                                            final @Nonnull String expectedResult)
+    public void getRelativeUri_must_return_a_correct_value (@CheckForNull final String exposedUri,
+                                                            @Nonnull final String fileName,
+                                                            @Nonnull final String parentUri,
+                                                            @Nonnull final String parentPath,
+                                                            @Nonnull final String expectedResult)
       throws Exception
       {
         // given
@@ -177,10 +177,10 @@ public class DefaultSiteNodeTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void prepareMocksForGetRelativeUri (final @CheckForNull String exposedUri,
-                                                final @Nonnull String fileName,
-                                                final @Nonnull String parentUri,
-                                                final @Nonnull String parentPath)
+    private void prepareMocksForGetRelativeUri (@CheckForNull final String exposedUri,
+                                                @Nonnull final String fileName,
+                                                @Nonnull final String parentUri,
+                                                @Nonnull final String parentPath)
             throws NotFoundException
       {
         final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);

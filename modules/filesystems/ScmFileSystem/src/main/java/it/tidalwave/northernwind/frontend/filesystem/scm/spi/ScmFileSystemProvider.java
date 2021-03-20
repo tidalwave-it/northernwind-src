@@ -183,7 +183,7 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
      *
      ******************************************************************************************************************/
     @Nonnull
-    abstract public ScmWorkingDirectory createWorkingDirectory (@Nonnull Path path);
+    public abstract ScmWorkingDirectory createWorkingDirectory (@Nonnull Path path);
 
     /*******************************************************************************************************************
      *

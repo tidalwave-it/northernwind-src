@@ -66,7 +66,7 @@ public class MockNodesForSitemap
         private final List<T> value = new ArrayList<>();
 
         @Override
-        public void visit (final @Nonnull T layout)
+        public void visit (@Nonnull final T layout)
           {
             value.add(layout);
           }
@@ -80,8 +80,8 @@ public class MockNodesForSitemap
      ******************************************************************************************************************/
     @Nonnull
     public List<SiteNode> createMockNodes (final long seed,
-                                           final @Nonnegative int count,
-                                           final @Nonnull String uriSegment)
+                                           @Nonnegative final int count,
+                                           @Nonnull final String uriSegment)
       throws NotFoundException, HttpStatusException
       {
         final Random random = new Random(seed);
@@ -147,9 +147,9 @@ public class MockNodesForSitemap
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void makeBlogNode (final @Nonnull SiteNode blogNode,
+    private void makeBlogNode (@Nonnull final SiteNode blogNode,
                                final long seed,
-                               final @Nonnegative int count)
+                               @Nonnegative final int count)
       throws NotFoundException, HttpStatusException
       {
         when(blogNode.getRelativeUri()).thenReturn(ResourcePath.of("/blog"));

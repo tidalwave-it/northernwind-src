@@ -47,7 +47,7 @@ public class ServletContextMimeTypeResolver implements MimeTypeResolver
     private Provider<ServletContext> servletContext;
 
     @Override @Nonnull
-    public String getMimeType (final @Nonnull String fileName)
+    public String getMimeType (@Nonnull final String fileName)
       {
         String mimeType = servletContext.get().getMimeType(fileName);
 

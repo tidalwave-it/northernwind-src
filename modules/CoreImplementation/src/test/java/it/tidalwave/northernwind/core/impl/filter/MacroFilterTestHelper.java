@@ -45,7 +45,7 @@ public class MacroFilterTestHelper
     private final List<List<String>> matches = new ArrayList<>();
 
     @Nonnull
-    public String filter (final @Nonnull Matcher matcher)
+    public String filter (@Nonnull final Matcher matcher)
       {
         final List<String> match = new ArrayList<>();
 

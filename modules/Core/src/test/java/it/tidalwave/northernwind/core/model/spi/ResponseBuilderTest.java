@@ -248,7 +248,7 @@ public class ResponseBuilderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    protected void assertContents (final @Nonnull ResponseBuilder<?> builder, final String fileName)
+    protected void assertContents (@Nonnull final ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
         final TestResource tr = helper.testResourceFor(fileName);
@@ -260,7 +260,7 @@ public class ResponseBuilderTest
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static String toRfc1123String (final @Nonnull ZonedDateTime dateTime)
+    private static String toRfc1123String (@Nonnull final ZonedDateTime dateTime)
       {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
       }

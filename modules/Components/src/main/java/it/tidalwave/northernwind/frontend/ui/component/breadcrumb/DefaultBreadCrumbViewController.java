@@ -44,7 +44,7 @@ public class DefaultBreadCrumbViewController implements BreadCrumbViewController
      * @param  siteNode          the related {@link SiteNode}
      *
      ******************************************************************************************************************/
-    public DefaultBreadCrumbViewController (final @Nonnull BreadCrumbView view, final @Nonnull SiteNode siteNode)
+    public DefaultBreadCrumbViewController (@Nonnull final BreadCrumbView view, @Nonnull final SiteNode siteNode)
       {
 //        super(view, siteNode);
 //        this.view = view;

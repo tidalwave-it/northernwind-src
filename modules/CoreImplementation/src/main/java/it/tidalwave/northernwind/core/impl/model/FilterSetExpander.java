@@ -52,7 +52,7 @@ public class FilterSetExpander implements Filter
       }
 
     @Override @Nonnull
-    public String filter (final @Nonnull String text, final @Nonnull String mimeType)
+    public String filter (@Nonnull final String text, @Nonnull final String mimeType)
       {
 //        // FIXME: do this with StringTemplate - remember to escape $'s in the source
 //        final String c = site.getContextPath();

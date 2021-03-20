@@ -54,7 +54,7 @@ public abstract class SiteNodeSupport implements SiteNode
     @Delegate
     private final AsSupport as = new AsSupport(this);
 
-    public SiteNodeSupport (final @Nonnull ModelFactory modelFactory, final @Nonnull ResourceFile file)
+    public SiteNodeSupport (@Nonnull final ModelFactory modelFactory, @Nonnull final ResourceFile file)
       {
         this.modelFactory = modelFactory;
         this.resource = modelFactory.createResource().withFile(file).build();

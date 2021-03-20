@@ -53,7 +53,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
      *
      ******************************************************************************************************************/
     @Override
-    public void contextInitialized (final @Nonnull ServletContextEvent event)
+    public void contextInitialized (@Nonnull final ServletContextEvent event)
       {
         log.info("**************** System properties:");
 
@@ -91,7 +91,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
      *
      ******************************************************************************************************************/
     @Override
-    public void contextDestroyed (final @Nonnull ServletContextEvent event)
+    public void contextDestroyed (@Nonnull final ServletContextEvent event)
       {
         // do nothing
       }

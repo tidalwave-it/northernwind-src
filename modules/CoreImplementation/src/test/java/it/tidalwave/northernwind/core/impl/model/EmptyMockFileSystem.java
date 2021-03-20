@@ -52,14 +52,14 @@ public class EmptyMockFileSystem extends MockFileSystemSupport
         super("Empty file system");
       }
 
-    protected EmptyMockFileSystem (final @Nonnull String name)
+    protected EmptyMockFileSystem (@Nonnull final String name)
       {
         super(name);
       }
 
     @Override
-    public void setUp (final @Nonnull ResourceFileSystem fileSystem,
-                       final @Nonnull MockModelFactory.PropertySetter propertySetter)
+    public void setUp (@Nonnull final ResourceFileSystem fileSystem,
+                       @Nonnull final MockModelFactory.PropertySetter propertySetter)
       {
         contentFolder  = createRootMockFolder(fileSystem, "/content");
         documentFolder = createMockFolder(fileSystem, contentFolder, "/document");
@@ -69,7 +69,7 @@ public class EmptyMockFileSystem extends MockFileSystemSupport
       }
 
     @Override
-    public void performAssertions (final @Nonnull DefaultSite underTest)
+    public void performAssertions (@Nonnull final DefaultSite underTest)
       {
         assertThat(underTest.documentMapByRelativePath.size(), is(1));
         assertItem(underTest.documentMapByRelativePath, "/", "Content(path=/content/document)");

@@ -43,7 +43,7 @@ import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ProcessExecutor;
 public class MercurialPreparer extends ScmPreparer
   {
     @Override
-    protected void stripChangesetsAfter (final @Nonnull String tag)
+    protected void stripChangesetsAfter (@Nonnull final String tag)
             throws IOException, InterruptedException
       {
         final Path sourceBundle = Paths.get("src/test/resources/MercurialFileSystemProviderTest/hg.bundle");

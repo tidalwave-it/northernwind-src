@@ -67,9 +67,9 @@ public class DefaultViewFactory implements ViewFactory
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ViewAndController createViewAndController (final @Nonnull String viewTypeUri,
-                                                      final @Nonnull Id viewId,
-                                                      final @Nonnull SiteNode siteNode)
+    public ViewAndController createViewAndController (@Nonnull final String viewTypeUri,
+                                                      @Nonnull final Id viewId,
+                                                      @Nonnull final SiteNode siteNode)
       throws NotFoundException, HttpStatusException
       {
         final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),

@@ -59,7 +59,7 @@ public interface RenderContext
      * @param       value       the property value
      *
      ******************************************************************************************************************/
-    default public <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
+    public default <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
       {
         getRequestContext().setDynamicNodeProperty(key, value);
       }
@@ -73,7 +73,7 @@ public interface RenderContext
      *
      ******************************************************************************************************************/
     @Nonnull
-    default public Optional<String> getQueryParam (final @Nonnull String name)
+    public default Optional<String> getQueryParam (@Nonnull final String name)
       {
         return getRequest().getParameter(name);
       }
@@ -87,7 +87,7 @@ public interface RenderContext
      *
      ******************************************************************************************************************/
     @Nonnull
-    default public ResourcePath getPathParams (final @Nonnull SiteNode siteNode)
+    public default ResourcePath getPathParams (@Nonnull final SiteNode siteNode)
       {
         return getRequest().getPathParams(siteNode);
       }

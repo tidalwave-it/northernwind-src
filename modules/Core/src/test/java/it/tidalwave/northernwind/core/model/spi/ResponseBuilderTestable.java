@@ -45,7 +45,7 @@ public class ResponseBuilderTestable extends ResponseBuilderSupport<byte[]>
     private final Map<String, String> headerMap = new TreeMap<>();
 
     @Override @Nonnull
-    public ResponseBuilderSupport<byte[]> withHeader (final @Nonnull String name, final @Nonnull String value)
+    public ResponseBuilderSupport<byte[]> withHeader (@Nonnull final String name, @Nonnull final String value)
       {
         headerMap.put(name, value);
         return this;
@@ -77,7 +77,7 @@ public class ResponseBuilderTestable extends ResponseBuilderSupport<byte[]>
       }
 
     @Override @Nonnull
-    protected Optional<String> getHeader (final @Nonnull String header)
+    protected Optional<String> getHeader (@Nonnull final String header)
       {
         return Optional.ofNullable(headerMap.get(header));
       }

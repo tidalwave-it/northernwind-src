@@ -64,7 +64,7 @@ public class MediaMetadataXsltAdapter
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static String getMetadataString (final @Nonnull String id, final @Nonnull String format)
+    public static String getMetadataString (@Nonnull final String id, @Nonnull final String format)
       {
         try
           {
@@ -109,7 +109,7 @@ public class MediaMetadataXsltAdapter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getMetadataString (final @Nonnull Id id, final @Nonnull String format)
+    private String getMetadataString (@Nonnull final Id id, @Nonnull final String format)
       throws NotFoundException
       {
         // FIXME: should use current SiteNode properties

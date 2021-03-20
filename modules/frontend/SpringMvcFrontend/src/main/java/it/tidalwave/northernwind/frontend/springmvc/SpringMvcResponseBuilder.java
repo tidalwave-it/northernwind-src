@@ -49,27 +49,27 @@ public class SpringMvcResponseBuilder extends ResponseBuilderSupport<ResponseEnt
     private final HttpHeaders headers = new HttpHeaders();
 
     @Override @Nonnull
-    public ResponseBuilder withHeader (final @Nonnull String header, final @Nonnull String value)
+    public ResponseBuilder withHeader (@Nonnull final String header, @Nonnull final String value)
       {
         headers.add(header, value);
         return this;
       }
 
     @Override @Nonnull
-    protected Optional<String> getHeader (final @Nonnull String header)
+    protected Optional<String> getHeader (@Nonnull final String header)
       {
         return headers.getOrDefault(header, emptyList()).stream().findFirst();
       }
 
     @Override @Nonnull
-    public ResponseBuilder withContentType (final @Nonnull String contentType)
+    public ResponseBuilder withContentType (@Nonnull final String contentType)
       {
         headers.setContentType(MediaType.parseMediaType(contentType));
         return this;
       }
 
     @Override @Nonnull
-    public ResponseBuilder withContentLength (final @Nonnegative long contentLength)
+    public ResponseBuilder withContentLength (@Nonnegative final long contentLength)
       {
         headers.setContentLength(contentLength);
         return this;

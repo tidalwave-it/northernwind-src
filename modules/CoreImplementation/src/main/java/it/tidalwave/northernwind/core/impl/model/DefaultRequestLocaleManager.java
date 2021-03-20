@@ -103,7 +103,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
      *
      ******************************************************************************************************************/
     @Override
-    public boolean setLocale (final @Nonnull Locale locale)
+    public boolean setLocale (@Nonnull final Locale locale)
       {
         if (siteProvider.get().getSite().getConfiguredLocales().contains(locale))
             {

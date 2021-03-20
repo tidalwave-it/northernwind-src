@@ -43,8 +43,8 @@ public class MockFileSystemWithOnlyIgnoredFiles extends EmptyMockFileSystem
       }
     
     @Override
-    public void setUp (final @Nonnull ResourceFileSystem fileSystem,
-                       final @Nonnull MockModelFactory.PropertySetter propertySetter)
+    public void setUp (@Nonnull final ResourceFileSystem fileSystem,
+                       @Nonnull final MockModelFactory.PropertySetter propertySetter)
       {
         super.setUp(fileSystem, propertySetter);
         createMockFolder(fileSystem, documentFolder, "ignored1");

@@ -90,7 +90,7 @@ public class VirtualSiteNode implements SiteNode
 
     @Nonnull
     @Override
-    public ResourceProperties getPropertyGroup (final @Nonnull Id id)
+    public ResourceProperties getPropertyGroup (@Nonnull final Id id)
       {
         throw new UnsupportedOperationException("Not supported.");
       }

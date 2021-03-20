@@ -68,10 +68,10 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public NodeViewRenderer (final @Nonnull Request request,
-                             final @Nonnull RequestContext requestContext,
-                             final @Nonnull ViewAndControllerLayoutBuilder vacLayoutBuilder,
-                             final @Nonnull BiConsumer<T, T> attacher)
+    public NodeViewRenderer (@Nonnull final Request request,
+                             @Nonnull final RequestContext requestContext,
+                             @Nonnull final ViewAndControllerLayoutBuilder vacLayoutBuilder,
+                             @Nonnull final BiConsumer<T, T> attacher)
       {
         this.vacLayoutBuilder = vacLayoutBuilder;
         this.attacher         = attacher;
@@ -84,7 +84,7 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
      *
      ******************************************************************************************************************/
     @Override
-    public void preVisit (final @Nonnull Layout layout)
+    public void preVisit (@Nonnull final Layout layout)
       {
         final ViewAndController vac = vacLayoutBuilder.getViewAndControllerFor(layout).get();
         final T component = renderView(vac, layout);
@@ -107,7 +107,7 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
      *
      ******************************************************************************************************************/
     @Override
-    public void postVisit (final @Nonnull Layout layout)
+    public void postVisit (@Nonnull final Layout layout)
       {
         componentStack.pop();
       }
@@ -116,7 +116,7 @@ public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
      *
      ******************************************************************************************************************/
     @Nonnull
-    private T renderView (final @Nonnull ViewAndController vac, final @Nonnull Layout layout)
+    private T renderView (@Nonnull final ViewAndController vac, @Nonnull final Layout layout)
       {
         try
           {
