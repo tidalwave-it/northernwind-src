@@ -46,7 +46,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 
 /***********************************************************************************************************************
  *
- * A mock implementation of {@SiteFinder<SiteNode>} which must be called with
+ * A mock implementation of {@link SiteFinder<SiteNode>} which must be called with
  * {@link #withRelativePath(java.lang.String)}. The typical initialisation is:
  *
  * <pre>

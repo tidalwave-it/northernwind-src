@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
- * A mock implementation of {@SiteFinder<Content>} which must be called with
+ * A mock implementation of {@link SiteFinder<Content>} which must be called with
  * {@link #withRelativePath(java.lang.String)}. The typical initialisation is:
  *
  * <pre>

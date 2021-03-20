@@ -214,7 +214,6 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
      *
      * @return  the parent node
      * @throws  NotFoundException               if the parent doesn't exist
-     * @throws  UnsupportedEncodingException
      *
      ******************************************************************************************************************/
     @Nonnull
