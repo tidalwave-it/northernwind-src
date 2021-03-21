@@ -35,6 +35,7 @@ import javax.annotation.Nonnull;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface Filter
   {
     @SuppressWarnings("squid:S1700")

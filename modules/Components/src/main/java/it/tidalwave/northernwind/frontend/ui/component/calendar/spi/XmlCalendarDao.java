@@ -99,7 +99,7 @@ public class XmlCalendarDao implements CalendarDao
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Entry toEntry (@Nonnull final Site site, @Nonnull final Node node, final int month)
+    private static Entry toEntry (@Nonnull final Site site, @Nonnull final Node node, final int month)
       {
         final String uri = node.getAttributes().getNamedItem("link").getNodeValue();
         final Optional<String> type = Optional.ofNullable(node.getAttributes().getNamedItem("type")).map(Node::getNodeValue);

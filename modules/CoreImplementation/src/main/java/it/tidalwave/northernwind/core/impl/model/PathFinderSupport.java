@@ -75,7 +75,7 @@ public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T
      *
      *
      ******************************************************************************************************************/
-    @SuppressWarnings({"squid:S00112"})
+    @SuppressWarnings("squid:S00112")
     public PathFinderSupport (@Nonnull final T parentResource)
       {
         try

@@ -54,15 +54,7 @@ public class HtmlTemplateHtmlTextWithTitleViewControllerTest
 
     private HtmlTemplateHtmlTextWithTitleView view;
 
-    private SiteNode siteNode;
-
-    private Site site;
-
     private HtmlTemplateHtmlTextWithTitleViewController underTest;
-
-    private RenderContext renderContext;
-
-    private ResourceProperties viewProperties;
 
     private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 
@@ -73,20 +65,20 @@ public class HtmlTemplateHtmlTextWithTitleViewControllerTest
     private void setup()
       throws Exception
       {
-        site = createMockSite();
+        final Site site = createMockSite();
 
-        siteNode = createMockSiteNode(site);
+        final SiteNode siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("uri"));
         final ResourceProperties siteNodeProperties = createMockProperties();
 
-        viewProperties = createMockProperties();
+        final ResourceProperties viewProperties = createMockProperties();
 
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         final Request request = mock(Request.class);
         final RequestContext requestContext = mock(RequestContext.class);
-        renderContext = new DefaultRenderContext(request, requestContext);
+        final RenderContext renderContext = new DefaultRenderContext(request, requestContext);
 
         view = new HtmlTemplateHtmlTextWithTitleView(viewId, site);
 

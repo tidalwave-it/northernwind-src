@@ -40,7 +40,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface MetadataCache 
+@FunctionalInterface
+public interface MetadataCache
   {
     /*******************************************************************************************************************
      *

@@ -49,7 +49,6 @@ import static java.util.stream.Collectors.toList;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
-import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
 
 /***********************************************************************************************************************
  *
@@ -190,7 +189,8 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Optional<Entry> newEntry (@Nonnull final SiteNode siteNode, @CheckForNull final SiteNode childSiteNode)
+    private static Optional<Entry> newEntry (@Nonnull final SiteNode siteNode,
+                                             @CheckForNull final SiteNode childSiteNode)
       {
         final SiteNode node = (childSiteNode != null) ? childSiteNode : siteNode;
         final ResourceProperties properties = node.getProperties();

@@ -63,7 +63,7 @@ public class DefaultRequestContext implements RequestContext
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
-            log.warn("No Content Properties in RequestContext ({})", toString());
+            log.warn("No Content Properties in RequestContext ({})", this);
             return modelFactory.createProperties().build();
           }
 
@@ -75,7 +75,7 @@ public class DefaultRequestContext implements RequestContext
       {
         if (contentHolder.get() == null) // FIXME: should never occur
           {
-            log.warn("No Node Properties in RequestContext ({})", toString());
+            log.warn("No Node Properties in RequestContext ({})", this);
             return dynamicNodePropertiesHolder.get();
           }
 

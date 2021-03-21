@@ -109,7 +109,7 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
         final ResourceFile propertyFile = findLocalizedFile(propertyName.stringValue());
         log.trace(">>>> reading from {}", propertyFile.getPath());
         final String mimeType = propertyFile.getMimeType();
-        final String charset = mimeType.equals("application/xhtml+xml") ? "UTF-8" : Charset.defaultCharset().name();
+        final String charset = "application/xhtml+xml".equals(mimeType) ? "UTF-8" : Charset.defaultCharset().name();
 
         try
           {

@@ -359,10 +359,10 @@ import lombok.extern.slf4j.Slf4j;
      * @param  consumer    the consumer
      *
      ******************************************************************************************************************/
-    private void traverse (@Nonnull final ResourcePath rootPath,
-                           @Nonnull final ResourceFile file,
-                           @Nonnull final Predicate<ResourceFile> fileFilter,
-                           @Nonnull final BiConsumer<ResourceFile, ResourcePath> consumer)
+    private static void traverse (@Nonnull final ResourcePath rootPath,
+                                  @Nonnull final ResourceFile file,
+                                  @Nonnull final Predicate<ResourceFile> fileFilter,
+                                  @Nonnull final BiConsumer<ResourceFile, ResourcePath> consumer)
       {
         log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, consumer);
         final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
@@ -380,7 +380,7 @@ import lombok.extern.slf4j.Slf4j;
      * Logs the configuration contained in the given map of properties.
      *
      ******************************************************************************************************************/
-    private static void logConfiguration (@Nonnull final String name, Map<String, ?> propertyMap)
+    private static void logConfiguration (@Nonnull final String name, final Map<String, ?> propertyMap)
       {
         log.info(name);
         propertyMap.forEach((key, value) -> log.info(">>>> {}: {}", key, value));

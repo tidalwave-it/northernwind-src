@@ -70,8 +70,6 @@ public class HtmlTemplateBlogViewControllerTest
 
     private RequestLocaleManager requestLocaleManager;
 
-    private ResourceProperties nodeProperties;
-
     private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
@@ -87,7 +85,7 @@ public class HtmlTemplateBlogViewControllerTest
 
         view = new HtmlTemplateBlogView(viewId, site);
 
-        nodeProperties = createMockProperties();
+        final ResourceProperties nodeProperties = createMockProperties();
         node = createMockSiteNode(site);
         when(node.getProperties()).thenReturn(nodeProperties);
         when(node.getRelativeUri()).thenReturn(ResourcePath.of("blog"));
