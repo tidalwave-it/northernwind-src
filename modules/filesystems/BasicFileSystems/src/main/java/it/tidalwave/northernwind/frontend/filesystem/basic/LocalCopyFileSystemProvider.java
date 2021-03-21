@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(of = {"rootPath"})
+@Slf4j @ToString(of = "rootPath")
 public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
@@ -148,7 +148,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private void emptyFolder (@Nonnull final ResourceFile folder)
+    private static void emptyFolder (@Nonnull final ResourceFile folder)
             throws IOException
       {
         log.trace("emptyFolder({}", folder);
@@ -163,7 +163,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
      *
      *
      ******************************************************************************************************************/
-    private void copyFolder (@Nonnull final ResourceFile sourceFolder, @Nonnull final ResourceFile targetFolder)
+    private static void copyFolder (@Nonnull final ResourceFile sourceFolder, @Nonnull final ResourceFile targetFolder)
             throws IOException
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);

@@ -102,7 +102,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
         final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();
         final Id id = properties.getId();
 
-        if (id.stringValue().equals(""))
+        if ("".equals(id.stringValue()))
           {
             propertiesJaxb.setVersion("1.0");
           }

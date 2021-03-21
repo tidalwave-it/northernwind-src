@@ -155,7 +155,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
         final ResourceProperties properties = bluetteConfiguration.withProperty(P_CATALOG_URL, "'" + link + "'");
         // FIXME: since key doesn't have dynamic type, we can't properly escape strings.
         final Aggregates variables = properties.getKeys().stream()
-               .filter(k -> k.getName().startsWith("bluette") || k.getName().equals("logging"))
+               .filter(k -> k.getName().startsWith("bluette") || "logging".equals(k.getName()))
                .flatMap(k -> toAggregate(properties, k).stream())
                .collect(toAggregates("entries"));
 

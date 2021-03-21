@@ -67,7 +67,6 @@ import static it.tidalwave.northernwind.util.CollectionFunctions.*;
 import static it.tidalwave.northernwind.util.UrlEncoding.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
-import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 import static lombok.AccessLevel.PUBLIC;
 
@@ -263,9 +262,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     private Optional<String> uriOrCategory = Optional.empty();
 
-    private boolean indexMode = false;
+    private boolean indexMode;
 
-    private boolean tagCloudMode = false;
+    private boolean tagCloudMode;
 
     protected Optional<String> title = Optional.empty();
 
@@ -628,7 +627,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
         else
           {
-            title = getViewProperties().getProperty(P_TITLE).map(String::trim).flatMap(this::filterEmptyString);
+            title = getViewProperties().getProperty(P_TITLE).map(String::trim).flatMap(DefaultBlogViewController::filterEmptyString);
           }
 
         title.ifPresent(view::setTitle);
@@ -644,7 +643,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         final String prefix    = siteNode.getProperty(P_TITLE).orElse("");
         final String title     = post.getProperty(P_TITLE).orElse("");
-        final String separator = prefix.equals("") || title.equals("") ? "": " - ";
+        final String separator = "".equals(prefix) || "".equals(title) ? "" : " - ";
 
         return prefix + separator + title;
       }
@@ -654,7 +653,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<TagAndCount> withRanks (@Nonnull final Collection<TagAndCount> tagsAndCount)
+    private static List<TagAndCount> withRanks (@Nonnull final Collection<TagAndCount> tagsAndCount)
       {
         final List<Integer> counts = tagsAndCount.stream()
                                                  .map(TagAndCount::getCount)
@@ -745,8 +744,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Optional<String> filterEmptyString (@Nonnull final String s)
+    private static Optional<String> filterEmptyString (@Nonnull final String s)
       {
-        return s.equals("") ? Optional.empty() : Optional.of(s);
+        return "".equals(s) ? Optional.empty() : Optional.of(s);
       }
   }

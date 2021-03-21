@@ -84,10 +84,10 @@ public class DefaultInheritanceHelper implements InheritanceHelper
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private List<ResourceFile> getFiles (@Nonnull final String prefix,
-                                         @Nonnull final String propertyFileName,
-                                         @Nonnull final ResourceFile folder,
-                                         @Nonnull final List<String> suffixes)
+    private static List<ResourceFile> getFiles (@Nonnull final String prefix,
+                                                @Nonnull final String propertyFileName,
+                                                @Nonnull final ResourceFile folder,
+                                                @Nonnull final List<String> suffixes)
       {
         final List<ResourceFile> files = new ArrayList<>();
 
@@ -113,7 +113,7 @@ public class DefaultInheritanceHelper implements InheritanceHelper
      *
      ******************************************************************************************************************/
     @Nonnull
-    private List<ResourceFile> getHierarchyFolders (@Nonnull final ResourceFile folder)
+    private static List<ResourceFile> getHierarchyFolders (@Nonnull final ResourceFile folder)
       {
         final List<ResourceFile> folders = new ArrayList<>();
 

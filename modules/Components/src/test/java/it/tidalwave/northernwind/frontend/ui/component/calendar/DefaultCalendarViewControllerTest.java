@@ -95,13 +95,7 @@ public class DefaultCalendarViewControllerTest
 
     private UnderTest underTest;
 
-    private CalendarView view;
-
     private SiteNode siteNode;
-
-    private Site site;
-
-    private RequestLocaleManager requestLocaleManager;
 
     private Request request;
 
@@ -120,9 +114,9 @@ public class DefaultCalendarViewControllerTest
     private void setup()
       throws Exception
       {
-        site = createMockSite();
+        final Site site = createMockSite();
 
-        view = mock(CalendarView.class);
+        final CalendarView view = mock(CalendarView.class);
         when(view.getId()).thenReturn(viewId);
 
         siteNode = createMockSiteNode(site);
@@ -138,7 +132,7 @@ public class DefaultCalendarViewControllerTest
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        requestLocaleManager = mock(RequestLocaleManager.class);
+        final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         request = mock(Request.class);

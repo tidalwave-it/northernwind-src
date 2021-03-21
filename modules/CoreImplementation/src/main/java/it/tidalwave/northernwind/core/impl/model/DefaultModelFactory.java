@@ -132,7 +132,7 @@ public class DefaultModelFactory extends ModelFactorySupport
     public Request createRequestFrom (@Nonnull final HttpServletRequest httpServletRequest)
       {
         String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
-        relativeUri = relativeUri.equals("") ? "/" : relativeUri;
+        relativeUri = "".equals(relativeUri) ? "/" : relativeUri;
         return createRequest().withBaseUrl(getBaseUrl(httpServletRequest))
                               .withRelativeUri(relativeUri)
                               .withParameterMap(httpServletRequest.getParameterMap())

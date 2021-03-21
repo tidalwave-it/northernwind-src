@@ -79,7 +79,7 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
 
     private final Timer timer = new Timer("ZipFileSystemProvider.modificationTracker");
 
-    private boolean changeWasDetected = false;
+    private boolean changeWasDetected;
 
     /*******************************************************************************************************************
      *

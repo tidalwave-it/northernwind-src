@@ -48,7 +48,7 @@ import lombok.ToString;
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@ToString(of = {"rootPath"})
+@ToString(of = "rootPath")
 public class LocalFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull

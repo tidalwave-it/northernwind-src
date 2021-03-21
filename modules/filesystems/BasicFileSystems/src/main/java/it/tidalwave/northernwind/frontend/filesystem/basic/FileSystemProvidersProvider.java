@@ -35,6 +35,7 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface FileSystemProvidersProvider
   {
     @Nonnull

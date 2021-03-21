@@ -100,7 +100,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Throwable findUpperCauseWithMessage (@Nonnull final Throwable throwable)
+    private static Throwable findUpperCauseWithMessage (@Nonnull final Throwable throwable)
       {
         Throwable cause = throwable;
 
@@ -121,7 +121,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      *
      ******************************************************************************************************************/
-    private void sendProcessingError (@Nonnull final Throwable t, @Nonnull final HttpServletResponse response)
+    private static void sendProcessingError (@Nonnull final Throwable t, @Nonnull final HttpServletResponse response)
       throws IOException
       {
         response.setStatus(500);
@@ -129,7 +129,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
         final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, UTF_8));
         pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n");
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");
-        pw.print(t.toString());
+        pw.print(t);
 //        t.printStackTrace(pw);
         pw.print("</pre>\n");
         pw.print("<h2>Boot log</h2>\n<pre>\n");

@@ -53,7 +53,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
                 throws IOException
           {
             final int n = Integer.parseInt(tag.replace("published-0.", ""));
-            List<String> tags = createTagNames(n);
+            final List<String> tags = createTagNames(n);
             final Path configFolder = ScmPreparer.REPOSITORY_FOLDER.resolve(MOCKSCM);
             Files.createDirectories(configFolder);
             Files.write(configFolder.resolve("tags"), tags);

@@ -82,8 +82,6 @@ public class ViewBuilderTest
 
     private Site site;
 
-    private SiteProvider siteProvider;
-
     private MockService1 service1;
 
     private MockService2 service2;
@@ -96,7 +94,7 @@ public class ViewBuilderTest
       {
         site = createMockSite();
         context = helper.createSpringContext();
-        siteProvider = context.getBean(SiteProvider.class);
+        final SiteProvider siteProvider = context.getBean(SiteProvider.class);
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);
 
