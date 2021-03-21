@@ -320,7 +320,7 @@ public class DefaultResourceProperties implements ResourceProperties
               {
                 result = key.getType().cast(value);
               }
-            else if (key.getName().equals("tags")) // workaround as Zephyr stores it as a comma-separated string
+            else if ("tags".equals(key.getName())) // workaround as Zephyr stores it as a comma-separated string
               {
                 result = (T)List.of(((String)value).split(","));
               }

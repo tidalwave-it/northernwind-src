@@ -245,7 +245,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
 
         for (final String nwBean : nwBeans.split(","))
           {
-            if (!nwBean.trim().equals(""))
+            if (!"".equals(nwBean.trim()))
               {
                 builder.append(separator).append(String.format("classpath:/META-INF/%sBeans.xml", nwBean.trim()));
                 separator = ",";

@@ -159,7 +159,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
     @Nonnull
     private static ResourcePath mockedExposedUri (@Nonnull final String relativePath)
       {
-        return relativePath.equals("/")
+        return "/".equals(relativePath)
                 ? ResourcePath.EMPTY
                 : ResourcePath.of("EXPOSED-" + relativePath.substring(1).replace('/', '-').replace(' ', '-'));
       }

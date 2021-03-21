@@ -221,7 +221,7 @@ public class DefaultBlogViewControllerTest
                 .collect(toList());
         assertSortedInReverseOrder(publishingDates);
 
-        if (!pathParams.equals("/tags"))
+        if (!"/tags".equals(pathParams))
           {
             assertThat(underTest.tagsAndCount.size(), is(0)); // TODO: should be: method not called
           }

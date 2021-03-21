@@ -643,7 +643,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         final String prefix    = siteNode.getProperty(P_TITLE).orElse("");
         final String title     = post.getProperty(P_TITLE).orElse("");
-        final String separator = prefix.equals("") || title.equals("") ? "": " - ";
+        final String separator = "".equals(prefix) || "".equals(title) ? "" : " - ";
 
         return prefix + separator + title;
       }
@@ -746,6 +746,6 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private static Optional<String> filterEmptyString (@Nonnull final String s)
       {
-        return s.equals("") ? Optional.empty() : Optional.of(s);
+        return "".equals(s) ? Optional.empty() : Optional.of(s);
       }
   }
