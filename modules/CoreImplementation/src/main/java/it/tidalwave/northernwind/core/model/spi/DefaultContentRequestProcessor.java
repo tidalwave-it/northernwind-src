@@ -50,7 +50,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value = "session") @Order(LOWEST_PRECEDENCE)
+@Configurable @Scope("session") @Order(LOWEST_PRECEDENCE)
 public class DefaultContentRequestProcessor implements RequestProcessor
   {
     @Inject

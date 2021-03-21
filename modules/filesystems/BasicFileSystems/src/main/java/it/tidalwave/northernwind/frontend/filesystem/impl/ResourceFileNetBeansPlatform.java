@@ -116,7 +116,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       }
 
     @Override @Nonnull
-    public ResourceFile createFolder (@Nonnull String name)
+    public ResourceFile createFolder (@Nonnull final String name)
             throws IOException
       {
         return fileSystem.createResourceFile(delegate.createFolder(name));

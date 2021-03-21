@@ -34,6 +34,7 @@ package it.tidalwave.northernwind.core.model.spi;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface RequestResettable
   {
     /*******************************************************************************************************************

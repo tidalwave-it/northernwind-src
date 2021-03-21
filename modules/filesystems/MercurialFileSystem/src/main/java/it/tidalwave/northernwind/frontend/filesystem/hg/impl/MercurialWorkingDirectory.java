@@ -104,7 +104,7 @@ public class MercurialWorkingDirectory extends ScmWorkingDirectorySupport
                           .waitForCompleted()
                           .filteredBy("([^ ]*) *.*$")
                           .stream()
-                          .filter(s -> !s.equals("tip"))
+                          .filter(s -> !"tip".equals(s))
                           .collect(collectingAndThen(toList(), ScmWorkingDirectorySupport::reversed));
       }
 

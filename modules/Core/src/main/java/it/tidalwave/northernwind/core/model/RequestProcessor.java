@@ -39,6 +39,7 @@ import it.tidalwave.util.NotFoundException;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface RequestProcessor
   {
     public enum Status

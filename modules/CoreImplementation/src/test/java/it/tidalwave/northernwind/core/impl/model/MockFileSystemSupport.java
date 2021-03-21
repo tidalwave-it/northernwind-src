@@ -138,7 +138,7 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceFile createMockFolder (@Nonnull final String name)
+    private static ResourceFile createMockFolder (@Nonnull final String name)
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
@@ -155,7 +155,7 @@ public abstract class MockFileSystemSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ResourceFile createMockFile (@Nonnull final String name)
+    private static ResourceFile createMockFile (@Nonnull final String name)
       {
         final ResourceFile folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);

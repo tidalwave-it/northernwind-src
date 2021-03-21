@@ -95,7 +95,7 @@ public class DefaultSiteProvider implements SiteProvider
     private String nodePath = DEFAULT_NODE_PATH;
 
     @Getter @Setter
-    private boolean logConfigurationEnabled = false;
+    private boolean logConfigurationEnabled;
 
     @Getter @Setter @Nonnull
     private String localesAsString = "";

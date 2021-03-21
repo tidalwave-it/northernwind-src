@@ -102,14 +102,14 @@ public class HtmlTemplateHtmlTextWithTitleViewController extends DefaultHtmlText
         final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
         view.render(viewProperties.getProperty(P_WRAPPER_TEMPLATE_PATH),
                     viewProperties.getProperty(P_TEMPLATE_PATH),
-                    txts.stream().map(this::toAggregate).collect(toAggregates("contents")));
+                    txts.stream().map(HtmlTemplateHtmlTextWithTitleViewController::toAggregate).collect(toAggregates("contents")));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (@Nonnull final TextWithTitle content)
+    private static Aggregate toAggregate (@Nonnull final TextWithTitle content)
       {
         return Aggregate.of("title", content.title).with("text", content.text).with("level", content.level);
       }

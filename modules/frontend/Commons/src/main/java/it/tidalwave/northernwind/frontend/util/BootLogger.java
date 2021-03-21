@@ -60,7 +60,7 @@ public final class BootLogger
         final PrintWriter pw = new PrintWriter(sw);
         t.printStackTrace(pw);
         pw.flush();
-        log(t.toString() + "\n" + sw.toString());
+        log(t + "\n" + sw);
       }
 
     @Nonnull
