@@ -54,11 +54,9 @@ public class ResponseBuilderTestable extends ResponseBuilderSupport<byte[]>
     @Override @Nonnull
     protected byte[] doBuild()
       {
-        try
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             final DataOutputStream dos = new DataOutputStream(baos))
           {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final DataOutputStream dos = new DataOutputStream(baos);
-
             dos.writeBytes("HTTP/1.1 " + httpStatus + "\n");
 
             for (final Entry<String, String> entry : headerMap.entrySet())
