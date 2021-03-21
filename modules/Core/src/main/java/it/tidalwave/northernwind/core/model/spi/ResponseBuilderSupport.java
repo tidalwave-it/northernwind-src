@@ -74,7 +74,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
 
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
-    private static final String[] DATE_FORMATS = new String[]
+    private static final String[] DATE_FORMATS =
       {
         PATTERN_RFC1123,
         "EEE, d MMM yyyy HH:mm:ss zzz",
