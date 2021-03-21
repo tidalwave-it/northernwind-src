@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @NoArgsConstructor(access = AccessLevel.PRIVATE) @Slf4j
-public class ProcessExecutor
+public final class ProcessExecutor
   {
     private static final String PROCESS_EXITED_WITH = "Process exited with ";
 

@@ -65,7 +65,7 @@ public class SpringTestHelper
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor(access = PRIVATE)
-    public class TestResource
+    public final class TestResource
       {
         @Nonnull
         private final String name;

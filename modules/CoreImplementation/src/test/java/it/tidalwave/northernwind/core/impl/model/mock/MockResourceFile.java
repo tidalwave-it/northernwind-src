@@ -44,7 +44,7 @@ import lombok.Getter;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public class MockResourceFile implements ResourceFile
+public final class MockResourceFile implements ResourceFile
   {
     private final boolean directory;
 

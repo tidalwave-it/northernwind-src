@@ -128,7 +128,7 @@ public class MockModelFactory extends ModelFactorySupport
       }
 
     @RequiredArgsConstructor(staticName = "of")
-    static class KeyMatcher<T> implements ArgumentMatcher<Key<T>>
+    static final class KeyMatcher<T> implements ArgumentMatcher<Key<T>>
       {
         @Nonnull
         private final String name;
