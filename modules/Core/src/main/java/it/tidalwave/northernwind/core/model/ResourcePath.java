@@ -102,7 +102,7 @@ public class ResourcePath implements Serializable
      ******************************************************************************************************************/
     private ResourcePath (@Nonnull final String path)
       {
-        this((path.equals("/") || path.equals("")) ? emptyList() : List.of(validated(path).split("/")));
+        this(("/".equals(path) || "".equals(path)) ? emptyList() : List.of(validated(path).split("/")));
       }
 
     /*******************************************************************************************************************
@@ -403,7 +403,7 @@ public class ResourcePath implements Serializable
       {
         for (final String segment : segments)
           {
-            if (segment.equals(""))
+            if ("".equals(segment))
               {
                 throw new IllegalArgumentException("Empty segment in " + segments);
               }

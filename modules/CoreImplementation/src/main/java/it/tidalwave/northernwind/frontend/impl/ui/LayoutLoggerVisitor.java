@@ -75,7 +75,7 @@ public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
 
     private static final String SPACES = "                                                               ";
 
-    private int indent = 0;
+    private int indent;
 
     @Nonnull
     private final Level logLevel;

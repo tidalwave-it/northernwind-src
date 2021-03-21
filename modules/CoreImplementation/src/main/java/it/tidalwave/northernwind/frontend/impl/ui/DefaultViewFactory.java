@@ -59,7 +59,7 @@ public class DefaultViewFactory implements ViewFactory
     /* package */ final Map<String, ViewBuilder> viewBuilderMapByTypeUri = new TreeMap<>();
 
     @Getter @Setter
-    private boolean logConfigurationEnabled = false;
+    private boolean logConfigurationEnabled;
 
     /*******************************************************************************************************************
      *

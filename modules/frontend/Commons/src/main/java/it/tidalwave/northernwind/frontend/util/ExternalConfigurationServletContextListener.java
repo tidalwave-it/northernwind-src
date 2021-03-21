@@ -82,8 +82,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      *
      ******************************************************************************************************************/
-    protected void loadProperties (@Nonnull final ServletContext servletContext,
-                                   @Nonnull final String configurationFile)
+    protected static void loadProperties (@Nonnull final ServletContext servletContext,
+                                          @Nonnull final String configurationFile)
       {
         final File file = new File(configurationFile);
         final Properties properties = new Properties();
@@ -144,9 +144,9 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getConfigurationPath (@Nonnull final ServletContext servletContext)
+    private static String getConfigurationPath (@Nonnull final ServletContext servletContext)
       {
-        String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
+        final String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
 
         if (configurationPath != null)
           {
@@ -245,7 +245,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
 
         for (final String nwBean : nwBeans.split(","))
           {
-            if (!nwBean.trim().equals(""))
+            if (!"".equals(nwBean.trim()))
               {
                 builder.append(separator).append(String.format("classpath:/META-INF/%sBeans.xml", nwBean.trim()));
                 separator = ",";
@@ -253,6 +253,6 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           }
 
         return "classpath*:/META-INF/*AutoBeans.xml,"
-             + "classpath*:/META-INF/WebConfigurationBeans.xml," + builder.toString();
+               + "classpath*:/META-INF/WebConfigurationBeans.xml," + builder;
       }
   }

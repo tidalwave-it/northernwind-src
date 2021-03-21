@@ -63,10 +63,6 @@ public class DefaultSiteTest
 
     private MockModelFactory modelFactory;
 
-    private RequestHolder requestHolder;
-
-    private ResourceFileSystemProvider resourceFileSystemProvider;
-
     private ResourceFileSystem resourceFileSystem;
 
     private DefaultSite underTest;
@@ -85,10 +81,10 @@ public class DefaultSiteTest
 
         final Request request = mock(Request.class);
         when(request.getBaseUrl()).thenReturn("/baseUrl");
-        requestHolder = context.getBean(RequestHolder.class);
+        final RequestHolder requestHolder = context.getBean(RequestHolder.class);
         when(requestHolder.get()).thenReturn(request);
 
-        resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
+        final ResourceFileSystemProvider resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
 

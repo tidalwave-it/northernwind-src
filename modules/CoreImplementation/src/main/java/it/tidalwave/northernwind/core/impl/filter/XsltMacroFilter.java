@@ -92,7 +92,7 @@ public class XsltMacroFilter implements Filter
 
     private String xslt = "";
 
-    private volatile boolean initialized = false;
+    private volatile boolean initialized;
 
     /*******************************************************************************************************************
      *
@@ -117,7 +117,7 @@ public class XsltMacroFilter implements Filter
     @Override @Nonnull
     public String filter (@Nonnull final String text, @Nonnull final String mimeType)
       {
-        if (!mimeType.equals("application/xhtml+xml"))
+        if (!"application/xhtml+xml".equals(mimeType))
           {
             log.debug("Cannot filter resources not in XHTML: {}", mimeType);
             return text;
@@ -161,7 +161,7 @@ public class XsltMacroFilter implements Filter
           }
         catch (TransformerException e)
           {
-            log.error("XSL error: {} at {}", e.toString(), e.getLocationAsString());
+            log.error("XSL error: {} at {}", e, e.getLocationAsString());
             log.error(xslt);
             throw new RuntimeException(e);
           }
@@ -199,7 +199,7 @@ public class XsltMacroFilter implements Filter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String asText (@Nonnull final ResourceFile file)
+    private static String asText (@Nonnull final ResourceFile file)
       {
         try
           {

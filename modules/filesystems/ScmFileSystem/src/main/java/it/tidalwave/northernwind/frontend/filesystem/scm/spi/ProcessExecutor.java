@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @NoArgsConstructor(access = AccessLevel.PRIVATE) @Slf4j
-public class ProcessExecutor
+public final class ProcessExecutor
   {
     private static final String PROCESS_EXITED_WITH = "Process exited with ";
 
@@ -136,14 +136,14 @@ public class ProcessExecutor
         /***************************************************************************************************************
          *
          * Returns a {@link Scanner} on the latest line of output produced that matches a given regular expression,
-         * split on the given delimiter.
+         * split on the given delimiter. Remember that the {@code Scanner} must be closed when done.
          *
          * @param       filterRegexp            the regular expression to filter output
          * @param       delimiterRegexp         the regular expression to split the line
          * @return the {@code Scanner} to parse results
          *
          ***************************************************************************************************************/
-        @Nonnull @SuppressWarnings("squid:S2095")
+        @Nonnull @SuppressWarnings({"squid:S2095", "IOResourceOpenedButNotSafelyClosed"})
         public Scanner filteredAndSplitBy (@Nonnull final String filterRegexp, @Nonnull final String delimiterRegexp)
           {
             return new Scanner(filteredBy(filterRegexp).get(0)).useDelimiter(Pattern.compile(delimiterRegexp));

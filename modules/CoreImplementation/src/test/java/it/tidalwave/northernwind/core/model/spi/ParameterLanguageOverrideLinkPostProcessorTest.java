@@ -49,8 +49,6 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
 
     private ApplicationContext context;
 
-    private ParameterLanguageOverrideRequestProcessor plorp;
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -58,7 +56,8 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
     public void setup()
       {
         context = helper.createSpringContext();
-        plorp = context.getBean(ParameterLanguageOverrideRequestProcessor.class);
+        final ParameterLanguageOverrideRequestProcessor plorp =
+                context.getBean(ParameterLanguageOverrideRequestProcessor.class);
         when(plorp.getParameterName()).thenReturn("lang");
         underTest = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
       }

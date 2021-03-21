@@ -47,7 +47,6 @@ import org.stringtemplate.v4.ST;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.SiteViewController;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -187,11 +186,12 @@ public class TextHolder
                 throw new FileNotFoundException();
               }
 
-            @Cleanup final Reader r = new InputStreamReader(resource.getInputStream());
-            final CharBuffer charBuffer = CharBuffer.allocate((int)resource.contentLength());
-            final int length = r.read(charBuffer);
-            r.close();
-            template = new String(charBuffer.array(), 0, length);
+            try (final Reader r = new InputStreamReader(resource.getInputStream()))
+              {
+                final CharBuffer charBuffer = CharBuffer.allocate((int)resource.contentLength());
+                final int length = r.read(charBuffer);
+                template = new String(charBuffer.array(), 0, length);
+              }
           }
         catch (FileNotFoundException e) // no specific template, fallback
           {

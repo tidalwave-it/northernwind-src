@@ -145,8 +145,8 @@ import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
      * FIXME: move to ResourceProperties!
      *
      ******************************************************************************************************************/
-    private void logProperties (@Nonnull final String indent,
-                                @Nonnull final ResourceProperties properties)
+    private static void logProperties (@Nonnull final String indent,
+                                       @Nonnull final ResourceProperties properties)
       {
         log.debug("{} property items:", indent);
 

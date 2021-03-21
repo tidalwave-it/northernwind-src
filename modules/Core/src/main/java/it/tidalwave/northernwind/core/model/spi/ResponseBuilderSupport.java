@@ -74,7 +74,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
 
     protected static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
-    private static final String[] DATE_FORMATS = new String[]
+    private static final String[] DATE_FORMATS =
       {
         PATTERN_RFC1123,
         "EEE, d MMM yyyy HH:mm:ss zzz",
@@ -224,7 +224,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     public ResponseBuilder<RESPONSE_TYPE> forRequest (@Nonnull final Request request)
       {
         this.requestIfNoneMatch = request.getHeader(HEADER_IF_NONE_MATCH);
-        this.requestIfModifiedSince = request.getHeader(HEADER_IF_MODIFIED_SINCE).map(this::parseDate);
+        this.requestIfModifiedSince = request.getHeader(HEADER_IF_MODIFIED_SINCE).map(ResponseBuilderSupport::parseDate);
 
         return this;
       }
@@ -362,7 +362,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Nonnull
     protected final Optional<ZonedDateTime> getDateTimeHeader (@Nonnull final String header)
       {
-        return getHeader(header).map(this::parseDate);
+        return getHeader(header).map(ResponseBuilderSupport::parseDate);
       }
 
     /*******************************************************************************************************************
@@ -413,7 +413,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ZonedDateTime parseDate (@Nonnull final String string)
+    private static ZonedDateTime parseDate (@Nonnull final String string)
       {
         for (final String dateFormat : DATE_FORMATS)
           {
