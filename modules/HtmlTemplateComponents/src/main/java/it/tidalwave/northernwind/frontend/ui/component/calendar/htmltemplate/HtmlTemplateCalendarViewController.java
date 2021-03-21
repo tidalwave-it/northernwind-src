@@ -46,9 +46,9 @@ import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
+import static it.tidalwave.util.Pair.*;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
-import static it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.Pair.*;
 
 /***********************************************************************************************************************
  *
@@ -97,16 +97,14 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                                           .collect(toAggregates("years"));
 
         final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
-
         final IntFunction<List<Map<String, Object>>> entriesByMonth =
-            i -> byMonth.getOrDefault(i + 1, emptyList()).stream().map(x -> toAggregate(x).getMap()).collect(toList());
-
+            m -> byMonth.getOrDefault(m + 1, emptyList()).stream().map(x -> toAggregate(x).getMap()).collect(toList());
         view.render(title,
                     getViewProperties().getProperty(P_TEMPLATE_PATH),
-                    indexedPairStream1(monthNames).collect(pairsToMap()),
+                    indexedPairStream(monthNames, BASE_1).collect(pairsToMap()),
                     Integer.toString(year),
                     years,
-                    indexedPairStream1(0, 12, entriesByMonth).collect(pairsToMap()),
+                    indexedPairStream(0, 12, entriesByMonth, BASE_1).collect(pairsToMap()),
                     columns);
       }
 
