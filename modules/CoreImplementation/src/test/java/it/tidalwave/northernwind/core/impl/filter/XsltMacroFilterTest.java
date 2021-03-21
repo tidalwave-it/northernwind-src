@@ -60,10 +60,6 @@ public class XsltMacroFilterTest
 
     private XsltMacroFilter underTest;
 
-    private SiteProvider siteProvider;
-
-    private Site site;
-
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -72,8 +68,8 @@ public class XsltMacroFilterTest
       throws Exception
       {
         context = helper.createSpringContext();
-        siteProvider = context.getBean(SiteProvider.class);
-        site = context.getBean(Site.class);
+        final SiteProvider siteProvider = context.getBean(SiteProvider.class);
+        final Site site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
 
         final String xslt = helper.readStringFromResource("Photo.xslt");

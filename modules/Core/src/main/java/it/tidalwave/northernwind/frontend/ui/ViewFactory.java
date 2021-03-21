@@ -44,6 +44,7 @@ import lombok.ToString;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface ViewFactory
   {
     @RequiredArgsConstructor @Getter @ToString

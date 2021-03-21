@@ -80,11 +80,11 @@ public class HtmlTemplateSitemapViewController extends DefaultSitemapViewControl
       {
         view.setMimeType("application/xml");
         view.render(getViewProperties().getProperty(P_SITEMAP_TEMPLATE_PATH),
-                    entries.stream().map(this::toAggregate).collect(toAggregates("entries")));
+                    entries.stream().map(HtmlTemplateSitemapViewController::toAggregate).collect(toAggregates("entries")));
       }
 
     @Nonnull
-    private Aggregate toAggregate (@Nonnull final Entry entry)
+    private static Aggregate toAggregate (@Nonnull final Entry entry)
       {
         return Aggregate.of("location",         entry.getLocation())
                       .with("lastModification", entry.getLastModification().format(FORMATTER))

@@ -72,12 +72,6 @@ public class DefaultSiteNodeTest
 
     private ResourceFile resourceFile;
 
-    private ModelFactory modelFactory;
-
-    private InheritanceHelper inheritanceHelper;
-
-    private RequestLocaleManager requestLocaleManager;
-
     private Layout emptyPlaceHolderLayout;
 
     /*******************************************************************************************************************
@@ -88,9 +82,9 @@ public class DefaultSiteNodeTest
       {
         context = helper.createSpringContext();
         site = context.getBean(InternalSite.class);
-        modelFactory = context.getBean(ModelFactory.class);
-        inheritanceHelper = context.getBean(InheritanceHelper.class);
-        requestLocaleManager = context.getBean(RequestLocaleManager.class);
+        final ModelFactory modelFactory = context.getBean(ModelFactory.class);
+        final InheritanceHelper inheritanceHelper = context.getBean(InheritanceHelper.class);
+        final RequestLocaleManager requestLocaleManager = context.getBean(RequestLocaleManager.class);
 
         resource = createMockResource();
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");

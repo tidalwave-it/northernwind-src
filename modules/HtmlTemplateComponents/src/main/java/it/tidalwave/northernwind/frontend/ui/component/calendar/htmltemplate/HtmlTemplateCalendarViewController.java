@@ -42,7 +42,6 @@ import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController;
-import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController.Entry;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyList;
@@ -115,7 +114,7 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Aggregate toAggregate (@Nonnull final Entry entry)
+    private static Aggregate toAggregate (@Nonnull final Entry entry)
       {
         return Aggregate.of(  "label", entry.name)
                         .with("link",  entry.link)

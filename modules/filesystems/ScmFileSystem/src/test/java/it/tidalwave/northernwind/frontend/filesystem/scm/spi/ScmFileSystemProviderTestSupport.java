@@ -172,7 +172,7 @@ public class ScmFileSystemProviderTestSupport
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertThatHasNoCurrentTag (@Nonnull final ScmWorkingDirectory workingDirectory)
+    private static void assertThatHasNoCurrentTag (@Nonnull final ScmWorkingDirectory workingDirectory)
             throws Exception
       {
         final Optional<Tag> tag = workingDirectory.getCurrentTag();

@@ -120,7 +120,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
 
         for (final Mapping mapping : permanentMappings)
           {
-            log.info(">>>> {}", mapping.toString());
+            log.info(">>>> {}", mapping);
           }
       }
 

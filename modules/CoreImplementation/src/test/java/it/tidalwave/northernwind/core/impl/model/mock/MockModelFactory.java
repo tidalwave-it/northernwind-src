@@ -71,7 +71,7 @@ public class MockModelFactory extends ModelFactorySupport
     private final PropertySetter propertySetter = new PropertySetter()
       {
         @Override
-        public <T> void setProperty (@Nonnull String path, @Nonnull Key<T> key, @Nonnull T value)
+        public <T> void setProperty (@Nonnull final String path, @Nonnull final Key<T> key, @Nonnull final T value)
           {
             resourceProperties.put(path + "." + key.getName(), value);
           }
@@ -128,7 +128,7 @@ public class MockModelFactory extends ModelFactorySupport
       }
 
     @RequiredArgsConstructor(staticName = "of")
-    static class KeyMatcher<T> implements ArgumentMatcher<Key<T>>
+    static final class KeyMatcher<T> implements ArgumentMatcher<Key<T>>
       {
         @Nonnull
         private final String name;

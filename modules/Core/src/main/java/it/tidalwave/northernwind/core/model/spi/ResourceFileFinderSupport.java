@@ -50,13 +50,13 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
   {
     private static final long serialVersionUID = -1393470412002725841L;
 
-    protected final transient Function<Finder, List<ResourceFile>> resultComputer;
+    private final transient Function<Finder, List<ResourceFile>> resultComputer;
 
     @Getter
-    protected final boolean recursive;
+    private final boolean recursive;
 
     @Getter @CheckForNull
-    protected final String name;
+    private final String name;
 
     /*******************************************************************************************************************
      *

@@ -63,8 +63,6 @@ public class ResponseBuilderTest
 
     private final ZonedDateTime resourceLatestModifiedTime = Instant.ofEpochMilli(1341242553456L).atZone(ZoneId.of("GMT"));
 
-    private MockResponseHolder responseHolder;
-
     @Nonnull
     private final Supplier<? extends MockResponseHolder> responseHolderFactory;
 
@@ -100,7 +98,7 @@ public class ResponseBuilderTest
         request = mock(Request.class);
         when(request.getHeader(anyString())).thenAnswer(i -> Optional.ofNullable(headers.get(i.getArgument(0))));
 
-        responseHolder = responseHolderFactory.get();
+        final MockResponseHolder responseHolder = responseHolderFactory.get();
         responseHolder.setClockSupplier(() -> Clock.fixed(currentTime.toInstant(), currentTime.getZone()));
         underTest = responseHolder.response();
       }

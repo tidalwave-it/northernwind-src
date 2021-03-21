@@ -61,6 +61,7 @@ public interface Resource extends As
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
+        @FunctionalInterface
         public static interface CallBack
           {
             @Nonnull
@@ -120,7 +121,7 @@ public interface Resource extends As
      *
      ******************************************************************************************************************/
     @Nonnull
-    public default <T> Optional<T> getProperty (@Nonnull Key<T> key)
+    public default <T> Optional<T> getProperty (@Nonnull final Key<T> key)
       {
         return getProperties().getProperty(key);
       }
@@ -134,7 +135,7 @@ public interface Resource extends As
      *
      ******************************************************************************************************************/
     @Nonnull
-    public default <T> Optional<T> getProperty (@Nonnull List<Key<T>> keys)
+    public default <T> Optional<T> getProperty (@Nonnull final List<Key<T>> keys)
       {
         return getProperties().getProperty(keys);
       }

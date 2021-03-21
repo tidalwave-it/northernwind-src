@@ -44,7 +44,6 @@ import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.core.impl.model.DefaultContent.*;
 
 // FIXME: reimplement with an Aspect
 @RequiredArgsConstructor
@@ -139,7 +138,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     private Optional<ResourcePath> getDefaultExposedUri()
       {
         return getResource().getProperty(P_TITLE)
-            .map(this::deAccent)
+            .map(DefaultContent::deAccent)
             .map(t -> t.replaceAll(" ", "-")
                        .replaceAll(",", "")
                        .replaceAll("\\.", "")
@@ -159,7 +158,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Nonnull
-    public String deAccent (@Nonnull final String string)
+    public static String deAccent (@Nonnull final String string)
       {
         final String nfdNormalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
         final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");

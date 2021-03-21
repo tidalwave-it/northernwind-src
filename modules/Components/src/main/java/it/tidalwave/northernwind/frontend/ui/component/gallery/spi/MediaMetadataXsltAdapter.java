@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j
-public class MediaMetadataXsltAdapter
+public final class MediaMetadataXsltAdapter
   {
     private static MediaMetadataXsltAdapter instance;
 
@@ -129,7 +129,7 @@ public class MediaMetadataXsltAdapter
     private MediaMetadataProvider findMediaMetadataProvider()
       {
         // FIXME: should be read by Node properties
-        String metadataProviderName = "EmbeddedMediaMetadataProvider";
+        final String metadataProviderName = "EmbeddedMediaMetadataProvider";
 
         try
           {
