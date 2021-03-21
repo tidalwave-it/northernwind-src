@@ -24,7 +24,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
+package it.tidalwave.util.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -43,9 +43,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import it.tidalwave.util.ProcessExecutorException;
+import it.tidalwave.util.ProcessExecutor;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,18 +57,16 @@ import lombok.extern.slf4j.Slf4j;
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NotThreadSafe @NoArgsConstructor(access = AccessLevel.PRIVATE) @Slf4j
-public final class ProcessExecutor
+@NotThreadSafe @Slf4j
+public final class DefaultProcessExecutor implements ProcessExecutor
   {
     private static final String PROCESS_EXITED_WITH = "Process exited with ";
 
     /*******************************************************************************************************************
      *
-     * A container of the console output of the process.
-     *
      ******************************************************************************************************************/
     @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-    public class ConsoleOutput
+    public class DefaultConsoleOutput implements ConsoleOutput
       {
         @Nonnull
         private final String name;
@@ -81,7 +80,7 @@ public final class ProcessExecutor
         private volatile boolean completed;
 
         /** The consumer for output. */
-        private final Runnable consoleConsumer =() ->
+        private final Runnable consoleConsumer = () ->
           {
             try
               {
@@ -92,21 +91,19 @@ public final class ProcessExecutor
                 log.warn("while reading from process console", e);
               }
 
-            synchronized (ConsoleOutput.this)
+            synchronized (DefaultConsoleOutput.this)
               {
                 completed = true;
-                ConsoleOutput.this.notifyAll();
+                DefaultConsoleOutput.this.notifyAll();
               }
           };
 
         /***************************************************************************************************************
          *
-         * Starts collection output from the external process.
+         * {@inheritDoc}
          *
-         * @return itself
-         *
-         ***************************************************************************************************************/
-        @Nonnull
+         **************************************************************************************************************/
+        @Override @Nonnull
         public ConsoleOutput start()
           {
             Executors.newSingleThreadExecutor().submit(consoleConsumer);
@@ -115,14 +112,11 @@ public final class ProcessExecutor
 
         /***************************************************************************************************************
          *
-         * Waits for the completion of the launched process.
+         * {@inheritDoc}
          *
-         * @return itself
-         * @throws InterruptedException    if the process was interrupted
-         *
-         ***************************************************************************************************************/
-        @Nonnull
-        public synchronized ConsoleOutput waitForCompleted()
+         **************************************************************************************************************/
+        @Override @Nonnull
+        public synchronized ConsoleOutput waitForCompleted ()
                 throws InterruptedException
           {
             while (!completed)
@@ -135,15 +129,10 @@ public final class ProcessExecutor
 
         /***************************************************************************************************************
          *
-         * Returns a {@link Scanner} on the latest line of output produced that matches a given regular expression,
-         * split on the given delimiter. Remember that the {@code Scanner} must be closed when done.
+         * {@inheritDoc}
          *
-         * @param       filterRegexp            the regular expression to filter output
-         * @param       delimiterRegexp         the regular expression to split the line
-         * @return the {@code Scanner} to parse results
-         *
-         ***************************************************************************************************************/
-        @Nonnull @SuppressWarnings({"squid:S2095", "IOResourceOpenedButNotSafelyClosed"})
+         **************************************************************************************************************/
+        @Override @Nonnull @SuppressWarnings({"squid:S2095", "IOResourceOpenedButNotSafelyClosed"})
         public Scanner filteredAndSplitBy (@Nonnull final String filterRegexp, @Nonnull final String delimiterRegexp)
           {
             return new Scanner(filteredBy(filterRegexp).get(0)).useDelimiter(Pattern.compile(delimiterRegexp));
@@ -151,13 +140,10 @@ public final class ProcessExecutor
 
         /***************************************************************************************************************
          *
-         * Returns the output produced by the launched process, filtered by the given regular expression.
+         * {@inheritDoc}
          *
-         * @param       filterRegexp            the regular expression to filter output
-         * @return the output lines
-         *
-         ***************************************************************************************************************/
-        @Nonnull
+         **************************************************************************************************************/
+        @Override @Nonnull
         public List<String> filteredBy (@Nonnull final String filterRegexp)
           {
             final Pattern p = Pattern.compile(filterRegexp);
@@ -178,15 +164,10 @@ public final class ProcessExecutor
 
         /***************************************************************************************************************
          *
-         * Waits for an output line matching the given regular expression to appear.
+         * {@inheritDoc}
          *
-         * @param  regexp                  the regular expression
-         * @return itself
-         * @throws IOException             if something goes wrong
-         * @throws InterruptedException    if the process has been interrupted
-         *
-         ***************************************************************************************************************/
-        @Nonnull
+         **************************************************************************************************************/
+        @Override @Nonnull
         public ConsoleOutput waitFor (@Nonnull final String regexp)
                 throws InterruptedException, IOException
           {
@@ -213,9 +194,10 @@ public final class ProcessExecutor
 
         /***************************************************************************************************************
          *
-         * Clears the contents collected so far.
+         * {@inheritDoc}
          *
-         ***************************************************************************************************************/
+         **************************************************************************************************************/
+        @Override
         public void clear()
           {
             content.clear();
@@ -223,11 +205,12 @@ public final class ProcessExecutor
 
         /***************************************************************************************************************
          *
-         * Reads the output until it's completed.
+         * {@inheritDoc}
          *
-         ***************************************************************************************************************/
-        private void read()
-                throws IOException
+         **************************************************************************************************************/
+        @Override
+        public void read()
+              throws IOException
           {
             try (final BufferedReader br = new BufferedReader(new InputStreamReader(input)))
               {
@@ -274,31 +257,19 @@ public final class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Specifies the executable to run. It is searched in the path.
-     *
-     * @param  executable          the executable
-     * @return itself
-     * @throws IOException         if something goes wrong
-     *
      ******************************************************************************************************************/
-    @Nonnull
-    public static ProcessExecutor forExecutable (@Nonnull final String executable)
+    public DefaultProcessExecutor (@Nonnull String executable)
             throws IOException
       {
-        final ProcessExecutor executor = new ProcessExecutor();
-        executor.arguments.add(findPathFor(executable));
-        return executor;
+        arguments.add(DefaultProcessExecutor.findPathFor(executable));
       }
 
     /*******************************************************************************************************************
      *
-     * Specifies a single argument for the executable. This method can be called multiple times.
-     *
-     * @param  argument            the argument
-     * @return itself
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public ProcessExecutor withArgument (@Nonnull final String argument)
       {
         arguments.add(argument);
@@ -307,13 +278,10 @@ public final class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Specifies some arguments for the executable. This method can be called multiple times.
-     *
-     * @param  arguments           the argument
-     * @return itself
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public ProcessExecutor withArguments (@Nonnull final String... arguments)
       {
         this.arguments.addAll(List.of(arguments));
@@ -322,13 +290,10 @@ public final class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Specifies the working directory for the executable.
-     *
-     * @param  workingDirectory    the working directory
-     * @return itself
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public ProcessExecutor withWorkingDirectory (@Nonnull final Path workingDirectory)
       {
         this.workingDirectory = workingDirectory;
@@ -337,14 +302,10 @@ public final class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Launches the external process and starts collecting its output (which can be analyzed by calling
-     * {@code getStdout()} and {@code getStderr()}.
-     *
-     * @return itself
-     * @throws IOException         if something goes wrong
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public ProcessExecutor start()
             throws IOException
       {
@@ -363,8 +324,8 @@ public final class ProcessExecutor
                                             environment.toArray(new String[0]),
                                             workingDirectory.toFile());
 
-        stdout = new ConsoleOutput("STDOUT", process.getInputStream()).start();
-        stderr = new ConsoleOutput("STDERR", process.getErrorStream()).start();
+        stdout = new DefaultConsoleOutput("STDOUT", process.getInputStream()).start();
+        stderr = new DefaultConsoleOutput("STDERR", process.getErrorStream()).start();
         stdin = new PrintWriter(process.getOutputStream(), true);
 
         return this;
@@ -372,16 +333,10 @@ public final class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Waits for the completion of the external process. If the process terminates with a non-zero status code, an
-     * {@link IOException} is thrown.
-     *
-     * @return itself
-     * @throws ProcessExecutorException if the process terminates with a non zero exit code
-     * @throws IOException             if something went wrong
-     * @throws InterruptedException    if the process has been interrupted
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public ProcessExecutor waitForCompletion()
             throws IOException, InterruptedException
       {
@@ -411,13 +366,10 @@ public final class ProcessExecutor
 
     /*******************************************************************************************************************
      *
-     * Sends some input to the external process.
-     *
-     * @param  string                  the input to send
-     * @return itself
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     public ProcessExecutor send (@Nonnull final String string)
       {
         log.info(">>>> sending '{}'...", string);
@@ -461,7 +413,7 @@ public final class ProcessExecutor
      * @param consoleOutput the output
      *
      ******************************************************************************************************************/
-    private static void log (@Nonnull final String prefix, @Nonnull final ConsoleOutput consoleOutput)
+    private static void log (@Nonnull final String prefix, @Nonnull final DefaultConsoleOutput consoleOutput)
       {
         for (final String line : consoleOutput.getContent())
           {
