@@ -178,7 +178,7 @@ public class XsltMacroFilter implements Filter
           }
         catch (TransformerException e)
           {
-            log.error("XSL error: {} at {}", e.toString(), e.getLocationAsString());
+            log.error("XSL error: {} at {}", e, e.getLocationAsString());
             log.error(xslt);
             throw new RuntimeException(e);
           }

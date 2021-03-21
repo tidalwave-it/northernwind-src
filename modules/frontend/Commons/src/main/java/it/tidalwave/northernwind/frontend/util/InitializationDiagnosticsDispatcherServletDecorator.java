@@ -129,7 +129,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
         final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, UTF_8));
         pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n");
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");
-        pw.print(t.toString());
+        pw.print(t);
 //        t.printStackTrace(pw);
         pw.print("</pre>\n");
         pw.print("<h2>Boot log</h2>\n<pre>\n");

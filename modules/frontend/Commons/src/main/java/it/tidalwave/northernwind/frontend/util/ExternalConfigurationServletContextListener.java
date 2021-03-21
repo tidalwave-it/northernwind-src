@@ -253,6 +253,6 @@ public class ExternalConfigurationServletContextListener implements ServletConte
           }
 
         return "classpath*:/META-INF/*AutoBeans.xml,"
-             + "classpath*:/META-INF/WebConfigurationBeans.xml," + builder.toString();
+               + "classpath*:/META-INF/WebConfigurationBeans.xml," + builder;
       }
   }
