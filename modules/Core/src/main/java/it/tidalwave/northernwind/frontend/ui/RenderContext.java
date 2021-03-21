@@ -59,7 +59,7 @@ public interface RenderContext
      * @param       value       the property value
      *
      ******************************************************************************************************************/
-    public default <T> void setDynamicNodeProperty (@Nonnull Key<T> key, @Nonnull T value)
+    public default <T> void setDynamicNodeProperty (@Nonnull final Key<T> key, @Nonnull final T value)
       {
         getRequestContext().setDynamicNodeProperty(key, value);
       }

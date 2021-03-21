@@ -164,7 +164,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> Optional<T> getProperty (@Nonnull Key<T> key)
+    public <T> Optional<T> getProperty (@Nonnull final Key<T> key)
       {
         try
           {
@@ -263,7 +263,7 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ResourceProperties merged (@Nonnull ResourceProperties properties)
+    public ResourceProperties merged (@Nonnull final ResourceProperties properties)
       {
         final DefaultResourceProperties otherProperties = (DefaultResourceProperties)properties;
 
@@ -312,7 +312,7 @@ public class DefaultResourceProperties implements ResourceProperties
     /* visible for testing */ static <T> T convertValue (@Nonnull final Key<T> key, @Nonnull final Object value)
       {
         log.trace("convertValue({}, {})", key, value);
-        T result;
+        final T result;
 
         try
           {

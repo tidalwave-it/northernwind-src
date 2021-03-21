@@ -380,7 +380,7 @@ import lombok.extern.slf4j.Slf4j;
      * Logs the configuration contained in the given map of properties.
      *
      ******************************************************************************************************************/
-    private static void logConfiguration (@Nonnull final String name, Map<String, ?> propertyMap)
+    private static void logConfiguration (@Nonnull final String name, final Map<String, ?> propertyMap)
       {
         log.info(name);
         propertyMap.forEach((key, value) -> log.info(">>>> {}: {}", key, value));

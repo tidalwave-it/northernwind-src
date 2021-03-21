@@ -146,7 +146,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Nonnull
     private static String getConfigurationPath (@Nonnull final ServletContext servletContext)
       {
-        String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
+        final String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
 
         if (configurationPath != null)
           {

@@ -127,7 +127,7 @@ public class DefaultSiteViewControllerTest
     public void must_call_all_RequestProcessors_in_normal_scenario()
       {
         // when
-        Object result = underTest.processRequest(request);
+        final Object result = underTest.processRequest(request);
         // then
         assertThat(result, sameInstance(response));
 
@@ -158,7 +158,7 @@ public class DefaultSiteViewControllerTest
         // given
         mockRequestProcessor3.setStatus(Status.BREAK);
         // when
-        Object result = underTest.processRequest(request);
+        final Object result = underTest.processRequest(request);
         // then
         assertThat(result, sameInstance(response));
 

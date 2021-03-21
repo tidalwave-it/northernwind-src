@@ -56,7 +56,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
       {
         public List<TextWithTitle> contents;
 
-        public UnderTest(HtmlTextWithTitleView arg0, SiteNode arg1)
+        public UnderTest(final HtmlTextWithTitleView arg0, final SiteNode arg1)
           {
             super(arg0, arg1);
           }

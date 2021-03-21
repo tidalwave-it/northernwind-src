@@ -129,7 +129,7 @@ public final class MediaMetadataXsltAdapter
     private MediaMetadataProvider findMediaMetadataProvider()
       {
         // FIXME: should be read by Node properties
-        String metadataProviderName = "EmbeddedMediaMetadataProvider";
+        final String metadataProviderName = "EmbeddedMediaMetadataProvider";
 
         try
           {

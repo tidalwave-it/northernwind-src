@@ -113,7 +113,7 @@ public interface ResourceProperties extends As, Identifiable
           {
             @Nonnull
             @Override
-            public <T> T resolveProperty (@Nonnull Id propertyGroupId, @Nonnull Key<T> key)
+            public <T> T resolveProperty (@Nonnull final Id propertyGroupId, @Nonnull final Key<T> key)
               throws NotFoundException
               {
                 throw new NotFoundException(key.stringValue());

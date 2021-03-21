@@ -146,7 +146,7 @@ public final class MockResourceFile implements ResourceFile
 
     @Nonnull
     @Override
-    public String asText(@Nonnull String encoding)
+    public String asText (@Nonnull final String encoding)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
@@ -180,13 +180,13 @@ public final class MockResourceFile implements ResourceFile
 
     @Nonnull
     @Override
-    public ResourceFile createFolder(@Nonnull String name)
+    public ResourceFile createFolder (@Nonnull final String name)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public void copyTo(@Nonnull ResourceFile targetFolder)
+    public void copyTo (@Nonnull final ResourceFile targetFolder)
       {
         throw new UnsupportedOperationException("Not supported yet.");
       }
