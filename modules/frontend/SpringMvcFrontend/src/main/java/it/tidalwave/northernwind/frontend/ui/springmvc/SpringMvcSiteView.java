@@ -54,7 +54,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Configurable @Scope(value = "session") @Slf4j
+@Configurable @Scope("session") @Slf4j
 public class SpringMvcSiteView implements SiteView
   {
     @Inject

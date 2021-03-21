@@ -50,7 +50,7 @@ import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Scope(value = "session") @Slf4j
+@Scope("session") @Slf4j
 public class DefaultSiteViewController implements SiteViewController
   {
     @Inject

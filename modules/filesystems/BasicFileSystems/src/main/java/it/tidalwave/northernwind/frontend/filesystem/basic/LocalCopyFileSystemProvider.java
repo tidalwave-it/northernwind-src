@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j @ToString(of = {"rootPath"})
+@Slf4j @ToString(of = "rootPath")
 public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
   {
     @Getter @Setter @Nonnull
