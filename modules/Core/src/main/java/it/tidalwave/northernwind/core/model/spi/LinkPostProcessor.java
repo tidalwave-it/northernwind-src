@@ -33,6 +33,7 @@ import javax.annotation.Nonnull;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface LinkPostProcessor
   {
     @Nonnull

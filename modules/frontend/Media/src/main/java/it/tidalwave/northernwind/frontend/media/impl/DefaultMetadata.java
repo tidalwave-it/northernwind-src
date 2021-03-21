@@ -160,7 +160,7 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Map<String, String> getLensMap (@Nonnull final ResourceProperties siteNodeProperties)
+    private static Map<String, String> getLensMap (@Nonnull final ResourceProperties siteNodeProperties)
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();

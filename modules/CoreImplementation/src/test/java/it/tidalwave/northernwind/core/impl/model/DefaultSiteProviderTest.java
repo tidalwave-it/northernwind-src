@@ -59,8 +59,6 @@ public class DefaultSiteProviderTest
 
     private TaskExecutorMock executor;
 
-    private ServletContext servletContext;
-
     private Site.Builder.CallBack siteBuilderCallback;
 
     private static final String SERVLET_CONTEXT_PATH = "thecontextpath";
@@ -73,7 +71,6 @@ public class DefaultSiteProviderTest
       {
         context = new ClassPathXmlApplicationContext("DefaultSiteProviderTest/TestBeans.xml");
         executor = context.getBean(TaskExecutorMock.class);
-        servletContext = context.getBean(ServletContext.class);
         site = mock(DefaultSite.class);
 
         siteBuilderCallback = mock(Site.Builder.CallBack.class);
@@ -82,6 +79,7 @@ public class DefaultSiteProviderTest
         final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
         when(modelFactory.createSite()).thenReturn(builder);
 
+        final ServletContext servletContext = context.getBean(ServletContext.class);
         when(servletContext.getContextPath()).thenReturn(SERVLET_CONTEXT_PATH);
       }
 

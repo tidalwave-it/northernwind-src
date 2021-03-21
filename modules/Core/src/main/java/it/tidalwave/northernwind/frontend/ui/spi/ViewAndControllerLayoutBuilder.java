@@ -110,7 +110,7 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ViewAndController createComponent (@Nonnull Layout layout)
+    private ViewAndController createComponent (@Nonnull final Layout layout)
       {
         try
           {
@@ -130,7 +130,7 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ViewAndController createErrorView (@Nonnull Layout layout, @Nonnull Throwable e)
+    private ViewAndController createErrorView (@Nonnull final Layout layout, @Nonnull final Throwable e)
       {
         return new ViewAndController(errorViewSupplier.apply(layout, e), VOID_CONTROLLER);
       }

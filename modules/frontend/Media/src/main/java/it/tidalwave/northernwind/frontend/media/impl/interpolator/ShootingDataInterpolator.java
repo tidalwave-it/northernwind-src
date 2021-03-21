@@ -86,7 +86,7 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
         builder.append(" @ ");
         builder.append(exif.getFocalLength().intValue()).append(" mm, ");
         // FIXME: eventually teleconverter
-        builder.append(exif.getExposureTime().toString()).append(" sec @ \u0192/");
+        builder.append(exif.getExposureTime()).append(" sec @ \u0192/");
         builder.append(new DecimalFormat("0.#").format(exif.getFNumber().floatValue()));
 
         final Rational exposureBiasValue = exif.getExposureBiasValue();
