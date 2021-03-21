@@ -141,11 +141,11 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
           }
 
         final Map<String, Content> contentMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
-        return List.of(contentMapByRelativePath.computeIfAbsent(relativePath, this::createMockContentWithPath));
+        return List.of(contentMapByRelativePath.computeIfAbsent(relativePath, MockContentSiteFinder::createMockContentWithPath));
       }
 
     @Nonnull
-    private Content createMockContentWithPath (@Nonnull final String relativePath)
+    private static Content createMockContentWithPath (@Nonnull final String relativePath)
       {
         final Content content = createMockContent();
         final ResourceProperties properties = createMockProperties();

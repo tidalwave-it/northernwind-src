@@ -80,7 +80,7 @@ public class SpringMvcSiteView implements SiteView
                                                                                              renderContext,
                                                                                              this::createErrorView);
         siteNode.getLayout().accept(vacBuilder);
-        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(request, requestContext, vacBuilder, this::attach);
+        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(request, requestContext, vacBuilder, SpringMvcSiteView::attach);
         siteNode.getLayout().accept(renderer);
         final TextHolder textHolder = renderer.getRootComponent();
         responseHolder.response().withStatus(httpStatus.get().value())
@@ -112,7 +112,7 @@ public class SpringMvcSiteView implements SiteView
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void attach (@Nonnull final TextHolder parent, @Nonnull final TextHolder child)
+    private static void attach (@Nonnull final TextHolder parent, @Nonnull final TextHolder child)
       {
         parent.addComponent(child);
       }

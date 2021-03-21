@@ -82,8 +82,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      *
      ******************************************************************************************************************/
-    protected void loadProperties (@Nonnull final ServletContext servletContext,
-                                   @Nonnull final String configurationFile)
+    protected static void loadProperties (@Nonnull final ServletContext servletContext,
+                                          @Nonnull final String configurationFile)
       {
         final File file = new File(configurationFile);
         final Properties properties = new Properties();
@@ -144,7 +144,7 @@ public class ExternalConfigurationServletContextListener implements ServletConte
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String getConfigurationPath (@Nonnull final ServletContext servletContext)
+    private static String getConfigurationPath (@Nonnull final ServletContext servletContext)
       {
         String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
 

@@ -100,7 +100,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      ******************************************************************************************************************/
     @Nonnull
-    private Throwable findUpperCauseWithMessage (@Nonnull final Throwable throwable)
+    private static Throwable findUpperCauseWithMessage (@Nonnull final Throwable throwable)
       {
         Throwable cause = throwable;
 
@@ -121,7 +121,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
      *
      *
      ******************************************************************************************************************/
-    private void sendProcessingError (@Nonnull final Throwable t, @Nonnull final HttpServletResponse response)
+    private static void sendProcessingError (@Nonnull final Throwable t, @Nonnull final HttpServletResponse response)
       throws IOException
       {
         response.setStatus(500);

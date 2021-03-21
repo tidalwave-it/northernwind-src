@@ -724,7 +724,7 @@ public class DefaultBlogViewControllerTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void assertSortedInReverseOrder (@Nonnull final List<ZonedDateTime> dates)
+    private static void assertSortedInReverseOrder (@Nonnull final List<ZonedDateTime> dates)
       {
         final List<ZonedDateTime> sorted = dates.stream()
                                                 .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())

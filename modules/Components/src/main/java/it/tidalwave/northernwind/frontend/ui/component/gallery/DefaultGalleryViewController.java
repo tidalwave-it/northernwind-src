@@ -88,7 +88,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
           }
 
         @Nonnull
-        private VirtualSiteNode createVirtualNode (@Nonnull final SiteNode siteNode, final String relativeUri)
+        private static VirtualSiteNode createVirtualNode (@Nonnull final SiteNode siteNode, final String relativeUri)
           {
             return new VirtualSiteNode(siteNode,
                                        siteNode.getRelativeUri().appendedWith(relativeUri),

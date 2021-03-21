@@ -216,7 +216,7 @@ public class XsltMacroFilter implements Filter
      *
      ******************************************************************************************************************/
     @Nonnull
-    private String asText (@Nonnull final ResourceFile file)
+    private static String asText (@Nonnull final ResourceFile file)
       {
         try
           {
