@@ -65,8 +65,6 @@ public class DefaultSiteViewControllerTest
 
     private RequestHolder requestHolder;
 
-    private ResponseHolder<Object> responseHolder;
-
     private ResponseBuilder<Object> responseBuilder;
 
     private Request request;
@@ -102,10 +100,10 @@ public class DefaultSiteViewControllerTest
         request = mock(Request.class);
         response = mock(Object.class);
         requestHolder = context.getBean(RequestHolder.class);
-        responseHolder = context.getBean(ResponseHolder.class);
+        final ResponseHolder<Object> responseHolder = context.getBean(ResponseHolder.class);
         responseBuilder = context.getBean(ResponseBuilder.class);
         when(responseHolder.get()).thenReturn(response);
-        when(responseHolder.response()).thenReturn( responseBuilder);
+        when(responseHolder.response()).thenReturn(responseBuilder);
         when(responseBuilder.forException(any(NotFoundException.class))).thenReturn(responseBuilder);
         when(responseBuilder.forException(any(HttpStatusException.class))).thenReturn(responseBuilder);
         when(responseBuilder.forException(any(Throwable.class))).thenReturn(responseBuilder);

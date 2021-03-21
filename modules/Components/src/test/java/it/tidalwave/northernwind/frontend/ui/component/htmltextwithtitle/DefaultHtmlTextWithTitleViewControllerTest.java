@@ -70,8 +70,6 @@ public class DefaultHtmlTextWithTitleViewControllerTest
 
     private final Id viewId = new Id("viewId");
 
-    private HtmlTextWithTitleView view;
-
     private SiteNode siteNode;
 
     private Site site;
@@ -79,8 +77,6 @@ public class DefaultHtmlTextWithTitleViewControllerTest
     private UnderTest underTest;
 
     private RenderContext renderContext;
-
-    private ResourceProperties viewProperties;
 
     private final FileTestHelper fileTestHelper = new FileTestHelper(getClass().getSimpleName());
 
@@ -98,7 +94,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("uri"));
         final ResourceProperties siteNodeProperties = createMockProperties();
 
-        viewProperties = createMockProperties();
+        final ResourceProperties viewProperties = createMockProperties();
 
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
@@ -107,7 +103,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
         final RequestContext requestContext = mock(RequestContext.class);
         renderContext = new DefaultRenderContext(request, requestContext);
 
-        view = mock(HtmlTextWithTitleView.class);
+        final HtmlTextWithTitleView view = mock(HtmlTextWithTitleView.class);
         when(view.getId()).thenReturn(viewId);
 
         underTest = new UnderTest(view, siteNode);

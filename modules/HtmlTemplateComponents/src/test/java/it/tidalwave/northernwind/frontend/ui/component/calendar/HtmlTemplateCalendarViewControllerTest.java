@@ -68,12 +68,6 @@ public class HtmlTemplateCalendarViewControllerTest
 
     private HtmlTemplateCalendarView view;
 
-    private SiteNode siteNode;
-
-    private Site site;
-
-    private RequestLocaleManager requestLocaleManager;
-
     private RenderContext context;
 
     private final Id viewId = new Id("viewId");
@@ -87,11 +81,11 @@ public class HtmlTemplateCalendarViewControllerTest
     private void setup()
       throws Exception
       {
-        site = createMockSite();
+        final Site site = createMockSite();
 
         view = new HtmlTemplateCalendarView(viewId, site); // this is an integration test
 
-        siteNode = createMockSiteNode(site);
+        final SiteNode siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("diary"));
         final ResourceProperties siteNodeProperties = createMockProperties();
 
@@ -104,7 +98,7 @@ public class HtmlTemplateCalendarViewControllerTest
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        requestLocaleManager = mock(RequestLocaleManager.class);
+        final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         final Request request = mock(Request.class);

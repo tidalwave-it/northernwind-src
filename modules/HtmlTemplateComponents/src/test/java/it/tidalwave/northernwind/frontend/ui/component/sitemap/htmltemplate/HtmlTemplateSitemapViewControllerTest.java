@@ -53,10 +53,6 @@ public class HtmlTemplateSitemapViewControllerTest
 
     private HtmlTemplateSitemapView view;
 
-    private SiteNode siteNode;
-
-    private Site site;
-
     private final Id viewId = new Id("viewId");
 
     /*******************************************************************************************************************
@@ -66,7 +62,7 @@ public class HtmlTemplateSitemapViewControllerTest
     public void setup()
       throws Exception
       {
-        site = createMockSite();
+        final Site site = createMockSite();
 
         final MockNodesForSitemap mockSiteNodes = new MockNodesForSitemap(site);
         final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
@@ -77,7 +73,7 @@ public class HtmlTemplateSitemapViewControllerTest
 
         view = new HtmlTemplateSitemapView(viewId, site);
 
-        siteNode = createMockSiteNode(site);
+        final SiteNode siteNode = createMockSiteNode(site);
         final ResourceProperties siteNodeProperties = createMockProperties();
         final ResourceProperties viewProperties = createMockProperties();
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);

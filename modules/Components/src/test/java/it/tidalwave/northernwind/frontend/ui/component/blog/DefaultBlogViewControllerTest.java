@@ -117,17 +117,11 @@ public class DefaultBlogViewControllerTest
 
     private static final String SITE_NODE_RELATIVE_URI = "/blogNode";
 
-    private Site site;
-
     private SiteNode siteNode;
-
-    private BlogView view;
 
     private UnderTest underTest;
 
     private ResourceProperties viewProperties;
-
-    private ResourceProperties siteNodeProperties;
 
     private RenderContext renderContext;
 
@@ -150,19 +144,19 @@ public class DefaultBlogViewControllerTest
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
 
-        site = createMockSite();
+        final Site site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
 
         viewProperties = createMockProperties();
-        siteNodeProperties = createMockProperties();
+        final ResourceProperties siteNodeProperties = createMockProperties();
 
         siteNode = createMockSiteNode(site);
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of(SITE_NODE_RELATIVE_URI));
 
-        view = mock(BlogView.class);
+        final BlogView view = mock(BlogView.class);
         when(view.getId()).thenReturn(viewId);
 
         request = mock(Request.class);
