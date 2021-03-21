@@ -36,7 +36,8 @@ import javax.annotation.Nonnull;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface MetadataInterpolatorFactory 
+@FunctionalInterface
+public interface MetadataInterpolatorFactory
   {
     /*******************************************************************************************************************
      *

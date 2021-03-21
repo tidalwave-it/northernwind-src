@@ -37,6 +37,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
+@FunctionalInterface
 public interface MediaMetadataProvider
   {
     /*******************************************************************************************************************

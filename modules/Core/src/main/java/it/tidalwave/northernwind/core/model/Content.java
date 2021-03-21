@@ -91,6 +91,7 @@ public interface Content extends Resource, SimpleComposite<Content>
     public final class Builder
       {
         // Workaround for a Lombok limitation with Wither and subclasses
+        @FunctionalInterface
         public static interface CallBack
           {
             @Nonnull
