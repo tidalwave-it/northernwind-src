@@ -93,7 +93,7 @@ public class XsltMacroFilter implements Filter
 
     private String xslt = "";
 
-    private volatile boolean initialized = false;
+    private volatile boolean initialized;
 
     private Method serializerMethod;
 

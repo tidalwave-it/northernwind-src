@@ -262,9 +262,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
 
     private Optional<String> uriOrCategory = Optional.empty();
 
-    private boolean indexMode = false;
+    private boolean indexMode;
 
-    private boolean tagCloudMode = false;
+    private boolean tagCloudMode;
 
     protected Optional<String> title = Optional.empty();
 
