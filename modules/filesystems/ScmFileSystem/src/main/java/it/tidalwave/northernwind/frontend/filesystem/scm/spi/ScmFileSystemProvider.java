@@ -38,6 +38,7 @@ import java.nio.file.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.beans.PropertyVetoException;
+import it.tidalwave.util.ProcessExecutorException;
 import org.openide.filesystems.LocalFileSystem;
 import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.messagebus.MessageBus;

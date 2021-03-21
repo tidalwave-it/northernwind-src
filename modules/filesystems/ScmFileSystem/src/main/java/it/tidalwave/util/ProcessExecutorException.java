@@ -24,7 +24,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
+package it.tidalwave.util;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -54,10 +54,10 @@ public class ProcessExecutorException extends IOException
     @Getter @Nonnull
     private final List<String> stderr;
 
-    protected ProcessExecutorException (@Nonnull final String message,
-                                        final int exitCode,
-                                        @Nonnull final List<String> stdout,
-                                        @Nonnull final List<String> stderr)
+    public ProcessExecutorException (@Nonnull final String message,
+                                     final int exitCode,
+                                     @Nonnull final List<String> stdout,
+                                     @Nonnull final List<String> stderr)
       {
         super(message);
         this.exitCode = exitCode;
