@@ -89,12 +89,16 @@ public class DefaultRedirectProcessor implements RequestProcessor
 
     /* VisibleForTesting */ static final Key<List<String>> P_PERMANENT_REDIRECTS = new Key<>("permanentRedirects") {};
 
+    /* VisibleForTesting */ static final Key<List<String>> P_TEMPORARY_REDIRECTS = new Key<>("temporaryRedirects") {};
+
     @Inject
     private Provider<SiteProvider> siteProvider;
 
     private Site site;
 
     private final List<Mapping> permanentMappings = new ArrayList<>();
+
+    private final List<Mapping> temporaryMappings = new ArrayList<>();
 
     private boolean initialized;
 
@@ -116,9 +120,21 @@ public class DefaultRedirectProcessor implements RequestProcessor
             permanentMappings.add(new Mapping(permanentRedirectConfig));
           }
 
+        for (final String temporaryRedirectConfig : properties.getProperty(P_TEMPORARY_REDIRECTS).orElse(emptyList()))
+          {
+            temporaryMappings.add(new Mapping(temporaryRedirectConfig));
+          }
+
         log.info("Permanent redirect mappings:");
 
         for (final Mapping mapping : permanentMappings)
+          {
+            log.info(">>>> {}", mapping);
+          }
+
+        log.info("Temporary redirect mappings:");
+
+        for (final Mapping mapping : temporaryMappings)
           {
             log.info(">>>> {}", mapping);
           }
@@ -159,8 +175,19 @@ public class DefaultRedirectProcessor implements RequestProcessor
 
                 if (!newRelativeUri.equals(relativeUri))
                   {
-                    log.info(">>>> redirecting from {} to {} ...", relativeUri, newRelativeUri);
+                    log.info(">>>> permanently redirecting from {} to {} ...", relativeUri, newRelativeUri);
                     throw HttpStatusException.permanentRedirect(site, newRelativeUri);
+                  }
+              }
+
+            for (final Mapping mapping : temporaryMappings)
+              {
+                final String newRelativeUri = mapping.replace(relativeUri);
+
+                if (!newRelativeUri.equals(relativeUri))
+                  {
+                    log.info(">>>> temporarily redirecting from {} to {} ...", relativeUri, newRelativeUri);
+                    throw HttpStatusException.temporaryRedirect(site, newRelativeUri);
                   }
               }
           }
