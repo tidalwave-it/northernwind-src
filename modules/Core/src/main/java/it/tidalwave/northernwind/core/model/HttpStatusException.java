@@ -61,16 +61,15 @@ public class HttpStatusException extends Exception
      * Creates an exception representing a temporary redirect.
      *
      * @param  site         the {@link Site}
-     * @param  relativeUri  the relativeUri to redirect to
+     * @param  target       the target to redirect to
      * @return              the exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static HttpStatusException temporaryRedirect (@Nonnull final Site site, @Nonnull final String relativeUri)
+    public static HttpStatusException temporaryRedirect (@Nonnull final Site site, @Nonnull final String target)
       {
         // FIXME: inject Site
-        return new HttpStatusException(SC_MOVED_TEMPORARILY)
-                  .withHeader("Location", site.createLink(ResourcePath.of(relativeUri)));
+        return new HttpStatusException(SC_MOVED_TEMPORARILY).withHeader("Location", createUrl(site, target));
       }
 
     /*******************************************************************************************************************
@@ -78,16 +77,15 @@ public class HttpStatusException extends Exception
      * Creates an exception representing a permanent redirect.
      *
      * @param  site         the {@link Site}
-     * @param  relativeUri  the relativeUri to redirect to
+     * @param  target       the target to redirect to
      * @return              the exception
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static HttpStatusException permanentRedirect (@Nonnull final Site site, @Nonnull final String relativeUri)
+    public static HttpStatusException permanentRedirect (@Nonnull final Site site, @Nonnull final String target)
       {
         // FIXME: inject Site
-        return new HttpStatusException(SC_MOVED_PERMANENTLY)
-                  .withHeader("Location", site.createLink(ResourcePath.of(relativeUri)));
+        return new HttpStatusException(SC_MOVED_PERMANENTLY).withHeader("Location", createUrl(site, target));
       }
 
     /*******************************************************************************************************************
@@ -140,5 +138,20 @@ public class HttpStatusException extends Exception
     public boolean isError()
       {
         return !GOOD_CODES.contains(httpStatus);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * @param site
+     * @param target
+     * @return
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private static String createUrl (@Nonnull final Site site, @Nonnull final String target)
+      {
+        return target.startsWith("http://") || target.startsWith("https://")
+                ? target
+                : site.createLink(ResourcePath.of(target));
       }
   }
