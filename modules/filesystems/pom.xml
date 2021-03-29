@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-modules</artifactId>
-        <version>1.2-ALPHA-8</version>
+        <version>1.2-ALPHA-9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-filesystem</artifactId>
-    <version>1.2-ALPHA-8</version>
+    <version>1.2-ALPHA-9-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>NorthernWind :: Filesystems</name>
     <description>The parent POM for all filesystem modules.</description>
