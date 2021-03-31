@@ -36,6 +36,7 @@ import it.tidalwave.util.Id;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -45,8 +46,7 @@ import lombok.RequiredArgsConstructor;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Immutable
-@RequiredArgsConstructor
+@Immutable @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields")
 public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> implements LayoutFinder
   {
     private static final long serialVersionUID = 2354576587657345L;
@@ -70,9 +70,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
      ******************************************************************************************************************/
     public DefaultLayoutFinder (@Nonnull final List<Layout> children, @Nonnull final Map<Id, Layout> childrenMapById)
       {
-        this.children = children;
-        this.childrenMapById = childrenMapById;
-        this.id = null;
+        this(children, childrenMapById, null);
       }
 
     /*******************************************************************************************************************
@@ -101,7 +99,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
     @Override @Nonnull
     public LayoutFinder withId (@Nonnull final Id id)
       {
-        return clone(new DefaultLayoutFinder(children, childrenMapById, id));
+        return clonedWith(fields(children, childrenMapById, id));
       }
 
     /*******************************************************************************************************************

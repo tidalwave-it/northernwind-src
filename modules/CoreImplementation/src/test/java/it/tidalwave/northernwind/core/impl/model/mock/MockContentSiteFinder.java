@@ -39,6 +39,7 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.northernwind.core.model.Content._Content_;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -82,7 +83,7 @@ import static org.mockito.Mockito.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields")
 public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Content>>
                                    implements SiteFinder<Content>
   {
@@ -99,14 +100,7 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
 
     public static void registerTo (@Nonnull final Site site)
       {
-        when(site.find(eq(_Content_))).thenReturn(new MockContentSiteFinder(site));
-      }
-
-    private MockContentSiteFinder (@Nonnull final Site site)
-      {
-        this.site         = site;
-        this.relativePath = null;
-        this.relativeUri  = null;
+        when(site.find(eq(_Content_))).thenReturn(new MockContentSiteFinder(site, null, null));
       }
 
     public MockContentSiteFinder (@Nonnull final MockContentSiteFinder other, @Nonnull final Object override)
@@ -121,13 +115,13 @@ public class MockContentSiteFinder extends FinderSupport<Content, SiteFinder<Con
     @Override @Nonnull
     public SiteFinder<Content> withRelativePath (@Nonnull final String relativePath)
       {
-        return clone(new MockContentSiteFinder(site, relativePath, relativeUri));
+        return clonedWith(fields(site, relativePath, relativeUri));
       }
 
     @Override @Nonnull
     public SiteFinder<Content> withRelativeUri (@Nonnull final String relativeUri)
       {
-        return clone(new MockContentSiteFinder(site, relativePath, relativeUri));
+        return clonedWith(fields(site, relativePath, relativeUri));
       }
 
     @Override @Nonnull
