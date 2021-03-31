@@ -50,7 +50,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
   {
     private static final long serialVersionUID = -1393470412002725841L;
 
-    private final transient Function<Finder, List<ResourceFile>> resultComputer;
+    private final transient Function<Finder, List<? extends ResourceFile>> resultComputer;
 
     @Getter
     private final boolean recursive;
@@ -68,7 +68,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      * @return                  the {@code Finder}
      *
      ******************************************************************************************************************/
-    public static Finder withComputeResults (final Function<Finder, List<ResourceFile>> resultComputer)
+    public static Finder withComputeResults (final Function<Finder, List<? extends ResourceFile>> resultComputer)
       {
         return withComputeResults("", resultComputer);
       }
@@ -85,7 +85,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      ******************************************************************************************************************/
     public static Finder withComputeResults (@Nonnull final String finderName,
-                                             final Function<Finder, List<ResourceFile>> resultComputer)
+                                             final Function<Finder, List<? extends ResourceFile>> resultComputer)
       {
         return new ResourceFileFinderSupport(finderName, resultComputer);
       }
@@ -96,7 +96,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      ******************************************************************************************************************/
     private ResourceFileFinderSupport (@Nonnull final String finderName,
-                                       final Function<Finder, List<ResourceFile>> resultComputer)
+                                       final Function<Finder, List<? extends ResourceFile>> resultComputer)
       {
         super(finderName);
         this.resultComputer = resultComputer;
