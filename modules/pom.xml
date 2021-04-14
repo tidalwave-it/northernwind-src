@@ -27,11 +27,9 @@
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
         <log.file>target/nw.log</log.file>
 
-        <activation.version>1.1.1</activation.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
         <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
-        <jaxb.version>2.2.11</jaxb.version>
         <jetty.version>6.1.26</jetty.version>
         <jtidy.version>r938</jtidy.version>
         <mistral.version>1.0-ALPHA-3</mistral.version>
@@ -72,6 +70,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-bom</artifactId>
+                <version>${tft.jaxb.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.imajine.image</groupId>
@@ -100,27 +105,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
                 <version>${commons-math.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-core</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.activation</groupId>
-                <artifactId>activation</artifactId>
-                <version>${activation.version}</version>
             </dependency>
 
             <dependency>

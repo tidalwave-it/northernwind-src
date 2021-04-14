@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>5.0-ALPHA-9</version>
+        <version>5.0-ALPHA-13</version>
         <relativePath />
     </parent>
 
@@ -44,9 +44,6 @@
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/northernwind-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/northernwind-src/src</scm.repo.browse.url>
         <tft.project.url>http://northernwind.tidalwave.it</tft.project.url>
-
-        <tft.jaxb2-maven-plugin.version>1.3</tft.jaxb2-maven-plugin.version> <!-- latest breaks the build -->
-        <!-- tft.maven-pmd-plugin.version>3.7</tft.maven-pmd-plugin.version --> <!-- latest breaks the build -->
     </properties>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->

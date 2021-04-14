@@ -35,17 +35,17 @@
     <bean id="frontendOjectFactory"
           class="it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory" />
 
-    <bean id="frontendJaxbContext" class="javax.xml.bind.JAXBContext" factory-method="newInstance">
+    <bean id="frontendJaxbContext" class="jakarta.xml.bind.JAXBContext" factory-method="newInstance">
         <constructor-arg index="0" value="it.tidalwave.northernwind.core.impl.io.jaxb"/>
     </bean>
 
     <bean id="frontendMarshaller"
-          class="javax.xml.bind.Marshaller"
+          class="jakarta.xml.bind.Marshaller"
           factory-bean="frontendJaxbContext"
           factory-method="createMarshaller"/>
 
     <bean id="frontendUnmarshaller"
-          class="javax.xml.bind.Unmarshaller"
+          class="jakarta.xml.bind.Unmarshaller"
           factory-bean="frontendJaxbContext"
           factory-method="createUnmarshaller"/>
 
