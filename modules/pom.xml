@@ -27,7 +27,7 @@
         <main.webapp.url>http://localhost:8080${main.webapp.contextPath}</main.webapp.url>
         <log.file>target/nw.log</log.file>
 
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-math.version>3.0</commons-math.version>
         <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
         <jetty.version>6.1.26</jetty.version>
