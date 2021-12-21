@@ -35,6 +35,7 @@ import java.util.function.Function;
 import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -44,13 +45,12 @@ import lombok.ToString;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Immutable
-@RequiredArgsConstructor @ToString(callSuper = true)
+@Immutable @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields") @ToString(callSuper = true)
 public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile, Finder> implements Finder
   {
     private static final long serialVersionUID = -1393470412002725841L;
 
-    private final transient Function<Finder, List<ResourceFile>> resultComputer;
+    private final transient Function<Finder, List<? extends ResourceFile>> resultComputer;
 
     @Getter
     private final boolean recursive;
@@ -68,9 +68,9 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      * @return                  the {@code Finder}
      *
      ******************************************************************************************************************/
-    public static Finder withComputeResults (final Function<Finder, List<ResourceFile>> resultComputer)
+    public static Finder withComputeResults (final Function<Finder, List<? extends ResourceFile>> resultComputer)
       {
-        return new ResourceFileFinderSupport(resultComputer);
+        return withComputeResults("", resultComputer);
       }
 
     /*******************************************************************************************************************
@@ -85,7 +85,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      ******************************************************************************************************************/
     public static Finder withComputeResults (@Nonnull final String finderName,
-                                             final Function<Finder, List<ResourceFile>> resultComputer)
+                                             final Function<Finder, List<? extends ResourceFile>> resultComputer)
       {
         return new ResourceFileFinderSupport(finderName, resultComputer);
       }
@@ -95,20 +95,8 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
      *
      *
      ******************************************************************************************************************/
-    private ResourceFileFinderSupport (final Function<Finder, List<ResourceFile>> resultComputer)
-      {
-        this.resultComputer = resultComputer;
-        this.recursive = false;
-        this.name = null;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
     private ResourceFileFinderSupport (@Nonnull final String finderName,
-                                       final Function<Finder, List<ResourceFile>> resultComputer)
+                                       final Function<Finder, List<? extends ResourceFile>> resultComputer)
       {
         super(finderName);
         this.resultComputer = resultComputer;
@@ -142,7 +130,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
     @Override @Nonnull
     public Finder withRecursion (final boolean recursive)
       {
-        return clone(new ResourceFileFinderSupport(resultComputer, recursive, name));
+        return clonedWith(fields(resultComputer, recursive, name));
       }
 
     /*******************************************************************************************************************
@@ -153,7 +141,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
     @Override @Nonnull
     public Finder withName (@Nonnull final String name)
       {
-        return clone(new ResourceFileFinderSupport(resultComputer, recursive, name));
+        return clonedWith(fields(resultComputer, recursive, name));
       }
 
     /*******************************************************************************************************************

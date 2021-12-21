@@ -38,6 +38,7 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
@@ -81,7 +82,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields")
 public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<SiteNode>>
                                     implements SiteFinder<SiteNode>
   {
@@ -98,14 +99,7 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
 
     public static void registerTo (@Nonnull final Site site)
       {
-        when(site.find(eq(_SiteNode_))).thenReturn(new MockSiteNodeSiteFinder(site));
-      }
-
-    private MockSiteNodeSiteFinder (@Nonnull final Site site)
-      {
-        this.site         = site;
-        this.relativePath = null;
-        this.relativeUri  = null;
+        when(site.find(eq(_SiteNode_))).thenReturn(new MockSiteNodeSiteFinder(site, null, null));
       }
 
     public MockSiteNodeSiteFinder (@Nonnull final MockSiteNodeSiteFinder other, @Nonnull final Object override)
@@ -120,13 +114,13 @@ public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<S
     @Override @Nonnull
     public SiteFinder<SiteNode> withRelativePath (@Nonnull final String relativePath)
       {
-        return clone(new MockSiteNodeSiteFinder(site, relativePath, relativeUri));
+        return clonedWith(fields(site, relativePath, relativeUri));
       }
 
     @Override @Nonnull
     public SiteFinder<SiteNode> withRelativeUri (@Nonnull final String relativeUri)
       {
-        return clone(new MockSiteNodeSiteFinder(site, relativePath, relativeUri));
+        return clonedWith(fields(site, relativePath, relativeUri));
       }
 
     @Override @Nonnull
