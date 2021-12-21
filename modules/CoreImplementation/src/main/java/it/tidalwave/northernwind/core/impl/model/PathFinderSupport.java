@@ -32,7 +32,7 @@ import javax.inject.Provider;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -53,7 +53,7 @@ import static java.util.stream.Collectors.toList;
  *
  **********************************************************************************************************************/
 @Configurable(preConstruction = true) @Slf4j @ToString
-public class PathFinderSupport<T extends Resource> extends SimpleFinderSupport<T>
+public class PathFinderSupport<T extends Resource> extends FinderSupport<T, PathFinderSupport<T>>
   {
     private static final long serialVersionUID = 2345536092354546452L;
 

@@ -34,7 +34,7 @@ import java.util.Map;
 import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.spi.SimpleFinderSupport;
+import it.tidalwave.util.spi.FinderSupport;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapter;
@@ -62,7 +62,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor
-    private static class VirtualSiteNodeFinder extends SimpleFinderSupport<SiteNode>
+    private static class VirtualSiteNodeFinder extends FinderSupport<SiteNode, VirtualSiteNodeFinder>
       {
         private static final long serialVersionUID = 1L;
 

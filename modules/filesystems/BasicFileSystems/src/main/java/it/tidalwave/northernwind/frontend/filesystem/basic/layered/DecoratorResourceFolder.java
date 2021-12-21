@@ -100,7 +100,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
             //
             else if (recursive)
               {
-                return (List)delegate.findChildren().withRecursion(recursive).results();
+                return delegate.findChildren().withRecursion(recursive).results();
               }
             else
               {

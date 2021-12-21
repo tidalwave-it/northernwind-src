@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
@@ -43,7 +43,7 @@ import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
