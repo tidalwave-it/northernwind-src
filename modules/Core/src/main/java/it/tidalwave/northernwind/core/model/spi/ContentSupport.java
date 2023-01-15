@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -54,7 +53,7 @@ public abstract class ContentSupport implements Content
     private final Resource resource;
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     @Nonnull
     protected final ModelFactory modelFactory;

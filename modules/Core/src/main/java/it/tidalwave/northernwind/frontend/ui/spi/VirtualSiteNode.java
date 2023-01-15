@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -64,7 +63,7 @@ public class VirtualSiteNode implements SiteNode
     private final ResourceProperties properties;
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     @Override @Nonnull
     public Site getSite()

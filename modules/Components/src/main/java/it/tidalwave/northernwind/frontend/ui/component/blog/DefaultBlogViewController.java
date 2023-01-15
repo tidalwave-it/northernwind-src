@@ -43,7 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
-import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -188,7 +188,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     // TODO: add eventual localized versions
     @RequiredArgsConstructor
-    private static class VirtualSiteNodeFinder extends FinderSupport<SiteNode, VirtualSiteNodeFinder>
+    private static class VirtualSiteNodeFinder extends HierarchicFinderSupport<SiteNode, VirtualSiteNodeFinder>
       {
         private static final long serialVersionUID = 1L;
 

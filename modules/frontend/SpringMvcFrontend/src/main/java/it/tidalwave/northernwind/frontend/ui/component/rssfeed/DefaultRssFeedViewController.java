@@ -125,7 +125,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
     @Override @Nonnull
     public Finder<SiteNode> findVirtualSiteNodes()
       {
-        return new DefaultSiteFinder<>("empty", emptyMap(), null); // TODO: FinderSupport.emptyFinder();
+        return new DefaultSiteFinder<>("empty", emptyMap(), null); // TODO: HierarchicFinderSupport.emptyFinder();
       }
 
     /*******************************************************************************************************************

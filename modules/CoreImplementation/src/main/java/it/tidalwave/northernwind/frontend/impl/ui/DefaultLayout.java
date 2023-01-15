@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -71,7 +70,7 @@ public class DefaultLayout implements Layout, Cloneable
     private final Map<Id, Layout> childrenMapById = new HashMap<>();
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     // FIXME: make it Immutable
 

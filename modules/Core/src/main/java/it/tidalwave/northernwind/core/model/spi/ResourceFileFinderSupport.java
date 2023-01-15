@@ -32,7 +32,7 @@ import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
 import lombok.AccessLevel;
@@ -46,7 +46,7 @@ import lombok.ToString;
  *
  **********************************************************************************************************************/
 @Immutable @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields") @ToString(callSuper = true)
-public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile, Finder> implements Finder
+public final class ResourceFileFinderSupport extends HierarchicFinderSupport<ResourceFile, Finder> implements Finder
   {
     private static final long serialVersionUID = -1393470412002725841L;
 
@@ -106,7 +106,7 @@ public final class ResourceFileFinderSupport extends FinderSupport<ResourceFile,
 
     /*******************************************************************************************************************
      *
-     * Clone constructor. See documentation withComputeResults {@link FinderSupport} for more information.
+     * Clone constructor. See documentation withComputeResults {@link HierarchicFinderSupport} for more information.
      *
      * @param other     the {@code Finder} to clone
      * @param override  the override object

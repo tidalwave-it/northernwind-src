@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
@@ -52,7 +51,7 @@ public abstract class MediaSupport implements Media
     private final Resource resource;
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     public MediaSupport (@Nonnull final Media.Builder builder)
       {
