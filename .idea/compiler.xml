@@ -68,6 +68,8 @@
       <module name="it-tidalwave-northernwind-core-filesystem-scm" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-core-marshalling-default" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-core-profiling" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-filesystem" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-frontend" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-frontend-commons" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-frontend-components" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-frontend-components-htmltemplate" options="-Xlint:all" />
@@ -77,6 +79,9 @@
       <module name="it-tidalwave-northernwind-frontend-springmvc" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-frontend-springmvc-webapp" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-frontend-webapp-commons" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-modules" options="-Xlint:all" />
+      <module name="it-tidalwave-northernwind-webapp" options="-Xlint:all" />
+      <module name="northernwind" options="-Xlint:all" />
     </option>
   </component>
 </project>
