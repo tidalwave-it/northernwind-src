@@ -50,10 +50,10 @@ public interface MetadataInterpolator
     public class Context
       {
         private final Metadata metadata;
-        
+        private final Map<String, String> modelMap;
         private final Map<String, String> lensMap;
       }
-    
+
     /*******************************************************************************************************************
      *
      * Returns the macro that this interpolator is capable to expand.

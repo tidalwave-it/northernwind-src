@@ -29,23 +29,27 @@ package it.tidalwave.northernwind.frontend.media.impl;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.imajine.image.EditableImage;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.metadata.TIFF;
-import org.imajine.image.metadata.XMP;
+import it.tidalwave.image.EditableImage;
+import it.tidalwave.image.metadata.Directory;
+import it.tidalwave.image.metadata.EXIF;
+import it.tidalwave.image.metadata.IPTC;
+import it.tidalwave.image.metadata.TIFF;
+import it.tidalwave.image.metadata.XMP;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
+import it.tidalwave.util.Key;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.P_GROUP_ID;
+import static it.tidalwave.util.FunctionalCheckedExceptionWrappers.*;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
 
 /***********************************************************************************************************************
  *
@@ -83,9 +87,9 @@ class DefaultMetadata implements Metadata
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> T getDirectory (@Nonnull final Class<T> metadataClass)
+    public <T extends Directory> T getDirectory (@Nonnull final Class<T> metadataClass)
       {
-        return image.getMetadata(metadataClass);
+        return image.getMetadata(metadataClass).orElseGet(_s(() -> metadataClass.getConstructor().newInstance()));
       }
 
     /*******************************************************************************************************************
@@ -104,7 +108,7 @@ class DefaultMetadata implements Metadata
 
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
         //            final String string = formatted(iptc.getObject(517, String.class));
-        final Context context = new Context(this, getLensMap(properties));
+        final Context context = new Context(this, getMap(properties, P_CAMERA_IDS), getMap(properties, P_LENS_IDS));
 
         String result = template;
 
@@ -124,48 +128,30 @@ class DefaultMetadata implements Metadata
      ******************************************************************************************************************/
     private void log()
       {
-        final TIFF tiff = image.getMetadata(TIFF.class);
-        final EXIF exif = image.getMetadata(EXIF.class);
-        final IPTC iptc = image.getMetadata(IPTC.class);
-        final XMP xmp = image.getMetadata(XMP.class);
+        final TIFF tiff = image.getMetadata(TIFF.class).orElseGet(TIFF::new);
+        final EXIF exif = image.getMetadata(EXIF.class).orElseGet(EXIF::new);
+        final IPTC iptc = image.getMetadata(IPTC.class).orElseGet(IPTC::new);
+        final XMP xmp = image.getMetadata(XMP.class).orElseGet(XMP::new);
         final Map<String, String> xmpProperties = new TreeMap<>(xmp.getXmpProperties());
 
-        for (final int tagCode : tiff.getTagCodes())
-          {
-            log.debug("TIFF({}).{}: {}", mediaName, tiff.getTagName(tagCode), tiff.getObject(tagCode));
-          }
-
-        for (final int tagCode : exif.getTagCodes())
-          {
-            log.debug("EXIF({}).{}: {}", mediaName, exif.getTagName(tagCode), exif.getObject(tagCode));
-          }
-
-        for (final int tagCode : iptc.getTagCodes())
-          {
-            log.debug("IPTC({}).{}: {}", mediaName, iptc.getTagName(tagCode), iptc.getObject(tagCode));
-          }
-
-        for (final int tagCode : xmp.getTagCodes())
-          {
-            log.debug("XMP({}).{}: {}", mediaName, xmp.getTagName(tagCode), xmp.getObject(tagCode));
-          }
-
-        for (final Map.Entry<String, String> e : xmpProperties.entrySet())
-          {
-            log.debug("XMPprop({}).{}: {}", mediaName, e.getKey(), e.getValue());
-          }
+        tiff.forEachTag(t -> log.debug("{}: TIFF[{}]: {}", mediaName, t.getName(), tiff.getRaw(t.getCode())));
+        exif.forEachTag(t -> log.debug("{}: EXIF[{}]: {}", mediaName, t.getName(), exif.getRaw(t.getCode())));
+        iptc.forEachTag(t -> log.debug("{}: IPTC[{}]: {}", mediaName, t.getName(), iptc.getRaw(t.getCode())));
+        xmp.forEachTag(t -> log.debug("{}: XMP[{}]: {}", mediaName, t.getName(), xmp.getRaw(t.getCode())));
+        xmpProperties.forEach((k, v) -> log.debug("XMPprop({}).{}: {}", mediaName, k, v));
       }
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static Map<String, String> getLensMap (@Nonnull final ResourceProperties siteNodeProperties)
+    private static Map<String, String> getMap (@Nonnull final ResourceProperties siteNodeProperties,
+                                               @Nonnull final Key<List<String>> key)
       {
         final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();
 
-        for (final String s : properties.getProperty(EmbeddedMediaMetadataProvider.P_LENS_IDS).orElse(emptyList()))
+        for (final String s : properties.getProperty(key).orElse(emptyList()))
           {
             final String[] split = s.split(":");
             lensMap.put(split[0].trim(), split[1].trim());

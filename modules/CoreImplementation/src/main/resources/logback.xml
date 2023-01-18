@@ -42,7 +42,7 @@
     </appender>
 
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.imajine.image" level="WARN"/>
+    <logger name="it.tidalwave.image" level="WARN"/>
 
     <root level="info">
         <appender-ref ref="FILE" />

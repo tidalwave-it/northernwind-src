@@ -1,3 +1,12 @@
+TIFF [271] Make: NIKON CORPORATION
+TIFF [272] Model: NIKON D5000
+TIFF [282] X Resolution: 72/1
+TIFF [283] Y Resolution: 72/1
+TIFF [296] Resolution Unit: 2
+TIFF [305] Software: Adobe Photoshop Lightroom 4.1 (Macintosh)
+TIFF [306] Date/Time: 2012:11:02 07:01:43
+TIFF [315] Artist: Fabrizio Giudici
+TIFF [33432] Copyright: © Copyright by Fabrizio Giudici. All rights reserved.
 EXIF [33434] Exposure Time: 1/1000
 EXIF [33437] F Number: 8/1
 EXIF [34850] Exposure Program: 1
@@ -31,22 +40,20 @@ EXIF [41992] Contrast: 0
 EXIF [41993] Saturation: 0
 EXIF [41994] Sharpness: 0
 EXIF [41996] Subject Distance Range: 0
-EXIF [42033] null: 6147706
-EXIF [42034] null: [1800/10, 1800/10, 28/10, 28/10]
-EXIF [42036] null: 180.0 mm f/2.8
-IPTC [346] null: %G
-IPTC [512] null: 4
-IPTC [517] null: Moutons autour de l'Île Saint-Honorat
-IPTC [567] null: 2010-01-02T00:00:00
-IPTC [572] null: 125359+0100
-IPTC [574] null: 20100102
-IPTC [575] null: 125359+0100
-IPTC [592] null: Fabrizio Giudici
-IPTC [597] null: Photographer
-IPTC [622] null: Fabrizio Giudici
-IPTC [627] null: Fabrizio Giudici
-IPTC [628] null: © Copyright by Fabrizio Giudici. All rights reserved.
-IPTC [634] null: Fabrizio Giudici
-XMP  [6] null: 1800/10 1800/10 28/10 28/10
-XMP  [7] null: 180.0 mm f/2.8
-XMP  [8] null: 6147706
+EXIF [42033] BodySerialNumber: 6147706
+EXIF [42034] LensSpecification: [1800/10, 1800/10, 28/10, 28/10]
+EXIF [42036] LensModel: 180.0 mm f/2.8
+IPTC [346] : UTF-8
+IPTC [512] : 4
+IPTC [517] : Moutons autour de l'Île Saint-Honorat
+IPTC [567] : 20100102
+IPTC [572] : 125359+0100
+IPTC [574] : 20100102
+IPTC [575] : 125359+0100
+IPTC [592] : Fabrizio Giudici
+IPTC [597] : Photographer
+IPTC [622] : Fabrizio Giudici
+IPTC [627] : Fabrizio Giudici
+IPTC [628] : © Copyright by Fabrizio Giudici. All rights reserved.
+IPTC [634] : Fabrizio Giudici
+XMP  [65535] : 172

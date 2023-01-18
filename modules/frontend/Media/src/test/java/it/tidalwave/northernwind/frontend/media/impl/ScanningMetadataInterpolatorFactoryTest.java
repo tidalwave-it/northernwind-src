@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import java.util.Collection;
 import org.springframework.context.ApplicationContext;
+import it.tidalwave.northernwind.frontend.media.impl.interpolator.IPTCTitleInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
@@ -72,8 +73,9 @@ public class ScanningMetadataInterpolatorFactoryTest
         // when
         final Collection<MetadataInterpolator> interpolators = underTest.getInterpolators();
         // then
-        assertThat(interpolators, hasSize(2));
+        assertThat(interpolators, hasSize(3));
         assertThat(interpolators, hasItem(isA(ShootingDataInterpolator.class)));
         assertThat(interpolators, hasItem(isA(XmpDcTitleInterpolator.class)));
+        assertThat(interpolators, hasItem(isA(IPTCTitleInterpolator.class)));
       }
   }

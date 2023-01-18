@@ -36,31 +36,16 @@
             <artifactId>it-tidalwave-role-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.imajine.image</groupId>
-            <artifactId>org-imajine-image-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.kenai.nbpwr</groupId>
-                    <artifactId>org-slf4j-jdk14</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.kenai.nbpwr</groupId>
-                    <artifactId>javax-annotation</artifactId>
-                </exclusion>
-                <!-- Fix for NW-130 -->
-                <exclusion>
-                    <artifactId>xmpcore</artifactId>
-                    <groupId>com.adobe.xmp</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>it.tidalwave.image</groupId>
+            <artifactId>image-core</artifactId>
         </dependency>
 
-        <!-- Fix for NW-130 -->
         <dependency>
-            <groupId>com.drewnoakes</groupId>
-            <artifactId>xmpcore-patched</artifactId>
+            <groupId>it.tidalwave.image</groupId>
+            <artifactId>image-core</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
             <artifactId>it-tidalwave-northernwind-core-default</artifactId>
@@ -72,6 +57,20 @@
             <artifactId>it-tidalwave-northernwind-common-tests</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <testSet.stoppingdown_100_20230116.folder>${testSet.stoppingdown_100_20230116.folder}</testSet.stoppingdown_100_20230116.folder>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
