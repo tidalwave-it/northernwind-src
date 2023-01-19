@@ -37,7 +37,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import lombok.AccessLevel;
@@ -51,7 +51,7 @@ import lombok.ToString;
  **********************************************************************************************************************/
 @Immutable @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString(callSuper = true, exclude = {"mapByRelativePath", "mapByRelativeUri" })
-public class DefaultSiteFinder<T> extends FinderSupport<T, SiteFinder<T>> implements SiteFinder<T>
+public class DefaultSiteFinder<T> extends HierarchicFinderSupport<T, SiteFinder<T>> implements SiteFinder<T>
   {
     private static final long serialVersionUID = 3242345356779345L;
 
@@ -104,7 +104,7 @@ public class DefaultSiteFinder<T> extends FinderSupport<T, SiteFinder<T>> implem
 
     /*******************************************************************************************************************
      *
-     * Clone constructor. See documentation of {@link FinderSupport} for more information.
+     * Clone constructor. See documentation of {@link HierarchicFinderSupport} for more information.
      *
      * @param other     the {@code Finder} to clone
      * @param override  the override object

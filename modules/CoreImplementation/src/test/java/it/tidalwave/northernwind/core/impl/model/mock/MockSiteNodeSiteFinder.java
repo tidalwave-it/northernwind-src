@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -83,7 +83,7 @@ import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields")
-public class MockSiteNodeSiteFinder extends FinderSupport<SiteNode, SiteFinder<SiteNode>>
+public class MockSiteNodeSiteFinder extends HierarchicFinderSupport<SiteNode, SiteFinder<SiteNode>>
                                     implements SiteFinder<SiteNode>
   {
     private static final long serialVersionUID = 1L;

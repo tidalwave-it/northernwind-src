@@ -31,7 +31,6 @@ import java.util.IdentityHashMap;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import lombok.experimental.Delegate;
@@ -51,7 +50,7 @@ public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
     private final FileSystem fileSystem;
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     @Override @Nonnull
     public ResourceFile getRoot()

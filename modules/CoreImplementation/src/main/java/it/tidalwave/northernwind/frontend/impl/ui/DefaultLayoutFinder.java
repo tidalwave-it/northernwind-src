@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import it.tidalwave.util.Id;
-import it.tidalwave.util.spi.FinderSupport;
+import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
 import lombok.AccessLevel;
@@ -47,7 +47,7 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @Immutable @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "fields")
-public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> implements LayoutFinder
+public class DefaultLayoutFinder extends HierarchicFinderSupport<Layout, LayoutFinder> implements LayoutFinder
   {
     private static final long serialVersionUID = 2354576587657345L;
 
@@ -75,7 +75,7 @@ public class DefaultLayoutFinder extends FinderSupport<Layout, LayoutFinder> imp
 
     /*******************************************************************************************************************
      *
-     * Clone constructor. See documentation of {@link FinderSupport} for more information.
+     * Clone constructor. See documentation of {@link HierarchicFinderSupport} for more information.
      *
      * @param other     the {@code Finder} to clone
      * @param override  the override object

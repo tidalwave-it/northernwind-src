@@ -32,7 +32,6 @@ import java.time.ZonedDateTime;
 import java.io.File;
 import java.io.InputStream;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -58,7 +57,7 @@ public final class MockResourceFile implements ResourceFile
     private final ResourcePath path;
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
 //    @Nonnull
 //    public static ResourceFile file (final @Nonnull String path)

@@ -81,6 +81,7 @@
       <module name="it-tidalwave-northernwind-frontend-webapp-commons" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-modules" options="-Xlint:all" />
       <module name="it-tidalwave-northernwind-webapp" options="-Xlint:all" />
+      <module name="northernwind" options="-Xlint:all" />
     </option>
   </component>
 </project>

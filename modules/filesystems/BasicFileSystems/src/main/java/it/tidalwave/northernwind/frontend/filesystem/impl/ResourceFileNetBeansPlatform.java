@@ -43,7 +43,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
@@ -88,7 +87,7 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     private final FileObject delegate;
 
     @Delegate
-    private final As asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     public ResourceFileNetBeansPlatform (@Nonnull final ResourceFileSystemNetBeansPlatform fileSystem,
                                          @Nonnull final FileObject delegate)

@@ -38,10 +38,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
+import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.experimental.Delegate;
 import lombok.Getter;
@@ -86,7 +86,7 @@ public class DefaultResourceProperties implements ResourceProperties
     private final PropertyResolver propertyResolver;
 
     @Delegate
-    private final AsSupport asSupport = new AsSupport(this);
+    private final As asSupport = As.forObject(this);
 
     /*******************************************************************************************************************
      *
